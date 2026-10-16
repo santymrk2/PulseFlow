@@ -32,7 +32,7 @@ use tauri::{Emitter, WebviewWindow};
 pub struct StartupType {
     /// Sub-canal del evento (`"TYPE"`).
     pub channel: &'static str,
-    /// Tipo de ventana: `null` (principal), `"output"`, `"pdf"` o `"stage"`.
+    /// Tipo de ventana: `null` (principal) o `"pdf"`.
     pub data: Option<&'static str>,
     /// Perfil a abrir automáticamente al arrancar (vacío = último usado).
     pub auto_profile: &'static str,
@@ -41,13 +41,11 @@ pub struct StartupType {
 /// Deriva el tipo de ventana a partir de su etiqueta (`label`).
 ///
 /// La ventana principal usa la etiqueta por defecto (`"main"`) y corresponde al
-/// tipo `null`; las ventanas de salida y de exportación PDF se identifican por
-/// sus etiquetas.
+/// tipo `null`; la ventana de exportación PDF se identifica por
+/// su etiqueta. Las salidas (audiencia/stage) son ventanas nativas sin webview y no pasan por aquí.
 fn window_type(label: &str) -> Option<&'static str> {
     match label {
-        "output" => Some("output"),
         "pdf" => Some("pdf"),
-        "stage" => Some("stage"),
         _ => None,
     }
 }
