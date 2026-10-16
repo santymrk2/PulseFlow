@@ -1,4 +1,4 @@
-// FreeShow GPU Transition Shader (WGSL)
+// PulseFlow GPU Transition Shader (WGSL)
 // Implementa transiciones de hardware libres de tirones a 60 fps:
 // - Crossfade suave
 // - Dip to Black

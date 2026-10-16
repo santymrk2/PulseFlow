@@ -6,7 +6,7 @@
 //!   configuración de la app.
 //! - Las tiendas **portables** viven en `<dataPath>/Config` (equivale a
 //!   `dataFolderNames.userData`), donde `dataPath` es `config.dataPath` o el
-//!   valor por defecto (`<Documents>/FreeShow`).
+//!   valor por defecto (`<Documents>/PulseFlow`).
 //!
 //! Los datos se representan como [`serde_json::Value`] para conservar la
 //! exactitud de las claves anidadas de TypeScript. Una capa de structs tipados
@@ -206,11 +206,11 @@ impl StoreManager {
     }
 }
 
-/// Raíz de datos por defecto: `<Documents>/FreeShow` (equivale a
+/// Raíz de datos por defecto: `<Documents>/PulseFlow` (equivale a
 /// `getDefaultDataFolderRoot`).
 pub fn default_data_folder_root() -> PathBuf {
     let documents = files::get_media_folder_path("documents").unwrap_or_else(|_| PathBuf::from("."));
-    documents.join("FreeShow")
+    documents.join("PulseFlow")
 }
 
 /// Raíz de datos desde `config.dataPath` o el valor por defecto.

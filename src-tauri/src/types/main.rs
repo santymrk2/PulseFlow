@@ -11,7 +11,7 @@
 
 use serde::{Deserialize, Serialize};
 
-/// Canal IPC central de FreeShow. Ver `src/types/IPC/Main.ts` en Electron.
+/// Canal IPC central de PulseFlow. Ver `src/types/IPC/Main.ts` en Electron.
 ///
 /// Los nombres se mantienen en `SCREAMING_SNAKE_CASE` a propósito para coincidir
 /// con los canales de TypeScript, de ahí el `allow(non_camel_case_types)`.

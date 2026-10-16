@@ -1,4 +1,4 @@
-//! Entry point de la librería de FreeShow (Tauri).
+//! Entry point de la librería de PulseFlow (Tauri).
 //!
 //! Comandos IPC (`commands/`), persistencia (STORES), servidores locales y el
 //! engine de render nativo WGPU (`render/`), que es la única salida del programa.
@@ -156,7 +156,7 @@ pub fn run() {
 
     // Regla del proyecto: no usar `.expect()` en producción; reportar y salir.
     if let Err(err) = result {
-        eprintln!("FreeShow no pudo iniciarse: {err}");
+        eprintln!("PulseFlow no pudo iniciarse: {err}");
         std::process::exit(1);
     }
 }

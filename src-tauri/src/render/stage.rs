@@ -55,7 +55,7 @@ pub fn start_native_stage(
 
     // Crear la ventana nativa de Tauri (SIN Webview)
     let window = WindowBuilder::new(app, NATIVE_STAGE_LABEL)
-        .title("FreeShow — Stage Display (GPU Engine)")
+        .title("PulseFlow — Stage Display (GPU Engine)")
         .decorations(true)
         .resizable(true)
         .visible(false)
@@ -97,7 +97,7 @@ pub fn start_native_stage(
 
     let (device, queue) = pollster::block_on(adapter.request_device(
         &wgpu::DeviceDescriptor {
-            label: Some("FreeShow Stage Device"),
+            label: Some("PulseFlow Stage Device"),
             ..Default::default()
         },
     ))
@@ -126,7 +126,7 @@ pub fn start_native_stage(
     let render_window = Arc::clone(&window_arc);
 
     let thread_handle = thread::Builder::new()
-        .name("FreeShow-StageLoop".into())
+        .name("PulseFlow-StageLoop".into())
         .spawn(move || {
             let mut text_engine = TextEngine::new(&device, &queue, config.format);
 
@@ -151,14 +151,14 @@ pub fn start_native_stage(
 
                         let mut encoder = device.create_command_encoder(
                             &wgpu::CommandEncoderDescriptor {
-                                label: Some("FreeShow Stage Encoder"),
+                                label: Some("PulseFlow Stage Encoder"),
                             },
                         );
 
                         {
                             let mut render_pass =
                                 encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                                    label: Some("FreeShow Stage Render Pass"),
+                                    label: Some("PulseFlow Stage Render Pass"),
                                     color_attachments: &[Some(
                                         wgpu::RenderPassColorAttachment {
                                             view: &view,

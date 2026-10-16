@@ -1,4 +1,4 @@
-//! FreeShow Native Render Engine (WGPU)
+//! PulseFlow Native Render Engine (WGPU)
 //!
 //! Este módulo implementa la renderización en GPU nativa sin Webview,
 //! utilizando WGPU para macOS (Metal), Windows (DirectX 12/Vulkan) y Linux.
@@ -44,7 +44,7 @@ impl RenderThread {
     }
 }
 
-/// Estado global del motor de renderizado GPU de FreeShow.
+/// Estado global del motor de renderizado GPU de PulseFlow.
 pub struct RenderState {
     pub active_render: Mutex<Option<RenderThread>>,
     pub active_stage: Mutex<Option<stage::StageRenderThread>>,
@@ -107,7 +107,7 @@ pub fn start_native_output(
 
     // Crear la ventana nativa de Tauri pura (SIN Webview)
     let window = WindowBuilder::new(app, NATIVE_OUTPUT_LABEL)
-        .title("FreeShow — Native Output (GPU Engine)")
+        .title("PulseFlow — Native Output (GPU Engine)")
         .decorations(false)
         .resizable(true)
         .skip_taskbar(true)
@@ -156,7 +156,7 @@ pub fn start_native_output(
     // 4. Solicitar Device y Queue
     let (device, queue) = pollster::block_on(adapter.request_device(
         &wgpu::DeviceDescriptor {
-            label: Some("FreeShow Render Device"),
+            label: Some("PulseFlow Render Device"),
             ..Default::default()
         },
     ))
@@ -205,7 +205,7 @@ pub fn start_native_output(
     let render_window = Arc::clone(&window_arc);
 
     let thread_handle = thread::Builder::new()
-        .name("FreeShow-RenderLoop".into())
+        .name("PulseFlow-RenderLoop".into())
         .spawn(move || {
             // Inicializar el pipeline de composición de fondos (Video / Imagen)
             let background_pipeline = media::BackgroundPipeline::new(&device, config.format);
@@ -242,14 +242,14 @@ pub fn start_native_output(
 
                         let mut encoder = device.create_command_encoder(
                             &wgpu::CommandEncoderDescriptor {
-                                label: Some("FreeShow Frame Clear Encoder"),
+                                label: Some("PulseFlow Frame Clear Encoder"),
                             },
                         );
 
                         {
                             let mut render_pass =
                                 encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                                    label: Some("FreeShow Multilayer Pass"),
+                                    label: Some("PulseFlow Multilayer Pass"),
                                     color_attachments: &[Some(
                                         wgpu::RenderPassColorAttachment {
                                             view: &view,
@@ -364,7 +364,7 @@ pub fn start_native_output(
                         surface.configure(&device, &config);
                     }
                     wgpu::CurrentSurfaceTexture::Validation => {
-                        eprintln!("[FreeShow WGPU Engine] Error de validación en swapchain");
+                        eprintln!("[PulseFlow WGPU Engine] Error de validación en swapchain");
                         thread::sleep(Duration::from_millis(16));
                     }
                 }
@@ -628,7 +628,7 @@ pub fn start_ndi_native_feed(
 
         let (device, _) = pollster::block_on(adapter.request_device(
             &wgpu::DeviceDescriptor {
-                label: Some("FreeShow NDI Capture Device"),
+                label: Some("PulseFlow NDI Capture Device"),
                 ..Default::default()
             },
         )).map_err(|e| AppError::new(format!("Device no disponible para NDI: {e}")))?;
@@ -699,7 +699,7 @@ mod tests {
         assert!(adapter.is_ok(), "Debe existir al menos un adaptador GPU disponible");
         let adapter = adapter.unwrap();
         let info = adapter.get_info();
-        println!("GPU detectada para FreeShow: {} ({:?})", info.name, info.backend);
+        println!("GPU detectada para PulseFlow: {} ({:?})", info.name, info.backend);
         assert!(!info.name.is_empty());
     }
 

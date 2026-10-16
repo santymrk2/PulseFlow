@@ -131,7 +131,7 @@ pub struct TransitionEngine {
 impl TransitionEngine {
     pub fn new(device: &Device, format: TextureFormat, width: u32, height: u32) -> Self {
         let shader = device.create_shader_module(ShaderModuleDescriptor {
-            label: Some("FreeShow Transition Shader"),
+            label: Some("PulseFlow Transition Shader"),
             source: ShaderSource::Wgsl(include_str!("shaders/transition.wgsl").into()),
         });
 

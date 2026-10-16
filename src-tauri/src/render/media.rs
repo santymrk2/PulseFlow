@@ -198,7 +198,7 @@ pub struct BackgroundPipeline {
 impl BackgroundPipeline {
     pub fn new(device: &Device, format: TextureFormat) -> Self {
         let shader = device.create_shader_module(ShaderModuleDescriptor {
-            label: Some("FreeShow Composite Shader"),
+            label: Some("PulseFlow Composite Shader"),
             source: ShaderSource::Wgsl(include_str!("shaders/composite.wgsl").into()),
         });
 

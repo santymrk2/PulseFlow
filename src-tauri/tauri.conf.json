@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "FreeShow",
+  "productName": "PulseFlow",
   "version": "0.1.0",
-  "identifier": "com.santiagomercadocarbone.tauri-app",
+  "identifier": "com.pulseflow.app",
   "build": {
     "beforeDevCommand": "bun run dev",
     "beforeBuildCommand": "bun run build",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "FreeShow",
+        "title": "PulseFlow",
         "width": 1280,
         "height": 800,
         "minWidth": 1024,
@@ -28,7 +28,7 @@
         "enable": true,
         "scope": [
           "$APPCONFIG/media-cache/**",
-          "$DOCUMENT/FreeShow/**"
+          "$DOCUMENT/PulseFlow/**"
         ]
       }
     }

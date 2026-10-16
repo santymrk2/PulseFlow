@@ -66,7 +66,7 @@ where
     let scale_filter = format!("scale={}:{}", frame_width, frame_height);
 
     let thread_handle = thread::Builder::new()
-        .name(format!("FreeShow-VideoDec-{}", video_id))
+        .name(format!("PulseFlow-VideoDec-{}", video_id))
         .spawn(move || {
             let mut child: Option<Child> = None;
 

@@ -1316,34 +1316,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "freeshow"
-version = "0.1.0"
-dependencies = [
- "axum",
- "bytemuck",
- "chrono",
- "cosmic-text",
- "futures-util",
- "glyphon",
- "hostname",
- "image",
- "kamadak-exif",
- "libloading 0.8.9",
- "pollster",
- "raw-window-handle",
- "serde",
- "serde_json",
- "tauri",
- "tauri-build",
- "tauri-plugin-dialog",
- "tauri-plugin-opener",
- "tokio",
- "tower-http",
- "wgpu",
- "zip",
-]
-
-[[package]]
 name = "futures-channel"
 version = "0.3.34"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3321,6 +3293,34 @@ name = "profiling"
 version = "1.0.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3d595e54a326bc53c1c197b32d295e14b169e3cfeaa8dc82b529f947fba6bcf5"
+
+[[package]]
+name = "pulseflow"
+version = "0.1.0"
+dependencies = [
+ "axum",
+ "bytemuck",
+ "chrono",
+ "cosmic-text",
+ "futures-util",
+ "glyphon",
+ "hostname",
+ "image",
+ "kamadak-exif",
+ "libloading 0.8.9",
+ "pollster",
+ "raw-window-handle",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-build",
+ "tauri-plugin-dialog",
+ "tauri-plugin-opener",
+ "tokio",
+ "tower-http",
+ "wgpu",
+ "zip",
+]
 
 [[package]]
 name = "pxfm"

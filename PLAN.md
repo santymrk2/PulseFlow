@@ -1,4 +1,6 @@
-# FreeShow — Plan del proyecto (Svelte + Tauri v2 + engine Rust)
+# PulseFlow — Plan del proyecto (Svelte + Tauri v2 + engine Rust)
+
+> PulseFlow es un fork de [FreeShow](https://github.com/ChurchApps/FreeShow) (GPL-3.0). Identificador de la app: `com.pulseflow.app`; datos por defecto en `Documents/PulseFlow`.
 
 ## Arquitectura objetivo
 
@@ -77,7 +79,7 @@ Limitaciones reales:
 - **Video:** se decodifica con **ffmpeg por pipe** (CPU) y se sube cada frame a una
   textura. NO es decodificación por hardware ni zero-copy. Sin sincronización
   audio/video ni control fino de reproducción.
-- **Stage:** muestra texto plano (slide actual/siguiente), no los layouts reales de stage de FreeShow.
+- **Stage:** muestra texto plano (slide actual/siguiente), no los layouts reales de stage heredados de FreeShow.
 - **NDI:** captura de framebuffer existe, pero falta integración completa (múltiples
   fuentes, alpha, gestión de ciclo de vida, UI).
 - **Overlays, timers y alertas** no se renderizan en el engine.

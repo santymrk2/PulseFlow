@@ -1,4 +1,4 @@
-// FreeShow Text Effects Shader (WGSL)
+// PulseFlow Text Effects Shader (WGSL)
 // Permite procesar efectos tipográficos avanzados en GPU:
 // - Color de relleno con gradiente o tono uniforme
 // - Contorno perimetral (Stroke)

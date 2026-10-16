@@ -90,7 +90,7 @@ async fn pick_backup_file(app: &AppHandle) -> AppResult<Option<String>> {
     let (tx, rx) = tokio::sync::oneshot::channel::<Option<String>>();
     app.dialog()
         .file()
-        .add_filter("FreeShow Backup Files", &["json", "zip"])
+        .add_filter("PulseFlow Backup Files", &["json", "zip"])
         .pick_file(move |selected| {
             let _ = tx.send(selected.map(|p| p.to_string()));
         });

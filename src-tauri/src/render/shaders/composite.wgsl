@@ -1,4 +1,4 @@
-// FreeShow GPU Composition Shader (WGSL)
+// PulseFlow GPU Composition Shader (WGSL)
 // Dibuja capas de fondo (imagen/video) y overlays con escalado, relación de aspecto y opacidad.
 
 struct QuadVertexOutput {
