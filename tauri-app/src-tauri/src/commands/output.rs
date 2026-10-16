@@ -16,13 +16,7 @@
 use crate::error::{AppError, AppResult};
 use serde::Deserialize;
 use serde_json::{json, Value};
-use tauri::{
-    window::Color, AppHandle, Manager, PhysicalPosition, PhysicalSize, WebviewUrl,
-    WebviewWindowBuilder,
-};
-
-/// Etiqueta (`label`) de la ventana nativa de audiencia.
-const OUTPUT_LABEL: &str = "output";
+use tauri::{AppHandle, Manager};
 
 fn monitor_name(index: usize, name: Option<&String>) -> String {
     match name {
@@ -121,144 +115,184 @@ pub struct OutputWindowOptions {
 /// control. Es una ventana nativa sin bordes (frameless), con fondo negro.
 ///
 /// Devuelve `true` si la ventana quedó en pantalla completa.
+/// `OPEN_OUTPUT_WINDOW`: crea (o enfoca) la ventana nativa de audiencia en GPU (WGPU).
+/// Utiliza directamente el Native Render Engine de ultra alto rendimiento a 60 fps con VSync.
 #[tauri::command]
 pub fn OPEN_OUTPUT_WINDOW(app: AppHandle, data: Option<OutputWindowOptions>) -> AppResult<bool> {
-    // Si ya existe, solo la trae al frente (evita duplicados/desincronización).
-    if let Some(window) = app.get_webview_window(OUTPUT_LABEL) {
-        let _ = window.show();
-        let _ = window.set_focus();
-        return Ok(window.is_fullscreen().unwrap_or(false));
-    }
-
     let options = data.unwrap_or_default();
-    let monitors = app.available_monitors().unwrap_or_default();
-
-    let display = options
-        .display
-        .unwrap_or_else(|| if monitors.len() > 1 { 1 } else { 0 });
-    let target = monitors.get(display).or_else(|| monitors.first());
-
-    // Auto: pantalla completa solo cuando hay un monitor distinto para la salida.
-    let fullscreen = options.fullscreen.unwrap_or(monitors.len() > 1);
-
-    let window = WebviewWindowBuilder::new(&app, OUTPUT_LABEL, WebviewUrl::App("index.html".into()))
-        .title("FreeShow — Output")
-        .decorations(false)
-        .resizable(false)
-        .skip_taskbar(true)
-        .shadow(false)
-        .background_color(Color(0, 0, 0, 255))
-        .visible(false)
-        .build()
-        .map_err(AppError::from)?;
-
-    if let Some(monitor) = target {
-        let position = monitor.position();
-        let size = monitor.size();
-
-        if fullscreen {
-            // Colocar la ventana dentro del monitor destino antes de maximizar,
-            // para que la pantalla completa se aplique a ese monitor.
-            let _ = window.set_position(PhysicalPosition::new(position.x, position.y));
-            let _ = window.set_fullscreen(true);
-        } else {
-            let width = ((size.width as f64) * 0.62).max(640.0) as u32;
-            let height = ((size.height as f64) * 0.62).max(360.0) as u32;
-            let x = position.x + (size.width.saturating_sub(width) / 2) as i32;
-            let y = position.y + (size.height.saturating_sub(height) / 2) as i32;
-            let _ = window.set_size(PhysicalSize::new(width, height));
-            let _ = window.set_position(PhysicalPosition::new(x, y));
-        }
-    }
-
-    let _ = window.show();
-    let _ = window.set_focus();
-    Ok(fullscreen)
+    crate::render::start_native_output(&app, options.display, options.fullscreen)
 }
 
-/// `CLOSE_OUTPUT_WINDOW`: cierra la ventana de audiencia si está abierta.
+/// `CLOSE_OUTPUT_WINDOW`: detiene el motor GPU y cierra la ventana de audiencia.
 #[tauri::command]
 pub fn CLOSE_OUTPUT_WINDOW(app: AppHandle) -> AppResult<()> {
-    if let Some(window) = app.get_webview_window(OUTPUT_LABEL) {
-        let _ = window.close();
-    }
-    Ok(())
+    crate::render::stop_native_output(&app)
 }
 
-/// `IS_OUTPUT_WINDOW_OPEN`: indica si la ventana de audiencia está abierta.
+/// `IS_OUTPUT_WINDOW_OPEN`: indica si la ventana de audiencia GPU nativa está abierta.
 #[tauri::command]
 pub fn IS_OUTPUT_WINDOW_OPEN(app: AppHandle) -> AppResult<bool> {
-    Ok(app.get_webview_window(OUTPUT_LABEL).is_some())
+    Ok(crate::render::is_native_output_open(&app))
 }
 
 // ---------------------------------------------------------------------------
 // Ventana de Stage (monitores de retorno para músicos/operadores)
 // ---------------------------------------------------------------------------
 
-/// Etiqueta (`label`) de la ventana nativa de Stage.
-const STAGE_LABEL: &str = "stage";
-
-/// `OPEN_STAGE_WINDOW`: crea (o enfoca) la ventana nativa de Stage.
-///
-/// A diferencia de la salida de audiencia, es una ventana normal (con bordes y
-/// redimensionable) que se abre en el monitor principal por defecto y muestra
-/// información de alto contraste (reloj, texto actual, siguiente y notas).
+/// `OPEN_STAGE_WINDOW`: abre la ventana nativa de Stage Display en GPU con vista de alto contraste.
 #[tauri::command]
 pub fn OPEN_STAGE_WINDOW(app: AppHandle, data: Option<OutputWindowOptions>) -> AppResult<bool> {
-    if let Some(window) = app.get_webview_window(STAGE_LABEL) {
-        let _ = window.show();
-        let _ = window.set_focus();
-        return Ok(window.is_fullscreen().unwrap_or(false));
-    }
-
     let options = data.unwrap_or_default();
-    let monitors = app.available_monitors().unwrap_or_default();
-    let display = options.display.unwrap_or(0);
-    let target = monitors.get(display).or_else(|| monitors.first());
-    let fullscreen = options.fullscreen.unwrap_or(false);
-
-    let window = WebviewWindowBuilder::new(&app, STAGE_LABEL, WebviewUrl::App("index.html".into()))
-        .title("FreeShow — Stage")
-        .background_color(Color(0, 0, 0, 255))
-        .visible(false)
-        .build()
-        .map_err(AppError::from)?;
-
-    if let Some(monitor) = target {
-        let position = monitor.position();
-        let size = monitor.size();
-
-        if fullscreen {
-            let _ = window.set_position(PhysicalPosition::new(position.x, position.y));
-            let _ = window.set_fullscreen(true);
-        } else {
-            let width = ((size.width as f64) * 0.5).max(640.0) as u32;
-            let height = ((size.height as f64) * 0.6).max(360.0) as u32;
-            let x = position.x + (size.width.saturating_sub(width) / 2) as i32;
-            let y = position.y + (size.height.saturating_sub(height) / 2) as i32;
-            let _ = window.set_size(PhysicalSize::new(width, height));
-            let _ = window.set_position(PhysicalPosition::new(x, y));
-        }
-    }
-
-    let _ = window.show();
-    let _ = window.set_focus();
-    Ok(fullscreen)
+    crate::render::start_native_stage(&app, options.display, options.fullscreen)
 }
 
-/// `CLOSE_STAGE_WINDOW`: cierra la ventana de Stage si está abierta.
+/// `CLOSE_STAGE_WINDOW`: detiene el Stage Display y cierra su ventana nativa.
 #[tauri::command]
 pub fn CLOSE_STAGE_WINDOW(app: AppHandle) -> AppResult<()> {
-    if let Some(window) = app.get_webview_window(STAGE_LABEL) {
-        let _ = window.close();
-    }
-    Ok(())
+    crate::render::stop_native_stage(&app)
 }
 
-/// `IS_STAGE_WINDOW_OPEN`: indica si la ventana de Stage está abierta.
+/// `IS_STAGE_WINDOW_OPEN`: indica si la ventana nativa de Stage está abierta.
 #[tauri::command]
 pub fn IS_STAGE_WINDOW_OPEN(app: AppHandle) -> AppResult<bool> {
-    Ok(app.get_webview_window(STAGE_LABEL).is_some())
+    Ok(crate::render::is_native_stage_open(&app))
+}
+
+/// Payload para el comando `TOGGLE_OUTPUTS` de Svelte.
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct ToggleOutputsPayload {
+    pub outputs: Option<Vec<Value>>,
+    pub state: bool,
+    #[serde(default)]
+    pub auto_startup: Option<bool>,
+    #[serde(default)]
+    pub auto_position: Option<bool>,
+}
+
+/// `TOGGLE_OUTPUTS`: abre o cierra las salidas nativas en GPU según el estado indicado.
+/// Invocado directamente por Svelte (`src/frontend/components/helpers/output.ts`).
+#[tauri::command]
+pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<bool> {
+    if data.state {
+        let mut any_opened = false;
+        if let Some(ref outs) = data.outputs {
+            for out in outs {
+                let is_stage = out.get("stageOutput").and_then(|v| v.as_str()).map(|s| !s.is_empty()).unwrap_or(false)
+                    || out.get("stageOutput").and_then(|v| v.as_bool()).unwrap_or(false);
+                if is_stage {
+                    let _ = crate::render::start_native_stage(&app, None, Some(false));
+                } else {
+                    let res = crate::render::start_native_output(&app, None, None)?;
+                    any_opened = any_opened || res;
+                }
+            }
+        } else {
+            any_opened = crate::render::start_native_output(&app, None, None)?;
+        }
+        Ok(any_opened)
+    } else {
+        crate::render::stop_native_output(&app)?;
+        let _ = crate::render::stop_native_stage(&app);
+        Ok(false)
+    }
+}
+
+/// `OUTPUTS`: procesa las actualizaciones de salida de Svelte (`send(OUTPUT, ["OUTPUTS"], data)`).
+/// Conecta la reactividad del frontend de Svelte directamente al Scene Graph de la GPU.
+#[tauri::command]
+pub fn OUTPUTS(app: AppHandle, data: Value) -> AppResult<()> {
+    if let Some(map) = data.as_object() {
+        for (_id, out_val) in map {
+            let is_stage = out_val.get("stageOutput").and_then(|v| v.as_str()).map(|s| !s.is_empty()).unwrap_or(false)
+                || out_val.get("stageOutput").and_then(|v| v.as_bool()).unwrap_or(false);
+
+            if let Some(out_data) = out_val.get("out") {
+                // 1. Fondo (video o imagen)
+                if let Some(bg_val) = out_data.get("background") {
+                    if bg_val.is_null() {
+                        let _ = crate::render::clear_scene_background(&app);
+                    } else if let Some(path) = bg_val.get("path").and_then(|p| p.as_str()) {
+                        let media_type = bg_val.get("type").and_then(|t| t.as_str()).unwrap_or("image");
+                        let bg = crate::render::types::BackgroundMedia {
+                            id: path.to_string(),
+                            path: Some(path.to_string()),
+                            media_type: media_type.to_string(),
+                            opacity: 1.0,
+                            aspect_mode: 0,
+                        };
+                        let _ = crate::render::set_scene_background(&app, bg);
+                    }
+                }
+
+                // 2. Diapositiva (Texto / Items)
+                if let Some(slide_val) = out_data.get("slide") {
+                    if slide_val.is_null() {
+                        let _ = crate::render::clear_scene_text(&app);
+                        if is_stage || crate::render::is_native_stage_open(&app) {
+                            let _ = crate::render::update_stage_data(&app, crate::render::types::StageData {
+                                current_slide: String::new(),
+                                ..Default::default()
+                            });
+                        }
+                    } else {
+                        let mut text_content = String::new();
+                        if let Some(items) = slide_val.get("items").or_else(|| slide_val.get("tempItems")).and_then(|i| i.as_array()) {
+                            for item in items {
+                                if let Some(lines) = item.get("lines").and_then(|l| l.as_array()) {
+                                    for line in lines {
+                                        if let Some(texts) = line.get("text").and_then(|t| t.as_array()) {
+                                            for t in texts {
+                                                if let Some(val) = t.get("value").and_then(|v| v.as_str()) {
+                                                    text_content.push_str(val);
+                                                }
+                                            }
+                                        }
+                                        text_content.push('\n');
+                                    }
+                                }
+                            }
+                        } else if let Some(text_str) = slide_val.get("text").and_then(|t| t.as_str()) {
+                            text_content = text_str.to_string();
+                        }
+
+                        let trimmed = text_content.trim().to_string();
+                        if !trimmed.is_empty() {
+                            let blocks = vec![crate::render::types::TextBlock {
+                                text: trimmed.clone(),
+                                font_family: None,
+                                font_size: 56.0,
+                                font_weight: 700,
+                                font_style: None,
+                                color: [1.0, 1.0, 1.0, 1.0],
+                                alignment: "center".to_string(),
+                                x: 100.0,
+                                y: 200.0,
+                                width: 1720.0,
+                                height: 700.0,
+                                line_height_ratio: 1.25,
+                                outline_color: Some([0.0, 0.0, 0.0, 1.0]),
+                                outline_width: Some(2.0),
+                                shadow_color: Some([0.0, 0.0, 0.0, 0.75]),
+                                shadow_offset: Some([4.0, 4.0]),
+                            }];
+                            let _ = crate::render::update_scene_text(&app, blocks);
+
+                            if is_stage || crate::render::is_native_stage_open(&app) {
+                                let _ = crate::render::update_stage_data(&app, crate::render::types::StageData {
+                                    current_slide: trimmed,
+                                    ..Default::default()
+                                });
+                            }
+                        } else {
+                            let _ = crate::render::clear_scene_text(&app);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    Ok(())
 }
 
 // ---------------------------------------------------------------------------
