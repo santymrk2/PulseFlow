@@ -8,7 +8,7 @@
  *
  * Pasos:
  *  1. Instala (si hace falta) `ffmpeg-static` y `ffprobe-static` como devDependencies.
- *  2. Crea `tauri-app/src-tauri/binaries/` si no existe.
+ *  2. Crea `src-tauri/binaries/` si no existe.
  *  3. Localiza los binarios que aportan esos paquetes.
  *  4. Los copia a `binaries/` con el nombre que Tauri espera:
  *     `<nombre>-<target-triple>[.exe]`.
@@ -35,7 +35,7 @@ const path = require("node:path")
 const zlib = require("node:zlib")
 
 const ROOT = path.resolve(__dirname, "..")
-const BINARIES_DIR = path.join(ROOT, "tauri-app", "src-tauri", "binaries")
+const BINARIES_DIR = path.join(ROOT, "src-tauri", "binaries")
 
 const PACKAGES = ["ffmpeg-static", "ffprobe-static", "@ffprobe-installer/ffprobe"]
 
