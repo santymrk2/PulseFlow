@@ -11,6 +11,7 @@ pub mod media;
 pub mod text;
 pub mod transition;
 pub mod types;
+pub mod video;
 
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex, RwLock};
@@ -41,6 +42,8 @@ impl RenderThread {
 /// Estado global del motor de renderizado GPU de FreeShow.
 pub struct RenderState {
     pub active_render: Mutex<Option<RenderThread>>,
+    pub active_video: Mutex<Option<video::VideoPlayback>>,
+    pub pending_video_frame: Arc<Mutex<Option<(String, u32, u32, Vec<u8>)>>>,
     pub scene_text: Arc<RwLock<Vec<TextBlock>>>,
     pub scene_background: Arc<RwLock<Option<BackgroundMedia>>>,
     pub scene_overlays: Arc<RwLock<Vec<OverlayItem>>>,
@@ -52,6 +55,8 @@ impl RenderState {
     pub fn new() -> Self {
         Self {
             active_render: Mutex::new(None),
+            active_video: Mutex::new(None),
+            pending_video_frame: Arc::new(Mutex::new(None)),
             scene_text: Arc::new(RwLock::new(Vec::new())),
             scene_background: Arc::new(RwLock::new(None)),
             scene_overlays: Arc::new(RwLock::new(Vec::new())),
@@ -164,13 +169,14 @@ pub fn start_native_output(
     let _ = window_arc.set_focus();
 
     // Obtener referencias a los estados compartidos
-    let (scene_text, scene_background, scene_overlays, media_pool) =
+    let (scene_text, scene_background, scene_overlays, media_pool, pending_video_frame) =
         if let Some(render_state) = app.try_state::<RenderState>() {
             (
                 Arc::clone(&render_state.scene_text),
                 Arc::clone(&render_state.scene_background),
                 Arc::clone(&render_state.scene_overlays),
                 Arc::clone(&render_state.media_pool),
+                Arc::clone(&render_state.pending_video_frame),
             )
         } else {
             (
@@ -178,6 +184,7 @@ pub fn start_native_output(
                 Arc::new(RwLock::new(None)),
                 Arc::new(RwLock::new(Vec::new())),
                 Arc::new(Mutex::new(media::MediaPool::new())),
+                Arc::new(Mutex::new(None)),
             )
         };
 
@@ -206,6 +213,12 @@ pub fn start_native_output(
                         config.height = current_size.height;
                         surface.configure(&device, &config);
                     }
+                }
+
+                // Subir nuevo fotograma de video a VRAM si está disponible
+                if let Some((vid_id, w, h, bytes)) = pending_video_frame.lock().unwrap().take() {
+                    let mut pool = media_pool.lock().unwrap();
+                    let _ = pool.update_video_frame(&device, &queue, &background_pipeline, &vid_id, w, h, &bytes);
                 }
 
                 // Render Pass: Composición multicapa en GPU a 60 fps
@@ -381,6 +394,39 @@ pub fn clear_scene_text(app: &AppHandle) -> AppResult<()> {
 /// Establece el fondo activo (imagen o video) en la escena de la GPU.
 pub fn set_scene_background(app: &AppHandle, bg: BackgroundMedia) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
+        // Detener video anterior si existía
+        {
+            let mut active = render_state.active_video.lock().unwrap();
+            if let Some(mut old_playback) = active.take() {
+                old_playback.stop();
+            }
+        }
+
+        // Si es video o archivo con extensión de video, iniciar decodificación acelerada por hardware
+        let is_video = bg.media_type == "video" || bg.path.as_deref().map(|p| {
+            let lower = p.to_lowercase();
+            lower.ends_with(".mp4") || lower.ends_with(".webm") || lower.ends_with(".mov") || lower.ends_with(".mkv")
+        }).unwrap_or(false);
+
+        if is_video {
+            if let Some(ref path_str) = bg.path {
+                let pending = Arc::clone(&render_state.pending_video_frame);
+                let playback = video::start_video_playback(
+                    app,
+                    path_str,
+                    &bg.id,
+                    1920,
+                    1080,
+                    move |vid_id, w, h, frame_bytes| {
+                        let mut p = pending.lock().unwrap();
+                        *p = Some((vid_id.to_string(), w, h, frame_bytes.to_vec()));
+                    },
+                )?;
+                let mut active = render_state.active_video.lock().unwrap();
+                *active = Some(playback);
+            }
+        }
+
         let mut background = render_state.scene_background.write().unwrap();
         *background = Some(bg);
         Ok(())
@@ -392,6 +438,12 @@ pub fn set_scene_background(app: &AppHandle, bg: BackgroundMedia) -> AppResult<(
 /// Limpia el fondo activo en la GPU (vuelve a negro puro).
 pub fn clear_scene_background(app: &AppHandle) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
+        {
+            let mut active = render_state.active_video.lock().unwrap();
+            if let Some(mut old_playback) = active.take() {
+                old_playback.stop();
+            }
+        }
         let mut background = render_state.scene_background.write().unwrap();
         *background = None;
         Ok(())
@@ -415,9 +467,9 @@ pub fn update_scene_overlays(app: &AppHandle, overlays: Vec<OverlayItem>) -> App
 pub fn feed_video_frame(
     app: &AppHandle,
     id: String,
-    _width: u32,
-    _height: u32,
-    _rgba_bytes: Vec<u8>,
+    width: u32,
+    height: u32,
+    rgba_bytes: Vec<u8>,
 ) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
         // Establecer como fondo activo si aún no lo es
@@ -433,7 +485,8 @@ pub fn feed_video_frame(
                 });
             }
         }
-        // Subida del buffer a VRAM en el siguiente pase o inmediatamente a la GPU
+        let mut pending = render_state.pending_video_frame.lock().unwrap();
+        *pending = Some((id, width, height, rgba_bytes));
         Ok(())
     } else {
         Err(AppError::new("RenderState no disponible"))
@@ -465,6 +518,10 @@ pub fn set_transition_config(
 /// Detiene el bucle de renderizado WGPU y cierra la ventana nativa.
 pub fn stop_native_output(app: &AppHandle) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
+        let mut active_vid = render_state.active_video.lock().unwrap();
+        if let Some(mut vid) = active_vid.take() {
+            vid.stop();
+        }
         let mut active = render_state.active_render.lock().unwrap();
         if let Some(mut thread) = active.take() {
             thread.stop();
