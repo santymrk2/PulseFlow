@@ -108,15 +108,8 @@ pub struct OutputWindowOptions {
     pub fullscreen: Option<bool>,
 }
 
-/// `OPEN_OUTPUT_WINDOW`: crea (o enfoca) la ventana nativa de audiencia.
-///
-/// La ventana reutiliza el mismo frontend React (`index.html`) con su etiqueta
-/// `"output"`; `main.tsx` decide renderizar `OutputView` en lugar del panel de
-/// control. Es una ventana nativa sin bordes (frameless), con fondo negro.
-///
-/// Devuelve `true` si la ventana quedó en pantalla completa.
-/// `OPEN_OUTPUT_WINDOW`: crea (o enfoca) la ventana nativa de audiencia en GPU (WGPU).
-/// Utiliza directamente el Native Render Engine de ultra alto rendimiento a 60 fps con VSync.
+/// `OPEN_OUTPUT_WINDOW`: crea (o enfoca) la ventana nativa de audiencia, sin webview.
+/// Renderiza con el engine WGPU a 60 fps con VSync; devuelve `true` si quedó en pantalla completa.
 #[tauri::command]
 pub fn OPEN_OUTPUT_WINDOW(app: AppHandle, data: Option<OutputWindowOptions>) -> AppResult<bool> {
     let options = data.unwrap_or_default();
@@ -296,43 +289,8 @@ pub fn OUTPUTS(app: AppHandle, data: Value) -> AppResult<()> {
 }
 
 // ---------------------------------------------------------------------------
-// Salida Nativa WGPU (GPU Render Engine sin Webview)
+// Scene Graph: texto, fondo, overlays y transiciones del engine WGPU
 // ---------------------------------------------------------------------------
-
-/// Opciones para abrir la salida nativa por GPU.
-#[derive(Debug, Default, Deserialize)]
-#[serde(rename_all = "camelCase", default)]
-pub struct NativeOutputOptions {
-    /// Índice del monitor donde colocar la salida nativa.
-    pub display: Option<usize>,
-    /// Forzar pantalla completa o ventana flotante.
-    pub fullscreen: Option<bool>,
-}
-
-/// `OPEN_NATIVE_OUTPUT`: crea una ventana nativa de Tauri pura (sin motor Webview)
-/// e inicia el pipeline de renderizado en GPU mediante WGPU a 60 fps con VSync.
-#[tauri::command]
-pub fn OPEN_NATIVE_OUTPUT(
-    app: AppHandle,
-    display_index: Option<usize>,
-    data: Option<NativeOutputOptions>,
-) -> AppResult<bool> {
-    let display = display_index.or_else(|| data.as_ref().and_then(|d| d.display));
-    let fullscreen = data.as_ref().and_then(|d| d.fullscreen);
-    crate::render::start_native_output(&app, display, fullscreen)
-}
-
-/// `CLOSE_NATIVE_OUTPUT`: detiene el bucle de renderizado WGPU y cierra la ventana nativa.
-#[tauri::command]
-pub fn CLOSE_NATIVE_OUTPUT(app: AppHandle) -> AppResult<()> {
-    crate::render::stop_native_output(&app)
-}
-
-/// `IS_NATIVE_OUTPUT_OPEN`: verifica si la salida nativa WGPU está abierta y activa.
-#[tauri::command]
-pub fn IS_NATIVE_OUTPUT_OPEN(app: AppHandle) -> AppResult<bool> {
-    Ok(crate::render::is_native_output_open(&app))
-}
 
 /// `UPDATE_SCENE_TEXT`: actualiza los bloques de texto de la salida nativa en GPU en <1ms.
 #[tauri::command]
@@ -470,31 +428,8 @@ pub fn SET_TRANSITION(
 }
 
 // ---------------------------------------------------------------------------
-// Multi-Salida Simultánea (Stage Display + NDI Framebuffer) - Fase 5
+// Stage Display y NDI (captura de framebuffer)
 // ---------------------------------------------------------------------------
-
-/// `OPEN_NATIVE_STAGE`: abre la ventana nativa de retorno de escenario (Stage Display)
-/// sin motor Webview y arranca el renderizador GPU de alto contraste a 60 fps.
-#[tauri::command]
-pub fn OPEN_NATIVE_STAGE(
-    app: AppHandle,
-    display_index: Option<usize>,
-    fullscreen: Option<bool>,
-) -> AppResult<bool> {
-    crate::render::start_native_stage(&app, display_index, fullscreen)
-}
-
-/// `CLOSE_NATIVE_STAGE`: detiene el hilo WGPU del Stage Display y cierra su ventana.
-#[tauri::command]
-pub fn CLOSE_NATIVE_STAGE(app: AppHandle) -> AppResult<()> {
-    crate::render::stop_native_stage(&app)
-}
-
-/// `IS_NATIVE_STAGE_OPEN`: comprueba si el Stage Display nativo está activo.
-#[tauri::command]
-pub fn IS_NATIVE_STAGE_OPEN(app: AppHandle) -> bool {
-    crate::render::is_native_stage_open(&app)
-}
 
 /// `UPDATE_STAGE_DATA`: actualiza la diapositiva actual, siguiente, reloj y mensaje del Stage Display.
 #[tauri::command]

@@ -7,6 +7,7 @@
 //! - Reloj o temporizador en tiempo real.
 //! - Alertas o mensajes pastorales en la parte inferior.
 
+use super::sync::{MutexExt, RwLockExt};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, RwLock};
 use std::thread::{self, JoinHandle};
@@ -176,7 +177,7 @@ pub fn start_native_stage(
                                 });
 
                             // Construir layout de alto contraste para músicos y predicadores
-                            let data = stage_data.read().unwrap().clone();
+                            let data = stage_data.read_safe().clone();
                             let w = config.width as f32;
                             let h = config.height as f32;
 
@@ -316,7 +317,7 @@ pub fn start_native_stage(
 
     // Guardar en el estado de Tauri
     if let Some(render_state) = app.try_state::<crate::render::RenderState>() {
-        let mut active = render_state.active_stage.lock().unwrap();
+        let mut active = render_state.active_stage.lock_safe();
         if let Some(mut old_thread) = active.take() {
             old_thread.stop();
         }
@@ -332,7 +333,7 @@ pub fn start_native_stage(
 /// Detiene el bucle de Stage y cierra la ventana nativa.
 pub fn stop_native_stage(app: &AppHandle) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<crate::render::RenderState>() {
-        let mut active = render_state.active_stage.lock().unwrap();
+        let mut active = render_state.active_stage.lock_safe();
         if let Some(mut thread) = active.take() {
             thread.stop();
         }

@@ -1,7 +1,7 @@
 //! Entry point de la librería de FreeShow (Tauri).
 //!
-//! Fase 1: fundamentos y ventanas.
-//! Fase 2: persistencia (STORES).
+//! Comandos IPC (`commands/`), persistencia (STORES), servidores locales y el
+//! engine de render nativo WGPU (`render/`), que es la única salida del programa.
 
 // Los literales `json!` de `defaults.rs` son muy profundos y superan el límite
 // de recursión por defecto de los macros.
@@ -104,9 +104,6 @@ pub fn run() {
             commands::output::OPEN_OUTPUT_WINDOW,
             commands::output::CLOSE_OUTPUT_WINDOW,
             commands::output::IS_OUTPUT_WINDOW_OPEN,
-            commands::output::OPEN_NATIVE_OUTPUT,
-            commands::output::CLOSE_NATIVE_OUTPUT,
-            commands::output::IS_NATIVE_OUTPUT_OPEN,
             commands::output::UPDATE_SCENE_TEXT,
             commands::output::CLEAR_SCENE_TEXT,
             commands::output::SELECT_SLIDE,
@@ -120,9 +117,6 @@ pub fn run() {
             commands::output::OPEN_STAGE_WINDOW,
             commands::output::CLOSE_STAGE_WINDOW,
             commands::output::IS_STAGE_WINDOW_OPEN,
-            commands::output::OPEN_NATIVE_STAGE,
-            commands::output::CLOSE_NATIVE_STAGE,
-            commands::output::IS_NATIVE_STAGE_OPEN,
             commands::output::UPDATE_STAGE_DATA,
             commands::output::START_NDI_NATIVE_FEED,
             commands::output::STOP_NDI_NATIVE_FEED,

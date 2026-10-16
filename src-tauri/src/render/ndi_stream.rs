@@ -4,6 +4,7 @@
 //! este módulo copia el render target resultante de la GPU (`copy_texture_to_buffer`)
 //! a un staging buffer mapeable para streaming NDI en tiempo real sin tirones.
 
+use super::sync::MutexExt;
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
 use wgpu::{
@@ -85,7 +86,7 @@ impl GpuFramebufferCapture {
     /// Detiene la captura para NDI.
     pub fn stop(&self) {
         self.is_active.store(false, Ordering::SeqCst);
-        let mut frame = self.latest_frame.lock().unwrap();
+        let mut frame = self.latest_frame.lock_safe();
         *frame = None;
     }
 }

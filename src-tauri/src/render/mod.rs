@@ -3,13 +3,14 @@
 //! Este módulo implementa la renderización en GPU nativa sin Webview,
 //! utilizando WGPU para macOS (Metal), Windows (DirectX 12/Vulkan) y Linux.
 //!
-//! Fase 1: Ventana nativa y Swapchain WGPU a 60 fps con VSync en fondo negro puro.
-//! Fase 2: Motor de texto y tipografías en GPU (glyphon + cosmic-text) con contornos y sombras.
-//! Fase 3: Capa de Video e Imágenes en VRAM (MediaPool, Zero-Copy y composición multicapa).
+//! Componentes: ventana nativa + swapchain WGPU a 60 fps con VSync, texto en GPU
+//! (glyphon + cosmic-text) con contornos y sombras, capa de video/imágenes en VRAM
+//! (MediaPool y composición multicapa), transiciones WGSL, stage y captura NDI.
 
 pub mod media;
 pub mod ndi_stream;
 pub mod stage;
+pub mod sync;
 pub mod text;
 pub mod transition;
 pub mod types;
@@ -21,6 +22,7 @@ use std::thread::{self, JoinHandle};
 use std::time::Duration;
 use tauri::{AppHandle, Manager, PhysicalPosition, PhysicalSize, window::WindowBuilder};
 use crate::error::{AppError, AppResult};
+use sync::{MutexExt, RwLockExt};
 pub use types::{BackgroundMedia, OverlayItem, SceneGraph, SelectSlidePayload, StageData, TextBlock};
 
 /// Etiqueta única para la ventana de salida nativa WGPU.
@@ -224,8 +226,8 @@ pub fn start_native_output(
                 }
 
                 // Subir nuevo fotograma de video a VRAM si está disponible
-                if let Some((vid_id, w, h, bytes)) = pending_video_frame.lock().unwrap().take() {
-                    let mut pool = media_pool.lock().unwrap();
+                if let Some((vid_id, w, h, bytes)) = pending_video_frame.lock_safe().take() {
+                    let mut pool = media_pool.lock_safe();
                     let _ = pool.update_video_frame(&device, &queue, &background_pipeline, &vid_id, w, h, &bytes);
                 }
 
@@ -265,9 +267,9 @@ pub fn start_native_output(
                                 });
 
                             // ─── CAPA 1: Fondo (Video o Imagen en VRAM) ───
-                            let bg_opt = scene_background.read().unwrap().clone();
+                            let bg_opt = scene_background.read_safe().clone();
                             if let Some(bg) = bg_opt {
-                                let mut pool = media_pool.lock().unwrap();
+                                let mut pool = media_pool.lock_safe();
 
                                 // Si la textura no está cargada y hay ruta de archivo, cargarla
                                 if pool.get(&bg.id).is_none() {
@@ -290,7 +292,7 @@ pub fn start_native_output(
                             }
 
                             // ─── CAPA 2: Texto Principal (Letras, Citas, Acordes) ───
-                            let current_blocks = scene_text.read().unwrap().clone();
+                            let current_blocks = scene_text.read_safe().clone();
                             if !current_blocks.is_empty() {
                                 let _ = text_engine.render(
                                     &device,
@@ -303,7 +305,7 @@ pub fn start_native_output(
                             }
 
                             // ─── CAPA 3: Overlays (Relojes, Avisos, Tercios Inferiores) ───
-                            let current_overlays = scene_overlays.read().unwrap().clone();
+                            let current_overlays = scene_overlays.read_safe().clone();
                             if !current_overlays.is_empty() {
                                 let overlay_blocks: Vec<TextBlock> = current_overlays
                                     .into_iter()
@@ -370,7 +372,7 @@ pub fn start_native_output(
 
     // Guardar el hilo en el estado global para poder gestionarlo
     if let Some(render_state) = app.try_state::<RenderState>() {
-        let mut active = render_state.active_render.lock().unwrap();
+        let mut active = render_state.active_render.lock_safe();
         if let Some(mut old_thread) = active.take() {
             old_thread.stop();
         }
@@ -386,7 +388,7 @@ pub fn start_native_output(
 /// Actualiza los bloques de texto de la escena en el motor GPU en menos de 1 milisegundo.
 pub fn update_scene_text(app: &AppHandle, blocks: Vec<TextBlock>) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
-        let mut text = render_state.scene_text.write().unwrap();
+        let mut text = render_state.scene_text.write_safe();
         *text = blocks;
         Ok(())
     } else {
@@ -404,7 +406,7 @@ pub fn set_scene_background(app: &AppHandle, bg: BackgroundMedia) -> AppResult<(
     if let Some(render_state) = app.try_state::<RenderState>() {
         // Detener video anterior si existía
         {
-            let mut active = render_state.active_video.lock().unwrap();
+            let mut active = render_state.active_video.lock_safe();
             if let Some(mut old_playback) = active.take() {
                 old_playback.stop();
             }
@@ -426,16 +428,16 @@ pub fn set_scene_background(app: &AppHandle, bg: BackgroundMedia) -> AppResult<(
                     1920,
                     1080,
                     move |vid_id, w, h, frame_bytes| {
-                        let mut p = pending.lock().unwrap();
+                        let mut p = pending.lock_safe();
                         *p = Some((vid_id.to_string(), w, h, frame_bytes.to_vec()));
                     },
                 )?;
-                let mut active = render_state.active_video.lock().unwrap();
+                let mut active = render_state.active_video.lock_safe();
                 *active = Some(playback);
             }
         }
 
-        let mut background = render_state.scene_background.write().unwrap();
+        let mut background = render_state.scene_background.write_safe();
         *background = Some(bg);
         Ok(())
     } else {
@@ -447,12 +449,12 @@ pub fn set_scene_background(app: &AppHandle, bg: BackgroundMedia) -> AppResult<(
 pub fn clear_scene_background(app: &AppHandle) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
         {
-            let mut active = render_state.active_video.lock().unwrap();
+            let mut active = render_state.active_video.lock_safe();
             if let Some(mut old_playback) = active.take() {
                 old_playback.stop();
             }
         }
-        let mut background = render_state.scene_background.write().unwrap();
+        let mut background = render_state.scene_background.write_safe();
         *background = None;
         Ok(())
     } else {
@@ -463,7 +465,7 @@ pub fn clear_scene_background(app: &AppHandle) -> AppResult<()> {
 /// Actualiza los overlays de la escena (relojes, avisos, tercios inferiores).
 pub fn update_scene_overlays(app: &AppHandle, overlays: Vec<OverlayItem>) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
-        let mut ov = render_state.scene_overlays.write().unwrap();
+        let mut ov = render_state.scene_overlays.write_safe();
         *ov = overlays;
         Ok(())
     } else {
@@ -482,7 +484,7 @@ pub fn feed_video_frame(
     if let Some(render_state) = app.try_state::<RenderState>() {
         // Establecer como fondo activo si aún no lo es
         {
-            let mut bg = render_state.scene_background.write().unwrap();
+            let mut bg = render_state.scene_background.write_safe();
             if bg.as_ref().map(|b| b.id.as_str()) != Some(&id) {
                 *bg = Some(BackgroundMedia {
                     id: id.clone(),
@@ -493,7 +495,7 @@ pub fn feed_video_frame(
                 });
             }
         }
-        let mut pending = render_state.pending_video_frame.lock().unwrap();
+        let mut pending = render_state.pending_video_frame.lock_safe();
         *pending = Some((id, width, height, rgba_bytes));
         Ok(())
     } else {
@@ -509,7 +511,7 @@ pub fn set_transition_config(
     easing_str: &str,
 ) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
-        let mut cfg = render_state.transition_config.write().unwrap();
+        let mut cfg = render_state.transition_config.write_safe();
         let trans_type = transition::TransitionType::from_str(trans_type_str);
         let easing = match easing_str.to_lowercase().as_str() {
             "easeout" | "ease_out" => transition::EasingType::EaseOut,
@@ -526,11 +528,11 @@ pub fn set_transition_config(
 /// Detiene el bucle de renderizado WGPU y cierra la ventana nativa.
 pub fn stop_native_output(app: &AppHandle) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
-        let mut active_vid = render_state.active_video.lock().unwrap();
+        let mut active_vid = render_state.active_video.lock_safe();
         if let Some(mut vid) = active_vid.take() {
             vid.stop();
         }
-        let mut active = render_state.active_render.lock().unwrap();
+        let mut active = render_state.active_render.lock_safe();
         if let Some(mut thread) = active.take() {
             thread.stop();
         }
@@ -575,7 +577,7 @@ pub fn is_native_stage_open(app: &AppHandle) -> bool {
 /// Actualiza los datos mostrados en el Stage Display (retorno de escenario).
 pub fn update_stage_data(app: &AppHandle, data: StageData) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
-        let mut stage_data = render_state.stage_data.write().unwrap();
+        let mut stage_data = render_state.stage_data.write_safe();
         *stage_data = data;
         Ok(())
     } else {
@@ -590,7 +592,7 @@ pub fn start_ndi_native_feed(
     height_opt: Option<u32>,
 ) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
-        let mut capture_guard = render_state.ndi_capture.lock().unwrap();
+        let mut capture_guard = render_state.ndi_capture.lock_safe();
         if let Some(ref capture) = *capture_guard {
             capture.start();
             return Ok(());
@@ -625,7 +627,7 @@ pub fn start_ndi_native_feed(
 /// Detiene la captura de Framebuffer de la GPU para streaming NDI.
 pub fn stop_ndi_native_feed(app: &AppHandle) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
-        let mut capture_guard = render_state.ndi_capture.lock().unwrap();
+        let mut capture_guard = render_state.ndi_capture.lock_safe();
         if let Some(ref mut capture) = *capture_guard {
             capture.stop();
         }
@@ -639,7 +641,7 @@ pub fn stop_ndi_native_feed(app: &AppHandle) -> AppResult<()> {
 /// Verifica si la captura directa de Framebuffer para NDI está activa.
 pub fn is_ndi_native_feed_active(app: &AppHandle) -> bool {
     if let Some(render_state) = app.try_state::<RenderState>() {
-        let capture_guard = render_state.ndi_capture.lock().unwrap();
+        let capture_guard = render_state.ndi_capture.lock_safe();
         capture_guard.as_ref().map(|c| c.is_active.load(Ordering::Relaxed)).unwrap_or(false)
     } else {
         false
