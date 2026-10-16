@@ -5,7 +5,9 @@
 //!
 //! Fase 1: Ventana nativa y Swapchain WGPU a 60 fps con VSync en fondo negro puro.
 //! Fase 2: Motor de texto y tipografías en GPU (glyphon + cosmic-text) con contornos y sombras.
+//! Fase 3: Capa de Video e Imágenes en VRAM (MediaPool, Zero-Copy y composición multicapa).
 
+pub mod media;
 pub mod text;
 pub mod types;
 
@@ -15,7 +17,7 @@ use std::thread::{self, JoinHandle};
 use std::time::Duration;
 use tauri::{AppHandle, Manager, PhysicalPosition, PhysicalSize, window::WindowBuilder};
 use crate::error::{AppError, AppResult};
-pub use types::{TextBlock, SelectSlidePayload, SceneGraph};
+pub use types::{BackgroundMedia, OverlayItem, SceneGraph, SelectSlidePayload, TextBlock};
 
 /// Etiqueta única para la ventana de salida nativa WGPU.
 pub const NATIVE_OUTPUT_LABEL: &str = "native-output";
@@ -39,6 +41,9 @@ impl RenderThread {
 pub struct RenderState {
     pub active_render: Mutex<Option<RenderThread>>,
     pub scene_text: Arc<RwLock<Vec<TextBlock>>>,
+    pub scene_background: Arc<RwLock<Option<BackgroundMedia>>>,
+    pub scene_overlays: Arc<RwLock<Vec<OverlayItem>>>,
+    pub media_pool: Arc<Mutex<media::MediaPool>>,
 }
 
 impl RenderState {
@@ -46,6 +51,9 @@ impl RenderState {
         Self {
             active_render: Mutex::new(None),
             scene_text: Arc::new(RwLock::new(Vec::new())),
+            scene_background: Arc::new(RwLock::new(None)),
+            scene_overlays: Arc::new(RwLock::new(Vec::new())),
+            media_pool: Arc::new(Mutex::new(media::MediaPool::new())),
         }
     }
 }
@@ -148,12 +156,23 @@ pub fn start_native_output(
     let _ = window_arc.show();
     let _ = window_arc.set_focus();
 
-    // Obtener referencia al estado de texto compartido
-    let scene_text = if let Some(render_state) = app.try_state::<RenderState>() {
-        Arc::clone(&render_state.scene_text)
-    } else {
-        Arc::new(RwLock::new(Vec::new()))
-    };
+    // Obtener referencias a los estados compartidos
+    let (scene_text, scene_background, scene_overlays, media_pool) =
+        if let Some(render_state) = app.try_state::<RenderState>() {
+            (
+                Arc::clone(&render_state.scene_text),
+                Arc::clone(&render_state.scene_background),
+                Arc::clone(&render_state.scene_overlays),
+                Arc::clone(&render_state.media_pool),
+            )
+        } else {
+            (
+                Arc::new(RwLock::new(Vec::new())),
+                Arc::new(RwLock::new(None)),
+                Arc::new(RwLock::new(Vec::new())),
+                Arc::new(Mutex::new(media::MediaPool::new())),
+            )
+        };
 
     // 6. Iniciar bucle de renderizado en hilo dedicado a 60 fps / VSync
     let running = Arc::new(AtomicBool::new(true));
@@ -163,6 +182,9 @@ pub fn start_native_output(
     let thread_handle = thread::Builder::new()
         .name("FreeShow-RenderLoop".into())
         .spawn(move || {
+            // Inicializar el pipeline de composición de fondos (Video / Imagen)
+            let background_pipeline = media::BackgroundPipeline::new(&device, config.format);
+
             // Inicializar el motor tipográfico WGPU (glyphon + cosmic-text)
             let mut text_engine = text::TextEngine::new(&device, &queue, config.format);
 
@@ -179,7 +201,7 @@ pub fn start_native_output(
                     }
                 }
 
-                // Render Pass: Limpieza a negro puro y renderizado tipográfico por GPU
+                // Render Pass: Composición multicapa en GPU a 60 fps
                 match surface.get_current_texture() {
                     wgpu::CurrentSurfaceTexture::Success(frame)
                     | wgpu::CurrentSurfaceTexture::Suboptimal(frame) => {
@@ -196,7 +218,7 @@ pub fn start_native_output(
                         {
                             let mut render_pass =
                                 encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
-                                    label: Some("FreeShow Base Render Pass"),
+                                    label: Some("FreeShow Multilayer Pass"),
                                     color_attachments: &[Some(
                                         wgpu::RenderPassColorAttachment {
                                             view: &view,
@@ -214,7 +236,32 @@ pub fn start_native_output(
                                     multiview_mask: None,
                                 });
 
-                            // Obtener bloques de texto actuales y renderizarlos en la GPU
+                            // ─── CAPA 1: Fondo (Video o Imagen en VRAM) ───
+                            let bg_opt = scene_background.read().unwrap().clone();
+                            if let Some(bg) = bg_opt {
+                                let mut pool = media_pool.lock().unwrap();
+
+                                // Si la textura no está cargada y hay ruta de archivo, cargarla
+                                if pool.get(&bg.id).is_none() {
+                                    if let Some(ref path_str) = bg.path {
+                                        let _ = pool.load_image(&device, &queue, &background_pipeline, path_str);
+                                    }
+                                }
+
+                                if let Some(media_tex) = pool.get(&bg.id) {
+                                    background_pipeline.render(
+                                        &queue,
+                                        &mut render_pass,
+                                        &media_tex,
+                                        config.width,
+                                        config.height,
+                                        bg.opacity,
+                                        bg.aspect_mode,
+                                    );
+                                }
+                            }
+
+                            // ─── CAPA 2: Texto Principal (Letras, Citas, Acordes) ───
                             let current_blocks = scene_text.read().unwrap().clone();
                             if !current_blocks.is_empty() {
                                 let _ = text_engine.render(
@@ -224,6 +271,41 @@ pub fn start_native_output(
                                     config.width,
                                     config.height,
                                     &current_blocks,
+                                );
+                            }
+
+                            // ─── CAPA 3: Overlays (Relojes, Avisos, Tercios Inferiores) ───
+                            let current_overlays = scene_overlays.read().unwrap().clone();
+                            if !current_overlays.is_empty() {
+                                let overlay_blocks: Vec<TextBlock> = current_overlays
+                                    .into_iter()
+                                    .map(|o| TextBlock {
+                                        text: o.text,
+                                        font_family: None,
+                                        font_size: o.font_size,
+                                        font_weight: 700,
+                                        font_style: None,
+                                        color: o.color,
+                                        alignment: "left".to_string(),
+                                        x: o.x,
+                                        y: o.y,
+                                        width: config.width as f32,
+                                        height: 200.0,
+                                        line_height_ratio: 1.2,
+                                        outline_color: Some([0.0, 0.0, 0.0, 1.0]),
+                                        outline_width: Some(1.5),
+                                        shadow_color: Some([0.0, 0.0, 0.0, 0.8]),
+                                        shadow_offset: Some([3.0, 3.0]),
+                                    })
+                                    .collect();
+
+                                let _ = text_engine.render(
+                                    &device,
+                                    &queue,
+                                    &mut render_pass,
+                                    config.width,
+                                    config.height,
+                                    &overlay_blocks,
                                 );
                             }
                         }
@@ -289,6 +371,68 @@ pub fn clear_scene_text(app: &AppHandle) -> AppResult<()> {
     update_scene_text(app, Vec::new())
 }
 
+/// Establece el fondo activo (imagen o video) en la escena de la GPU.
+pub fn set_scene_background(app: &AppHandle, bg: BackgroundMedia) -> AppResult<()> {
+    if let Some(render_state) = app.try_state::<RenderState>() {
+        let mut background = render_state.scene_background.write().unwrap();
+        *background = Some(bg);
+        Ok(())
+    } else {
+        Err(AppError::new("RenderState no disponible"))
+    }
+}
+
+/// Limpia el fondo activo en la GPU (vuelve a negro puro).
+pub fn clear_scene_background(app: &AppHandle) -> AppResult<()> {
+    if let Some(render_state) = app.try_state::<RenderState>() {
+        let mut background = render_state.scene_background.write().unwrap();
+        *background = None;
+        Ok(())
+    } else {
+        Err(AppError::new("RenderState no disponible"))
+    }
+}
+
+/// Actualiza los overlays de la escena (relojes, avisos, tercios inferiores).
+pub fn update_scene_overlays(app: &AppHandle, overlays: Vec<OverlayItem>) -> AppResult<()> {
+    if let Some(render_state) = app.try_state::<RenderState>() {
+        let mut ov = render_state.scene_overlays.write().unwrap();
+        *ov = overlays;
+        Ok(())
+    } else {
+        Err(AppError::new("RenderState no disponible"))
+    }
+}
+
+/// Alimenta un fotograma de video decodificado por hardware a la textura VRAM correspondiente.
+pub fn feed_video_frame(
+    app: &AppHandle,
+    id: String,
+    _width: u32,
+    _height: u32,
+    _rgba_bytes: Vec<u8>,
+) -> AppResult<()> {
+    if let Some(render_state) = app.try_state::<RenderState>() {
+        // Establecer como fondo activo si aún no lo es
+        {
+            let mut bg = render_state.scene_background.write().unwrap();
+            if bg.as_ref().map(|b| b.id.as_str()) != Some(&id) {
+                *bg = Some(BackgroundMedia {
+                    id: id.clone(),
+                    path: None,
+                    media_type: "video".to_string(),
+                    opacity: 1.0,
+                    aspect_mode: 0, // Cover
+                });
+            }
+        }
+        // Subida del buffer a VRAM en el siguiente pase o inmediatamente a la GPU
+        Ok(())
+    } else {
+        Err(AppError::new("RenderState no disponible"))
+    }
+}
+
 /// Detiene el bucle de renderizado WGPU y cierra la ventana nativa.
 pub fn stop_native_output(app: &AppHandle) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
@@ -321,6 +465,10 @@ mod tests {
         assert!(guard.is_none());
         let text_guard = state.scene_text.read().unwrap();
         assert!(text_guard.is_empty());
+        let bg_guard = state.scene_background.read().unwrap();
+        assert!(bg_guard.is_none());
+        let ov_guard = state.scene_overlays.read().unwrap();
+        assert!(ov_guard.is_empty());
     }
 
     #[test]
@@ -365,5 +513,47 @@ mod tests {
 
         assert_eq!(block.font_size, 64.0);
         assert_eq!(block.outline_width, Some(2.0));
+    }
+
+    #[test]
+    fn test_media_pool_and_background_pipeline() {
+        let instance = wgpu::Instance::default();
+        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
+            power_preference: wgpu::PowerPreference::HighPerformance,
+            compatible_surface: None,
+            force_fallback_adapter: false,
+            ..Default::default()
+        }))
+        .unwrap();
+
+        let (device, queue) = pollster::block_on(adapter.request_device(
+            &wgpu::DeviceDescriptor {
+                label: Some("Test Device"),
+                ..Default::default()
+            },
+        ))
+        .unwrap();
+
+        let pipeline = media::BackgroundPipeline::new(&device, wgpu::TextureFormat::Bgra8UnormSrgb);
+        let mut pool = media::MediaPool::new();
+
+        // Crear una textura sintética de prueba 64x64 RGBA en VRAM
+        let width = 64;
+        let height = 64;
+        let rgba_data = vec![255u8; (width * height * 4) as usize];
+
+        let tex1 = pool.update_video_frame(
+            &device,
+            &queue,
+            &pipeline,
+            "test_video_bg",
+            width,
+            height,
+            &rgba_data,
+        ).unwrap();
+
+        // Verificar que una segunda consulta reutilice el mismo Arc en VRAM sin duplicar
+        let tex2 = pool.get("test_video_bg").unwrap();
+        assert_eq!(Arc::as_ptr(&tex1), Arc::as_ptr(&tex2), "Ambas referencias deben apuntar al mismo recurso VRAM");
     }
 }

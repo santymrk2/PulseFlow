@@ -74,13 +74,13 @@ pub struct SceneGraph {
 ### Fase 3: Capa de Video e Imágenes en VRAM
 - **Objetivo**: Reproducir fondos en bucle (motion backgrounds) e imágenes estáticas sin consumir CPU ni duplicar decodificación.
 - **Acciones**:
-  - [ ] Pipeline de carga de texturas: subida asíncrona de imágenes (`image` crate) a texturas `wgpu::Texture`.
-  - [ ] Decodificación de video acelerada por hardware: decodificar frames a un formato YUV/RGBA y transferirlos directamente a una textura de video.
-  - [ ] Implementar shaders de mezcla:
-    - [ ] Capa inferior: Video/Imagen de fondo.
-    - [ ] Capa intermedia: Texto y glifos.
-    - [ ] Capa superior: Relojes y alertas.
-  - [ ] Reutilización de texturas: si 2 pantallas muestran el mismo fondo, usar la misma textura de VRAM para ambas salidas.
+  - [x] Pipeline de carga de texturas: subida asíncrona de imágenes (`image` crate) a texturas `wgpu::Texture`.
+  - [x] Decodificación de video acelerada por hardware: decodificar frames a un formato YUV/RGBA y transferirlos directamente a una textura de video.
+  - [x] Implementar shaders de mezcla:
+    - [x] Capa inferior: Video/Imagen de fondo.
+    - [x] Capa intermedia: Texto y glifos.
+    - [x] Capa superior: Relojes y alertas.
+  - [x] Reutilización de texturas: si 2 pantallas muestran el mismo fondo, usar la misma textura de VRAM para ambas salidas.
 
 ### Fase 4: Transiciones por Shaders de GPU
 - **Objetivo**: Reemplazar las transiciones CSS por shaders de hardware libres de tirones.

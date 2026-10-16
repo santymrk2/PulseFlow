@@ -79,6 +79,57 @@ fn default_line_height() -> f32 {
     1.25
 }
 
+/// Medio de fondo (imagen o video) cargado en VRAM.
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct BackgroundMedia {
+    pub id: String,
+    pub path: Option<String>,
+    #[serde(default = "default_media_type")]
+    pub media_type: String, // "image", "video"
+    #[serde(default = "default_opacity")]
+    pub opacity: f32,
+    #[serde(default = "default_aspect_mode")]
+    pub aspect_mode: u32, // 0 = Cover, 1 = Contain, 2 = Stretch
+}
+
+fn default_media_type() -> String {
+    "image".to_string()
+}
+
+fn default_opacity() -> f32 {
+    1.0
+}
+
+fn default_aspect_mode() -> u32 {
+    0 // Cover
+}
+
+/// Elemento de superposición superior (reloj, avisos, tercios inferiores).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct OverlayItem {
+    pub id: String,
+    #[serde(default = "default_overlay_type")]
+    pub item_type: String, // "clock", "alert", "lower_third"
+    pub text: String,
+    pub x: f32,
+    pub y: f32,
+    #[serde(default = "default_overlay_font_size")]
+    pub font_size: f32,
+    #[serde(default = "default_white_color")]
+    pub color: [f32; 4],
+    pub background_color: Option<[f32; 4]>,
+}
+
+fn default_overlay_type() -> String {
+    "clock".to_string()
+}
+
+fn default_overlay_font_size() -> f32 {
+    36.0
+}
+
 /// Payload para el evento de selección de diapositiva rápida (`SELECT_SLIDE`).
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -89,6 +140,9 @@ pub struct SelectSlidePayload {
     /// Título opcional o referencia bíblica.
     #[serde(default)]
     pub title: Option<String>,
+    /// Fondo opcional de la diapositiva.
+    #[serde(default)]
+    pub background: Option<BackgroundMedia>,
     /// Bloques de texto principales a proyectar en el motor nativo.
     #[serde(default)]
     pub text_blocks: Vec<TextBlock>,
@@ -99,5 +153,8 @@ pub struct SelectSlidePayload {
 #[serde(rename_all = "camelCase")]
 pub struct SceneGraph {
     pub display_id: u32,
+    pub background: Option<BackgroundMedia>,
     pub text_blocks: Vec<TextBlock>,
+    pub overlays: Vec<OverlayItem>,
 }
+

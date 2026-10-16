@@ -4306,6 +4306,7 @@ name = "tauri-app"
 version = "0.1.0"
 dependencies = [
  "axum",
+ "bytemuck",
  "chrono",
  "cosmic-text",
  "futures-util",

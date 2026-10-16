@@ -318,11 +318,16 @@ pub fn CLEAR_SCENE_TEXT(app: AppHandle) -> AppResult<()> {
 /// `SELECT_SLIDE`: evento de cambio de diapositiva que actualiza el búfer de texto de la GPU en <1ms.
 #[tauri::command]
 pub fn SELECT_SLIDE(app: AppHandle, data: serde_json::Value) -> AppResult<()> {
-    let blocks: Vec<crate::render::types::TextBlock> = if let Ok(payload) =
+    if let Ok(payload) =
         serde_json::from_value::<crate::render::types::SelectSlidePayload>(data.clone())
     {
-        payload.text_blocks
-    } else if let Ok(b) =
+        if let Some(bg) = payload.background {
+            let _ = crate::render::set_scene_background(&app, bg);
+        }
+        return crate::render::update_scene_text(&app, payload.text_blocks);
+    }
+
+    let blocks: Vec<crate::render::types::TextBlock> = if let Ok(b) =
         serde_json::from_value::<Vec<crate::render::types::TextBlock>>(data.clone())
     {
         b
@@ -353,5 +358,58 @@ pub fn SELECT_SLIDE(app: AppHandle, data: serde_json::Value) -> AppResult<()> {
 
     crate::render::update_scene_text(&app, blocks)
 }
+
+/// `SET_BACKGROUND_IMAGE`: establece una imagen de fondo en VRAM para la GPU.
+#[tauri::command]
+pub fn SET_BACKGROUND_IMAGE(
+    app: AppHandle,
+    path: String,
+    mode: Option<String>,
+    opacity: Option<f32>,
+) -> AppResult<()> {
+    let aspect_mode = match mode.as_deref() {
+        Some("contain") => 1,
+        Some("stretch") => 2,
+        _ => 0, // cover por defecto
+    };
+
+    let bg = crate::render::types::BackgroundMedia {
+        id: path.clone(),
+        path: Some(path),
+        media_type: "image".to_string(),
+        opacity: opacity.unwrap_or(1.0),
+        aspect_mode,
+    };
+
+    crate::render::set_scene_background(&app, bg)
+}
+
+/// `CLEAR_BACKGROUND`: limpia el fondo de la GPU (vuelve a negro puro).
+#[tauri::command]
+pub fn CLEAR_BACKGROUND(app: AppHandle) -> AppResult<()> {
+    crate::render::clear_scene_background(&app)
+}
+
+/// `FEED_VIDEO_FRAME`: transfiere un fotograma de video decodificado a VRAM.
+#[tauri::command]
+pub fn FEED_VIDEO_FRAME(
+    app: AppHandle,
+    id: String,
+    width: u32,
+    height: u32,
+    data: Vec<u8>,
+) -> AppResult<()> {
+    crate::render::feed_video_frame(&app, id, width, height, data)
+}
+
+/// `UPDATE_SCENE_OVERLAYS`: actualiza los overlays (relojes, avisos, tercios inferiores).
+#[tauri::command]
+pub fn UPDATE_SCENE_OVERLAYS(
+    app: AppHandle,
+    overlays: Vec<crate::render::types::OverlayItem>,
+) -> AppResult<()> {
+    crate::render::update_scene_overlays(&app, overlays)
+}
+
 
 
