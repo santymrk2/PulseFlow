@@ -158,3 +158,22 @@ pub struct SceneGraph {
     pub overlays: Vec<OverlayItem>,
 }
 
+/// Datos para el Stage Display (retorno de escenario para músicos/pastor).
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct StageData {
+    /// Texto de la diapositiva actual.
+    #[serde(default)]
+    pub current_slide: String,
+    /// Texto de la diapositiva siguiente (anticipación).
+    #[serde(default)]
+    pub next_slide: Option<String>,
+    /// Reloj o temporizador en tiempo real.
+    #[serde(default)]
+    pub clock: Option<String>,
+    /// Alerta o mensaje privado para el escenario.
+    #[serde(default)]
+    pub message: Option<String>,
+}
+
+

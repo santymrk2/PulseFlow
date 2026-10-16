@@ -356,6 +356,14 @@ pub fn SELECT_SLIDE(app: AppHandle, data: serde_json::Value) -> AppResult<()> {
         Vec::new()
     };
 
+    if crate::render::is_native_stage_open(&app) {
+        let full_text = blocks.iter().map(|b| b.text.as_str()).collect::<Vec<_>>().join("\n");
+        let _ = crate::render::update_stage_data(&app, crate::render::types::StageData {
+            current_slide: full_text,
+            ..Default::default()
+        });
+    }
+
     crate::render::update_scene_text(&app, blocks)
 }
 
@@ -427,6 +435,61 @@ pub fn SET_TRANSITION(
     )
 }
 
+// ---------------------------------------------------------------------------
+// Multi-Salida Simultánea (Stage Display + NDI Framebuffer) - Fase 5
+// ---------------------------------------------------------------------------
 
+/// `OPEN_NATIVE_STAGE`: abre la ventana nativa de retorno de escenario (Stage Display)
+/// sin motor Webview y arranca el renderizador GPU de alto contraste a 60 fps.
+#[tauri::command]
+pub fn OPEN_NATIVE_STAGE(
+    app: AppHandle,
+    display_index: Option<usize>,
+    fullscreen: Option<bool>,
+) -> AppResult<bool> {
+    crate::render::start_native_stage(&app, display_index, fullscreen)
+}
 
+/// `CLOSE_NATIVE_STAGE`: detiene el hilo WGPU del Stage Display y cierra su ventana.
+#[tauri::command]
+pub fn CLOSE_NATIVE_STAGE(app: AppHandle) -> AppResult<()> {
+    crate::render::stop_native_stage(&app)
+}
 
+/// `IS_NATIVE_STAGE_OPEN`: comprueba si el Stage Display nativo está activo.
+#[tauri::command]
+pub fn IS_NATIVE_STAGE_OPEN(app: AppHandle) -> bool {
+    crate::render::is_native_stage_open(&app)
+}
+
+/// `UPDATE_STAGE_DATA`: actualiza la diapositiva actual, siguiente, reloj y mensaje del Stage Display.
+#[tauri::command]
+pub fn UPDATE_STAGE_DATA(
+    app: AppHandle,
+    stage_data: crate::render::types::StageData,
+) -> AppResult<()> {
+    crate::render::update_stage_data(&app, stage_data)
+}
+
+/// `START_NDI_NATIVE_FEED`: activa la captura directa de Framebuffer en GPU (`copy_texture_to_buffer`)
+/// para transmisión NDI en red local sin consumir CPU.
+#[tauri::command]
+pub fn START_NDI_NATIVE_FEED(
+    app: AppHandle,
+    width: Option<u32>,
+    height: Option<u32>,
+) -> AppResult<()> {
+    crate::render::start_ndi_native_feed(&app, width, height)
+}
+
+/// `STOP_NDI_NATIVE_FEED`: detiene la captura de Framebuffer de GPU para NDI.
+#[tauri::command]
+pub fn STOP_NDI_NATIVE_FEED(app: AppHandle) -> AppResult<()> {
+    crate::render::stop_ndi_native_feed(&app)
+}
+
+/// `IS_NDI_NATIVE_FEED_ACTIVE`: comprueba si la captura directa de Framebuffer NDI está activa.
+#[tauri::command]
+pub fn IS_NDI_NATIVE_FEED_ACTIVE(app: AppHandle) -> bool {
+    crate::render::is_ndi_native_feed_active(&app)
+}

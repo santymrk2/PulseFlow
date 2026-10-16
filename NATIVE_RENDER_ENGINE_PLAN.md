@@ -95,9 +95,9 @@ pub struct SceneGraph {
 ### Fase 5: Multi-Salida Simultánea (Auditorio + Stage Display + NDI)
 - **Objetivo**: Soportar la configuración clásica de eventos en vivo: 3 salidas independientes.
 - **Acciones**:
-  - [ ] Auditorio (Main Output): Renderiza fondo + texto principal.
-  - [ ] Stage Display (Retorno para músicos/pastor): El engine renderiza otra vista usando la misma fuente de datos pero con un layout distinto (alto contraste, diapositiva actual + siguiente + reloj).
-  - [ ] Salida NDI / DeckLink directa: En lugar de capturar la pantalla, extraer el framebuffer resultante de la GPU (`copy_texture_to_buffer`) y enviarlo directamente por la red local mediante el comando NDI de Rust existente en `commands/ndi.rs`.
+  - [x] Auditorio (Main Output): Renderiza fondo + texto principal.
+  - [x] Stage Display (Retorno para músicos/pastor): El engine renderiza otra vista usando la misma fuente de datos pero con un layout distinto (alto contraste, diapositiva actual + siguiente + reloj).
+  - [x] Salida NDI / DeckLink directa: En lugar de capturar la pantalla, extraer el framebuffer resultante de la GPU (`copy_texture_to_buffer`) y enviarlo directamente por la red local mediante el comando NDI de Rust existente en `commands/ndi.rs`.
 
 ### Fase 6: Conmutador (Feature Flag) en la UI
 - **Objetivo**: Transición transparente sin romper el software actual.

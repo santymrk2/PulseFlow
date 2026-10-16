@@ -8,6 +8,8 @@
 //! Fase 3: Capa de Video e Imágenes en VRAM (MediaPool, Zero-Copy y composición multicapa).
 
 pub mod media;
+pub mod ndi_stream;
+pub mod stage;
 pub mod text;
 pub mod transition;
 pub mod types;
@@ -19,7 +21,7 @@ use std::thread::{self, JoinHandle};
 use std::time::Duration;
 use tauri::{AppHandle, Manager, PhysicalPosition, PhysicalSize, window::WindowBuilder};
 use crate::error::{AppError, AppResult};
-pub use types::{BackgroundMedia, OverlayItem, SceneGraph, SelectSlidePayload, TextBlock};
+pub use types::{BackgroundMedia, OverlayItem, SceneGraph, SelectSlidePayload, StageData, TextBlock};
 
 /// Etiqueta única para la ventana de salida nativa WGPU.
 pub const NATIVE_OUTPUT_LABEL: &str = "native-output";
@@ -42,30 +44,36 @@ impl RenderThread {
 /// Estado global del motor de renderizado GPU de FreeShow.
 pub struct RenderState {
     pub active_render: Mutex<Option<RenderThread>>,
+    pub active_stage: Mutex<Option<stage::StageRenderThread>>,
     pub active_video: Mutex<Option<video::VideoPlayback>>,
     pub pending_video_frame: Arc<Mutex<Option<(String, u32, u32, Vec<u8>)>>>,
     pub scene_text: Arc<RwLock<Vec<TextBlock>>>,
     pub scene_background: Arc<RwLock<Option<BackgroundMedia>>>,
     pub scene_overlays: Arc<RwLock<Vec<OverlayItem>>>,
+    pub stage_data: Arc<RwLock<StageData>>,
     pub media_pool: Arc<Mutex<media::MediaPool>>,
     pub transition_config: Arc<RwLock<(transition::TransitionType, u64, transition::EasingType)>>,
+    pub ndi_capture: Arc<Mutex<Option<ndi_stream::GpuFramebufferCapture>>>,
 }
 
 impl RenderState {
     pub fn new() -> Self {
         Self {
             active_render: Mutex::new(None),
+            active_stage: Mutex::new(None),
             active_video: Mutex::new(None),
             pending_video_frame: Arc::new(Mutex::new(None)),
             scene_text: Arc::new(RwLock::new(Vec::new())),
             scene_background: Arc::new(RwLock::new(None)),
             scene_overlays: Arc::new(RwLock::new(Vec::new())),
+            stage_data: Arc::new(RwLock::new(StageData::default())),
             media_pool: Arc::new(Mutex::new(media::MediaPool::new())),
             transition_config: Arc::new(RwLock::new((
                 transition::TransitionType::Crossfade,
                 300,
                 transition::EasingType::EaseInOut,
             ))),
+            ndi_capture: Arc::new(Mutex::new(None)),
         }
     }
 }
@@ -540,6 +548,104 @@ pub fn is_native_output_open(app: &AppHandle) -> bool {
     app.get_window(NATIVE_OUTPUT_LABEL).is_some()
 }
 
+/// Inicia la ventana y el bucle de renderizado nativo de Stage Display.
+pub fn start_native_stage(
+    app: &AppHandle,
+    display_index: Option<usize>,
+    fullscreen_opt: Option<bool>,
+) -> AppResult<bool> {
+    if let Some(render_state) = app.try_state::<RenderState>() {
+        let stage_data = Arc::clone(&render_state.stage_data);
+        stage::start_native_stage(app, display_index, fullscreen_opt, stage_data)
+    } else {
+        Err(AppError::new("RenderState no disponible"))
+    }
+}
+
+/// Detiene el bucle de Stage Display y cierra su ventana nativa.
+pub fn stop_native_stage(app: &AppHandle) -> AppResult<()> {
+    stage::stop_native_stage(app)
+}
+
+/// Verifica si la ventana de Stage Display nativa está abierta.
+pub fn is_native_stage_open(app: &AppHandle) -> bool {
+    stage::is_native_stage_open(app)
+}
+
+/// Actualiza los datos mostrados en el Stage Display (retorno de escenario).
+pub fn update_stage_data(app: &AppHandle, data: StageData) -> AppResult<()> {
+    if let Some(render_state) = app.try_state::<RenderState>() {
+        let mut stage_data = render_state.stage_data.write().unwrap();
+        *stage_data = data;
+        Ok(())
+    } else {
+        Err(AppError::new("RenderState no disponible"))
+    }
+}
+
+/// Inicia la captura directa del Framebuffer de la GPU para streaming NDI.
+pub fn start_ndi_native_feed(
+    app: &AppHandle,
+    width_opt: Option<u32>,
+    height_opt: Option<u32>,
+) -> AppResult<()> {
+    if let Some(render_state) = app.try_state::<RenderState>() {
+        let mut capture_guard = render_state.ndi_capture.lock().unwrap();
+        if let Some(ref capture) = *capture_guard {
+            capture.start();
+            return Ok(());
+        }
+
+        let instance = wgpu::Instance::default();
+        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
+            power_preference: wgpu::PowerPreference::HighPerformance,
+            compatible_surface: None,
+            force_fallback_adapter: false,
+            ..Default::default()
+        })).map_err(|e| AppError::new(format!("GPU no disponible para NDI: {e}")))?;
+
+        let (device, _) = pollster::block_on(adapter.request_device(
+            &wgpu::DeviceDescriptor {
+                label: Some("FreeShow NDI Capture Device"),
+                ..Default::default()
+            },
+        )).map_err(|e| AppError::new(format!("Device no disponible para NDI: {e}")))?;
+
+        let w = width_opt.unwrap_or(1920);
+        let h = height_opt.unwrap_or(1080);
+        let capture = ndi_stream::GpuFramebufferCapture::new(&device, w, h);
+        capture.start();
+        *capture_guard = Some(capture);
+        Ok(())
+    } else {
+        Err(AppError::new("RenderState no disponible"))
+    }
+}
+
+/// Detiene la captura de Framebuffer de la GPU para streaming NDI.
+pub fn stop_ndi_native_feed(app: &AppHandle) -> AppResult<()> {
+    if let Some(render_state) = app.try_state::<RenderState>() {
+        let mut capture_guard = render_state.ndi_capture.lock().unwrap();
+        if let Some(ref mut capture) = *capture_guard {
+            capture.stop();
+        }
+        *capture_guard = None;
+        Ok(())
+    } else {
+        Err(AppError::new("RenderState no disponible"))
+    }
+}
+
+/// Verifica si la captura directa de Framebuffer para NDI está activa.
+pub fn is_ndi_native_feed_active(app: &AppHandle) -> bool {
+    if let Some(render_state) = app.try_state::<RenderState>() {
+        let capture_guard = render_state.ndi_capture.lock().unwrap();
+        capture_guard.as_ref().map(|c| c.is_active.load(Ordering::Relaxed)).unwrap_or(false)
+    } else {
+        false
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -555,6 +661,8 @@ mod tests {
         assert!(bg_guard.is_none());
         let ov_guard = state.scene_overlays.read().unwrap();
         assert!(ov_guard.is_empty());
+        let stage_guard = state.stage_data.read().unwrap();
+        assert!(stage_guard.current_slide.is_empty());
     }
 
     #[test]
@@ -672,6 +780,51 @@ mod tests {
         engine.trigger(transition::TransitionType::Crossfade, 500, transition::EasingType::EaseInOut);
         assert!(engine.active_transition.is_active);
         assert_eq!(engine.active_transition.transition_type, transition::TransitionType::Crossfade);
+    }
+
+    #[test]
+    fn test_stage_display_data_and_layout() {
+        let stage_data = StageData {
+            current_slide: "Sublime gracia del Señor\nQue a un pecador salvó".to_string(),
+            next_slide: Some("Fui ciego mas hoy veo yo\nPerdido y Él me halló".to_string()),
+            clock: Some("11:45 AM".to_string()),
+            message: Some("Pastor listo para predicar".to_string()),
+        };
+
+        assert!(!stage_data.current_slide.is_empty());
+        assert_eq!(stage_data.clock.as_deref(), Some("11:45 AM"));
+        assert_eq!(stage_data.message.as_deref(), Some("Pastor listo para predicar"));
+    }
+
+    #[test]
+    fn test_gpu_ndi_capture_buffer() {
+        let instance = wgpu::Instance::default();
+        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
+            power_preference: wgpu::PowerPreference::HighPerformance,
+            compatible_surface: None,
+            force_fallback_adapter: false,
+            ..Default::default()
+        }))
+        .unwrap();
+
+        let (device, _queue) = pollster::block_on(adapter.request_device(
+            &wgpu::DeviceDescriptor {
+                label: Some("Test NDI Device"),
+                ..Default::default()
+            },
+        ))
+        .unwrap();
+
+        let capture = ndi_stream::GpuFramebufferCapture::new(&device, 1920, 1080);
+        assert_eq!(capture.width, 1920);
+        assert_eq!(capture.height, 1080);
+        assert!(!capture.is_active.load(Ordering::Relaxed));
+
+        capture.start();
+        assert!(capture.is_active.load(Ordering::Relaxed));
+
+        capture.stop();
+        assert!(!capture.is_active.load(Ordering::Relaxed));
     }
 }
 
