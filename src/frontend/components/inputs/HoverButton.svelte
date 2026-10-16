@@ -1,15 +1,29 @@
 <script lang="ts">
-    import { onMount } from "svelte"
+    import { onMount, type Snippet } from "svelte"
+    import type { HTMLAttributes } from "svelte/elements"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
 
-    export let icon: string
-    export let size = 5
-    export let title = "media.play"
-    export let hide = false
+    interface Props extends HTMLAttributes<HTMLDivElement> {
+        icon: string
+        size?: number
+        title?: string
+        hide?: boolean
+        children?: Snippet
+    }
+
+    let {
+        icon,
+        size = 5,
+        title = "media.play",
+        hide = false,
+        children,
+        style = "",
+        ...restProps
+    }: Props = $props()
 
     // fade out (to show itself)
-    let reveal = true
+    let reveal = $state(true)
     onMount(startFade)
     function startFade() {
         setTimeout(() => {
@@ -18,9 +32,8 @@
     }
 </script>
 
-<!-- on:keydown={triggerClickOnEnterSpace} tabindex="0" role="button" -->
-<div style={$$props.style} role="none" on:click data-title={hide ? "" : translateText(title)}>
-    <slot />
+<div {...restProps} {style} role="none" data-title={hide ? "" : translateText(title)}>
+    {@render children?.()}
 
     <div class="overlay" class:reveal class:hidden={hide}>
         <Icon id={icon} {size} white />

@@ -55,14 +55,6 @@
             </MaterialButton>
         {/if}
     </div>
-{:else if openedTab === "ai"}
-    {#if $ai.enabled}
-        <div class="bottom">
-            <MaterialButton variant="outlined" icon="ai" on:click={() => open("ai_model_manager")} small>
-                <T id="popup.ai_model_manager" />
-            </MaterialButton>
-        </div>
-    {/if}
 {:else if openedTab === "other"}
     <div class="bottom">
         <MaterialButton variant="outlined" icon="document" on:click={openLog} small>

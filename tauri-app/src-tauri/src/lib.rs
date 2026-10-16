@@ -10,6 +10,7 @@
 pub mod commands;
 pub mod domain;
 pub mod error;
+pub mod render;
 pub mod server;
 pub mod state;
 pub mod types;
@@ -28,6 +29,7 @@ pub fn run() {
             std::fs::create_dir_all(&config_dir)?;
             let stores = crate::domain::data::store::StoreManager::new(config_dir);
             app.manage(crate::state::AppState::new(stores));
+            app.manage(crate::render::RenderState::new());
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -102,6 +104,12 @@ pub fn run() {
             commands::output::OPEN_OUTPUT_WINDOW,
             commands::output::CLOSE_OUTPUT_WINDOW,
             commands::output::IS_OUTPUT_WINDOW_OPEN,
+            commands::output::OPEN_NATIVE_OUTPUT,
+            commands::output::CLOSE_NATIVE_OUTPUT,
+            commands::output::IS_NATIVE_OUTPUT_OPEN,
+            commands::output::UPDATE_SCENE_TEXT,
+            commands::output::CLEAR_SCENE_TEXT,
+            commands::output::SELECT_SLIDE,
             commands::output::OPEN_STAGE_WINDOW,
             commands::output::CLOSE_STAGE_WINDOW,
             commands::output::IS_STAGE_WINDOW_OPEN,

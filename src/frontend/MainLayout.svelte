@@ -1,5 +1,4 @@
 <script lang="ts">
-    import AiFloating from "./ai/components/floating/AiFloating.svelte"
     import { customActionActivation } from "./components/actions/actions"
     import DrawTabs from "./components/draw/DrawTabs.svelte"
     import Navigation from "./components/edit/Navigation.svelte"
@@ -121,10 +120,6 @@
 
     {#if $showChangeProfileMenu && $activeProfile !== null}
         <ProfileChangerMenu />
-    {/if}
-
-    {#if $ai.enabled}
-        <AiFloating />
     {/if}
 
     <Tipbar />

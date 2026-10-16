@@ -16,8 +16,11 @@
     },
     "scripts": {
         "dev": "vite",
+        "dev:tauri": "bun --cwd=tauri-app run tauri dev",
         "build": "vite build",
+        "build:tauri": "bun --cwd=tauri-app run tauri build",
         "preview": "vite preview",
+        "tauri": "bun --cwd=tauri-app run tauri",
         "---DEVELOPMENT---": "",
         "build:frontend:dev": "npx cross-env NODE_ENV=development vite",
         "---PRODUCTION---": "",

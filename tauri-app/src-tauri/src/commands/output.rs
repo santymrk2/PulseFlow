@@ -260,3 +260,98 @@ pub fn CLOSE_STAGE_WINDOW(app: AppHandle) -> AppResult<()> {
 pub fn IS_STAGE_WINDOW_OPEN(app: AppHandle) -> AppResult<bool> {
     Ok(app.get_webview_window(STAGE_LABEL).is_some())
 }
+
+// ---------------------------------------------------------------------------
+// Salida Nativa WGPU (GPU Render Engine sin Webview)
+// ---------------------------------------------------------------------------
+
+/// Opciones para abrir la salida nativa por GPU.
+#[derive(Debug, Default, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct NativeOutputOptions {
+    /// Índice del monitor donde colocar la salida nativa.
+    pub display: Option<usize>,
+    /// Forzar pantalla completa o ventana flotante.
+    pub fullscreen: Option<bool>,
+}
+
+/// `OPEN_NATIVE_OUTPUT`: crea una ventana nativa de Tauri pura (sin motor Webview)
+/// e inicia el pipeline de renderizado en GPU mediante WGPU a 60 fps con VSync.
+#[tauri::command]
+pub fn OPEN_NATIVE_OUTPUT(
+    app: AppHandle,
+    display_index: Option<usize>,
+    data: Option<NativeOutputOptions>,
+) -> AppResult<bool> {
+    let display = display_index.or_else(|| data.as_ref().and_then(|d| d.display));
+    let fullscreen = data.as_ref().and_then(|d| d.fullscreen);
+    crate::render::start_native_output(&app, display, fullscreen)
+}
+
+/// `CLOSE_NATIVE_OUTPUT`: detiene el bucle de renderizado WGPU y cierra la ventana nativa.
+#[tauri::command]
+pub fn CLOSE_NATIVE_OUTPUT(app: AppHandle) -> AppResult<()> {
+    crate::render::stop_native_output(&app)
+}
+
+/// `IS_NATIVE_OUTPUT_OPEN`: verifica si la salida nativa WGPU está abierta y activa.
+#[tauri::command]
+pub fn IS_NATIVE_OUTPUT_OPEN(app: AppHandle) -> AppResult<bool> {
+    Ok(crate::render::is_native_output_open(&app))
+}
+
+/// `UPDATE_SCENE_TEXT`: actualiza los bloques de texto de la salida nativa en GPU en <1ms.
+#[tauri::command]
+pub fn UPDATE_SCENE_TEXT(
+    app: AppHandle,
+    blocks: Vec<crate::render::types::TextBlock>,
+) -> AppResult<()> {
+    crate::render::update_scene_text(&app, blocks)
+}
+
+/// `CLEAR_SCENE_TEXT`: limpia todo el texto proyectado en el motor de GPU.
+#[tauri::command]
+pub fn CLEAR_SCENE_TEXT(app: AppHandle) -> AppResult<()> {
+    crate::render::clear_scene_text(&app)
+}
+
+/// `SELECT_SLIDE`: evento de cambio de diapositiva que actualiza el búfer de texto de la GPU en <1ms.
+#[tauri::command]
+pub fn SELECT_SLIDE(app: AppHandle, data: serde_json::Value) -> AppResult<()> {
+    let blocks: Vec<crate::render::types::TextBlock> = if let Ok(payload) =
+        serde_json::from_value::<crate::render::types::SelectSlidePayload>(data.clone())
+    {
+        payload.text_blocks
+    } else if let Ok(b) =
+        serde_json::from_value::<Vec<crate::render::types::TextBlock>>(data.clone())
+    {
+        b
+    } else if let Some(arr) = data.get("textBlocks").or_else(|| data.get("items")) {
+        serde_json::from_value(arr.clone()).unwrap_or_default()
+    } else if let Some(text_str) = data.get("text").and_then(|t| t.as_str()) {
+        vec![crate::render::types::TextBlock {
+            text: text_str.to_string(),
+            font_family: None,
+            font_size: 56.0,
+            font_weight: 700,
+            font_style: None,
+            color: [1.0, 1.0, 1.0, 1.0],
+            alignment: "center".to_string(),
+            x: 100.0,
+            y: 200.0,
+            width: 1720.0,
+            height: 700.0,
+            line_height_ratio: 1.25,
+            outline_color: Some([0.0, 0.0, 0.0, 1.0]),
+            outline_width: Some(2.0),
+            shadow_color: Some([0.0, 0.0, 0.0, 0.75]),
+            shadow_offset: Some([4.0, 4.0]),
+        }]
+    } else {
+        Vec::new()
+    };
+
+    crate::render::update_scene_text(&app, blocks)
+}
+
+

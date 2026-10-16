@@ -5,21 +5,21 @@ export const defaultThemes: { [key: string]: Themes } = {
         name: "default",
         default: true,
         font: {
-            family: "",
+            family: "system-ui, -apple-system, BlinkMacSystemFont, 'Inter', 'Geist', 'Segoe UI', Roboto, sans-serif",
             size: "1em"
         },
         colors: {
-            primary: "#242832",
-            "primary-lighter": "#2f3542",
-            "primary-darker": "#191923",
-            "primary-darkest": "#12121c",
-            text: "#f0f0ff",
-            textInvert: "#131313",
-            "secondary-text": "#f0f0ff",
-            secondary: "#F0008C",
-            "secondary-opacity": "rgba(240, 0, 140, 0.5)",
-            hover: "rgb(255 255 255 / 0.05)",
-            focus: "rgb(255 255 255 / 0.1)"
+            primary: "#18181b",
+            "primary-lighter": "#27272a",
+            "primary-darker": "#121215",
+            "primary-darkest": "#09090b",
+            text: "#f4f4f5",
+            textInvert: "#09090b",
+            "secondary-text": "#ffffff",
+            secondary: "#6366f1",
+            "secondary-opacity": "rgba(99, 102, 241, 0.4)",
+            hover: "rgba(255, 255, 255, 0.06)",
+            focus: "rgba(255, 255, 255, 0.12)"
         }
     },
     dark: {

@@ -520,8 +520,6 @@ export type Popups =
     | "pco_picker"
     | "sync_folders"
     | "node_options"
-    | "ai_model_manager"
-    | "ai_chat"
 
 export type DefaultProjectNames = "date" | "today" | "sunday" | "week" | "custom" | "blank"
 
