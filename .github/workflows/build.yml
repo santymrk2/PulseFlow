@@ -1,31 +1,51 @@
 name: Build
+
 on:
-  workflow_dispatch:
+    workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+    build:
+        name: Build (${{ matrix.os }})
+        runs-on: ${{ matrix.os }}
 
-    strategy:
-      matrix:
-        os:
-          [
-            windows-latest,
-            macos-latest,
-            ubuntu-latest
-          ]
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [windows-latest, macos-latest, ubuntu-latest]
 
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v5
+        steps:
+            - name: Check out Git repository
+              uses: actions/checkout@v5
 
-      - name: Install Node.js and NPM
-        uses: actions/setup-node@v5
-        with:
-          node-version: 22
+            - name: Install Bun
+              uses: oven-sh/setup-bun@v2
 
-      - name: Install dependencies
-        run: npm ci
+            - name: Install Rust
+              uses: dtolnay/rust-toolchain@stable
 
-      - name: Build app
-        run: npm run build
+            - name: Cache cargo
+              uses: Swatinem/rust-cache@v2
+              with:
+                  workspaces: src-tauri
+
+            - name: Install system libraries (Linux)
+              if: runner.os == 'Linux'
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libsoup-3.0-dev libjavascriptcoregtk-4.1-dev
+
+            - name: Install dependencies
+              run: bun install --frozen-lockfile
+
+            - name: Prepare FFmpeg sidecars
+              run: bun run setup:sidecars --only-host
+
+            - name: Build app
+              run: bun run build:tauri
+
+            - name: Upload bundles
+              uses: actions/upload-artifact@v4
+              with:
+                  name: pulseflow-${{ matrix.os }}
+                  path: src-tauri/target/release/bundle/
+                  retention-days: 14
