@@ -37,3 +37,15 @@ pub fn GET_OS() -> AppResult<OS> {
         arch: std::env::consts::ARCH.to_string(),
     })
 }
+
+/// Log del frontend (equivale a `Main.LOG`): imprime en la terminal de Tauri.
+/// En desarrollo, `IPC/tauri.ts` reenvía aquí `console.warn`/`console.error`
+/// del webview para poder verlos sin abrir el inspector.
+#[tauri::command]
+pub fn LOG(data: Option<serde_json::Value>) {
+    match data {
+        Some(serde_json::Value::String(text)) => eprintln!("[webview] {text}"),
+        Some(value) => eprintln!("[webview] {value}"),
+        None => {}
+    }
+}

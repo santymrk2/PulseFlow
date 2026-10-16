@@ -37,6 +37,7 @@ pub fn run() {
             commands::app::VERSION,
             commands::app::IS_DEV,
             commands::app::GET_OS,
+            commands::app::LOG,
             // STARTUP
             commands::startup::READY,
             // WINDOW

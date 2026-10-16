@@ -1,29 +1,18 @@
 <script lang="ts">
-    import { onMount, type Snippet } from "svelte"
-    import type { HTMLAttributes } from "svelte/elements"
+    // Modo legacy (no runes) a propósito: los padres usan `on:click` sobre este
+    // componente y Svelte 5 sólo reenvía esas directivas en componentes legacy.
+    import { onMount } from "svelte"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
 
-    interface Props extends HTMLAttributes<HTMLDivElement> {
-        icon: string
-        size?: number
-        title?: string
-        hide?: boolean
-        children?: Snippet
-    }
-
-    let {
-        icon,
-        size = 5,
-        title = "media.play",
-        hide = false,
-        children,
-        style = "",
-        ...restProps
-    }: Props = $props()
+    export let icon: string
+    export let size = 5
+    export let title = "media.play"
+    export let hide = false
+    export let style = ""
 
     // fade out (to show itself)
-    let reveal = $state(true)
+    let reveal = true
     onMount(startFade)
     function startFade() {
         setTimeout(() => {
@@ -32,8 +21,8 @@
     }
 </script>
 
-<div {...restProps} {style} role="none" data-title={hide ? "" : translateText(title)}>
-    {@render children?.()}
+<div {...$$restProps} {style} role="none" data-title={hide ? "" : translateText(title)} on:click on:dblclick on:mousedown on:contextmenu>
+    <slot />
 
     <div class="overlay" class:reveal class:hidden={hide}>
         <Icon id={icon} {size} white />

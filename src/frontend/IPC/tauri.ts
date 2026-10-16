@@ -111,6 +111,34 @@ function showFilePath(file: File): string {
     return (file as any)?.path || ""
 }
 
+// En desarrollo, reenvía `console.warn`/`console.error` del webview a la terminal
+// de Tauri (comando `LOG`), para ver los errores del frontend sin el inspector.
+function forwardConsoleToTerminal() {
+    if (!isTauri || !import.meta.env.DEV) return
+
+    const stringify = (value: any) => {
+        if (value instanceof Error) return value.stack || value.message
+        if (typeof value === "string") return value
+        try {
+            return JSON.stringify(value)
+        } catch {
+            return String(value)
+        }
+    }
+
+    ;(["warn", "error"] as const).forEach((level) => {
+        const original = console[level].bind(console)
+        console[level] = (...args: any[]) => {
+            original(...args)
+            invoke("LOG", { data: `${level.toUpperCase()}: ${args.map(stringify).join(" ")}` }).catch(() => {})
+        }
+    })
+
+    window.addEventListener("error", (e) => console.error(e.error || e.message))
+    window.addEventListener("unhandledrejection", (e) => console.error("Unhandled rejection:", e.reason))
+}
+
 export function setupTauriApi() {
     window.api = { send, receive, removeListener, getListeners, showFilePath }
+    forwardConsoleToTerminal()
 }
