@@ -27,17 +27,22 @@ import {
     deleteBackup,
     getDisplays,
     getOs,
+    getRenderEngine,
+    setRenderEngine,
     getVersion,
     getTeams,
     listBackups,
     openOutputWindow,
+    openNativeOutput,
     openStageWindow,
+    openNativeStage,
     restoreBackup,
     getStoreValue,
     setStoreValue,
     type BackupInfo,
     type Display,
     type OsInfo,
+    type RenderEngine,
 } from "@/IPC/system"
 import { useAppStore } from "@/store/useAppStore"
 
@@ -138,15 +143,68 @@ function ShortcutsTab() {
 
 function ScreensTab() {
     const [displays, setDisplays] = useState<Display[]>([])
+    const [renderEngine, setEngine] = useState<RenderEngine>("web")
 
     const refresh = useCallback(() => {
         void getDisplays().then(setDisplays)
+        void getRenderEngine().then(setEngine)
     }, [])
 
     useEffect(() => refresh(), [refresh])
 
+    const handleEngineChange = async (engine: RenderEngine) => {
+        setEngine(engine)
+        await setRenderEngine(engine)
+    }
+
+    const handleOpenOutput = (displayId: number) => {
+        if (renderEngine === "native") {
+            void openNativeOutput(displayId, false)
+        } else {
+            void openOutputWindow({ display: displayId })
+        }
+    }
+
+    const handleOpenStage = (displayId: number) => {
+        if (renderEngine === "native") {
+            void openNativeStage(displayId, false)
+        } else {
+            void openStageWindow({ display: displayId })
+        }
+    }
+
     return (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-3">
+            {/* Conmutador de Motor de Render (Fase 6) */}
+            <div className="flex items-center justify-between rounded-md border bg-zinc-900/60 p-3">
+                <div className="flex flex-col gap-0.5">
+                    <span className="text-xs font-medium text-zinc-200">Motor de Render</span>
+                    <span className="text-[11px] text-zinc-400">
+                        {renderEngine === "native"
+                            ? "Nativo GPU WGPU (60 fps VSync, shaders, <1ms)"
+                            : "Web Legacy (HTML/CSS Webview tradicional)"}
+                    </span>
+                </div>
+                <div className="flex gap-1 rounded bg-zinc-800 p-0.5">
+                    <Button
+                        size="sm"
+                        variant={renderEngine === "web" ? "secondary" : "ghost"}
+                        className="h-7 px-2.5 text-xs"
+                        onClick={() => void handleEngineChange("web")}
+                    >
+                        Web (Legacy)
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant={renderEngine === "native" ? "secondary" : "ghost"}
+                        className="h-7 px-2.5 text-xs font-semibold text-amber-300"
+                        onClick={() => void handleEngineChange("native")}
+                    >
+                        Nativo GPU (Pro)
+                    </Button>
+                </div>
+            </div>
+
             <div className="flex items-center justify-between">
                 <span className="flex items-center gap-2 text-[11px] font-medium tracking-wider text-muted-foreground uppercase">
                     <Monitor className="size-3.5" />
@@ -167,11 +225,11 @@ function ScreensTab() {
                     >
                         <span className="text-[13px]">{display.label || `Pantalla ${display.id}`}</span>
                         <div className="flex gap-1.5">
-                            <Button size="sm" variant="ghost" onClick={() => void openOutputWindow({ display: display.id })}>
-                                Output
+                            <Button size="sm" variant="ghost" onClick={() => handleOpenOutput(display.id)}>
+                                Output {renderEngine === "native" ? "(GPU)" : ""}
                             </Button>
-                            <Button size="sm" variant="ghost" onClick={() => void openStageWindow({ display: display.id })}>
-                                Stage
+                            <Button size="sm" variant="ghost" onClick={() => handleOpenStage(display.id)}>
+                                Stage {renderEngine === "native" ? "(GPU)" : ""}
                             </Button>
                         </div>
                     </div>

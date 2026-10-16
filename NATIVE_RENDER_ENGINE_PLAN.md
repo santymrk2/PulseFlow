@@ -102,6 +102,6 @@ pub struct SceneGraph {
 ### Fase 6: Conmutador (Feature Flag) en la UI
 - **Objetivo**: Transición transparente sin romper el software actual.
 - **Acciones**:
-  - [ ] En la configuración de pantallas de FreeShow (`Settings -> Displays`), añadir una opción:
-    - [ ] Motor de Render: `[ Web (Legacy) | Nativo GPU (Pro Engine) ]`.
-  - [ ] Si está en Nativo, Tauri invoca los nuevos comandos Rust de WGPU. Si está en Legacy, usa las ventanas Webview actuales.
+  - [x] En la configuración de pantallas de FreeShow (`Settings -> Displays`), añadir una opción:
+    - [x] Motor de Render: `[ Web (Legacy) | Nativo GPU (Pro Engine) ]`.
+  - [x] Si está en Nativo, Tauri invoca los nuevos comandos Rust de WGPU. Si está en Legacy, usa las ventanas Webview actuales.

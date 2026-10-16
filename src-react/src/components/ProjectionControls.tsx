@@ -10,16 +10,55 @@ import { MonitorPlay, Projector, Trash2 } from "lucide-react"
 import { MediaContent } from "@/components/MediaStage"
 import RichTextCanvas from "@/components/RichTextCanvas"
 import { Button } from "@/components/ui/button"
-import { MAIN } from "@/IPC/channels"
-import { closeStageWindow, openStageWindow } from "@/IPC/system"
+import {
+    clearBackground,
+    clearSceneText,
+    closeNativeOutput,
+    closeNativeStage,
+    closeOutputWindow,
+    closeStageWindow,
+    getRenderEngine,
+    openNativeOutput,
+    openNativeStage,
+    openOutputWindow,
+    openStageWindow,
+} from "@/IPC/system"
 import { useProjectionStore } from "@/store/useProjectionStore"
 
-function openAudience() {
-    window.api?.send(MAIN, { channel: "OPEN_OUTPUT_WINDOW", data: {} })
+async function openAudience() {
+    const engine = await getRenderEngine()
+    if (engine === "native") {
+        await openNativeOutput()
+    } else {
+        await openOutputWindow()
+    }
 }
 
-function closeAudience() {
-    window.api?.send(MAIN, { channel: "CLOSE_OUTPUT_WINDOW" })
+async function closeAudience() {
+    const engine = await getRenderEngine()
+    if (engine === "native") {
+        await closeNativeOutput()
+    } else {
+        await closeOutputWindow()
+    }
+}
+
+async function handleOpenStage() {
+    const engine = await getRenderEngine()
+    if (engine === "native") {
+        await openNativeStage()
+    } else {
+        await openStageWindow()
+    }
+}
+
+async function handleCloseStage() {
+    const engine = await getRenderEngine()
+    if (engine === "native") {
+        await closeNativeStage()
+    } else {
+        await closeStageWindow()
+    }
 }
 
 export default function ProjectionControls() {
@@ -92,7 +131,7 @@ export default function ProjectionControls() {
                     size="sm"
                     variant="outline"
                     className="flex-1 gap-1.5"
-                    onClick={() => void openStageWindow()}
+                    onClick={() => void handleOpenStage()}
                 >
                     <MonitorPlay className="size-3.5" />
                     Abrir Stage
@@ -101,13 +140,22 @@ export default function ProjectionControls() {
                     size="sm"
                     variant="ghost"
                     className="text-zinc-400"
-                    onClick={() => void closeStageWindow()}
+                    onClick={() => void handleCloseStage()}
                 >
                     Cerrar
                 </Button>
             </div>
 
-            <Button size="sm" variant="ghost" className="gap-1.5 text-zinc-400" onClick={clear}>
+            <Button
+                size="sm"
+                variant="ghost"
+                className="gap-1.5 text-zinc-400"
+                onClick={async () => {
+                    clear()
+                    void clearSceneText()
+                    void clearBackground()
+                }}
+            >
                 <Trash2 className="size-3.5" />
                 Limpiar pantalla
             </Button>

@@ -67,6 +67,92 @@ export async function isStageWindowOpen(): Promise<boolean> {
 }
 
 // ---------------------------------------------------------------------------
+// Motor de Render: Feature Flag y Comandos GPU Nativo (WGPU)
+// ---------------------------------------------------------------------------
+
+export type RenderEngine = "web" | "native"
+
+export async function getRenderEngine(): Promise<RenderEngine> {
+    if (!isTauri) return "web"
+    const val = await getStoreValue("settings", "renderEngine")
+    return val === "native" ? "native" : "web"
+}
+
+export async function setRenderEngine(engine: RenderEngine): Promise<void> {
+    if (!isTauri) return
+    await setStoreValue("settings", "renderEngine", engine)
+}
+
+export async function openNativeOutput(displayIndex?: number, fullscreen?: boolean): Promise<boolean> {
+    if (!isTauri) return false
+    return invoke<boolean>("OPEN_NATIVE_OUTPUT", { displayIndex, fullscreen })
+}
+
+export async function closeNativeOutput(): Promise<void> {
+    if (!isTauri) return
+    await invoke("CLOSE_NATIVE_OUTPUT")
+}
+
+export async function isNativeOutputOpen(): Promise<boolean> {
+    if (!isTauri) return false
+    return invoke<boolean>("IS_NATIVE_OUTPUT_OPEN")
+}
+
+export async function openNativeStage(displayIndex?: number, fullscreen?: boolean): Promise<boolean> {
+    if (!isTauri) return false
+    return invoke<boolean>("OPEN_NATIVE_STAGE", { displayIndex, fullscreen })
+}
+
+export async function closeNativeStage(): Promise<void> {
+    if (!isTauri) return
+    await invoke("CLOSE_NATIVE_STAGE")
+}
+
+export async function isNativeStageOpen(): Promise<boolean> {
+    if (!isTauri) return false
+    return invoke<boolean>("IS_NATIVE_STAGE_OPEN")
+}
+
+export async function updateStageData(data: {
+    currentSlide: string
+    nextSlide?: string
+    clock?: string
+    message?: string
+}): Promise<void> {
+    if (!isTauri) return
+    await invoke("UPDATE_STAGE_DATA", { stageData: data })
+}
+
+export async function selectSlideNative(data: unknown): Promise<void> {
+    if (!isTauri) return
+    await invoke("SELECT_SLIDE", { data })
+}
+
+export async function clearSceneText(): Promise<void> {
+    if (!isTauri) return
+    await invoke("CLEAR_SCENE_TEXT")
+}
+
+export async function clearBackground(): Promise<void> {
+    if (!isTauri) return
+    await invoke("CLEAR_BACKGROUND")
+}
+
+export async function setBackgroundImage(path: string, mode?: string, opacity?: number): Promise<void> {
+    if (!isTauri) return
+    await invoke("SET_BACKGROUND_IMAGE", { path, mode, opacity })
+}
+
+export async function setTransition(
+    transitionType: string,
+    durationMs?: number,
+    easing?: string
+): Promise<void> {
+    if (!isTauri) return
+    await invoke("SET_TRANSITION", { transitionType, durationMs, easing })
+}
+
+// ---------------------------------------------------------------------------
 // Tiendas (lectura/escritura de valores concretos)
 // ---------------------------------------------------------------------------
 

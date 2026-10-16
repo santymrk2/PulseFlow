@@ -41,6 +41,76 @@ function listenSafe<T>(event: string, handler: (payload: T) => void): () => void
     }
 }
 
+import {
+    clearBackground,
+    clearSceneText,
+    isNativeOutputOpen,
+    isNativeStageOpen,
+    selectSlideNative,
+    setBackgroundImage,
+    updateStageData,
+} from "@/IPC/system"
+
+async function syncNativeGpuEngine(state: ProjectionState) {
+    try {
+        const isNativeOpen = await isNativeOutputOpen()
+        const isStageOpen = await isNativeStageOpen()
+        if (!isNativeOpen && !isStageOpen) return
+
+        if (!state.visible) {
+            if (isNativeOpen) {
+                await clearSceneText()
+                await clearBackground()
+            }
+            if (isStageOpen) {
+                await updateStageData({
+                    currentSlide: "",
+                    nextSlide: state.nextText || undefined,
+                })
+            }
+            return
+        }
+
+        // Actualizar Fondo en GPU si existe media
+        if (state.media?.path && isNativeOpen) {
+            await setBackgroundImage(state.media.path, "cover", 1.0)
+        }
+
+        // Extraer texto
+        let mainText = state.text || ""
+        if (state.richText?.lines?.length) {
+            mainText = state.richText.lines.map((l) => l.text).join("\n")
+        }
+
+        if (isNativeOpen) {
+            await selectSlideNative({
+                text: mainText,
+                subtext: state.subtext,
+                background: state.media?.path
+                    ? {
+                          id: state.media.path,
+                          path: state.media.path,
+                          mediaType: state.media.kind || "image",
+                          opacity: 1.0,
+                          aspectMode: 0,
+                      }
+                    : undefined,
+            })
+        }
+
+        if (isStageOpen) {
+            await updateStageData({
+                currentSlide: mainText,
+                nextSlide: state.nextText || undefined,
+                clock: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+                message: state.alert?.text || undefined,
+            })
+        }
+    } catch (err) {
+        console.warn("[projection] syncNativeGpuEngine failed:", err)
+    }
+}
+
 /** Ventana de control: difunde el estado y atiende las peticiones de la audiencia. */
 export function useProjectionBroadcast() {
     useEffect(() => {
@@ -51,9 +121,10 @@ export function useProjectionBroadcast() {
             void broadcastProjection(useProjectionStore.getState())
         })
 
-        // Emite cada cambio local del store.
+        // Emite cada cambio local del store a Webview y al Native GPU Render Engine
         const unsubscribe = useProjectionStore.subscribe((state) => {
             void broadcastProjection(state)
+            void syncNativeGpuEngine(state)
         })
 
         return () => {

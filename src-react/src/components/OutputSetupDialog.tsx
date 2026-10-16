@@ -6,7 +6,17 @@ import { useEffect, useState } from "react"
 import { Monitor } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { getDisplays, getStoreValue, openOutputWindow, setStoreValue, type Display } from "@/IPC/system"
+import {
+    getDisplays,
+    getRenderEngine,
+    setRenderEngine,
+    getStoreValue,
+    openOutputWindow,
+    openNativeOutput,
+    setStoreValue,
+    type Display,
+    type RenderEngine,
+} from "@/IPC/system"
 
 const RESOLUTIONS: { value: string; width: number; height: number; label: string }[] = [
     { value: "1920x1080", width: 1920, height: 1080, label: "Full HD · 1920×1080" },
@@ -24,6 +34,7 @@ export default function OutputSetupDialog({ onClose }: OutputSetupDialogProps) {
     const [displayId, setDisplayId] = useState(0)
     const [resolution, setResolution] = useState("1920x1080")
     const [fullscreen, setFullscreen] = useState(true)
+    const [renderEngine, setEngine] = useState<RenderEngine>("web")
 
     useEffect(() => {
         void getDisplays().then((list) => {
@@ -33,13 +44,20 @@ export default function OutputSetupDialog({ onClose }: OutputSetupDialogProps) {
         void getStoreValue("settings", "outputResolution").then((value) => {
             if (typeof value === "string") setResolution(value)
         })
+        void getRenderEngine().then((engine) => setEngine(engine))
     }, [])
 
     async function save() {
         await setStoreValue("settings", "outputResolution", resolution)
         await setStoreValue("settings", "outputDisplay", displayId)
         await setStoreValue("settings", "outputFullscreen", fullscreen)
-        await openOutputWindow({ display: displayId, fullscreen })
+        await setRenderEngine(renderEngine)
+
+        if (renderEngine === "native") {
+            await openNativeOutput(displayId, fullscreen)
+        } else {
+            await openOutputWindow({ display: displayId, fullscreen })
+        }
         onClose()
     }
 
@@ -83,6 +101,19 @@ export default function OutputSetupDialog({ onClose }: OutputSetupDialogProps) {
                                     {entry.label}
                                 </SelectItem>
                             ))}
+                        </SelectContent>
+                    </Select>
+                </label>
+
+                <label className="flex flex-col gap-1 text-[11px] text-zinc-500">
+                    Motor de Render
+                    <Select value={renderEngine} onValueChange={(val) => setEngine(val as RenderEngine)}>
+                        <SelectTrigger size="sm" className="w-full">
+                            <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="web">Web (Legacy HTML/CSS)</SelectItem>
+                            <SelectItem value="native">Nativo GPU (Pro Engine WGPU 60fps)</SelectItem>
                         </SelectContent>
                     </Select>
                 </label>
