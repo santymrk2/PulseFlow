@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import type { ContentProviderId } from "../../electron/contentProviders/base/types"
+import type { ContentProviderId } from "../../types/ContentProvider"
 import { OUTPUT, STARTUP } from "../../types/Channels"
 import { Main } from "../../types/IPC/Main"
 import { checkStartupActions } from "../components/actions/actions"
@@ -15,7 +15,7 @@ import { getDefaultElements } from "./createData"
 import { setLanguage } from "./language"
 import { storeSubscriber } from "./listeners"
 import { autoOpenLastUsedProfile, openProfileByName } from "./profile"
-import { receiveOUTPUTasOUTPUT, remoteListen, setupMainReceivers } from "./receivers"
+import { remoteListen, setupMainReceivers } from "./receivers"
 import { destroy, receive, send } from "./request"
 import { save, unsavedUpdater } from "./save"
 
@@ -42,10 +42,6 @@ export async function startup() {
             if (type) loaded.set(true)
 
             if (type === "pdf") return
-            if (type === "output") {
-                startupOutput()
-                return
-            }
 
             startupProfile = msg.autoProfile
 
@@ -210,14 +206,4 @@ async function getStoredData() {
     sendMain(Main.SHOWS)
 
     getDefaultElements()
-}
-
-async function startupOutput() {
-    setLanguage() // this is only needed for the context menu (and stage display)
-    receive(OUTPUT, receiveOUTPUTasOUTPUT)
-
-    // wait a bit on slow computers
-    await wait(200)
-
-    send(OUTPUT, ["REQUEST_DATA_MAIN"])
 }

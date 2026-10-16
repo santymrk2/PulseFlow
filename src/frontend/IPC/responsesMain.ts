@@ -1,10 +1,9 @@
 import { get } from "svelte/store"
-import type { ContentProviderId } from "../../electron/contentProviders/base/types"
+import type { ContentProviderId } from "../../types/ContentProvider"
 import type { ToMainSendPayloads } from "../../types/IPC/ToMain"
 import { ToMain } from "../../types/IPC/ToMain"
 import type { Project } from "../../types/Projects"
 import type { Show, Slide } from "../../types/Show"
-import { Transcript } from "../ai/stt/transcript"
 import { API_ACTIONS, triggerAction } from "../components/actions/api"
 import { receivedMidi } from "../components/actions/midi"
 import { menuClick } from "../components/context/menuClick"
@@ -618,7 +617,7 @@ export const mainResponses: MainResponses = {
     [Main.TIMECODE_STATUS]: (data) => updateTimelineStatus(data!),
     [Main.TIMECODE_AUDIO_DATA]: (data) => processTimecodeFrame(data!),
 
-    // AI
-    [ToMain.AI_STATUS]: (data) => aiSttStatus.set(data),
-    [ToMain.AI_TRANSCRIPT]: (data) => Transcript.push(data)
+    // AI (disabled)
+    [ToMain.AI_STATUS]: () => {},
+    [ToMain.AI_TRANSCRIPT]: () => {}
 }

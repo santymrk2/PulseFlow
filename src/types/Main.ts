@@ -1,11 +1,49 @@
 import type { Stats } from "fs"
-import type { dataFolderNames } from "../electron/utils/files"
 import type { Cropping } from "./Settings"
+
+/** Rectángulo en píxeles (reemplaza a `Electron.Rectangle`). */
+export interface Rectangle {
+    x: number
+    y: number
+    width: number
+    height: number
+}
+
+/** Monitor/pantalla (reemplaza a `Display` de `electron`). */
+export interface Display {
+    id: number
+    label: string
+    bounds: Rectangle
+    workArea: Rectangle
+    size: { width: number; height: number }
+    scaleFactor: number
+    rotation?: number
+    internal?: boolean
+}
+
+/**
+ * Nombres de carpetas de datos (movidos desde `src/electron/utils/files.ts`).
+ */
+export const dataFolderNames = {
+    shows: "Shows",
+    backups: "Backups",
+    scriptures: "Bibles",
+    onlineMedia: "Online",
+    media: "Media",
+    exports: "Exports",
+    imports: "Imports",
+    lessons: "Lessons",
+    planningcenter: "Planning Center",
+    recordings: "Recordings",
+    audio: "Audio",
+    userData: "Config",
+    cloud: "Cloud"
+}
 
 export interface Config {
     loaded: boolean
     maximized: boolean
-    bounds: Electron.Rectangle
+    bounds: Rectangle
     dataPath: string | null
     disableHardwareAcceleration: boolean | null
     graphicsDevice: string | null
@@ -482,8 +520,6 @@ export type Popups =
     | "pco_picker"
     | "sync_folders"
     | "node_options"
-    | "ai_model_manager"
-    | "ai_chat"
 
 export type DefaultProjectNames = "date" | "today" | "sunday" | "week" | "custom" | "blank"
 

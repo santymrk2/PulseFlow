@@ -1,59 +1,44 @@
+import tailwindcss from "@tailwindcss/vite"
+import { svelte } from "@sveltejs/vite-plugin-svelte"
+import { fileURLToPath } from "node:url"
 import { defineConfig } from "vite"
-import { svelte, vitePreprocess } from "@sveltejs/vite-plugin-svelte"
 
 const production = process.env.NODE_ENV === "production"
 
 export default defineConfig({
     plugins: [
         svelte({
-            preprocess: vitePreprocess(),
             compilerOptions: {
                 dev: !production
             },
             onwarn: (warning, handler) => {
                 // disable A11y warnings
                 if (warning.code.startsWith("a11y-")) return
+                // Svelte 5 no longer requires self-closing non-void tags
+                if (warning.code === "element_invalid_self_closing_tag") return
                 handler(warning)
             }
-        })
+        }),
+        tailwindcss()
     ],
-    root: production ? "." : "public",
-    publicDir: false,
-    build: production
-        ? {
-              lib: {
-                  entry: "src/frontend/main.ts",
-                  name: "freeshow",
-                  formats: ["iife"],
-                  fileName: () => "bundle.js"
-              },
-              outDir: "public/build",
-              emptyOutDir: false,
-              rollupOptions: {
-                  output: {
-                      assetFileNames: (assetInfo) => {
-                          if (assetInfo.name.endsWith(".css")) {
-                              return "bundle.css"
-                          }
-                          return assetInfo.name
-                      }
-                  }
-              }
-          }
-        : {
-              outDir: "../dist",
-              rollupOptions: {
-                  input: "index.html"
-              }
-          },
+    // `public/` holds static assets (global.css, fonts, …) copied as-is.
+    publicDir: "public",
+    // The SPA entry is the root `index.html` (dev + build).
     server: {
-        port: 3000,
+        port: 1420,
         host: "127.0.0.1",
-        strictPort: true,
-        middlewareMode: false
+        strictPort: true
+    },
+    build: {
+        // Static SPA output consumed by Tauri (`frontendDist`).
+        outDir: "dist",
+        emptyOutDir: true
     },
     resolve: {
         dedupe: ["svelte"],
-        ...(!production && { alias: { "/src": "../src" } })
+        alias: {
+            // shadcn-svelte convention: `$lib/*` → `src/frontend/lib/*`
+            $lib: fileURLToPath(new URL("./src/frontend/lib", import.meta.url))
+        }
     }
 })

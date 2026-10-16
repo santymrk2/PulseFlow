@@ -5,36 +5,67 @@ on:
     workflow_dispatch:
 
 jobs:
-    checks:
-        name: Format & type-check
+    frontend:
+        name: Frontend (format, type-check, tests, build)
         runs-on: ubuntu-latest
         steps:
             - name: Check out Git repository
               uses: actions/checkout@v5
 
-            - name: Install Node.js and NPM
-              uses: actions/setup-node@v5
-              with:
-                  node-version: 22
-
-            - name: Install libraries
-              run: |
-                  sudo apt-get update
-                  sudo apt-get install -y libfontconfig1-dev uuid-dev libltc-dev --fix-missing
+            - name: Install Bun
+              uses: oven-sh/setup-bun@v2
 
             - name: Install dependencies
-              run: npm ci
+              run: bun install --frozen-lockfile
 
             # Formatting and svelte type-check currently have a pre-existing backlog, so they are
             # reported but non-blocking for now. Flip continue-on-error off once the backlog is cleared.
             - name: Check formatting
-              run: npm run test:format
+              run: bun run test:format
               continue-on-error: true
 
             - name: Type-check (svelte)
-              run: npm run test:svelte
+              run: bun run test:svelte
               continue-on-error: true
+
+            - name: Unit tests
+              run: bun run test:unit
 
             # Blocking gate: a broken build fails this run.
             - name: Build
-              run: npm run build
+              run: bun run build
+
+    rust:
+        name: Rust (cargo check + tests)
+        runs-on: ubuntu-latest
+        steps:
+            - name: Check out Git repository
+              uses: actions/checkout@v5
+
+            - name: Install system libraries
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.1-dev libayatana-appindicator3-dev librsvg2-dev libsoup-3.0-dev libjavascriptcoregtk-4.1-dev
+
+            - name: Install Rust
+              uses: dtolnay/rust-toolchain@stable
+
+            - name: Cache cargo
+              uses: Swatinem/rust-cache@v2
+              with:
+                  workspaces: src-tauri
+
+            # Tauri valida que existan los sidecars declarados en tauri.conf.json (externalBin).
+            - name: Stub sidecars
+              run: |
+                  mkdir -p src-tauri/binaries
+                  TRIPLE=$(rustc -vV | sed -n 's/host: //p')
+                  touch "src-tauri/binaries/ffmpeg-$TRIPLE" "src-tauri/binaries/ffprobe-$TRIPLE"
+
+            - name: Cargo check
+              working-directory: src-tauri
+              run: cargo check --locked
+
+            - name: Cargo test
+              working-directory: src-tauri
+              run: cargo test --lib --locked

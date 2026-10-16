@@ -1,33 +1,67 @@
 <script lang="ts">
-    import { createEventDispatcher } from "svelte"
+    import { createEventDispatcher, type Snippet } from "svelte"
+    import type { HTMLButtonAttributes } from "svelte/elements"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
     import { dictionary } from "../../stores"
 
-    export let variant: "contained" | "outlined" | "text" = "text"
-    export let title = ""
-    export let info = ""
-    export let icon = ""
-    export let iconSize = 1
-    export let white = false
-    export let isActive = false
-    export let showOutline = false
-    export let disabled = false
-    export let gradient = false
-    export let small = false
-    export let tab = false
-    export let red = false
-    let button
+    interface CustomClickDetail {
+        ctrl: boolean
+        shift: boolean
+        alt: boolean
+        doubleClick: boolean
+        target: EventTarget | null
+    }
 
-    // automatically do white icon if no content
-    if (!$$slots.default) white = true
+    interface Props extends HTMLButtonAttributes {
+        variant?: "contained" | "outlined" | "text"
+        title?: string
+        info?: string
+        icon?: string
+        iconSize?: number
+        white?: boolean
+        isActive?: boolean
+        showOutline?: boolean
+        disabled?: boolean
+        gradient?: boolean
+        small?: boolean
+        tab?: boolean
+        red?: boolean
+        children?: Snippet
+    }
 
-    let ripples: { x: number; y: number; size: number; id: number }[] = []
+    let {
+        variant = "text",
+        title = "",
+        info = "",
+        icon = "",
+        iconSize = 1,
+        children,
+        white = !children,
+        isActive = false,
+        showOutline = false,
+        disabled = false,
+        gradient = false,
+        small = false,
+        tab = false,
+        red = false,
+        class: className = "",
+        style = "",
+        ...restProps
+    }: Props = $props()
 
-    let dispatch = createEventDispatcher()
-    function click(e, double = false) {
-        if (e.target?.closest(".edit")) return
-        if (e.target?.closest("button") !== button) return
+    let button = $state<HTMLButtonElement | null>(null)
+    let ripples = $state<{ x: number; y: number; size: number; id: number }[]>([])
+
+    const dispatch = createEventDispatcher<{
+        click: CustomClickDetail
+        dblclick: CustomClickDetail
+    }>()
+
+    function click(e: MouseEvent, double = false) {
+        const targetElem = e.target as HTMLElement | null
+        if (targetElem?.closest(".edit")) return
+        if (targetElem?.closest("button") !== button) return
 
         const ctrl = e.ctrlKey || e.metaKey
         const shift = e.shiftKey
@@ -43,14 +77,15 @@
         dispatch(double ? "dblclick" : "click", { ctrl, shift, alt, doubleClick, target })
     }
 
-    function dblclick(e: any) {
+    function dblclick(e: MouseEvent) {
         click(e, true)
     }
 
-    function triggerRipple(e) {
-        if (disabled) return
-        if (e.target?.closest(".edit")) return
-        if (e.target?.closest("button") !== button) return
+    function triggerRipple(e: MouseEvent) {
+        if (disabled || !button) return
+        const targetElem = e.target as HTMLElement | null
+        if (targetElem?.closest(".edit")) return
+        if (targetElem?.closest("button") !== button) return
 
         const rect = button.getBoundingClientRect()
         const size = Math.max(rect.width, rect.height)
@@ -67,25 +102,25 @@
         ripples = [...ripples, ripple]
     }
 
-    function handleKey(e) {
-        if (disabled) return
-        if (e.target?.closest("button") !== button) return
+    function handleKey(e: KeyboardEvent) {
+        if (disabled || !button) return
+        const targetElem = e.target as HTMLElement | null
+        if (targetElem?.closest("button") !== button) return
 
         if (e.key === "Enter" || e.key === " ") {
-            click(e)
+            click(e as unknown as MouseEvent)
         }
     }
 
-    function handleAnimationEnd(id) {
+    function handleAnimationEnd(id: number) {
         ripples = ripples.filter((r) => r.id !== id)
     }
 </script>
 
 <button
-    id={$$props.id}
-    data-testid={$$props["data-testid"]}
+    {...restProps}
     bind:this={button}
-    class="{variant} {$$props.class || ''}"
+    class="{variant} {className}"
     tabindex={disabled ? -1 : 0}
     aria-disabled={disabled}
     data-title={translateText(title, $dictionary)}
@@ -100,25 +135,25 @@
     background: {variant === 'contained' ? (gradient ? 'linear-gradient(160deg, #8000f0 0%, #9000f0 10%, #b300f0 30%, #d100db 50%, #f0008c 100%)' : 'var(--secondary)') : variant === 'outlined' ? 'var(--primary-darkest)' : 'transparent'};
     color: {variant === 'contained' ? 'var(--secondary-text)' : white ? 'var(--text)' : 'var(--text)'};
     border-color: {white ? 'rgb(255 255 255 / 0.08)' : variant === 'outlined' ? 'var(--primary-lighter)' : 'transparent'};
-    {$$props.style || ''}
+    {style}
   "
-    on:mousedown={triggerRipple}
-    on:keydown={handleKey}
-    on:click={click}
-    on:dblclick={dblclick}
+    onmousedown={triggerRipple}
+    onkeydown={handleKey}
+    onclick={click}
+    ondblclick={dblclick}
 >
     {#if icon}
         <Icon id={icon} size={iconSize} white={white || isActive || variant === "contained"} />
     {/if}
 
-    <slot />
+    {@render children?.()}
 
     {#if info}
         <span class="info">{info}</span>
     {/if}
 
     {#each ripples as { x, y, size, id } (id)}
-        <span class="ripple" style="top: {y}px; left: {x}px; width: {size}px; height: {size}px;" on:animationend={() => handleAnimationEnd(id)} />
+        <span class="ripple" style="top: {y}px; left: {x}px; width: {size}px; height: {size}px;" onanimationend={() => handleAnimationEnd(id)} />
     {/each}
 </button>
 
@@ -133,7 +168,7 @@
         font-size: 0.9em;
         font-weight: 500;
         font-family: inherit;
-        border-radius: 4px;
+        border-radius: 6px;
         cursor: pointer;
         transition:
             opacity 0.4s ease,

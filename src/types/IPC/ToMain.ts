@@ -1,5 +1,5 @@
 import type { ICommonTagsResult } from "music-metadata"
-import type { ContentProviderId } from "../../electron/contentProviders/base/types"
+import type { ContentProviderId } from "../ContentProvider"
 import type { RtmpStatus } from "../Output"
 import type { TrimmedShows } from "../Show"
 

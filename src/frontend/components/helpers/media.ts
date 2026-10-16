@@ -2,7 +2,7 @@
 // This is for media/file functions
 
 import { get } from "svelte/store"
-import type { ContentProviderId } from "../../../electron/contentProviders/base/types"
+import type { ContentProviderId } from "../../../types/ContentProvider"
 import { Main } from "../../../types/IPC/Main"
 import type { FileFolder, MediaStyle, Subtitle } from "../../../types/Main"
 import type { Cropping, Styles } from "../../../types/Settings"

@@ -1,13 +1,30 @@
 <script lang="ts">
-    export let faded = false
-    export let absolute = false
-    export let padding = 0
-    export let size = 1
-    export let style = ""
+    import type { Snippet } from "svelte"
+    import type { HTMLAttributes } from "svelte/elements"
+
+    interface Props extends HTMLAttributes<HTMLDivElement> {
+        faded?: boolean
+        absolute?: boolean
+        padding?: number
+        size?: number
+        style?: string
+        children?: Snippet
+    }
+
+    let {
+        faded = false,
+        absolute = false,
+        padding = 0,
+        size = 1,
+        style = "",
+        children,
+        class: className = "",
+        ...restProps
+    }: Props = $props()
 </script>
 
-<div style="font-size: {size}em;padding: {padding}px;{style}" class="loader {$$props.class}" class:faded class:absolute>
-    <slot />
+<div {...restProps} style="font-size: {size}em;padding: {padding}px;{style}" class="loader {className}" class:faded class:absolute>
+    {@render children?.()}
 </div>
 
 <style>

@@ -1,0 +1,92 @@
+//! Salida NDI y Broadcast directa desde el Framebuffer de la GPU.
+//!
+//! En lugar de capturar la pantalla por software (lento y pesado en CPU),
+//! este módulo copia el render target resultante de la GPU (`copy_texture_to_buffer`)
+//! a un staging buffer mapeable para streaming NDI en tiempo real sin tirones.
+
+use super::sync::MutexExt;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::{Arc, Mutex};
+use wgpu::{
+    Buffer, BufferDescriptor, BufferUsages, CommandEncoder, Device, Extent3d, Origin3d,
+    TexelCopyBufferInfo, TexelCopyBufferLayout, TexelCopyTextureInfo, Texture, TextureAspect,
+};
+
+/// Capturador de Framebuffer en VRAM para NDI y streaming de red.
+pub struct GpuFramebufferCapture {
+    pub staging_buffer: Buffer,
+    pub width: u32,
+    pub height: u32,
+    pub is_active: Arc<AtomicBool>,
+    pub latest_frame: Arc<Mutex<Option<Vec<u8>>>>,
+}
+
+impl GpuFramebufferCapture {
+    pub fn new(device: &Device, width: u32, height: u32) -> Self {
+        // En WGPU los bytes por fila deben alinearse a COPY_BYTES_PER_ROW_ALIGNMENT (256 bytes)
+        let unpadded_bytes_per_row = width * 4;
+        let align = wgpu::COPY_BYTES_PER_ROW_ALIGNMENT;
+        let padded_bytes_per_row = ((unpadded_bytes_per_row + align - 1) / align) * align;
+        let buffer_size = (padded_bytes_per_row * height) as u64;
+
+        let staging_buffer = device.create_buffer(&BufferDescriptor {
+            label: Some("NDI Framebuffer Staging Buffer"),
+            size: buffer_size,
+            usage: BufferUsages::COPY_DST | BufferUsages::MAP_READ,
+            mapped_at_creation: false,
+        });
+
+        Self {
+            staging_buffer,
+            width,
+            height,
+            is_active: Arc::new(AtomicBool::new(false)),
+            latest_frame: Arc::new(Mutex::new(None)),
+        }
+    }
+
+    /// Registra la copia de la textura resultante al staging buffer en el CommandEncoder de la GPU.
+    pub fn record_copy(&self, encoder: &mut CommandEncoder, source_texture: &Texture) {
+        if !self.is_active.load(Ordering::Relaxed) {
+            return;
+        }
+
+        let unpadded = self.width * 4;
+        let align = wgpu::COPY_BYTES_PER_ROW_ALIGNMENT;
+        let padded = ((unpadded + align - 1) / align) * align;
+
+        encoder.copy_texture_to_buffer(
+            TexelCopyTextureInfo {
+                texture: source_texture,
+                mip_level: 0,
+                origin: Origin3d::ZERO,
+                aspect: TextureAspect::All,
+            },
+            TexelCopyBufferInfo {
+                buffer: &self.staging_buffer,
+                layout: TexelCopyBufferLayout {
+                    offset: 0,
+                    bytes_per_row: Some(padded),
+                    rows_per_image: Some(self.height),
+                },
+            },
+            Extent3d {
+                width: self.width,
+                height: self.height,
+                depth_or_array_layers: 1,
+            },
+        );
+    }
+
+    /// Inicia la captura para NDI.
+    pub fn start(&self) {
+        self.is_active.store(true, Ordering::SeqCst);
+    }
+
+    /// Detiene la captura para NDI.
+    pub fn stop(&self) {
+        self.is_active.store(false, Ordering::SeqCst);
+        let mut frame = self.latest_frame.lock_safe();
+        *frame = None;
+    }
+}

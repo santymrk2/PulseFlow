@@ -15,6 +15,8 @@
 
 <Tip type="info" value="tips.global_options" bottom={20} />
 
+<div style="height: 12px;"></div>
+
 <MaterialToggleSwitch label="settings.auto_output" checked={$autoOutput} defaultValue={false} on:change={(e) => autoOutput.set(e.detail)} />
 <!-- apparently doesn't work on some versions of macOS -->
 {#if $os.platform !== "darwin" || $special.hideCursor}

@@ -1,19 +1,61 @@
 <script lang="ts">
-    export let active = false
-    export let outlineColor: string | null = null
-    export let outline = false
-    export let title = ""
-    export let center = false
-    export let border = false
-    export let dark = false
-    export let bold = true
-    export let red = false
-    export let redHover = false
-    export let brighterHover = false
+    import type { Snippet } from "svelte"
+    import type { HTMLButtonAttributes } from "svelte/elements"
+
+    interface Props extends HTMLButtonAttributes {
+        active?: boolean
+        outlineColor?: string | null
+        outline?: boolean
+        title?: string
+        center?: boolean
+        border?: boolean
+        dark?: boolean
+        bold?: boolean
+        red?: boolean
+        redHover?: boolean
+        brighterHover?: boolean
+        children?: Snippet
+    }
+
+    let {
+        active = false,
+        outlineColor = null,
+        outline = false,
+        title = "",
+        center = false,
+        border = false,
+        dark = false,
+        bold = true,
+        red = false,
+        redHover = false,
+        brighterHover = false,
+        children,
+        class: className = "",
+        style = "",
+        tabindex,
+        disabled,
+        ...restProps
+    }: Props = $props()
 </script>
 
-<button data-title={title} id={$$props.id} data-testid={$$props["data-testid"]} style="{outlineColor ? 'outline-offset: -2px;outline: 2px solid ' + outlineColor + ' !important;' : ''}{$$props.style || ''}" class:active class:outline class:center class:border class:bold class:dark class:red class:redHover class:brighterHover class={$$props.class} on:click on:dblclick disabled={$$props.disabled} tabindex={active ? -1 : 0}>
-    <slot />
+<button
+    {...restProps}
+    data-title={title}
+    {disabled}
+    tabindex={tabindex ?? (active ? -1 : 0)}
+    style="{outlineColor ? 'outline-offset: -2px;outline: 2px solid ' + outlineColor + ' !important;' : ''}{style}"
+    class:active
+    class:outline
+    class:center
+    class:border
+    class:bold
+    class:dark
+    class:red
+    class:redHover
+    class:brighterHover
+    class={className}
+>
+    {@render children?.()}
 </button>
 
 <style>
@@ -22,16 +64,16 @@
         background-color: inherit;
         color: inherit;
         font-family: inherit;
-        /* font-size: inherit; */
         font-size: 0.9em;
         border: none;
         display: flex;
         align-items: center;
-        padding: 0.2em 0.8em;
+        padding: 0.25em 0.8em;
+        border-radius: 6px;
 
         transition:
-            background-color 0.2s,
-            border 0.2s;
+            background-color 0.15s ease,
+            border 0.15s ease;
     }
     button.dark {
         background-color: var(--primary-darker);

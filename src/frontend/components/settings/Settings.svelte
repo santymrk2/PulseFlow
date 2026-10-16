@@ -5,7 +5,6 @@
     import Icon from "../helpers/Icon.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
     import Tip from "../main/Tip.svelte"
-    import SmartSettings from "../../ai/components/settings/SmartSettings.svelte"
     import AudioRouting from "./tabs/AudioRouting.svelte"
     import Connection from "./tabs/Connection.svelte"
     import Files from "./tabs/Files.svelte"
@@ -91,8 +90,6 @@
             <Profiles />
         {:else if tabId === "theme"}
             <Theme />
-        {:else if tabId === "ai"}
-            <SmartSettings />
         {:else if tabId === "other"}
             <Other />
         {/if}

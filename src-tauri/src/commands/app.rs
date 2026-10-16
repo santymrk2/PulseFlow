@@ -1,0 +1,39 @@
+//! Comandos estáticos de la aplicación (dominio `APP`).
+//!
+//! Traducción de los canales `Main.VERSION`, `Main.IS_DEV` y `Main.GET_OS`
+//! de `src/electron/IPC/responsesMain.ts`.
+//!
+//! Los nombres de función coinciden con los canales del enum `Main`.
+
+#![allow(non_snake_case)]
+
+use crate::error::{AppError, AppResult};
+use crate::types::main::OS;
+use tauri::AppHandle;
+
+/// Versión de la aplicación (equivale a `Main.VERSION` → `app.getVersion()`).
+#[tauri::command]
+pub fn VERSION(app: AppHandle) -> String {
+    app.package_info().version.to_string()
+}
+
+/// Indica si la app corre en modo desarrollo (equivale a `Main.IS_DEV`).
+#[tauri::command]
+pub fn IS_DEV() -> bool {
+    cfg!(debug_assertions)
+}
+
+/// Información del sistema operativo (equivale a `Main.GET_OS`).
+#[tauri::command]
+pub fn GET_OS() -> AppResult<OS> {
+    let name = hostname::get()
+        .map_err(AppError::from)?
+        .to_string_lossy()
+        .into_owned();
+
+    Ok(OS {
+        platform: std::env::consts::OS.to_string(),
+        name,
+        arch: std::env::consts::ARCH.to_string(),
+    })
+}

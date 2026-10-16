@@ -1,0 +1,89 @@
+/*
+ * TailwindCSS v4 + shadcn-svelte entry for the FreeShow Svelte frontend.
+ *
+ * Preflight (Tailwind's global reset) is intentionally NOT imported: FreeShow
+ * already ships its own reset/theming in `public/global.css`, and it sets its
+ * theme as inline CSS variables on <html> (`--primary`, `--secondary`, …).
+ * We therefore:
+ *   1. import only the Tailwind theme + utilities layers, and
+ *   2. namespace the shadcn design tokens under `--shui-*` so they never
+ *      collide with FreeShow's own `--primary` / `--secondary` / `--accent`.
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@import "tw-animate-css";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+    --shui-radius: 0.625rem;
+    --shui-background: oklch(1 0 0);
+    --shui-foreground: oklch(0.145 0 0);
+    --shui-card: oklch(1 0 0);
+    --shui-card-foreground: oklch(0.145 0 0);
+    --shui-popover: oklch(1 0 0);
+    --shui-popover-foreground: oklch(0.145 0 0);
+    --shui-primary: oklch(0.205 0 0);
+    --shui-primary-foreground: oklch(0.985 0 0);
+    --shui-secondary: oklch(0.97 0 0);
+    --shui-secondary-foreground: oklch(0.205 0 0);
+    --shui-muted: oklch(0.97 0 0);
+    --shui-muted-foreground: oklch(0.556 0 0);
+    --shui-accent: oklch(0.97 0 0);
+    --shui-accent-foreground: oklch(0.205 0 0);
+    --shui-destructive: oklch(0.577 0.245 27.325);
+    --shui-destructive-foreground: oklch(0.985 0 0);
+    --shui-border: oklch(0.922 0 0);
+    --shui-input: oklch(0.922 0 0);
+    --shui-ring: oklch(0.708 0 0);
+}
+
+.dark {
+    --shui-background: oklch(0.145 0 0);
+    --shui-foreground: oklch(0.985 0 0);
+    --shui-card: oklch(0.205 0 0);
+    --shui-card-foreground: oklch(0.985 0 0);
+    --shui-popover: oklch(0.205 0 0);
+    --shui-popover-foreground: oklch(0.985 0 0);
+    --shui-primary: oklch(0.922 0 0);
+    --shui-primary-foreground: oklch(0.205 0 0);
+    --shui-secondary: oklch(0.269 0 0);
+    --shui-secondary-foreground: oklch(0.985 0 0);
+    --shui-muted: oklch(0.269 0 0);
+    --shui-muted-foreground: oklch(0.708 0 0);
+    --shui-accent: oklch(0.269 0 0);
+    --shui-accent-foreground: oklch(0.985 0 0);
+    --shui-destructive: oklch(0.704 0.191 22.216);
+    --shui-destructive-foreground: oklch(0.985 0 0);
+    --shui-border: oklch(1 0 0 / 10%);
+    --shui-input: oklch(1 0 0 / 15%);
+    --shui-ring: oklch(0.556 0 0);
+}
+
+@theme inline {
+    --color-background: var(--shui-background);
+    --color-foreground: var(--shui-foreground);
+    --color-card: var(--shui-card);
+    --color-card-foreground: var(--shui-card-foreground);
+    --color-popover: var(--shui-popover);
+    --color-popover-foreground: var(--shui-popover-foreground);
+    --color-primary: var(--shui-primary);
+    --color-primary-foreground: var(--shui-primary-foreground);
+    --color-secondary: var(--shui-secondary);
+    --color-secondary-foreground: var(--shui-secondary-foreground);
+    --color-muted: var(--shui-muted);
+    --color-muted-foreground: var(--shui-muted-foreground);
+    --color-accent: var(--shui-accent);
+    --color-accent-foreground: var(--shui-accent-foreground);
+    --color-destructive: var(--shui-destructive);
+    --color-destructive-foreground: var(--shui-destructive-foreground);
+    --color-border: var(--shui-border);
+    --color-input: var(--shui-input);
+    --color-ring: var(--shui-ring);
+
+    --radius-sm: calc(var(--shui-radius) - 4px);
+    --radius-md: calc(var(--shui-radius) - 2px);
+    --radius-lg: var(--shui-radius);
+    --radius-xl: calc(var(--shui-radius) + 4px);
+}
