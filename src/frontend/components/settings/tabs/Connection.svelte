@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte"
-    import type { ContentProviderId } from "../../../../electron/contentProviders/base/types"
+    import type { ContentProviderId } from "../../../../types/ContentProvider"
     import { Main } from "../../../../types/IPC/Main"
     import { requestMain, sendMain } from "../../../IPC/main"
     import { activePage, activePopup, activeShow, activeTriggerFunction, cloudSyncData, connections, contentProviderData, disabledServers, maxConnections, notFound, obsData, outputs, popupData, ports, projectTemplates, providerConnections, saved, serverData, special } from "../../../stores"
@@ -21,6 +21,11 @@
     import Tip from "../../main/Tip.svelte"
 
     let ip = "localhost"
+
+    // Hoisted so store auto-subscription happens at the component top level
+    // (Svelte 5 disallows `$store` inside `{@const}`).
+    let connectionsData: Record<string, any> = {}
+    $: connectionsData = $connections
 
     onMount(async () => {
         ip = ((await requestMain(Main.IP)) || ["localhost"])[0]
@@ -221,7 +226,7 @@
 
 {#each servers as server}
     {@const disabled = server.id === "companion" ? $serverData?.companion?.enabled !== true : server.enabledByDefault ? $disabledServers[server.id] === true : $disabledServers[server.id] !== false}
-    {@const connections = Object.keys($connections[server.id.toUpperCase()] || {})?.length || 0}
+    {@const connections = Object.keys(connectionsData[server.id.toUpperCase()] || {})?.length || 0}
 
     <InputRow>
         <MaterialButton

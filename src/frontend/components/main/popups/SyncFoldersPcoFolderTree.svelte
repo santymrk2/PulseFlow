@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import type { PCOFolderTreeNode } from "../../../../electron/contentProviders/planningCenter/request"
+    import type { PCOFolderTreeNode } from "../../../../types/ContentProvider"
     import Icon from "../../helpers/Icon.svelte"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
 

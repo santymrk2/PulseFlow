@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import type { ContentProviderId } from "../../electron/contentProviders/base/types"
+import type { ContentProviderId } from "../../types/ContentProvider"
 import type { ToMainSendPayloads } from "../../types/IPC/ToMain"
 import { ToMain } from "../../types/IPC/ToMain"
 import type { Project } from "../../types/Projects"

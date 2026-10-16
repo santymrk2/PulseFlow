@@ -1,6 +1,6 @@
 <script lang="ts">
     import { derived } from "svelte/store"
-    import type { ContentFile, ContentProviderId } from "../../../../electron/contentProviders/base/types"
+    import type { ContentFile, ContentProviderId } from "../../../../types/ContentProvider"
     import type { MediaStyle } from "../../../../types/Main"
     import type { ShowType } from "../../../../types/Show"
     import { addProjectItem } from "../../../converters/project"

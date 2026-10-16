@@ -1,5 +1,5 @@
 import { get } from "svelte/store"
-import type { ContentProviderId } from "../../electron/contentProviders/base/types"
+import type { ContentProviderId } from "../../types/ContentProvider"
 import { OUTPUT, STARTUP } from "../../types/Channels"
 import { Main } from "../../types/IPC/Main"
 import { checkStartupActions } from "../components/actions/actions"

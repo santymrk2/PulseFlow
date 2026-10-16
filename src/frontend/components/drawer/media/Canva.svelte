@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte"
-    import type { ContentFile, ContentLibraryCategory } from "../../../../electron/contentProviders/base/types"
+    import type { ContentFile, ContentLibraryCategory } from "../../../../types/ContentProvider"
     import { Main } from "../../../../types/IPC/Main"
     import { sendMain } from "../../../IPC/main"
     import { activeCanvaPresentation, mediaOptions, providerConnections } from "../../../stores"

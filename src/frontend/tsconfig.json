@@ -19,8 +19,13 @@
         "emitDecoratorMetadata": true,
         "experimentalDecorators": true,
         "esModuleInterop": true,
-        "isolatedModules": true
+        "isolatedModules": true,
+        "baseUrl": ".",
+        "paths": {
+            "$lib": ["lib"],
+            "$lib/*": ["lib/*"]
+        }
     },
     "include": ["."],
-    "exclude": ["node_modules/*", "__sapper__/*", "public/*"]
+    "exclude": ["node_modules/*", "__sapper__/*", "public/*", "../electron/*"]
 }

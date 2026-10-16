@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 import { uid } from "uid"
-import type { ContentFile, ContentProviderId } from "../../electron/contentProviders/base/types"
+import type { ContentFile, ContentProviderId } from "../../types/ContentProvider"
 import { Main } from "../../types/IPC/Main"
 import type { Show, Slide, SlideData } from "../../types/Show"
 import { ShowObj } from "../classes/Show"

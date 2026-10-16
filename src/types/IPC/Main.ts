@@ -1,16 +1,13 @@
-import type { Display } from "electron"
 import type { ExifData } from "exif"
 import type { Stats } from "fs"
 import type { Bible } from "json-bible/lib/Bible"
-import type { SyncProviderId } from "../../electron/cloud/syncManager"
-import type { ContentFile, ContentLibraryCategory, ContentProviderId, MediaLicense } from "../../electron/contentProviders/base/types"
-import type { PCOFolderTreeNode } from "../../electron/contentProviders/planningCenter/request"
-import type { _store } from "../../electron/data/store"
-import type { EncoderDetection } from "../../electron/streaming/encoderDetection"
-import type { TimecodeMode } from "../../electron/timecode/timecode"
+import type { ContentFile, ContentLibraryCategory, ContentProviderId, MediaLicense, PCOFolderTreeNode } from "../ContentProvider"
+import type { EncoderDetection } from "../Encoder"
+import type { SyncProviderId } from "../Sync"
+import type { TimecodeMode } from "../Timecode"
 import type { AIProviderId, AiSetupOptions, EngineStatus } from "../ai/Ai"
 import type { SttEngineOptions } from "../ai/AiSettings"
-import type { ErrorLog, FileFolder, LessonsData, LyricSearchResult, MainFilePaths, Media, MediaCodecInfo, OS, SpotifyState, Subtitle } from "../Main"
+import type { Display, ErrorLog, FileFolder, LessonsData, LyricSearchResult, MainFilePaths, Media, MediaCodecInfo, OS, SpotifyState, Subtitle } from "../Main"
 import type { Output } from "../Output"
 import type { Folders, Projects } from "../Projects"
 import type { Dictionary, Resolution, Themes } from "../Settings"
@@ -22,6 +19,12 @@ import type { History } from "./../History"
 import type { SaveData, SaveListSyncedSettings } from "./../Save"
 
 export const MAIN = "MAIN"
+
+/**
+ * Claves de tiendas persistidas (reemplaza a `keyof typeof _store`, antes
+ * importado de `src/electron/data/store.ts`).
+ */
+export type StoreFileId = "SHOWS" | "SETTINGS" | "SYNCED_SETTINGS" | "THEMES" | "PROJECTS" | "STAGE" | "OVERLAYS" | "TEMPLATES" | "EVENTS" | "HISTORY" | "MEDIA" | "CACHE" | "CACHE_SYNC" | "USAGE" | "ERROR_LOG" | "DRIVE_API_KEY" | "ACCESS"
 
 export enum Main {
     // DEV
@@ -212,8 +215,8 @@ export interface MainSendPayloads {
     [Main.UPDATE_DATA_PATH]: { newPath: string; oldPath: string }
     [Main.LOG_ERROR]: ErrorLog
     [Main.OPEN_FOLDER_PATH]: string
-    [Main.GET_STORE_VALUE]: { file: "config" | keyof typeof _store; key: string }
-    [Main.SET_STORE_VALUE]: { file: "config" | keyof typeof _store; key: string; value: any }
+    [Main.GET_STORE_VALUE]: { file: "config" | StoreFileId; key: string }
+    [Main.SET_STORE_VALUE]: { file: "config" | StoreFileId; key: string; value: any }
     [Main.DELETE_SHOWS]: { shows: { id: string; name: string }[] }
     [Main.DELETE_SHOWS_NI]: { shows: TrimmedShows }
     [Main.GET_EMPTY_SHOWS]: { cached: Shows }
@@ -431,7 +434,7 @@ export type MainReceiveValue<ID extends Main = Main> = {
     data: MainReceiveData<ID>
 }
 
-type MainHandler<ID extends Main> = (data: ID extends keyof MainSendPayloads ? MainSendPayloads[ID] : undefined, e: Electron.IpcMainEvent) => ID extends keyof MainReturnPayloads ? MainReturnPayloads[ID] : void
+type MainHandler<ID extends Main> = (data: ID extends keyof MainSendPayloads ? MainSendPayloads[ID] : undefined, e: unknown) => ID extends keyof MainReturnPayloads ? MainReturnPayloads[ID] : void
 export type MainResponses = {
     [ID in Main]: MainHandler<ID>
 }

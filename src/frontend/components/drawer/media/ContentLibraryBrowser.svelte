@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte"
-    import type { ContentFile, ContentLibraryCategory, ContentProviderId } from "../../../../electron/contentProviders/base/types"
+    import type { ContentFile, ContentLibraryCategory, ContentProviderId } from "../../../../types/ContentProvider"
     import { Main } from "../../../../types/IPC/Main"
     import { requestMain } from "../../../IPC/main"
     import { mediaOptions, openedMediaFolders } from "../../../stores"

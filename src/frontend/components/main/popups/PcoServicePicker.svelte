@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte"
-    import type { PCOFolderTreeNode } from "../../../../electron/contentProviders/planningCenter/request"
+    import type { PCOFolderTreeNode } from "../../../../types/ContentProvider"
     import { Main } from "../../../../types/IPC/Main"
     import { requestMain } from "../../../IPC/main"
     import { activePopup } from "../../../stores"
