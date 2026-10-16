@@ -15,6 +15,7 @@
 
 use crate::error::{AppError, AppResult};
 use serde::Deserialize;
+use crate::render::scene::ScenePayload;
 use serde_json::{json, Value};
 use tauri::{AppHandle, Manager};
 
@@ -191,99 +192,57 @@ pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<b
     }
 }
 
-/// `OUTPUTS`: procesa las actualizaciones de salida de Svelte (`send(OUTPUT, ["OUTPUTS"], data)`).
-/// Conecta la reactividad del frontend de Svelte directamente al Scene Graph de la GPU.
+/// `OUTPUTS`: comando histórico (`send(OUTPUT, ["OUTPUTS"], data)`) que recibía el store
+/// `outputs` completo. Ya no se usa: el frontend envía el Scene Graph con `RENDER_SCENE`.
+/// Se mantiene sólo para no fallar si llega un payload viejo; no hace nada.
 #[tauri::command]
-pub fn OUTPUTS(app: AppHandle, data: Value) -> AppResult<()> {
-    if let Some(map) = data.as_object() {
-        for (_id, out_val) in map {
-            let is_stage = out_val.get("stageOutput").and_then(|v| v.as_str()).map(|s| !s.is_empty()).unwrap_or(false)
-                || out_val.get("stageOutput").and_then(|v| v.as_bool()).unwrap_or(false);
+pub fn OUTPUTS(_data: Value) -> AppResult<()> {
+    Ok(())
+}
 
-            if let Some(out_data) = out_val.get("out") {
-                // 1. Fondo (video o imagen)
-                if let Some(bg_val) = out_data.get("background") {
-                    if bg_val.is_null() {
-                        let _ = crate::render::clear_scene_background(&app);
-                    } else if let Some(path) = bg_val.get("path").and_then(|p| p.as_str()) {
-                        let media_type = bg_val.get("type").and_then(|t| t.as_str()).unwrap_or("image");
-                        let bg = crate::render::types::BackgroundMedia {
-                            id: path.to_string(),
-                            path: Some(path.to_string()),
-                            media_type: media_type.to_string(),
-                            opacity: 1.0,
-                            aspect_mode: 0,
-                        };
-                        let _ = crate::render::set_scene_background(&app, bg);
-                    }
-                }
-
-                // 2. Diapositiva (Texto / Items)
-                if let Some(slide_val) = out_data.get("slide") {
-                    if slide_val.is_null() {
-                        let _ = crate::render::clear_scene_text(&app);
-                        if is_stage || crate::render::is_native_stage_open(&app) {
-                            let _ = crate::render::update_stage_data(&app, crate::render::types::StageData {
-                                current_slide: String::new(),
-                                ..Default::default()
-                            });
-                        }
-                    } else {
-                        let mut text_content = String::new();
-                        if let Some(items) = slide_val.get("items").or_else(|| slide_val.get("tempItems")).and_then(|i| i.as_array()) {
-                            for item in items {
-                                if let Some(lines) = item.get("lines").and_then(|l| l.as_array()) {
-                                    for line in lines {
-                                        if let Some(texts) = line.get("text").and_then(|t| t.as_array()) {
-                                            for t in texts {
-                                                if let Some(val) = t.get("value").and_then(|v| v.as_str()) {
-                                                    text_content.push_str(val);
-                                                }
-                                            }
-                                        }
-                                        text_content.push('\n');
-                                    }
-                                }
-                            }
-                        } else if let Some(text_str) = slide_val.get("text").and_then(|t| t.as_str()) {
-                            text_content = text_str.to_string();
-                        }
-
-                        let trimmed = text_content.trim().to_string();
-                        if !trimmed.is_empty() {
-                            let blocks = vec![crate::render::types::TextBlock {
-                                text: trimmed.clone(),
-                                font_family: None,
-                                font_size: 56.0,
-                                font_weight: 700,
-                                font_style: None,
-                                color: [1.0, 1.0, 1.0, 1.0],
-                                alignment: "center".to_string(),
-                                x: 100.0,
-                                y: 200.0,
-                                width: 1720.0,
-                                height: 700.0,
-                                line_height_ratio: 1.25,
-                                outline_color: Some([0.0, 0.0, 0.0, 1.0]),
-                                outline_width: Some(2.0),
-                                shadow_color: Some([0.0, 0.0, 0.0, 0.75]),
-                                shadow_offset: Some([4.0, 4.0]),
-                            }];
-                            let _ = crate::render::update_scene_text(&app, blocks);
-
-                            if is_stage || crate::render::is_native_stage_open(&app) {
-                                let _ = crate::render::update_stage_data(&app, crate::render::types::StageData {
-                                    current_slide: trimmed,
-                                    ..Default::default()
-                                });
-                            }
-                        } else {
-                            let _ = crate::render::clear_scene_text(&app);
-                        }
-                    }
-                }
-            }
+/// `RENDER_SCENE`: aplica el Scene Graph de una salida (`src/types/SceneGraph.ts`).
+///
+/// Si la salida es de tipo Stage, actualiza el Stage Display; si no, actualiza fondo,
+/// texto y transición de la ventana de audiencia.
+#[tauri::command]
+pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
+    if data.stage {
+        if crate::render::is_native_stage_open(&app) {
+            crate::render::update_stage_data(
+                &app,
+                crate::render::types::StageData {
+                    current_slide: data.plain_text.trim().to_string(),
+                    ..Default::default()
+                },
+            )?;
         }
+        return Ok(());
+    }
+
+    if let Some(transition) = &data.transition {
+        crate::render::set_transition_config(
+            &app,
+            transition.engine_name(),
+            transition.duration_ms,
+            transition.easing.as_deref().unwrap_or("easeInOut"),
+        )?;
+    }
+
+    match data.background_media() {
+        Some(bg) => crate::render::apply_scene_background(&app, bg)?,
+        None => crate::render::clear_scene_background(&app)?,
+    }
+    crate::render::update_scene_text(&app, data.text_blocks())?;
+
+    // El Stage Display muestra el texto actual aunque llegue por la salida principal.
+    if crate::render::is_native_stage_open(&app) {
+        crate::render::update_stage_data(
+            &app,
+            crate::render::types::StageData {
+                current_slide: data.plain_text.trim().to_string(),
+                ..Default::default()
+            },
+        )?;
     }
     Ok(())
 }
@@ -343,6 +302,7 @@ pub fn SELECT_SLIDE(app: AppHandle, data: serde_json::Value) -> AppResult<()> {
             outline_width: Some(2.0),
             shadow_color: Some([0.0, 0.0, 0.0, 0.75]),
             shadow_offset: Some([4.0, 4.0]),
+            ..Default::default()
         }]
     } else {
         Vec::new()

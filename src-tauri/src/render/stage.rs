@@ -204,6 +204,7 @@ pub fn start_native_stage(
                                 outline_width: None,
                                 shadow_color: None,
                                 shadow_offset: None,
+                                ..Default::default()
                             });
 
                             // 2. Diapositiva Actual (Amarillo brillante, grande)
@@ -225,6 +226,7 @@ pub fn start_native_stage(
                                     outline_width: None,
                                     shadow_color: None,
                                     shadow_offset: None,
+                                    ..Default::default()
                                 });
                             }
 
@@ -248,6 +250,7 @@ pub fn start_native_stage(
                                         outline_width: None,
                                         shadow_color: None,
                                         shadow_offset: None,
+                                        ..Default::default()
                                     });
                                 }
                             }
@@ -272,6 +275,7 @@ pub fn start_native_stage(
                                         outline_width: None,
                                         shadow_color: None,
                                         shadow_offset: None,
+                                        ..Default::default()
                                     });
                                 }
                             }

@@ -8,6 +8,7 @@
 //! (MediaPool y composición multicapa), transiciones WGSL, stage y captura NDI.
 
 pub mod media;
+pub mod scene;
 pub mod ndi_stream;
 pub mod stage;
 pub mod sync;
@@ -326,6 +327,7 @@ pub fn start_native_output(
                                         outline_width: Some(1.5),
                                         shadow_color: Some([0.0, 0.0, 0.0, 0.8]),
                                         shadow_offset: Some([3.0, 3.0]),
+                                        ..Default::default()
                                     })
                                     .collect();
 
@@ -440,6 +442,24 @@ pub fn set_scene_background(app: &AppHandle, bg: BackgroundMedia) -> AppResult<(
         let mut background = render_state.scene_background.write_safe();
         *background = Some(bg);
         Ok(())
+    } else {
+        Err(AppError::new("RenderState no disponible"))
+    }
+}
+
+/// Aplica un fondo sin reiniciar la reproducción si el medio es el mismo
+/// (sólo cambian opacidad o ajuste). Evita relanzar el video en cada update.
+pub fn apply_scene_background(app: &AppHandle, bg: BackgroundMedia) -> AppResult<()> {
+    if let Some(render_state) = app.try_state::<RenderState>() {
+        let mut current = render_state.scene_background.write_safe();
+        if let Some(existing) = current.as_mut() {
+            if existing.id == bg.id && existing.path == bg.path && existing.media_type == bg.media_type {
+                *existing = bg;
+                return Ok(());
+            }
+        }
+        drop(current);
+        set_scene_background(app, bg)
     } else {
         Err(AppError::new("RenderState no disponible"))
     }
@@ -705,6 +725,7 @@ mod tests {
             outline_width: Some(2.0),
             shadow_color: Some([0.0, 0.0, 0.0, 0.7]),
             shadow_offset: Some([4.0, 4.0]),
+            ..Default::default()
         };
 
         assert_eq!(block.font_size, 64.0);

@@ -53,6 +53,62 @@ pub struct TextBlock {
     /// Desplazamiento de la sombra [dx, dy] en píxeles.
     #[serde(default)]
     pub shadow_offset: Option<[f32; 2]>,
+    /// Tramos con estilo propio (color, tamaño, peso...). Si está vacío se usa
+    /// `text` con el estilo del bloque. Los saltos de línea van dentro de los textos.
+    #[serde(default)]
+    pub spans: Vec<TextSpan>,
+    /// Alineación vertical dentro del cuadro: "top" (por defecto), "center", "bottom".
+    #[serde(default)]
+    pub vertical_align: Option<String>,
+    /// Ancho de la resolución lógica en la que están expresados x/y/width/height/font_size.
+    /// Si está presente, el bloque se escala a la resolución real de la ventana
+    /// (`ventana / design_width`). Si es `None`, las coordenadas son píxeles de pantalla.
+    #[serde(default)]
+    pub design_width: Option<f32>,
+}
+
+impl Default for TextBlock {
+    fn default() -> Self {
+        Self {
+            text: String::new(),
+            font_family: None,
+            font_size: default_font_size(),
+            font_weight: default_font_weight(),
+            font_style: None,
+            color: default_white_color(),
+            alignment: default_alignment(),
+            x: 0.0,
+            y: 0.0,
+            width: default_box_size(),
+            height: default_box_size(),
+            line_height_ratio: default_line_height(),
+            outline_color: None,
+            outline_width: None,
+            shadow_color: None,
+            shadow_offset: None,
+            spans: Vec::new(),
+            vertical_align: None,
+            design_width: None,
+        }
+    }
+}
+
+/// Tramo de texto con estilo propio dentro de un `TextBlock`.
+/// Los campos ausentes heredan el estilo del bloque.
+#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct TextSpan {
+    pub text: String,
+    #[serde(default)]
+    pub font_family: Option<String>,
+    #[serde(default)]
+    pub font_size: Option<f32>,
+    #[serde(default)]
+    pub font_weight: Option<u16>,
+    #[serde(default)]
+    pub font_style: Option<String>,
+    #[serde(default)]
+    pub color: Option<[f32; 4]>,
 }
 
 fn default_font_size() -> f32 {
@@ -80,7 +136,7 @@ fn default_line_height() -> f32 {
 }
 
 /// Medio de fondo (imagen o video) cargado en VRAM.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct BackgroundMedia {
     pub id: String,

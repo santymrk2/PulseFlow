@@ -114,6 +114,7 @@ pub fn run() {
             commands::output::SET_TRANSITION,
             commands::output::TOGGLE_OUTPUTS,
             commands::output::OUTPUTS,
+            commands::output::RENDER_SCENE,
             commands::output::OPEN_STAGE_WINDOW,
             commands::output::CLOSE_STAGE_WINDOW,
             commands::output::IS_STAGE_WINDOW_OPEN,

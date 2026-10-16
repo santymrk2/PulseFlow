@@ -2,6 +2,7 @@ import { get } from "svelte/store"
 import { OUTPUT, REMOTE, STAGE } from "../../types/Channels"
 import { AudioPlayer } from "../audio/audioPlayer"
 import { midiInListen } from "../components/actions/midi"
+import { sendOutputScenes } from "../components/helpers/sceneGraph"
 import { getAllActiveOutputIds, getAllNormalOutputs, updateSyncedOutputs } from "../components/helpers/output"
 import { loadShows } from "../components/helpers/setShow"
 import { getShowCacheId, syncCachedShows, updateCachedShow, updateCachedShows, updateShowsList } from "../components/helpers/show"
@@ -195,7 +196,8 @@ export function storeSubscriber() {
         // having more is probably better, but breaks some things including slide timeline updates
         // if (await hasNewerUpdate("LISTENER_OUTPUTS", 15)) return
 
-        send(OUTPUT, ["OUTPUTS"], data)
+        // scene graph for the native render engine (Rust)
+        sendOutputScenes(data)
         // used for stage mirror data
         send(OUTPUT, ["ALL_OUTPUTS"], data)
         send(REMOTE, ["AUDIO_ROUTING"], getFilteredAudioChannels())

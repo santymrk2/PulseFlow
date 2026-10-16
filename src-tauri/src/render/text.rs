@@ -112,109 +112,87 @@ impl TextEngine {
         };
         self.viewport.update(queue, resolution);
 
-        // Creamos los buffers de texto necesarios para cada bloque
-        let mut text_buffers = Vec::new();
+        // Un buffer principal por bloque y, si hay sombra/contorno, buffers teñidos
+        // con ese color (el color por tramo del texto principal no debe afectarles).
+        let mut mains = Vec::new();
+        let mut shadows: Vec<Option<Buffer>> = Vec::new();
+        let mut strokes: Vec<Option<Buffer>> = Vec::new();
+        let mut layouts: Vec<BlockLayout> = Vec::new();
 
         for block in blocks {
-            let line_height = block.font_size * block.line_height_ratio.max(1.0);
-            let metrics = Metrics::new(block.font_size, line_height);
-
-            let family = match &block.font_family {
-                Some(fam) if !fam.is_empty() => Family::Name(fam.as_str()),
-                _ => Family::SansSerif,
+            let scale = match block.design_width {
+                Some(dw) if dw > 0.0 => screen_width as f32 / dw,
+                _ => 1.0,
             };
-
-            let weight = Weight(block.font_weight);
-            let style = match block.font_style.as_deref() {
-                Some("italic") => Style::Italic,
-                _ => Style::Normal,
+            let fs = &mut self.font_atlas.font_system;
+            let (main, offset_y) = build_buffer(fs, block, None);
+            let shadow = match (block.shadow_color, block.shadow_offset) {
+                (Some(color), Some(_)) => Some(build_buffer(fs, block, Some(color)).0),
+                _ => None,
             };
-
-            let align = match block.alignment.to_lowercase().as_str() {
-                "center" => Some(Align::Center),
-                "right" => Some(Align::Right),
-                "justify" => Some(Align::Justified),
-                _ => Some(Align::Left),
+            let stroke = match (block.outline_color, block.outline_width) {
+                (Some(color), Some(w)) if w > 0.0 => Some(build_buffer(fs, block, Some(color)).0),
+                _ => None,
             };
-
-            let attrs = Attrs::new()
-                .family(family)
-                .weight(weight)
-                .style(style);
-
-            let mut buffer = Buffer::new(&mut self.font_atlas.font_system, metrics);
-            buffer.set_size(Some(block.width), Some(block.height));
-            buffer.set_wrap(Wrap::Word);
-            buffer.set_text(
-                &block.text,
-                &attrs,
-                Shaping::Advanced,
-                align,
-            );
-
-            buffer.shape_until_scroll(&mut self.font_atlas.font_system, false);
-            text_buffers.push(buffer);
+            layouts.push(BlockLayout { scale, offset_y });
+            mains.push(main);
+            shadows.push(shadow);
+            strokes.push(stroke);
         }
 
-        // Construir capas de renderizado:
-        // Capa 1: Sombra arrojada (Drop Shadow)
-        // Capa 2: Contorno (Stroke) en 8 direcciones
-        // Capa 3: Texto frontal principal
+        // Capas: 1) sombra, 2) contorno en 8 direcciones, 3) texto principal.
         let mut text_areas = Vec::new();
 
         for (i, block) in blocks.iter().enumerate() {
-            let buffer = &text_buffers[i];
+            let BlockLayout { scale, offset_y } = layouts[i];
+            let base_x = block.x * scale;
+            let base_y = (block.y + offset_y) * scale;
 
-            // 1. Sombra arrojada si está configurada
-            if let (Some(shadow_color), Some(offset)) = (block.shadow_color, block.shadow_offset) {
-                let shadow_area = TextArea {
+            if let (Some(buffer), Some(shadow_color), Some(offset)) =
+                (shadows[i].as_ref(), block.shadow_color, block.shadow_offset)
+            {
+                text_areas.push(TextArea {
                     buffer,
-                    left: block.x + offset[0],
-                    top: block.y + offset[1],
-                    scale: 1.0,
+                    left: base_x + offset[0] * scale,
+                    top: base_y + offset[1] * scale,
+                    scale,
                     bounds: TextBounds::default(),
                     default_color: to_glyphon_color(shadow_color),
                     custom_glyphs: &[],
-                };
-                text_areas.push(shadow_area);
+                });
             }
 
-            // 2. Contorno / Stroke por GPU en 8 direcciones perimetrales
-            if let (Some(outline_color), Some(stroke_w)) = (block.outline_color, block.outline_width) {
-                if stroke_w > 0.0 {
-                    let w = stroke_w;
-                    let stroke_color = to_glyphon_color(outline_color);
-                    let offsets = [
-                        (-w, -w), (0.0, -w), (w, -w),
-                        (-w,  0.0),          (w,  0.0),
-                        (-w,  w), (0.0,  w), (w,  w),
-                    ];
-                    for (dx, dy) in offsets {
-                        text_areas.push(TextArea {
-                            buffer,
-                            left: block.x + dx,
-                            top: block.y + dy,
-                            scale: 1.0,
-                            bounds: TextBounds::default(),
-                            default_color: stroke_color,
-                            custom_glyphs: &[],
-                        });
-                    }
+            if let (Some(buffer), Some(outline_color), Some(stroke_w)) =
+                (strokes[i].as_ref(), block.outline_color, block.outline_width)
+            {
+                let w = stroke_w * scale;
+                let offsets = [
+                    (-w, -w), (0.0, -w), (w, -w),
+                    (-w,  0.0),          (w,  0.0),
+                    (-w,  w), (0.0,  w), (w,  w),
+                ];
+                for (dx, dy) in offsets {
+                    text_areas.push(TextArea {
+                        buffer,
+                        left: base_x + dx,
+                        top: base_y + dy,
+                        scale,
+                        bounds: TextBounds::default(),
+                        default_color: to_glyphon_color(outline_color),
+                        custom_glyphs: &[],
+                    });
                 }
             }
 
-            // 3. Texto principal
-            let main_color = to_glyphon_color(block.color);
-            let main_area = TextArea {
-                buffer,
-                left: block.x,
-                top: block.y,
-                scale: 1.0,
+            text_areas.push(TextArea {
+                buffer: &mains[i],
+                left: base_x,
+                top: base_y,
+                scale,
                 bounds: TextBounds::default(),
-                default_color: main_color,
+                default_color: to_glyphon_color(block.color),
                 custom_glyphs: &[],
-            };
-            text_areas.push(main_area);
+            });
         }
 
         // Preparar text areas en VRAM
@@ -237,6 +215,84 @@ impl TextEngine {
 
         Ok(())
     }
+}
+
+/// Construye y mide el buffer de un bloque. Con `tint` todo el texto se pinta de
+/// ese color (sombra/contorno). Devuelve el buffer y el desplazamiento vertical
+/// que corresponde a la alineación vertical del bloque.
+fn build_buffer(font_system: &mut FontSystem, block: &TextBlock, tint: Option<[f32; 4]>) -> (Buffer, f32) {
+    let line_ratio = block.line_height_ratio.max(1.0);
+    let metrics = Metrics::new(block.font_size, block.font_size * line_ratio);
+    let base_family = block.font_family.as_deref().filter(|f| !f.is_empty());
+    let attrs = block_attrs(base_family, block.font_weight, block.font_style.as_deref(), tint.unwrap_or(block.color));
+
+    let align = match block.alignment.to_lowercase().as_str() {
+        "center" => Some(Align::Center),
+        "right" => Some(Align::Right),
+        "justify" => Some(Align::Justified),
+        _ => Some(Align::Left),
+    };
+
+    let mut buffer = Buffer::new(font_system, metrics);
+    // Sin límite de alto: el texto desborda la caja como en CSS y la alineación
+    // vertical se calcula midiendo el layout.
+    buffer.set_size(Some(block.width), None);
+    buffer.set_wrap(Wrap::Word);
+
+    if block.spans.is_empty() {
+        buffer.set_text(&block.text, &attrs, Shaping::Advanced, align);
+    } else {
+        let spans: Vec<(&str, Attrs)> = block
+            .spans
+            .iter()
+            .map(|span| {
+                let family = span.font_family.as_deref().filter(|f| !f.is_empty()).or(base_family);
+                let size = span.font_size.unwrap_or(block.font_size);
+                let color = tint.or(span.color).unwrap_or(block.color);
+                let a = block_attrs(
+                    family,
+                    span.font_weight.unwrap_or(block.font_weight),
+                    span.font_style.as_deref().or(block.font_style.as_deref()),
+                    color,
+                )
+                .metrics(Metrics::new(size, size * line_ratio));
+                (span.text.as_str(), a)
+            })
+            .collect();
+        buffer.set_rich_text(spans, &attrs, Shaping::Advanced, align);
+    }
+
+    buffer.shape_until_scroll(font_system, false);
+
+    let text_height: f32 = buffer.layout_runs().map(|run| run.line_height).sum();
+    let offset_y = match block.vertical_align.as_deref() {
+        Some("center") | Some("middle") => (block.height - text_height) / 2.0,
+        Some("bottom") => block.height - text_height,
+        _ => 0.0,
+    };
+    (buffer, offset_y)
+}
+
+/// Escala y desplazamiento vertical calculados para un bloque.
+#[derive(Clone, Copy)]
+struct BlockLayout {
+    scale: f32,
+    offset_y: f32,
+}
+
+/// Atributos de fuente de un bloque o tramo.
+fn block_attrs<'a>(family: Option<&'a str>, weight: u16, style: Option<&str>, color: [f32; 4]) -> Attrs<'a> {
+    Attrs::new()
+        .family(match family {
+            Some(name) => Family::Name(name),
+            None => Family::SansSerif,
+        })
+        .weight(Weight(weight))
+        .style(match style {
+            Some("italic") => Style::Italic,
+            _ => Style::Normal,
+        })
+        .color(to_glyphon_color(color).into())
 }
 
 /// Convierte un color [r, g, b, a] normalizado (0.0..1.0) a `glyphon::Color`.
