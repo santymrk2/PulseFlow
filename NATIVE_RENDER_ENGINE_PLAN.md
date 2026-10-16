@@ -85,12 +85,12 @@ pub struct SceneGraph {
 ### Fase 4: Transiciones por Shaders de GPU
 - **Objetivo**: Reemplazar las transiciones CSS por shaders de hardware libres de tirones.
 - **Acciones**:
-  - [ ] Implementar un buffer doble (Texture A y Texture B).
-  - [ ] Crear shaders en WGSL para transiciones:
-    - [ ] Crossfade suave: Interpolación lineal entre texturas A y B durante N milisegundos.
-    - [ ] Dip to Black: Desvanecimiento a negro y aparición del nuevo contenido.
-    - [ ] Push / Wipe: Desplazamientos geométricos instantáneos.
-  - [ ] Controlar la curva de animación (easing) directamente en el shader mediante uniforms de tiempo.
+  - [x] Implementar un buffer doble (Texture A y Texture B).
+  - [x] Crear shaders en WGSL para transiciones:
+    - [x] Crossfade suave: Interpolación lineal entre texturas A y B durante N milisegundos.
+    - [x] Dip to Black: Desvanecimiento a negro y aparición del nuevo contenido.
+    - [x] Push / Wipe: Desplazamientos geométricos instantáneos.
+  - [x] Controlar la curva de animación (easing) directamente en el shader mediante uniforms de tiempo.
 
 ### Fase 5: Multi-Salida Simultánea (Auditorio + Stage Display + NDI)
 - **Objetivo**: Soportar la configuración clásica de eventos en vivo: 3 salidas independientes.

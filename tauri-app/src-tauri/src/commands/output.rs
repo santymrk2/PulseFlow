@@ -411,5 +411,22 @@ pub fn UPDATE_SCENE_OVERLAYS(
     crate::render::update_scene_overlays(&app, overlays)
 }
 
+/// `SET_TRANSITION`: configura la transición activa por GPU (Crossfade, DipToBlack, Wipe, Push) y su duración.
+#[tauri::command]
+pub fn SET_TRANSITION(
+    app: AppHandle,
+    transition_type: String,
+    duration_ms: Option<u64>,
+    easing: Option<String>,
+) -> AppResult<()> {
+    crate::render::set_transition_config(
+        &app,
+        &transition_type,
+        duration_ms.unwrap_or(300),
+        easing.as_deref().unwrap_or("easeInOut"),
+    )
+}
+
+
 
 

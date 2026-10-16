@@ -114,6 +114,7 @@ pub fn run() {
             commands::output::CLEAR_BACKGROUND,
             commands::output::FEED_VIDEO_FRAME,
             commands::output::UPDATE_SCENE_OVERLAYS,
+            commands::output::SET_TRANSITION,
             commands::output::OPEN_STAGE_WINDOW,
             commands::output::CLOSE_STAGE_WINDOW,
             commands::output::IS_STAGE_WINDOW_OPEN,

@@ -9,6 +9,7 @@
 
 pub mod media;
 pub mod text;
+pub mod transition;
 pub mod types;
 
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -44,6 +45,7 @@ pub struct RenderState {
     pub scene_background: Arc<RwLock<Option<BackgroundMedia>>>,
     pub scene_overlays: Arc<RwLock<Vec<OverlayItem>>>,
     pub media_pool: Arc<Mutex<media::MediaPool>>,
+    pub transition_config: Arc<RwLock<(transition::TransitionType, u64, transition::EasingType)>>,
 }
 
 impl RenderState {
@@ -54,6 +56,11 @@ impl RenderState {
             scene_background: Arc::new(RwLock::new(None)),
             scene_overlays: Arc::new(RwLock::new(Vec::new())),
             media_pool: Arc::new(Mutex::new(media::MediaPool::new())),
+            transition_config: Arc::new(RwLock::new((
+                transition::TransitionType::Crossfade,
+                300,
+                transition::EasingType::EaseInOut,
+            ))),
         }
     }
 }
@@ -433,6 +440,28 @@ pub fn feed_video_frame(
     }
 }
 
+/// Configura el efecto de transición (Crossfade, DipToBlack, Wipe, Push) y su duración.
+pub fn set_transition_config(
+    app: &AppHandle,
+    trans_type_str: &str,
+    duration_ms: u64,
+    easing_str: &str,
+) -> AppResult<()> {
+    if let Some(render_state) = app.try_state::<RenderState>() {
+        let mut cfg = render_state.transition_config.write().unwrap();
+        let trans_type = transition::TransitionType::from_str(trans_type_str);
+        let easing = match easing_str.to_lowercase().as_str() {
+            "easeout" | "ease_out" => transition::EasingType::EaseOut,
+            "linear" => transition::EasingType::Linear,
+            _ => transition::EasingType::EaseInOut,
+        };
+        *cfg = (trans_type, duration_ms, easing);
+        Ok(())
+    } else {
+        Err(AppError::new("RenderState no disponible"))
+    }
+}
+
 /// Detiene el bucle de renderizado WGPU y cierra la ventana nativa.
 pub fn stop_native_output(app: &AppHandle) -> AppResult<()> {
     if let Some(render_state) = app.try_state::<RenderState>() {
@@ -556,4 +585,36 @@ mod tests {
         let tex2 = pool.get("test_video_bg").unwrap();
         assert_eq!(Arc::as_ptr(&tex1), Arc::as_ptr(&tex2), "Ambas referencias deben apuntar al mismo recurso VRAM");
     }
+
+    #[test]
+    fn test_transition_engine_and_curves() {
+        let instance = wgpu::Instance::default();
+        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
+            power_preference: wgpu::PowerPreference::HighPerformance,
+            compatible_surface: None,
+            force_fallback_adapter: false,
+            ..Default::default()
+        }))
+        .unwrap();
+
+        let (device, _queue) = pollster::block_on(adapter.request_device(
+            &wgpu::DeviceDescriptor {
+                label: Some("Test Transition Device"),
+                ..Default::default()
+            },
+        ))
+        .unwrap();
+
+        let mut engine = transition::TransitionEngine::new(
+            &device,
+            wgpu::TextureFormat::Bgra8UnormSrgb,
+            1920,
+            1080,
+        );
+
+        engine.trigger(transition::TransitionType::Crossfade, 500, transition::EasingType::EaseInOut);
+        assert!(engine.active_transition.is_active);
+        assert_eq!(engine.active_transition.transition_type, transition::TransitionType::Crossfade);
+    }
 }
+
