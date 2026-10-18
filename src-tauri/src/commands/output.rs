@@ -249,8 +249,12 @@ pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
 
 /// Payload del comando de debug `RENDER_SNAPSHOT`. Espejo en TypeScript:
 /// `SnapshotRequest` en `src/types/SceneGraph.ts`.
+///
+/// El comando existe sólo en builds de desarrollo (`debug_assertions`): no se
+/// compila en `tauri build`, así que una release no expone esta superficie.
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+#[cfg(debug_assertions)]
 pub struct SnapshotPayload {
     /// Escena a renderizar (el mismo Scene Graph que `RENDER_SCENE`).
     pub scene: ScenePayload,
@@ -258,21 +262,26 @@ pub struct SnapshotPayload {
     pub width: Option<u32>,
     /// Alto en píxeles del PNG (por defecto 1080).
     pub height: Option<u32>,
-    /// Ruta absoluta donde guardar el PNG.
-    pub path: String,
+    /// Nombre simple del archivo PNG (sin ruta); queda en `<cache>/snapshots/`.
+    pub file_name: String,
 }
 
-/// `RENDER_SNAPSHOT`: renderiza una escena a un PNG offscreen, sin ventana ni
-/// monitor. Es la herramienta de verificación visual del engine (tests, CI y
-/// depuración desde la consola del webview).
+/// `RENDER_SNAPSHOT` (sólo desarrollo): renderiza una escena a un PNG
+/// offscreen, sin ventana ni monitor. Es la herramienta de verificación visual
+/// del engine (tests, CI y depuración desde la consola del webview). Recibe
+/// sólo un nombre de archivo y devuelve la ruta completa escrita.
 #[tauri::command]
-pub fn RENDER_SNAPSHOT(data: SnapshotPayload) -> AppResult<()> {
-    crate::render::snapshot::render_snapshot(
+#[cfg(debug_assertions)]
+pub fn RENDER_SNAPSHOT(app: AppHandle, data: SnapshotPayload) -> AppResult<String> {
+    let base_dir = app.path().app_cache_dir()?;
+    let path = crate::render::snapshot::render_snapshot(
         &data.scene,
         data.width.unwrap_or(1920),
         data.height.unwrap_or(1080),
-        std::path::Path::new(&data.path),
-    )
+        &base_dir,
+        &data.file_name,
+    )?;
+    Ok(path.to_string_lossy().to_string())
 }
 
 // ---------------------------------------------------------------------------
@@ -451,7 +460,7 @@ pub fn IS_NDI_NATIVE_FEED_ACTIVE(app: AppHandle) -> bool {
     crate::render::is_ndi_native_feed_active(&app)
 }
 
-#[cfg(test)]
+#[cfg(all(test, debug_assertions))]
 mod tests {
     use super::*;
     use serde_json::json;
@@ -476,14 +485,14 @@ mod tests {
             },
             "width": 640,
             "height": 360,
-            "path": "/tmp/pulseflow-snapshot.png"
+            "fileName": "escena-manual"
         }))
         .expect("payload de snapshot válido");
 
         assert_eq!(payload.scene.output_id, "out1");
         assert_eq!(payload.width, Some(640));
         assert_eq!(payload.height, Some(360));
-        assert_eq!(payload.path, "/tmp/pulseflow-snapshot.png");
+        assert_eq!(payload.file_name, "escena-manual");
         assert_eq!(payload.scene.text_blocks().len(), 1);
     }
 
@@ -491,7 +500,7 @@ mod tests {
     fn snapshot_payload_con_defaults_de_dimension_y_escena_minima() {
         let payload: SnapshotPayload = serde_json::from_value(json!({
             "scene": { "outputId": "out2" },
-            "path": "/tmp/s.png"
+            "fileName": "s"
         }))
         .expect("payload mínimo válido");
 

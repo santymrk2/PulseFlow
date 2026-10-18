@@ -5,7 +5,7 @@
 //! de los tests visuales del engine: un agente o CI puede verificar qué dibuja
 //! el motor sin hardware de presentación.
 
-use std::path::Path;
+use std::path::{Path, PathBuf};
 
 use crate::error::{AppError, AppResult};
 
@@ -17,21 +17,56 @@ use super::text::TextEngine;
 /// swapchain de la salida y el formato natural del PNG.
 const SNAPSHOT_FORMAT: wgpu::TextureFormat = wgpu::TextureFormat::Rgba8UnormSrgb;
 
-/// Renderiza la escena y guarda el resultado como PNG en `path`.
+/// Renderiza la escena en `<base_dir>/snapshots/<file_name>.png` y devuelve la
+/// ruta completa escrita.
 ///
+/// `file_name` debe ser un nombre simple (sin ruta): se rechazan `/`, `\` y
+/// `..` para que ningún caller pueda escribir fuera del directorio de snapshots.
 /// Los fondos de tipo video no se decodifican en un snapshot (sólo imagen).
 pub fn render_snapshot(
     scene: &ScenePayload,
     width: u32,
     height: u32,
-    path: &Path,
-) -> AppResult<()> {
+    base_dir: &Path,
+    file_name: &str,
+) -> AppResult<PathBuf> {
+    let name = safe_file_name(file_name)?;
+    let dir = base_dir.join("snapshots");
+    std::fs::create_dir_all(&dir)
+        .map_err(|e| AppError::new(format!("Error creando '{}': {e}", dir.display())))?;
+    let path = dir.join(name);
+
     let width = width.max(1);
     let height = height.max(1);
     let rgba = render_snapshot_rgba(scene, width, height)?;
-    image::save_buffer(path, &rgba, width, height, image::ColorType::Rgba8)
+    image::save_buffer(&path, &rgba, width, height, image::ColorType::Rgba8)
         .map_err(|e| AppError::new(format!("Error guardando snapshot '{}': {e}", path.display())))?;
-    Ok(())
+    Ok(path)
+}
+
+/// Valida que `file_name` sea un nombre de archivo simple y devuelve el nombre
+/// con extensión `.png`. Se rechazan rutas (`/`, `\`), `..`, cadenas vacías y
+/// los caracteres inválidos también en nombres de archivo de Windows.
+fn safe_file_name(file_name: &str) -> AppResult<String> {
+    let name = file_name.trim();
+    if name.is_empty() {
+        return Err(AppError::new("RENDER_SNAPSHOT: el nombre de archivo está vacío"));
+    }
+    if name.contains('/') || name.contains('\\') || name.contains("..") {
+        return Err(AppError::new(format!(
+            "RENDER_SNAPSHOT: nombre de archivo inválido (se espera un nombre simple, sin ruta): {file_name}"
+        )));
+    }
+    if name.chars().any(|c| matches!(c, ':' | '*' | '?' | '"' | '<' | '>' | '|')) {
+        return Err(AppError::new(format!(
+            "RENDER_SNAPSHOT: nombre de archivo con caracteres no permitidos: {file_name}"
+        )));
+    }
+    Ok(if name.ends_with(".png") {
+        name.to_string()
+    } else {
+        format!("{name}.png")
+    })
 }
 
 /// Renderiza la escena a una textura offscreen y devuelve los píxeles RGBA8
@@ -259,14 +294,43 @@ mod tests {
         // El PNG generado se puede abrir y tiene las dimensiones pedidas.
         let dir = std::env::temp_dir().join("pulseflow-snapshot-test");
         std::fs::create_dir_all(&dir).expect("carpeta temporal");
-        let png_path = dir.join("snapshot_texto.png");
-        render_snapshot(&scene, width, height, &png_path).expect("guardar PNG");
+        let png_path = render_snapshot(&scene, width, height, &dir, "snapshot_texto")
+            .expect("guardar PNG");
+        assert_eq!(png_path, dir.join("snapshots").join("snapshot_texto.png"));
 
         let saved = image::open(&png_path).expect("abrir el PNG generado");
         assert_eq!(saved.width(), width);
         assert_eq!(saved.height(), height);
 
         let _ = std::fs::remove_file(&png_path);
+    }
+
+    #[test]
+    fn snapshot_rechaza_nombres_con_ruta() {
+        let scene = text_scene();
+        let dir = std::env::temp_dir().join("pulseflow-snapshot-reject");
+        std::fs::create_dir_all(&dir).expect("carpeta temporal");
+
+        for bad in ["../x", "/tmp/evil.png", "sub\\dir", "", "  ", "a..b", "c:/x"] {
+            let result = render_snapshot(&scene, 8, 8, &dir, bad);
+            assert!(
+                result.is_err(),
+                "El nombre '{bad}' debe ser rechazado"
+            );
+        }
+
+        // No debe haberse escrito nada fuera de <dir>/snapshots/.
+        assert!(!dir.join("x.png").exists(), "No debe escribirse fuera de snapshots/");
+        let Ok(entries) = std::fs::read_dir(dir.join("snapshots")) else {
+            return; // ni siquiera se creó la carpeta: también válido
+        };
+        assert_eq!(entries.count(), 0, "No debe haber archivos de nombres rechazados");
+    }
+
+    #[test]
+    fn snapshot_acepta_nombre_con_extension_png() {
+        assert_eq!(safe_file_name("foto").expect("válido"), "foto.png");
+        assert_eq!(safe_file_name("foto.png").expect("válido"), "foto.png");
     }
 
     #[test]

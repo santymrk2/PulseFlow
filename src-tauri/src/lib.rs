@@ -116,6 +116,7 @@ pub fn run() {
             commands::output::TOGGLE_OUTPUTS,
             commands::output::OUTPUTS,
             commands::output::RENDER_SCENE,
+            #[cfg(debug_assertions)]
             commands::output::RENDER_SNAPSHOT,
             commands::output::OPEN_STAGE_WINDOW,
             commands::output::CLOSE_STAGE_WINDOW,

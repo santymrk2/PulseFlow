@@ -66,7 +66,11 @@ no como código probado.
   | cargo check | ✅ sin errores ni warnings |
   | cargo test --lib | ✅ 9/9 tests |
 
-- [ ] **F0.2 Snapshot de escena sin monitor (`RENDER_SNAPSHOT`).**
+- [x] **F0.2 Snapshot de escena sin monitor (`RENDER_SNAPSHOT`).** (verificado
+  2026-10-18: `cargo test --lib` genera y valida el PNG; el comando fue invocado
+  desde la consola del webview real y el PNG resultante se verificó píxel a
+  píxel. Sólo existe en builds de desarrollo y escribe en
+  `<app_cache_dir>/snapshots/` con nombre simple validado.)
   *Por qué:* hoy nadie (ni un agente ni CI) puede verificar qué dibuja el engine sin
   un monitor físico. Esto habilita tests de la salida.
   *Archivos:* `src-tauri/src/render/` (nuevo `snapshot.rs` o dentro del módulo de

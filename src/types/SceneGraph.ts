@@ -73,7 +73,9 @@ export interface SceneTextSpan {
 /**
  * Payload del comando de debug `RENDER_SNAPSHOT` (Rust: `commands/output.rs`).
  * Renderiza una escena a un PNG offscreen, sin ventana ni monitor.
- * Por ahora sólo lo invoca un agente/CI desde la consola del webview.
+ * El comando existe sólo en builds de desarrollo y devuelve la ruta completa
+ * del PNG escrito. Por ahora sólo lo invoca un agente/CI desde la consola del
+ * webview.
  */
 export interface SnapshotRequest {
     scene: SceneGraph
@@ -81,6 +83,6 @@ export interface SnapshotRequest {
     width?: number
     /** Alto en píxeles del PNG (por defecto 1080) */
     height?: number
-    /** Ruta absoluta donde guardar el PNG */
-    path: string
+    /** Nombre simple del archivo PNG (sin ruta); queda en `<cache>/snapshots/` */
+    fileName: string
 }
