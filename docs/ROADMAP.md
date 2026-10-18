@@ -243,7 +243,22 @@ monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
   *Aceptación:* dos salidas de audiencia con estilos distintos muestran cada una su
   estilo; una salida stage muestra actual + siguiente + reloj.
 
-- [ ] **F2.5 `IDENTIFY_SCREENS`.**
+- [x] **F2.5 `IDENTIFY_SCREENS`.** (verificado 2026-10-18: `cargo check` limpio y
+  `cargo test --lib` 29/29, incluidos los 3 tests nuevos —matching puro
+  `identify_targets`, serde del payload de `GET_DISPLAYS` y bloques de texto
+  del número—; `bun run test:unit` 47/47; `svelte-check` 59 errores (línea base,
+  sin aumento); Prettier limpio. `IDENTIFY_SCREENS` abre una ventana temporal
+  por monitor (label `identify-N`, sin decorations, always-on-top, cubriendo el
+  monitor) con el mismo bucle de render de las salidas: número grande centrado
+  + rótulo "PulseFlow — Pantalla N"; a los 3 s el hilo temporizador une al hilo
+  de render y destruye la ventana. Las ventanas NO entran en `ScreenManager`
+  (no emiten `OUTPUT_STATE` ni se confunden con salidas). El número es la
+  posición (1-based) de la entrada en el payload, que es como numera la
+  previsualización; el monitor se empareja por centro de `bounds` con fallback
+  al índice. El frontend ya enviaba el comando desde `Screens.svelte` y
+  `OutputSelector.svelte`; no hizo falta tocar Svelte. La verificación visual
+  con monitores reales quedó para el usuario en `docs/VERIFICAR.md`, sección
+  "F2.5".)
   *Pasos:* ventana temporal por monitor con el número grande durante 3 s (usa el mismo
   bucle de render).
   *Aceptación:* el botón de lupa de "Elegir pantalla" muestra los números.

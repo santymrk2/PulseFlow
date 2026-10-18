@@ -71,6 +71,24 @@ La verificación GUI con dos monitores queda pendiente para el usuario:
 5. Cambiar una slide y verificar en la consola del webview que llegan varios
    `RENDER_SCENE` (uno por salida) sin errores "Command … not found".
 
+## F2.5 — IDENTIFY_SCREENS
+Verificado 2026-10-18 (automatizado): `cargo check` limpio, `cargo test --lib` 29/29
+(incluidos `identify_targets_matches_bounds_then_index`,
+`identify_screen_deserializa_desde_display_del_frontend` y
+`identify_blocks_center_big_number`), `bun run test:unit` 47/47,
+`svelte-check` 59 errores (línea base) y Prettier limpio. Verificación visual
+(con monitores reales) pendiente para el usuario:
+
+1. Settings → Outputs → "Elegir pantalla" → botón de lupa: cada monitor muestra
+   una ventana negra temporal con su número grande (y "PulseFlow — Pantalla N")
+   durante 3 s y se cierra sola.
+2. El número coincide con el número de la previsualización de la misma pantalla.
+3. Repetir desde el popup de selección de salida (misma lupa).
+4. Pulsar la lupa dos veces seguidas: no debe quedarse ninguna ventana abierta
+   (la segunda ejecución reemplaza a la primera).
+5. Las ventanas de identificación no deben aparecer como salidas ni afectar al
+   botón de salida (no emiten `OUTPUT_STATE`).
+
 ## F2.8 — Prueba end-to-end "Elegir monitor → poner en vivo → cubrirlo"
 Reunir F2.1–F2.7 en un solo test:
 1. Elegir monitor secundario en Settings → Outputs (Elegir pantalla).

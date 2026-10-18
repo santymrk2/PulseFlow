@@ -15,7 +15,7 @@
 
 use crate::error::{AppError, AppResult};
 use crate::render::scene::ScenePayload;
-use crate::render::{ScreenConfig, ScreenKind};
+use crate::render::{IdentifyScreen, ScreenConfig, ScreenKind};
 use serde::Deserialize;
 use serde_json::{json, Value};
 use tauri::{AppHandle, Manager};
@@ -178,6 +178,15 @@ pub fn IS_STAGE_WINDOW_OPEN(app: AppHandle) -> AppResult<bool> {
 #[tauri::command]
 pub fn UPDATE_BOUNDS(app: AppHandle, data: ScreenConfig) -> AppResult<()> {
     crate::render::reposition_screen(&app, &data)
+}
+
+/// `IDENTIFY_SCREENS`: ventana temporal (3 s) por monitor con su número
+/// grande, usando el mismo bucle de render. El payload es la lista de
+/// `GET_DISPLAYS` (espejo en TypeScript: `IdentifyScreen` en
+/// `src/types/Output.ts`); sin payload se numeran todos los monitores.
+#[tauri::command]
+pub fn IDENTIFY_SCREENS(app: AppHandle, data: Option<Vec<IdentifyScreen>>) -> AppResult<()> {
+    crate::render::identify_screens(&app, &data.unwrap_or_default())
 }
 
 /// Payload para el comando `TOGGLE_OUTPUTS` de Svelte.

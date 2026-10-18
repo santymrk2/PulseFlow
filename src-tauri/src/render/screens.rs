@@ -491,6 +491,164 @@ pub fn emit_output_state(app: &AppHandle, states: &[(String, bool)]) {
 }
 
 // ---------------------------------------------------------------------------
+// Identificación de monitores (F2.5)
+// ---------------------------------------------------------------------------
+
+/// Duración del número en pantalla al identificar monitores.
+const IDENTIFY_DURATION: Duration = Duration::from_secs(3);
+
+/// Pantalla enviada por `IDENTIFY_SCREENS` (espejo en TypeScript:
+/// `IdentifyScreen` en `src/types/Output.ts`). El frontend manda la lista de
+/// `GET_DISPLAYS` ya ordenada como la previsualiza; la posición (1-based) de
+/// cada entrada es el número que se muestra en el monitor.
+#[derive(Debug, Clone, Default, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct IdentifyScreen {
+    /// Índice del monitor en `GET_DISPLAYS`.
+    pub id: Option<usize>,
+    /// Bounds del monitor (mismo sistema que `ScreenRect`).
+    pub bounds: Option<ScreenRect>,
+}
+
+/// Emparejamiento puro entre las entradas del payload y los monitores reales
+/// (testeable sin monitores): devuelve (número a mostrar, índice de monitor).
+/// El monitor es el que contiene el centro de los bounds de la entrada; si no,
+/// el mismo índice de la entrada (el orden de `GET_DISPLAYS` coincide con el de
+/// `available_monitors`). Sin monitor, la entrada se omite.
+fn identify_targets(monitors: &[ScreenRect], entries: &[IdentifyScreen]) -> Vec<(String, usize)> {
+    entries
+        .iter()
+        .enumerate()
+        .filter_map(|(index, entry)| {
+            let monitor = entry
+                .bounds
+                .filter(|b| b.width > 0 && b.height > 0)
+                .and_then(|b| monitors.iter().position(|m| m.contains(b.center())))
+                .or_else(|| (index < monitors.len()).then_some(index))?;
+            Some(((index + 1).to_string(), monitor))
+        })
+        .collect()
+}
+
+/// `IDENTIFY_SCREENS`: ventana temporal por monitor con su número grande
+/// durante 3 s (F2.5), usando el mismo bucle de render que las salidas. No
+/// entra en `ScreenManager`: son ventanas `identify-*` que se destruyen solas.
+pub fn identify_screens(app: &AppHandle, entries: &[IdentifyScreen]) -> AppResult<()> {
+    let monitors = app.available_monitors().map_err(|e| AppError::new(e.to_string()))?;
+    let rects: Vec<ScreenRect> = monitors.iter().map(ScreenRect::of_monitor).collect();
+
+    let targets = if entries.is_empty() {
+        // Sin payload: todos los monitores, numerados por su orden.
+        rects.iter().enumerate().map(|(i, _)| ((i + 1).to_string(), i)).collect()
+    } else {
+        identify_targets(&rects, entries)
+    };
+
+    for (number, monitor_index) in targets {
+        let Some(monitor) = monitors.get(monitor_index) else { continue };
+        if let Err(err) = open_identify_window(app, &number, monitor) {
+            eprintln!("[identify] no se pudo abrir la ventana del monitor {monitor_index}: {err}");
+        }
+    }
+    Ok(())
+}
+
+/// Ventana temporal cubriendo el monitor con el número grande; se cierra sola.
+fn open_identify_window(app: &AppHandle, number: &str, monitor: &Monitor) -> AppResult<()> {
+    let label = format!("identify-{number}");
+    // Reemplaza una identificación anterior en curso (mismo monitor).
+    if let Some(existing) = app.get_window(&label) {
+        let _ = existing.destroy();
+    }
+
+    let rect = ScreenRect::of_monitor(monitor);
+    let window = WindowBuilder::new(app, &label)
+        .title(format!("Pantalla {number}"))
+        .decorations(false)
+        .resizable(false)
+        .skip_taskbar(true)
+        .shadow(false)
+        .always_on_top(true)
+        .visible(true)
+        .build()
+        .map_err(|e| AppError::new(format!("Error al crear la ventana de identificación: {e}")))?;
+
+    let _ = window.set_position(PhysicalPosition::new(rect.x, rect.y));
+    let _ = window.set_size(PhysicalSize::new(rect.width, rect.height));
+
+    let window = Arc::new(window);
+    let scene = Arc::new(RwLock::new(ScreenScene {
+        text: identify_blocks(number, rect.width, rect.height),
+        ..Default::default()
+    }));
+    let running = Arc::new(AtomicBool::new(true));
+    let video_frame: Arc<Mutex<Option<VideoFrame>>> = Arc::new(Mutex::new(None));
+
+    let render_thread = match spawn_render_loop(
+        Arc::clone(&window),
+        ScreenKind::Audience,
+        Arc::clone(&scene),
+        video_frame,
+        Arc::clone(&running),
+    ) {
+        Ok(thread) => thread,
+        Err(err) => {
+            let _ = window.destroy();
+            return Err(err);
+        }
+    };
+
+    // La ventana se destruye sola a los 3 s (F2.5).
+    thread::Builder::new()
+        .name(format!("PulseFlow-Identify-{number}"))
+        .spawn(move || {
+            thread::sleep(IDENTIFY_DURATION);
+            running.store(false, Ordering::SeqCst);
+            let _ = render_thread.join();
+            let _ = window.destroy();
+        })
+        .map_err(|e| AppError::new(format!("Error iniciando el temporizador de identificación: {e}")))?;
+
+    Ok(())
+}
+
+/// Bloques de texto de una ventana de identificación: número grande centrado
+/// y, debajo, el nombre del monitor.
+fn identify_blocks(number: &str, width: u32, height: u32) -> Vec<TextBlock> {
+    let (w, h) = (width as f32, height as f32);
+    vec![
+        TextBlock {
+            text: number.to_string(),
+            font_size: (h * 0.5).min(w * 0.5),
+            font_weight: 800,
+            color: [1.0, 1.0, 1.0, 1.0],
+            alignment: "center".to_string(),
+            vertical_align: Some("center".to_string()),
+            x: 0.0,
+            y: 0.0,
+            width: w,
+            height: h,
+            line_height_ratio: 1.0,
+            outline_color: Some([0.0, 0.0, 0.0, 1.0]),
+            outline_width: Some(4.0),
+            ..Default::default()
+        },
+        TextBlock {
+            text: format!("PulseFlow — Pantalla {number}"),
+            font_size: (h * 0.04).clamp(16.0, 40.0),
+            color: [0.6, 0.6, 0.6, 1.0],
+            alignment: "center".to_string(),
+            x: 0.0,
+            y: h * 0.9,
+            width: w,
+            height: h * 0.08,
+            line_height_ratio: 1.2,
+            ..Default::default()
+        },
+    ]
+}
+
+// ---------------------------------------------------------------------------
 // Escena
 // ---------------------------------------------------------------------------
 
@@ -906,6 +1064,62 @@ mod tests {
         assert_eq!(select_monitor_index(&one, None, None), Some(0));
         // Sin monitores: nada.
         assert_eq!(select_monitor_index(&[], None, None), None);
+    }
+
+    #[test]
+    fn identify_targets_matches_bounds_then_index() {
+        let monitors = [
+            ScreenRect { x: 0, y: 0, width: 1920, height: 1080 },
+            ScreenRect { x: 1920, y: 0, width: 2560, height: 1440 },
+        ];
+
+        // El número es la posición (1-based) y el monitor el que contiene los bounds.
+        let entries = [
+            IdentifyScreen { bounds: Some(ScreenRect { x: 1920, y: 0, width: 2560, height: 1440 }), ..Default::default() },
+            IdentifyScreen { bounds: Some(ScreenRect { x: 0, y: 0, width: 1920, height: 1080 }), ..Default::default() },
+        ];
+        assert_eq!(
+            identify_targets(&monitors, &entries),
+            vec![("1".to_string(), 1), ("2".to_string(), 0)]
+        );
+
+        // Sin bounds válidos: fallback al índice de la entrada.
+        let no_bounds = [IdentifyScreen::default()];
+        assert_eq!(identify_targets(&monitors, &no_bounds), vec![("1".to_string(), 0)]);
+
+        // Entrada sin monitor asociado: se omite.
+        let out_of_range = [IdentifyScreen { bounds: Some(ScreenRect { x: 9999, y: 9999, width: 100, height: 100 }), ..Default::default() }];
+        assert!(identify_targets(&[], &out_of_range).is_empty());
+    }
+
+    #[test]
+    fn identify_screen_deserializa_desde_display_del_frontend() {
+        // Payload real: la lista de `GET_DISPLAYS` (id numérico + bounds), con
+        // campos extra (label, workArea, size, scaleFactor) que serde ignora.
+        let screens: Vec<IdentifyScreen> = serde_json::from_value(serde_json::json!([
+            {
+                "id": 0,
+                "label": "Built-in Retina Display",
+                "bounds": { "x": 0, "y": 0, "width": 1728, "height": 1117 },
+                "workArea": { "x": 0, "y": 37, "width": 1728, "height": 1080 },
+                "size": { "width": 1728, "height": 1117 },
+                "scaleFactor": 2
+            }
+        ]))
+        .expect("display de GET_DISPLAYS debe mapear a IdentifyScreen");
+
+        assert_eq!(screens[0].id, Some(0));
+        assert_eq!(screens[0].bounds.map(|b| b.width), Some(1728));
+    }
+
+    #[test]
+    fn identify_blocks_center_big_number() {
+        let blocks = identify_blocks("2", 1920, 1080);
+        assert_eq!(blocks[0].text, "2");
+        assert_eq!(blocks[0].alignment, "center");
+        assert_eq!(blocks[0].vertical_align.as_deref(), Some("center"));
+        assert!(blocks[0].font_size > 400.0, "el número debe ser grande");
+        assert!(blocks[1].text.contains("2"));
     }
 
     #[test]

@@ -42,6 +42,19 @@ export interface SyncedOutputs {
     [id: string]: string
 }
 
+/**
+ * Pantalla de `GET_DISPLAYS` reenviada por el comando `IDENTIFY_SCREENS`
+ * (espejo de `IdentifyScreen` en `src-tauri/src/render/screens.rs`).
+ * La posición de la entrada en la lista (1-based) es el número que se muestra
+ * en el monitor durante 3 s.
+ */
+export interface IdentifyScreen {
+    /** Índice del monitor en `GET_DISPLAYS` */
+    id?: number
+    label?: string
+    bounds?: { x: number; y: number; width: number; height: number }
+}
+
 // RTMP
 export interface RtmpDestination {
     id: string
