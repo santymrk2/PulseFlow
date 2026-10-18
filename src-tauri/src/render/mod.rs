@@ -10,6 +10,7 @@
 pub mod media;
 pub mod scene;
 pub mod ndi_stream;
+pub mod snapshot;
 pub mod stage;
 pub mod sync;
 pub mod text;

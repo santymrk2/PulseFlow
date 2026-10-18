@@ -247,6 +247,34 @@ pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
     Ok(())
 }
 
+/// Payload del comando de debug `RENDER_SNAPSHOT`. Espejo en TypeScript:
+/// `SnapshotRequest` en `src/types/SceneGraph.ts`.
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SnapshotPayload {
+    /// Escena a renderizar (el mismo Scene Graph que `RENDER_SCENE`).
+    pub scene: ScenePayload,
+    /// Ancho en píxeles del PNG (por defecto 1920).
+    pub width: Option<u32>,
+    /// Alto en píxeles del PNG (por defecto 1080).
+    pub height: Option<u32>,
+    /// Ruta absoluta donde guardar el PNG.
+    pub path: String,
+}
+
+/// `RENDER_SNAPSHOT`: renderiza una escena a un PNG offscreen, sin ventana ni
+/// monitor. Es la herramienta de verificación visual del engine (tests, CI y
+/// depuración desde la consola del webview).
+#[tauri::command]
+pub fn RENDER_SNAPSHOT(data: SnapshotPayload) -> AppResult<()> {
+    crate::render::snapshot::render_snapshot(
+        &data.scene,
+        data.width.unwrap_or(1920),
+        data.height.unwrap_or(1080),
+        std::path::Path::new(&data.path),
+    )
+}
+
 // ---------------------------------------------------------------------------
 // Scene Graph: texto, fondo, overlays y transiciones del engine WGPU
 // ---------------------------------------------------------------------------
@@ -421,4 +449,54 @@ pub fn STOP_NDI_NATIVE_FEED(app: AppHandle) -> AppResult<()> {
 #[tauri::command]
 pub fn IS_NDI_NATIVE_FEED_ACTIVE(app: AppHandle) -> bool {
     crate::render::is_ndi_native_feed_active(&app)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn snapshot_payload_deserializa_desde_json_de_ejemplo() {
+        let payload: SnapshotPayload = serde_json::from_value(json!({
+            "scene": {
+                "outputId": "out1",
+                "stage": false,
+                "width": 1920,
+                "height": 1080,
+                "background": null,
+                "items": [
+                    { "type": "text", "x": 100, "y": 200, "width": 1720, "height": 700,
+                      "align": "center", "verticalAlign": "top", "lineHeight": 1.25,
+                      "fontSize": 56, "fontWeight": 700, "color": [1, 1, 1, 1],
+                      "text": "Hola PulseFlow", "spans": [] }
+                ],
+                "transition": null,
+                "plainText": "Hola PulseFlow"
+            },
+            "width": 640,
+            "height": 360,
+            "path": "/tmp/pulseflow-snapshot.png"
+        }))
+        .expect("payload de snapshot válido");
+
+        assert_eq!(payload.scene.output_id, "out1");
+        assert_eq!(payload.width, Some(640));
+        assert_eq!(payload.height, Some(360));
+        assert_eq!(payload.path, "/tmp/pulseflow-snapshot.png");
+        assert_eq!(payload.scene.text_blocks().len(), 1);
+    }
+
+    #[test]
+    fn snapshot_payload_con_defaults_de_dimension_y_escena_minima() {
+        let payload: SnapshotPayload = serde_json::from_value(json!({
+            "scene": { "outputId": "out2" },
+            "path": "/tmp/s.png"
+        }))
+        .expect("payload mínimo válido");
+
+        assert_eq!(payload.width, None);
+        assert_eq!(payload.height, None);
+        assert!(payload.scene.items.is_empty());
+    }
 }
