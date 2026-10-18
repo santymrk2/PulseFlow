@@ -229,6 +229,9 @@ export function storeSubscriber() {
 
         send(OUTPUT, ["STAGE"], data)
 
+        // la escena de cada salida stage depende de su layout (salida fuente)
+        sendOutputScenes()
+
         // STAGE
         data = arrayToObject(filterObjectArray(data, ["disabled", "name", "settings", "items"]).filter((a: any) => a.disabled === false))
         timedout(STAGE, { channel: "LAYOUT", data }, () =>

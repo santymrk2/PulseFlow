@@ -52,9 +52,24 @@ A completar cuando se implemente F2.3:
 4. Botón de salida pasa a rojo al abrir y cierra todas con un click (comportamiento del frontend existente).
 
 ## F2.4 — Escena por pantalla con RENDER_SCENE
-A completar al llegar a F2.4:
-1. Cuando el frontend envía `RENDER_SCENE` por cada `outputId`, el texto/fondo correcto aparece en cada pantalla.
-2. Un cambio de escena sólo afecta a la pantalla que la recibe.
+Verificado 2026-10-18 (automatizado): `cargo check` limpio, `cargo test --lib` 26/26
+(incluido el nuevo test de `nextText` en `scene.rs`), `bun run test:unit` 47/47,
+`bun run test:svelte` con 59 errores (línea base, sin aumento) y Prettier limpio.
+La verificación GUI con dos monitores queda pendiente para el usuario:
+
+1. Con dos salidas de audiencia habilitadas con estilos distintos, abrir ambas:
+   cada monitor muestra su propio estilo (tipografía, color, alineación), no el
+   de la primera salida.
+2. Añadir una salida stage (con layout de stage asignado). Al cambiar de slide:
+   la pantalla de stage muestra el texto actual **y** el siguiente
+   ("SIGUIENTE: …") más el reloj; las pantallas de audiencia no muestran nada de
+   stage.
+3. Cambiar en el layout de stage la "salida fuente" (settings → output): el
+   stage pasa a reflejar esa otra salida (y su siguiente slide).
+4. Poner un video de fondo en una salida de audiencia: sólo se reproduce en esa
+   pantalla; al cambiar de slide con otro fondo, el video anterior se detiene.
+5. Cambiar una slide y verificar en la consola del webview que llegan varios
+   `RENDER_SCENE` (uno por salida) sin errores "Command … not found".
 
 ## F2.8 — Prueba end-to-end "Elegir monitor → poner en vivo → cubrirlo"
 Reunir F2.1–F2.7 en un solo test:

@@ -16,6 +16,8 @@ export interface SceneGraph {
     transition: SceneTransition | null
     /** Todo el texto de la slide en una cadena (stage display) */
     plainText: string
+    /** Texto de la slide siguiente, si la hay (stage display) */
+    nextText?: string
 }
 
 export interface SceneBackground {

@@ -249,10 +249,11 @@ pub fn OUTPUTS(_data: Value) -> AppResult<()> {
 
 /// `RENDER_SCENE`: aplica el Scene Graph de una salida (`src/types/SceneGraph.ts`).
 ///
-/// La escena se guarda en `ScreenManager` **por id de salida**, así que persiste
-/// aunque la pantalla esté cerrada. Si `stage` es falso es escena de audiencia
-/// (fondo + texto); si no, es una escena de stage. La transición sigue siendo
-/// global hasta F3.
+/// El frontend envía un comando por cada salida habilitada (audiencia y stage)
+/// con su `outputId`; la escena se guarda en `ScreenManager` **por id de salida**,
+/// así que persiste aunque la pantalla esté cerrada. Si `stage` es falso es
+/// escena de audiencia (fondo + texto); si no, es escena de stage y se usa
+/// `plainText`/`nextText`. La transición sigue siendo global hasta F3.
 #[tauri::command]
 pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
     if let Some(transition) = &data.transition {
@@ -265,11 +266,13 @@ pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
     }
 
     if data.stage {
+        let next_slide = data.next_text.as_ref().map(|t| t.trim().to_string()).filter(|t| !t.is_empty());
         return crate::render::set_stage_scene(
             &app,
             &data.output_id,
             crate::render::types::StageData {
                 current_slide: data.plain_text.trim().to_string(),
+                next_slide,
                 ..Default::default()
             },
         );
@@ -282,18 +285,6 @@ pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
         data.background_media(),
     )?;
 
-    // Temporal hasta F2.4 (escena por pantalla): el stage abierto muestra el
-    // texto actual aunque llegue por la salida principal, como hasta ahora.
-    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Stage) {
-        crate::render::set_stage_scene(
-            &app,
-            &id,
-            crate::render::types::StageData {
-                current_slide: data.plain_text.trim().to_string(),
-                ..Default::default()
-            },
-        )?;
-    }
     Ok(())
 }
 
@@ -405,15 +396,8 @@ pub fn SELECT_SLIDE(app: AppHandle, data: serde_json::Value) -> AppResult<()> {
         Vec::new()
     };
 
-    // Temporal hasta F2.4: el stage abierto refleja el texto actual.
-    let full_text = blocks.iter().map(|b| b.text.as_str()).collect::<Vec<_>>().join("\n");
-    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Stage) {
-        let _ = crate::render::set_stage_scene(&app, &id, crate::render::types::StageData {
-            current_slide: full_text.clone(),
-            ..Default::default()
-        });
-    }
-
+    // Este comando ya no se invoca desde el frontend (sólo `RENDER_SCENE`);
+    // el texto se aplica a las pantallas de audiencia abiertas.
     UPDATE_SCENE_TEXT(app, blocks)
 }
 

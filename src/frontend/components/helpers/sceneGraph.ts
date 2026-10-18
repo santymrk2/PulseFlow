@@ -10,7 +10,7 @@ import { OUTPUT } from "../../../types/Channels"
 import type { Output } from "../../../types/Output"
 import type { SceneBackground, SceneGraph, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
 import type { Item, OutSlide, Slide } from "../../../types/Show"
-import { media, outputs, styles, transitionData } from "../../stores"
+import { media, outputs, stageShows, styles, transitionData } from "../../stores"
 import { send } from "../../utils/request"
 import { getItemText } from "../edit/scripts/textStyle"
 import { shouldItemBeShown } from "../edit/scripts/itemHelpers"
@@ -171,6 +171,27 @@ function getTransition(output: Output, currentStyle: ReturnType<typeof getCurren
 
 // SCENE
 
+/** Items de texto de una slide, con las líneas visibles limitadas por el estilo. */
+function buildSlideTextItems(showSlide: OutSlide, outputId: string, currentStyle: ReturnType<typeof getCurrentStyle>, resolution: { width: number; height: number }) {
+    const slideItems = getSlideItems(showSlide, outputId, currentStyle)
+    const lineWindow = getOutputLines(showSlide, currentStyle.lines)
+
+    const items: SceneTextItem[] = []
+    slideItems.forEach((item, index) => {
+        const textItem = buildTextItem(item, index, slideItems, showSlide, outputId, resolution, lineWindow)
+        if (textItem) items.push(textItem)
+    })
+
+    return { items, slideItems }
+}
+
+/** Texto plano de una slide: items visibles o, si no los hay, todo su texto (para stage). */
+function plainTextOf(items: SceneTextItem[], slideItems: Item[]): string {
+    let text = items.map((a) => a.text).join("\n")
+    if (!text) text = slideItems.map((a) => getItemText(a)).join("\n")
+    return text.trim()
+}
+
 export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
     const currentStyle = getCurrentStyle(get(styles), output.style)
     const resolution = getOutputResolution(outputId, get(outputs), true, output.style || "")
@@ -179,19 +200,13 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
     const slide = output.out?.slide || null
     const showSlide = slide && layers.includes("slide") ? slide : null
 
-    const items: SceneTextItem[] = []
+    let items: SceneTextItem[] = []
     let plainText = ""
 
     if (showSlide) {
-        const slideItems = getSlideItems(showSlide, outputId, currentStyle)
-        const lineWindow = getOutputLines(showSlide, currentStyle.lines)
-        slideItems.forEach((item, index) => {
-            const textItem = buildTextItem(item, index, slideItems, showSlide, outputId, resolution, lineWindow)
-            if (textItem) items.push(textItem)
-        })
-        plainText = items.map((a) => a.text).join("\n")
-        // fallback si ningún item de texto es visible pero la slide tiene texto (stage)
-        if (!plainText) plainText = slideItems.map((a) => getItemText(a)).join("\n")
+        const built = buildSlideTextItems(showSlide, outputId, currentStyle, resolution)
+        items = built.items
+        plainText = plainTextOf(built.items, built.slideItems)
     }
 
     return {
@@ -206,24 +221,94 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
     }
 }
 
+// STAGE
+
+/** Id de la salida de audiencia que una salida stage refleja (su "fuente"). */
+function getStageSourceOutputId(output: Output, outputsData: { [id: string]: Output }): string {
+    const configuredId = stageShows[output.stageOutput || ""]?.settings?.output || ""
+    if (configuredId && outputsData[configuredId] && !outputsData[configuredId].stageOutput) return configuredId
+
+    return (
+        Object.keys(outputsData)
+            .filter((id) => outputsData[id]?.enabled && !outputsData[id].stageOutput)
+            .sort((a, b) => (outputsData[a].name || a).localeCompare(outputsData[b].name || b))[0] || ""
+    )
+}
+
+/** Siguiente slide del layout (ignora las desactivadas); `null` si no hay. */
+function getNextSlideRef(slide: OutSlide): OutSlide | null {
+    if (!slide.id || slide.id === "temp" || slide.id === "tempText") return null
+
+    const layoutRef = _show(slide.id).layouts([slide.layout]).ref()[0] || []
+    let index = slide.index ?? -1
+    do {
+        index++
+    } while (layoutRef[index]?.data?.disabled)
+    if (!layoutRef[index]) return null
+
+    return { id: slide.id, layout: slide.layout, index }
+}
+
+/**
+ * Escena de una salida stage (F2.4): el engine sólo usa `plainText`/`nextText`,
+ * que se calculan sobre la salida de audiencia fuente (mismo criterio que
+ * `receiveSTAGE.OUT` en `utils/stageTalk.ts`).
+ */
+function buildStageScene(outputId: string, output: Output, outputsData: { [id: string]: Output }): SceneGraph {
+    const sourceOutputId = getStageSourceOutputId(output, outputsData)
+    const sourceOutput = sourceOutputId ? outputsData[sourceOutputId] : null
+    const currentStyle = getCurrentStyle(get(styles), sourceOutput?.style)
+    const resolution = getOutputResolution(outputId, outputsData, true, output.style || "")
+
+    let plainText = ""
+    let nextText = ""
+
+    const slide = sourceOutput?.out?.slide || null
+    if (slide && (slide.type || "show") === "show") {
+        const current = buildSlideTextItems(slide, sourceOutputId, currentStyle, resolution)
+        plainText = plainTextOf(current.items, current.slideItems)
+
+        const nextSlide = getNextSlideRef(slide)
+        if (nextSlide) {
+            const next = buildSlideTextItems(nextSlide, sourceOutputId, currentStyle, resolution)
+            nextText = plainTextOf(next.items, next.slideItems)
+        }
+    }
+
+    return {
+        outputId,
+        stage: true,
+        width: resolution.width,
+        height: resolution.height,
+        background: null,
+        items: [],
+        transition: null,
+        plainText,
+        nextText
+    }
+}
+
 // SEND
 
 /**
- * Envía al engine nativo la escena de la salida principal (la primera activa que no sea stage).
- * El engine sólo tiene una ventana de audiencia: con varias salidas, las demás se ignoran por ahora.
- * El Stage Display se alimenta con el texto de esta misma escena (`plainText`).
+ * Envía al engine nativo una escena por cada salida habilitada, con su `outputId`.
+ * F2.4: el motor rutea la escena por id y la mantiene persistente por pantalla;
+ * las salidas stage reciben su propia escena con `plainText` (slide actual de su
+ * salida fuente) y `nextText` (slide siguiente).
  */
 export function sendOutputScenes(outputsData: { [id: string]: Output } = get(outputs)) {
     const ids = Object.keys(outputsData || {})
-        .filter((id) => outputsData[id]?.enabled && !outputsData[id].stageOutput)
+        .filter((id) => outputsData[id]?.enabled)
         .sort((a, b) => (outputsData[a].name || a).localeCompare(outputsData[b].name || b))
 
-    const mainId = ids.find((id) => outputsData[id].active) || ids[0]
-    if (!mainId) return
+    if (!ids.length) return
 
-    try {
-        send(OUTPUT, ["RENDER_SCENE"], buildSceneGraph(mainId, outputsData[mainId]))
-    } catch (err) {
-        console.error("[sceneGraph] could not build scene for output", mainId, err)
-    }
+    ids.forEach((id) => {
+        try {
+            const scene = outputsData[id].stageOutput ? buildStageScene(id, outputsData[id], outputsData) : buildSceneGraph(id, outputsData[id])
+            send(OUTPUT, ["RENDER_SCENE"], scene)
+        } catch (err) {
+            console.error("[sceneGraph] could not build scene for output", id, err)
+        }
+    })
 }

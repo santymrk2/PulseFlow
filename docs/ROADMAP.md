@@ -218,7 +218,22 @@ monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
   *Aceptación:* el botón de salida se pone rojo al abrir y un segundo click (con la
   confirmación existente) cierra todas las pantallas.
 
-- [ ] **F2.4 Escena por pantalla.**
+- [x] **F2.4 Escena por pantalla.** (verificado 2026-10-18: `cargo check` limpio y
+  `cargo test --lib` 26/26, incluido el nuevo test de serde de `nextText`
+  (`parses_stage_next_text_and_defaults_to_none`); `bun run test:unit` 47/47;
+  `bun run test:svelte` 59 errores (línea base, sin aumento); Prettier limpio.
+  `sendOutputScenes()` envía ahora un `RENDER_SCENE` por **cada** salida
+  habilitada, audiencia y stage: las stage resuelven su salida fuente como
+  `receiveSTAGE.OUT` (layout de stage → `settings.output`, si no la primera
+  habilitada) y mandan `plainText` (slide actual) y `nextText` (slide siguiente
+  del layout, ignorando desactivadas); `nextText` se agregó al Scene Graph
+  (`src/types/SceneGraph.ts`) y a `ScenePayload` (Rust, con espejo y test). En
+  Rust, la rama stage de `RENDER_SCENE` rellena `StageData.next_slide` y se
+  eliminaron los efectos secundarios temporales de F2.1 (escribir el texto
+  principal en todos los stages abiertos desde `RENDER_SCENE` y `SELECT_SLIDE`).
+  El video de fondo ya era por pantalla (`set_scene_background` → `sync_video`
+  por `ScreenHandle`). La verificación GUI de dos monitores + stage quedó para
+  el usuario en `docs/VERIFICAR.md`, sección "F2.4".)
   *Archivos:* `src/frontend/components/helpers/sceneGraph.ts`,
   `src/frontend/utils/listeners.ts`, `commands/output.rs`.
   *Pasos:* `sendOutputScenes()` manda un `RENDER_SCENE` por **cada** salida habilitada

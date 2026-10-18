@@ -22,6 +22,8 @@ pub struct ScenePayload {
     pub transition: Option<SceneTransition>,
     /// Todo el texto de la slide en una cadena (lo usa el Stage Display).
     pub plain_text: String,
+    /// Texto de la slide siguiente, si la hay (lo usa el Stage Display).
+    pub next_text: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -238,6 +240,23 @@ mod tests {
         let bg = payload.background_media().expect("fondo");
         assert_eq!(bg.aspect_mode, 1);
         assert_eq!(bg.media_type, "video");
+    }
+
+    #[test]
+    fn parses_stage_next_text_and_defaults_to_none() {
+        let with_next: ScenePayload = serde_json::from_value(json!({
+            "outputId": "stage1",
+            "stage": true,
+            "plainText": "Actual",
+            "nextText": "Siguiente"
+        }))
+        .expect("payload de stage válido");
+        assert_eq!(with_next.next_text.as_deref(), Some("Siguiente"));
+
+        let without_next: ScenePayload =
+            serde_json::from_value(json!({ "outputId": "stage1", "plainText": "Actual" }))
+                .expect("payload sin nextText válido");
+        assert!(without_next.next_text.is_none());
     }
 
     #[test]

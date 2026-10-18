@@ -344,6 +344,7 @@ mod tests {
             items: vec![SceneItem::Unknown],
             transition: None,
             plain_text: String::new(),
+            next_text: None,
         };
 
         let rgba = render_snapshot_rgba(&scene, 320, 180).expect("render del snapshot");
