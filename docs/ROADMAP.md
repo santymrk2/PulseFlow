@@ -86,7 +86,9 @@ no como código probado.
 
 ## F1 — Plataformas: sólo macOS y Windows
 
-- [ ] **F1.1 Bundles y configuración.**
+- [x] **F1.1 Bundles y configuración.** (verificado 2026-10-18: `tauri build` en
+  macOS produjo sólo `.app` y `.dmg`; sin intentos de deb/rpm/AppImage. Íconos
+  `.icns`/`.ico` presentes — siguen siendo los de FreeShow, branding en F9.4.)
   *Archivos:* `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`.
   *Pasos:* `bundle.targets` → `["app", "dmg", "nsis"]`; `bundle.macOS.minimumSystemVersion`
   (11.0); `bundle.windows` (WebView2 `downloadBootstrapper`); revisar íconos `.icns`/`.ico`.
