@@ -201,6 +201,7 @@ pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<b
     if data.state {
         let mut any_opened = false;
         if let Some(ref outs) = data.outputs {
+            let mut states: Vec<(String, bool)> = Vec::new();
             for out in outs {
                 let Ok(config) = serde_json::from_value::<ScreenConfig>(out.clone()) else {
                     continue;
@@ -209,7 +210,11 @@ pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<b
                     continue;
                 }
                 crate::render::open_screen(&app, &config)?;
+                states.push((config.id.clone(), true));
                 any_opened = true;
+            }
+            if !states.is_empty() {
+                crate::render::screens::emit_output_state(&app, &states);
             }
         } else {
             let config = ScreenConfig {
@@ -219,11 +224,17 @@ pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<b
                 ..Default::default()
             };
             crate::render::open_screen(&app, &config)?;
+            crate::render::screens::emit_output_state(&app, &[(config.id.clone(), true)]);
             any_opened = true;
         }
         Ok(any_opened)
     } else {
+        let ids = crate::render::open_ids(&app);
         crate::render::close_all_screens(&app)?;
+        let states: Vec<(String, bool)> = ids.into_iter().map(|id| (id, false)).collect();
+        if !states.is_empty() {
+            crate::render::screens::emit_output_state(&app, &states);
+        }
         Ok(false)
     }
 }

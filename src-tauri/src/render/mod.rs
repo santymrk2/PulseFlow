@@ -21,10 +21,10 @@ pub mod types;
 pub mod video;
 
 pub use screens::{
-    close_all_of_kind, close_all_screens, close_screen, feed_video_frame, has_open, open_ids,
-    open_ids_of_kind, open_screen, reposition_screen, set_audience_scene, set_scene_background, set_scene_overlays,
-    set_scene_text, set_stage_scene, set_transition_config, ScreenConfig, ScreenKind,
-    ScreenManager, ScreenRect,
+    close_all_of_kind, close_all_screens, close_screen, emit_output_state, feed_video_frame,
+    has_open, open_ids, open_ids_of_kind, open_screen, reposition_screen, set_audience_scene,
+    set_scene_background, set_scene_overlays, set_scene_text, set_stage_scene,
+    set_transition_config, ScreenConfig, ScreenKind, ScreenManager, ScreenRect,
 };
 pub use types::{
     BackgroundMedia, OverlayItem, SceneGraph, SelectSlidePayload, StageData, TextBlock,

@@ -200,7 +200,12 @@ monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
   *Aceptación:* con 2 monitores, la salida cubre el elegido; con 1, aparece flotante.
   Probarlo en macOS **y** en Windows, y anotar el resultado en el commit.
 
-- [ ] **F2.3 Estado de salidas hacia el frontend.**
+- [x] **F2.3 Estado de salidas hacia el frontend.** (verificado 2026-10-18: `cargo check`
+  y `cargo test --lib` 25/25; `TOGGLE_OUTPUTS` emite `app.emit("OUTPUT", { channel: "OUTPUT_STATE", ... })`
+  tanto al abrir (ids → active: true) como al cerrar (ids → active: false); el
+  `Destroyed` event de cada ventana cierra la pantalla y también emite
+  `active: false` para ese `id`. Los estados se calculan sobre las pantallas que
+  realmente se abren/cierran usando `open_ids`.)
   *Pasos:* `TOGGLE_OUTPUTS { outputs, state }` abre/cierra todas las pantallas
   indicadas y emite `app.emit("OUTPUT", { channel: "OUTPUT_STATE", data: [{ id, active }] })`.
   También emitir cuando el sistema cierra una ventana (`WindowEvent::Destroyed`).

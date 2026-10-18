@@ -30,7 +30,7 @@ use std::sync::{Arc, Mutex, RwLock};
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 use tauri::window::{Monitor, Window, WindowBuilder};
-use tauri::{AppHandle, Manager, PhysicalPosition, PhysicalSize, WindowEvent};
+use tauri::{AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize, WindowEvent};
 
 /// Prefijo de las etiquetas de ventana de las pantallas.
 const SCREEN_LABEL_PREFIX: &str = "screen-";
@@ -373,7 +373,6 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
         }
     };
 
-    // Si el usuario cierra la ventana desde el sistema, liberar la pantalla.
     // (F2.3 agregará aquí la emisión de OUTPUT_STATE al frontend.)
     {
         let app_handle = app.clone();
@@ -386,6 +385,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
                 if let Some(mut handle) = handle {
                     handle.stop();
                 }
+                emit_output_state(&app_handle, &[(id.clone(), false)]);
             }
         });
     }
@@ -479,6 +479,15 @@ pub fn open_ids_of_kind(app: &AppHandle, kind: ScreenKind) -> Vec<String> {
 /// ¿Hay alguna pantalla de este tipo abierta?
 pub fn has_open(app: &AppHandle, kind: ScreenKind) -> bool {
     !open_ids_of_kind(app, kind).is_empty()
+}
+
+/// Notifica al frontend el estado de las salidas (`OUTPUT` → `OUTPUT_STATE`).
+pub fn emit_output_state(app: &AppHandle, states: &[(String, bool)]) {
+    let data: Vec<_> = states
+        .iter()
+        .map(|(id, active)| serde_json::json!({ "id": id, "active": active }))
+        .collect();
+    let _ = app.emit("OUTPUT", serde_json::json!({ "channel": "OUTPUT_STATE", "data": data }));
 }
 
 // ---------------------------------------------------------------------------
