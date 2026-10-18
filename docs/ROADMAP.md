@@ -94,11 +94,14 @@ no como código probado.
   (11.0); `bundle.windows` (WebView2 `downloadBootstrapper`); revisar íconos `.icns`/`.ico`.
   *Aceptación:* `tauri build` no intenta generar `.deb/.rpm/.AppImage`.
 
-- [x] **F1.2 CI en macOS y Windows.** (verificado 2026-10-18: el job de Rust usa
-  matriz `[macos-latest, windows-latest]` sin `apt-get`; `build.yml` sólo matrix
-  `[macos-latest, windows-latest]`; el paso de sidecars ya usaba `--only-host`.
-  La corrida real de los workflows en GitHub requiere push/dispatch — pendiente
-  de que el usuario dispare `workflow_dispatch`.)
+- [x] **F1.2 CI en macOS y Windows.** (verificado 2026-10-18 con corridas reales
+  disparadas por `gh`: CI run 39165461277 verde en los tres jobs — Rust macOS,
+  Rust Windows y Frontend — y Build run 39164663595 verde en `macos-latest` y
+  `windows-latest`, con bundles release completos. El job de Rust usa matriz
+  `[macos-latest, windows-latest]` sin `apt-get`; `build.yml` sólo matrix
+  `[macos-latest, windows-latest]`. Dos fixes durante la corrida: `shell: bash`
+  explícito para el stub de sidecars en Windows y extensión `.exe` en los
+  stubs.)
   *Archivos:* `.github/workflows/ci.yml`, `build.yml`.
   *Pasos:* el job de Rust corre en `macos-latest` y `windows-latest` (quitar
   `apt-get` de GTK); el job de frontend puede seguir en `ubuntu-latest` (sólo bun);
