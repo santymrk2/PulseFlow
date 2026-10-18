@@ -141,7 +141,21 @@ Objetivo: elegir monitor en Settings → "poner en vivo" → la slide aparece en
 monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
 `commands/output.rs` y `render/mod.rs`: se hace junto con la funcionalidad, no antes.
 
-- [ ] **F2.1 Gestor de pantallas en Rust.**
+- [x] **F2.1 Gestor de pantallas en Rust.** (verificado 2026-10-18: `cargo check`
+  limpio y `cargo test --lib` 24/24, incluidos los tests de selección de monitor
+  (`select_monitor_prefers_bounds_center`, `select_monitor_falls_back_to_index_then_secondary`)
+  y de layout de stage (`stage_layout_*`). `ScreenManager` es el estado de Tauri
+  (escenas por id que persisten + pantallas abiertas + `ndi_capture` y
+  `transition_config` de engine hasta F3/F8); ventana creada visible antes de la
+  superficie WGPU; un solo bucle de render donde stage es un layout
+  (`stage::stage_blocks`); `render/mod.rs` es fachada y se eliminaron
+  `start_native_output`, `NATIVE_OUTPUT_LABEL`, `RenderState`, `active_render`,
+  el stage nativo y todo el API de escena global. Los comandos se re-enrutaron:
+  `TOGGLE_OUTPUTS` abre/cierra por `ScreenConfig` y `RENDER_SCENE` aplica la
+  escena por `outputId`; los comandos legacy sin uso en el frontend son shims
+  sobre pantallas abiertas hasta F2.7. Decisión propia: se conserva el efecto
+  secundario de escribir el texto principal en los stages abiertos hasta F2.4,
+  para no regresionar el comportamiento visible entre tareas.)
   *Archivos:* `src-tauri/src/render/` (partir de `docs/drafts/render_screens.rs`),
   `render/mod.rs`, `render/stage.rs`.
   *Pasos:*

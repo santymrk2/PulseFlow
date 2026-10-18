@@ -29,7 +29,7 @@ pub fn run() {
             std::fs::create_dir_all(&config_dir)?;
             let stores = crate::domain::data::store::StoreManager::new(config_dir);
             app.manage(crate::state::AppState::new(stores));
-            app.manage(crate::render::RenderState::new());
+            app.manage(crate::render::ScreenManager::new());
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![

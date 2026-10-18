@@ -90,3 +90,68 @@ impl GpuFramebufferCapture {
         *frame = None;
     }
 }
+
+// ---------------------------------------------------------------------------
+// Ciclo de vida del feed (comandos START/STOP/IS_NDI_NATIVE_FEED)
+// ---------------------------------------------------------------------------
+
+/// Inicia (o reutiliza) la captura directa del Framebuffer de la GPU para NDI.
+pub fn start_feed(
+    app: &tauri::AppHandle,
+    width_opt: Option<u32>,
+    height_opt: Option<u32>,
+) -> crate::error::AppResult<()> {
+    let state = super::screens::manager(app)?;
+    let mut capture_guard = state.ndi_capture.lock_safe();
+    if let Some(ref capture) = *capture_guard {
+        capture.start();
+        return Ok(());
+    }
+
+    let instance = wgpu::Instance::default();
+    let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
+        power_preference: wgpu::PowerPreference::HighPerformance,
+        compatible_surface: None,
+        force_fallback_adapter: false,
+        ..Default::default()
+    }))
+    .map_err(|e| crate::error::AppError::new(format!("GPU no disponible para NDI: {e}")))?;
+
+    let (device, _) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
+        label: Some("PulseFlow NDI Capture Device"),
+        ..Default::default()
+    }))
+    .map_err(|e| crate::error::AppError::new(format!("Device no disponible para NDI: {e}")))?;
+
+    let w = width_opt.unwrap_or(1920);
+    let h = height_opt.unwrap_or(1080);
+    let capture = GpuFramebufferCapture::new(&device, w, h);
+    capture.start();
+    *capture_guard = Some(capture);
+    Ok(())
+}
+
+/// Detiene la captura de Framebuffer de la GPU para NDI.
+pub fn stop_feed(app: &tauri::AppHandle) -> crate::error::AppResult<()> {
+    let state = super::screens::manager(app)?;
+    let mut capture_guard = state.ndi_capture.lock_safe();
+    if let Some(ref mut capture) = *capture_guard {
+        capture.stop();
+    }
+    *capture_guard = None;
+    Ok(())
+}
+
+/// Verifica si la captura directa de Framebuffer para NDI está activa.
+pub fn is_feed_active(app: &tauri::AppHandle) -> bool {
+    super::screens::manager(app)
+        .map(|state| {
+            state
+                .ndi_capture
+                .lock_safe()
+                .as_ref()
+                .map(|c| c.is_active.load(Ordering::Relaxed))
+                .unwrap_or(false)
+        })
+        .unwrap_or(false)
+}

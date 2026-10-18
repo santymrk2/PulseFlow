@@ -14,8 +14,9 @@
 #![allow(non_snake_case)]
 
 use crate::error::{AppError, AppResult};
-use serde::Deserialize;
 use crate::render::scene::ScenePayload;
+use crate::render::{ScreenConfig, ScreenKind};
+use serde::Deserialize;
 use serde_json::{json, Value};
 use tauri::{AppHandle, Manager};
 
@@ -109,47 +110,65 @@ pub struct OutputWindowOptions {
     pub fullscreen: Option<bool>,
 }
 
-/// `OPEN_OUTPUT_WINDOW`: crea (o enfoca) la ventana nativa de audiencia, sin webview.
-/// Renderiza con el engine WGPU a 60 fps con VSync; devuelve `true` si quedó en pantalla completa.
+/// `OPEN_OUTPUT_WINDOW`: crea (o reubica) la ventana nativa de audiencia "main",
+/// sin webview, con el engine WGPU a 60 fps con VSync. Devuelve `true` si abrió.
 #[tauri::command]
 pub fn OPEN_OUTPUT_WINDOW(app: AppHandle, data: Option<OutputWindowOptions>) -> AppResult<bool> {
     let options = data.unwrap_or_default();
-    crate::render::start_native_output(&app, options.display, options.fullscreen)
+    let config = ScreenConfig {
+        id: "main".to_string(),
+        name: "Audiencia".to_string(),
+        screen: options.display.map(|i| json!(i)),
+        always_on_top: Some(true),
+        ..Default::default()
+    };
+    crate::render::open_screen(&app, &config)?;
+    Ok(true)
 }
 
-/// `CLOSE_OUTPUT_WINDOW`: detiene el motor GPU y cierra la ventana de audiencia.
+/// `CLOSE_OUTPUT_WINDOW`: cierra todas las pantallas de audiencia abiertas.
 #[tauri::command]
 pub fn CLOSE_OUTPUT_WINDOW(app: AppHandle) -> AppResult<()> {
-    crate::render::stop_native_output(&app)
+    crate::render::close_all_of_kind(&app, ScreenKind::Audience)
 }
 
-/// `IS_OUTPUT_WINDOW_OPEN`: indica si la ventana de audiencia GPU nativa está abierta.
+/// `IS_OUTPUT_WINDOW_OPEN`: indica si hay alguna pantalla de audiencia abierta.
 #[tauri::command]
 pub fn IS_OUTPUT_WINDOW_OPEN(app: AppHandle) -> AppResult<bool> {
-    Ok(crate::render::is_native_output_open(&app))
+    Ok(crate::render::has_open(&app, ScreenKind::Audience))
 }
 
 // ---------------------------------------------------------------------------
 // Ventana de Stage (monitores de retorno para músicos/operadores)
 // ---------------------------------------------------------------------------
 
-/// `OPEN_STAGE_WINDOW`: abre la ventana nativa de Stage Display en GPU con vista de alto contraste.
+/// `OPEN_STAGE_WINDOW`: abre la pantalla nativa de Stage Display "main-stage"
+/// con vista de alto contraste.
 #[tauri::command]
 pub fn OPEN_STAGE_WINDOW(app: AppHandle, data: Option<OutputWindowOptions>) -> AppResult<bool> {
     let options = data.unwrap_or_default();
-    crate::render::start_native_stage(&app, options.display, options.fullscreen)
+    let config = ScreenConfig {
+        id: "main-stage".to_string(),
+        name: "Stage".to_string(),
+        screen: options.display.map(|i| json!(i)),
+        stage_output: Some(json!(true)),
+        always_on_top: Some(true),
+        ..Default::default()
+    };
+    crate::render::open_screen(&app, &config)?;
+    Ok(true)
 }
 
-/// `CLOSE_STAGE_WINDOW`: detiene el Stage Display y cierra su ventana nativa.
+/// `CLOSE_STAGE_WINDOW`: cierra todas las pantallas de stage abiertas.
 #[tauri::command]
 pub fn CLOSE_STAGE_WINDOW(app: AppHandle) -> AppResult<()> {
-    crate::render::stop_native_stage(&app)
+    crate::render::close_all_of_kind(&app, ScreenKind::Stage)
 }
 
-/// `IS_STAGE_WINDOW_OPEN`: indica si la ventana nativa de Stage está abierta.
+/// `IS_STAGE_WINDOW_OPEN`: indica si hay alguna pantalla de stage abierta.
 #[tauri::command]
 pub fn IS_STAGE_WINDOW_OPEN(app: AppHandle) -> AppResult<bool> {
-    Ok(crate::render::is_native_stage_open(&app))
+    Ok(crate::render::has_open(&app, ScreenKind::Stage))
 }
 
 /// Payload para el comando `TOGGLE_OUTPUTS` de Svelte.
@@ -164,30 +183,38 @@ pub struct ToggleOutputsPayload {
     pub auto_position: Option<bool>,
 }
 
-/// `TOGGLE_OUTPUTS`: abre o cierra las salidas nativas en GPU según el estado indicado.
-/// Invocado directamente por Svelte (`src/frontend/components/helpers/output.ts`).
+/// `TOGGLE_OUTPUTS`: abre o cierra las pantallas indicadas según el estado.
+/// Cada salida del payload es un `Output` de Svelte; su `stageOutput` define el
+/// tipo de pantalla. Invocado por Svelte (`src/frontend/components/helpers/output.ts`).
+/// (F2.3 emitirá `OUTPUT_STATE` al frontend al cambiar el estado.)
 #[tauri::command]
 pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<bool> {
     if data.state {
         let mut any_opened = false;
         if let Some(ref outs) = data.outputs {
             for out in outs {
-                let is_stage = out.get("stageOutput").and_then(|v| v.as_str()).map(|s| !s.is_empty()).unwrap_or(false)
-                    || out.get("stageOutput").and_then(|v| v.as_bool()).unwrap_or(false);
-                if is_stage {
-                    let _ = crate::render::start_native_stage(&app, None, Some(false));
-                } else {
-                    let res = crate::render::start_native_output(&app, None, None)?;
-                    any_opened = any_opened || res;
+                let Ok(config) = serde_json::from_value::<ScreenConfig>(out.clone()) else {
+                    continue;
+                };
+                if !config.enabled.unwrap_or(true) {
+                    continue;
                 }
+                crate::render::open_screen(&app, &config)?;
+                any_opened = true;
             }
         } else {
-            any_opened = crate::render::start_native_output(&app, None, None)?;
+            let config = ScreenConfig {
+                id: "main".to_string(),
+                name: "Audiencia".to_string(),
+                always_on_top: Some(true),
+                ..Default::default()
+            };
+            crate::render::open_screen(&app, &config)?;
+            any_opened = true;
         }
         Ok(any_opened)
     } else {
-        crate::render::stop_native_output(&app)?;
-        let _ = crate::render::stop_native_stage(&app);
+        crate::render::close_all_screens(&app)?;
         Ok(false)
     }
 }
@@ -202,23 +229,12 @@ pub fn OUTPUTS(_data: Value) -> AppResult<()> {
 
 /// `RENDER_SCENE`: aplica el Scene Graph de una salida (`src/types/SceneGraph.ts`).
 ///
-/// Si la salida es de tipo Stage, actualiza el Stage Display; si no, actualiza fondo,
-/// texto y transición de la ventana de audiencia.
+/// La escena se guarda en `ScreenManager` **por id de salida**, así que persiste
+/// aunque la pantalla esté cerrada. Si `stage` es falso es escena de audiencia
+/// (fondo + texto); si no, es una escena de stage. La transición sigue siendo
+/// global hasta F3.
 #[tauri::command]
 pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
-    if data.stage {
-        if crate::render::is_native_stage_open(&app) {
-            crate::render::update_stage_data(
-                &app,
-                crate::render::types::StageData {
-                    current_slide: data.plain_text.trim().to_string(),
-                    ..Default::default()
-                },
-            )?;
-        }
-        return Ok(());
-    }
-
     if let Some(transition) = &data.transition {
         crate::render::set_transition_config(
             &app,
@@ -228,16 +244,30 @@ pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
         )?;
     }
 
-    match data.background_media() {
-        Some(bg) => crate::render::apply_scene_background(&app, bg)?,
-        None => crate::render::clear_scene_background(&app)?,
-    }
-    crate::render::update_scene_text(&app, data.text_blocks())?;
-
-    // El Stage Display muestra el texto actual aunque llegue por la salida principal.
-    if crate::render::is_native_stage_open(&app) {
-        crate::render::update_stage_data(
+    if data.stage {
+        return crate::render::set_stage_scene(
             &app,
+            &data.output_id,
+            crate::render::types::StageData {
+                current_slide: data.plain_text.trim().to_string(),
+                ..Default::default()
+            },
+        );
+    }
+
+    crate::render::set_audience_scene(
+        &app,
+        &data.output_id,
+        data.text_blocks(),
+        data.background_media(),
+    )?;
+
+    // Temporal hasta F2.4 (escena por pantalla): el stage abierto muestra el
+    // texto actual aunque llegue por la salida principal, como hasta ahora.
+    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Stage) {
+        crate::render::set_stage_scene(
+            &app,
+            &id,
             crate::render::types::StageData {
                 current_slide: data.plain_text.trim().to_string(),
                 ..Default::default()
@@ -286,33 +316,43 @@ pub fn RENDER_SNAPSHOT(app: AppHandle, data: SnapshotPayload) -> AppResult<Strin
 
 // ---------------------------------------------------------------------------
 // Scene Graph: texto, fondo, overlays y transiciones del engine WGPU
+//
+// El frontend ya no invoca estos comandos (grep en `src/` dio 0 usos): sólo
+// `TOGGLE_OUTPUTS` y `RENDER_SCENE` llegan por IPC. Se mantienen como shims
+// sobre `ScreenManager` —aplicando a todas las pantallas abiertas del tipo—
+// hasta eliminarlos en F2.7.
 // ---------------------------------------------------------------------------
 
-/// `UPDATE_SCENE_TEXT`: actualiza los bloques de texto de la salida nativa en GPU en <1ms.
+/// `UPDATE_SCENE_TEXT`: actualiza los bloques de texto de las pantallas de audiencia.
 #[tauri::command]
 pub fn UPDATE_SCENE_TEXT(
     app: AppHandle,
     blocks: Vec<crate::render::types::TextBlock>,
 ) -> AppResult<()> {
-    crate::render::update_scene_text(&app, blocks)
+    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Audience) {
+        crate::render::set_scene_text(&app, &id, blocks.clone())?;
+    }
+    Ok(())
 }
 
-/// `CLEAR_SCENE_TEXT`: limpia todo el texto proyectado en el motor de GPU.
+/// `CLEAR_SCENE_TEXT`: limpia todo el texto proyectado en las pantallas de audiencia.
 #[tauri::command]
 pub fn CLEAR_SCENE_TEXT(app: AppHandle) -> AppResult<()> {
-    crate::render::clear_scene_text(&app)
+    UPDATE_SCENE_TEXT(app, Vec::new())
 }
 
-/// `SELECT_SLIDE`: evento de cambio de diapositiva que actualiza el búfer de texto de la GPU en <1ms.
+/// `SELECT_SLIDE`: cambio de diapositiva (fondo + texto) en las pantallas de audiencia.
 #[tauri::command]
 pub fn SELECT_SLIDE(app: AppHandle, data: serde_json::Value) -> AppResult<()> {
     if let Ok(payload) =
         serde_json::from_value::<crate::render::types::SelectSlidePayload>(data.clone())
     {
         if let Some(bg) = payload.background {
-            let _ = crate::render::set_scene_background(&app, bg);
+            for id in crate::render::open_ids_of_kind(&app, ScreenKind::Audience) {
+                let _ = crate::render::set_scene_background(&app, &id, Some(bg.clone()));
+            }
         }
-        return crate::render::update_scene_text(&app, payload.text_blocks);
+        return UPDATE_SCENE_TEXT(app, payload.text_blocks);
     }
 
     let blocks: Vec<crate::render::types::TextBlock> = if let Ok(b) =
@@ -345,18 +385,19 @@ pub fn SELECT_SLIDE(app: AppHandle, data: serde_json::Value) -> AppResult<()> {
         Vec::new()
     };
 
-    if crate::render::is_native_stage_open(&app) {
-        let full_text = blocks.iter().map(|b| b.text.as_str()).collect::<Vec<_>>().join("\n");
-        let _ = crate::render::update_stage_data(&app, crate::render::types::StageData {
-            current_slide: full_text,
+    // Temporal hasta F2.4: el stage abierto refleja el texto actual.
+    let full_text = blocks.iter().map(|b| b.text.as_str()).collect::<Vec<_>>().join("\n");
+    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Stage) {
+        let _ = crate::render::set_stage_scene(&app, &id, crate::render::types::StageData {
+            current_slide: full_text.clone(),
             ..Default::default()
         });
     }
 
-    crate::render::update_scene_text(&app, blocks)
+    UPDATE_SCENE_TEXT(app, blocks)
 }
 
-/// `SET_BACKGROUND_IMAGE`: establece una imagen de fondo en VRAM para la GPU.
+/// `SET_BACKGROUND_IMAGE`: establece una imagen de fondo en VRAM en las pantallas de audiencia.
 #[tauri::command]
 pub fn SET_BACKGROUND_IMAGE(
     app: AppHandle,
@@ -378,13 +419,19 @@ pub fn SET_BACKGROUND_IMAGE(
         aspect_mode,
     };
 
-    crate::render::set_scene_background(&app, bg)
+    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Audience) {
+        crate::render::set_scene_background(&app, &id, Some(bg.clone()))?;
+    }
+    Ok(())
 }
 
-/// `CLEAR_BACKGROUND`: limpia el fondo de la GPU (vuelve a negro puro).
+/// `CLEAR_BACKGROUND`: limpia el fondo de las pantallas de audiencia (negro puro).
 #[tauri::command]
 pub fn CLEAR_BACKGROUND(app: AppHandle) -> AppResult<()> {
-    crate::render::clear_scene_background(&app)
+    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Audience) {
+        crate::render::set_scene_background(&app, &id, None)?;
+    }
+    Ok(())
 }
 
 /// `FEED_VIDEO_FRAME`: transfiere un fotograma de video decodificado a VRAM.
@@ -396,7 +443,7 @@ pub fn FEED_VIDEO_FRAME(
     height: u32,
     data: Vec<u8>,
 ) -> AppResult<()> {
-    crate::render::feed_video_frame(&app, id, width, height, data)
+    crate::render::feed_video_frame(&app, &id, width, height, data)
 }
 
 /// `UPDATE_SCENE_OVERLAYS`: actualiza los overlays (relojes, avisos, tercios inferiores).
@@ -405,10 +452,13 @@ pub fn UPDATE_SCENE_OVERLAYS(
     app: AppHandle,
     overlays: Vec<crate::render::types::OverlayItem>,
 ) -> AppResult<()> {
-    crate::render::update_scene_overlays(&app, overlays)
+    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Audience) {
+        crate::render::set_scene_overlays(&app, &id, overlays.clone())?;
+    }
+    Ok(())
 }
 
-/// `SET_TRANSITION`: configura la transición activa por GPU (Crossfade, DipToBlack, Wipe, Push) y su duración.
+/// `SET_TRANSITION`: configura la transición activa (Crossfade, DipToBlack, Wipe, Push) y su duración.
 #[tauri::command]
 pub fn SET_TRANSITION(
     app: AppHandle,
@@ -428,13 +478,17 @@ pub fn SET_TRANSITION(
 // Stage Display y NDI (captura de framebuffer)
 // ---------------------------------------------------------------------------
 
-/// `UPDATE_STAGE_DATA`: actualiza la diapositiva actual, siguiente, reloj y mensaje del Stage Display.
+/// `UPDATE_STAGE_DATA`: actualiza la diapositiva actual, siguiente, reloj y mensaje
+/// de todas las pantallas de stage abiertas.
 #[tauri::command]
 pub fn UPDATE_STAGE_DATA(
     app: AppHandle,
     stage_data: crate::render::types::StageData,
 ) -> AppResult<()> {
-    crate::render::update_stage_data(&app, stage_data)
+    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Stage) {
+        crate::render::set_stage_scene(&app, &id, stage_data.clone())?;
+    }
+    Ok(())
 }
 
 /// `START_NDI_NATIVE_FEED`: activa la captura directa de Framebuffer en GPU (`copy_texture_to_buffer`)
@@ -445,19 +499,19 @@ pub fn START_NDI_NATIVE_FEED(
     width: Option<u32>,
     height: Option<u32>,
 ) -> AppResult<()> {
-    crate::render::start_ndi_native_feed(&app, width, height)
+    crate::render::ndi_stream::start_feed(&app, width, height)
 }
 
 /// `STOP_NDI_NATIVE_FEED`: detiene la captura de Framebuffer de GPU para NDI.
 #[tauri::command]
 pub fn STOP_NDI_NATIVE_FEED(app: AppHandle) -> AppResult<()> {
-    crate::render::stop_ndi_native_feed(&app)
+    crate::render::ndi_stream::stop_feed(&app)
 }
 
 /// `IS_NDI_NATIVE_FEED_ACTIVE`: comprueba si la captura directa de Framebuffer NDI está activa.
 #[tauri::command]
 pub fn IS_NDI_NATIVE_FEED_ACTIVE(app: AppHandle) -> bool {
-    crate::render::is_ndi_native_feed_active(&app)
+    crate::render::ndi_stream::is_feed_active(&app)
 }
 
 #[cfg(all(test, debug_assertions))]
