@@ -104,7 +104,7 @@ Limitaciones reales:
 - [x] `@tauri-apps/cli` en devDependencies raíz; scripts `tauri`, `dev:tauri`, `build:tauri`.
 - [x] `package-lock.json` eliminado; sólo `bun.lock`.
 - [x] Planes viejos eliminados; este `PLAN.md` es la fuente de verdad.
-- [x] Crate renombrado a `freeshow` / `freeshow_lib`.
+- [x] Crate renombrado a `pulseflow` / `pulseflow_lib`.
 
 ### Fase 2 — Un solo modo de salida: engine Rust
 - [x] API única de ventanas: `OPEN/CLOSE/IS_OUTPUT_WINDOW(_OPEN)` y `OPEN/CLOSE/IS_STAGE_WINDOW(_OPEN)` (sin duplicados `*_NATIVE_*`).
@@ -120,15 +120,11 @@ Limitaciones reales:
 - [ ] Limpiar los `send(OUTPUT, ...)` obsoletos del frontend (ver tabla, categoría "eliminar").
 - [ ] Probar manualmente con monitor real: texto, fondo imagen/video y cambio de slides.
 
-### Fases siguientes (pendientes)
-- [ ] Overlays (imágenes, texto, tercios inferiores) en el Scene Graph y en el engine.
-- [ ] Timers / relojes / countdowns renderizados por el engine.
-- [ ] Transiciones del show (tipo, duración, easing por slide/output) aplicadas desde el Scene Graph.
-- [ ] Video sincronizado (reproducción, pausa, seek, loop, volumen, tiempo) y evaluar decodificación por hardware.
-- [ ] Stage con layouts reales (items de stage configurados por el usuario).
-- [ ] NDI completo (fuentes por output, alpha, ciclo de vida, UI).
-- [ ] Inventario de comandos OUTPUT: implementar los "pendientes" y eliminar los obsoletos.
-- [ ] Portar la estética de `docs/design-reference/` al frontend Svelte.
+### Fases siguientes
+
+Las tareas pendientes (salida multi-pantalla, persistencia, Scene Graph, Looks, diseño,
+IPC, video) están en [`docs/ROADMAP.md`](docs/ROADMAP.md), que es la lista de trabajo
+a ejecutar. Plataformas soportadas: **macOS y Windows**.
 
 ## Inventario de comandos `send(OUTPUT, [...])`
 
