@@ -171,6 +171,15 @@ pub fn IS_STAGE_WINDOW_OPEN(app: AppHandle) -> AppResult<bool> {
     Ok(crate::render::has_open(&app, ScreenKind::Stage))
 }
 
+/// `UPDATE_BOUNDS`: reubica una pantalla abierta cuando el usuario mueve o
+/// redimensiona sus bounds en "Elegir pantalla" (`Screens.svelte`). No abre la
+/// pantalla si está cerrada. El payload es un `Output` de Svelte con id
+/// (espejo en TypeScript: `Output` en `src/types/Output.ts`).
+#[tauri::command]
+pub fn UPDATE_BOUNDS(app: AppHandle, data: ScreenConfig) -> AppResult<()> {
+    crate::render::reposition_screen(&app, &data)
+}
+
 /// Payload para el comando `TOGGLE_OUTPUTS` de Svelte.
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]

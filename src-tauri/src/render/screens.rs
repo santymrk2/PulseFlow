@@ -440,6 +440,21 @@ pub fn close_all_of_kind(app: &AppHandle, kind: ScreenKind) -> AppResult<()> {
     Ok(())
 }
 
+/// Reubica una pantalla **abierta** con la configuración nueva (la que mueve el
+/// usuario en "Elegir pantalla"). Si está cerrada no la abre: la configuración
+/// quedará aplicada cuando se abra.
+pub fn reposition_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
+    let state = manager(app)?;
+    let open_kind = {
+        let screens = state.screens.lock_safe();
+        screens.get(&config.id).map(|h| h.kind)
+    };
+    match open_kind {
+        Some(kind) if kind == config.kind() => open_screen(app, config),
+        _ => Ok(()),
+    }
+}
+
 /// Ids de todas las pantallas abiertas.
 pub fn open_ids(app: &AppHandle) -> Vec<String> {
     manager(app)
@@ -894,5 +909,42 @@ mod tests {
     fn screen_manager_new_starts_empty() {
         let state = ScreenManager::new();
         assert!(!state.is_open("cualquiera"));
+    }
+
+    #[test]
+    fn screen_config_deserializa_desde_output_del_frontend() {
+        // Payload real de UPDATE_BOUNDS/TOGGLE_OUTPUTS: un `Output` de Svelte
+        // (src/types/Output.ts) con campos extra que serde debe ignorar.
+        let config: ScreenConfig = serde_json::from_value(json!({
+            "id": "output-1",
+            "name": "Principal",
+            "color": "#ff0000",
+            "active": true,
+            "enabled": true,
+            "bounds": { "x": 1920, "y": 0, "width": 1920, "height": 1080 },
+            "boundsLocked": false,
+            "screen": "1",
+            "alwaysOnTop": true,
+            "invisible": false
+        }))
+        .expect("Output del frontend debe mapear a ScreenConfig");
+
+        assert_eq!(config.id, "output-1");
+        assert_eq!(config.kind(), ScreenKind::Audience);
+        assert_eq!(config.bounds.map(|b| b.width), Some(1920));
+        assert_eq!(config.always_on_top, Some(true));
+        assert_eq!(config.enabled, Some(true));
+
+        // Una salida de stage se reconoce por stageOutput.
+        let stage: ScreenConfig = serde_json::from_value(json!({
+            "id": "stage-1",
+            "name": "Stage",
+            "enabled": true,
+            "stageOutput": "layout-1",
+            "screen": null
+        }))
+        .expect("Output de stage debe mapear a ScreenConfig");
+        assert_eq!(stage.kind(), ScreenKind::Stage);
+        assert_eq!(stage.screen_index(), None);
     }
 }

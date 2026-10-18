@@ -121,6 +121,7 @@ pub fn run() {
             commands::output::OPEN_STAGE_WINDOW,
             commands::output::CLOSE_STAGE_WINDOW,
             commands::output::IS_STAGE_WINDOW_OPEN,
+            commands::output::UPDATE_BOUNDS,
             commands::output::UPDATE_STAGE_DATA,
             commands::output::START_NDI_NATIVE_FEED,
             commands::output::STOP_NDI_NATIVE_FEED,
