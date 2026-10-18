@@ -55,7 +55,9 @@ jobs:
                   workspaces: src-tauri
 
             # Tauri valida que existan los sidecars declarados en tauri.conf.json (externalBin).
+            # shell: bash para que funcione igual en el runner de Windows (Git Bash).
             - name: Stub sidecars
+              shell: bash
               run: |
                   mkdir -p src-tauri/binaries
                   TRIPLE=$(rustc -vV | sed -n 's/host: //p')
