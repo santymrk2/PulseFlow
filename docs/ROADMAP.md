@@ -106,7 +106,12 @@ no como código probado.
   `--only-host`.
   *Aceptación:* ningún workflow instala paquetes de Linux para compilar Rust.
 
-- [ ] **F1.3 Código y scripts específicos de Linux.**
+- [x] **F1.3 Código y scripts específicos de Linux.** (verificado 2026-10-18:
+  `grep -rni "linux|vaapi|gtk" src-tauri/src scripts .github PLAN.md README.md`
+  sin resultados; `hwaccel` sólo VideoToolbox/D3D11VA; sidecars sólo para
+  darwin-x64/arm64 y win32-x64, `--only-host` OK; `cargo test --lib` 16/16.
+  La sección de desarrollo del README se reescribió con bun/macOS-Windows, que
+  estaba desactualizada con Node/npm.)
   *Archivos:* `src-tauri/src/render/video.rs` (rama `hwaccel auto`),
   `scripts/setup-sidecars.js`, `PLAN.md`, `README.md`.
   *Pasos:* quitar ramas/documentación de Linux; en `setup-sidecars.js` limitar los

@@ -1,7 +1,7 @@
 //! PulseFlow Native Render Engine (WGPU)
 //!
 //! Este módulo implementa la renderización en GPU nativa sin Webview,
-//! utilizando WGPU para macOS (Metal), Windows (DirectX 12/Vulkan) y Linux.
+//! utilizando WGPU para macOS (Metal) y Windows (DirectX 12/Vulkan).
 //!
 //! Componentes: ventana nativa + swapchain WGPU a 60 fps con VSync, texto en GPU
 //! (glyphon + cosmic-text) con contornos y sombras, capa de video/imágenes en VRAM

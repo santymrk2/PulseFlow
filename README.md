@@ -66,13 +66,13 @@ Head over to [FreeShow on Transifex](https://app.transifex.com/nettbiter/freesho
 
 You are welcome to contribute to the code!
 
-1. Clone the code in this repo
-2. Install [Node.js](https://nodejs.org/en/download/)
-3. Install [Python 3.12](https://www.python.org/downloads/), and the [`setuptools`](https://pypi.org/project/setuptools/) package
-4. On Windows, download [Visual Studio](https://visualstudio.microsoft.com/downloads/) and install "Desktop development with C++", also select the "Windows 10 SDK"
-5. On Linux, install the following library: `sudo apt-get install libfontconfig1-dev`
-6. In the terminal, run: `npm install`
-7. To start the app, run: `npm start`
+PulseFlow runs on macOS (Apple Silicon and Intel) and Windows 10/11 (x64) only.
+
+1. Clone this repo
+2. Install [Bun](https://bun.sh/)
+3. On Windows, download [Visual Studio](https://visualstudio.microsoft.com/downloads/) and install "Desktop development with C++", also select the "Windows 10 SDK"
+4. In the terminal, run: `bun install`
+5. To start the app, run: `bun run dev:tauri` (frontend only: `bun run dev`)
 
 ## Join us on Slack
 

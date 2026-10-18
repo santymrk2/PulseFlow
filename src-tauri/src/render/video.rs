@@ -3,7 +3,6 @@
 //! Utiliza el decodificador nativo por hardware según la plataforma:
 //! - macOS: VideoToolbox (`-hwaccel videotoolbox`)
 //! - Windows: D3D11VA (`-hwaccel d3d11va`)
-//! - Linux: VAAPI / Auto (`-hwaccel auto`)
 //!
 //! Transfiere los fotogramas decodificados en tiempo real directamente
 //! a texturas en VRAM mediante `MediaPool::update_video_frame`, permitiendo que
@@ -55,12 +54,11 @@ where
     let frame_height = if height > 0 { height } else { 1080 };
     let frame_size = (frame_width * frame_height * 4) as usize;
 
+    // Plataformas soportadas: macOS (VideoToolbox) y Windows (D3D11VA).
     let hwaccel = if cfg!(target_os = "macos") {
         "videotoolbox"
-    } else if cfg!(target_os = "windows") {
-        "d3d11va"
     } else {
-        "auto"
+        "d3d11va"
     };
 
     let scale_filter = format!("scale={}:{}", frame_width, frame_height);

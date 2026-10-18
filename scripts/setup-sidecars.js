@@ -44,13 +44,11 @@ const FFMPEG_RELEASE = "b6.1.1"
 const FFMPEG_BASE_URL = "https://github.com/eugeneware/ffmpeg-static/releases/download"
 
 // `process.platform/arch` -> target triple de Rust.
+// Sólo plataformas soportadas: macOS (Apple Silicon e Intel) y Windows x64.
 const TRIPLES = {
     "darwin-arm64": "aarch64-apple-darwin",
     "darwin-x64": "x86_64-apple-darwin",
-    "win32-x64": "x86_64-pc-windows-msvc",
-    "win32-arm64": "aarch64-pc-windows-msvc",
-    "linux-x64": "x86_64-unknown-linux-gnu",
-    "linux-arm64": "aarch64-unknown-linux-gnu"
+    "win32-x64": "x86_64-pc-windows-msvc"
 }
 
 const WINDOWS_TARGET = {

@@ -203,7 +203,8 @@ pub const MAIN: &str = "MAIN";
 /// de `src/types/Main.ts`.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OS {
-    /// `std::env::consts::OS` (p. ej. "macos", "windows", "linux").
+    /// `std::env::consts::OS` (sólo valores de plataformas soportadas:
+    /// "macos" o "windows").
     pub platform: String,
     /// Nombre del host (`os.hostname()` en Electron).
     pub name: String,
