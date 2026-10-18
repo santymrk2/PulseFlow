@@ -89,6 +89,24 @@ Verificado 2026-10-18 (automatizado): `cargo check` limpio, `cargo test --lib` 2
 5. Las ventanas de identificación no deben aparecer como salidas ni afectar al
    botón de salida (no emiten `OUTPUT_STATE`).
 
+## F2.6 — Puente OUTPUT sin ruido
+Verificado 2026-10-18 (automatizado): `bun run test:unit` 47/47, `svelte-check` 59
+errores (línea base) y Prettier limpio. Sin cambios en Rust. La lógica es
+determinista: todo comando del canal `OUTPUT` que no esté en `OUTPUT_COMMANDS` se
+descarta antes de `invoke`, así que no puede generar "Command … not found".
+Prueba visual pendiente para el usuario:
+
+1. Levantar la app (`bun run dev:tauri`) con la consola del webview o la terminal
+   visible.
+2. Abrir una canción y pasar varias slides (también con imagen/video de fondo).
+3. Debe salir **cero** error `Command … not found` / `invoke(...) failed`.
+4. En desarrollo, puede aparecer **una sola vez** por nombre un warning
+   `[tauri] canal OUTPUT: comando "X" descartado …` — es el aviso único, no un
+   error.
+5. Comprobar que lo que sí funciona sigue funcionando: abrir/cerrar salidas
+   (botón de salir), mover bounds en "Elegir pantalla", lupa de identificación,
+   y que las salidas siguen mostrando el contenido al cambiar de slide.
+
 ## F2.8 — Prueba end-to-end "Elegir monitor → poner en vivo → cubrirlo"
 Reunir F2.1–F2.7 en un solo test:
 1. Elegir monitor secundario en Settings → Outputs (Elegir pantalla).

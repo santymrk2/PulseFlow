@@ -15,6 +15,7 @@
 
 import { invoke } from "@tauri-apps/api/core"
 import { listen, type UnlistenFn } from "@tauri-apps/api/event"
+import { OUTPUT } from "../../types/Channels"
 
 type Receiver = (args: any, listenedId?: string) => void
 
@@ -26,6 +27,31 @@ interface StoredReceiver {
 const receivers: { [channel: string]: StoredReceiver[] } = {}
 const unlisteners: { [channel: string]: UnlistenFn } = {}
 const listenerPromises: { [channel: string]: Promise<void> } = {}
+
+// Lista blanca de comandos del canal `OUTPUT` que existen en Rust (F2.6).
+//
+// El canal `OUTPUT` de Svelte se usaba, en la versión Electron, para hablar con
+// la ventana de salida que alojaba el HTML de la webview: ahí se consumían
+// señales como `CREATE`, `DRAW`, `SHOWS`, `CAPTURE`, `SET_VALUE`… En PulseFlow
+// esa ventana ya no existe (la salida es una ventana nativa WGPU) y el frontend
+// sólo necesita unos pocos comandos, que sí están registrados en
+// `src-tauri/src/lib.rs` (módulo `commands::output`).
+//
+// Cualquier otro comando del canal `OUTPUT` se descarta antes de `invoke` para
+// no llenar la consola de errores "Command … not found" (p. ej. al cambiar de
+// slide, que dispara muchas señales heredadas). En desarrollo se avisa una sola
+// vez por nombre.
+const OUTPUT_COMMANDS = new Set([
+    "TOGGLE_OUTPUTS",
+    "RENDER_SCENE",
+    "UPDATE_BOUNDS",
+    "IDENTIFY_SCREENS",
+    // no-op histórico: existe en Rust y no debe avisar (se elimina en F2.7)
+    "OUTPUTS"
+])
+
+// Comandos ya avisados en desarrollo, para no repetir el warning en cada envío.
+const warnedOutputCommands = new Set<string>()
 
 const isTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window
 
@@ -59,6 +85,16 @@ async function send(channel: string, data?: any, id?: string) {
     if (data && typeof data === "object" && "channel" in data) {
         command = data.channel
         payload = data.data
+    }
+
+    // Canal `OUTPUT`: sólo se invocan los comandos que existen en Rust; el resto
+    // son señales heredadas de la ventana webview de Electron (F2.6).
+    if (channel === OUTPUT && !OUTPUT_COMMANDS.has(command)) {
+        if (!warnedOutputCommands.has(command)) {
+            warnedOutputCommands.add(command)
+            if (import.meta.env.DEV) console.warn(`[tauri] canal OUTPUT: comando "${command}" descartado (no existe en el engine nativo)`)
+        }
+        return
     }
 
     if (!isTauri) {

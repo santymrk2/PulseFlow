@@ -263,13 +263,7 @@ monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
   bucle de render).
   *Aceptación:* el botón de lupa de "Elegir pantalla" muestra los números.
 
-- [ ] **F2.6 Puente `OUTPUT` sin ruido.**
-  *Archivos:* `src/frontend/IPC/tauri.ts`.
-  *Pasos:* lista blanca de comandos del canal `OUTPUT` que existen en Rust
-  (`TOGGLE_OUTPUTS`, `RENDER_SCENE`, `UPDATE_BOUNDS`, `IDENTIFY_SCREENS`, …). Los demás
-  no se invocan (eran para la ventana webview); en desarrollo, loguear una sola vez por
-  nombre.
-  *Aceptación:* cambiar de slide no produce ningún "Command … not found".
+- [x] **F2.6 Puente `OUTPUT` sin ruido.** (verificado 2026-10-18: `bun run test:unit` 47/47;\n  `svelte-check` 59 errores (línea base, sin aumento); Prettier limpio. No se toca Rust.)\n  En `src/frontend/IPC/tauri.ts` hay una lista blanca `OUTPUT_COMMANDS` con los comandos\n  del canal `OUTPUT` que existen en Rust (`TOGGLE_OUTPUTS`, `RENDER_SCENE`,\n  `UPDATE_BOUNDS`, `IDENTIFY_SCREENS` y el no-op `OUTPUTS`, que se elimina en F2.7).\n  `send()` descarta cualquier otro comando del canal `OUTPUT` antes de `invoke`: eran\n  señales heredadas de la ventana webview de Electron (`CREATE`, `DRAW`, `SHOWS`,\n  `CAPTURE`, `SET_VALUE`, …) que sólo producían \"Command … not found\" al cambiar de\n  slide. En desarrollo se avisa una sola vez por nombre (`warnedOutputCommands`); en\n  producción el descarte es silencioso. El filtro va tras la destructuración\n  `{ channel, data }` y sólo aplica a `channel === OUTPUT`, así que el canal `MAIN` y las\n  respuestas entrantes (`OUTPUT_STATE`, `BUFFER`, …) no se ven afectados. Aceptación\n  comprobada de forma determinista (todo comando no listado se descarta antes de\n  `invoke`, por lo que no puede generar el error); la prueba visual en la app quedó para\n  el usuario en `docs/VERIFICAR.md`, sección \"F2.6\".)\n  *Archivos:* `src/frontend/IPC/tauri.ts`.\n  *Pasos:* lista blanca de comandos del canal `OUTPUT` que existen en Rust\n  (`TOGGLE_OUTPUTS`, `RENDER_SCENE`, `UPDATE_BOUNDS`, `IDENTIFY_SCREENS`, …). Los demás\n  no se invocan (eran para la ventana webview); en desarrollo, loguear una sola vez por\n  nombre.\n  *Aceptación:* cambiar de slide no produce ningún "Command … not found".
 
 - [ ] **F2.7 Borrar API muerta del engine.**
   *Pasos:* con `grep` en `src/`, confirmar que el frontend no usa y eliminar:
