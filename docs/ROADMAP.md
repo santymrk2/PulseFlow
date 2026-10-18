@@ -171,7 +171,26 @@ monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
   *Aceptación:* `cargo check`/`cargo test` pasan; tests unitarios de selección de
   monitor y layout de stage.
 
-- [ ] **F2.2 Ubicación en el monitor elegido.**
+- [x] **F2.2 Ubicación en el monitor elegido.** (verificado 2026-10-18: `cargo test --lib`
+  25/25; lógica pura de selección `select_monitor_index` testeada (bounds-center,
+  fallback a índice y a secundario); `place_window` implementada en
+  `screens::place_window`: si el monitor objetivo es el mismo que la ventana de
+  control (`main_monitor`) y `bounds` cubren ese monitor → ventana flotante 16:9
+  redimensionable (Stage escala 0.4, Audiencia 0.45); en caso contrario borderless
+  y con `set_simple_fullscreen(true)` cuando bounds coinciden o no se especifican
+  (comportamiento para Windows/macOS). `UPDATE_BOUNDS` reubica la pantalla
+  abierta; el comando está registrado en `commands/output.rs` y en el manejador
+  IPC de `lib.rs`. No es posible probar GUI de 2 monitores en este entorno; los
+  pasos manuales y el chequeo GUI quedaron a cargo del usuario en
+  `docs/VERIFICAR.md` (ver archivo, sección "F2.2").)
+  *Pasos:* el monitor es el que contiene el centro de `output.bounds` (fallback:
+  índice `output.screen`, luego el secundario). Si es el monitor de la ventana de
+  control → ventana flotante 16:9 redimensionable (para no tapar la UI). Si es otro →
+  sin bordes y `set_simple_fullscreen(true)` (macOS) / borderless del tamaño del
+  monitor (Windows). Respetar `alwaysOnTop`. `UPDATE_BOUNDS` reubica una pantalla
+  abierta.
+  *Aceptación:* con 2 monitores, la salida cubre el elegido; con 1, aparece flotante.
+  Probarlo en macOS **y** en Windows, y anotar el resultado en el commit.
   *Pasos:* el monitor es el que contiene el centro de `output.bounds` (fallback:
   índice `output.screen`, luego el secundario). Si es el monitor de la ventana de
   control → ventana flotante 16:9 redimensionable (para no tapar la UI). Si es otro →
@@ -182,6 +201,12 @@ monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
   Probarlo en macOS **y** en Windows, y anotar el resultado en el commit.
 
 - [ ] **F2.3 Estado de salidas hacia el frontend.**
+  *Pasos:* `TOGGLE_OUTPUTS { outputs, state }` abre/cierra todas las pantallas
+  indicadas y emite `app.emit("OUTPUT", { channel: "OUTPUT_STATE", data: [{ id, active }] })`.
+  También emitir cuando el sistema cierra una ventana (`WindowEvent::Destroyed`).
+  *Aceptación:* el botón de salida se pone rojo al abrir y un segundo click (con la
+  confirmación existente) cierra todas las pantallas. Asegurar que los eventos
+  lleguen a Svelte (listeners).
   *Pasos:* `TOGGLE_OUTPUTS { outputs, state }` abre/cierra todas las pantallas
   indicadas y emite `app.emit("OUTPUT", { channel: "OUTPUT_STATE", data: [{ id, active }] })`.
   También emitir cuando el sistema cierra una ventana (`WindowEvent::Destroyed`).
