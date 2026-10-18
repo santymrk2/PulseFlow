@@ -52,7 +52,7 @@ no como código probado.
 
 ## F0 — Línea base y herramientas de verificación
 
-- [ ] **F0.1 Registrar la línea base.**
+- [x] **F0.1 Registrar la línea base.** (2026-10-18, macOS arm64, commit base `22726c39`)
   *Pasos:* correr `bun run test:unit`, `bun run test:svelte`, `bun run build`,
   `cd src-tauri && cargo check && cargo test --lib`. Anotar abajo los números
   (tests pasados, errores/warnings de svelte-check).
@@ -60,9 +60,11 @@ no como código probado.
 
   | Chequeo | Resultado |
   | --- | --- |
-  | test:unit | _completar_ |
-  | test:svelte | _completar_ (referencia previa: 220 errores / 317 warnings) |
-  | cargo test | _completar_ |
+  | test:unit | ✅ 47/47 tests en 3 archivos |
+  | test:svelte | ⚠️ falla (exit 1): **59 errores** / 317 warnings en 152 archivos (la referencia previa de 220 errores era anterior al fix `b7fa296`; no aumentar) |
+  | build | ✅ `vite build` OK en 9.36 s (warnings de chunks > 500 kB, heredados) |
+  | cargo check | ✅ sin errores ni warnings |
+  | cargo test --lib | ✅ 9/9 tests |
 
 - [ ] **F0.2 Snapshot de escena sin monitor (`RENDER_SNAPSHOT`).**
   *Por qué:* hoy nadie (ni un agente ni CI) puede verificar qué dibuja el engine sin
