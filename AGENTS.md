@@ -21,12 +21,15 @@ diferenciarse, usá `cfg(target_os = "macos")` / `cfg(target_os = "windows")`.
 | Frontend dev | `bun run dev` |
 | App completa | `bun run dev:tauri` (requiere `bun run setup:sidecars --only-host` una vez) |
 | Tests JS | `bun run test:unit` |
-| Tipos Svelte | `bun run test:svelte` (hay ~220 errores heredados: **no aumentar**) |
-| Formato | `bunx prettier --config config/formatting/.prettierrc.yaml --check <archivos tocados>` |
+| Tipos Svelte | `bun run test:svelte` (hay ~59 errores heredados: **no aumentar**) |
+| Formato | `bunx prettier --config config/formatting/.prettierrc.yaml --check <archivos tocados en src/>` |
 | Rust | `cd src-tauri && cargo check && cargo test --lib` |
 | Build | `bun run build` |
 
 Sólo **bun** (nunca npm, yarn, pnpm ni npx). El lockfile es `bun.lock`.
+
+El chequeo de formato aplica **sólo** a archivos tocados dentro de `src/`. No correr
+prettier sobre `.md`, `docs/` ni el resto de la configuración.
 
 ## Definición de terminado (cada tarea)
 
