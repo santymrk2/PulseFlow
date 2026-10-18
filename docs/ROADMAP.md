@@ -119,7 +119,11 @@ no como código probado.
   *Aceptación:* `grep -rni "linux\|vaapi\|gtk" src-tauri/src scripts .github` sin
   resultados relevantes.
 
-- [ ] **F1.4 Permisos y firma (preparación).**
+- [x] **F1.4 Permisos y firma (preparación).** (verificado 2026-10-18: `tauri build`
+  en macOS incluye los tres claves de uso en `Contents/Info.plist` del `.app`;
+  `Entitlements.plist` es aceptado por `codesign` con allow-jit + cámara +
+  micrófono; `entitlements` declarado en `bundle.macOS`; README con la sección
+  de firma/notarización macOS y firma Windows. Sin secretos configurados.)
   *Archivos:* `src-tauri/Info.plist` (nuevo), `src-tauri/Entitlements.plist` (nuevo).
   *Pasos:* declarar `NSCameraUsageDescription`, `NSMicrophoneUsageDescription` y lo
   necesario para captura de pantalla; documentar en `README.md` cómo firmar/notarizar

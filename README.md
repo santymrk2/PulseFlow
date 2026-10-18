@@ -74,6 +74,24 @@ PulseFlow runs on macOS (Apple Silicon and Intel) and Windows 10/11 (x64) only.
 4. In the terminal, run: `bun install`
 5. To start the app, run: `bun run dev:tauri` (frontend only: `bun run dev`)
 
+## Packaging, signing and notarization
+
+PulseFlow is built with `bun run build:tauri` (Tauri v2). Bundles are limited to `.app`/`.dmg` on macOS and NSIS on Windows (see `src-tauri/tauri.conf.json`).
+
+### macOS
+
+- Privacy permissions live in `src-tauri/Info.plist` (`NSCameraUsageDescription`, `NSMicrophoneUsageDescription`, `NSScreenCaptureUsageDescription`) and are merged into the `.app` automatically.
+- Hardened-runtime entitlements (JIT, camera, microphone) live in `src-tauri/Entitlements.plist` (`bundle.macOS.entitlements`).
+- To code sign and notarize, set these environment variables before `bun run build:tauri`:
+  - `APPLE_SIGNING_IDENTITY`: `Developer ID Application: <name> (<team id>)`
+  - `APPLE_ID` + `APPLE_PASSWORD` (app-specific password) + `APPLE_TEAM_ID`: enable notarization and stapling.
+- Without those variables the build is ad-hoc signed (fine for local testing, not for distribution).
+
+### Windows
+
+- To Authenticode-sign the NSIS installer, configure `bundle.windows.signCommand` in `src-tauri/tauri.conf.json` pointing to your signing tool (e.g. `signtool.exe sign /fd SHA256 /tr http://timestamp.digicert.com {exe}`) and provide the certificate through your tool of choice.
+- The WebView2 runtime is installed via `downloadBootstrapper` when missing.
+
 ## Join us on Slack
 
 If you would like to get involved contributing in any way, head over to our [Slack Channel](https://join.slack.com/t/livechurchsolutions/shared_invite/zt-i88etpo5-ZZhYsQwQLVclW12DKtVflg) and introduce yourself. We'd love to hear from you.
