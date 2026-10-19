@@ -144,7 +144,7 @@
         flex: 1;
         height: 22px;
         border-radius: 4px;
-        border: 1px solid var(--primary-lighter);
+        border: 1px solid var(--border-color, var(--primary-lighter));
         box-shadow: inset 0 0 4px rgba(0, 0, 0, 0.3);
     }
 </style>

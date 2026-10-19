@@ -163,10 +163,11 @@
         display: flex;
         justify-content: space-between;
         z-index: 30;
-        min-height: 40px;
-        height: 40px;
+        min-height: 48px;
+        height: 48px;
 
-        box-shadow: 0 0 4px rgb(0 0 0 / 0.4);
+        /* separador inferior (referencia: Topbar.tsx "border-b") */
+        border-bottom: 1px solid var(--border-color, var(--primary-lighter));
 
         /* disabled because it's causing unexpected behaviour in Windows 11 */
         /* -webkit-app-region: drag; */
@@ -248,7 +249,7 @@
         position: absolute;
         top: 0;
         left: 0;
-        height: calc(40px - 4px);
+        height: calc(48px - 4px);
 
         display: flex;
         align-items: center;

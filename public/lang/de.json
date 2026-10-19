@@ -350,6 +350,7 @@
         "first_last": "Erste und letzte Folie"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Standard",
         "dark": "Dunkel",
         "light": "Hell",

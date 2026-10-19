@@ -334,6 +334,7 @@
         "first_last": "最初と最後のスライド"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "デフォルト",
         "dark": "ダーク",
         "light": "ライト",

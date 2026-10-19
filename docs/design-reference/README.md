@@ -51,9 +51,11 @@ Notas: el tema se aplica inline desde `defaultThemes.ts` sobre `<html>`. Geist y
 
 ## Idea a futuro
 
-Portar estos tokens y estilos al frontend Svelte actual (`src/frontend/`), que ya
-tiene Tailwind v4 + `bits-ui` + shadcn-svelte en `src/frontend/lib`: copiar los
-valores del tema `.dark` de `index.css` al tema "PulseFlow" en `defaultThemes.ts`,
-incorporar fuente Geist y ajustar componentes base (`Button`, `MaterialButton`,
-inputs `Material*`, paneles y popups) para usar radios/bordes globales. Esto se
-hará en F6.2–F6.3, solo donde se indique.
+Hecho en F6.2–F6.5 (ver `docs/ROADMAP.md`): tema "PulseFlow" por defecto con los
+valores `.dark` de la referencia (`defaultThemes.ts`), fuente Geist empaquetada
+(`@fontsource-variable/geist`), radios/bordes globales `var(--radius)` /
+`var(--border-color)` en los componentes base, topbar de 48px y componentes
+shadcn-svelte generados en `src/frontend/lib/components/ui/` (su regla de uso
+está en el README de esa carpeta: sólo pantallas nuevas).
+
+Pendiente de verificación visual: `docs/VERIFICAR-F6.md`.

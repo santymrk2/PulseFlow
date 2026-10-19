@@ -73,7 +73,7 @@
         if (width > defaultWidth - 20 && width < defaultWidth + 20) return defaultWidth
         if (width > maxWidth) return maxWidth
         if (side === "bottom") {
-            const availableHeight = window.innerHeight - ($os.platform === "win32" ? 25 : 0) - $drawer.height - 40
+            const availableHeight = window.innerHeight - ($os.platform === "win32" ? 25 : 0) - $drawer.height - 48 // 48: Top.svelte
             if (width > availableHeight) return availableHeight
         }
         move = true

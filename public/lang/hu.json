@@ -381,6 +381,7 @@
         "first_last": "Első és utolsó dián"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Alapértelmezett",
         "dark": "Sötét",
         "light": "Világos",

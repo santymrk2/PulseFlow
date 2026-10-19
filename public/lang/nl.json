@@ -381,6 +381,7 @@
         "first_last": "Eerste en laatste dia"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Standaard",
         "dark": "Donker",
         "light": "Licht",

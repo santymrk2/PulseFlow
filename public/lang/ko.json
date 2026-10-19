@@ -378,6 +378,7 @@
         "first_last": "첫 번째 및 마지막 슬라이드"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "기본",
         "dark": "어둡게",
         "light": "밝게",

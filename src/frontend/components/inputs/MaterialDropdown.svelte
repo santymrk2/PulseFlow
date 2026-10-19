@@ -466,7 +466,8 @@
         position: absolute;
         inset: 0;
         background-color: var(--primary-darkest);
-        border-radius: 4px 4px 0 0;
+        border-start-start-radius: var(--radius, 4px);
+        border-start-end-radius: var(--radius, 4px);
         z-index: 0;
     }
 
@@ -577,7 +578,8 @@
         right: 0;
         background-color: var(--primary-darkest);
         /* border: 1px solid var(--secondary); */
-        border-radius: 0 0 4px 4px;
+        border-end-start-radius: var(--radius, 4px);
+        border-end-end-radius: var(--radius, 4px);
         z-index: 10;
         list-style: none;
         margin: 0;
@@ -668,11 +670,11 @@
 
         background-color: var(--primary-darkest);
         color: var(--text);
-        border: 1px solid var(--primary-lighter);
+        border: 1px solid var(--border-color, var(--primary-lighter));
 
         opacity: 0.8;
         padding: 10px;
-        border-radius: 4px;
+        border-radius: var(--radius, 4px);
 
         z-index: 10;
     }

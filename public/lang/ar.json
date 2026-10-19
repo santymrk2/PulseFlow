@@ -312,6 +312,7 @@
         "first_last": "الشريحة الأولى والأخيرة"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "افتراضي",
         "dark": "غامق",
         "light": "فاتح",

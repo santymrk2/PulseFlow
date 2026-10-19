@@ -26,7 +26,7 @@
     import Info from "./info/Info.svelte"
 
     const minHeight = 40
-    const topHeight = 40
+    const topHeight = 48 // Top.svelte
     let maxHeight = window.innerHeight - topHeight - ($os.platform === "win32" ? MENU_BAR_HEIGHT - 0.3 : 0)
     $: height = $drawer.height
 
@@ -354,7 +354,7 @@
     }
     .top::after {
         content: "";
-        background-color: var(--primary-lighter);
+        background-color: var(--border-color, var(--primary-lighter));
         position: absolute;
         top: 0;
         width: 100%;
@@ -379,7 +379,7 @@
         padding: 0 8px;
         padding-right: 40px;
         border: none;
-        border-radius: 4px;
+        border-radius: var(--radius, 4px);
         border-inline-start: 4px solid var(--primary-darker);
     }
     .search:active,
@@ -426,7 +426,7 @@
         flex-direction: row-reverse;
     }
     .right.row :global(.scroll.split .border) {
-        border-inline-end: 2px solid var(--primary-lighter);
+        border-inline-end: 2px solid var(--border-color, var(--primary-lighter));
         overflow-y: auto;
     }
     /* scripture preview */

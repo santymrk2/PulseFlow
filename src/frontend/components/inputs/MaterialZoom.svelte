@@ -24,7 +24,7 @@
     // const debouncedColumnUpdate = debounce((newValue: number) => dispatch("change", newValue), { wait: 50 })
 
     const dispatch = createEventDispatcher()
-    function update(value: number, origin?: {x: number, y: number}) {
+    function update(value: number, origin?: { x: number; y: number }) {
         let newValue = Math.max(min, Math.min(max, value))
         if (Math.abs(newValue - 1) < 0.01) newValue = 1
 
@@ -136,7 +136,7 @@
 
         width: 100%;
 
-        border: 1px solid var(--primary-lighter);
+        border: 1px solid var(--border-color, var(--primary-lighter));
         border-top-left-radius: 50px;
         border-top-right-radius: 50px;
 

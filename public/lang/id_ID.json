@@ -350,6 +350,7 @@
         "first_last": "Slide pertama dan terakhir"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Semula",
         "dark": "Gelap",
         "light": "Terang",

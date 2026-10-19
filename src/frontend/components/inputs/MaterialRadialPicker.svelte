@@ -207,7 +207,8 @@
         position: absolute;
         inset: 0;
         background-color: var(--primary-darkest);
-        border-radius: 4px 4px 0 0;
+        border-start-start-radius: var(--radius, 4px);
+        border-start-end-radius: var(--radius, 4px);
         z-index: 0;
     }
     .input-wrapper {
@@ -351,8 +352,8 @@
         transform: translateX(-50%);
 
         background: var(--primary-darkest);
-        border: 1px solid var(--primary-lighter);
-        border-radius: 8px;
+        border: 1px solid var(--border-color, var(--primary-lighter));
+        border-radius: var(--radius, 8px);
         /* padding: 8px 5px; */
         padding: 5px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);

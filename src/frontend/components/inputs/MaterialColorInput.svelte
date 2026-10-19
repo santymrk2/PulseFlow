@@ -345,7 +345,8 @@
         position: absolute;
         inset: 0;
         background-color: var(--primary-darkest);
-        border-radius: 4px 4px 0 0;
+        border-start-start-radius: var(--radius, 4px);
+        border-start-end-radius: var(--radius, 4px);
     }
     .color-display {
         position: relative;
@@ -402,8 +403,8 @@
         top: calc(100% - var(--margin));
         left: 50%;
         background: var(--primary-darker);
-        border: 1px solid var(--primary-lighter);
-        border-radius: 8px;
+        border: 1px solid var(--border-color, var(--primary-lighter));
+        border-radius: var(--radius, 8px);
         /* display: flex;
         flex-wrap: wrap; */
         z-index: 10;
@@ -486,7 +487,7 @@
     .color {
         transition: background-color 0.2s;
         position: relative;
-        border-radius: 4px;
+        border-radius: var(--radius, 4px);
 
         margin-top: 5px;
         padding: 15px;

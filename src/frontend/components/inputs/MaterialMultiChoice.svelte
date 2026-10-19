@@ -46,7 +46,7 @@
 
         gap: 9px;
 
-        border-radius: 8px;
+        border-radius: var(--radius, 8px);
         background-color: var(--primary-darker);
         padding: 10px;
     }

@@ -182,7 +182,9 @@ export function updateSettings(data: any) {
         // update colors (pre 0.9.2 or 1.4.9)
         const pre092 = currentTheme.colors.secondary?.toLowerCase() === "#e6349c"
         const pre149 = currentTheme.colors.primary?.toLowerCase() === "#292c36"
-        if (data.theme === "default" && (pre092 || pre149)) {
+        // pre-F6.2: el tema "default" guardado con los valores heredados de FreeShow
+        const preF62 = currentTheme.colors.primary?.toLowerCase() === "#18181b"
+        if (data.theme === "default" && (pre092 || pre149 || preF62)) {
             themes.update((a) => {
                 a.default = clone(defaultThemes.default)
                 currentTheme = a.default

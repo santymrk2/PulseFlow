@@ -388,6 +388,7 @@
         "first_last": "Første og siste lysbilde"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Standard",
         "dark": "Mørkt",
         "light": "Lyst",

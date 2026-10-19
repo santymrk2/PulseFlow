@@ -345,9 +345,9 @@
         position: relative;
 
         background-color: var(--primary-darker);
-        border: 1px solid var(--primary-lighter);
+        border: 1px solid var(--border-color, var(--primary-lighter));
         margin: 5px;
-        border-radius: 10px;
+        border-radius: var(--radius, 10px);
 
         overflow: hidden;
 
