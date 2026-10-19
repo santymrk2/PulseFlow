@@ -523,7 +523,7 @@ Después, ampliar el contrato **de a un tipo por tarea** (cada una con fixture +
   src/frontend/components/helpers/sceneGraphPayload.ts
   src/frontend/components/helpers/sceneGraphPayload.test.ts src/frontend/utils/listeners.ts`
   y completar el lado Rust.
-- [ ] **F4.7** Timers/relojes (el engine dibuja el valor que manda el frontend).
+- [x] **F4.7** Timers/relojes (el engine dibuja el valor que manda el frontend). (2026-10-19: `buildTimerItem` en `sceneGraph.ts` resuelve items `timer`/`clock` a texto (contadores con `getCurrentTimerValue`+`joinTimeBig`, relojes digital/custom con dayjs) y los envía como `SceneTextItem`; `activeTimers`/`timers` disparan `sendOutputScenes` para refrescar el valor cada tick. Chequeos: test:unit 58/58, svelte-check 58 errores (línea base), Prettier limpio.)
 
 ---
 
