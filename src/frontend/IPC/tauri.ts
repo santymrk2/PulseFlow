@@ -41,14 +41,7 @@ const listenerPromises: { [channel: string]: Promise<void> } = {}
 // no llenar la consola de errores "Command … not found" (p. ej. al cambiar de
 // slide, que dispara muchas señales heredadas). En desarrollo se avisa una sola
 // vez por nombre.
-const OUTPUT_COMMANDS = new Set([
-    "TOGGLE_OUTPUTS",
-    "RENDER_SCENE",
-    "UPDATE_BOUNDS",
-    "IDENTIFY_SCREENS",
-    // no-op histórico: existe en Rust y no debe avisar (se elimina en F2.7)
-    "OUTPUTS"
-])
+const OUTPUT_COMMANDS = new Set(["TOGGLE_OUTPUTS", "RENDER_SCENE", "UPDATE_BOUNDS", "IDENTIFY_SCREENS"])
 
 // Comandos ya avisados en desarrollo, para no repetir el warning en cada envío.
 const warnedOutputCommands = new Set<string>()

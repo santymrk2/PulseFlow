@@ -431,15 +431,6 @@ pub fn close_all_screens(app: &AppHandle) -> AppResult<Vec<String>> {
     Ok(ids)
 }
 
-/// Cierra todas las pantallas abiertas de un tipo.
-pub fn close_all_of_kind(app: &AppHandle, kind: ScreenKind) -> AppResult<()> {
-    let ids = open_ids_of_kind(app, kind);
-    for id in &ids {
-        close_screen(app, id)?;
-    }
-    Ok(())
-}
-
 /// Reubica una pantalla **abierta** con la configuración nueva (la que mueve el
 /// usuario en "Elegir pantalla"). Si está cerrada no la abre: la configuración
 /// quedará aplicada cuando se abra.
@@ -460,25 +451,6 @@ pub fn open_ids(app: &AppHandle) -> Vec<String> {
     manager(app)
         .map(|s| s.screens.lock_safe().keys().cloned().collect())
         .unwrap_or_default()
-}
-
-/// Ids de las pantallas abiertas de un tipo (audiencia o stage).
-pub fn open_ids_of_kind(app: &AppHandle, kind: ScreenKind) -> Vec<String> {
-    manager(app)
-        .map(|s| {
-            s.screens
-                .lock_safe()
-                .iter()
-                .filter(|(_, h)| h.kind == kind)
-                .map(|(id, _)| id.clone())
-                .collect()
-        })
-        .unwrap_or_default()
-}
-
-/// ¿Hay alguna pantalla de este tipo abierta?
-pub fn has_open(app: &AppHandle, kind: ScreenKind) -> bool {
-    !open_ids_of_kind(app, kind).is_empty()
 }
 
 /// Notifica al frontend el estado de las salidas (`OUTPUT` → `OUTPUT_STATE`).
@@ -670,13 +642,6 @@ pub fn set_scene_text(app: &AppHandle, id: &str, text: Vec<TextBlock>) -> AppRes
     Ok(())
 }
 
-/// Reemplaza los overlays de la escena de una salida (legacy hasta F2.7).
-pub fn set_scene_overlays(app: &AppHandle, id: &str, overlays: Vec<OverlayItem>) -> AppResult<()> {
-    let scene = manager(app)?.scene(id);
-    scene.write_safe().overlays = overlays;
-    Ok(())
-}
-
 /// Reemplaza sólo el fondo de la escena de una salida y sincroniza el video.
 pub fn set_scene_background(
     app: &AppHandle,
@@ -720,50 +685,6 @@ pub fn set_transition_config(
         _ => super::transition::EasingType::EaseInOut,
     };
     *cfg = (trans_type, duration_ms, easing);
-    Ok(())
-}
-
-/// Alimenta un fotograma de video decodificado a todas las pantallas de
-/// audiencia abiertas (legacy hasta F2.7: el feed no lleva id de salida).
-pub fn feed_video_frame(
-    app: &AppHandle,
-    id: &str,
-    width: u32,
-    height: u32,
-    rgba_bytes: Vec<u8>,
-) -> AppResult<()> {
-    let state = manager(app)?;
-
-    // Si alguna pantalla tiene otro fondo activo, este fotograma lo convierte en
-    // el fondo de video de todas (comportamiento del modelo previo de un solo output).
-    {
-        let screens = state.screens.lock_safe();
-        for (screen_id, handle) in screens.iter() {
-            if handle.kind != ScreenKind::Audience {
-                continue;
-            }
-            let scene = state.scene(screen_id);
-            let mut scene = scene.write_safe();
-            if scene.background.as_ref().map(|b| b.id.as_str()) != Some(id) {
-                scene.background = Some(BackgroundMedia {
-                    id: id.to_string(),
-                    path: None,
-                    media_type: "video".to_string(),
-                    opacity: 1.0,
-                    aspect_mode: 0, // Cover
-                });
-            }
-        }
-    }
-
-    let screens = state.screens.lock_safe();
-    for handle in screens.values() {
-        if handle.kind != ScreenKind::Audience {
-            continue;
-        }
-        *handle.video_frame.lock_safe() =
-            Some((id.to_string(), width, height, rgba_bytes.clone()));
-    }
     Ok(())
 }
 

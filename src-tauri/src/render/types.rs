@@ -186,34 +186,6 @@ fn default_overlay_font_size() -> f32 {
     36.0
 }
 
-/// Payload para el evento de selección de diapositiva rápida (`SELECT_SLIDE`).
-#[derive(Debug, Clone, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct SelectSlidePayload {
-    /// Identificador o índice de la diapositiva.
-    #[serde(default)]
-    pub slide_id: Option<String>,
-    /// Título opcional o referencia bíblica.
-    #[serde(default)]
-    pub title: Option<String>,
-    /// Fondo opcional de la diapositiva.
-    #[serde(default)]
-    pub background: Option<BackgroundMedia>,
-    /// Bloques de texto principales a proyectar en el motor nativo.
-    #[serde(default)]
-    pub text_blocks: Vec<TextBlock>,
-}
-
-/// Escena completa para el Scene Graph nativo en GPU.
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase")]
-pub struct SceneGraph {
-    pub display_id: u32,
-    pub background: Option<BackgroundMedia>,
-    pub text_blocks: Vec<TextBlock>,
-    pub overlays: Vec<OverlayItem>,
-}
-
 /// Datos para el Stage Display (retorno de escenario para músicos/pastor).
 #[derive(Debug, Clone, Default, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

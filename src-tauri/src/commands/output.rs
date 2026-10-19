@@ -4,18 +4,16 @@
 //! (`available_monitors`). `GET_SCREENS` y `GET_WINDOWS` en Electron usan
 //! `desktopCapturer`, que no tiene equivalente directo: aquí se derivan de los
 //! monitores disponibles y de las ventanas de la propia app. La captura real de
-//! pantalla/ventana (para salidas NDI/streaming) llegará con los sidecars
-//! (bloque 7).
+//! pantalla/ventana (para salidas NDI/streaming).
 //!
-//! Las utilidades de rutas del sistema del bloque 4 (`OPEN_LOG`, `OPEN_CACHE`,
-//! `OPEN_APPDATA`, `OPEN_FOLDER_PATH`) ya quedaron implementadas en
-//! `commands/files.rs`.
+//! Las utilidades de rutas del sistema (`OPEN_LOG`, `OPEN_CACHE`, `OPEN_APPDATA`,
+//! `OPEN_FOLDER_PATH`) quedaron implementadas en `commands/files.rs`.
 
 #![allow(non_snake_case)]
 
 use crate::error::{AppError, AppResult};
 use crate::render::scene::ScenePayload;
-use crate::render::{IdentifyScreen, ScreenConfig, ScreenKind};
+use crate::render::{IdentifyScreen, ScreenConfig};
 use serde::Deserialize;
 use serde_json::{json, Value};
 use tauri::{AppHandle, Manager};
@@ -92,85 +90,6 @@ pub fn GET_WINDOWS(app: AppHandle) -> AppResult<Vec<Value>> {
     Ok(windows)
 }
 
-// ---------------------------------------------------------------------------
-// Ventana nativa de audiencia (Output)
-// ---------------------------------------------------------------------------
-
-/// Opciones para abrir la ventana de audiencia.
-///
-/// Todas son opcionales: sin datos se elige automáticamente el monitor
-/// secundario (si existe) y pantalla completa.
-#[derive(Debug, Default, Deserialize)]
-#[serde(rename_all = "camelCase", default)]
-pub struct OutputWindowOptions {
-    /// Índice del monitor donde colocar la salida (por defecto: el secundario).
-    pub display: Option<usize>,
-    /// Fuerza pantalla completa (`true`) o ventana (`false`). Por defecto: auto
-    /// (pantalla completa solo si hay un monitor secundario).
-    pub fullscreen: Option<bool>,
-}
-
-/// `OPEN_OUTPUT_WINDOW`: crea (o reubica) la ventana nativa de audiencia "main",
-/// sin webview, con el engine WGPU a 60 fps con VSync. Devuelve `true` si abrió.
-#[tauri::command]
-pub fn OPEN_OUTPUT_WINDOW(app: AppHandle, data: Option<OutputWindowOptions>) -> AppResult<bool> {
-    let options = data.unwrap_or_default();
-    let config = ScreenConfig {
-        id: "main".to_string(),
-        name: "Audiencia".to_string(),
-        screen: options.display.map(|i| json!(i)),
-        always_on_top: Some(true),
-        ..Default::default()
-    };
-    crate::render::open_screen(&app, &config)?;
-    Ok(true)
-}
-
-/// `CLOSE_OUTPUT_WINDOW`: cierra todas las pantallas de audiencia abiertas.
-#[tauri::command]
-pub fn CLOSE_OUTPUT_WINDOW(app: AppHandle) -> AppResult<()> {
-    crate::render::close_all_of_kind(&app, ScreenKind::Audience)
-}
-
-/// `IS_OUTPUT_WINDOW_OPEN`: indica si hay alguna pantalla de audiencia abierta.
-#[tauri::command]
-pub fn IS_OUTPUT_WINDOW_OPEN(app: AppHandle) -> AppResult<bool> {
-    Ok(crate::render::has_open(&app, ScreenKind::Audience))
-}
-
-// ---------------------------------------------------------------------------
-// Ventana de Stage (monitores de retorno para músicos/operadores)
-// ---------------------------------------------------------------------------
-
-/// `OPEN_STAGE_WINDOW`: abre la pantalla nativa de Stage Display "main-stage"
-/// con vista de alto contraste.
-#[tauri::command]
-pub fn OPEN_STAGE_WINDOW(app: AppHandle, data: Option<OutputWindowOptions>) -> AppResult<bool> {
-    let options = data.unwrap_or_default();
-    let config = ScreenConfig {
-        id: "main-stage".to_string(),
-        name: "Stage".to_string(),
-        screen: options.display.map(|i| json!(i)),
-        stage_output: Some(json!(true)),
-        always_on_top: Some(true),
-        ..Default::default()
-    };
-    crate::render::open_screen(&app, &config)?;
-    Ok(true)
-}
-
-/// `CLOSE_STAGE_WINDOW`: cierra todas las pantallas de stage abiertas.
-#[tauri::command]
-pub fn CLOSE_STAGE_WINDOW(app: AppHandle) -> AppResult<()> {
-    crate::render::close_all_of_kind(&app, ScreenKind::Stage)
-}
-
-/// `IS_STAGE_WINDOW_OPEN`: indica si hay alguna pantalla de stage abierta.
-#[tauri::command]
-pub fn IS_STAGE_WINDOW_OPEN(app: AppHandle) -> AppResult<bool> {
-    Ok(crate::render::has_open(&app, ScreenKind::Stage))
-}
-
 /// `UPDATE_BOUNDS`: reubica una pantalla abierta cuando el usuario mueve o
 /// redimensiona sus bounds en "Elegir pantalla" (`Screens.svelte`). No abre la
 /// pantalla si está cerrada. El payload es un `Output` de Svelte con id
@@ -204,7 +123,6 @@ pub struct ToggleOutputsPayload {
 /// `TOGGLE_OUTPUTS`: abre o cierra las pantallas indicadas según el estado.
 /// Cada salida del payload es un `Output` de Svelte; su `stageOutput` define el
 /// tipo de pantalla. Invocado por Svelte (`src/frontend/components/helpers/output.ts`).
-/// (F2.3 emitirá `OUTPUT_STATE` al frontend al cambiar el estado.)
 #[tauri::command]
 pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<bool> {
     if data.state {
@@ -246,14 +164,6 @@ pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<b
         }
         Ok(false)
     }
-}
-
-/// `OUTPUTS`: comando histórico (`send(OUTPUT, ["OUTPUTS"], data)`) que recibía el store
-/// `outputs` completo. Ya no se usa: el frontend envía el Scene Graph con `RENDER_SCENE`.
-/// Se mantiene sólo para no fallar si llega un payload viejo; no hace nada.
-#[tauri::command]
-pub fn OUTPUTS(_data: Value) -> AppResult<()> {
-    Ok(())
 }
 
 /// `RENDER_SCENE`: aplica el Scene Graph de una salida (`src/types/SceneGraph.ts`).
@@ -335,174 +245,8 @@ pub fn RENDER_SNAPSHOT(app: AppHandle, data: SnapshotPayload) -> AppResult<Strin
 }
 
 // ---------------------------------------------------------------------------
-// Scene Graph: texto, fondo, overlays y transiciones del engine WGPU
-//
-// El frontend ya no invoca estos comandos (grep en `src/` dio 0 usos): sólo
-// `TOGGLE_OUTPUTS` y `RENDER_SCENE` llegan por IPC. Se mantienen como shims
-// sobre `ScreenManager` —aplicando a todas las pantallas abiertas del tipo—
-// hasta eliminarlos en F2.7.
-// ---------------------------------------------------------------------------
-
-/// `UPDATE_SCENE_TEXT`: actualiza los bloques de texto de las pantallas de audiencia.
-#[tauri::command]
-pub fn UPDATE_SCENE_TEXT(
-    app: AppHandle,
-    blocks: Vec<crate::render::types::TextBlock>,
-) -> AppResult<()> {
-    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Audience) {
-        crate::render::set_scene_text(&app, &id, blocks.clone())?;
-    }
-    Ok(())
-}
-
-/// `CLEAR_SCENE_TEXT`: limpia todo el texto proyectado en las pantallas de audiencia.
-#[tauri::command]
-pub fn CLEAR_SCENE_TEXT(app: AppHandle) -> AppResult<()> {
-    UPDATE_SCENE_TEXT(app, Vec::new())
-}
-
-/// `SELECT_SLIDE`: cambio de diapositiva (fondo + texto) en las pantallas de audiencia.
-#[tauri::command]
-pub fn SELECT_SLIDE(app: AppHandle, data: serde_json::Value) -> AppResult<()> {
-    if let Ok(payload) =
-        serde_json::from_value::<crate::render::types::SelectSlidePayload>(data.clone())
-    {
-        if let Some(bg) = payload.background {
-            for id in crate::render::open_ids_of_kind(&app, ScreenKind::Audience) {
-                let _ = crate::render::set_scene_background(&app, &id, Some(bg.clone()));
-            }
-        }
-        return UPDATE_SCENE_TEXT(app, payload.text_blocks);
-    }
-
-    let blocks: Vec<crate::render::types::TextBlock> = if let Ok(b) =
-        serde_json::from_value::<Vec<crate::render::types::TextBlock>>(data.clone())
-    {
-        b
-    } else if let Some(arr) = data.get("textBlocks").or_else(|| data.get("items")) {
-        serde_json::from_value(arr.clone()).unwrap_or_default()
-    } else if let Some(text_str) = data.get("text").and_then(|t| t.as_str()) {
-        vec![crate::render::types::TextBlock {
-            text: text_str.to_string(),
-            font_family: None,
-            font_size: 56.0,
-            font_weight: 700,
-            font_style: None,
-            color: [1.0, 1.0, 1.0, 1.0],
-            alignment: "center".to_string(),
-            x: 100.0,
-            y: 200.0,
-            width: 1720.0,
-            height: 700.0,
-            line_height_ratio: 1.25,
-            outline_color: Some([0.0, 0.0, 0.0, 1.0]),
-            outline_width: Some(2.0),
-            shadow_color: Some([0.0, 0.0, 0.0, 0.75]),
-            shadow_offset: Some([4.0, 4.0]),
-            ..Default::default()
-        }]
-    } else {
-        Vec::new()
-    };
-
-    // Este comando ya no se invoca desde el frontend (sólo `RENDER_SCENE`);
-    // el texto se aplica a las pantallas de audiencia abiertas.
-    UPDATE_SCENE_TEXT(app, blocks)
-}
-
-/// `SET_BACKGROUND_IMAGE`: establece una imagen de fondo en VRAM en las pantallas de audiencia.
-#[tauri::command]
-pub fn SET_BACKGROUND_IMAGE(
-    app: AppHandle,
-    path: String,
-    mode: Option<String>,
-    opacity: Option<f32>,
-) -> AppResult<()> {
-    let aspect_mode = match mode.as_deref() {
-        Some("contain") => 1,
-        Some("stretch") => 2,
-        _ => 0, // cover por defecto
-    };
-
-    let bg = crate::render::types::BackgroundMedia {
-        id: path.clone(),
-        path: Some(path),
-        media_type: "image".to_string(),
-        opacity: opacity.unwrap_or(1.0),
-        aspect_mode,
-    };
-
-    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Audience) {
-        crate::render::set_scene_background(&app, &id, Some(bg.clone()))?;
-    }
-    Ok(())
-}
-
-/// `CLEAR_BACKGROUND`: limpia el fondo de las pantallas de audiencia (negro puro).
-#[tauri::command]
-pub fn CLEAR_BACKGROUND(app: AppHandle) -> AppResult<()> {
-    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Audience) {
-        crate::render::set_scene_background(&app, &id, None)?;
-    }
-    Ok(())
-}
-
-/// `FEED_VIDEO_FRAME`: transfiere un fotograma de video decodificado a VRAM.
-#[tauri::command]
-pub fn FEED_VIDEO_FRAME(
-    app: AppHandle,
-    id: String,
-    width: u32,
-    height: u32,
-    data: Vec<u8>,
-) -> AppResult<()> {
-    crate::render::feed_video_frame(&app, &id, width, height, data)
-}
-
-/// `UPDATE_SCENE_OVERLAYS`: actualiza los overlays (relojes, avisos, tercios inferiores).
-#[tauri::command]
-pub fn UPDATE_SCENE_OVERLAYS(
-    app: AppHandle,
-    overlays: Vec<crate::render::types::OverlayItem>,
-) -> AppResult<()> {
-    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Audience) {
-        crate::render::set_scene_overlays(&app, &id, overlays.clone())?;
-    }
-    Ok(())
-}
-
-/// `SET_TRANSITION`: configura la transición activa (Crossfade, DipToBlack, Wipe, Push) y su duración.
-#[tauri::command]
-pub fn SET_TRANSITION(
-    app: AppHandle,
-    transition_type: String,
-    duration_ms: Option<u64>,
-    easing: Option<String>,
-) -> AppResult<()> {
-    crate::render::set_transition_config(
-        &app,
-        &transition_type,
-        duration_ms.unwrap_or(300),
-        easing.as_deref().unwrap_or("easeInOut"),
-    )
-}
-
-// ---------------------------------------------------------------------------
 // Stage Display y NDI (captura de framebuffer)
 // ---------------------------------------------------------------------------
-
-/// `UPDATE_STAGE_DATA`: actualiza la diapositiva actual, siguiente, reloj y mensaje
-/// de todas las pantallas de stage abiertas.
-#[tauri::command]
-pub fn UPDATE_STAGE_DATA(
-    app: AppHandle,
-    stage_data: crate::render::types::StageData,
-) -> AppResult<()> {
-    for id in crate::render::open_ids_of_kind(&app, ScreenKind::Stage) {
-        crate::render::set_stage_scene(&app, &id, stage_data.clone())?;
-    }
-    Ok(())
-}
 
 /// `START_NDI_NATIVE_FEED`: activa la captura directa de Framebuffer en GPU (`copy_texture_to_buffer`)
 /// para transmisión NDI en red local sin consumir CPU.
