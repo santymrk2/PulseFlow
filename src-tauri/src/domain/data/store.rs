@@ -15,7 +15,7 @@
 use super::defaults;
 use crate::error::{AppError, AppResult};
 use crate::utils::files::{self, DataFolder};
-use serde_json::{json, Map, Value};
+use serde_json::{Map, Value, json};
 use std::collections::HashMap;
 use std::path::PathBuf;
 
@@ -29,23 +29,108 @@ struct StoreDef {
 }
 
 const STORE_DEFS: &[StoreDef] = &[
-    StoreDef { id: "SHOWS", file_name: "shows", portable: false, minify: true },
-    StoreDef { id: "SETTINGS", file_name: "settings", portable: false, minify: false },
-    StoreDef { id: "SYNCED_SETTINGS", file_name: "settings_synced", portable: true, minify: false },
-    StoreDef { id: "THEMES", file_name: "themes", portable: true, minify: false },
-    StoreDef { id: "PROJECTS", file_name: "projects", portable: true, minify: false },
-    StoreDef { id: "STAGE", file_name: "stage", portable: true, minify: false },
-    StoreDef { id: "OVERLAYS", file_name: "overlays", portable: true, minify: false },
-    StoreDef { id: "TEMPLATES", file_name: "templates", portable: true, minify: false },
-    StoreDef { id: "EVENTS", file_name: "events", portable: true, minify: false },
-    StoreDef { id: "HISTORY", file_name: "history", portable: false, minify: true },
-    StoreDef { id: "MEDIA", file_name: "media", portable: false, minify: true },
-    StoreDef { id: "CACHE", file_name: "cache", portable: false, minify: true },
-    StoreDef { id: "CACHE_SYNC", file_name: "cache_sync", portable: false, minify: true },
-    StoreDef { id: "USAGE", file_name: "usage", portable: false, minify: true },
-    StoreDef { id: "ERROR_LOG", file_name: "error_log", portable: false, minify: false },
-    StoreDef { id: "DRIVE_API_KEY", file_name: "DRIVE_API_KEY", portable: false, minify: false },
-    StoreDef { id: "ACCESS", file_name: "ACCESS", portable: false, minify: false },
+    StoreDef {
+        id: "SHOWS",
+        file_name: "shows",
+        portable: false,
+        minify: true,
+    },
+    StoreDef {
+        id: "SETTINGS",
+        file_name: "settings",
+        portable: false,
+        minify: false,
+    },
+    StoreDef {
+        id: "SYNCED_SETTINGS",
+        file_name: "settings_synced",
+        portable: true,
+        minify: false,
+    },
+    StoreDef {
+        id: "THEMES",
+        file_name: "themes",
+        portable: true,
+        minify: false,
+    },
+    StoreDef {
+        id: "PROJECTS",
+        file_name: "projects",
+        portable: true,
+        minify: false,
+    },
+    StoreDef {
+        id: "STAGE",
+        file_name: "stage",
+        portable: true,
+        minify: false,
+    },
+    StoreDef {
+        id: "OVERLAYS",
+        file_name: "overlays",
+        portable: true,
+        minify: false,
+    },
+    StoreDef {
+        id: "TEMPLATES",
+        file_name: "templates",
+        portable: true,
+        minify: false,
+    },
+    StoreDef {
+        id: "EVENTS",
+        file_name: "events",
+        portable: true,
+        minify: false,
+    },
+    StoreDef {
+        id: "HISTORY",
+        file_name: "history",
+        portable: false,
+        minify: true,
+    },
+    StoreDef {
+        id: "MEDIA",
+        file_name: "media",
+        portable: false,
+        minify: true,
+    },
+    StoreDef {
+        id: "CACHE",
+        file_name: "cache",
+        portable: false,
+        minify: true,
+    },
+    StoreDef {
+        id: "CACHE_SYNC",
+        file_name: "cache_sync",
+        portable: false,
+        minify: true,
+    },
+    StoreDef {
+        id: "USAGE",
+        file_name: "usage",
+        portable: false,
+        minify: true,
+    },
+    StoreDef {
+        id: "ERROR_LOG",
+        file_name: "error_log",
+        portable: false,
+        minify: false,
+    },
+    StoreDef {
+        id: "DRIVE_API_KEY",
+        file_name: "DRIVE_API_KEY",
+        portable: false,
+        minify: false,
+    },
+    StoreDef {
+        id: "ACCESS",
+        file_name: "ACCESS",
+        portable: false,
+        minify: false,
+    },
 ];
 
 /// Tienda cargada en memoria.
@@ -87,16 +172,28 @@ impl StoreManager {
                 .ok()
                 .and_then(|s| serde_json::from_str::<Value>(&s).ok())
                 .unwrap_or_else(|| default_for(def.id));
-            stores.insert(def.id.to_string(), StoreData { def_index: idx, value });
+            stores.insert(
+                def.id.to_string(),
+                StoreData {
+                    def_index: idx,
+                    value,
+                },
+            );
         }
 
-        Self { config_dir, config_path, config, stores }
+        Self {
+            config_dir,
+            config_path,
+            config,
+            stores,
+        }
     }
 
     fn store_path_for(config: &Value, config_dir: &std::path::Path, def: &StoreDef) -> PathBuf {
         if def.portable {
             let root = data_root_from_config(config);
-            root.join(DataFolder::UserData.name()).join(format!("{}.json", def.file_name))
+            root.join(DataFolder::UserData.name())
+                .join(format!("{}.json", def.file_name))
         } else {
             config_dir.join(format!("{}.json", def.file_name))
         }
@@ -133,7 +230,13 @@ impl StoreManager {
             serde_json::to_string_pretty(&value)?
         };
         files::write_file(&path, &payload)?;
-        self.stores.insert(id.to_string(), StoreData { def_index: idx, value });
+        self.stores.insert(
+            id.to_string(),
+            StoreData {
+                def_index: idx,
+                value,
+            },
+        );
         Ok(())
     }
 
@@ -144,12 +247,16 @@ impl StoreManager {
 
     /// Devuelve `config.dataPath` (o `null`).
     pub fn data_path(&self) -> Option<String> {
-        self.config.get("dataPath").and_then(Value::as_str).map(str::to_string)
+        self.config
+            .get("dataPath")
+            .and_then(Value::as_str)
+            .map(str::to_string)
     }
 
     /// Raíz de datos de la app (`getDataFolderRoot`).
     pub fn data_folder_root(&self) -> String {
-        self.data_path().unwrap_or_else(|| default_data_folder_root().to_string_lossy().into_owned())
+        self.data_path()
+            .unwrap_or_else(|| default_data_folder_root().to_string_lossy().into_owned())
     }
 
     /// Ruta de una carpeta de datos, creándola si no existe (`getDataFolderPath`).
@@ -164,7 +271,14 @@ impl StoreManager {
 
     /// Lectura de un valor con notación por puntos (`getStoreValue`).
     pub fn get_value(&self, file: &str, key: &str) -> Value {
-        let container = if file == "config" { &self.config } else { match self.stores.get(file) { Some(s) => &s.value, None => return Value::Null } };
+        let container = if file == "config" {
+            &self.config
+        } else {
+            match self.stores.get(file) {
+                Some(s) => &s.value,
+                None => return Value::Null,
+            }
+        };
         get_path(container, key)
     }
 
@@ -222,14 +336,21 @@ impl StoreManager {
     pub fn update_data_path(&mut self, new_path: &str, _old_path: &str) -> AppResult<()> {
         self.set_value("config", "dataPath", json!(new_path))?;
         let portable = data_root_from_config(&self.config).join(DataFolder::UserData.name());
-        std::fs::create_dir_all(&portable)
-            .map_err(|err| AppError::new(format!("No se pudo crear {}: {err}", portable.display())))?;
+        std::fs::create_dir_all(&portable).map_err(|err| {
+            AppError::new(format!("No se pudo crear {}: {err}", portable.display()))
+        })?;
 
         // Migrar las tiendas portables: como sus valores ya están en memoria,
         // reescribirlos en la nueva ruta conserva los datos.
         for def in STORE_DEFS.iter().filter(|d| d.portable) {
-            let Some(store) = self.stores.get(def.id) else { continue };
-            let payload = if def.minify { serde_json::to_string(&store.value)? } else { serde_json::to_string_pretty(&store.value)? };
+            let Some(store) = self.stores.get(def.id) else {
+                continue;
+            };
+            let payload = if def.minify {
+                serde_json::to_string(&store.value)?
+            } else {
+                serde_json::to_string_pretty(&store.value)?
+            };
             let path = portable.join(format!("{}.json", def.file_name));
             files::write_file(&path, &payload)?;
         }
@@ -240,7 +361,8 @@ impl StoreManager {
 /// Raíz de datos por defecto: `<Documents>/PulseFlow` (equivale a
 /// `getDefaultDataFolderRoot`).
 pub fn default_data_folder_root() -> PathBuf {
-    let documents = files::get_media_folder_path("documents").unwrap_or_else(|_| PathBuf::from("."));
+    let documents =
+        files::get_media_folder_path("documents").unwrap_or_else(|_| PathBuf::from("."));
     documents.join("PulseFlow")
 }
 
@@ -272,7 +394,9 @@ fn set_path(container: &mut Value, key: &str, value: Value) {
 }
 
 fn set_path_parts(current: &mut Value, parts: &[&str], value: Value) {
-    let Some(head) = parts.first().copied() else { return };
+    let Some(head) = parts.first().copied() else {
+        return;
+    };
     if !current.is_object() {
         *current = Value::Object(Map::new());
     }
@@ -283,7 +407,9 @@ fn set_path_parts(current: &mut Value, parts: &[&str], value: Value) {
         return;
     }
     if let Some(obj) = current.as_object_mut() {
-        let entry = obj.entry(head.to_string()).or_insert_with(|| Value::Object(Map::new()));
+        let entry = obj
+            .entry(head.to_string())
+            .or_insert_with(|| Value::Object(Map::new()));
         set_path_parts(entry, &parts[1..], value);
     }
 }
@@ -332,14 +458,25 @@ mod tests {
         let result = manager.set("SETTINGS", json!({ "language": "fr" }));
         fs::set_permissions(&dir, fs::Permissions::from_mode(0o755)).expect("chmod 755");
 
-        assert!(result.is_err(), "debe devolver error en una carpeta sin permisos");
+        assert!(
+            result.is_err(),
+            "debe devolver error en una carpeta sin permisos"
+        );
         assert_eq!(
             fs::read_to_string(dir.join("settings.json")).expect("leer original"),
             ORIGINAL,
             "el archivo original debe quedar intacto"
         );
-        assert_eq!(file_names(&dir), vec!["settings.json".to_string()], "no debe quedar ningún temporal");
-        assert_eq!(manager.get("SETTINGS"), before, "la memoria no debe actualizarse si no se escribió");
+        assert_eq!(
+            file_names(&dir),
+            vec!["settings.json".to_string()],
+            "no debe quedar ningún temporal"
+        );
+        assert_eq!(
+            manager.get("SETTINGS"),
+            before,
+            "la memoria no debe actualizarse si no se escribió"
+        );
 
         let _ = fs::remove_dir_all(&dir);
     }
@@ -349,12 +486,21 @@ mod tests {
         let dir = temp_dir("ok");
         let mut manager = StoreManager::new(dir.clone());
 
-        manager.set("SETTINGS", json!({ "language": "fr" })).expect("guardado");
+        manager
+            .set("SETTINGS", json!({ "language": "fr" }))
+            .expect("guardado");
 
         let saved = fs::read_to_string(dir.join("settings.json")).expect("leer guardado");
-        assert!(saved.contains("fr"), "el valor debe estar en el archivo: {saved}");
+        assert!(
+            saved.contains("fr"),
+            "el valor debe estar en el archivo: {saved}"
+        );
         assert_eq!(manager.get("SETTINGS"), json!({ "language": "fr" }));
-        assert_eq!(file_names(&dir), vec!["settings.json".to_string()], "no debe quedar ningún temporal");
+        assert_eq!(
+            file_names(&dir),
+            vec!["settings.json".to_string()],
+            "no debe quedar ningún temporal"
+        );
 
         let _ = fs::remove_dir_all(&dir);
     }
@@ -375,7 +521,10 @@ mod tests {
         let result = manager.set_value("SETTINGS", "theme", json!("dark"));
         fs::set_permissions(&dir, fs::Permissions::from_mode(0o755)).expect("chmod 755");
 
-        assert!(result.is_err(), "debe devolver error en una carpeta sin permisos");
+        assert!(
+            result.is_err(),
+            "debe devolver error en una carpeta sin permisos"
+        );
         assert_eq!(
             fs::read_to_string(dir.join("settings.json")).expect("leer original"),
             ORIGINAL,
@@ -415,7 +564,10 @@ mod tests {
             .to_string();
         let style_name = manager.get_value("SYNCED_SETTINGS", "styles.default.name");
 
-        assert!(!style_id.is_empty(), "la salida por defecto debe tener un estilo asignado");
+        assert!(
+            !style_id.is_empty(),
+            "la salida por defecto debe tener un estilo asignado"
+        );
         assert_eq!(
             style_name.as_str().unwrap_or(""),
             "Default",
