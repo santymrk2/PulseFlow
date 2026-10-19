@@ -14,7 +14,8 @@ use super::scene::{SceneItem, ScenePayload, SCENE_GRAPH_VERSION};
 use serde_json::Value;
 
 /// Nombres de los fixtures; el mismo listado que `sceneGraphPayload.test.ts`.
-const SCENE_FIXTURES: [&str; 4] = ["audience-text", "audience-background-video", "stage", "cleared"];
+const SCENE_FIXTURES: [&str; 5] =
+    ["audience-text", "audience-background-video", "audience-media", "stage", "cleared"];
 
 fn fixture(name: &str) -> &'static str {
     match name {
@@ -22,6 +23,7 @@ fn fixture(name: &str) -> &'static str {
         "audience-background-video" => {
             include_str!("../../tests/fixtures/scene/audience-background-video.json")
         }
+        "audience-media" => include_str!("../../tests/fixtures/scene/audience-media.json"),
         "stage" => include_str!("../../tests/fixtures/scene/stage.json"),
         "cleared" => include_str!("../../tests/fixtures/scene/cleared.json"),
         other => panic!("fixture de contrato desconocida: {other}"),
@@ -53,7 +55,7 @@ fn assert_keys(value: &Value, expected: &[&str]) {
 /// Cualquier fixture del contrato deserializa y declara la versión que entiende el engine.
 #[test]
 fn cada_fixture_deserializa_y_valida_la_version() {
-    assert_eq!(SCENE_FIXTURES.len(), 4, "el test de vitest debe generar 4 fixtures");
+    assert_eq!(SCENE_FIXTURES.len(), 5, "el test de vitest debe generar 5 fixtures");
     for name in SCENE_FIXTURES {
         let (payload, _) = parse(name);
         assert_eq!(payload.version, SCENE_GRAPH_VERSION, "versión en {name}");
@@ -212,10 +214,54 @@ fn escena_vacia_mantiene_su_contrato() {
     );
 }
 
+#[test]
+fn audience_media_mantiene_su_contrato() {
+    let (payload, json) = parse("audience-media");
+
+    assert_eq!(payload.output_id, "audience-3");
+    assert!(!payload.stage);
+    assert_eq!(payload.width, 1920.0);
+    assert_eq!(payload.height, 1080.0);
+    assert_eq!(payload.items.len(), 2);
+
+    // claves del contrato de un item de medio
+    assert_keys(
+        &json["items"][0],
+        &["type", "id", "x", "y", "width", "height", "src", "mediaType", "fit", "opacity"],
+    );
+    assert_keys(
+        &json["items"][1],
+        &["type", "x", "y", "width", "height", "src", "mediaType", "fit", "opacity"],
+    );
+
+    // ningún item de medio llega al motor de texto
+    assert!(payload.text_blocks().is_empty());
+
+    let media = payload.media_items();
+    assert_eq!(media.len(), 2);
+
+    let image = &media[0];
+    assert_eq!(image.id, "/media/imagen.png", "el MediaPool cachea por ruta");
+    assert_eq!(image.path, "/media/imagen.png");
+    assert_eq!(image.media_type, "image");
+    assert_eq!(image.x, 50.0);
+    assert_eq!(image.y, 100.0);
+    assert_eq!(image.width, 1820.0);
+    assert_eq!(image.height, 880.0);
+    assert_eq!(image.aspect_mode, 1, "fit contain");
+    assert_eq!(image.opacity, 1.0);
+    assert_eq!(image.design_width, Some(1920.0));
+
+    let video = &media[1];
+    assert_eq!(video.media_type, "video");
+    assert_eq!(video.aspect_mode, 2, "fit fill");
+    assert_eq!(video.opacity, 0.5);
+}
+
 /// El engine ignora los items de tipos que todavía no soporta (F4.5) en vez de fallar.
 #[test]
 fn un_item_de_tipo_desconocido_deserializa_como_unknown() {
     let item: SceneItem =
-        serde_json::from_value(serde_json::json!({ "type": "media", "src": "x.png" })).expect("item desconocido");
+        serde_json::from_value(serde_json::json!({ "type": "camera", "src": "x.png" })).expect("item desconocido");
     assert!(matches!(item, SceneItem::Unknown));
 }

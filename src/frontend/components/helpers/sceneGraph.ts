@@ -5,11 +5,13 @@
 // plantilla del estilo de salida (setTemplateStyle), resolución (getOutputResolution), líneas visibles
 // (getOutputLines), valores dinámicos (replaceDynamicValues) y transiciones (getOutputTransitions).
 // El payload final lo arma `sceneGraphPayload.ts`, único lugar que enumera las claves del contrato.
-
+//
+// F4.5: los items de medio (imagen) se envían con su caja en la resolución lógica de la escena.
+// El engine dibuja fondo → medios → texto (no respeta el orden de apilado de la slide).
 import { get } from "svelte/store"
 import { OUTPUT } from "../../../types/Channels"
 import type { Output } from "../../../types/Output"
-import type { SceneBackground, SceneGraph, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
+import type { SceneBackground, SceneGraph, SceneItem, SceneMediaItem, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
 import type { Item, OutSlide, Slide } from "../../../types/Show"
 import { media, outputs, stageShows, styles, transitionData } from "../../stores"
 import { send } from "../../utils/request"
@@ -21,7 +23,7 @@ import { defaultLayers, getCurrentStyle, getOutputLines, getOutputResolution, ge
 import { _show } from "./shows"
 import { replaceDynamicValues } from "./showActions"
 import { applyTextTransform, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
-import { sceneBackground, sceneGraphPayload, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
+import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
 
 const DEFAULT_FONT_SIZE = 100
 const DEFAULT_LINE_HEIGHT = 1.1
@@ -131,6 +133,25 @@ function buildTextItem(item: Item, index: number, allItems: Item[], slide: OutSl
     })
 }
 
+function buildMediaItem(item: Item, index: number, allItems: Item[], slide: OutSlide, outputId: string, resolution: { width: number; height: number }, lineWindow: ReturnType<typeof getOutputLines>): SceneMediaItem | null {
+    if (item.type !== "media") return null
+    if (!shouldItemBeShown(item, allItems, { outputId, type: "default" })) return null
+    if (item.clickReveal && lineWindow.clickRevealed === false) return null
+
+    const src = item.src || ""
+    if (!src) return null
+
+    // cámaras, web, temporizadores… no son archivos en disco: el engine no los puede dibujar
+    const mediaType = getMediaType(getExtension(src))
+    if (mediaType !== "image" && mediaType !== "video") return null
+
+    const box = parseItemBox(percentageStylePos(item.style, resolution), { x: 0, y: 0, width: resolution.width, height: resolution.height })
+    // "blur" no se puede pintar en el engine: cae a "contain" (igual que el render HTML)
+    const fit = item.fit === "cover" ? "cover" : item.fit === "fill" ? "fill" : "contain"
+
+    return sceneMediaItem({ id: item.id, x: box.x, y: box.y, width: box.width, height: box.height, src, mediaType, fit, opacity: 1 })
+}
+
 // BACKGROUND
 
 function getBackground(output: Output, currentStyle: ReturnType<typeof getCurrentStyle>, slide: OutSlide | null, layers: string[]): SceneBackground | null {
@@ -173,18 +194,26 @@ function getTransition(output: Output, currentStyle: ReturnType<typeof getCurren
 
 // SCENE
 
-/** Items de texto de una slide, con las líneas visibles limitadas por el estilo. */
-function buildSlideTextItems(showSlide: OutSlide, outputId: string, currentStyle: ReturnType<typeof getCurrentStyle>, resolution: { width: number; height: number }) {
+/** Items de una slide (texto y medios), con las líneas visibles limitadas por el estilo. */
+function buildSlideItems(showSlide: OutSlide, outputId: string, currentStyle: ReturnType<typeof getCurrentStyle>, resolution: { width: number; height: number }) {
     const slideItems = getSlideItems(showSlide, outputId, currentStyle)
     const lineWindow = getOutputLines(showSlide, currentStyle.lines)
 
-    const items: SceneTextItem[] = []
+    const items: SceneItem[] = []
+    const textItems: SceneTextItem[] = []
     slideItems.forEach((item, index) => {
         const textItem = buildTextItem(item, index, slideItems, showSlide, outputId, resolution, lineWindow)
-        if (textItem) items.push(textItem)
+        if (textItem) {
+            items.push(textItem)
+            textItems.push(textItem)
+            return
+        }
+
+        const mediaItem = buildMediaItem(item, index, slideItems, showSlide, outputId, resolution, lineWindow)
+        if (mediaItem) items.push(mediaItem)
     })
 
-    return { items, slideItems }
+    return { items, textItems, slideItems }
 }
 
 /** Texto plano de una slide: items visibles o, si no los hay, todo su texto (para stage). */
@@ -202,13 +231,13 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
     const slide = output.out?.slide || null
     const showSlide = slide && layers.includes("slide") ? slide : null
 
-    let items: SceneTextItem[] = []
+    let items: SceneItem[] = []
     let plainText = ""
 
     if (showSlide) {
-        const built = buildSlideTextItems(showSlide, outputId, currentStyle, resolution)
+        const built = buildSlideItems(showSlide, outputId, currentStyle, resolution)
         items = built.items
-        plainText = plainTextOf(built.items, built.slideItems)
+        plainText = plainTextOf(built.textItems, built.slideItems)
     }
 
     return sceneGraphPayload({
@@ -267,13 +296,13 @@ function buildStageScene(outputId: string, output: Output, outputsData: { [id: s
 
     const slide = sourceOutput?.out?.slide || null
     if (slide && (slide.type || "show") === "show") {
-        const current = buildSlideTextItems(slide, sourceOutputId, currentStyle, resolution)
-        plainText = plainTextOf(current.items, current.slideItems)
+        const current = buildSlideItems(slide, sourceOutputId, currentStyle, resolution)
+        plainText = plainTextOf(current.textItems, current.slideItems)
 
         const nextSlide = getNextSlideRef(slide)
         if (nextSlide) {
-            const next = buildSlideTextItems(nextSlide, sourceOutputId, currentStyle, resolution)
-            nextText = plainTextOf(next.items, next.slideItems)
+            const next = buildSlideItems(nextSlide, sourceOutputId, currentStyle, resolution)
+            nextText = plainTextOf(next.textItems, next.slideItems)
         }
     }
 

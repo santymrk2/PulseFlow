@@ -132,12 +132,22 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
             multiview_mask: None,
         });
 
-        // Capa 1: fondo de imagen (los videos no se decodifican fuera del bucle).
-        if let Some(bg) = scene.background_media() {
-            if bg.media_type == "image" {
-                if let Some(ref path_str) = bg.path {
-                    let pipeline = media::BackgroundPipeline::new(&device, SNAPSHOT_FORMAT);
-                    let mut pool = MediaPool::new();
+        // Capas de imagen: fondo (si lo hay) e items de medio de la slide (F4.5).
+        // Los videos no se decodifican fuera del bucle de render.
+        let background = scene.background_media();
+        let media_items = scene.media_items();
+        let has_background_image = background
+            .as_ref()
+            .map(|b| b.media_type == "image")
+            .unwrap_or(false);
+
+        if has_background_image || !media_items.is_empty() {
+            let pipeline = media::BackgroundPipeline::new(&device, SNAPSHOT_FORMAT);
+            let mut pool = MediaPool::new();
+
+            // Capa 1: fondo de imagen a pantalla completa.
+            if let Some(bg) = background.as_ref().filter(|b| b.media_type == "image") {
+                if let Some(path_str) = bg.path.as_deref() {
                     let texture = pool.load_image(&device, &queue, &pipeline, path_str)?;
                     pipeline.render(
                         &queue,
@@ -150,9 +160,36 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
                     );
                 }
             }
+
+            // Capa 2: items de medio (imágenes) colocados en la slide.
+            for item in &media_items {
+                if item.media_type != "image" || item.path.is_empty() {
+                    continue;
+                }
+                let texture = pool.load_image(&device, &queue, &pipeline, &item.path)?;
+                let scale = match item.design_width {
+                    Some(dw) if dw > 0.0 => width as f32 / dw,
+                    _ => 1.0,
+                };
+                pipeline.render_rect(
+                    &queue,
+                    &mut render_pass,
+                    &texture,
+                    width,
+                    height,
+                    [
+                        item.x * scale,
+                        item.y * scale,
+                        item.width * scale,
+                        item.height * scale,
+                    ],
+                    item.opacity,
+                    item.aspect_mode,
+                );
+            }
         }
 
-        // Capa 2: texto principal.
+        // Capa 3: texto principal.
         let blocks = scene.text_blocks();
         if !blocks.is_empty() {
             let mut text_engine = TextEngine::new(&device, &queue, SNAPSHOT_FORMAT);

@@ -20,7 +20,7 @@
 use super::media::{BackgroundPipeline, MediaPool};
 use super::sync::{MutexExt, RwLockExt};
 use super::text::TextEngine;
-use super::types::{BackgroundMedia, OverlayItem, StageData, TextBlock};
+use super::types::{BackgroundMedia, MediaItem, OverlayItem, StageData, TextBlock};
 use super::video::{self, VideoPlayback};
 use crate::error::{AppError, AppResult};
 use serde::Deserialize;
@@ -130,6 +130,7 @@ pub type VideoFrame = (String, u32, u32, Vec<u8>);
 #[derive(Debug, Clone, Default)]
 pub struct ScreenScene {
     pub text: Vec<TextBlock>,
+    pub media: Vec<MediaItem>,
     pub background: Option<BackgroundMedia>,
     pub overlays: Vec<OverlayItem>,
     pub stage: StageData,
@@ -641,11 +642,12 @@ fn identify_blocks(number: &str, width: u32, height: u32) -> Vec<TextBlock> {
 // Escena
 // ---------------------------------------------------------------------------
 
-/// Reemplaza la escena de audiencia de una salida (texto + fondo).
+/// Reemplaza la escena de audiencia de una salida (texto + medios + fondo).
 pub fn set_audience_scene(
     app: &AppHandle,
     id: &str,
     text: Vec<TextBlock>,
+    media: Vec<MediaItem>,
     background: Option<BackgroundMedia>,
 ) -> AppResult<()> {
     let state = manager(app)?;
@@ -655,10 +657,11 @@ pub fn set_audience_scene(
     let changed = {
         let scene = state.scene(id);
         let current = scene.read_safe();
-        current.text != text || current.background != background
+        current.text != text || current.media != media || current.background != background
     };
 
     set_scene_text(app, id, text)?;
+    set_scene_media(app, id, media)?;
     set_scene_background(app, id, background)?;
 
     if changed {
@@ -671,6 +674,13 @@ pub fn set_audience_scene(
 pub fn set_scene_text(app: &AppHandle, id: &str, text: Vec<TextBlock>) -> AppResult<()> {
     let scene = manager(app)?.scene(id);
     scene.write_safe().text = text;
+    Ok(())
+}
+
+/// Reemplaza sólo los items de medio (imágenes) de la escena de una salida.
+pub fn set_scene_media(app: &AppHandle, id: &str, media: Vec<MediaItem>) -> AppResult<()> {
+    let scene = manager(app)?.scene(id);
+    scene.write_safe().media = media;
     Ok(())
 }
 
@@ -952,6 +962,49 @@ fn spawn_render_loop(
                                         h,
                                         bg.opacity,
                                         bg.aspect_mode,
+                                    );
+                                }
+                            }
+
+                            // Items de medio (imágenes) colocados en la slide, encima
+                            // del fondo y debajo del texto (F4.5).
+                            for item in &current.media {
+                                if item.media_type != "image" || item.path.is_empty() {
+                                    continue;
+                                }
+                                if media_pool.get(&item.id).is_none()
+                                    && !failed_images.contains(&item.id)
+                                {
+                                    if let Err(err) = media_pool.load_image(
+                                        &device,
+                                        &queue,
+                                        &background_pipeline,
+                                        &item.path,
+                                    ) {
+                                        eprintln!("[screens] {err}");
+                                        failed_images.insert(item.id.clone());
+                                    }
+                                }
+                                if let Some(texture) = media_pool.get(&item.id) {
+                                    // La caja viene en la resolución lógica de la escena.
+                                    let scale = match item.design_width {
+                                        Some(dw) if dw > 0.0 => w as f32 / dw,
+                                        _ => 1.0,
+                                    };
+                                    background_pipeline.render_rect(
+                                        &queue,
+                                        &mut pass,
+                                        &texture,
+                                        w,
+                                        h,
+                                        [
+                                            item.x * scale,
+                                            item.y * scale,
+                                            item.width * scale,
+                                            item.height * scale,
+                                        ],
+                                        item.opacity,
+                                        item.aspect_mode,
                                     );
                                 }
                             }

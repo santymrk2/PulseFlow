@@ -17,15 +17,16 @@
 //! - `background`: imagen o video (con `opacity` y `fit` → `aspect_mode`).
 //! - `items` de tipo `text`: caja, alineación horizontal y vertical, línea,
 //!   fuente por tramo (`spans`), color, contorno (`stroke`) y sombra (`shadow`).
+//! - `items` de tipo `media` (imágenes): caja, `src`, `fit` (cover/contain/fill) y
+//!   `opacity` (F4.5). Los videos se aceptan pero el engine todavía no los dibuja.
+//! - `transition`: crossfade y corte en el bucle de render (F4.4).
 //! - `plainText`/`nextText`: texto del Stage Display.
 //!
 //! Sólo tipo (llega al engine pero todavía no se dibuja):
 //!
-//! - `transition`: se guarda en la config global del engine pero el bucle de
-//!   render aún no la aplica (ver F4.4 en `docs/ROADMAP.md`).
 //! - `height`.
-//! - Items que no son `text` (`media`, `image`, overlays…): se deserializan como
-//!   `SceneItem::Unknown` y se ignoran (F4.5 en el roadmap).
+//! - Items que no son `text` ni `media` (cámaras, web, temporizadores…): se
+//!   deserializan como `SceneItem::Unknown` y se ignoran.
 //! - Los overlays de `ScreenScene::overlays` son el modelo previo, no del Scene
 //!   Graph (F4.6 en el roadmap).
 //!
@@ -34,7 +35,7 @@
 //! arma `sceneGraphPayload.ts`, único lugar que enumera las claves— y los deserializa
 //! `render/scene_contract.rs` con estos tipos.
 
-use super::types::{BackgroundMedia, TextBlock, TextSpan};
+use super::types::{BackgroundMedia, MediaItem, TextBlock, TextSpan};
 use crate::error::{AppError, AppResult};
 use serde::{Deserialize, Serialize};
 
@@ -142,8 +143,32 @@ impl SceneTransition {
 #[serde(tag = "type", rename_all = "camelCase")]
 pub enum SceneItem {
     Text(SceneTextItem),
+    Media(SceneMediaItem),
     #[serde(other)]
     Unknown,
+}
+
+/// Item de medio (imagen o video) colocado dentro de la slide (F4.5).
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct SceneMediaItem {
+    #[serde(default)]
+    pub id: Option<String>,
+    pub x: f32,
+    pub y: f32,
+    pub width: f32,
+    pub height: f32,
+    /// Ruta del archivo en disco.
+    #[serde(default)]
+    pub src: String,
+    /// "image" o "video" (el engine sólo dibuja imágenes por ahora).
+    #[serde(default = "default_bg_type", rename = "mediaType")]
+    pub media_type: String,
+    /// "cover", "contain" o "fill"/"stretch".
+    #[serde(default)]
+    pub fit: Option<String>,
+    #[serde(default = "default_opacity")]
+    pub opacity: f32,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -240,7 +265,7 @@ impl ScenePayload {
             .iter()
             .filter_map(|item| match item {
                 SceneItem::Text(t) => Some(t),
-                SceneItem::Unknown => None,
+                _ => None,
             })
             .filter(|t| !t.text.trim().is_empty() || t.spans.iter().any(|s| !s.text.trim().is_empty()))
             .map(|t| TextBlock {
@@ -263,6 +288,35 @@ impl ScenePayload {
                 spans: t.spans.clone(),
                 vertical_align: t.vertical_align.clone(),
                 design_width: Some(design_width),
+            })
+            .collect()
+    }
+
+    /// Items de medio (imágenes) colocados dentro de la slide (F4.5).
+    pub fn media_items(&self) -> Vec<MediaItem> {
+        self.items
+            .iter()
+            .filter_map(|item| match item {
+                SceneItem::Media(m) => Some(m),
+                _ => None,
+            })
+            .filter(|m| !m.src.trim().is_empty())
+            .map(|m| MediaItem {
+                // El `MediaPool` cachea por ruta (como el fondo): la clave es el `src`.
+                id: m.src.clone(),
+                path: m.src.clone(),
+                media_type: m.media_type.clone(),
+                x: m.x,
+                y: m.y,
+                width: m.width,
+                height: m.height,
+                aspect_mode: match m.fit.as_deref() {
+                    Some("contain") => 1,
+                    Some("fill") | Some("stretch") => 2,
+                    _ => 0,
+                },
+                opacity: m.opacity.clamp(0.0, 1.0),
+                design_width: Some(self.width),
             })
             .collect()
     }
@@ -299,7 +353,7 @@ mod tests {
                 { "type": "text", "x": 10, "y": 20, "width": 800, "height": 400, "text": "Hola",
                   "spans": [{ "text": "Hola", "color": [1, 0, 0, 1] }],
                   "stroke": { "color": [0, 0, 0, 1], "width": 2 } },
-                { "type": "media", "src": "x.png" }
+                { "type": "camera", "src": "x.png" }
             ],
             "transition": { "type": "fade", "durationMs": 500 }
         }))
@@ -310,10 +364,53 @@ mod tests {
         assert_eq!(blocks[0].outline_width, Some(2.0));
         assert_eq!(blocks[0].design_width, Some(1920.0));
         assert_eq!(blocks[0].spans.len(), 1);
+        assert!(
+            payload.media_items().is_empty(),
+            "una cámara no es un item de medio"
+        );
 
         let bg = payload.background_media().expect("fondo");
         assert_eq!(bg.aspect_mode, 1);
         assert_eq!(bg.media_type, "video");
+    }
+
+    /// F4.5: los items de medio se traducen a `MediaItem` con la caja en la
+    /// resolución lógica de la escena y el modo de encaje del contrato.
+    #[test]
+    fn parses_media_items_with_box_and_fit() {
+        let payload: ScenePayload = serde_json::from_value(json!({
+            "outputId": "out1",
+            "width": 1920,
+            "height": 1080,
+            "items": [
+                { "type": "media", "x": 10, "y": 20, "width": 800, "height": 400,
+                  "src": "/a/b.png", "mediaType": "image", "fit": "contain", "opacity": 0.5 },
+                { "type": "media", "x": 0, "y": 0, "width": 1920, "height": 1080,
+                  "src": "/a/c.mp4", "mediaType": "video", "fit": "fill" },
+                // sin src: el engine lo ignora
+                { "type": "media", "x": 0, "y": 0, "width": 10, "height": 10 }
+            ]
+        }))
+        .expect("payload con medios válido");
+
+        let media = payload.media_items();
+        assert_eq!(media.len(), 2, "el item sin src se descarta");
+        assert!(payload.text_blocks().is_empty());
+
+        assert_eq!(media[0].id, "/a/b.png");
+        assert_eq!(media[0].path, "/a/b.png");
+        assert_eq!(media[0].media_type, "image");
+        assert_eq!(media[0].x, 10.0);
+        assert_eq!(media[0].y, 20.0);
+        assert_eq!(media[0].width, 800.0);
+        assert_eq!(media[0].height, 400.0);
+        assert_eq!(media[0].aspect_mode, 1, "contain");
+        assert_eq!(media[0].opacity, 0.5);
+        assert_eq!(media[0].design_width, Some(1920.0));
+
+        assert_eq!(media[1].media_type, "video");
+        assert_eq!(media[1].aspect_mode, 2, "fill");
+        assert_eq!(media[1].opacity, 1.0, "opacidad por defecto");
     }
 
     #[test]

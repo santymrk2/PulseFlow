@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import type { SceneGraph } from "../../../types/SceneGraph"
 import { SCENE_GRAPH_VERSION } from "../../../types/SceneGraph"
-import { sceneBackground, sceneGraphPayload, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
+import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
 
 /**
  * Fixtures del contrato Scene Graph (F4.2).
@@ -60,6 +60,17 @@ function scenes(): { [name: string]: SceneGraph } {
             background: sceneBackground({ path: "/media/fondo.mp4", type: "video", fit: "contain", opacity: 0.8, loop: true, muted: true }),
             items: [],
             transition: sceneTransition({ type: "fade", durationMs: 500 }),
+            plainText: ""
+        }),
+
+        "audience-media": sceneGraphPayload({
+            outputId: "audience-3",
+            stage: false,
+            width: 1920,
+            height: 1080,
+            background: null,
+            items: [sceneMediaItem({ id: "media-0", x: 50, y: 100, width: 1820, height: 880, src: "/media/imagen.png", mediaType: "image", fit: "contain", opacity: 1 }), sceneMediaItem({ x: 0, y: 0, width: 1920, height: 1080, src: "/media/fondo.mp4", mediaType: "video", fit: "fill", opacity: 0.5 })],
+            transition: null,
             plainText: ""
         }),
 

@@ -231,6 +231,30 @@ Prueba manual con `bun run dev:tauri` y **2 monitores**:
 - macOS: 
 - Windows: 
 
+## F4.5 — Items de imagen/medio dentro de la slide
+Verificado 2026-10-19 (automatizado): `cargo check --tests` limpio y `cargo test --lib`
+56/56 (3 tests nuevos: tipos de `scene.rs`, contrato TS ↔ Rust sobre el fixture
+`audience-media.json`, y el golden `item-imagen` —una imagen de 4 cuadrantes con
+`fit: "fill"` en una caja de 320×180 dentro de una escena de 640×360; cada cuadrante
+conserva su color en su centro y fuera de la caja queda negro—). Los goldens de F4.3
+quedan byte a byte idénticos, así que el fondo no cambió. `test:unit` 49/49 y
+`test:svelte` 59 errores (línea base).
+
+La verificación visual necesita GUI. Prueba manual con `bun run dev:tauri`:
+
+1. Abrir una canción, arrastrar una **imagen** desde el media bin a la slide y ponerla
+   en vivo.
+2. La imagen debe aparecer en la salida dentro de su caja (no a pantalla completa salvo
+   que la caja la cubra) y con el encaje elegido (`cover`/`contain`/`fill`). Con
+   `contain`, lo que sobra de la caja debe verse transparente (fondo), no negro.
+3. Cambiar `fit` de la imagen: se debe re-dibujar con el nuevo encaje.
+4. Poner un texto encima de la imagen: el texto debe verse sobre la imagen (el engine
+   dibuja fondo → medios → texto; el orden de apilado de la slide todavía no se respeta).
+5. Un **video** como item de slide no se dibuja todavía (limitación conocida); la imagen
+   sí.
+
+### Resultado (pendiente de ejecutar por el usuario)
+
 ## F4 — NDI directo desde framebuffer GPU
 A completar: verificar que START_NDI_NATIVE_FEED inicia la captura y que el feed está activo.
 

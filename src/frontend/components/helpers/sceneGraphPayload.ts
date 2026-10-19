@@ -8,7 +8,7 @@
 // Las claves que el engine dibuja y las que son sólo tipo están documentadas en
 // `SceneGraph.ts` (F4.1).
 
-import type { SceneBackground, SceneGraph, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
+import type { SceneBackground, SceneGraph, SceneItem, SceneMediaItem, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
 import { SCENE_GRAPH_VERSION } from "../../../types/SceneGraph"
 
 /** Todo el Scene Graph salvo `version`, que lo pone este módulo. */
@@ -18,7 +18,7 @@ export interface SceneGraphParts {
     width: number
     height: number
     background: SceneBackground | null
-    items: SceneTextItem[]
+    items: SceneItem[]
     transition: SceneTransition | null
     plainText: string
     nextText?: string
@@ -52,7 +52,7 @@ export function sceneBackground(parts: SceneBackground): SceneBackground {
     })
 }
 
-/** Transición entre escenas (el engine la guarda pero todavía no la aplica; F4.4). */
+/** Transición entre escenas (crossfade y corte en el bucle de render; F4.4). */
 export function sceneTransition(parts: SceneTransition): SceneTransition {
     return defined<SceneTransition>({
         type: parts.type,
@@ -61,7 +61,7 @@ export function sceneTransition(parts: SceneTransition): SceneTransition {
     })
 }
 
-/** Item de texto de la escena (el único tipo de item implementado en el engine). */
+/** Item de texto de la escena. */
 export function sceneTextItem(parts: Omit<SceneTextItem, "type">): SceneTextItem {
     return defined<SceneTextItem>({
         type: "text",
@@ -82,6 +82,22 @@ export function sceneTextItem(parts: Omit<SceneTextItem, "type">): SceneTextItem
         shadow: parts.shadow,
         text: parts.text,
         spans: parts.spans
+    })
+}
+
+/** Item de medio (imagen) dentro de la slide (F4.5). */
+export function sceneMediaItem(parts: Omit<SceneMediaItem, "type">): SceneMediaItem {
+    return defined<SceneMediaItem>({
+        type: "media",
+        id: parts.id,
+        x: parts.x,
+        y: parts.y,
+        width: parts.width,
+        height: parts.height,
+        src: parts.src,
+        mediaType: parts.mediaType,
+        fit: parts.fit,
+        opacity: parts.opacity
     })
 }
 

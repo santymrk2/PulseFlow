@@ -15,13 +15,15 @@
 // - `background`: imagen o video (con `opacity` y `fit`).
 // - `items` de tipo `text`: caja, alineación horizontal y vertical, línea, fuente por
 //   tramo (`spans`), color, contorno (`stroke`) y sombra (`shadow`).
+// - `items` de tipo `media` (imágenes): caja, `src`, `fit` y `opacity` (F4.5). Los
+//   videos se aceptan en el contrato pero el engine todavía no los dibuja.
+// - `transition`: crossfade y corte en el bucle de render (F4.4).
 // - `plainText`/`nextText`: texto del Stage Display.
 //
 // Sólo tipo (llega al engine pero todavía no se dibuja):
 //
-// - `transition`: el engine guarda la config pero el bucle aún no la aplica (F4.4).
 // - `height`.
-// - Items que no son `text` (`media`, `image`, overlays…): Rust los ignora.
+// - Items que no son `text` ni `media` (cámaras, web, temporizadores…): Rust los ignora.
 // - Los overlays de la UI salen del modelo previo de `ScreenScene`, no de este contrato.
 
 /** Versión del contrato. El engine rechaza cualquier otra (F4.1). */
@@ -64,8 +66,24 @@ export interface SceneTransition {
     easing?: string
 }
 
-// por ahora el engine sólo soporta texto; el resto de tipos se ignora en Rust
-export type SceneItem = SceneTextItem
+// Tipos de item que el engine dibuja; el resto (cámaras, web, timers…) se ignora en Rust.
+export type SceneItem = SceneTextItem | SceneMediaItem
+
+export interface SceneMediaItem {
+    type: "media"
+    id?: string
+    x: number
+    y: number
+    width: number
+    height: number
+    /** Ruta del archivo en disco */
+    src: string
+    /** "image" o "video" (el engine sólo dibuja imágenes por ahora) */
+    mediaType: "image" | "video"
+    /** Cómo encaja la imagen en la caja (por defecto "contain") */
+    fit?: "cover" | "contain" | "fill"
+    opacity: number
+}
 
 export interface SceneTextItem {
     type: "text"

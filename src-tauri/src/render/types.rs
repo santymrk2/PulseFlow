@@ -161,6 +161,30 @@ fn default_aspect_mode() -> u32 {
     0 // Cover
 }
 
+/// Item de medio (imagen) colocado dentro de la slide (F4.5).
+///
+/// El fondo (`BackgroundMedia`) cubre toda la salida; esto es un medio con su
+/// propia caja en coordenadas de la resolución lógica de la escena.
+#[derive(Debug, Clone, PartialEq)]
+pub struct MediaItem {
+    /// Clave de caché en el `MediaPool` (el `src` si no hay id propio).
+    pub id: String,
+    /// Ruta del archivo en disco.
+    pub path: String,
+    /// "image" o "video" (el engine sólo dibuja imágenes por ahora).
+    pub media_type: String,
+    pub x: f32,
+    pub y: f32,
+    pub width: f32,
+    pub height: f32,
+    /// 0 = Cover, 1 = Contain, 2 = Stretch.
+    pub aspect_mode: u32,
+    pub opacity: f32,
+    /// Resolución lógica de la escena; el engine escala la caja a la ventana
+    /// (`ventana / design_width`). Si es `None`, las coordenadas son píxeles.
+    pub design_width: Option<f32>,
+}
+
 /// Elemento de superposición superior (reloj, avisos, tercios inferiores).
 #[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]

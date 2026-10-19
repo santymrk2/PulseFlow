@@ -40,8 +40,10 @@ pub struct MediaTexture {
 pub struct LayerUniforms {
     pub opacity: f32,
     pub aspect_mode: u32, // 0 = Cover, 1 = Contain, 2 = Stretch
-    pub screen_ratio: f32,
+    pub target_ratio: f32,
     pub media_ratio: f32,
+    /// Rect destino normalizado [0, 1] (x, y, ancho, alto), origen arriba-izquierda.
+    pub rect: [f32; 4],
 }
 
 /// Piscina de texturas compartidas en VRAM.
@@ -213,10 +215,10 @@ impl BackgroundPipeline {
         let bind_group_layout = device.create_bind_group_layout(&BindGroupLayoutDescriptor {
             label: Some("Background Bind Group Layout"),
             entries: &[
-                // Binding 0: Uniforms
+                // Binding 0: Uniforms (el vertex stage lee `rect` para colocar el quad)
                 BindGroupLayoutEntry {
                     binding: 0,
-                    visibility: ShaderStages::FRAGMENT,
+                    visibility: ShaderStages::VERTEX_FRAGMENT,
                     ty: BindingType::Buffer {
                         ty: wgpu::BufferBindingType::Uniform,
                         has_dynamic_offset: false,
@@ -303,7 +305,7 @@ impl BackgroundPipeline {
         }
     }
 
-    /// Dibuja la textura de fondo en el render pass.
+    /// Dibuja la textura de fondo a pantalla completa en el render pass.
     pub fn render(
         &self,
         queue: &Queue,
@@ -315,20 +317,71 @@ impl BackgroundPipeline {
         aspect_mode: u32, // 0 Cover, 1 Contain, 2 Stretch
     ) {
         let screen_ratio = screen_width as f32 / screen_height.max(1) as f32;
+        self.draw(
+            queue,
+            render_pass,
+            media,
+            opacity,
+            aspect_mode,
+            screen_ratio,
+            [0.0, 0.0, 1.0, 1.0],
+        );
+    }
+
+    /// Dibuja la textura en un rect de la pantalla (en píxeles, origen arriba-izquierda).
+    /// Es la capa de los items de medio dentro de la slide (F4.5).
+    pub fn render_rect(
+        &self,
+        queue: &Queue,
+        render_pass: &mut RenderPass<'_>,
+        media: &MediaTexture,
+        screen_width: u32,
+        screen_height: u32,
+        rect: [f32; 4], // x, y, ancho, alto en píxeles
+        opacity: f32,
+        aspect_mode: u32, // 0 Cover, 1 Contain, 2 Stretch
+    ) {
+        let w = screen_width.max(1) as f32;
+        let h = screen_height.max(1) as f32;
+        let target_ratio = rect[2] / rect[3].max(1.0);
+        let normalized = [rect[0] / w, rect[1] / h, rect[2] / w, rect[3] / h];
+        self.draw(
+            queue,
+            render_pass,
+            media,
+            opacity,
+            aspect_mode,
+            target_ratio,
+            normalized,
+        );
+    }
+
+    /// Escribe los uniforms y dibuja el quad de composición (6 vértices).
+    fn draw(
+        &self,
+        queue: &Queue,
+        render_pass: &mut RenderPass<'_>,
+        media: &MediaTexture,
+        opacity: f32,
+        aspect_mode: u32,
+        target_ratio: f32,
+        rect: [f32; 4],
+    ) {
         let media_ratio = media.width as f32 / media.height.max(1) as f32;
 
         let uniforms = LayerUniforms {
             opacity,
             aspect_mode,
-            screen_ratio,
+            target_ratio,
             media_ratio,
+            rect,
         };
 
         queue.write_buffer(&self.uniform_buffer, 0, bytemuck::cast_slice(&[uniforms]));
 
         render_pass.set_pipeline(&self.render_pipeline);
         render_pass.set_bind_group(0, &media.bind_group, &[]);
-        // Dibuja los 6 vértices del Fullscreen Quad generado en vs_main
+        // Dibuja los 6 vértices del Quad generado en vs_main
         render_pass.draw(0..6, 0..1);
     }
 }

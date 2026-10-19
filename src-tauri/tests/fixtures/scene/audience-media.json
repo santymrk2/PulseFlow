@@ -1,0 +1,35 @@
+{
+    "version": 1,
+    "outputId": "audience-3",
+    "stage": false,
+    "width": 1920,
+    "height": 1080,
+    "background": null,
+    "items": [
+        {
+            "type": "media",
+            "id": "media-0",
+            "x": 50,
+            "y": 100,
+            "width": 1820,
+            "height": 880,
+            "src": "/media/imagen.png",
+            "mediaType": "image",
+            "fit": "contain",
+            "opacity": 1
+        },
+        {
+            "type": "media",
+            "x": 0,
+            "y": 0,
+            "width": 1920,
+            "height": 1080,
+            "src": "/media/fondo.mp4",
+            "mediaType": "video",
+            "fit": "fill",
+            "opacity": 0.5
+        }
+    ],
+    "transition": null,
+    "plainText": ""
+}

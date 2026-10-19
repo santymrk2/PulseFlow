@@ -459,7 +459,39 @@ Después, ampliar el contrato **de a un tipo por tarea** (cada una con fixture +
   *Archivos:* `src-tauri/src/render/transition.rs`,
   `src-tauri/src/render/screens.rs`, `src-tauri/src/render/types.rs`,
   `src-tauri/src/render/mod.rs`.
-- [ ] **F4.5** Items de imagen/medio dentro de la slide.
+- [x] **F4.5 Items de imagen/medio dentro de la slide.** (verificado 2026-10-19:
+  `cargo check --tests` limpio, `cargo test --lib` 56/56 —3 tests nuevos:
+  `parses_media_items_with_box_and_fit` (tipos de `scene.rs`),
+  `audience_media_mantiene_su_contrato` (contrato TS ↔ Rust sobre el fixture) y el golden
+  `golden_item_imagen`—; `test:unit` 49/49, Prettier limpio sobre los archivos tocados,
+  `test:svelte` 59 errores (línea base de F0, sin aumentar). La verificación visual en la
+  app queda para el usuario en `docs/VERIFICAR.md`, sección "F4.5".)
+  Un item de medio (imagen) de la slide llega al engine con su caja en la resolución
+  lógica de la escena (`x`, `y`, `width`, `height`), `src`, `mediaType`, `fit`
+  (`cover`/`contain`/`fill`) y `opacity`. El motor lo dibuja en la capa de medios: el
+  mismo `BackgroundPipeline` que pinta el fondo dibuja el item en un `rect` normalizado
+  (nuevo `render_rect`). `LayerUniforms` cambió `screen_ratio` por `target_ratio` (la
+  relación del destino, que para el fondo coincide con la de la pantalla) y sumó
+  `rect: [f32; 4]`; el fondo pasa `rect = [0,0,1,1]` y se comporta igual que antes (los
+  goldens de F4.3 quedan byte a byte idénticos). El binding de uniforms pasa a
+  `VERTEX_FRAGMENT` porque el vertex shader lee `rect` para colocar el quad. El modo
+  *Contain* ahora devuelve transparente (antes negro opaco): es lo correcto para un item
+  y para el fondo sigue siendo seguro (es la capa de abajo, sobre un limpiado a negro).
+  El engine escala la caja por `ventana / design_width` (igual que el texto) y sólo
+  dibuja `media_type == "image"`; los videos se aceptan en el contrato pero se saltean
+  (la decodificación de video todavía no está en el bucle ni en el snapshot).
+  *Decisión, anotada a propósito:* el engine dibuja fondo → medios → texto, sin respetar
+  el orden de apilado de la slide (limitación conocida).
+  *Fuentes de verdad:* `ScenePayload::media_items()`, el fixture `audience-media.json`,
+  y los tipos `SceneMediaItem` (TS) / `SceneMediaItem` + `MediaItem` (Rust).
+  *Archivos:* `src-tauri/src/render/media.rs`, `src-tauri/src/render/shaders/composite.wgsl`,
+  `src-tauri/src/render/scene.rs`, `src-tauri/src/render/screens.rs`,
+  `src-tauri/src/render/snapshot.rs`, `src-tauri/src/render/types.rs`,
+  `src-tauri/src/render/golden.rs`, `src-tauri/src/render/scene_contract.rs`,
+  `src/types/SceneGraph.ts`, `src/frontend/components/helpers/sceneGraph.ts`,
+  `src/frontend/components/helpers/sceneGraphPayload.ts` (+`.test.ts`),
+  `src-tauri/tests/fixtures/scene/audience-media.json`,
+  `src-tauri/tests/golden/scene/item-imagen.png`.
 - [ ] **F4.6** Overlays (texto e imagen) como capa propia.
 - [ ] **F4.7** Timers/relojes (el engine dibuja el valor que manda el frontend).
 

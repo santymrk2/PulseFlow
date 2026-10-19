@@ -203,6 +203,7 @@ pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
         &app,
         &data.output_id,
         data.text_blocks(),
+        data.media_items(),
         data.background_media(),
     )?;
 

@@ -184,8 +184,7 @@ fn texto_contorno_sombra() -> ScenePayload {
 }
 
 /// Fondo de imagen (4 cuadrantes) con texto blanco encima.
-fn fondo_imagen(image_path: &str) -> ScenePayload {
-    scene(serde_json::json!({
+fn fondo_imagen(image_path: &str) -> ScenePayload {    scene(serde_json::json!({
         "outputId": "golden-fondo",
         "stage": false,
         "width": WIDTH,
@@ -208,6 +207,29 @@ fn fondo_imagen(image_path: &str) -> ScenePayload {
         }],
         "transition": null,
         "plainText": "PULSEFLOW"
+    }))
+}
+
+/// Item de medio (imagen de 4 cuadrantes) dentro de la slide, con `fit: "fill"`, en
+/// la caja x: 160..480, y: 90..270 de la escena 640×360 (F4.5).
+fn item_imagen(image_path: &str) -> ScenePayload {
+    scene(serde_json::json!({
+        "outputId": "golden-item",
+        "stage": false,
+        "width": WIDTH,
+        "height": HEIGHT,
+        "background": null,
+        "items": [{
+            "type": "media",
+            "id": "item-0",
+            "x": 160, "y": 90, "width": 320, "height": 180,
+            "src": image_path,
+            "mediaType": "image",
+            "fit": "fill",
+            "opacity": 1
+        }],
+        "transition": null,
+        "plainText": ""
     }))
 }
 
@@ -308,4 +330,24 @@ fn golden_fondo_imagen() {
     assert_color_near(pixel_at(&rgba, WIDTH, 480, 270), [255, 255, 255], "cuadrante blanco");
 
     assert_golden("fondo-imagen", &rgba, WIDTH, HEIGHT);
+}
+
+/// F4.5: un item de medio se dibuja en su caja (no cubre toda la salida) y, con
+/// `fit: "fill"`, estira la imagen al rect.
+#[test]
+fn golden_item_imagen() {
+    let scene = item_imagen(&reference_background());
+    let rgba = render_snapshot_rgba(&scene, WIDTH, HEIGHT).expect("render del snapshot");
+
+    // Caja x: 160..480, y: 90..270 → cada cuadrante conserva su color en su centro.
+    assert_color_near(pixel_at(&rgba, WIDTH, 240, 135), [255, 0, 0], "item rojo");
+    assert_color_near(pixel_at(&rgba, WIDTH, 400, 135), [0, 255, 0], "item verde");
+    assert_color_near(pixel_at(&rgba, WIDTH, 240, 225), [0, 0, 255], "item azul");
+    assert_color_near(pixel_at(&rgba, WIDTH, 400, 225), [255, 255, 255], "item blanco");
+
+    // Fuera de la caja sigue el fondo negro del render.
+    assert_eq!(pixel_at(&rgba, WIDTH, 20, 20), [0, 0, 0], "esquina sin item");
+    assert_eq!(pixel_at(&rgba, WIDTH, 620, 340), [0, 0, 0], "esquina opuesta sin item");
+
+    assert_golden("item-imagen", &rgba, WIDTH, HEIGHT);
 }
