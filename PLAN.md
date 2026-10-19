@@ -214,3 +214,92 @@ Clasificación:
 Los números de la columna "Envíos" son las ocurrencias de `send(OUTPUT, ["X"]...)` en `src/frontend/`
 (los `//` comentados incluidos en algunos casos). Para limpiar la categoría "eliminar" hay que revisar
 cada llamador porque algunas de esas señales también las consume el receptor de la ventana principal.
+
+## Inventario de canales `Main.*` sin comando Rust (F7.1)
+
+Inventario al 2026-10-19 (rama `feature/ipc`): diff entre los 153 miembros del enum
+`Main` (`src/types/IPC/Main.ts`) y los 90 comandos registrados en
+`src-tauri/src/lib.rs` (`comm -23`). Los 76 canales sin comando se clasifican en
+**implementar** (F7.4, en el orden P1–P13), **posponer** (F7.2 les responde
+`undefined` al instante en vez de esperar 15 s) y **eliminar del frontend** (sin
+uso demostrado; la eliminación es un paso posterior aparte). Los canales que
+requieren una **dependencia pesada o permisos del sistema** se marcan
+*saltear*: quedan documentados en [`docs/VERIFICAR-F7.md`](VERIFICAR-F7.md) con
+el motivo.
+
+Nota: `BACKUP` figuraba en la prioridad sugerida del roadmap, pero `BACKUPS`,
+`DELETE_BACKUP` y `RESTORE` ya tienen comando Rust (`commands/backup.rs`), así
+que no está en esta tabla.
+
+### implementar (orden de F7.4)
+
+| # | Canal | Pantalla que se rompe hoy | Nota |
+| --- | --- | --- | --- |
+| P1 | `IMPORT` | Popups Import (todos los formatos), Projects → importar, ImportCalendar, ImportScripture | Diálogo nativo + leer archivos + emitir `IMPORT2`; para `pdf`/`powerkey` se mandan rutas, para el resto contenido |
+| P2 | `IMPORT_FILES` | Drop de archivos en la app, ImportScripture → biblia local | Mismo flujo que P1 sin diálogo (recibe `paths`) |
+| P3 | `URL` | Links externos por toda la app (docs, updates, References, Spotify, Connect…) | Abrir en el navegador por defecto (`tauri-plugin-opener`, ya en deps) |
+| P4 | `LANGUAGE` | Cambio de idioma: guarda copia de los strings actuales | Escribir `<dataPath>/languages/<lang>.json` |
+| P5 | `SAVE_IMAGE` | Popup Export (imágenes), caché de miniaturas de media | Decodificar base64/bytes y guardar; `filePath` relativo a Imágenes; `openFolder` abre la carpeta |
+| P6 | `SEND_MIDI` | Emitters MIDI y acciones de slide | Salida MIDI real con `midir` (ver nota abajo); `GET_MIDI_OUTPUTS` pasa a listar puertos reales |
+| P7 | `RECEIVE_MIDI` | Acciones MIDI entrantes (Settings → Actions) | Escuchar puerto por nombre y emitir `RECEIVE_MIDI2` |
+| P8 | `CLOSE_MIDI` | Limpieza de listeners MIDI | Desregistro por `id` |
+| P9 | `IP` | Settings → Connection, popups About/OutputSetup/NodeOptions, obsTalk | IPs locales sin dependencias (truco del socket UDP; el frontend usa el primero) |
+| P10 | `MAXIMIZED` | Barra superior (estado maximizado) + arranque | `window.is_maximized()` de la ventana llamadora |
+| P11 | `DEVICE_ID` | Arranque: store `deviceId` (hoje espera 15 s) | `hostname` (crate ya presente) |
+| P12 | `GET_DEVICE_NAME` | Settings → Files (nombre del dispositivo en cloud sync) | `hostname` |
+| P13 | `LOG_ERROR` | Handler global de errores del frontend | Append atómico en `<configDir>/error_log.json` (el mismo que revela `OPEN_LOG`) |
+
+### posponer (respuesta inmediata en F7.2)
+
+| Canal | Pantalla que se rompe hoy | Motivo del aplazamiento |
+| --- | --- | --- |
+| `CHECK_RAM_USAGE` | Arranque (modo optimizado) | Requiere crate `sysinfo` (decisión del usuario) |
+| `AUTO_UPDATE` | Settings → Other | Requiere `tauri-plugin-updater` + firmas/CI de releases |
+| `SPELLCHECK` | Menú contextual de editores | Sin API de sesión de spellcheck en Tauri v2 |
+| `OPEN_NOW_PLAYING` | Popup NowPlaying | Integración nativa Now Playing (macOS) sin API |
+| `NOW_PLAYING` / `NOW_PLAYING_UNSET` | `audioPlayer` (estado Now Playing) | Ídem |
+| `GET_GRAPHICS_DEVICES` | Settings → Other | Enumeración de GPUs (wgpu dedicado + UI) |
+| `DOWNLOAD_LESSONS_MEDIA` | Converter Lessons | Descargas de red |
+| `MEDIA_DOWNLOAD` / `MEDIA_IS_DOWNLOADED` | `helpers/media.ts` (videos remotos) | Descargas de red con progreso |
+| `CAPTURE_SLIDE` | `helpers/media.ts` (miniatura vía canvas) | Depende del engine de render (fuera del alcance de F7) |
+| `PPT_TO_PDF` | Popup Import → PowerPoint | Requiere LibreOffice externo |
+| `SLIDESHOW_GET_APPS` / `START_SLIDESHOW` / `PRESENTATION_CONTROL` | PowerPointPreview + control de presentación | Control de apps externas (PowerPoint/Keynote) |
+| `API_TRIGGER` | Actions → API REST | Puente servidor REST (Rust) → acciones del frontend |
+| `EMIT_OSC` | Actions → OSC | Requiere librería OSC |
+| `GET_LYRICS` / `SEARCH_LYRICS` | Popup WebSearch (crear show) | APIs externas de letras |
+| `RECORDER` | Drawer Live → recorder + audio analyser | Grabación de audio (permisos de micrófono) |
+| `GET_SIMILAR` | Popup Tools → Media | Similitud de imágenes |
+| `MEDIA_FOLDER_COPY` | cloudSync | Stack de cloud sync |
+| `CLOUD_SYNC` / `RESTORE_CLOUD_BACKUP` / `GET_CONVERSATION_ID` | Settings → Files (cloud sync) | Stack de cloud sync |
+| `SEND_SOCKET_MESSAGE` | `SocketHelper` | Stack de cloud sync |
+| `PROVIDER_LOAD_SERVICES` / `PROVIDER_CONNECTIONS` / `PROVIDER_DISCONNECT` / `PROVIDER_STARTUP_LOAD` / `PROVIDER_FETCH_FOLDERS` | Tabs Connection/Files, Canva, SyncFolders, arranque | Integraciones de terceros |
+| `PCO_LIVE_GET` / `PCO_FETCH_SERVICE_TREE` / `PCO_LOAD_PLAN` | pcoLiveSync, PcoServicePicker, Projects | Planning Center (red + pusher) |
+| `ONSTAGE_LOAD_SERVICE` / `ONSTAGE_GET_TEAMS` / `ONSTAGE_SWITCH_TEAM` | Connection tab, Projects | OnStage (red) |
+| `GET_CONTENT_PROVIDERS` / `GET_CONTENT_LIBRARY` / `GET_PROVIDER_CONTENT` | Drawer Media → ContentLibraryBrowser | Content Library (red) |
+| `CHECK_MEDIA_LICENSE` | `helpers/media.ts` | Content Library (red) |
+| `TIMECODE_AUDIO_DATA` / `TIMECODE_STATUS` | Timeline → timecode | Procesamiento de audio en backend |
+| `SPOTIFY_GET_STATE` / `SPOTIFY_COMMAND` | SpotifyManager (preview) | OAuth de Spotify |
+| `ENCODER_DETECT` / `SET_RTMP_ENCODER` | Settings → Outputs (streaming) | Detección de encoders + RTMP |
+
+### saltear (dependencia pesada o permisos del sistema)
+
+| Canal | Motivo |
+| --- | --- |
+| `PDF_TO_IMAGE` | Requiere rasterizar PDF (pdfium/poppler): dependencia pesada |
+| `ACCESS_CAMERA_PERMISSION` | Permiso de sistema (cámara) |
+| `ACCESS_MICROPHONE_PERMISSION` | Permiso de sistema (micrófono) |
+| `ACCESS_SCREEN_PERMISSION` | Permiso de sistema (grabación de pantalla) |
+
+### eliminar del frontend (sin uso demostrado)
+
+| Canal | Evidencia |
+| --- | --- |
+| `OUTPUT` (legacy, `"true" \| "false"`) | Cero envíos en `src/frontend/`; lo reemplazó `TOGGLE_OUTPUTS` (F2) |
+| `PCO_PUSHER_AUTH` | Cero envíos en `src/frontend/` |
+| `AI_GET_MODELS`, `AI_GET_BIN`, `AI_LISTEN_START`, `AI_LISTEN_STOP`, `AI_AUDIO_DATA`, `AI_GET_STATUS`, `AI_SETUP`, `AI_SET_KEY`, `AI_LLM_COMPLETE` | Cero envíos en `src/frontend/` |
+
+Sobre `SEND_MIDI`/`RECEIVE_MIDI` (P6–P8): usarán el crate `midir` (CoreMIDI en
+macOS, winmm en Windows; sin binarios externos ni pasos de sistema), siguiendo la
+nota del encabezado de `commands/midi.rs` ("un crate/FFI dedicado más adelante").
+No es una dependencia pesada como ffmpeg/gstreamer; si se prefiere no agregarla,
+avisar antes de ejecutar F7.4.

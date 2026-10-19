@@ -21,14 +21,16 @@
 //!   `opacity` (F4.5). Los videos se aceptan pero el engine todavía no los dibuja.
 //! - `transition`: crossfade y corte en el bucle de render (F4.4).
 //! - `plainText`/`nextText`: texto del Stage Display.
+//! - `overlays`: capa propia con los items de las overlays activas (texto e imagen),
+//!   dibujada encima de la slide (F4.6): fondo → medios de la slide → texto de la
+//!   slide → medios de los overlays → texto de los overlays. Los overlays con
+//!   `placeUnderSlide` viajan igual en esta capa (limitación anotada a propósito).
 //!
 //! Sólo tipo (llega al engine pero todavía no se dibuja):
 //!
 //! - `height`.
 //! - Items que no son `text` ni `media` (cámaras, web, temporizadores…): se
 //!   deserializan como `SceneItem::Unknown` y se ignoran.
-//! - Los overlays de `ScreenScene::overlays` son el modelo previo, no del Scene
-//!   Graph (F4.6 en el roadmap).
 //!
 //! El contrato se verifica con los fixtures de `src-tauri/tests/fixtures/scene/`
 //! (F4.2): los genera el test de vitest `sceneGraphPayload.test.ts` —el payload lo
@@ -62,6 +64,8 @@ pub struct ScenePayload {
     pub height: f32,
     pub background: Option<SceneBackground>,
     pub items: Vec<SceneItem>,
+    /// Items de las overlays activas: capa propia dibujada encima de la slide (F4.6).
+    pub overlays: Vec<SceneItem>,
     pub transition: Option<SceneTransition>,
     /// Todo el texto de la slide en una cadena (lo usa el Stage Display).
     pub plain_text: String,
@@ -81,6 +85,7 @@ impl Default for ScenePayload {
             height: 0.0,
             background: None,
             items: Vec::new(),
+            overlays: Vec::new(),
             transition: None,
             plain_text: String::new(),
             next_text: None,

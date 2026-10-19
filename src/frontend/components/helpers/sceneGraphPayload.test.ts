@@ -48,6 +48,7 @@ function scenes(): { [name: string]: SceneGraph } {
                     spans: [sceneTextSpan({ text: "Santo", color: [1, 0, 0, 1] }), sceneTextSpan({ text: "\n" }), sceneTextSpan({ text: "Santo", fontStyle: "italic" })]
                 })
             ],
+            overlays: [],
             transition: sceneTransition({ type: "crossfade", durationMs: 400, easing: "ease-in" }),
             plainText: "Santo\nSanto"
         }),
@@ -59,6 +60,7 @@ function scenes(): { [name: string]: SceneGraph } {
             height: 1080,
             background: sceneBackground({ path: "/media/fondo.mp4", type: "video", fit: "contain", opacity: 0.8, loop: true, muted: true }),
             items: [],
+            overlays: [],
             transition: sceneTransition({ type: "fade", durationMs: 500 }),
             plainText: ""
         }),
@@ -70,8 +72,55 @@ function scenes(): { [name: string]: SceneGraph } {
             height: 1080,
             background: null,
             items: [sceneMediaItem({ id: "media-0", x: 50, y: 100, width: 1820, height: 880, src: "/media/imagen.png", mediaType: "image", fit: "contain", opacity: 1 }), sceneMediaItem({ x: 0, y: 0, width: 1920, height: 1080, src: "/media/fondo.mp4", mediaType: "video", fit: "fill", opacity: 0.5 })],
+            overlays: [],
             transition: null,
             plainText: ""
+        }),
+
+        "audience-overlays": sceneGraphPayload({
+            outputId: "audience-4",
+            stage: false,
+            width: 1920,
+            height: 1080,
+            background: null,
+            items: [
+                sceneTextItem({
+                    id: "item-0",
+                    x: 50,
+                    y: 88,
+                    width: 1820,
+                    height: 904,
+                    align: "center",
+                    verticalAlign: "center",
+                    lineHeight: 1.1,
+                    fontSize: 96,
+                    fontWeight: 700,
+                    color: [1, 1, 1, 1],
+                    text: "Slide",
+                    spans: []
+                })
+            ],
+            overlays: [
+                sceneMediaItem({ id: "overlay-media", x: 160, y: 940, width: 480, height: 140, src: "/media/logo.png", mediaType: "image", fit: "contain", opacity: 0.9 }),
+                sceneTextItem({
+                    id: "overlay-text",
+                    x: 160,
+                    y: 88,
+                    width: 1600,
+                    height: 80,
+                    align: "left",
+                    verticalAlign: "center",
+                    lineHeight: 1.2,
+                    fontFamily: "CMG Sans",
+                    fontSize: 48,
+                    fontWeight: 700,
+                    color: [1, 1, 0, 1],
+                    text: "Aviso",
+                    spans: []
+                })
+            ],
+            transition: null,
+            plainText: "Slide"
         }),
 
         stage: sceneGraphPayload({
@@ -81,6 +130,7 @@ function scenes(): { [name: string]: SceneGraph } {
             height: 720,
             background: null,
             items: [],
+            overlays: [],
             transition: null,
             plainText: "Santo\nSanto",
             nextText: "Digno"
@@ -93,6 +143,7 @@ function scenes(): { [name: string]: SceneGraph } {
             height: 1080,
             background: null,
             items: [],
+            overlays: [],
             transition: null,
             plainText: ""
         })

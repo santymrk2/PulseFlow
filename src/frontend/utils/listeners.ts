@@ -162,6 +162,8 @@ export function storeSubscriber() {
 
         send(OUTPUT, ["OVERLAYS"], data)
         send(REMOTE, ["OVERLAYS"], data)
+        // el Scene Graph de cada salida incluye los items de las overlays activas (F4.6)
+        sendOutputScenes(get(outputs))
     })
     overlayCategories.subscribe(async (data) => {
         if (await hasNewerUpdate("LISTENER_OVERLAY_CATEGORIES", 50)) return
