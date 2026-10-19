@@ -21,7 +21,7 @@ diferenciarse, usá `cfg(target_os = "macos")` / `cfg(target_os = "windows")`.
 | Frontend dev | `bun run dev` |
 | App completa | `bun run dev:tauri` (requiere `bun run setup:sidecars --only-host` una vez) |
 | Tests JS | `bun run test:unit` |
-| Tipos Svelte | `bun run test:svelte` (hay ~59 errores heredados: **no aumentar**) |
+| Tipos Svelte | `bun run test:svelte` (hay 58 errores heredados: **no aumentar**) |
 | Formato | `bunx prettier --config config/formatting/.prettierrc.yaml --check <archivos tocados en src/>` |
 | Rust | `cd src-tauri && cargo check && cargo test --lib` |
 | Build | `bun run build` |
@@ -65,6 +65,17 @@ prettier sobre `.md`, `docs/` ni el resto de la configuración.
   y `public/global.css`. No hardcodear colores en componentes.
 - `docs/design-reference/` es **sólo referencia visual** (React, no se compila). No
   importar nada de ahí.
+
+## Varios agentes en paralelo
+
+- Cada agente trabaja en **su propia carpeta** (`git worktree add ../PulseFlow-<x> <rama>`)
+  y en su propia rama. Nunca dos agentes en la misma carpeta.
+- Prohibido `git checkout`/`git switch` a otra rama, `git stash`, `git reset --hard` y
+  `git push --force` sin que el usuario lo pida.
+- Sólo uno corre `bun run dev` / `bun run dev:tauri` (puerto 1420 fijo).
+- **No correr `cargo fmt` ni `prettier --write` sobre todo el proyecto**: sólo sobre
+  los archivos que la tarea modifica. Un reformateo global genera conflictos en todos
+  los archivos de los demás agentes.
 
 ## Qué no hacer sin preguntar
 

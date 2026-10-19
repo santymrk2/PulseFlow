@@ -50,6 +50,22 @@ no como código probado.
 
 ---
 
+## Estado al 2026-10-19 (después de trabajar con 3 agentes en paralelo)
+
+Rama principal `feature/tauri-rust-migration` (`d7dd318`): F0–F4.5, F3.1 (tests
+portables), F6.1–F6.5 y F7.1–F7.4 (`IMPORT`) integrados. Chequeos: test:unit 58/58,
+cargo test 59/59, svelte-check **58 errores** (nueva referencia), build OK.
+
+| Qué | Dónde | Estado |
+| --- | --- | --- |
+| F4.6 overlays | rama `wip/f4` (`4f9fb7a`) | **A medias.** Hecho: campo `overlays` en `SceneGraph.ts`/`scene.rs`, armado en `sceneGraph.ts`, envío desde `listeners.ts`, test de contrato. Falta: inicializar `overlays` en los `ScenePayload` de Rust (no compila: `E0063`), dibujar la capa en `render/screens.rs` (orden: fondo → medios slide → texto slide → medios overlay → texto overlay), regenerar el fixture `audience-*.json` (falla `sceneGraphPayload.test.ts`) y golden. Ignorar de ese commit los cambios en `PLAN.md` y `docs/VERIFICAR-F7.md` (ya integrados). |
+| F6.2–F6.5 diseño | integrado | Implementado; **falta verificación visual** (capturas) según `docs/VERIFICAR-F6.md`. Por eso los checkboxes siguen sin marcar. |
+| F7.4 canales Main | integrado hasta `IMPORT` | Faltan `URL`, `SAVE_IMAGE`, `PDF_TO_IMAGE`, `IP`, `MAXIMIZED`. |
+| `wip/f7` (`af2a2a8`) | rama `wip/f7` | **Descartar**: es `cargo fmt` sobre todo el crate, sin cambios funcionales. Sus notas ya están en `docs/VERIFICAR-F7.md`. |
+| `f6-pulseflow`, `feature/diseno`, `feature/ipc` | ramas remotas | Ya integradas; se pueden borrar. |
+
+---
+
 ## F0 — Línea base y herramientas de verificación
 
 - [x] **F0.1 Registrar la línea base.** (2026-10-18, macOS arm64, commit base `22726c39`)
@@ -501,7 +517,12 @@ Después, ampliar el contrato **de a un tipo por tarea** (cada una con fixture +
   `src/frontend/components/helpers/sceneGraphPayload.ts` (+`.test.ts`),
   `src-tauri/tests/fixtures/scene/audience-media.json`,
   `src-tauri/tests/golden/scene/item-imagen.png`.
-- [ ] **F4.6** Overlays (texto e imagen) como capa propia.
+- [ ] **F4.6** Overlays (texto e imagen) como capa propia. **Retomar desde `wip/f4`**
+  (ver "Estado al 2026-10-19"): `git checkout wip/f4 -- src/types/SceneGraph.ts
+  src-tauri/src/render/scene.rs src/frontend/components/helpers/sceneGraph.ts
+  src/frontend/components/helpers/sceneGraphPayload.ts
+  src/frontend/components/helpers/sceneGraphPayload.test.ts src/frontend/utils/listeners.ts`
+  y completar el lado Rust.
 - [ ] **F4.7** Timers/relojes (el engine dibuja el valor que manda el frontend).
 
 ---
@@ -608,6 +629,8 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   Orden de prioridad: `IMPORT` → `IMPORT_FILES` → `URL` → `SAVE_IMAGE` →
   `PDF_TO_IMAGE` → `IP` → `MAXIMIZED`. (`BACKUP` ya estaba hecho; `LANGUAGE`
   se elimina del frontend; `SEND_MIDI` se saltea — requiere crate MIDI.)
+  Hecho: `IMPORT`/`IMPORT_FILES` (`6d2d8bd`). Pendiente: `URL` → `SAVE_IMAGE` →
+  `PDF_TO_IMAGE` → `IP` → `MAXIMIZED`.
 
 ---
 
