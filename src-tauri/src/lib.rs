@@ -38,6 +38,7 @@ pub fn run() {
             commands::app::IS_DEV,
             commands::app::GET_OS,
             commands::app::LOG,
+            commands::app::URL,
             // STARTUP
             commands::startup::READY,
             // WINDOW

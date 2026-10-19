@@ -10,6 +10,7 @@
 use crate::error::{AppError, AppResult};
 use crate::types::main::OS;
 use tauri::AppHandle;
+use tauri_plugin_opener::OpenerExt;
 
 /// Versión de la aplicación (equivale a `Main.VERSION` → `app.getVersion()`).
 #[tauri::command]
@@ -48,4 +49,15 @@ pub fn LOG(data: Option<serde_json::Value>) {
         Some(value) => eprintln!("[webview] {value}"),
         None => {}
     }
+}
+
+/// `URL`: abre una URL (o un esquema del sistema) en el navegador/aplicación
+/// predeterminada del sistema (equivale a `Main.URL`).
+#[tauri::command]
+pub fn URL(app: AppHandle, data: String) -> AppResult<()> {
+    if data.trim().is_empty() {
+        return Ok(());
+    }
+    let _ = app.opener().open_url(data, None::<&str>);
+    Ok(())
 }
