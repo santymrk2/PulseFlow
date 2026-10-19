@@ -10,6 +10,11 @@ export interface Themes {
 }
 
 type StyleLayers = "background" | "slide" | "overlays"
+export interface Look {
+    name: string
+    screens: { [outputId: string]: string }
+}
+
 export interface Styles {
     name: string
     layers?: StyleLayers[]

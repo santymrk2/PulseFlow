@@ -7,9 +7,10 @@
     import type { Output, RtmpDestination } from "../../../../types/Output"
     import { AudioAnalyser } from "../../../audio/audioAnalyser"
     import { requestMain } from "../../../IPC/main"
-    import { activePage, activePopup, activeStage, activeStyle, alertMessage, currentOutputSettings, ndiData, omtData, os, outputDisplay, outputs, rtmpStatus, saved, settingsTab, stageShows, styles, toggleOutputEnabled } from "../../../stores"
+    import { activeLook, activePage, activePopup, activeStage, activeStyle, alertMessage, currentOutputSettings, looks, ndiData, omtData, os, outputDisplay, outputs, rtmpStatus, saved, settingsTab, stageShows, styles, toggleOutputEnabled } from "../../../stores"
     import { newToast } from "../../../utils/common"
     import { translateText } from "../../../utils/language"
+    import { applyLook } from "../../helpers/looks"
     import { destroy, receive, send } from "../../../utils/request"
     import { clone, keysToID, sortByName, sortObject } from "../../helpers/array"
     import { addRtmpDestination, checkFFmpeg, refreshOut, removeRtmpDestination, startRtmpStreaming, startStreaming, stopRtmpStreaming, stopStreaming, toggleOutput, updateOutputRtmpData, updateOutputWebrtcData, updateRtmpDestination } from "../../helpers/output"
@@ -374,6 +375,14 @@
         {#if $styles[styleId]}
             <MaterialButton title="titlebar.edit" icon="edit" on:click={editStyle} />
         {/if}
+    </InputRow>
+    <InputRow>
+        <label>Looks</label>
+        <select value={$activeLook} on:change={(e) => applyLook((e.target as HTMLSelectElement).value)}>
+            {#each Object.entries($looks) as [id, look]}
+                <option value={id}>{look.name}</option>
+            {/each}
+        </select>
     </InputRow>
 {/if}
 

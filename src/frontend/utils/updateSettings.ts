@@ -84,6 +84,8 @@ import {
     sorted,
     special,
     splitLines,
+    activeLook,
+    looks,
     styles,
     templateCategories,
     theme,
@@ -363,6 +365,20 @@ const updateList: { [key in SaveListSettings | SaveListSyncedSettings]: any } = 
         })
 
         styles.set(v)
+    },
+    looks: (v: any) => {
+        if (!v || !Object.keys(v).length) {
+            // migración: si no hay looks, crear "Default" con el estilo actual de cada salida
+            const screens: { [key: string]: string } = {}
+            Object.keys(get(outputs)).forEach((id) => {
+                screens[id] = get(outputs)[id]?.style || "default"
+            })
+            v = { default: { name: "Default", screens } }
+        }
+        looks.set(v)
+    },
+    activeLook: (v: any) => {
+        activeLook.set(v || "default")
     },
     profiles: (v: any) => profiles.set(v),
     audioFolders: (v: any) => audioFolders.set(v),

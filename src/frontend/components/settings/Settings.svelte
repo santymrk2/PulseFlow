@@ -18,6 +18,7 @@
     import Profiles from "./tabs/Profiles.svelte"
     import ProfilesButtons from "./tabs/ProfilesButtons.svelte"
     import ProfilesTabs from "./tabs/ProfilesTabs.svelte"
+    import Looks from "./tabs/Looks.svelte"
     import Styles from "./tabs/Styles.svelte"
     import StylesButtons from "./tabs/StylesButtons.svelte"
     import StylesTabs from "./tabs/StylesTabs.svelte"
@@ -80,6 +81,8 @@
             {/if}
         {:else if tabId === "styles"}
             <Styles />
+        {:else if tabId === "looks"}
+            <Looks />
         {:else if tabId === "audio"}
             <AudioRouting />
         {:else if tabId === "connection"}

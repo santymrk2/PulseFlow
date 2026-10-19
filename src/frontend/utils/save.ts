@@ -96,6 +96,8 @@ import {
     splitLines,
     stageShows,
     statusIndicator,
+    activeLook,
+    looks,
     styles,
     syncedOutputs,
     templateCategories,

@@ -15,7 +15,7 @@ import type { Effects } from "../types/Effects"
 import type { History, HistoryNew } from "../types/History"
 import type { ActiveEdit, Clipboard, Interaction, Media, MediaOptions, NumberObject, OS, Popups, Profiles, Selected, SlidesOptions, Variable } from "../types/Main"
 import type { Folders, Projects, ShowRef } from "../types/Projects"
-import type { Dictionary, Styles, Themes } from "../types/Settings"
+import type { Dictionary, Look, Styles, Themes } from "../types/Settings"
 import type { Action, CustomFont, Emitter, ID, Overlays, Scene, ShowGroups, ShowList, Shows, ShowType, SlideTimer, Tag, Templates, Timer, Transition, TrimmedShows } from "../types/Show"
 import type { ServerData } from "../types/Socket"
 import type { ActiveStage, StageLayouts } from "../types/Stage"
@@ -378,6 +378,8 @@ export const themes: Writable<{ [key: string]: Themes }> = writable({}) // {defa
 
 // STYLES
 export const styles: Writable<{ [key: string]: Styles }> = writable({}) // {}
+export const looks: Writable<{ [key: string]: Look }> = writable({}) // {}
+export const activeLook: Writable<string> = writable("default") // ""
 
 // OUTPUTS
 export const outputs: Writable<Outputs> = writable({}) // {default}
@@ -501,6 +503,8 @@ export const $ = {
     themes,
     outputs,
     styles,
+    looks,
+    activeLook,
     customMetadata,
     customMessageCredits,
     slideTimelineSpeedMultiplier,
