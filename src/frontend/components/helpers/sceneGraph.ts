@@ -4,12 +4,12 @@
 // Reutiliza la misma lógica que el render HTML de la UI de control: layout/slide de la show,
 // plantilla del estilo de salida (setTemplateStyle), resolución (getOutputResolution), líneas visibles
 // (getOutputLines), valores dinámicos (replaceDynamicValues) y transiciones (getOutputTransitions).
+// El payload final lo arma `sceneGraphPayload.ts`, único lugar que enumera las claves del contrato.
 
 import { get } from "svelte/store"
 import { OUTPUT } from "../../../types/Channels"
 import type { Output } from "../../../types/Output"
 import type { SceneBackground, SceneGraph, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
-import { SCENE_GRAPH_VERSION } from "../../../types/SceneGraph"
 import type { Item, OutSlide, Slide } from "../../../types/Show"
 import { media, outputs, stageShows, styles, transitionData } from "../../stores"
 import { send } from "../../utils/request"
@@ -21,6 +21,7 @@ import { defaultLayers, getCurrentStyle, getOutputLines, getOutputResolution, ge
 import { _show } from "./shows"
 import { replaceDynamicValues } from "./showActions"
 import { applyTextTransform, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
+import { sceneBackground, sceneGraphPayload, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
 
 const DEFAULT_FONT_SIZE = 100
 const DEFAULT_LINE_HEIGHT = 1.1
@@ -83,16 +84,19 @@ function buildTextItem(item: Item, index: number, allItems: Item[], slide: OutSl
             if (!blockStyle) blockStyle = { ...base, ...partStyle }
             if (lineHeight === undefined) lineHeight = partStyle.lineHeight || base.lineHeight
 
-            const span: SceneTextSpan = { text: value }
-            if (partStyle.fontFamily) span.fontFamily = partStyle.fontFamily
-            if (partStyle.fontSize) span.fontSize = partStyle.fontSize
-            if (partStyle.fontWeight !== undefined) span.fontWeight = partStyle.fontWeight
-            if (partStyle.fontStyle) span.fontStyle = partStyle.fontStyle
-            if (partStyle.color) span.color = partStyle.color
-            spans.push(span)
+            spans.push(
+                sceneTextSpan({
+                    text: value,
+                    fontFamily: partStyle.fontFamily,
+                    fontSize: partStyle.fontSize,
+                    fontWeight: partStyle.fontWeight,
+                    fontStyle: partStyle.fontStyle,
+                    color: partStyle.color
+                })
+            )
         })
 
-        if (lineIndex < visibleLines.length - 1) spans.push({ text: "\n" })
+        if (lineIndex < visibleLines.length - 1) spans.push(sceneTextSpan({ text: "\n" }))
     })
 
     const text = spans.map((s) => s.text).join("")
@@ -106,8 +110,7 @@ function buildTextItem(item: Item, index: number, allItems: Item[], slide: OutSl
         spans.forEach((s) => delete s.fontSize)
     }
 
-    const textItem: SceneTextItem = {
-        type: "text",
+    return sceneTextItem({
         id: item.id || `item-${index}`,
         x: box.x,
         y: box.y,
@@ -116,18 +119,16 @@ function buildTextItem(item: Item, index: number, allItems: Item[], slide: OutSl
         align: align || "center",
         verticalAlign: parseVerticalAlign(item.align),
         lineHeight: lineHeight || DEFAULT_LINE_HEIGHT,
+        fontFamily: resolved.fontFamily,
         fontSize,
         fontWeight: resolved.fontWeight ?? 400,
+        fontStyle: resolved.fontStyle,
         color: resolved.color || [1, 1, 1, 1],
+        stroke: resolved.strokeWidth && resolved.strokeWidth > 0 ? { color: resolved.strokeColor || [0, 0, 0, 1], width: resolved.strokeWidth } : undefined,
+        shadow: resolved.shadow || undefined,
         text,
         spans
-    }
-    if (resolved.fontFamily) textItem.fontFamily = resolved.fontFamily
-    if (resolved.fontStyle) textItem.fontStyle = resolved.fontStyle
-    if (resolved.strokeWidth && resolved.strokeWidth > 0) textItem.stroke = { color: resolved.strokeColor || [0, 0, 0, 1], width: resolved.strokeWidth }
-    if (resolved.shadow) textItem.shadow = resolved.shadow
-
-    return textItem
+    })
 }
 
 // BACKGROUND
@@ -153,7 +154,7 @@ function getBackground(output: Output, currentStyle: ReturnType<typeof getCurren
     const mediaStyle = getMediaStyle({ ...get(media)[path], ...(outBackground?.path === path ? outBackground : {}) } as any, currentStyle)
     const fit = mediaStyle.fit === "cover" ? "cover" : mediaStyle.fit === "fill" ? "fill" : "contain"
 
-    return { path, type: mediaType, fit, opacity: 1, loop: outBackground?.path === path ? outBackground.loop !== false : true, muted: outBackground?.muted }
+    return sceneBackground({ path, type: mediaType, fit, opacity: 1, loop: outBackground?.path === path ? outBackground.loop !== false : true, muted: outBackground?.muted })
 }
 
 // TRANSITION
@@ -167,7 +168,7 @@ function getTransition(output: Output, currentStyle: ReturnType<typeof getCurren
     const transition = hasSlide ? transitions.text : transitions.media
     if (!transition?.type) return null
 
-    return { type: transition.type, durationMs: Math.max(0, Math.round(transition.duration || 0)), easing: transition.easing || undefined }
+    return sceneTransition({ type: transition.type, durationMs: Math.max(0, Math.round(transition.duration || 0)), easing: transition.easing || undefined })
 }
 
 // SCENE
@@ -210,8 +211,7 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
         plainText = plainTextOf(built.items, built.slideItems)
     }
 
-    return {
-        version: SCENE_GRAPH_VERSION,
+    return sceneGraphPayload({
         outputId,
         stage: !!output.stageOutput,
         width: resolution.width,
@@ -220,7 +220,7 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
         items,
         transition: getTransition(output, currentStyle, !!showSlide),
         plainText: plainText.trim()
-    }
+    })
 }
 
 // STAGE
@@ -277,8 +277,7 @@ function buildStageScene(outputId: string, output: Output, outputsData: { [id: s
         }
     }
 
-    return {
-        version: SCENE_GRAPH_VERSION,
+    return sceneGraphPayload({
         outputId,
         stage: true,
         width: resolution.width,
@@ -288,7 +287,7 @@ function buildStageScene(outputId: string, output: Output, outputsData: { [id: s
         transition: null,
         plainText,
         nextText
-    }
+    })
 }
 
 // SEND

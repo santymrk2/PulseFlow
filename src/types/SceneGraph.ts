@@ -1,7 +1,9 @@
 // Scene Graph que la UI de control envía al engine de render nativo (Rust) con `RENDER_SCENE`.
 // Espejo exacto de `src-tauri/src/render/scene.rs` (serde camelCase). Si cambias un campo en un
-// lado, cambia el otro: el test de contrato (`src-tauri/tests/scene_contract.rs`, F4.2) deserializa
-// fixtures generadas desde aquí y falla si los nombres no coinciden.
+// lado, cambia el otro: el payload lo arma `sceneGraphPayload.ts` (el único lugar que enumera las
+// claves) y el test de contrato F4.2 lo verifica — `sceneGraphPayload.test.ts` genera los fixtures
+// de `src-tauri/tests/fixtures/scene/*.json` y `src-tauri/src/render/scene_contract.rs` los
+// deserializa con el engine y falla si los nombres o los valores no coinciden.
 //
 // # Qué está implementado en el engine (F4.1)
 //

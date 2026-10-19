@@ -29,9 +29,10 @@
 //! - Los overlays de `ScreenScene::overlays` son el modelo previo, no del Scene
 //!   Graph (F4.6 en el roadmap).
 //!
-//! Espejo exacto de `src/types/SceneGraph.ts` (serde `camelCase`): si cambias un
-//! campo en un lado, cambia el otro. El payload lleva `version` y este engine
-//! rechaza las versiones que no entiende.
+//! El contrato se verifica con los fixtures de `src-tauri/tests/fixtures/scene/`
+//! (F4.2): los genera el test de vitest `sceneGraphPayload.test.ts` —el payload lo
+//! arma `sceneGraphPayload.ts`, único lugar que enumera las claves— y los deserializa
+//! `render/scene_contract.rs` con estos tipos.
 
 use super::types::{BackgroundMedia, TextBlock, TextSpan};
 use crate::error::{AppError, AppResult};

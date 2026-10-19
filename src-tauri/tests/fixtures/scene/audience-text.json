@@ -1,0 +1,75 @@
+{
+    "version": 1,
+    "outputId": "audience-1",
+    "stage": false,
+    "width": 1920,
+    "height": 1080,
+    "background": null,
+    "items": [
+        {
+            "type": "text",
+            "id": "item-0",
+            "x": 50,
+            "y": 88,
+            "width": 1820,
+            "height": 904,
+            "align": "center",
+            "verticalAlign": "center",
+            "lineHeight": 1.1,
+            "fontFamily": "CMG Sans",
+            "fontSize": 96,
+            "fontWeight": 700,
+            "fontStyle": "italic",
+            "color": [
+                1,
+                1,
+                1,
+                1
+            ],
+            "stroke": {
+                "color": [
+                    0,
+                    0,
+                    0,
+                    1
+                ],
+                "width": 4
+            },
+            "shadow": {
+                "color": [
+                    0,
+                    0,
+                    0,
+                    0.7
+                ],
+                "offsetX": 2,
+                "offsetY": 2
+            },
+            "text": "Santo\nSanto",
+            "spans": [
+                {
+                    "text": "Santo",
+                    "color": [
+                        1,
+                        0,
+                        0,
+                        1
+                    ]
+                },
+                {
+                    "text": "\n"
+                },
+                {
+                    "text": "Santo",
+                    "fontStyle": "italic"
+                }
+            ]
+        }
+    ],
+    "transition": {
+        "type": "crossfade",
+        "durationMs": 400,
+        "easing": "ease-in"
+    },
+    "plainText": "Santo\nSanto"
+}

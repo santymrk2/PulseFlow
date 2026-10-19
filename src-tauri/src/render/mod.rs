@@ -20,6 +20,10 @@ pub mod transition;
 pub mod types;
 pub mod video;
 
+// F4.2: tests del contrato Scene Graph contra los fixtures del frontend.
+#[cfg(test)]
+mod scene_contract;
+
 pub use screens::{
     close_all_screens, close_screen, emit_output_state, identify_screens, open_ids, open_screen,
     reposition_screen, set_audience_scene, set_scene_background, set_scene_text, set_stage_scene,

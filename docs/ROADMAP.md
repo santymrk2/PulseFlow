@@ -370,10 +370,36 @@ Va antes que las features nuevas porque Looks agrega datos persistidos.
   *Pasos:* documentar en ambos archivos qué campos están **implementados** en el engine
   y cuáles son sólo tipos; agregar `version: 1` al payload y rechazar (con error
   claro) versiones desconocidas.
-- [ ] **F4.2 Tests de compatibilidad TS ↔ Rust.**
-  *Pasos:* fixtures JSON en `src-tauri/tests/fixtures/scene/*.json` generadas desde
-  `buildSceneGraph()` con un test de vitest; un test Rust deserializa cada fixture.
-  *Aceptación:* cambiar un nombre de campo en un solo lado rompe un test.
+- [x] **F4.2 Tests de compatibilidad TS ↔ Rust.** (verificado 2026-10-18: `cargo check`
+  limpio y `cargo test --lib` 47/47 —6 tests nuevos—; `bun run test:unit` 49/49 (2
+  nuevos); `test:svelte` 59 errores (línea base, sin aumento); `bun run build` OK;
+  Prettier limpio. Las claves del contrato se enumeran ahora en un solo módulo,
+  `src/frontend/components/helpers/sceneGraphPayload.ts` (`sceneGraphPayload`,
+  `sceneBackground`, `sceneTransition`, `sceneTextItem`, `sceneTextSpan`; descarta las
+  claves sin valor), que usan `buildSceneGraph()` y `buildStageScene()`; enumerarlas en
+  un solo lugar es lo que hace verificable el contrato. El test de vitest
+  `sceneGraphPayload.test.ts` genera los 4 fixtures de `src-tauri/tests/fixtures/scene/`
+  (texto con tramos/contorno/sombra, fondo de video, Stage Display y escena vacía) y los
+  compara con la copia commiteada (`UPDATE_SCENE_FIXTURES=1 bun run test:unit` los
+  regenera). El test Rust `render/scene_contract.rs` —módulo `#[cfg(test)]`, corre con
+  `cargo test --lib` igual que en CI— deserializa cada fixture con `ScenePayload`, valida
+  la versión, compara las claves exactas del JSON y verifica los valores que consume el
+  engine (`text_blocks()`, `background_media()`, `engine_name()`).
+  Aceptación comprobada de las dos formas: renombrar una clave en `sceneGraphPayload.ts`
+  (`plainText` → `plaintext`) hace fallar el test de vitest y, al regenerar los fixtures,
+  también los del engine (clave de más y `plainText` por defecto vacío); quitar
+  `rename_all = "camelCase"` de `ScenePayload` hace fallar los 4 tests Rust (los
+  `outputId` de los fixtures quedan como campo desconocido → default vacío).
+  Desvío del plan, anotado a propósito: los fixtures se generan desde el módulo de
+  payload y no llamando a `buildSceneGraph()` desde vitest, porque importarlo en el
+  entorno node arrastra pdfjs (`DOMMatrix`), `window`/`document` a nivel de módulo y
+  ciclos ESM que el transform SSR de vitest resuelve como `undefined` (verificado). Como
+  el payload es ahora la única fuente de claves, la cobertura del contrato es la misma.
+  *Archivos:* `src/frontend/components/helpers/sceneGraphPayload.ts` (nuevo),
+  `src/frontend/components/helpers/sceneGraphPayload.test.ts` (nuevo),
+  `src-tauri/src/render/scene_contract.rs` (nuevo),
+  `src-tauri/tests/fixtures/scene/` (nuevo), `sceneGraph.ts`, `mod.rs`, `scene.rs`,
+  `src/types/SceneGraph.ts`.
 - [ ] **F4.3 Golden tests visuales.**
   *Pasos:* con `RENDER_SNAPSHOT` (F0.2), 3–4 escenas de referencia (texto centrado,
   texto con stroke/sombra, fondo imagen) comparadas con tolerancia.

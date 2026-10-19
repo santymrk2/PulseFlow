@@ -1,0 +1,21 @@
+{
+    "version": 1,
+    "outputId": "audience-2",
+    "stage": false,
+    "width": 1920,
+    "height": 1080,
+    "background": {
+        "path": "/media/fondo.mp4",
+        "type": "video",
+        "fit": "contain",
+        "opacity": 0.8,
+        "loop": true,
+        "muted": true
+    },
+    "items": [],
+    "transition": {
+        "type": "fade",
+        "durationMs": 500
+    },
+    "plainText": ""
+}
