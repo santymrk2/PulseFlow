@@ -359,6 +359,7 @@ export interface MainReturnPayloads {
     [Main.GET_WINDOWS]: Promise<{ name: string; id: string }[]>
     [Main.DOES_MEDIA_EXIST]: Promise<{ path: string; exists: boolean; creationTime?: number }>
     [Main.GET_THUMBNAIL]: Promise<{ output: string; input: string; size: number }>
+    [Main.SAVE_IMAGE]: Promise<string | undefined>
     // [Main.PDF_TO_IMAGE]: Promise<string[]>
     [Main.READ_EXIF]: Promise<{ id: string; exif: ExifData | undefined }>
     [Main.MEDIA_CODEC]: Promise<MediaCodecInfo>

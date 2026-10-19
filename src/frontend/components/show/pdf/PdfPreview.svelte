@@ -2,7 +2,9 @@
     import { getDocument, GlobalWorkerOptions, type PDFDocumentLoadingTask } from "pdfjs-dist"
     import { onDestroy, onMount } from "svelte"
     import { Main } from "../../../../types/IPC/Main"
-    import { sendMain } from "../../../IPC/main"
+    import { requestMain } from "../../../IPC/main"
+    import { createImageShow } from "../../../converters/imageShow"
+    import { formatToFileName } from "../../helpers/show"
     import { activePopup, activeProject, focusMode, labelsDisabled, outLocked, outputs, popupData, projects, slidesOptions, styles } from "../../../stores"
     import { triggerClickOnEnterSpace } from "../../../utils/clickable"
     import { newToast, wait } from "../../../utils/common"
@@ -180,9 +182,37 @@
         }
     }
 
-    function convertToImages() {
+    async function convertToImages() {
+        if (!pageCount || !canvases.filter(Boolean).length) return
         newToast("actions.converting")
-        sendMain(Main.PDF_TO_IMAGE, { filePath: resolvedId || show.id })
+
+        const name = show.name || removeExtension(getFileName(resolvedId || show.id))
+        const folderName = formatToFileName(name) || "PDF"
+
+        const paths: string[] = []
+        for (let i = 0; i < pageCount; i++) {
+            const canvas = canvases[i]
+            if (!canvas) continue
+
+            let base64 = ""
+            try {
+                base64 = canvas.toDataURL("image/jpeg", 0.92)
+            } catch {
+                continue
+            }
+            if (!base64) continue
+
+            const saved = await requestMain(Main.SAVE_IMAGE, { base64, filePath: ["Images", folderName, `${i + 1}.jpg`], format: "jpg" })
+            if (saved) paths.push(saved)
+        }
+
+        if (!paths.length) {
+            newToast("error")
+            return
+        }
+
+        createImageShow({ images: paths, name })
+        newToast("actions.done")
     }
 
     $: timer = data?.timer || 0

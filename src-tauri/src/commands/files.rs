@@ -869,14 +869,16 @@ pub struct SaveImageData {
 }
 
 /// `SAVE_IMAGE`: guarda una imagen (base64 o buffer) en disco.
+/// Devuelve la ruta absoluta escrita (o `None` si no había nada que guardar),
+/// para que el frontend pueda construir un show con las imágenes resultantes.
 #[tauri::command]
-pub fn SAVE_IMAGE(app: AppHandle, state: State<'_, AppState>, data: SaveImageData) -> AppResult<()> {
+pub fn SAVE_IMAGE(app: AppHandle, state: State<'_, AppState>, data: SaveImageData) -> AppResult<Option<String>> {
     if let (Some(path), Some(buffer)) = (data.path.as_deref(), data.buffer.as_ref()) {
         if let Some(parent) = Path::new(path).parent() {
             let _ = std::fs::create_dir_all(parent);
         }
         std::fs::write(path, buffer)?;
-        return Ok(());
+        return Ok(Some(path.to_string()));
     }
 
     if let Some(b64) = data.base64.as_deref() {
@@ -918,11 +920,11 @@ pub fn SAVE_IMAGE(app: AppHandle, state: State<'_, AppState>, data: SaveImageDat
                 let _ = app.opener().open_path(parent.to_string_lossy().to_string(), None::<&str>);
             }
         }
-        return Ok(());
+        return Ok(Some(target.to_string_lossy().into_owned()));
     }
 
     let _ = data.id;
-    Ok(())
+    Ok(None)
 }
 
 // ---------------------------------------------------------------------------
