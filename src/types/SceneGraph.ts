@@ -19,12 +19,16 @@
 //   videos se aceptan en el contrato pero el engine todavía no los dibuja.
 // - `transition`: crossfade y corte en el bucle de render (F4.4).
 // - `plainText`/`nextText`: texto del Stage Display.
+// - `overlays`: capa propia con los items de las overlays activas (texto e imagen),
+//   dibujada encima de la slide en este orden: fondo → medios de la slide → texto de
+//   la slide → medios de los overlays → texto de los overlays (F4.6). Todo overlay
+//   activo viaja en esta capa, incluso los con `placeUnderSlide`: el engine todavía
+//   no los dibuja debajo de la slide.
 //
 // Sólo tipo (llega al engine pero todavía no se dibuja):
 //
 // - `height`.
 // - Items que no son `text` ni `media` (cámaras, web, temporizadores…): Rust los ignora.
-// - Los overlays de la UI salen del modelo previo de `ScreenScene`, no de este contrato.
 
 /** Versión del contrato. El engine rechaza cualquier otra (F4.1). */
 export const SCENE_GRAPH_VERSION = 1
@@ -43,6 +47,8 @@ export interface SceneGraph {
     height: number
     background: SceneBackground | null
     items: SceneItem[]
+    /** Items de las overlays activas: capa propia dibujada encima de la slide (F4.6) */
+    overlays: SceneItem[]
     transition: SceneTransition | null
     /** Todo el texto de la slide en una cadena (stage display) */
     plainText: string

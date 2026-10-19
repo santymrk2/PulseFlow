@@ -19,6 +19,8 @@ export interface SceneGraphParts {
     height: number
     background: SceneBackground | null
     items: SceneItem[]
+    /** Items de las overlays activas (F4.6): capa propia encima de la slide */
+    overlays: SceneItem[]
     transition: SceneTransition | null
     plainText: string
     nextText?: string
@@ -34,6 +36,7 @@ export function sceneGraphPayload(parts: SceneGraphParts): SceneGraph {
         height: parts.height,
         background: parts.background,
         items: parts.items,
+        overlays: parts.overlays,
         transition: parts.transition,
         plainText: parts.plainText,
         nextText: parts.nextText

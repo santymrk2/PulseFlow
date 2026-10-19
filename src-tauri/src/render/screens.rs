@@ -133,6 +133,10 @@ pub struct ScreenScene {
     pub media: Vec<MediaItem>,
     pub background: Option<BackgroundMedia>,
     pub overlays: Vec<OverlayItem>,
+    /// Texto de la capa de overlays del Scene Graph (F4.6).
+    pub overlay_text: Vec<TextBlock>,
+    /// Medios de la capa de overlays del Scene Graph (F4.6).
+    pub overlay_media: Vec<MediaItem>,
     pub stage: StageData,
 }
 
@@ -649,6 +653,8 @@ pub fn set_audience_scene(
     text: Vec<TextBlock>,
     media: Vec<MediaItem>,
     background: Option<BackgroundMedia>,
+    overlay_text: Vec<TextBlock>,
+    overlay_media: Vec<MediaItem>,
 ) -> AppResult<()> {
     let state = manager(app)?;
     // El frontend reenvía la escena ante cualquier cambio de `outputs`, no sólo al
@@ -657,16 +663,36 @@ pub fn set_audience_scene(
     let changed = {
         let scene = state.scene(id);
         let current = scene.read_safe();
-        current.text != text || current.media != media || current.background != background
+        current.text != text
+            || current.media != media
+            || current.background != background
+            || current.overlay_text != overlay_text
+            || current.overlay_media != overlay_media
     };
 
     set_scene_text(app, id, text)?;
     set_scene_media(app, id, media)?;
     set_scene_background(app, id, background)?;
+    set_scene_overlay_text(app, id, overlay_text)?;
+    set_scene_overlay_media(app, id, overlay_media)?;
 
     if changed {
         request_transition(&state, id);
     }
+    Ok(())
+}
+
+/// Reemplaza sólo el texto de la capa de overlays de una salida (F4.6).
+pub fn set_scene_overlay_text(app: &AppHandle, id: &str, text: Vec<TextBlock>) -> AppResult<()> {
+    let scene = manager(app)?.scene(id);
+    scene.write_safe().overlay_text = text;
+    Ok(())
+}
+
+/// Reemplaza sólo los medios de la capa de overlays de una salida (F4.6).
+pub fn set_scene_overlay_media(app: &AppHandle, id: &str, media: Vec<MediaItem>) -> AppResult<()> {
+    let scene = manager(app)?.scene(id);
+    scene.write_safe().overlay_media = media;
     Ok(())
 }
 
@@ -1009,12 +1035,61 @@ fn spawn_render_loop(
                                 }
                             }
 
-                            let mut blocks = current.text;
-                            // Overlays (relojes, avisos): modelo previo, hasta F2.7.
-                            blocks.extend(
-                                current.overlays.into_iter().map(|o| overlay_block(o, w)),
-                            );
-                            blocks
+                            // Texto de la slide.
+                            let slide_blocks = current.text.clone();
+                            if !slide_blocks.is_empty() {
+                                let _ = text_engine.render(&device, &queue, &mut pass, w, h, &slide_blocks);
+                            }
+
+                            // Medios de la capa de overlays (F4.6), encima del texto de la slide.
+                            for item in &current.overlay_media {
+                                if item.media_type != "image" || item.path.is_empty() {
+                                    continue;
+                                }
+                                if media_pool.get(&item.id).is_none()
+                                    && !failed_images.contains(&item.id)
+                                {
+                                    if let Err(err) = media_pool.load_image(
+                                        &device,
+                                        &queue,
+                                        &background_pipeline,
+                                        &item.path,
+                                    ) {
+                                        eprintln!("[screens] {err}");
+                                        failed_images.insert(item.id.clone());
+                                    }
+                                }
+                                if let Some(texture) = media_pool.get(&item.id) {
+                                    let scale = match item.design_width {
+                                        Some(dw) if dw > 0.0 => w as f32 / dw,
+                                        _ => 1.0,
+                                    };
+                                    background_pipeline.render_rect(
+                                        &queue,
+                                        &mut pass,
+                                        &texture,
+                                        w,
+                                        h,
+                                        [
+                                            item.x * scale,
+                                            item.y * scale,
+                                            item.width * scale,
+                                            item.height * scale,
+                                        ],
+                                        item.opacity,
+                                        item.aspect_mode,
+                                    );
+                                }
+                            }
+
+                            // Texto de la capa de overlays (F4.6), encima de todo.
+                            let overlay_blocks = current.overlay_text.clone();
+                            if !overlay_blocks.is_empty() {
+                                let _ = text_engine.render(&device, &queue, &mut pass, w, h, &overlay_blocks);
+                            }
+
+                            // Devolvemos vacío: ya dibujamos todo en este bloque.
+                            Vec::new()
                         }
                         ScreenKind::Stage => super::stage::stage_blocks(&current.stage, w as f32, h as f32),
                     };
@@ -1058,29 +1133,6 @@ fn spawn_render_loop(
             }
         })
         .map_err(|e| AppError::new(format!("Error iniciando el hilo de render: {e}")))
-}
-
-/// Mapea un overlay del modelo previo a un bloque de texto (contorno + sombra).
-fn overlay_block(o: OverlayItem, surface_width: u32) -> TextBlock {
-    TextBlock {
-        text: o.text,
-        font_family: None,
-        font_size: o.font_size,
-        font_weight: 700,
-        font_style: None,
-        color: o.color,
-        alignment: "left".to_string(),
-        x: o.x,
-        y: o.y,
-        width: surface_width as f32,
-        height: 200.0,
-        line_height_ratio: 1.2,
-        outline_color: Some([0.0, 0.0, 0.0, 1.0]),
-        outline_width: Some(1.5),
-        shadow_color: Some([0.0, 0.0, 0.0, 0.8]),
-        shadow_offset: Some([3.0, 3.0]),
-        ..Default::default()
-    }
 }
 
 #[cfg(test)]
