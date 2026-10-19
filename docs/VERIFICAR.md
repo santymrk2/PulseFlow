@@ -45,7 +45,9 @@ En un entorno con **2 monitores** (macOS y, si aplica, Windows):
 **Notas**: en macOS se usa `set_simple_fullscreen(true)` para cubrir el monitor; en Windows se usa bordes desactivados y tamaño/posición. Esta parte es parte de la verificación funcional de F2.8.
 
 ## F2.3 — Estado de salidas hacia el frontend
-A completar cuando se implemente F2.3:
+Comprobado en código y `cargo test` (2026-10-18): `TOGGLE_OUTPUTS` emite `OUTPUT_STATE`
+al abrir y al cerrar, y el evento `Destroyed` de cada ventana también lo emite. En la app:
+
 1. Abrir una salida → frontend recibe `OUTPUT_STATE` con `active: true`.
 2. Cerrar → recibe `active: false`.
 3. Cerrar desde la propia ventana (`Destroyed`) → emite estado.
@@ -108,11 +110,34 @@ Prueba visual pendiente para el usuario:
    y que las salidas siguen mostrando el contenido al cambiar de slide.
 
 ## F2.8 — Prueba end-to-end "Elegir monitor → poner en vivo → cubrirlo"
-Reunir F2.1–F2.7 en un solo test:
-1. Elegir monitor secundario en Settings → Outputs (Elegir pantalla).
-2. Poner en vivo → la slide aparece en ese monitor, cubriéndolo (sin UI de la app).
-3. Pulsa el botón nuevamente para cerrar → la pantalla desaparece.
-4. Repetir en Windows.
+Requiere hardware real: **2 monitores**, en **macOS y Windows**. No se puede ejecutar
+en este entorno (sin display físico ni segundo monitor), así que queda para el usuario.
+Levantar la app con `bun run dev:tauri`. Recorrido completo:
+
+1. Settings → Outputs → "Elegir pantalla": usar la lupa (`IDENTIFY_SCREENS`) y
+   comprobar que cada monitor muestra su número 3 s y se cierra solo.
+2. Elegir el **monitor secundario** como salida de audiencia y poner en vivo
+   (`TOGGLE_OUTPUTS`).
+3. Esperado: la slide aparece en ese monitor **cubriéndolo** (sin la UI de la app),
+   con el estilo de la salida elegida.
+4. Abrir una **canción** y pasar **varias slides**: cada slide se proyecta
+   (`RENDER_SCENE` por salida); en consola, cero `Command … not found`.
+5. Poner **imagen de fondo** en una slide → se ve en el monitor; cambiar a una slide
+   con **video de fondo** → el video se reproduce y el anterior se detiene.
+6. **Limpiar** la salida → vuelve a negro (sin texto ni fondo).
+7. Si hay una salida **stage** habilitada: al pasar slides muestra actual + siguiente
+   ("SIGUIENTE: …") y reloj, sin mezclarse con la audiencia.
+8. Cerrar la salida con el mismo botón → la ventana desaparece; el botón vuelve a su
+   estado inactivo (`OUTPUT_STATE` con `active: false`).
+9. Repetir el recorrido en **Windows**.
+
+Anotar abajo, por sistema, qué funcionó y qué no (fondos, stage, ubicación en el
+monitor, alwaysOnTop, cierre). Ver también F2.2 (ubicación en el monitor), F2.4
+(escena por pantalla) y F2.5 (lupa) para detalles puntuales.
+
+### Resultado (pendiente de ejecutar por el usuario)
+- macOS: 
+- Windows: 
 
 ## F3 — Transiciones GPU (WGSL)
 A completar: comprobar transiciones suaves en la misma pantalla, sin parpadeo, a 60 fps.

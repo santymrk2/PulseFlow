@@ -66,8 +66,10 @@ Hecho y funcionando a nivel código (compila; falta validación manual con hardw
   guarda la configuración (tipo, duración, easing) y el cambio de slide es instantáneo.
 - Stage display: ventana nativa propia.
 - Captura de framebuffer (`copy_texture_to_buffer`) para NDI: existe `render/ndi_stream.rs`.
-- `OPEN_OUTPUT_WINDOW` / `TOGGLE_OUTPUTS` abren el engine nativo; API única de ventanas
-  (`OPEN/CLOSE/IS_OUTPUT_WINDOW(_OPEN)`, `OPEN/CLOSE/IS_STAGE_WINDOW(_OPEN)`).
+- `TOGGLE_OUTPUTS` abre/cierra las salidas y emite `OUTPUT_STATE` al frontend. La API de
+  ventanas por tipo (`OPEN/CLOSE/IS_OUTPUT_WINDOW(_OPEN)`, `OPEN/CLOSE/IS_STAGE_WINDOW(_OPEN)`)
+  y el no-op `OUTPUTS` se eliminaron en F2.7 (sin uso en el frontend); hoy abrir/cerrar
+  salida pasa por `TOGGLE_OUTPUTS` y la escena por `RENDER_SCENE`.
 - **Scene Graph (`RENDER_SCENE`):** Svelte serializa el output activo (`sceneGraph.ts`, tipo en
   `src/types/SceneGraph.ts`, espejo en `render/scene.rs`) con items de texto en coordenadas de la
   resolución de la salida (posición, tamaño, fuente, peso, color, alineación horizontal/vertical,
@@ -107,9 +109,12 @@ Limitaciones reales:
 - [x] Crate renombrado a `pulseflow` / `pulseflow_lib`.
 
 ### Fase 2 — Un solo modo de salida: engine Rust
-- [x] API única de ventanas: `OPEN/CLOSE/IS_OUTPUT_WINDOW(_OPEN)` y `OPEN/CLOSE/IS_STAGE_WINDOW(_OPEN)` (sin duplicados `*_NATIVE_*`).
+- [x] API única de ventanas (se unificaron los duplicados `*_NATIVE_*`); la API por tipo
+  (`OPEN/CLOSE/IS_OUTPUT_WINDOW(_OPEN)`, `OPEN/CLOSE/IS_STAGE_WINDOW(_OPEN)`) se eliminó
+  en F2.7 por no tener uso en el frontend.
 - [x] Sin `.unwrap()` de locks en `render/` de producción (`render/sync.rs`).
-- [x] Scene Graph real desde Svelte (`RENDER_SCENE`) en lugar de la concatenación de texto. `OUTPUTS` queda como no-op de compatibilidad.
+- [x] Scene Graph real desde Svelte (`RENDER_SCENE`) en lugar de la concatenación de texto.
+  El no-op `OUTPUTS` se eliminó en F2.7 (sin uso).
 - [x] Eliminado el camino de la ventana webview de salida (`MainOutput.svelte`, `startupOutput`, `receiveOUTPUTasOUTPUT`); `isOutputWindow()` devuelve siempre `false`.
 - [x] Inventario de comandos `send(OUTPUT, ...)` (ver más abajo).
 - [ ] Limpieza pendiente (ambigua, no se borró): ramas `$currentWindow === "output"` / `"output"` que quedan como código inerte en
@@ -118,7 +123,10 @@ Limitaciones reales:
   El tipo del store `currentWindow` sigue incluyendo `"output"` para no romper esas comparaciones en svelte-check.
   Además `Output.svelte` y `stage/StageLayout.svelte` se usan sólo para las previews dentro de la UI de control.
 - [ ] Limpiar los `send(OUTPUT, ...)` obsoletos del frontend (ver tabla, categoría "eliminar").
-- [ ] Probar manualmente con monitor real: texto, fondo imagen/video y cambio de slides.
+- **Prueba manual con monitor real (Fase 2 / F2.8) pendiente para el usuario**: texto,
+  fondo imagen/video, cambio de slides y ubicación en el monitor elegido. La lista guiada
+  está en `docs/VERIFICAR.md` (secciones F2.2–F2.8); no se puede ejecutar en este entorno
+  (sin display físico ni segundo monitor).
 
 ### Fases siguientes
 
@@ -129,12 +137,14 @@ a ejecutar. Plataformas soportadas: **macOS y Windows**.
 ## Inventario de comandos `send(OUTPUT, [...])`
 
 El frontend envía por el canal `OUTPUT` (→ `invoke(<comando>)`) los comandos de abajo. Casi todos existían para
-alimentar a la ventana webview de salida y a la gestión de ventanas de Electron. Sólo `TOGGLE_OUTPUTS`
-y `RENDER_SCENE` tienen un `#[tauri::command]` propio de salida; el resto falla con una advertencia en consola
-(`[tauri] invoke(...) failed`). Dos nombres coinciden con comandos de Rust que NO son de salida:
+alimentar a la ventana webview de salida y a la gestión de ventanas de Electron. Hoy sólo pasan al backend los
+comandos con `#[tauri::command]` propio de salida — `TOGGLE_OUTPUTS`, `RENDER_SCENE`, `UPDATE_BOUNDS`,
+`IDENTIFY_SCREENS` y los NDI —; desde F2.6 el resto se **descarta antes de `invoke`** en la lista blanca de
+`OUTPUT_COMMANDS` (`src/frontend/IPC/tauri.ts`), sin ensuciar la consola. Dos nombres coinciden con comandos de
+Rust que NO son de salida:
 
 - `SHOWS` (3 envíos): invoca `commands/shows.rs::SHOWS` (carga la biblioteca de shows) y descarta `data`. Es tráfico inútil: eliminar.
-- `OUTPUTS`: comando de compatibilidad, no-op.
+- `OUTPUTS`: **eliminado en F2.7** (era un no-op de compatibilidad sin uso).
 
 Clasificación:
 
@@ -145,7 +155,7 @@ Clasificación:
 | Comando | Envíos | Clasificación | Nota |
 | --- | --- | --- | --- |
 | `RENDER_SCENE` | 1 | Cubierto (nuevo) | Scene Graph de la salida principal |
-| `OUTPUTS` | 1 | Cubierto | Reemplazado por `RENDER_SCENE`; no-op en Rust |
+| `OUTPUTS` | 1 | Eliminado (F2.7) | Reemplazado por `RENDER_SCENE`; comando no-op eliminado |
 | `TOGGLE_OUTPUTS` | 1 | Cubierto | Comando Rust existente (abre/cierra engine) |
 | `TRANSITION` | 1 | Cubierto | La transición viaja en `scene.transition` (falta aplicarla en el render) |
 | `STYLES` | 1 | Cubierto | El estilo de salida ya está aplicado en el Scene Graph |
@@ -192,7 +202,7 @@ Clasificación:
 | `COLORBARS` | 1 | Pendiente | Patrón de barras en el engine |
 | `LIVE_PREPARE` | 1 | Pendiente | Fundido a negro mientras se prepara el cambio |
 | `DRAW` / `DRAW_TOOL` / `DRAW_SETTINGS` | 7 | Pendiente | Herramienta de dibujo sobre la salida (baja prioridad) |
-| `CREATE` | 7 | Pendiente | Crear la ventana de una salida con sus bounds/pantalla (hoy: `OPEN_OUTPUT_WINDOW`) |
+| `CREATE` | 7 | Eliminado (F2.7) | Crear la ventana de una salida: hoy se hace con `TOGGLE_OUTPUTS` |
 | `SET_VALUE` | 7 | Pendiente | Propiedades de la salida (alwaysOnTop, transparente, webrtc/rtmp data...) |
 | `REMOVE` | 1 | Pendiente | Cerrar/eliminar la ventana de una salida |
 | `UPDATE_BOUNDS` | 2 | Pendiente | Mover/redimensionar la ventana nativa |
