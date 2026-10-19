@@ -642,11 +642,15 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
 
 ## F8 — Video y medios
 
-- [ ] **F8.1 Ciclo de vida de ffmpeg.** Detener mata el proceso y une el hilo; EOF o
-  error de lectura se reporta; si falla la decodificación por hardware a mitad de
-  camino, reintentar en software.
-- [ ] **F8.2 Una decodificación por archivo.** Si dos pantallas muestran el mismo
-  video, compartir el decodificador (hoy sería uno por pantalla).
+- [x] **F8.1 Ciclo de vida de ffmpeg.** Hecho en `render/video.rs`: `stop()` mata el
+  proceso ffmpeg (cierra el pipe y desbloquea el `read_exact`) y une el hilo; EOF o
+  error de lectura se reportan por stderr; si el stream HW muere a mitad de camino
+  (con `running` todavía en true) se reintenta en software.
+- [x] **F8.2 Una decodificación por archivo.** Hecho con un hub en `ScreenManager`
+  (`video_hub`): cada archivo tiene un único proceso ffmpeg cuyos fotogramas se
+  difunden a los slots de todas las pantallas suscritas; al cerrar/ cambiar de fondo,
+  `video_hub_release` quita al suscriptor y sólo detiene el proceso si queda sin
+  suscriptores.
 - [ ] **F8.3 Medir.** CPU/RAM/GPU con un video 1080p en loop durante 30 min en macOS y
   Windows; anotar en `PLAN.md`. Decidir recién entonces si hace falta otra estrategia.
 - [ ] **F8.4 NDI.** Conectar la captura de framebuffer al bucle de una pantalla
