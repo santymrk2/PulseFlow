@@ -173,6 +173,34 @@ El toast y el indicador de estado no se pueden comprobar sin GUI. Prueba manual:
 - macOS: 
 - Windows: 
 
+## F3.2 — Estilo por defecto válido
+Verificado 2026-10-18 (automatizado): `cargo check` limpio, `cargo test --lib` 38/38
+(incluido `instalacion_limpia_el_estilo_de_la_salida_existe`, que construye un
+`StoreManager` sobre una carpeta temporal vacía y comprueba que el estilo referenciado
+por `settings.outputs.default.style` existe y se llama "Default"), `bun run test:unit`
+47/47 y Prettier limpio. El engine de render no consume `styles`; el cambio es
+cosmético en la UI.
+
+"No muestra Unnamed" no se puede confirmar sin GUI. Prueba manual:
+
+1. Empezar de una instalación limpia:
+   - Cerrar la app.
+   - Renombrar (no borrar) las carpetas de datos y de configuración para que arranque
+     vacía:
+     - macOS: `~/Documents/PulseFlow` y `~/Library/Application Support/com.pulseflow.app`
+     - Windows: `%USERPROFILE%\Documents\PulseFlow` y `%APPDATA%\com.pulseflow.app`
+2. Abrir la app e ir a **Settings → Outputs**.
+3. Esperado: en la fila del estilo de la salida "Primary" aparece **Default** (no
+   "Unnamed", que aparecía en cursiva).
+4. Abrir el selector de estilo: debe listarse "Default" como opción.
+5. Nota: una instalación existente que ya tenga su `settings_synced.json` sin
+   `styles.default` seguirá mostrando "Unnamed"; en ese caso basta elegir el estilo a
+   mano (no hay migración, era fuera del alcance de F3.2).
+
+### Resultado (pendiente de ejecutar por el usuario)
+- macOS: 
+- Windows: 
+
 ## F3 — Transiciones GPU (WGSL)
 A completar: comprobar transiciones suaves en la misma pantalla, sin parpadeo, a 60 fps.
 

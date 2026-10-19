@@ -328,7 +328,22 @@ Va antes que las features nuevas porque Looks agrega datos persistidos.
   *Aceptación:* test que simula una carpeta sin permisos y verifica que el comando
   devuelve error y el archivo original queda intacto.
 
-- [ ] **F3.2 Estilo por defecto válido.**
+- [x] **F3.2 Estilo por defecto válido.** (verificado 2026-10-18: `cargo check` limpio,
+  `cargo test --lib` 38/38 —2 tests nuevos: `instalacion_limpia_el_estilo_de_la_salida_
+  existe`, que construye un `StoreManager` sobre una carpeta temporal limpia (con
+  `config.json` apuntando `dataPath` a esa misma carpeta para aislar las tiendas
+  portables) y verifica que el estilo que referencia la salida por defecto existe y se
+  llama "Default", y `las_salidas_por_defecto_referencian_estilos_validos`, que recorre
+  todas las salidas por defecto y exige que su estilo exista en `styles` con nombre—;
+  `test:unit` 47/47, Prettier limpio. Causa raíz: `settings.outputs.default.style` es
+  `"default"` pero `default_synced_settings().styles` era `{}`, y en Settings → Outputs
+  el `MaterialPopupButton` recibe `value="default"` (truthy) y `name=undefined`, así que
+  cae en su rama de "Unnamed". Fix: `styles.default = { name: "Default" }` en los
+  defaults. Nota: el engine de render no consume `styles`, es cosmético; y sólo aplica a
+  instalaciones nuevas (una instalación existente que ya tenga `settings_synced.json` sin
+  `styles.default` sigue mostrando "Unnamed" hasta que se elija el estilo a mano — sin
+  migración, fuera del alcance de F3.2). La verificación visual en la app quedó para el
+  usuario en `docs/VERIFICAR.md`, sección "F3.2".)
   *Archivos:* `src-tauri/src/domain/data/defaults.rs`.
   *Pasos:* crear el estilo `default` en los defaults o dejar `style` vacío en el output.
   *Aceptación:* instalación limpia: Settings → Outputs no muestra "Unnamed".

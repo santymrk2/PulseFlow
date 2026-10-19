@@ -110,7 +110,11 @@ pub fn default_synced_settings() -> Value {
             "presentation": { "name": "category.presentation", "icon": "presentation", "default": true },
             "scripture": { "name": "category.scripture", "icon": "scripture", "default": true }
         },
-        "styles": {},
+        // F3.2: la salida por defecto (`settings.outputs.default.style`) apunta al
+        // estilo "default". Si no existe, Settings → Outputs muestra "Unnamed"
+        // (el selector resuelve `styles[id]?.name`). Un estilo sin claves de
+        // render equivale a `{}` en el engine, así que no cambia el dibujo.
+        "styles": { "default": { "name": "Default" } },
         "profiles": {},
         "timers": { "default": { "name": "05:00", "type": "counter", "start": 300, "end": 0 } },
         "variables": { "default": { "name": "Counter", "type": "number" } },
@@ -168,4 +172,38 @@ pub fn default_synced_settings() -> Value {
         "deletedDefaults": {},
         "syncedOutputs": {}
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// F3.2: cada estilo referenciado por una salida por defecto debe existir
+    /// en `default_synced_settings().styles` y tener nombre; si no, la
+    /// Settings → Outputs muestra "Unnamed" en una instalación limpia.
+    #[test]
+    fn las_salidas_por_defecto_referencian_estilos_validos() {
+        let synced = default_synced_settings();
+        let settings = default_settings();
+        let styles = synced["styles"]
+            .as_object()
+            .expect("styles por defecto es un objeto");
+        let outputs = settings["outputs"]
+            .as_object()
+            .expect("outputs por defecto es un objeto");
+
+        assert!(!outputs.is_empty(), "debe haber al menos una salida por defecto");
+
+        for (output_id, output) in outputs {
+            let style_id = output["style"].as_str().unwrap_or("");
+            assert!(
+                styles.contains_key(style_id),
+                "la salida {output_id} referencia el estilo {style_id:?}, que no existe"
+            );
+            assert!(
+                !styles[style_id]["name"].as_str().unwrap_or("").is_empty(),
+                "el estilo {style_id:?} necesita un nombre visible"
+            );
+        }
+    }
 }

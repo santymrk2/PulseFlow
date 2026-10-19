@@ -389,4 +389,39 @@ mod tests {
 
         let _ = fs::remove_dir_all(&dir);
     }
+
+    /// F3.2: en una instalación limpia (sin archivos) el estilo que referencia
+    /// la salida por defecto existe y tiene nombre, así que Settings → Outputs
+    /// no muestra "Unnamed". El `config.json` apunta `dataPath` a la carpeta
+    /// temporal para que las tiendas portables (`SYNCED_SETTINGS`) se lean de
+    /// ahí y no de la carpeta de datos real.
+    #[test]
+    fn instalacion_limpia_el_estilo_de_la_salida_existe() {
+        let dir = temp_dir("instalacion-limpia");
+        let portable_root = dir.join("data");
+        fs::create_dir_all(&portable_root).expect("carpeta de datos");
+        fs::write(
+            dir.join("config.json"),
+            format!(r#"{{"dataPath":"{}"}}"#, portable_root.display()),
+        )
+        .expect("config.json");
+
+        let manager = StoreManager::new(dir.clone());
+
+        let style_id = manager
+            .get_value("SETTINGS", "outputs.default.style")
+            .as_str()
+            .unwrap_or("")
+            .to_string();
+        let style_name = manager.get_value("SYNCED_SETTINGS", "styles.default.name");
+
+        assert!(!style_id.is_empty(), "la salida por defecto debe tener un estilo asignado");
+        assert_eq!(
+            style_name.as_str().unwrap_or(""),
+            "Default",
+            "el estilo {style_id:?} de la salida debe existir y tener nombre"
+        );
+
+        let _ = fs::remove_dir_all(&dir);
+    }
 }
