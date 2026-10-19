@@ -43,6 +43,11 @@ pollster = "1.0.1"
 glyphon = "0.12.0"
 cosmic-text = "0.19.0"
 
+# Sólo para tests: `tauri::test::mock_app()` permite invocar comandos sin GUI
+# (F3.1). La feature "test" no entra en el build normal de la app.
+[dev-dependencies]
+tauri = { version = "2", features = ["test"] }
+
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
 [profile.release]

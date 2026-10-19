@@ -251,13 +251,13 @@ pub fn restore_files(
 
         if let Some(show_name) = name.strip_prefix("SHOWS/") {
             files::create_folder(&shows_folder)?;
-            let _ = files::write_file(Path::new(&shows_folder).join(show_name), &content);
+            files::write_file(Path::new(&shows_folder).join(show_name), &content)?;
             continue;
         }
 
         if let Some(bible_name) = name.strip_prefix("BIBLE_") {
             files::create_folder(&bibles_folder)?;
-            let _ = files::write_file(Path::new(&bibles_folder).join(bible_name), &content);
+            files::write_file(Path::new(&bibles_folder).join(bible_name), &content)?;
             continue;
         }
 
@@ -270,14 +270,14 @@ pub fn restore_files(
                 map.remove("dataPath");
                 map.remove("showsPath");
                 let cleaned = Value::Object(map);
-                stores.set("SETTINGS", cleaned.clone());
+                stores.set("SETTINGS", cleaned.clone())?;
                 emissions.push(("SETTINGS".to_string(), cleaned));
             }
             continue;
         }
 
         if let Some(store_id) = portable_ids.iter().find(|id| name.contains(id.as_str())) {
-            stores.set(store_id, value.clone());
+            stores.set(store_id, value.clone())?;
             emissions.push((store_id.clone(), value));
         }
     }

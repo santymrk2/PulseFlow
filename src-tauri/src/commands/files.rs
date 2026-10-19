@@ -507,8 +507,7 @@ pub fn SET_MEDIA_FOLDER_PATH(state: State<'_, AppState>, data: String) -> AppRes
         .stores
         .lock()
         .map_err(|_| AppError::new("Store manager lock poisoned"))?;
-    stores.set_value("config", "mediaFolderPath", serde_json::Value::String(data));
-    Ok(())
+    stores.set_value("config", "mediaFolderPath", serde_json::Value::String(data))
 }
 
 // ---------------------------------------------------------------------------

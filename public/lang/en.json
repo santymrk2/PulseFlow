@@ -589,6 +589,7 @@
     "toast": {
         "saving": "Saving...",
         "saved": "Saved",
+        "save_error": "Could not save your changes. Check folder permissions and try again.",
         "autosize_disabled": "Auto size disabled",
         "error_media": "Could not get media.",
         "empty_styles": "No styles",

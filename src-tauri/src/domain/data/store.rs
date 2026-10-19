@@ -13,6 +13,7 @@
 //! se puede añadir más adelante por dominio (regla 4 del proyecto).
 
 use super::defaults;
+use crate::error::{AppError, AppResult};
 use crate::utils::files::{self, DataFolder};
 use serde_json::{json, Map, Value};
 use std::collections::HashMap;
@@ -110,22 +111,30 @@ impl StoreManager {
     }
 
     /// Guarda el contenido completo de la tienda (`safeStoreSet` / `setStore`).
-    pub fn set(&mut self, id: &str, value: Value) {
+    ///
+    /// La escritura es atómica y **propaga el error** (F3.1): si el archivo no
+    /// se pudo guardar, el valor en memoria no se actualiza, de modo que un
+    /// intento siguiente vuelva a intentar escribirlo en vez de darlo por
+    /// hecho.
+    pub fn set(&mut self, id: &str, value: Value) -> AppResult<()> {
         let Some(idx) = STORE_DEFS.iter().position(|d| d.id == id) else {
-            return;
+            return Ok(());
         };
         let def = &STORE_DEFS[idx];
         let path = Self::store_path_for(&self.config, &self.config_dir, def);
         if let Some(parent) = path.parent() {
-            let _ = std::fs::create_dir_all(parent);
+            std::fs::create_dir_all(parent).map_err(|err| {
+                AppError::new(format!("No se pudo crear {}: {err}", parent.display()))
+            })?;
         }
         let payload = if def.minify {
-            serde_json::to_string(&value).unwrap_or_default()
+            serde_json::to_string(&value)?
         } else {
-            serde_json::to_string_pretty(&value).unwrap_or_default()
+            serde_json::to_string_pretty(&value)?
         };
-        let _ = std::fs::write(&path, payload);
+        files::write_file(&path, &payload)?;
         self.stores.insert(id.to_string(), StoreData { def_index: idx, value });
+        Ok(())
     }
 
     /// Devuelve el objeto config completo.
@@ -169,40 +178,62 @@ impl StoreManager {
     }
 
     /// Escritura de un valor con notación por puntos (`setStoreValue`).
-    pub fn set_value(&mut self, file: &str, key: &str, value: Value) {
+    ///
+    /// Calcula el nuevo valor sobre una copia y sólo lo fija en memoria si el
+    /// archivo se guardó bien (escritura atómica + error propagado, F3.1).
+    pub fn set_value(&mut self, file: &str, key: &str, value: Value) -> AppResult<()> {
         if file == "config" {
-            set_path(&mut self.config, key, value);
-            let payload = serde_json::to_string_pretty(&self.config).unwrap_or_default();
-            let _ = std::fs::write(&self.config_path, payload);
-            return;
+            let mut next = self.config.clone();
+            set_path(&mut next, key, value);
+            let payload = serde_json::to_string_pretty(&next)?;
+            files::write_file(&self.config_path, &payload)?;
+            self.config = next;
+            return Ok(());
         }
-        if let Some(store) = self.stores.get_mut(file) {
-            set_path(&mut store.value, key, value.clone());
-            let def = &STORE_DEFS[store.def_index];
-            let path = Self::store_path_for(&self.config, &self.config_dir, def);
-            if let Some(parent) = path.parent() {
-                let _ = std::fs::create_dir_all(parent);
-            }
-            let payload = if def.minify { serde_json::to_string(&store.value).unwrap_or_default() } else { serde_json::to_string_pretty(&store.value).unwrap_or_default() };
-            let _ = std::fs::write(path, payload);
+
+        let Some(store) = self.stores.get_mut(file) else {
+            return Ok(());
+        };
+        let mut next = store.value.clone();
+        set_path(&mut next, key, value);
+
+        let def = &STORE_DEFS[store.def_index];
+        let payload = if def.minify {
+            serde_json::to_string(&next)?
+        } else {
+            serde_json::to_string_pretty(&next)?
+        };
+        let path = Self::store_path_for(&self.config, &self.config_dir, def);
+        if let Some(parent) = path.parent() {
+            std::fs::create_dir_all(parent).map_err(|err| {
+                AppError::new(format!("No se pudo crear {}: {err}", parent.display()))
+            })?;
         }
+        files::write_file(&path, &payload)?;
+        store.value = next;
+        Ok(())
     }
 
     /// Actualiza `config.dataPath` (`UPDATE_DATA_PATH`), crea las carpetas y
     /// reescribe las tiendas portables en la nueva ubicación.
-    pub fn update_data_path(&mut self, new_path: &str, _old_path: &str) {
-        self.set_value("config", "dataPath", json!(new_path));
+    ///
+    /// Propaga cualquier error de escritura (F3.1): si una tienda portable no
+    /// se pudo guardar, el comando informa del fallo en lugar de ignorarlo.
+    pub fn update_data_path(&mut self, new_path: &str, _old_path: &str) -> AppResult<()> {
+        self.set_value("config", "dataPath", json!(new_path))?;
         let portable = data_root_from_config(&self.config).join(DataFolder::UserData.name());
-        let _ = std::fs::create_dir_all(&portable);
+        std::fs::create_dir_all(&portable)
+            .map_err(|err| AppError::new(format!("No se pudo crear {}: {err}", portable.display())))?;
 
         // Migrar las tiendas portables: como sus valores ya están en memoria,
         // reescribirlos en la nueva ruta conserva los datos.
         for def in STORE_DEFS.iter().filter(|d| d.portable) {
             let Some(store) = self.stores.get(def.id) else { continue };
+            let payload = if def.minify { serde_json::to_string(&store.value)? } else { serde_json::to_string_pretty(&store.value)? };
             let path = portable.join(format!("{}.json", def.file_name));
-            let payload = if def.minify { serde_json::to_string(&store.value).unwrap_or_default() } else { serde_json::to_string_pretty(&store.value).unwrap_or_default() };
-            let _ = std::fs::write(path, payload);
+            files::write_file(&path, &payload)?;
         }
+        Ok(())
     }
 }
 
@@ -254,5 +285,108 @@ fn set_path_parts(current: &mut Value, parts: &[&str], value: Value) {
     if let Some(obj) = current.as_object_mut() {
         let entry = obj.entry(head.to_string()).or_insert_with(|| Value::Object(Map::new()));
         set_path_parts(entry, &parts[1..], value);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    use std::path::Path;
+
+    const ORIGINAL: &str = r#"{"language":"es"}"#;
+
+    fn temp_dir(name: &str) -> PathBuf {
+        let dir = std::env::temp_dir().join(format!("pulseflow-store-{name}"));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("carpeta temporal");
+        dir
+    }
+
+    fn file_names(dir: &Path) -> Vec<String> {
+        let mut names: Vec<String> = fs::read_dir(dir)
+            .expect("leer carpeta")
+            .filter_map(|entry| entry.ok())
+            .map(|entry| entry.file_name().to_string_lossy().into_owned())
+            .collect();
+        names.sort();
+        names
+    }
+
+    /// `set` es la vía que usa `SAVE` para las tiendas (F3.1): en una carpeta
+    /// sin permisos debe fallar a la vista, dejar el archivo original y no
+    /// marcar el valor como guardado en memoria (así un reintento vuelve a
+    /// intentar escribirlo).
+    #[cfg(unix)]
+    #[test]
+    fn set_en_carpeta_sin_permisos_falla_sin_tocar_el_archivo() {
+        use std::os::unix::fs::PermissionsExt;
+
+        let dir = temp_dir("sin-permisos");
+        fs::write(dir.join("settings.json"), ORIGINAL).expect("archivo original");
+
+        let mut manager = StoreManager::new(dir.clone());
+        let before = manager.get("SETTINGS");
+
+        fs::set_permissions(&dir, fs::Permissions::from_mode(0o555)).expect("chmod 555");
+        let result = manager.set("SETTINGS", json!({ "language": "fr" }));
+        fs::set_permissions(&dir, fs::Permissions::from_mode(0o755)).expect("chmod 755");
+
+        assert!(result.is_err(), "debe devolver error en una carpeta sin permisos");
+        assert_eq!(
+            fs::read_to_string(dir.join("settings.json")).expect("leer original"),
+            ORIGINAL,
+            "el archivo original debe quedar intacto"
+        );
+        assert_eq!(file_names(&dir), vec!["settings.json".to_string()], "no debe quedar ningún temporal");
+        assert_eq!(manager.get("SETTINGS"), before, "la memoria no debe actualizarse si no se escribió");
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    #[test]
+    fn set_escribe_atomicamente_y_actualiza_la_memoria() {
+        let dir = temp_dir("ok");
+        let mut manager = StoreManager::new(dir.clone());
+
+        manager.set("SETTINGS", json!({ "language": "fr" })).expect("guardado");
+
+        let saved = fs::read_to_string(dir.join("settings.json")).expect("leer guardado");
+        assert!(saved.contains("fr"), "el valor debe estar en el archivo: {saved}");
+        assert_eq!(manager.get("SETTINGS"), json!({ "language": "fr" }));
+        assert_eq!(file_names(&dir), vec!["settings.json".to_string()], "no debe quedar ningún temporal");
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    /// `set_value` (usado por `SET_STORE_VALUE`) también propaga el error de
+    /// escritura en lugar de ignorarlo.
+    #[cfg(unix)]
+    #[test]
+    fn set_value_en_carpeta_sin_permisos_falla_sin_tocar_el_archivo() {
+        use std::os::unix::fs::PermissionsExt;
+
+        let dir = temp_dir("valor-sin-permisos");
+        fs::write(dir.join("settings.json"), ORIGINAL).expect("archivo original");
+
+        let mut manager = StoreManager::new(dir.clone());
+
+        fs::set_permissions(&dir, fs::Permissions::from_mode(0o555)).expect("chmod 555");
+        let result = manager.set_value("SETTINGS", "theme", json!("dark"));
+        fs::set_permissions(&dir, fs::Permissions::from_mode(0o755)).expect("chmod 755");
+
+        assert!(result.is_err(), "debe devolver error en una carpeta sin permisos");
+        assert_eq!(
+            fs::read_to_string(dir.join("settings.json")).expect("leer original"),
+            ORIGINAL,
+            "el archivo original debe quedar intacto"
+        );
+        assert_eq!(
+            manager.get_value("SETTINGS", "theme"),
+            Value::Null,
+            "la memoria no debe actualizarse si no se escribió"
+        );
+
+        let _ = fs::remove_dir_all(&dir);
     }
 }

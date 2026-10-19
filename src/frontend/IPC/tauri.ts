@@ -16,6 +16,7 @@
 import { invoke } from "@tauri-apps/api/core"
 import { listen, type UnlistenFn } from "@tauri-apps/api/event"
 import { OUTPUT } from "../../types/Channels"
+import { newToast, setStatus } from "../utils/common"
 
 type Receiver = (args: any, listenedId?: string) => void
 
@@ -42,6 +43,11 @@ const listenerPromises: { [channel: string]: Promise<void> } = {}
 // slide, que dispara muchas señales heredadas). En desarrollo se avisa una sola
 // vez por nombre.
 const OUTPUT_COMMANDS = new Set(["TOGGLE_OUTPUTS", "RENDER_SCENE", "UPDATE_BOUNDS", "IDENTIFY_SCREENS"])
+
+// Comandos que escriben datos en disco (F3.1). Si fallan, los cambios del
+// usuario no quedaron guardados: además del warning se muestra un toast y el
+// indicador de estado pasa a "error" (deja el "saving" para poder reintentar).
+const PERSISTENCE_COMMANDS = new Set(["SAVE", "SET_STORE_VALUE", "SET_MEDIA_FOLDER_PATH", "UPDATE_DATA_PATH"])
 
 // Comandos ya avisados en desarrollo, para no repetir el warning en cada envío.
 const warnedOutputCommands = new Set<string>()
@@ -106,6 +112,11 @@ async function send(channel: string, data?: any, id?: string) {
             // Muchos canales (servidores, salidas, etc.) aún no tienen comando en el
             // backend; se registran como advertencia en lugar de colapsar.
             console.warn(`[tauri] invoke("${command}") failed:`, error)
+
+            if (PERSISTENCE_COMMANDS.has(command)) {
+                setStatus("error", 10)
+                newToast("toast.save_error")
+            }
         })
 }
 

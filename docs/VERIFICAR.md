@@ -139,6 +139,40 @@ monitor, alwaysOnTop, cierre). Ver también F2.2 (ubicación en el monitor), F2.
 - macOS: 
 - Windows: 
 
+## F3.1 — Errores de escritura visibles
+Verificado 2026-10-18 (automatizado): `cargo check` limpio, `cargo test --lib` 36/36
+(incluido `set_store_value_devuelve_error_en_carpeta_sin_permisos`, que invoca el
+comando con `tauri::test::mock_app()` sobre una carpeta `chmod 555` y comprueba que
+devuelve error, que `settings.json` conserva su contenido original y que no queda
+ningún `.tmp`), `bun run test:unit` 47/47, `svelte-check` 59 errores (línea base) y
+Prettier limpio.
+
+El toast y el indicador de estado no se pueden comprobar sin GUI. Prueba manual:
+
+1. Apuntar la carpeta de datos (`DATA_PATH`, por defecto `~/Documents/PulseFlow`) y la
+   de configuración de la app:
+   - macOS: `~/Library/Application Support/com.pulseflow.app`
+   - Windows: `%APPDATA%\com.pulseflow.app`
+2. Cerrar la app y poner una de ellas en solo lectura:
+   - Tiendas portables (proyectos, temas, overlays, stage, eventos):
+     `chmod 555 ~/Documents/PulseFlow/Config`
+   - Ajustes (`SETTINGS`, no portables): `chmod 555 ~/Library/Application Support/com.pulseflow.app`
+     (Windows: permisos de la carpeta → denegar escritura).
+3. Abrir la app y hacer algo que dispare un guardado (crear/editar un proyecto, o
+   cambiar un ajuste según la carpeta elegida).
+4. Esperado: toast `Could not save your changes. Check folder permissions and try
+   again.` (`toast.save_error`), el indicador de estado (arriba a la izquierda) pasa a
+   **Error** en lugar de quedarse en "Saving…", y la consola muestra
+   `[tauri] invoke("SAVE") failed: …`.
+5. Volver a poner la carpeta escribible (`chmod 755 …`) y guardar de nuevo → se guarda
+   sin toast y el archivo contiene el valor nuevo.
+6. Mientras hubo fallo, abrir el archivo de la tienda afectada: debe conservar su valor
+   anterior (no vacío ni a medias; la escritura es atómica).
+
+### Resultado (pendiente de ejecutar por el usuario)
+- macOS: 
+- Windows: 
+
 ## F3 — Transiciones GPU (WGSL)
 A completar: comprobar transiciones suaves en la misma pantalla, sin parpadeo, a 60 fps.
 

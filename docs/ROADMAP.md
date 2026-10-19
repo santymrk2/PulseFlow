@@ -301,7 +301,25 @@ monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
 
 Va antes que las features nuevas porque Looks agrega datos persistidos.
 
-- [ ] **F3.1 Errores de escritura visibles.**
+- [x] **F3.1 Errores de escritura visibles.** (verificado 2026-10-18: `cargo check`
+  limpio, `cargo test --lib` 36/36 —7 tests nuevos: `set_store_value_devuelve_error_en_
+  carpeta_sin_permisos` (el de aceptación, a nivel de comando), `set_store_value_guarda_
+  cuando_hay_permisos` (control), `set_en_carpeta_sin_permisos_falla_sin_tocar_el_
+  archivo`, `set_value_en_carpeta_sin_permisos_falla_sin_tocar_el_archivo`,
+  `set_escribe_atomicamente_y_actualiza_la_memoria`, `write_file_en_carpeta_sin_
+  permisos_falla_y_conserva_el_original` y `write_file_escribe_y_no_deja_archivos_
+  temporales`—, `test:unit` 47/47, `test:svelte` 59 errores (línea base, sin aumento),
+  Prettier limpio. Cambios: `files::write_file` escribe a un `.tmp` en la misma carpeta
+  y lo renombra (un fallo nunca deja el destino truncado y borra el temporal);
+  `StoreManager::set`/`set_value`/`update_data_path` devuelven `AppResult`, serializan
+  con `?` en vez de `unwrap_or_default()` y sólo actualizan la memoria si el archivo se
+  guardó (así un reintento vuelve a intentarlo); `SET_STORE_VALUE`, `UPDATE_DATA_PATH`,
+  `SET_MEDIA_FOLDER_PATH`, `SAVE` (tiendas, biblias y `.show`) y la restauración de
+  backups propagan el error. En el frontend, `tauri.ts` muestra `toast.save_error` y
+  pasa el indicador a `error` cuando falla un comando de persistencia (clave nueva en
+  `public/lang/en.json`). Se añadió `tauri` con la feature `test` en `[dev-dependencies]`
+  sólo para invocar comandos en tests sin GUI. El toast no se puede ver sin GUI: prueba
+  manual en `docs/VERIFICAR.md`, sección "F3.1".)
   *Archivos:* `src-tauri/src/domain/data/store.rs`, `commands/stores.rs`,
   `commands/shows.rs`.
   *Pasos:* reemplazar `let _ = fs::write` / `unwrap_or_default()` por `AppResult`;

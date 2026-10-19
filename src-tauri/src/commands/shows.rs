@@ -426,7 +426,10 @@ pub fn SAVE(app: AppHandle, state: State<'_, AppState>, data: Value) -> AppResul
         if check_if_matching(&stores.get(id), new_value) {
             continue;
         }
-        stores.set(id, new_value.clone());
+        // Un fallo de escritura interrumpe el guardado y llega al frontend
+        // como error (F3.1); no se sigue escribiendo como si nada hubiera
+        // pasado.
+        stores.set(id, new_value.clone())?;
     }
 
     // Biblias.
@@ -440,8 +443,8 @@ pub fn SAVE(app: AppHandle, state: State<'_, AppState>, data: Value) -> AppResul
                 continue;
             };
             let file_path = Path::new(&folder).join(format!("{name}.fsb"));
-            let payload = serde_json::to_string(&json!([id, value])).unwrap_or_default();
-            let _ = files::write_file(&file_path, &payload);
+            let payload = serde_json::to_string(&json!([id, value]))?;
+            files::write_file(&file_path, &payload)?;
         }
     }
 
@@ -493,8 +496,8 @@ pub fn SAVE(app: AppHandle, state: State<'_, AppState>, data: Value) -> AppResul
             }
             let name = value.get("name").and_then(Value::as_str).unwrap_or(id.as_str());
             let file_path = Path::new(&shows_path).join(format!("{name}.show"));
-            let payload = serde_json::to_string(&json!([id, value])).unwrap_or_default();
-            let _ = files::write_file(&file_path, &payload);
+            let payload = serde_json::to_string(&json!([id, value]))?;
+            files::write_file(&file_path, &payload)?;
         }
     }
 

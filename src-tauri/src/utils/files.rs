@@ -4,7 +4,7 @@
 //! Prioriza la funcionalidad real necesaria para `stores`, evitando `unwrap()`
 //! conforme a la regla del proyecto.
 
-use crate::error::AppResult;
+use crate::error::{AppError, AppResult};
 use std::fs;
 use std::path::{Path, PathBuf};
 
@@ -58,10 +58,38 @@ pub fn read_file<P: AsRef<Path>>(path: P) -> AppResult<String> {
     Ok(String::from_utf8(bytes).unwrap_or_default())
 }
 
-/// Escribe un archivo con contenido (sincronizado).
+/// Escribe un archivo con contenido de forma **atómica** (F3.1).
+///
+/// Primero vuelca los bytes a un archivo temporal en la misma carpeta y luego
+/// lo renombra sobre el destino. Así un fallo a mitad de escritura (disco lleno,
+/// permisos, corte de energía) nunca deja el archivo original truncado: o se
+/// escribe completo, o queda el original.
 pub fn write_file<P: AsRef<Path>>(path: P, content: &str) -> AppResult<()> {
     let p = path.as_ref();
-    fs::write(p, content.as_bytes())?;
+    let file_name = p
+        .file_name()
+        .ok_or_else(|| AppError::new(format!("Ruta sin nombre de archivo: {}", p.display())))?;
+
+    let mut tmp_name = file_name.to_os_string();
+    tmp_name.push(".tmp");
+    let tmp = p.with_file_name(tmp_name);
+
+    if let Err(err) = fs::write(&tmp, content.as_bytes()) {
+        let _ = fs::remove_file(&tmp);
+        return Err(AppError::new(format!(
+            "No se pudo escribir {}: {err}",
+            p.display()
+        )));
+    }
+
+    if let Err(err) = fs::rename(&tmp, p) {
+        let _ = fs::remove_file(&tmp);
+        return Err(AppError::new(format!(
+            "No se pudo guardar {}: {err}",
+            p.display()
+        )));
+    }
+
     Ok(())
 }
 
@@ -266,4 +294,94 @@ pub fn sanitize_file_name(name: &str) -> String {
 /// Valida/corrige nombre de archivo.
 pub fn get_valid_file_name(name: &str) -> String {
     sanitize_file_name(name)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Carpeta temporal limpia para un test (los nombres no se solapan entre
+    /// tests, que corren en paralelo).
+    fn temp_dir(name: &str) -> PathBuf {
+        let dir = std::env::temp_dir().join(format!("pulseflow-files-{name}"));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("carpeta temporal");
+        dir
+    }
+
+    /// Nombres de archivo que quedan en la carpeta (para detectar temporales
+    /// abandonados).
+    fn file_names(dir: &Path) -> Vec<String> {
+        let mut names: Vec<String> = fs::read_dir(dir)
+            .expect("leer carpeta")
+            .filter_map(|entry| entry.ok())
+            .map(|entry| entry.file_name().to_string_lossy().into_owned())
+            .collect();
+        names.sort();
+        names
+    }
+
+    #[test]
+    fn write_file_escribe_y_no_deja_archivos_temporales() {
+        let dir = temp_dir("atomico");
+        let path = dir.join("data.json");
+
+        write_file(&path, "{\"a\":1}").expect("primera escritura");
+        assert_eq!(fs::read_to_string(&path).expect("leer"), "{\"a\":1}");
+
+        // Reescribe por encima: el temporal debe quedar renombrado, no suelto.
+        write_file(&path, "{\"a\":2}").expect("reescritura");
+        assert_eq!(fs::read_to_string(&path).expect("leer"), "{\"a\":2}");
+        assert_eq!(file_names(&dir), vec!["data.json".to_string()]);
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    /// Carpeta de sólo lectura: la escritura falla antes de tocar el destino
+    /// y el archivo original queda intacto (F3.1).
+    #[cfg(unix)]
+    #[test]
+    fn write_file_en_carpeta_sin_permisos_falla_y_conserva_el_original() {
+        use std::os::unix::fs::PermissionsExt;
+
+        let dir = temp_dir("sin-permisos");
+        let path = dir.join("data.json");
+        fs::write(&path, "original").expect("archivo original");
+
+        fs::set_permissions(&dir, fs::Permissions::from_mode(0o555)).expect("chmod 555");
+        let result = write_file(&path, "nuevo");
+        fs::set_permissions(&dir, fs::Permissions::from_mode(0o755)).expect("chmod 755");
+
+        assert!(result.is_err(), "debe devolver error en una carpeta sin permisos");
+        assert!(
+            result.unwrap_err().message().contains("data.json"),
+            "el error debe indicar el archivo que falló"
+        );
+        assert_eq!(fs::read_to_string(&path).expect("leer original"), "original");
+        assert_eq!(file_names(&dir), vec!["data.json".to_string()], "no debe quedar ningún temporal");
+
+        let _ = fs::remove_dir_all(&dir);
+    }
+
+    /// En Windows no hay chmod de carpeta equivalente: se simula un destino
+    /// no escribible con una carpeta donde debería ir el archivo. El renombre
+    /// atómico falla y el original (la carpeta) queda intacto.
+    #[cfg(windows)]
+    #[test]
+    fn write_file_en_destino_no_escribible_falla_y_conserva_el_original() {
+        let dir = temp_dir("no-escribible");
+        let path = dir.join("data.json");
+        fs::create_dir(&path).expect("destino no escribible");
+        fs::write(path.join("dentro.txt"), "original").expect("contenido original");
+
+        let result = write_file(&path, "nuevo");
+
+        assert!(result.is_err(), "debe devolver error en un destino no escribible");
+        assert_eq!(
+            fs::read_to_string(path.join("dentro.txt")).expect("leer original"),
+            "original"
+        );
+
+        let _ = fs::remove_dir_all(&dir);
+    }
 }
