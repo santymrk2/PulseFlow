@@ -58,7 +58,7 @@ cargo test 59/59, svelte-check **58 errores** (nueva referencia), build OK.
 
 | Qué | Dónde | Estado |
 | --- | --- | --- |
-| F4.6 overlays | rama `wip/f4` (`4f9fb7a`) | **A medias.** Hecho: campo `overlays` en `SceneGraph.ts`/`scene.rs`, armado en `sceneGraph.ts`, envío desde `listeners.ts`, test de contrato. Falta: inicializar `overlays` en los `ScenePayload` de Rust (no compila: `E0063`), dibujar la capa en `render/screens.rs` (orden: fondo → medios slide → texto slide → medios overlay → texto overlay), regenerar el fixture `audience-*.json` (falla `sceneGraphPayload.test.ts`) y golden. Ignorar de ese commit los cambios en `PLAN.md` y `docs/VERIFICAR-F7.md` (ya integrados). |
+| F4.6 overlays | integrado | **Hecho** (2026-10-19): capa propia dibujada en el engine (fondo → medios slide → texto slide → medios overlay → texto overlay), fixture `audience-overlays.json`, golden `overlays.png`. |
 | F6.2–F6.5 diseño | integrado | Implementado; **falta verificación visual** (capturas) según `docs/VERIFICAR-F6.md`. Por eso los checkboxes siguen sin marcar. |
 | F7.4 canales Main | integrado hasta `IMPORT` | Faltan `URL`, `SAVE_IMAGE`, `PDF_TO_IMAGE`, `IP`, `MAXIMIZED`. |
 | `wip/f7` (`af2a2a8`) | rama `wip/f7` | **Descartar**: es `cargo fmt` sobre todo el crate, sin cambios funcionales. Sus notas ya están en `docs/VERIFICAR-F7.md`. |
@@ -517,7 +517,7 @@ Después, ampliar el contrato **de a un tipo por tarea** (cada una con fixture +
   `src/frontend/components/helpers/sceneGraphPayload.ts` (+`.test.ts`),
   `src-tauri/tests/fixtures/scene/audience-media.json`,
   `src-tauri/tests/golden/scene/item-imagen.png`.
-- [ ] **F4.6** Overlays (texto e imagen) como capa propia. **Retomar desde `wip/f4`**
+- [x] **F4.6** Overlays (texto e imagen) como capa propia. (2026-10-19: completado desde `wip/f4`. Inicializados `overlays` en `ScenePayload` (ya estaba), armado en `sceneGraph.ts` (ya), envío desde `listeners.ts` (ya), test de contrato (audience-overlays fixture + tests Rust/TS). Lado Rust: métodos `overlay_text_blocks`/`overlay_media_items` en `ScenePayload`, campos `overlay_text`/`overlay_media` en `ScreenScene`, `set_audience_scene` los persiste, `RENDER_SCENE` los pasa, bucle de render dibuja fondo → medios slide → texto slide → medios overlay → texto overlay (+ overlays del modelo previo encima), snapshot offscreen idem, golden `overlays.png`. Chequeos: cargo test 61/61, test:unit 58/58, svelte-check 58 errores (línea base), Prettier limpio.) **Retomar desde `wip/f4`**
   (ver "Estado al 2026-10-19"): `git checkout wip/f4 -- src/types/SceneGraph.ts
   src-tauri/src/render/scene.rs src/frontend/components/helpers/sceneGraph.ts
   src/frontend/components/helpers/sceneGraphPayload.ts
