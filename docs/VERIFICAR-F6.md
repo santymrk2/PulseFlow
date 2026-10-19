@@ -63,3 +63,46 @@ pre-1.4.9). La pestaña de temas se llama ahora "PulseFlow"
 
 (acompletar al ejecutar los pasos; adjuntar las capturas en
 `docs/design-reference/screenshots/`)
+
+---
+
+## F6.3 — Radios, bordes y espaciados globales
+
+Qué cambió (verificado con tests, sin GUI): los componentes base usan ahora las
+variables globales en lugar de valores hardcodeados, con la misma convención de
+F6.1 (`var(--radius, <valor anterior>)`, `var(--border-color, var(--primary-lighter))`),
+de modo que el valor por defecto es **idéntico al anterior** y el radio/borde se
+puede ajustar en un solo lugar:
+
+- Radios de superficie → `var(--radius, …)` en: todos los inputs `Material*`
+  (carpetas, número, archivo, checkbox, color, multi-choice, radio, tiempo,
+  texto, textarea, dropdown, popup-button, toggle-switch), `NumberInput`,
+  `Slider`, `Dropdown`, y en los contenedores base `Popup.svelte` (tarjeta y
+  botones de cierre), `Preview.svelte` (sección de preview) y el campo de
+  búsqueda del `Drawer`. Los radios internos/small shapes (2–3 px, pildas de
+  20/22 px, círculos 50%, esquinas `0`) quedaron intactos a propósito.
+  `4px 4px 0 0` se tradujo a las propiedades lógicas
+  `border-start-start-radius` / `border-start-end-radius`.
+- Bordes estáticos → `var(--border-color, var(--primary-lighter))` en los
+  mismos componentes base (listas desplegables, checkbox, paletas de color,
+  tooltips, tarjeta del popup, header del popup, separador `.border` del Drawer,
+  sección del preview, subrayado de `CombinedInput`). Los bordes de
+  **estado/selección** (`!important`, `var(--secondary)`, `--color`) no se
+  tocaron: son feedback, no separadores.
+
+### Pasos (verificación visual)
+
+1. Con la app corriendo (ver F6.2, paso 1), abrir cualquier pantalla con varios
+   inputs Material (Settings → Outputs, por ejemplo).
+2. Comprobar que inputs, dropdowns abiertos, checkboxes y popups (abrir
+   Settings → Themes → editar, o un popup de "Add" cualquiera) conservan la
+   forma redondeada previa y que los bordes de separación siguen visibles.
+3. **Control global:** en `public/global.css` cambiar temporalmente
+   `--radius: 0.625rem` por `--radius: 0rem` (y volver): todo lo anterior debe
+   redondearse/aplanarse de una sola vez; idem con `--border-color` (p. ej.
+   `rgba(255, 255, 255, 0.4)`) para ver los bordes destacarse.
+4. Anotar el resultado abajo.
+
+### Resultado
+
+(acompletar al ejecutar los pasos)

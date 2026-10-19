@@ -51,7 +51,7 @@
         <div style={isWindows ? `height: calc(100% - ${MENU_BAR_HEIGHT}px);` : null} class="popup" class:isOptimized transition:fade={{ duration: isOptimized ? 20 : 100 }} on:mousedown={mousedown}>
             <div class="card" transition:scale={{ duration: isOptimized ? 50 : 200 }}>
                 {#if popupId !== "alert"}
-                    <div class="headerContent" style="border-bottom: 1px solid var(--primary-lighter);{scrolled ? 'box-shadow: 2px 2px 4px 5px rgb(0 0 0 / 0.1);' : ''}">
+                    <div class="headerContent" style="border-bottom: 1px solid var(--border-color, var(--primary-lighter));{scrolled ? 'box-shadow: 2px 2px 4px 5px rgb(0 0 0 / 0.1);' : ''}">
                         <div class="headerMargin">
                             {#key popupId}
                                 <!-- margin-top: -5px; -->
@@ -130,7 +130,7 @@
         /* background-color: rgba(41, 44, 54, 0.8);
         backdrop-filter: blur(4px); */
 
-        border-radius: 10px;
+        border-radius: var(--radius, 10px);
 
         /* overflow-y: auto; */
         /* overflow-x: hidden; */
@@ -140,7 +140,7 @@
         max-width: 100%;
         max-height: 100%;
 
-        border: 2px solid var(--primary-lighter);
+        border: 2px solid var(--border-color, var(--primary-lighter));
         box-shadow: 0 0 5px 5px rgb(0 0 0 / 0.2);
     }
 
@@ -186,7 +186,7 @@
         top: 0;
         height: 100%;
         padding: 0.4em !important;
-        border-radius: 4px;
+        border-radius: var(--radius, 4px);
         aspect-ratio: 1;
         justify-content: center;
 

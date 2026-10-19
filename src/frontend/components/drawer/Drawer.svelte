@@ -379,7 +379,7 @@
         padding: 0 8px;
         padding-right: 40px;
         border: none;
-        border-radius: 4px;
+        border-radius: var(--radius, 4px);
         border-inline-start: 4px solid var(--primary-darker);
     }
     .search:active,
@@ -426,7 +426,7 @@
         flex-direction: row-reverse;
     }
     .right.row :global(.scroll.split .border) {
-        border-inline-end: 2px solid var(--primary-lighter);
+        border-inline-end: 2px solid var(--border-color, var(--primary-lighter));
         overflow-y: auto;
     }
     /* scripture preview */

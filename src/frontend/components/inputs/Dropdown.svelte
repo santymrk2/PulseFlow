@@ -147,7 +147,7 @@
         position: fixed;
         display: flex;
         flex-direction: column;
-        border: 2px solid var(--primary-lighter);
+        border: 2px solid var(--border-color, var(--primary-lighter));
         transform: translateY(-1px);
         /* transform: translateX(-25%); */
         z-index: 10;
@@ -193,7 +193,7 @@
     button {
         /* width: 200px; */
         color: var(--text);
-        border: 2px solid var(--primary-lighter);
+        border: 2px solid var(--border-color, var(--primary-lighter));
         /* font-weight: bold; */
         text-align: start;
 

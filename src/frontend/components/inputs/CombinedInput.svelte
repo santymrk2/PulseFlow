@@ -21,7 +21,7 @@
         /* margin: 2px 0; */
 
         background-color: var(--primary-darker);
-        border-bottom: 2px solid var(--primary-lighter);
+        border-bottom: 2px solid var(--border-color, var(--primary-lighter));
     }
 
     .input :global(*:not(:first-child)) {
