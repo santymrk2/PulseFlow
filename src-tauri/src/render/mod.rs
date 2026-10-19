@@ -29,18 +29,18 @@ mod scene_contract;
 mod golden;
 
 pub use screens::{
-    close_all_screens, close_screen, emit_output_state, identify_screens, open_ids, open_screen,
-    reposition_screen, set_audience_scene, set_scene_background, set_scene_media, set_scene_text,
-    set_stage_scene, set_transition_config, IdentifyScreen, ScreenConfig, ScreenKind, ScreenManager,
-    ScreenRect,
+    IdentifyScreen, ScreenConfig, ScreenKind, ScreenManager, ScreenRect, close_all_screens,
+    close_screen, emit_output_state, identify_screens, open_ids, open_screen, reposition_screen,
+    set_audience_scene, set_scene_background, set_scene_media, set_scene_text, set_stage_scene,
+    set_transition_config,
 };
 pub use types::{BackgroundMedia, MediaItem, OverlayItem, StageData, TextBlock};
 
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::atomic::Ordering;
     use std::sync::Arc;
+    use std::sync::atomic::Ordering;
 
     #[test]
     fn test_wgpu_instance_and_adapter() {
@@ -51,17 +51,26 @@ mod tests {
             force_fallback_adapter: false,
             ..Default::default()
         }));
-        assert!(adapter.is_ok(), "Debe existir al menos un adaptador GPU disponible");
+        assert!(
+            adapter.is_ok(),
+            "Debe existir al menos un adaptador GPU disponible"
+        );
         let adapter = adapter.unwrap();
         let info = adapter.get_info();
-        println!("GPU detectada para PulseFlow: {} ({:?})", info.name, info.backend);
+        println!(
+            "GPU detectada para PulseFlow: {} ({:?})",
+            info.name, info.backend
+        );
         assert!(!info.name.is_empty());
     }
 
     #[test]
     fn test_font_atlas_and_text_block() {
         let atlas = text::FontAtlas::new();
-        assert!(atlas.font_system.db().len() > 0, "Debe cargar fuentes del sistema");
+        assert!(
+            atlas.font_system.db().len() > 0,
+            "Debe cargar fuentes del sistema"
+        );
 
         let block = TextBlock {
             text: "Dios es amor y gracia eterna".to_string(),
@@ -98,12 +107,10 @@ mod tests {
         }))
         .unwrap();
 
-        let (device, queue) = pollster::block_on(adapter.request_device(
-            &wgpu::DeviceDescriptor {
-                label: Some("Test Device"),
-                ..Default::default()
-            },
-        ))
+        let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
+            label: Some("Test Device"),
+            ..Default::default()
+        }))
         .unwrap();
 
         let pipeline = media::BackgroundPipeline::new(&device, wgpu::TextureFormat::Bgra8UnormSrgb);
@@ -114,19 +121,25 @@ mod tests {
         let height = 64;
         let rgba_data = vec![255u8; (width * height * 4) as usize];
 
-        let tex1 = pool.update_video_frame(
-            &device,
-            &queue,
-            &pipeline,
-            "test_video_bg",
-            width,
-            height,
-            &rgba_data,
-        ).unwrap();
+        let tex1 = pool
+            .update_video_frame(
+                &device,
+                &queue,
+                &pipeline,
+                "test_video_bg",
+                width,
+                height,
+                &rgba_data,
+            )
+            .unwrap();
 
         // Verificar que una segunda consulta reutilice el mismo Arc en VRAM sin duplicar
         let tex2 = pool.get("test_video_bg").unwrap();
-        assert_eq!(Arc::as_ptr(&tex1), Arc::as_ptr(&tex2), "Ambas referencias deben apuntar al mismo recurso VRAM");
+        assert_eq!(
+            Arc::as_ptr(&tex1),
+            Arc::as_ptr(&tex2),
+            "Ambas referencias deben apuntar al mismo recurso VRAM"
+        );
     }
 
     #[test]
@@ -140,13 +153,12 @@ mod tests {
         }))
         .unwrap();
 
-        let (device, _queue) = pollster::block_on(adapter.request_device(
-            &wgpu::DeviceDescriptor {
+        let (device, _queue) =
+            pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
                 label: Some("Test Transition Device"),
                 ..Default::default()
-            },
-        ))
-        .unwrap();
+            }))
+            .unwrap();
 
         let mut engine = transition::TransitionEngine::new(
             &device,
@@ -156,12 +168,23 @@ mod tests {
         );
 
         // Crossfade con duración: hay que animar y copiar el fotograma anterior.
-        assert!(engine.trigger(transition::TransitionType::Crossfade, 500, transition::EasingType::EaseInOut));
+        assert!(engine.trigger(
+            transition::TransitionType::Crossfade,
+            500,
+            transition::EasingType::EaseInOut
+        ));
         assert!(engine.active_transition.is_active);
-        assert_eq!(engine.active_transition.transition_type, transition::TransitionType::Crossfade);
+        assert_eq!(
+            engine.active_transition.transition_type,
+            transition::TransitionType::Crossfade
+        );
 
         // Corte: no hay nada que copiar ni animar, el resultado ya es el buffer nuevo.
-        assert!(!engine.trigger(transition::TransitionType::None, 500, transition::EasingType::EaseInOut));
+        assert!(!engine.trigger(
+            transition::TransitionType::None,
+            500,
+            transition::EasingType::EaseInOut
+        ));
         assert!(!engine.active_transition.is_active);
     }
 
@@ -192,13 +215,12 @@ mod tests {
         }))
         .unwrap();
 
-        let (device, _queue) = pollster::block_on(adapter.request_device(
-            &wgpu::DeviceDescriptor {
+        let (device, _queue) =
+            pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
                 label: Some("Test NDI Device"),
                 ..Default::default()
-            },
-        ))
-        .unwrap();
+            }))
+            .unwrap();
 
         let capture = ndi_stream::GpuFramebufferCapture::new(&device, 1920, 1080);
         assert_eq!(capture.width, 1920);

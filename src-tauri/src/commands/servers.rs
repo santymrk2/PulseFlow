@@ -33,14 +33,16 @@ pub struct StartServersData {
 
 /// `START`: levanta los servidores REST/WebSocket de cada dominio activo.
 #[tauri::command]
-pub fn START(
-    app: AppHandle,
-    state: State<'_, AppState>,
-    data: StartServersData,
-) -> AppResult<()> {
+pub fn START(app: AppHandle, state: State<'_, AppState>, data: StartServersData) -> AppResult<()> {
     let max = data.max.unwrap_or(server::default_max() as u64) as usize;
 
-    server::start(app, data.ports.clone(), data.disabled.clone(), data.data.clone(), max)?;
+    server::start(
+        app,
+        data.ports.clone(),
+        data.disabled.clone(),
+        data.data.clone(),
+        max,
+    )?;
 
     let mut servers = state
         .servers

@@ -227,5 +227,3 @@ pub struct StageData {
     #[serde(default)]
     pub message: Option<String>,
 }
-
-

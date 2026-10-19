@@ -287,8 +287,10 @@ impl TransitionEngine {
         self.width = width.max(1);
         self.height = height.max(1);
 
-        let (texture_a, view_a) = create_target_texture(device, self.width, self.height, format, "Buffer A");
-        let (texture_b, view_b) = create_target_texture(device, self.width, self.height, format, "Buffer B");
+        let (texture_a, view_a) =
+            create_target_texture(device, self.width, self.height, format, "Buffer A");
+        let (texture_b, view_b) =
+            create_target_texture(device, self.width, self.height, format, "Buffer B");
 
         self.bind_group = create_transition_bind_group(
             device,
@@ -309,8 +311,14 @@ impl TransitionEngine {
     /// transición con duración distinta de `None`): en ese caso el bucle debe copiar
     /// el fotograma anterior a la textura A antes de dibujar el nuevo en B. Un corte
     /// (`None` o duración 0) devuelve `false`: el resultado ya es el buffer nuevo.
-    pub fn trigger(&mut self, trans_type: TransitionType, duration_ms: u64, easing: EasingType) -> bool {
-        self.active_transition.start(trans_type, duration_ms, easing);
+    pub fn trigger(
+        &mut self,
+        trans_type: TransitionType,
+        duration_ms: u64,
+        easing: EasingType,
+    ) -> bool {
+        self.active_transition
+            .start(trans_type, duration_ms, easing);
         self.active_transition.is_active
     }
 
@@ -323,7 +331,12 @@ impl TransitionEngine {
     /// Escribe los uniforms y dibuja el quad de composición con un `progress` dado
     /// (0 = `texture_a`, 1 = `texture_b`). Separado de `render` para poder fijar el
     /// progreso en los tests sin depender del reloj.
-    fn render_with_progress(&mut self, queue: &Queue, render_pass: &mut RenderPass<'_>, progress: f32) {
+    fn render_with_progress(
+        &mut self,
+        queue: &Queue,
+        render_pass: &mut RenderPass<'_>,
+        progress: f32,
+    ) {
         let uniforms = TransitionUniforms {
             progress,
             transition_type: self.active_transition.transition_type as u32,
@@ -433,7 +446,12 @@ mod tests {
 
     /// Rellena una textura con un color sólido.
     fn fill(queue: &Queue, texture: &Texture, color: [u8; 4]) {
-        let data: Vec<u8> = color.iter().copied().cycle().take((SIZE * SIZE * 4) as usize).collect();
+        let data: Vec<u8> = color
+            .iter()
+            .copied()
+            .cycle()
+            .take((SIZE * SIZE * 4) as usize)
+            .collect();
         queue.write_texture(
             texture.as_image_copy(),
             &data,
@@ -532,12 +550,19 @@ mod tests {
         slice.map_async(wgpu::MapMode::Read, move |result| {
             let _ = tx.send(result);
         });
-        device.poll(wgpu::PollType::wait_indefinitely()).expect("poll");
+        device
+            .poll(wgpu::PollType::wait_indefinitely())
+            .expect("poll");
         rx.recv().expect("mapeo listo").expect("mapeo ok");
 
         let mapped = slice.get_mapped_range().expect("rango mapeado");
         let center = ((SIZE / 2) * bytes_per_row + (SIZE / 2) * 4) as usize;
-        let pixel = [mapped[center], mapped[center + 1], mapped[center + 2], mapped[center + 3]];
+        let pixel = [
+            mapped[center],
+            mapped[center + 1],
+            mapped[center + 2],
+            mapped[center + 3],
+        ];
         drop(mapped);
         buffer.unmap();
         pixel
@@ -565,7 +590,11 @@ mod tests {
             EasingType::Linear,
             0.0,
         );
-        assert_near(center, [0, 0, 255, 255], "corte debe mostrar el buffer nuevo");
+        assert_near(
+            center,
+            [0, 0, 255, 255],
+            "corte debe mostrar el buffer nuevo",
+        );
     }
 
     #[test]
@@ -585,8 +614,16 @@ mod tests {
             )
         };
 
-        assert_near(at(&mut engine, 0.0), [255, 0, 0, 255], "progreso 0 = buffer anterior");
-        assert_near(at(&mut engine, 1.0), [0, 0, 255, 255], "progreso 1 = buffer nuevo");
+        assert_near(
+            at(&mut engine, 0.0),
+            [255, 0, 0, 255],
+            "progreso 0 = buffer anterior",
+        );
+        assert_near(
+            at(&mut engine, 1.0),
+            [0, 0, 255, 255],
+            "progreso 1 = buffer nuevo",
+        );
 
         // Al 50% el crossfade mezcla rojo y azul: (127, 0, 127).
         let middle = at(&mut engine, 0.5);

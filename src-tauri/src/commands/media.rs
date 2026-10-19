@@ -28,7 +28,8 @@ use tauri::AppHandle;
 const THUMBNAIL_SIZES: [u32; 4] = [900, 500, 250, 100];
 
 /// Extensiones que el crate `image` puede abrir con las features habilitadas.
-const GENERATABLE_EXTENSIONS: &[&str] = &["jpg", "jpeg", "png", "gif", "webp", "bmp", "tiff", "tif"];
+const GENERATABLE_EXTENSIONS: &[&str] =
+    &["jpg", "jpeg", "png", "gif", "webp", "bmp", "tiff", "tif"];
 
 /// Extensiones de vídeo/audio con flujo de imagen extraíble mediante FFmpeg.
 const FFMPEG_VIDEO_EXTENSIONS: &[&str] = &[
@@ -42,7 +43,10 @@ const FFMPEG_IMAGE_EXTENSIONS: &[&str] = &["heic", "heif", "avif"];
 fn file_path_hash_code(s: &str) -> String {
     let mut hash: i32 = 0;
     for code_unit in s.encode_utf16() {
-        hash = hash.wrapping_shl(5).wrapping_sub(hash).wrapping_add(code_unit as i32);
+        hash = hash
+            .wrapping_shl(5)
+            .wrapping_sub(hash)
+            .wrapping_add(code_unit as i32);
     }
     if hash < 0 {
         let digits = hash.to_string();
@@ -116,7 +120,10 @@ pub struct DoesMediaExistResult {
 
 /// `DOES_MEDIA_EXIST`: comprueba que el archivo exista y que su cache siga vigente.
 #[tauri::command]
-pub fn DOES_MEDIA_EXIST(app: AppHandle, data: DoesMediaExistData) -> AppResult<DoesMediaExistResult> {
+pub fn DOES_MEDIA_EXIST(
+    app: AppHandle,
+    data: DoesMediaExistData,
+) -> AppResult<DoesMediaExistResult> {
     let folder = thumbnail_folder(&app)?;
     let path = PathBuf::from(&data.path);
 
@@ -182,7 +189,10 @@ pub struct GetThumbnailResult {
 /// Imágenes: crate `image`. Vídeo y formatos exóticos (HEIC/AVIF): FFmpeg
 /// (sidecar/sistema). El esquema de caché por hash de ruta se mantiene igual.
 #[tauri::command]
-pub async fn GET_THUMBNAIL(app: AppHandle, data: GetThumbnailData) -> AppResult<GetThumbnailResult> {
+pub async fn GET_THUMBNAIL(
+    app: AppHandle,
+    data: GetThumbnailData,
+) -> AppResult<GetThumbnailResult> {
     let folder = thumbnail_folder(&app)?;
     let size = match data.size {
         Some(s) if s > 0 => s,
@@ -373,16 +383,29 @@ pub async fn MEDIA_TRACKS(app: AppHandle, data: MediaCodecData) -> AppResult<Med
 
     let probe = match ffmpeg::probe(&app, &data.path).await {
         Ok(p) => p,
-        Err(_) => return Ok(MediaTracksResult { path: data.path, tracks }),
+        Err(_) => {
+            return Ok(MediaTracksResult {
+                path: data.path,
+                tracks,
+            });
+        }
     };
 
     let streams = match probe.get("streams").and_then(|s| s.as_array()) {
         Some(s) => s,
-        None => return Ok(MediaTracksResult { path: data.path, tracks }),
+        None => {
+            return Ok(MediaTracksResult {
+                path: data.path,
+                tracks,
+            });
+        }
     };
 
     for stream in streams {
-        let codec_type = stream.get("codec_type").and_then(|t| t.as_str()).unwrap_or("");
+        let codec_type = stream
+            .get("codec_type")
+            .and_then(|t| t.as_str())
+            .unwrap_or("");
         if codec_type != "subtitle" {
             continue;
         }
@@ -407,7 +430,11 @@ pub async fn MEDIA_TRACKS(app: AppHandle, data: MediaCodecData) -> AppResult<Med
             if !vtt.trim().is_empty() {
                 let lang_code = language.chars().take(2).collect::<String>();
                 tracks.push(SubtitleTrack {
-                    lang: if lang_code.is_empty() { "und".into() } else { lang_code },
+                    lang: if lang_code.is_empty() {
+                        "und".into()
+                    } else {
+                        lang_code
+                    },
                     name: title,
                     vtt,
                     embedded: true,
@@ -416,7 +443,10 @@ pub async fn MEDIA_TRACKS(app: AppHandle, data: MediaCodecData) -> AppResult<Med
         }
     }
 
-    Ok(MediaTracksResult { path: data.path, tracks })
+    Ok(MediaTracksResult {
+        path: data.path,
+        tracks,
+    })
 }
 
 /// Extrae un flujo de subtítulos concreto a formato WebVTT usando FFmpeg.

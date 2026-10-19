@@ -22,7 +22,10 @@ fn try_eq(a: &serde_json::Value, b: &serde_json::Value) -> bool {
             }
             ha == hb
         }
-        _ => serde_json::to_string(a).unwrap_or_default() == serde_json::to_string(b).unwrap_or_default(),
+        _ => {
+            serde_json::to_string(a).unwrap_or_default()
+                == serde_json::to_string(b).unwrap_or_default()
+        }
     }
 }
 

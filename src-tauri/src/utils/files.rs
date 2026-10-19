@@ -202,9 +202,18 @@ pub struct FileInfoStat {
 pub fn get_file_info<P: AsRef<Path>>(path: P) -> AppResult<FileInfo> {
     let p = path.as_ref();
     let meta = fs::metadata(p)?;
-    let modified = meta.modified().ok().and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok());
-    let accessed = meta.accessed().ok().and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok());
-    let created = meta.created().ok().and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok());
+    let modified = meta
+        .modified()
+        .ok()
+        .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok());
+    let accessed = meta
+        .accessed()
+        .ok()
+        .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok());
+    let created = meta
+        .created()
+        .ok()
+        .and_then(|t| t.duration_since(std::time::UNIX_EPOCH).ok());
 
     Ok(FileInfo {
         path: p.to_string_lossy().into_owned(),
@@ -282,7 +291,18 @@ pub fn get_media_folder_path(base: &str) -> AppResult<PathBuf> {
 /// Sanitiza nombre de archivo.
 pub fn sanitize_file_name(name: &str) -> String {
     name.chars()
-        .filter(|c| !c.is_control() && *c != '<' && *c != '>' && *c != ':' && *c != '\"' && *c != '/' && *c != '\\' && *c != '|' && *c != '?' && *c != '*')
+        .filter(|c| {
+            !c.is_control()
+                && *c != '<'
+                && *c != '>'
+                && *c != ':'
+                && *c != '\"'
+                && *c != '/'
+                && *c != '\\'
+                && *c != '|'
+                && *c != '?'
+                && *c != '*'
+        })
         .collect::<String>()
         .split_whitespace()
         .collect::<Vec<_>>()
@@ -352,13 +372,23 @@ mod tests {
         let result = write_file(&path, "nuevo");
         fs::set_permissions(&dir, fs::Permissions::from_mode(0o755)).expect("chmod 755");
 
-        assert!(result.is_err(), "debe devolver error en una carpeta sin permisos");
+        assert!(
+            result.is_err(),
+            "debe devolver error en una carpeta sin permisos"
+        );
         assert!(
             result.unwrap_err().message().contains("data.json"),
             "el error debe indicar el archivo que falló"
         );
-        assert_eq!(fs::read_to_string(&path).expect("leer original"), "original");
-        assert_eq!(file_names(&dir), vec!["data.json".to_string()], "no debe quedar ningún temporal");
+        assert_eq!(
+            fs::read_to_string(&path).expect("leer original"),
+            "original"
+        );
+        assert_eq!(
+            file_names(&dir),
+            vec!["data.json".to_string()],
+            "no debe quedar ningún temporal"
+        );
 
         let _ = fs::remove_dir_all(&dir);
     }
@@ -376,7 +406,10 @@ mod tests {
 
         let result = write_file(&path, "nuevo");
 
-        assert!(result.is_err(), "debe devolver error en un destino no escribible");
+        assert!(
+            result.is_err(),
+            "debe devolver error en un destino no escribible"
+        );
         assert_eq!(
             fs::read_to_string(path.join("dentro.txt")).expect("leer original"),
             "original"

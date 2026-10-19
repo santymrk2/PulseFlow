@@ -26,7 +26,7 @@ impl NativeLibrary {
                     return Some(Self {
                         inner,
                         path: (*candidate).to_string(),
-                    })
+                    });
                 }
                 Err(_) => continue,
             }

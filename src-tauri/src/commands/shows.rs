@@ -17,7 +17,7 @@ use crate::state::AppState;
 use crate::utils::files::{self, DataFolder};
 use crate::utils::helpers::check_if_matching;
 use serde::Deserialize;
-use serde_json::{json, Map, Value};
+use serde_json::{Map, Value, json};
 use std::path::Path;
 use tauri::{AppHandle, State};
 
@@ -227,7 +227,9 @@ fn migrate_bible_value_to_text(bible: &mut Value) {
                 if obj.contains_key("text") {
                     continue;
                 }
-                let text = obj.remove("value").unwrap_or_else(|| Value::String(String::new()));
+                let text = obj
+                    .remove("value")
+                    .unwrap_or_else(|| Value::String(String::new()));
                 obj.insert("text".to_string(), text);
             }
         }
@@ -352,8 +354,7 @@ pub fn GET_EMPTY_SHOWS(
 }
 
 fn show_has_layout_content(show: &Value) -> bool {
-    show
-        .get("layouts")
+    show.get("layouts")
         .and_then(Value::as_object)
         .map(|layouts| {
             layouts.values().any(|layout| {
@@ -452,11 +453,17 @@ pub fn SAVE(app: AppHandle, state: State<'_, AppState>, data: Value) -> AppResul
 
     // Backup disparado desde `customTriggers.backup` (se lanza tras soltar el lock).
     let pending_backup = obj.get("customTriggers").and_then(|triggers| {
-        let wants_backup = triggers.get("backup").and_then(Value::as_bool).unwrap_or(false);
+        let wants_backup = triggers
+            .get("backup")
+            .and_then(Value::as_bool)
+            .unwrap_or(false);
         if !wants_backup {
             return None;
         }
-        let is_auto = triggers.get("isAutoBackup").and_then(Value::as_bool).unwrap_or(false);
+        let is_auto = triggers
+            .get("isAutoBackup")
+            .and_then(Value::as_bool)
+            .unwrap_or(false);
         crate::domain::data::backup::build_plan(&stores, is_auto).ok()
     });
 
@@ -471,7 +478,11 @@ pub fn SAVE(app: AppHandle, state: State<'_, AppState>, data: Value) -> AppResul
         let deleted: Vec<&str> = obj
             .get("deletedShows")
             .and_then(Value::as_array)
-            .map(|arr| arr.iter().filter_map(|d| d.get("id").and_then(Value::as_str)).collect())
+            .map(|arr| {
+                arr.iter()
+                    .filter_map(|d| d.get("id").and_then(Value::as_str))
+                    .collect()
+            })
             .unwrap_or_default();
         for show in renamed {
             let Some(id) = show.get("id").and_then(Value::as_str) else {
@@ -494,7 +505,10 @@ pub fn SAVE(app: AppHandle, state: State<'_, AppState>, data: Value) -> AppResul
             if !is_valid_json(value) {
                 continue;
             }
-            let name = value.get("name").and_then(Value::as_str).unwrap_or(id.as_str());
+            let name = value
+                .get("name")
+                .and_then(Value::as_str)
+                .unwrap_or(id.as_str());
             let file_path = Path::new(&shows_path).join(format!("{name}.show"));
             let payload = serde_json::to_string(&json!([id, value]))?;
             files::write_file(&file_path, &payload)?;

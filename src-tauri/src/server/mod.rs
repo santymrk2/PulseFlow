@@ -15,20 +15,20 @@
 
 use crate::error::{AppError, AppResult};
 use axum::{
+    Json, Router,
     extract::{
-        ws::{Message, WebSocket, WebSocketUpgrade},
         State,
+        ws::{Message, WebSocket, WebSocketUpgrade},
     },
     response::{IntoResponse, Response},
     routing::get,
-    Json, Router,
 };
 use futures_util::{sink::SinkExt, stream::StreamExt};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::collections::HashMap;
 use std::path::PathBuf;
-use std::sync::{Arc, Mutex, OnceLock};
 use std::sync::atomic::{AtomicUsize, Ordering};
+use std::sync::{Arc, Mutex, OnceLock};
 use tauri::{AppHandle, Emitter, Manager};
 use tokio::sync::broadcast;
 use tower_http::services::ServeDir;
@@ -193,10 +193,7 @@ pub fn stop() {
 
 /// `true` si hay servidores en ejecución.
 pub fn is_running() -> bool {
-    runtime_cell()
-        .lock()
-        .map(|g| g.is_some())
-        .unwrap_or(false)
+    runtime_cell().lock().map(|g| g.is_some()).unwrap_or(false)
 }
 
 async fn serve_room(
@@ -260,7 +257,11 @@ async fn handle_socket(socket: WebSocket, shared: RoomShared) {
         "channel": "CONNECTION",
         "data": { "room": shared.room, "max": shared.max }
     });
-    if sender.send(Message::Text(hello.to_string().into())).await.is_err() {
+    if sender
+        .send(Message::Text(hello.to_string().into()))
+        .await
+        .is_err()
+    {
         shared.connections.fetch_sub(1, Ordering::Relaxed);
         return;
     }
@@ -292,7 +293,10 @@ async fn handle_socket(socket: WebSocket, shared: RoomShared) {
             match msg {
                 Message::Text(text) => {
                     if let Ok(value) = serde_json::from_str::<Value>(&text) {
-                        let _ = app.emit("SERVER_MESSAGE", json!({ "room": room_recv, "message": value }));
+                        let _ = app.emit(
+                            "SERVER_MESSAGE",
+                            json!({ "room": room_recv, "message": value }),
+                        );
                     }
                 }
                 Message::Binary(_) => {}
@@ -326,5 +330,8 @@ pub fn default_max() -> usize {
 
 /// Códigos de cliente disponibles (para logs/diagnóstico).
 pub fn room_list() -> HashMap<String, u16> {
-    DEFAULT_PORTS.iter().map(|(r, p)| (r.to_string(), *p)).collect()
+    DEFAULT_PORTS
+        .iter()
+        .map(|(r, p)| (r.to_string(), *p))
+        .collect()
 }

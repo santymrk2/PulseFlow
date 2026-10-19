@@ -37,7 +37,11 @@ fn golden_path(name: &str) -> std::path::PathBuf {
 /// Compara la imagen recién renderizada con el golden `name`, o lo (re)genera si
 /// `UPDATE_GOLDEN` está definido.
 fn assert_golden(name: &str, actual: &[u8], width: u32, height: u32) {
-    assert_eq!(actual.len(), (width * height * 4) as usize, "tamaño del buffer de «{name}»");
+    assert_eq!(
+        actual.len(),
+        (width * height * 4) as usize,
+        "tamaño del buffer de «{name}»"
+    );
     let path = golden_path(name);
 
     if std::env::var_os(UPDATE_ENV).is_some() {
@@ -84,7 +88,10 @@ fn compare_cells(name: &str, golden: &[u8], actual: &[u8], width: u32, height: u
             let cell_w = CELL_SIZE.min(width - x);
             let golden_mean = cell_mean(golden, width, x, y, cell_w, cell_h);
             let actual_mean = cell_mean(actual, width, x, y, cell_w, cell_h);
-            let delta = (0..3).map(|c| (golden_mean[c] - actual_mean[c]).abs()).max().unwrap_or(0);
+            let delta = (0..3)
+                .map(|c| (golden_mean[c] - actual_mean[c]).abs())
+                .max()
+                .unwrap_or(0);
             worst = worst.max(delta);
             total += 1;
             if delta > CELL_TOLERANCE {
@@ -114,7 +121,11 @@ fn cell_mean(rgba: &[u8], width: u32, x: u32, y: u32, w: u32, h: u32) -> [i32; 3
         }
     }
     let n = i64::from(w * h);
-    [(sum[0] / n) as i32, (sum[1] / n) as i32, (sum[2] / n) as i32]
+    [
+        (sum[0] / n) as i32,
+        (sum[1] / n) as i32,
+        (sum[2] / n) as i32,
+    ]
 }
 
 /// Color RGB de un píxel (sin alfa).
@@ -125,12 +136,17 @@ fn pixel_at(rgba: &[u8], width: u32, x: u32, y: u32) -> [u8; 3] {
 
 /// Cuenta los píxeles cuyo RGB cumple `predicate`.
 fn count_pixels(rgba: &[u8], predicate: impl Fn([u8; 3]) -> bool) -> usize {
-    rgba.chunks_exact(4).filter(|p| predicate([p[0], p[1], p[2]])).count()
+    rgba.chunks_exact(4)
+        .filter(|p| predicate([p[0], p[1], p[2]]))
+        .count()
 }
 
 /// Luminosidad aproximada (suma de canales) de un píxel.
 fn luminosity(rgba: &[u8], width: u32, x: u32, y: u32) -> u32 {
-    pixel_at(rgba, width, x, y).iter().map(|&c| u32::from(c)).sum()
+    pixel_at(rgba, width, x, y)
+        .iter()
+        .map(|&c| u32::from(c))
+        .sum()
 }
 
 /// Payload de una escena de referencia, desde el mismo JSON que viaja por IPC.
@@ -184,7 +200,8 @@ fn texto_contorno_sombra() -> ScenePayload {
 }
 
 /// Fondo de imagen (4 cuadrantes) con texto blanco encima.
-fn fondo_imagen(image_path: &str) -> ScenePayload {    scene(serde_json::json!({
+fn fondo_imagen(image_path: &str) -> ScenePayload {
+    scene(serde_json::json!({
         "outputId": "golden-fondo",
         "stage": false,
         "width": WIDTH,
@@ -288,8 +305,14 @@ fn golden_texto_centrado() {
             }
         }
     }
-    assert!(lit_in_text_zone > 200, "debe haber texto en su zona ({lit_in_text_zone})");
-    assert_eq!(lit_outside, 0, "fuera de la zona del texto todo debe ser negro");
+    assert!(
+        lit_in_text_zone > 200,
+        "debe haber texto en su zona ({lit_in_text_zone})"
+    );
+    assert_eq!(
+        lit_outside, 0,
+        "fuera de la zona del texto todo debe ser negro"
+    );
 
     let blancos = count_pixels(&rgba, |[r, g, b]| r > 200 && g > 200 && b > 200);
     let de_color = count_pixels(&rgba, |[r, g, b]| {
@@ -297,7 +320,10 @@ fn golden_texto_centrado() {
         max - min > 40
     });
     assert!(blancos > 100, "el texto debe ser blanco ({blancos})");
-    assert_eq!(de_color, 0, "sin contorno ni sombra, todo el texto debe ser acromático");
+    assert_eq!(
+        de_color, 0,
+        "sin contorno ni sombra, todo el texto debe ser acromático"
+    );
 
     assert_golden("texto-centrado", &rgba, WIDTH, HEIGHT);
 }
@@ -324,10 +350,26 @@ fn golden_fondo_imagen() {
 
     // Con `fit: "fill"` la imagen estirada ocupa toda la salida: el centro de cada
     // cuadrante debe conservar su color.
-    assert_color_near(pixel_at(&rgba, WIDTH, 160, 90), [255, 0, 0], "cuadrante rojo");
-    assert_color_near(pixel_at(&rgba, WIDTH, 480, 90), [0, 255, 0], "cuadrante verde");
-    assert_color_near(pixel_at(&rgba, WIDTH, 160, 270), [0, 0, 255], "cuadrante azul");
-    assert_color_near(pixel_at(&rgba, WIDTH, 480, 270), [255, 255, 255], "cuadrante blanco");
+    assert_color_near(
+        pixel_at(&rgba, WIDTH, 160, 90),
+        [255, 0, 0],
+        "cuadrante rojo",
+    );
+    assert_color_near(
+        pixel_at(&rgba, WIDTH, 480, 90),
+        [0, 255, 0],
+        "cuadrante verde",
+    );
+    assert_color_near(
+        pixel_at(&rgba, WIDTH, 160, 270),
+        [0, 0, 255],
+        "cuadrante azul",
+    );
+    assert_color_near(
+        pixel_at(&rgba, WIDTH, 480, 270),
+        [255, 255, 255],
+        "cuadrante blanco",
+    );
 
     assert_golden("fondo-imagen", &rgba, WIDTH, HEIGHT);
 }
@@ -343,11 +385,23 @@ fn golden_item_imagen() {
     assert_color_near(pixel_at(&rgba, WIDTH, 240, 135), [255, 0, 0], "item rojo");
     assert_color_near(pixel_at(&rgba, WIDTH, 400, 135), [0, 255, 0], "item verde");
     assert_color_near(pixel_at(&rgba, WIDTH, 240, 225), [0, 0, 255], "item azul");
-    assert_color_near(pixel_at(&rgba, WIDTH, 400, 225), [255, 255, 255], "item blanco");
+    assert_color_near(
+        pixel_at(&rgba, WIDTH, 400, 225),
+        [255, 255, 255],
+        "item blanco",
+    );
 
     // Fuera de la caja sigue el fondo negro del render.
-    assert_eq!(pixel_at(&rgba, WIDTH, 20, 20), [0, 0, 0], "esquina sin item");
-    assert_eq!(pixel_at(&rgba, WIDTH, 620, 340), [0, 0, 0], "esquina opuesta sin item");
+    assert_eq!(
+        pixel_at(&rgba, WIDTH, 20, 20),
+        [0, 0, 0],
+        "esquina sin item"
+    );
+    assert_eq!(
+        pixel_at(&rgba, WIDTH, 620, 340),
+        [0, 0, 0],
+        "esquina opuesta sin item"
+    );
 
     assert_golden("item-imagen", &rgba, WIDTH, HEIGHT);
 }

@@ -177,13 +177,19 @@ mod tests {
         // Restaurar permisos para verificar y limpiar.
         std::fs::set_permissions(&dir, std::fs::Permissions::from_mode(0o755)).expect("chmod 755");
 
-        assert!(result.is_err(), "el comando debe devolver error si no se pudo escribir");
+        assert!(
+            result.is_err(),
+            "el comando debe devolver error si no se pudo escribir"
+        );
         assert_eq!(
             std::fs::read_to_string(dir.join("settings.json")).expect("leer original"),
             ORIGINAL,
             "el archivo original debe quedar intacto"
         );
-        assert!(!dir.join("settings.json.tmp").exists(), "no debe quedar un temporal");
+        assert!(
+            !dir.join("settings.json.tmp").exists(),
+            "no debe quedar un temporal"
+        );
 
         let _ = std::fs::remove_dir_all(&dir);
     }
@@ -202,13 +208,19 @@ mod tests {
         app.manage(AppState::new(StoreManager::new(dir.clone())));
         let result = SET_STORE_VALUE(app.state::<AppState>(), payload());
 
-        assert!(result.is_err(), "el comando debe devolver error si no se pudo escribir");
+        assert!(
+            result.is_err(),
+            "el comando debe devolver error si no se pudo escribir"
+        );
         assert_eq!(
             std::fs::read_to_string(target.join("dentro.txt")).expect("leer original"),
             ORIGINAL,
             "el contenido original debe quedar intacto"
         );
-        assert!(!dir.join("settings.json.tmp").exists(), "no debe quedar un temporal");
+        assert!(
+            !dir.join("settings.json.tmp").exists(),
+            "no debe quedar un temporal"
+        );
 
         let _ = std::fs::remove_dir_all(&dir);
     }
@@ -224,7 +236,10 @@ mod tests {
         SET_STORE_VALUE(app.state::<AppState>(), payload()).expect("guardado con permisos");
 
         let saved = std::fs::read_to_string(dir.join("settings.json")).expect("leer guardado");
-        assert!(saved.contains("dark"), "el valor debe haberse escrito: {saved}");
+        assert!(
+            saved.contains("dark"),
+            "el valor debe haberse escrito: {saved}"
+        );
 
         let _ = std::fs::remove_dir_all(&dir);
     }

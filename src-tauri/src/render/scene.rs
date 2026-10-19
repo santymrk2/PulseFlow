@@ -267,7 +267,9 @@ impl ScenePayload {
                 SceneItem::Text(t) => Some(t),
                 _ => None,
             })
-            .filter(|t| !t.text.trim().is_empty() || t.spans.iter().any(|s| !s.text.trim().is_empty()))
+            .filter(|t| {
+                !t.text.trim().is_empty() || t.spans.iter().any(|s| !s.text.trim().is_empty())
+            })
             .map(|t| TextBlock {
                 text: t.text.clone(),
                 font_family: t.font_family.clone(),
@@ -323,17 +325,20 @@ impl ScenePayload {
 
     /// Fondo del engine (si lo hay).
     pub fn background_media(&self) -> Option<BackgroundMedia> {
-        self.background.as_ref().filter(|b| !b.path.is_empty()).map(|b| BackgroundMedia {
-            id: b.path.clone(),
-            path: Some(b.path.clone()),
-            media_type: b.media_type.clone(),
-            opacity: b.opacity.clamp(0.0, 1.0),
-            aspect_mode: match b.fit.as_deref() {
-                Some("contain") => 1,
-                Some("fill") | Some("stretch") => 2,
-                _ => 0,
-            },
-        })
+        self.background
+            .as_ref()
+            .filter(|b| !b.path.is_empty())
+            .map(|b| BackgroundMedia {
+                id: b.path.clone(),
+                path: Some(b.path.clone()),
+                media_type: b.media_type.clone(),
+                opacity: b.opacity.clamp(0.0, 1.0),
+                aspect_mode: match b.fit.as_deref() {
+                    Some("contain") => 1,
+                    Some("fill") | Some("stretch") => 2,
+                    _ => 0,
+                },
+            })
     }
 }
 

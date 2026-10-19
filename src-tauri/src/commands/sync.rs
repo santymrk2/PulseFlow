@@ -8,7 +8,7 @@
 
 use crate::error::AppResult;
 use serde::Deserialize;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 #[derive(Deserialize)]
 pub struct SyncProviderData {

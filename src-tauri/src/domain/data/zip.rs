@@ -29,11 +29,11 @@ fn zip_err<E: std::fmt::Display>(err: E) -> AppError {
 pub fn compress_to_zip(entries: &[ZipEntry], zip_path: &Path) -> AppResult<()> {
     let file = File::create(zip_path)?;
     let mut zip = zip::ZipWriter::new(file);
-    let options =
-        SimpleFileOptions::default().compression_method(zip::CompressionMethod::Deflated);
+    let options = SimpleFileOptions::default().compression_method(zip::CompressionMethod::Deflated);
 
     for entry in entries {
-        zip.start_file(entry.name.clone(), options).map_err(zip_err)?;
+        zip.start_file(entry.name.clone(), options)
+            .map_err(zip_err)?;
         match &entry.source {
             EntrySource::File(path) => {
                 let mut src = File::open(path)?;

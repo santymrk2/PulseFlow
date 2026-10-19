@@ -10,12 +10,17 @@
 //! Los fixtures cubren el contrato completo (texto con tramos, contorno y sombra;
 //! fondo de video; Stage Display; escena vacía), no todos los casos de la app.
 
-use super::scene::{SceneItem, ScenePayload, SCENE_GRAPH_VERSION};
+use super::scene::{SCENE_GRAPH_VERSION, SceneItem, ScenePayload};
 use serde_json::Value;
 
 /// Nombres de los fixtures; el mismo listado que `sceneGraphPayload.test.ts`.
-const SCENE_FIXTURES: [&str; 5] =
-    ["audience-text", "audience-background-video", "audience-media", "stage", "cleared"];
+const SCENE_FIXTURES: [&str; 5] = [
+    "audience-text",
+    "audience-background-video",
+    "audience-media",
+    "stage",
+    "cleared",
+];
 
 fn fixture(name: &str) -> &'static str {
     match name {
@@ -35,7 +40,8 @@ fn fixture(name: &str) -> &'static str {
 fn parse(name: &str) -> (ScenePayload, Value) {
     let raw = fixture(name);
     let json: Value = serde_json::from_str(raw).expect("fixture JSON válido");
-    let payload: ScenePayload = serde_json::from_str(raw).expect("fixture deserializa en ScenePayload");
+    let payload: ScenePayload =
+        serde_json::from_str(raw).expect("fixture deserializa en ScenePayload");
     (payload, json)
 }
 
@@ -55,11 +61,18 @@ fn assert_keys(value: &Value, expected: &[&str]) {
 /// Cualquier fixture del contrato deserializa y declara la versión que entiende el engine.
 #[test]
 fn cada_fixture_deserializa_y_valida_la_version() {
-    assert_eq!(SCENE_FIXTURES.len(), 5, "el test de vitest debe generar 5 fixtures");
+    assert_eq!(
+        SCENE_FIXTURES.len(),
+        5,
+        "el test de vitest debe generar 5 fixtures"
+    );
     for name in SCENE_FIXTURES {
         let (payload, _) = parse(name);
         assert_eq!(payload.version, SCENE_GRAPH_VERSION, "versión en {name}");
-        assert!(payload.validate_version().is_ok(), "versión válida en {name}");
+        assert!(
+            payload.validate_version().is_ok(),
+            "versión válida en {name}"
+        );
     }
 }
 
@@ -78,7 +91,17 @@ fn audience_text_mantiene_el_contrato() {
 
     assert_keys(
         &json,
-        &["version", "outputId", "stage", "width", "height", "background", "items", "transition", "plainText"],
+        &[
+            "version",
+            "outputId",
+            "stage",
+            "width",
+            "height",
+            "background",
+            "items",
+            "transition",
+            "plainText",
+        ],
     );
     assert_keys(
         &json["items"][0],
@@ -104,7 +127,10 @@ fn audience_text_mantiene_el_contrato() {
         ],
     );
     assert_keys(&json["items"][0]["stroke"], &["color", "width"]);
-    assert_keys(&json["items"][0]["shadow"], &["color", "offsetX", "offsetY"]);
+    assert_keys(
+        &json["items"][0]["shadow"],
+        &["color", "offsetX", "offsetY"],
+    );
     assert_keys(&json["items"][0]["spans"][0], &["text", "color"]);
     assert_keys(&json["items"][0]["spans"][1], &["text"]);
     assert_keys(&json["items"][0]["spans"][2], &["text", "fontStyle"]);
@@ -158,7 +184,10 @@ fn audience_background_video_mantiene_su_contrato() {
     assert!(payload.items.is_empty());
     assert_eq!(payload.plain_text, "");
 
-    assert_keys(&json["background"], &["path", "type", "fit", "opacity", "loop", "muted"]);
+    assert_keys(
+        &json["background"],
+        &["path", "type", "fit", "opacity", "loop", "muted"],
+    );
     assert_keys(&json["transition"], &["type", "durationMs"]);
 
     let background = payload.background_media().expect("fondo de video");
@@ -190,7 +219,18 @@ fn stage_mantiene_su_contrato() {
 
     assert_keys(
         &json,
-        &["version", "outputId", "stage", "width", "height", "background", "items", "transition", "plainText", "nextText"],
+        &[
+            "version",
+            "outputId",
+            "stage",
+            "width",
+            "height",
+            "background",
+            "items",
+            "transition",
+            "plainText",
+            "nextText",
+        ],
     );
 }
 
@@ -210,7 +250,17 @@ fn escena_vacia_mantiene_su_contrato() {
     // sin nextText: la clave no existe en el payload
     assert_keys(
         &json,
-        &["version", "outputId", "stage", "width", "height", "background", "items", "transition", "plainText"],
+        &[
+            "version",
+            "outputId",
+            "stage",
+            "width",
+            "height",
+            "background",
+            "items",
+            "transition",
+            "plainText",
+        ],
     );
 }
 
@@ -227,11 +277,32 @@ fn audience_media_mantiene_su_contrato() {
     // claves del contrato de un item de medio
     assert_keys(
         &json["items"][0],
-        &["type", "id", "x", "y", "width", "height", "src", "mediaType", "fit", "opacity"],
+        &[
+            "type",
+            "id",
+            "x",
+            "y",
+            "width",
+            "height",
+            "src",
+            "mediaType",
+            "fit",
+            "opacity",
+        ],
     );
     assert_keys(
         &json["items"][1],
-        &["type", "x", "y", "width", "height", "src", "mediaType", "fit", "opacity"],
+        &[
+            "type",
+            "x",
+            "y",
+            "width",
+            "height",
+            "src",
+            "mediaType",
+            "fit",
+            "opacity",
+        ],
     );
 
     // ningún item de medio llega al motor de texto
@@ -241,7 +312,10 @@ fn audience_media_mantiene_su_contrato() {
     assert_eq!(media.len(), 2);
 
     let image = &media[0];
-    assert_eq!(image.id, "/media/imagen.png", "el MediaPool cachea por ruta");
+    assert_eq!(
+        image.id, "/media/imagen.png",
+        "el MediaPool cachea por ruta"
+    );
     assert_eq!(image.path, "/media/imagen.png");
     assert_eq!(image.media_type, "image");
     assert_eq!(image.x, 50.0);
@@ -262,6 +336,7 @@ fn audience_media_mantiene_su_contrato() {
 #[test]
 fn un_item_de_tipo_desconocido_deserializa_como_unknown() {
     let item: SceneItem =
-        serde_json::from_value(serde_json::json!({ "type": "camera", "src": "x.png" })).expect("item desconocido");
+        serde_json::from_value(serde_json::json!({ "type": "camera", "src": "x.png" }))
+            .expect("item desconocido");
     assert!(matches!(item, SceneItem::Unknown));
 }

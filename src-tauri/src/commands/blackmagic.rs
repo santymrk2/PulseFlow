@@ -28,10 +28,7 @@ pub const NOT_IMPLEMENTED: &str = "Ayuda nativa de Blackmagic no disponible";
 /// Nombres candidatos del ayudante nativo de Blackmagic por plataforma.
 fn library_candidates() -> Vec<&'static str> {
     if cfg!(windows) {
-        vec![
-            "blackmagic_helper.dll",
-            "libblackmagic_helper.dll",
-        ]
+        vec!["blackmagic_helper.dll", "libblackmagic_helper.dll"]
     } else if cfg!(target_os = "macos") {
         vec![
             "libblackmagic_helper.dylib",
@@ -108,8 +105,8 @@ pub fn enumerate_devices() -> Vec<BlackmagicDevice> {
         return Vec::new();
     }
 
-    let has_api = lib.has_symbol(b"blackmagic_device_count\0")
-        && lib.has_symbol(b"blackmagic_device_name\0");
+    let has_api =
+        lib.has_symbol(b"blackmagic_device_count\0") && lib.has_symbol(b"blackmagic_device_name\0");
 
     // La enumeración real se activa cuando la ayuda nativa está desplegada y se
     // dispone de las firmas tipadas; por ahora se apaga el runtime.

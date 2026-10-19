@@ -37,7 +37,11 @@ pub fn time_point_string() -> String {
 /// Construye el plan de backup leyendo tiendas portables, shows y biblias.
 pub fn build_plan(stores: &StoreManager, is_auto: bool) -> AppResult<BackupPlan> {
     let backups_folder = PathBuf::from(stores.get_data_folder_path(DataFolder::Backups, None));
-    let folder_name = format!("{}{}", time_point_string(), if is_auto { "_auto" } else { "" });
+    let folder_name = format!(
+        "{}{}",
+        time_point_string(),
+        if is_auto { "_auto" } else { "" }
+    );
     let zip_path = backups_folder.join(format!("{folder_name}.zip"));
 
     let mut entries: Vec<ZipEntry> = Vec::new();
@@ -216,10 +220,7 @@ pub fn prune_auto_backups(stores: &StoreManager, ignore_implementation_date: boo
 
 /// Restaura desde un `.zip` (o carpeta antigua). Devuelve `(canal, valor)` a
 /// emitir en el frontend por cada tienda restaurada.
-pub fn restore_files(
-    stores: &mut StoreManager,
-    path: &str,
-) -> AppResult<Vec<(String, Value)>> {
+pub fn restore_files(stores: &mut StoreManager, path: &str) -> AppResult<Vec<(String, Value)>> {
     let mut emissions: Vec<(String, Value)> = Vec::new();
 
     let files_to_restore: Vec<(String, String)> = if path.to_lowercase().ends_with(".zip") {

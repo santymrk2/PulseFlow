@@ -174,7 +174,12 @@ pub fn READ_FOLDER(data: ReadFolderData) -> AppResult<HashMap<String, FileFolder
     Ok(content)
 }
 
-fn walk_folder(folder_path: &str, current_depth: i64, ctx: &ReadFolderCtx, content: &mut HashMap<String, FileFolder>) {
+fn walk_folder(
+    folder_path: &str,
+    current_depth: i64,
+    ctx: &ReadFolderCtx,
+    content: &mut HashMap<String, FileFolder>,
+) {
     let exceeded = current_depth > ctx.depth;
 
     if content.contains_key(folder_path) {
@@ -182,7 +187,10 @@ fn walk_folder(folder_path: &str, current_depth: i64, ctx: &ReadFolderCtx, conte
     }
 
     if ctx.capture && current_depth >= 2 && exceeded {
-        content.insert(folder_path.to_string(), folder_entry(folder_path, Vec::new(), None));
+        content.insert(
+            folder_path.to_string(),
+            folder_entry(folder_path, Vec::new(), None),
+        );
         return;
     }
 
@@ -191,7 +199,12 @@ fn walk_folder(folder_path: &str, current_depth: i64, ctx: &ReadFolderCtx, conte
     };
     let file_paths: Vec<String> = names
         .iter()
-        .map(|name| Path::new(folder_path).join(name).to_string_lossy().into_owned())
+        .map(|name| {
+            Path::new(folder_path)
+                .join(name)
+                .to_string_lossy()
+                .into_owned()
+        })
         .collect();
 
     let mut no_media = false;
@@ -313,7 +326,8 @@ pub async fn OPEN_FOLDER(app: AppHandle, data: OpenFolderData) -> AppResult<Opti
     builder.pick_folder(move |folder| {
         let _ = tx.send(folder.map(|f| f.to_string()));
     });
-    rx.await.map_err(|_| AppError::new("Folder dialog cancelled"))
+    rx.await
+        .map_err(|_| AppError::new("Folder dialog cancelled"))
 }
 
 #[derive(Deserialize)]
@@ -363,7 +377,9 @@ pub async fn OPEN_FILE(app: AppHandle, data: OpenFileData) -> AppResult<OpenFile
             let list = selected.map(|paths| paths.into_iter().map(|p| p.to_string()).collect());
             let _ = tx.send(list);
         });
-        rx.await.map_err(|_| AppError::new("File dialog cancelled"))?.unwrap_or_default()
+        rx.await
+            .map_err(|_| AppError::new("File dialog cancelled"))?
+            .unwrap_or_default()
     } else {
         let (tx, rx) = tokio::sync::oneshot::channel::<Option<String>>();
         builder.pick_file(move |selected| {
@@ -378,7 +394,10 @@ pub async fn OPEN_FILE(app: AppHandle, data: OpenFileData) -> AppResult<OpenFile
     let mut content = HashMap::new();
     if data.read.unwrap_or(false) {
         for file_path in &files {
-            content.insert(file_path.clone(), files::read_file(file_path).unwrap_or_default());
+            content.insert(
+                file_path.clone(),
+                files::read_file(file_path).unwrap_or_default(),
+            );
         }
     }
 
@@ -396,7 +415,11 @@ fn open_in_system(app: &AppHandle, file_path: &str, open_folder: bool) {
         return;
     }
     if open_folder {
-        if app.opener().open_path(file_path.to_string(), None::<&str>).is_ok() {
+        if app
+            .opener()
+            .open_path(file_path.to_string(), None::<&str>)
+            .is_ok()
+        {
             return;
         }
     }
@@ -470,13 +493,19 @@ pub fn READ_BIBLES_FOLDER(state: State<'_, AppState>) -> AppResult<Vec<BibleFile
 
     let mut bibles = Vec::new();
     for name in files::read_folder(&folder)? {
-        let path = Path::new(&folder).join(&name).to_string_lossy().into_owned();
+        let path = Path::new(&folder)
+            .join(&name)
+            .to_string_lossy()
+            .into_owned();
         let display = name
             .strip_suffix(".fsb")
             .or_else(|| name.strip_suffix(".FSB"))
             .unwrap_or(&name)
             .to_string();
-        bibles.push(BibleFile { path, name: display });
+        bibles.push(BibleFile {
+            path,
+            name: display,
+        });
     }
     Ok(bibles)
 }
@@ -549,7 +578,10 @@ fn media_sync_folder(state: &State<'_, AppState>) -> AppResult<String> {
 fn file_path_hash_code(s: &str) -> String {
     let mut hash: i32 = 0;
     for code_unit in s.encode_utf16() {
-        hash = hash.wrapping_shl(5).wrapping_sub(hash).wrapping_add(code_unit as i32);
+        hash = hash
+            .wrapping_shl(5)
+            .wrapping_sub(hash)
+            .wrapping_add(code_unit as i32);
     }
     if hash < 0 {
         let digits = hash.to_string();
@@ -567,7 +599,11 @@ fn get_file_parent_folder_id(file_path: &str) -> String {
         .file_name()
         .map(|n| n.to_string_lossy().into_owned())
         .unwrap_or_default();
-    format!("{}_{}", parent_name, file_path_hash_code(&parent.to_string_lossy()))
+    format!(
+        "{}_{}",
+        parent_name,
+        file_path_hash_code(&parent.to_string_lossy())
+    )
 }
 
 /// Decodifica secuencias `%XX` sin depender de una tabla de códigos completa.
@@ -708,7 +744,10 @@ pub struct BundleMediaFilesData {
 }
 
 /// Reúne las rutas de medios referenciadas por todas las tiendas/proyectos.
-fn collect_media_paths(stores: &crate::domain::data::store::StoreManager, shows_folder: &str) -> Vec<String> {
+fn collect_media_paths(
+    stores: &crate::domain::data::store::StoreManager,
+    shows_folder: &str,
+) -> Vec<String> {
     let mut media_files: Vec<String> = Vec::new();
 
     // Shows guardados en disco

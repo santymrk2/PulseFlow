@@ -15,7 +15,7 @@ use crate::error::{AppError, AppResult};
 use crate::render::scene::ScenePayload;
 use crate::render::{IdentifyScreen, ScreenConfig};
 use serde::Deserialize;
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use tauri::{AppHandle, Manager};
 
 fn monitor_name(index: usize, name: Option<&String>) -> String {
@@ -187,7 +187,11 @@ pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
     }
 
     if data.stage {
-        let next_slide = data.next_text.as_ref().map(|t| t.trim().to_string()).filter(|t| !t.is_empty());
+        let next_slide = data
+            .next_text
+            .as_ref()
+            .map(|t| t.trim().to_string())
+            .filter(|t| !t.is_empty());
         return crate::render::set_stage_scene(
             &app,
             &data.output_id,

@@ -3,7 +3,7 @@
 //! Se mantienen como `serde_json::Value` (JSON) porque son estructuras muy
 //! anidadas y heterogéneas; conservan exactamente las mismas claves que en TS.
 
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 
 /// `defaultConfig` de TS.
 pub fn default_config() -> Value {
@@ -192,7 +192,10 @@ mod tests {
             .as_object()
             .expect("outputs por defecto es un objeto");
 
-        assert!(!outputs.is_empty(), "debe haber al menos una salida por defecto");
+        assert!(
+            !outputs.is_empty(),
+            "debe haber al menos una salida por defecto"
+        );
 
         for (output_id, output) in outputs {
             let style_id = output["style"].as_str().unwrap_or("");

@@ -8,14 +8,14 @@
 //! a texturas en VRAM mediante `MediaPool::update_video_frame`, permitiendo que
 //! múltiples salidas compartan la misma decodificación con cero consumo adicional de CPU.
 
-use std::io::Read;
-use std::process::{Child, Command, Stdio};
-use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::Arc;
-use std::thread::{self, JoinHandle};
-use tauri::AppHandle;
 use crate::error::{AppError, AppResult};
 use crate::utils::ffmpeg;
+use std::io::Read;
+use std::process::{Child, Command, Stdio};
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::thread::{self, JoinHandle};
+use tauri::AppHandle;
 
 /// Hilo de reproducción de video en bucle continuo.
 pub struct VideoPlayback {
@@ -71,17 +71,24 @@ where
             // Intentar primero con aceleración por hardware nativa
             let hw_cmd = Command::new(&ffmpeg_bin)
                 .args([
-                    "-hwaccel", hwaccel,
-                    "-stream_loop", "-1",       // Bucle infinito continuo
-                    "-re",                       // Tasa de refresco en tiempo real
-                    "-i", &video_path,
-                    "-vf", &scale_filter,
-                    "-f", "rawvideo",
-                    "-pix_fmt", "rgba",
-                    "-an",                      // Sin audio (los fondos son mudos o se manejan por canal de audio)
-                    "-sn",                      // Sin subtítulos
-                    "-loglevel", "error",
-                    "-",                        // Enviar a stdout en streaming
+                    "-hwaccel",
+                    hwaccel,
+                    "-stream_loop",
+                    "-1",  // Bucle infinito continuo
+                    "-re", // Tasa de refresco en tiempo real
+                    "-i",
+                    &video_path,
+                    "-vf",
+                    &scale_filter,
+                    "-f",
+                    "rawvideo",
+                    "-pix_fmt",
+                    "rgba",
+                    "-an", // Sin audio (los fondos son mudos o se manejan por canal de audio)
+                    "-sn", // Sin subtítulos
+                    "-loglevel",
+                    "error",
+                    "-", // Enviar a stdout en streaming
                 ])
                 .stdout(Stdio::piped())
                 .stderr(Stdio::null())
@@ -94,15 +101,21 @@ where
                     // Fallback a decodificación estándar por software
                     let sw_cmd = Command::new(&ffmpeg_bin)
                         .args([
-                            "-stream_loop", "-1",
+                            "-stream_loop",
+                            "-1",
                             "-re",
-                            "-i", &video_path,
-                            "-vf", &scale_filter,
-                            "-f", "rawvideo",
-                            "-pix_fmt", "rgba",
+                            "-i",
+                            &video_path,
+                            "-vf",
+                            &scale_filter,
+                            "-f",
+                            "rawvideo",
+                            "-pix_fmt",
+                            "rgba",
                             "-an",
                             "-sn",
-                            "-loglevel", "error",
+                            "-loglevel",
+                            "error",
                             "-",
                         ])
                         .stdout(Stdio::piped())

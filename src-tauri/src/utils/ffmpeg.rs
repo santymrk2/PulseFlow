@@ -30,9 +30,17 @@ fn system_candidates(base: &str) -> Vec<PathBuf> {
 
     if cfg!(windows) {
         candidates.push(PathBuf::from(format!("C:\\ffmpeg\\bin\\{name}")));
-        candidates.push(PathBuf::from(format!("C:\\Program Files\\ffmpeg\\bin\\{name}")));
+        candidates.push(PathBuf::from(format!(
+            "C:\\Program Files\\ffmpeg\\bin\\{name}"
+        )));
         if let Ok(local) = std::env::var("LOCALAPPDATA") {
-            candidates.push(PathBuf::from(local).join("Programs").join("ffmpeg").join("bin").join(&name));
+            candidates.push(
+                PathBuf::from(local)
+                    .join("Programs")
+                    .join("ffmpeg")
+                    .join("bin")
+                    .join(&name),
+            );
         }
     } else if cfg!(target_os = "macos") {
         candidates.push(PathBuf::from(format!("/opt/homebrew/bin/{name}")));
@@ -119,7 +127,10 @@ pub async fn run_capture(bin: &Path, args: &[String]) -> AppResult<String> {
 /// Comprueba si `base` está disponible en el sistema.
 pub async fn is_available(app: &AppHandle, base: &str) -> bool {
     let bin = resolve(app, base);
-    run(&bin, &["-version".to_string()]).await.map(|o| o.status.success()).unwrap_or(false)
+    run(&bin, &["-version".to_string()])
+        .await
+        .map(|o| o.status.success())
+        .unwrap_or(false)
 }
 
 /// Comprueba si FFmpeg está disponible (equivalente a `FFMPEG_CHECK`).

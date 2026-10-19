@@ -179,8 +179,11 @@ pub struct ScreenManager {
     /// Captura de framebuffer para NDI (recurso de engine, hasta F8).
     pub(crate) ndi_capture: Mutex<Option<super::ndi_stream::GpuFramebufferCapture>>,
     /// Configuración global de transición hasta que F3 la aplique por pantalla.
-    pub(crate) transition_config:
-        Mutex<(super::transition::TransitionType, u64, super::transition::EasingType)>,
+    pub(crate) transition_config: Mutex<(
+        super::transition::TransitionType,
+        u64,
+        super::transition::EasingType,
+    )>,
 }
 
 impl ScreenManager {
@@ -256,7 +259,8 @@ fn select_monitor_index(
 /// Monitor de la salida, según `select_monitor_index`.
 fn target_monitor(monitors: &[Monitor], config: &ScreenConfig) -> Option<Monitor> {
     let rects: Vec<ScreenRect> = monitors.iter().map(ScreenRect::of_monitor).collect();
-    select_monitor_index(&rects, config.bounds, config.screen_index()).and_then(|i| monitors.get(i).cloned())
+    select_monitor_index(&rects, config.bounds, config.screen_index())
+        .and_then(|i| monitors.get(i).cloned())
 }
 
 fn main_monitor(app: &AppHandle) -> Option<Monitor> {
@@ -272,7 +276,9 @@ fn same_monitor(a: &Monitor, b: &Monitor) -> bool {
 /// redimensionable si el monitor es el de la ventana de control.
 fn place_window(app: &AppHandle, window: &Window, config: &ScreenConfig, kind: ScreenKind) {
     let monitors = app.available_monitors().unwrap_or_default();
-    let Some(monitor) = target_monitor(&monitors, config) else { return };
+    let Some(monitor) = target_monitor(&monitors, config) else {
+        return;
+    };
     let monitor_rect = ScreenRect::of_monitor(&monitor);
 
     let on_control_monitor = main_monitor(app)
@@ -344,11 +350,19 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
     let title = match kind {
         ScreenKind::Audience => format!(
             "PulseFlow — {}",
-            if config.name.is_empty() { "Audiencia" } else { &config.name }
+            if config.name.is_empty() {
+                "Audiencia"
+            } else {
+                &config.name
+            }
         ),
         ScreenKind::Stage => format!(
             "PulseFlow — Stage: {}",
-            if config.name.is_empty() { "Stage" } else { &config.name }
+            if config.name.is_empty() {
+                "Stage"
+            } else {
+                &config.name
+            }
         ),
     };
 
@@ -475,7 +489,10 @@ pub fn emit_output_state(app: &AppHandle, states: &[(String, bool)]) {
         .iter()
         .map(|(id, active)| serde_json::json!({ "id": id, "active": active }))
         .collect();
-    let _ = app.emit("OUTPUT", serde_json::json!({ "channel": "OUTPUT_STATE", "data": data }));
+    let _ = app.emit(
+        "OUTPUT",
+        serde_json::json!({ "channel": "OUTPUT_STATE", "data": data }),
+    );
 }
 
 // ---------------------------------------------------------------------------
@@ -522,18 +539,26 @@ fn identify_targets(monitors: &[ScreenRect], entries: &[IdentifyScreen]) -> Vec<
 /// durante 3 s (F2.5), usando el mismo bucle de render que las salidas. No
 /// entra en `ScreenManager`: son ventanas `identify-*` que se destruyen solas.
 pub fn identify_screens(app: &AppHandle, entries: &[IdentifyScreen]) -> AppResult<()> {
-    let monitors = app.available_monitors().map_err(|e| AppError::new(e.to_string()))?;
+    let monitors = app
+        .available_monitors()
+        .map_err(|e| AppError::new(e.to_string()))?;
     let rects: Vec<ScreenRect> = monitors.iter().map(ScreenRect::of_monitor).collect();
 
     let targets = if entries.is_empty() {
         // Sin payload: todos los monitores, numerados por su orden.
-        rects.iter().enumerate().map(|(i, _)| ((i + 1).to_string(), i)).collect()
+        rects
+            .iter()
+            .enumerate()
+            .map(|(i, _)| ((i + 1).to_string(), i))
+            .collect()
     } else {
         identify_targets(&rects, entries)
     };
 
     for (number, monitor_index) in targets {
-        let Some(monitor) = monitors.get(monitor_index) else { continue };
+        let Some(monitor) = monitors.get(monitor_index) else {
+            continue;
+        };
         if let Err(err) = open_identify_window(app, &number, monitor) {
             eprintln!("[identify] no se pudo abrir la ventana del monitor {monitor_index}: {err}");
         }
@@ -597,7 +622,11 @@ fn open_identify_window(app: &AppHandle, number: &str, monitor: &Monitor) -> App
             let _ = render_thread.join();
             let _ = window.destroy();
         })
-        .map_err(|e| AppError::new(format!("Error iniciando el temporizador de identificación: {e}")))?;
+        .map_err(|e| {
+            AppError::new(format!(
+                "Error iniciando el temporizador de identificación: {e}"
+            ))
+        })?;
 
     Ok(())
 }
@@ -766,9 +795,10 @@ fn sync_video(app: &AppHandle, handle: &mut ScreenHandle, background: Option<&Ba
 
     if let Some((id, path)) = wanted {
         let slot = Arc::clone(&handle.video_frame);
-        let result = video::start_video_playback(app, &path, &id, 1920, 1080, move |vid_id, w, h, bytes| {
-            *slot.lock_safe() = Some((vid_id.to_string(), w, h, bytes.to_vec()));
-        });
+        let result =
+            video::start_video_playback(app, &path, &id, 1920, 1080, move |vid_id, w, h, bytes| {
+                *slot.lock_safe() = Some((vid_id.to_string(), w, h, bytes.to_vec()));
+            });
         match result {
             Ok(playback) => handle.video = Some((id, playback)),
             Err(err) => eprintln!("[screens] no se pudo reproducir el video {path}: {err}"),
@@ -850,7 +880,12 @@ fn spawn_render_loop(
                         config.width = current.width;
                         config.height = current.height;
                         surface.configure(&device, &config);
-                        transition_engine.resize(&device, config.format, config.width, config.height);
+                        transition_engine.resize(
+                            &device,
+                            config.format,
+                            config.width,
+                            config.height,
+                        );
                     }
                 }
 
@@ -869,8 +904,7 @@ fn spawn_render_loop(
                 let frame = match surface.get_current_texture() {
                     wgpu::CurrentSurfaceTexture::Success(frame)
                     | wgpu::CurrentSurfaceTexture::Suboptimal(frame) => frame,
-                    wgpu::CurrentSurfaceTexture::Outdated
-                    | wgpu::CurrentSurfaceTexture::Lost => {
+                    wgpu::CurrentSurfaceTexture::Outdated | wgpu::CurrentSurfaceTexture::Lost => {
                         surface.configure(&device, &config);
                         continue;
                     }
@@ -1011,12 +1045,13 @@ fn spawn_render_loop(
 
                             let mut blocks = current.text;
                             // Overlays (relojes, avisos): modelo previo, hasta F2.7.
-                            blocks.extend(
-                                current.overlays.into_iter().map(|o| overlay_block(o, w)),
-                            );
+                            blocks
+                                .extend(current.overlays.into_iter().map(|o| overlay_block(o, w)));
                             blocks
                         }
-                        ScreenKind::Stage => super::stage::stage_blocks(&current.stage, w as f32, h as f32),
+                        ScreenKind::Stage => {
+                            super::stage::stage_blocks(&current.stage, w as f32, h as f32)
+                        }
                     };
 
                     if !blocks.is_empty() {
@@ -1106,36 +1141,97 @@ mod tests {
 
     #[test]
     fn rect_contains_center() {
-        let monitor = ScreenRect { x: 1920, y: 0, width: 1920, height: 1080 };
-        let bounds = ScreenRect { x: 1920, y: 0, width: 1920, height: 1080 };
+        let monitor = ScreenRect {
+            x: 1920,
+            y: 0,
+            width: 1920,
+            height: 1080,
+        };
+        let bounds = ScreenRect {
+            x: 1920,
+            y: 0,
+            width: 1920,
+            height: 1080,
+        };
         assert!(monitor.contains(bounds.center()));
-        assert!(!ScreenRect { x: 0, y: 0, width: 1920, height: 1080 }.contains(bounds.center()));
+        assert!(
+            !ScreenRect {
+                x: 0,
+                y: 0,
+                width: 1920,
+                height: 1080
+            }
+            .contains(bounds.center())
+        );
     }
 
     #[test]
     fn select_monitor_prefers_bounds_center() {
         let monitors = [
-            ScreenRect { x: 0, y: 0, width: 1920, height: 1080 },
-            ScreenRect { x: 1920, y: 0, width: 2560, height: 1440 },
-            ScreenRect { x: -1280, y: 0, width: 1280, height: 720 },
+            ScreenRect {
+                x: 0,
+                y: 0,
+                width: 1920,
+                height: 1080,
+            },
+            ScreenRect {
+                x: 1920,
+                y: 0,
+                width: 2560,
+                height: 1440,
+            },
+            ScreenRect {
+                x: -1280,
+                y: 0,
+                width: 1280,
+                height: 720,
+            },
         ];
 
         // Centro de bounds dentro del monitor 1 (aunque screen diga 0).
-        let bounds = ScreenRect { x: 2000, y: 100, width: 800, height: 600 };
-        assert_eq!(select_monitor_index(&monitors, Some(bounds), Some(0)), Some(1));
+        let bounds = ScreenRect {
+            x: 2000,
+            y: 100,
+            width: 800,
+            height: 600,
+        };
+        assert_eq!(
+            select_monitor_index(&monitors, Some(bounds), Some(0)),
+            Some(1)
+        );
 
         // Centro de bounds dentro del monitor 2 (secundario a la izquierda).
-        let bounds = ScreenRect { x: -1000, y: 10, width: 200, height: 200 };
+        let bounds = ScreenRect {
+            x: -1000,
+            y: 10,
+            width: 200,
+            height: 200,
+        };
         assert_eq!(select_monitor_index(&monitors, Some(bounds), None), Some(2));
     }
 
     #[test]
     fn select_monitor_falls_back_to_index_then_secondary() {
         let two = [
-            ScreenRect { x: 0, y: 0, width: 1920, height: 1080 },
-            ScreenRect { x: 1920, y: 0, width: 1920, height: 1080 },
+            ScreenRect {
+                x: 0,
+                y: 0,
+                width: 1920,
+                height: 1080,
+            },
+            ScreenRect {
+                x: 1920,
+                y: 0,
+                width: 1920,
+                height: 1080,
+            },
         ];
-        let one = [ScreenRect { x: 0, y: 0, width: 1920, height: 1080 }];
+        let one = [ScreenRect {
+            x: 0,
+            y: 0,
+            width: 1920,
+            height: 1080,
+        }];
 
         // Sin bounds: índice elegido.
         assert_eq!(select_monitor_index(&two, None, Some(0)), Some(0));
@@ -1151,14 +1247,40 @@ mod tests {
     #[test]
     fn identify_targets_matches_bounds_then_index() {
         let monitors = [
-            ScreenRect { x: 0, y: 0, width: 1920, height: 1080 },
-            ScreenRect { x: 1920, y: 0, width: 2560, height: 1440 },
+            ScreenRect {
+                x: 0,
+                y: 0,
+                width: 1920,
+                height: 1080,
+            },
+            ScreenRect {
+                x: 1920,
+                y: 0,
+                width: 2560,
+                height: 1440,
+            },
         ];
 
         // El número es la posición (1-based) y el monitor el que contiene los bounds.
         let entries = [
-            IdentifyScreen { bounds: Some(ScreenRect { x: 1920, y: 0, width: 2560, height: 1440 }), ..Default::default() },
-            IdentifyScreen { bounds: Some(ScreenRect { x: 0, y: 0, width: 1920, height: 1080 }), ..Default::default() },
+            IdentifyScreen {
+                bounds: Some(ScreenRect {
+                    x: 1920,
+                    y: 0,
+                    width: 2560,
+                    height: 1440,
+                }),
+                ..Default::default()
+            },
+            IdentifyScreen {
+                bounds: Some(ScreenRect {
+                    x: 0,
+                    y: 0,
+                    width: 1920,
+                    height: 1080,
+                }),
+                ..Default::default()
+            },
         ];
         assert_eq!(
             identify_targets(&monitors, &entries),
@@ -1167,10 +1289,21 @@ mod tests {
 
         // Sin bounds válidos: fallback al índice de la entrada.
         let no_bounds = [IdentifyScreen::default()];
-        assert_eq!(identify_targets(&monitors, &no_bounds), vec![("1".to_string(), 0)]);
+        assert_eq!(
+            identify_targets(&monitors, &no_bounds),
+            vec![("1".to_string(), 0)]
+        );
 
         // Entrada sin monitor asociado: se omite.
-        let out_of_range = [IdentifyScreen { bounds: Some(ScreenRect { x: 9999, y: 9999, width: 100, height: 100 }), ..Default::default() }];
+        let out_of_range = [IdentifyScreen {
+            bounds: Some(ScreenRect {
+                x: 9999,
+                y: 9999,
+                width: 100,
+                height: 100,
+            }),
+            ..Default::default()
+        }];
         assert!(identify_targets(&[], &out_of_range).is_empty());
     }
 

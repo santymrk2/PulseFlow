@@ -8,16 +8,14 @@
 //!   - Contorno perimetral (Stroke / Outline).
 //! - Auto-ajuste de texto (word wrapping) y alineación configurable.
 
-use std::path::Path;
+use crate::error::{AppError, AppResult};
+use crate::render::types::TextBlock;
 use cosmic_text::{
     Align, Attrs, Buffer, Family, FontSystem, Metrics, Shaping, Style, SwashCache, Weight, Wrap,
 };
-use glyphon::{
-    Cache, Color, Resolution, TextAtlas, TextArea, TextBounds, TextRenderer, Viewport,
-};
+use glyphon::{Cache, Color, Resolution, TextArea, TextAtlas, TextBounds, TextRenderer, Viewport};
+use std::path::Path;
 use wgpu::{Device, MultisampleState, Queue, RenderPass, TextureFormat};
-use crate::error::{AppError, AppResult};
-use crate::render::types::TextBlock;
 
 /// Administrador de fuentes y caché de rasterización de glifos.
 pub struct FontAtlas {
@@ -30,11 +28,7 @@ impl FontAtlas {
         let mut font_system = FontSystem::new();
 
         // Intentar cargar fuentes adicionales locales si existen
-        let potential_font_dirs = [
-            "public/fonts",
-            "../public/fonts",
-            "../../public/fonts",
-        ];
+        let potential_font_dirs = ["public/fonts", "../public/fonts", "../../public/fonts"];
 
         for dir in potential_font_dirs {
             let path = Path::new(dir);
@@ -76,12 +70,8 @@ impl TextEngine {
         let cache = Cache::new(device);
         let mut atlas = TextAtlas::new(device, queue, &cache, format);
         let viewport = Viewport::new(device, &cache);
-        let text_renderer = TextRenderer::new(
-            &mut atlas,
-            device,
-            MultisampleState::default(),
-            None,
-        );
+        let text_renderer =
+            TextRenderer::new(&mut atlas, device, MultisampleState::default(), None);
 
         Self {
             font_atlas,
@@ -162,14 +152,21 @@ impl TextEngine {
                 });
             }
 
-            if let (Some(buffer), Some(outline_color), Some(stroke_w)) =
-                (strokes[i].as_ref(), block.outline_color, block.outline_width)
-            {
+            if let (Some(buffer), Some(outline_color), Some(stroke_w)) = (
+                strokes[i].as_ref(),
+                block.outline_color,
+                block.outline_width,
+            ) {
                 let w = stroke_w * scale;
                 let offsets = [
-                    (-w, -w), (0.0, -w), (w, -w),
-                    (-w,  0.0),          (w,  0.0),
-                    (-w,  w), (0.0,  w), (w,  w),
+                    (-w, -w),
+                    (0.0, -w),
+                    (w, -w),
+                    (-w, 0.0),
+                    (w, 0.0),
+                    (-w, w),
+                    (0.0, w),
+                    (w, w),
                 ];
                 for (dx, dy) in offsets {
                     text_areas.push(TextArea {
@@ -220,11 +217,20 @@ impl TextEngine {
 /// Construye y mide el buffer de un bloque. Con `tint` todo el texto se pinta de
 /// ese color (sombra/contorno). Devuelve el buffer y el desplazamiento vertical
 /// que corresponde a la alineación vertical del bloque.
-fn build_buffer(font_system: &mut FontSystem, block: &TextBlock, tint: Option<[f32; 4]>) -> (Buffer, f32) {
+fn build_buffer(
+    font_system: &mut FontSystem,
+    block: &TextBlock,
+    tint: Option<[f32; 4]>,
+) -> (Buffer, f32) {
     let line_ratio = block.line_height_ratio.max(1.0);
     let metrics = Metrics::new(block.font_size, block.font_size * line_ratio);
     let base_family = block.font_family.as_deref().filter(|f| !f.is_empty());
-    let attrs = block_attrs(base_family, block.font_weight, block.font_style.as_deref(), tint.unwrap_or(block.color));
+    let attrs = block_attrs(
+        base_family,
+        block.font_weight,
+        block.font_style.as_deref(),
+        tint.unwrap_or(block.color),
+    );
 
     let align = match block.alignment.to_lowercase().as_str() {
         "center" => Some(Align::Center),
@@ -246,7 +252,11 @@ fn build_buffer(font_system: &mut FontSystem, block: &TextBlock, tint: Option<[f
             .spans
             .iter()
             .map(|span| {
-                let family = span.font_family.as_deref().filter(|f| !f.is_empty()).or(base_family);
+                let family = span
+                    .font_family
+                    .as_deref()
+                    .filter(|f| !f.is_empty())
+                    .or(base_family);
                 let size = span.font_size.unwrap_or(block.font_size);
                 let color = tint.or(span.color).unwrap_or(block.color);
                 let a = block_attrs(
@@ -281,7 +291,12 @@ struct BlockLayout {
 }
 
 /// Atributos de fuente de un bloque o tramo.
-fn block_attrs<'a>(family: Option<&'a str>, weight: u16, style: Option<&str>, color: [f32; 4]) -> Attrs<'a> {
+fn block_attrs<'a>(
+    family: Option<&'a str>,
+    weight: u16,
+    style: Option<&str>,
+    color: [f32; 4],
+) -> Attrs<'a> {
     Attrs::new()
         .family(match family {
             Some(name) => Family::Name(name),

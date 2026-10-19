@@ -7,22 +7,22 @@
 //!   comparten el mismo `Arc<MediaTexture>` en VRAM.
 //! - Pipeline de composición con ajuste de aspecto (Cover, Contain, Stretch).
 
+use crate::error::{AppError, AppResult};
 use std::collections::HashMap;
 use std::path::Path;
 use std::sync::Arc;
 use wgpu::util::DeviceExt;
 use wgpu::{
     BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor,
-    BindGroupLayoutEntry, BindingResource, BindingType, BlendComponent, BlendFactor, BlendOperation,
-    BlendState, ColorTargetState, ColorWrites, Device, Extent3d, FragmentState, MultisampleState,
-    Origin3d, PipelineCompilationOptions, PipelineLayoutDescriptor, PrimitiveState, Queue,
-    RenderPass, RenderPipeline, RenderPipelineDescriptor, Sampler, SamplerBindingType,
-    SamplerDescriptor, ShaderModuleDescriptor, ShaderSource, ShaderStages, TexelCopyBufferLayout,
-    TexelCopyTextureInfo, Texture, TextureAspect, TextureDescriptor, TextureDimension,
-    TextureFormat, TextureSampleType, TextureUsages, TextureView, TextureViewDescriptor,
-    TextureViewDimension, VertexState,
+    BindGroupLayoutEntry, BindingResource, BindingType, BlendComponent, BlendFactor,
+    BlendOperation, BlendState, ColorTargetState, ColorWrites, Device, Extent3d, FragmentState,
+    MultisampleState, Origin3d, PipelineCompilationOptions, PipelineLayoutDescriptor,
+    PrimitiveState, Queue, RenderPass, RenderPipeline, RenderPipelineDescriptor, Sampler,
+    SamplerBindingType, SamplerDescriptor, ShaderModuleDescriptor, ShaderSource, ShaderStages,
+    TexelCopyBufferLayout, TexelCopyTextureInfo, Texture, TextureAspect, TextureDescriptor,
+    TextureDimension, TextureFormat, TextureSampleType, TextureUsages, TextureView,
+    TextureViewDescriptor, TextureViewDimension, VertexState,
 };
-use crate::error::{AppError, AppResult};
 
 /// Textura de medio (imagen o video) lista en VRAM para la GPU.
 pub struct MediaTexture {
@@ -79,19 +79,17 @@ impl MediaPool {
         }
 
         let img = image::open(path_ref)
-            .map_err(|e| AppError::new(format!("Error abriendo imagen '{}': {e}", path_ref.display())))?
+            .map_err(|e| {
+                AppError::new(format!(
+                    "Error abriendo imagen '{}': {e}",
+                    path_ref.display()
+                ))
+            })?
             .to_rgba8();
 
         let (width, height) = img.dimensions();
-        let media = create_texture_from_rgba(
-            device,
-            queue,
-            pipeline,
-            &id,
-            width,
-            height,
-            &img.into_raw(),
-        )?;
+        let media =
+            create_texture_from_rgba(device, queue, pipeline, &id, width, height, &img.into_raw())?;
 
         let arc_media = Arc::new(media);
         self.textures.insert(id, Arc::clone(&arc_media));
@@ -116,15 +114,8 @@ impl MediaPool {
             .to_rgba8();
 
         let (width, height) = img.dimensions();
-        let media = create_texture_from_rgba(
-            device,
-            queue,
-            pipeline,
-            id,
-            width,
-            height,
-            &img.into_raw(),
-        )?;
+        let media =
+            create_texture_from_rgba(device, queue, pipeline, id, width, height, &img.into_raw())?;
 
         let arc_media = Arc::new(media);
         self.textures.insert(id.to_string(), Arc::clone(&arc_media));
@@ -169,15 +160,8 @@ impl MediaPool {
         }
 
         // Si no existe o cambió la resolución, crear nueva textura
-        let media = create_texture_from_rgba(
-            device,
-            queue,
-            pipeline,
-            id,
-            width,
-            height,
-            rgba_bytes,
-        )?;
+        let media =
+            create_texture_from_rgba(device, queue, pipeline, id, width, height, rgba_bytes)?;
         let arc_media = Arc::new(media);
         self.textures.insert(id.to_string(), Arc::clone(&arc_media));
         Ok(arc_media)

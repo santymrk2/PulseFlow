@@ -39,8 +39,12 @@ pub fn render_snapshot(
     let width = width.max(1);
     let height = height.max(1);
     let rgba = render_snapshot_rgba(scene, width, height)?;
-    image::save_buffer(&path, &rgba, width, height, image::ColorType::Rgba8)
-        .map_err(|e| AppError::new(format!("Error guardando snapshot '{}': {e}", path.display())))?;
+    image::save_buffer(&path, &rgba, width, height, image::ColorType::Rgba8).map_err(|e| {
+        AppError::new(format!(
+            "Error guardando snapshot '{}': {e}",
+            path.display()
+        ))
+    })?;
     Ok(path)
 }
 
@@ -50,14 +54,19 @@ pub fn render_snapshot(
 fn safe_file_name(file_name: &str) -> AppResult<String> {
     let name = file_name.trim();
     if name.is_empty() {
-        return Err(AppError::new("RENDER_SNAPSHOT: el nombre de archivo está vacío"));
+        return Err(AppError::new(
+            "RENDER_SNAPSHOT: el nombre de archivo está vacío",
+        ));
     }
     if name.contains('/') || name.contains('\\') || name.contains("..") {
         return Err(AppError::new(format!(
             "RENDER_SNAPSHOT: nombre de archivo inválido (se espera un nombre simple, sin ruta): {file_name}"
         )));
     }
-    if name.chars().any(|c| matches!(c, ':' | '*' | '?' | '"' | '<' | '>' | '|')) {
+    if name
+        .chars()
+        .any(|c| matches!(c, ':' | '*' | '?' | '"' | '<' | '>' | '|'))
+    {
         return Err(AppError::new(format!(
             "RENDER_SNAPSHOT: nombre de archivo con caracteres no permitidos: {file_name}"
         )));
@@ -85,12 +94,10 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
     }))
     .map_err(|e| AppError::new(format!("GPU no disponible para snapshot: {e}")))?;
 
-    let (device, queue) = pollster::block_on(adapter.request_device(
-        &wgpu::DeviceDescriptor {
-            label: Some("PulseFlow Snapshot Device"),
-            ..Default::default()
-        },
-    ))
+    let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
+        label: Some("PulseFlow Snapshot Device"),
+        ..Default::default()
+    }))
     .map_err(|e| AppError::new(format!("Device no disponible para snapshot: {e}")))?;
 
     // 2. Textura offscreen + render pass con limpieza a negro.
@@ -326,13 +333,16 @@ mod tests {
             lit_in_text_zone > 200,
             "El texto debe dejar píxeles no negros en su zona (hay {lit_in_text_zone})"
         );
-        assert_eq!(lit_outside, 0, "Fuera de la zona del texto todo debe ser negro");
+        assert_eq!(
+            lit_outside, 0,
+            "Fuera de la zona del texto todo debe ser negro"
+        );
 
         // El PNG generado se puede abrir y tiene las dimensiones pedidas.
         let dir = std::env::temp_dir().join("pulseflow-snapshot-test");
         std::fs::create_dir_all(&dir).expect("carpeta temporal");
-        let png_path = render_snapshot(&scene, width, height, &dir, "snapshot_texto")
-            .expect("guardar PNG");
+        let png_path =
+            render_snapshot(&scene, width, height, &dir, "snapshot_texto").expect("guardar PNG");
         assert_eq!(png_path, dir.join("snapshots").join("snapshot_texto.png"));
 
         let saved = image::open(&png_path).expect("abrir el PNG generado");
@@ -348,20 +358,32 @@ mod tests {
         let dir = std::env::temp_dir().join("pulseflow-snapshot-reject");
         std::fs::create_dir_all(&dir).expect("carpeta temporal");
 
-        for bad in ["../x", "/tmp/evil.png", "sub\\dir", "", "  ", "a..b", "c:/x"] {
+        for bad in [
+            "../x",
+            "/tmp/evil.png",
+            "sub\\dir",
+            "",
+            "  ",
+            "a..b",
+            "c:/x",
+        ] {
             let result = render_snapshot(&scene, 8, 8, &dir, bad);
-            assert!(
-                result.is_err(),
-                "El nombre '{bad}' debe ser rechazado"
-            );
+            assert!(result.is_err(), "El nombre '{bad}' debe ser rechazado");
         }
 
         // No debe haberse escrito nada fuera de <dir>/snapshots/.
-        assert!(!dir.join("x.png").exists(), "No debe escribirse fuera de snapshots/");
+        assert!(
+            !dir.join("x.png").exists(),
+            "No debe escribirse fuera de snapshots/"
+        );
         let Ok(entries) = std::fs::read_dir(dir.join("snapshots")) else {
             return; // ni siquiera se creó la carpeta: también válido
         };
-        assert_eq!(entries.count(), 0, "No debe haber archivos de nombres rechazados");
+        assert_eq!(
+            entries.count(),
+            0,
+            "No debe haber archivos de nombres rechazados"
+        );
     }
 
     #[test]
@@ -398,6 +420,9 @@ mod tests {
         let scene = text_scene();
         let blocks = scene.text_blocks();
         assert_eq!(blocks.len(), 1);
-        assert!(matches!(scene.items[0], SceneItem::Text(SceneTextItem { .. })));
+        assert!(matches!(
+            scene.items[0],
+            SceneItem::Text(SceneTextItem { .. })
+        ));
     }
 }
