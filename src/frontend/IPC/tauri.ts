@@ -45,6 +45,39 @@ const listenerPromises: { [channel: string]: Promise<void> } = {}
 // vez por nombre.
 const OUTPUT_COMMANDS = new Set(["TOGGLE_OUTPUTS", "RENDER_SCENE", "UPDATE_BOUNDS", "IDENTIFY_SCREENS"])
 
+// Resultado de un `invoke` directo al backend (F7.3). `ok: false` significa que
+// el comando falló en Rust o que no había backend Tauri; el frontend decide qué
+// mostrar. Se evita el `throw` para que ningún call site crítico quede sin
+// capturar (guardar, abrir salidas, renderizar escena).
+export type InvokeResult<T> = { ok: true; value: T } | { ok: false; error: string }
+
+// Invoca un comando Rust y devuelve el resultado o el error, sin lanzar.
+//
+// A diferencia de `window.api.send` (fire & forget, errores sólo en consola),
+// esta función devuelve el error al call site. Se usa sólo para las operaciones
+// críticas marcadas en el roadmap de F7: guardar (`SAVE`), abrir/cerrar salidas
+// (`TOGGLE_OUTPUTS`) y renderizar escena (`RENDER_SCENE`).
+export async function invokeCommand<T = void>(command: string, data?: any): Promise<InvokeResult<T>> {
+    if (!isTauri) return { ok: false, error: "not running inside Tauri" }
+
+    try {
+        const value = (await invoke(command, { data })) as T
+        return { ok: true, value }
+    } catch (error) {
+        const message = typeof error === "string" ? error : JSON.stringify(error)
+        console.warn(`[tauri] invoke("${command}") failed:`, error)
+
+        // Comandos de persistencia (F3.1): si fallan, los cambios del usuario no
+        // quedaron guardados → toast + estado de error, igual que en `send`.
+        if (PERSISTENCE_COMMANDS.has(command)) {
+            setStatus("error", 10)
+            newToast("toast.save_error")
+        }
+
+        return { ok: false, error: message }
+    }
+}
+
 // Comandos que escriben datos en disco (F3.1). Si fallan, los cambios del
 // usuario no quedaron guardados: además del warning se muestra un toast y el
 // indicador de estado pasa a "error" (deja el "saving" para poder reintentar).

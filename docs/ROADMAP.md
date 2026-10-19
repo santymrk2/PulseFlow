@@ -585,10 +585,13 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
 - [x] **F7.2 Respuesta inmediata para canales no implementados.** `tauri.ts` responde
   `undefined` al instante (sin esperar el timeout de 15 s) a los canales marcados
   *posponer*, con un único aviso en desarrollo.
-- [ ] **F7.3 `invokeCommand<T>()` tipado.** Helper en `tauri.ts` que devuelve
+- [x] **F7.3 `invokeCommand<T>()` tipado.** Helper en `tauri.ts` que devuelve
   `Promise<Result<T, AppError>>`; migrar a él **sólo** las operaciones críticas
   (abrir/cerrar salida, renderizar escena, guardar). `window.api` se mantiene.
 - [ ] **F7.4** Implementar los canales marcados *implementar*, de a uno por tarea.
+  Orden de prioridad: `IMPORT` → `IMPORT_FILES` → `URL` → `SAVE_IMAGE` →
+  `PDF_TO_IMAGE` → `IP` → `MAXIMIZED`. (`BACKUP` ya estaba hecho; `LANGUAGE`
+  se elimina del frontend; `SEND_MIDI` se saltea — requiere crate MIDI.)
 
 ---
 

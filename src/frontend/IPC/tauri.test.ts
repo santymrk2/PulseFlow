@@ -21,7 +21,7 @@ vi.mock("../utils/common", () => ({ newToast: vi.fn(), setStatus: vi.fn() }))
 }
 
 const { Main, MAIN } = await import("../../types/IPC/Main")
-const { setupTauriApi } = await import("./tauri")
+const { setupTauriApi, invokeCommand } = await import("./tauri")
 setupTauriApi()
 const api = (window as any).api
 
@@ -29,8 +29,11 @@ const api = (window as any).api
 // assertar "no se invocó el comando" hay que ignorar ese forward.
 const commandCalls = () => invokeMock.mock.calls.filter((call) => call[0] !== "LOG")
 
-beforeEach(() => {
+beforeEach(async () => {
     invokeMock.mockClear()
+    const common = await import("../utils/common")
+    vi.mocked(common.newToast).mockClear()
+    vi.mocked(common.setStatus).mockClear()
     setupTauriApi()
 })
 
@@ -90,5 +93,42 @@ describe("send (F7.2)", () => {
         expect(commandCalls()).toEqual([])
         expect(forA[0].data).toBeUndefined()
         expect(forB[0].data).toBeUndefined()
+    })
+})
+
+describe("invokeCommand (F7.3)", () => {
+    it("devuelve { ok: true, value } cuando el comando resuelve", async () => {
+        const result = await invokeCommand(Main.SAVE, { any: "data" })
+
+        expect(result).toEqual({ ok: true, value: "RUST_RESULT" })
+        expect(invokeMock).toHaveBeenCalledWith(Main.SAVE, { data: { any: "data" } })
+    })
+
+    it("devuelve { ok: false, error } sin lanzar cuando el comando falla", async () => {
+        invokeMock.mockRejectedValueOnce("comando roto")
+
+        const result = await invokeCommand("COMANDO_QUE_FALLA")
+
+        expect(result).toEqual({ ok: false, error: "comando roto" })
+    })
+
+    it("muestra el toast de persistencia si falla un comando de guardado", async () => {
+        const { newToast, setStatus } = await import("../utils/common")
+        invokeMock.mockRejectedValueOnce("disco lleno")
+
+        const result = await invokeCommand(Main.SAVE)
+
+        expect(result.ok).toBe(false)
+        expect(setStatus).toHaveBeenCalledWith("error", 10)
+        expect(newToast).toHaveBeenCalledWith("toast.save_error")
+    })
+
+    it("no muestra toast de persistencia para comandos no críticos", async () => {
+        const { newToast } = await import("../utils/common")
+        invokeMock.mockRejectedValueOnce("fallo cualquiera")
+
+        await invokeCommand("UN_COMANDO_CUALQUIERA")
+
+        expect(newToast).not.toHaveBeenCalledWith("toast.save_error")
     })
 })
