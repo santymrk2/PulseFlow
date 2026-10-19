@@ -26,7 +26,7 @@
     import Info from "./info/Info.svelte"
 
     const minHeight = 40
-    const topHeight = 40
+    const topHeight = 48 // Top.svelte
     let maxHeight = window.innerHeight - topHeight - ($os.platform === "win32" ? MENU_BAR_HEIGHT - 0.3 : 0)
     $: height = $drawer.height
 
@@ -354,7 +354,7 @@
     }
     .top::after {
         content: "";
-        background-color: var(--primary-lighter);
+        background-color: var(--border-color, var(--primary-lighter));
         position: absolute;
         top: 0;
         width: 100%;

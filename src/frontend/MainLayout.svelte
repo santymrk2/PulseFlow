@@ -168,11 +168,14 @@
     }
 
     .right :global(.border) {
-        border-top: 2px solid var(--border-color, var(--primary-lighter));
+        /* divisor entre secciones (referencia: RightPanel.tsx Divider: h-px mx-3) */
+        border-top: 1px solid var(--border-color, var(--primary-lighter));
+        margin: 0 12px;
     }
     .right.row :global(.border) {
         border: none;
-        border-inline-end: 2px solid var(--border-color, var(--primary-lighter));
+        border-inline-end: 1px solid var(--border-color, var(--primary-lighter));
+        margin: 12px 0;
         min-width: 50%;
     }
 

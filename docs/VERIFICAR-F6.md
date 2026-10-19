@@ -106,3 +106,48 @@ puede ajustar en un solo lugar:
 ### Resultado
 
 (acompletar al ejecutar los pasos)
+
+---
+
+## F6.4 — Layout de paneles
+
+Qué cambió (verificado con tests, sin GUI), comparando la referencia
+(`Topbar.tsx`, `LibraryPanel.tsx`, `RightPanel.tsx`, `Drawer.tsx`) con
+`MainLayout.svelte` y `components/main/Top.svelte`:
+
+- **Topbar:** altura 40px → **48px** (referencia `h-12`); el `box-shadow`
+  inferior se reemplazó por un separador real
+  `border-bottom: 1px solid var(--border-color, …)` (referencia `border-b`).
+  La altura vieja estaba duplicada en dos lugares que también se actualizaron:
+  `Drawer.svelte` (`topHeight`, para el alto máximo del drawer) y
+  `Resizeable.svelte` (altura disponible del panel central).
+- **Separadores del panel derecho:** los `.border` pasan de 2px a **1px** con
+  inset de 12px (referencia `Divider: h-px mx-3 bg-border`); en modo fila
+  (panel derecho ancho) el inset es vertical.
+- **Drawer:** el asa de redimensionar superior (`.top::after`) usa ahora
+  `var(--border-color, …)` en vez de `--primary-lighter` (referencia
+  `bg-border`).
+- Sin mover funcionalidad: no se tocó markup ni lógica, sólo estilos.
+
+### Pasos (verificación visual)
+
+1. Con la app corriendo (F6.2, paso 1), abrir la app en una ventana normal.
+2. **Topbar:** debe verse 8px más alta, con una línea fina inferior (sin
+   sombra difusa). Comprobar que los botones de página (Show/Edit/Stage) y el
+   de output siguen centrados y clicables, y que el indicador rojo de "unsaved"
+   (si no guardó) cubre toda la altura.
+3. **Panel derecho:** con una slide seleccionada, los separadores entre
+   "preview" y las secciones de herramientas deben ser finos (1px) y con
+   margen lateral; si el panel derecho es ancho (modo fila), el separador
+   vertical también.
+4. **Drawer:** arrastrar el borde superior del drawer para redimensionarlo al
+   máximo: no debe quedar tapada la topbar (48px). El asa superior debe verse
+   como una línea fina de color borde.
+5. **Márgenes:** en Settings (una pestaña con scroll), el panel central debe
+   ocupar exactamente el alto restante (no debe aparecer scroll vertical de la
+   ventana por el cambio de altura de la topbar).
+6. Anotar el resultado abajo.
+
+### Resultado
+
+(acompletar al ejecutar los pasos)
