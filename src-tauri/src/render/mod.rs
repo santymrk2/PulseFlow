@@ -24,6 +24,10 @@ pub mod video;
 #[cfg(test)]
 mod scene_contract;
 
+// F4.3: golden tests visuales del engine contra PNG de referencia.
+#[cfg(test)]
+mod golden;
+
 pub use screens::{
     close_all_screens, close_screen, emit_output_state, identify_screens, open_ids, open_screen,
     reposition_screen, set_audience_scene, set_scene_background, set_scene_text, set_stage_scene,

@@ -400,7 +400,33 @@ Va antes que las features nuevas porque Looks agrega datos persistidos.
   `src-tauri/src/render/scene_contract.rs` (nuevo),
   `src-tauri/tests/fixtures/scene/` (nuevo), `sceneGraph.ts`, `mod.rs`, `scene.rs`,
   `src/types/SceneGraph.ts`.
-- [ ] **F4.3 Golden tests visuales.**
+- [x] **F4.3 Golden tests visuales.** (verificado 2026-10-19: `cargo check` limpio y
+  `cargo test --lib` 50/50 —3 tests nuevos—. Sin cambios en el frontend: no hace falta
+  re-verificar `test:unit`/`test:svelte`/`build`.) Nuevo módulo `render/golden.rs`
+  (`#[cfg(test)]`, corre con `cargo test --lib` como el resto) con 3 escenas de
+  referencia de 640×360: texto blanco centrado, texto con contorno rojo y sombra azul
+  desplazada (las tres capas del motor de texto) y fondo de imagen. Los PNG de
+  referencia quedan commiteados en `src-tauri/tests/golden/scene/` y se regeneran con
+  `UPDATE_GOLDEN=1 cargo test --lib` (mismo patrón que `UPDATE_SCENE_FIXTURES` de F4.2).
+  La imagen de fondo no es un asset: el test escribe en la carpeta temporal un PNG
+  determinista de 4 cuadrantes (rojo/verde/azul/blanco), así el golden no arrastra
+  binarios de referencia y comprueba de paso que el fondo estirado (`fit: "fill"`)
+  ocupa su cuadrante con el color correcto.
+  Decisión, anotada a propósito: la comparación con el golden es **por celdas** (media
+  de color de bloques de 32 px, tolerancia ±40 por canal, hasta un 5% de celdas
+  distintas) y no píxel a píxel, porque el texto se rasteriza con las fuentes del
+  sistema y las `public/fonts/*.woff2` del repo **no** las carga `fontdb` 0.23 (no
+  tiene soporte de woff), de modo que los glifos no coinciden entre plataformas; una
+  comparación exacta sería frágil fuera de macOS. Lo fino que deja pasar esa tolerancia
+  lo cubren los sondeos estructurales de cada escena: hay texto en su zona y es
+  acromático (blanco) sin dejar píxeles fuera, aparecen el contorno rojo y la sombra
+  azul, y cada cuadrante del fondo conserva su color.
+  Aceptación comprobada de las dos formas (y revertida): pintar el texto de rojo falla
+  el sondeo estructural (`el texto debe ser blanco (0)`); cambiar la alineación de
+  centro a izquierda —dentro de la misma zona, así pasan los sondeos— falla el golden
+  (16 de 240 celdas difieren, se permiten 12).
+  *Archivos:* `src-tauri/src/render/golden.rs` (nuevo),
+  `src-tauri/tests/golden/scene/` (nuevo), `src-tauri/src/render/mod.rs`.
   *Pasos:* con `RENDER_SNAPSHOT` (F0.2), 3–4 escenas de referencia (texto centrado,
   texto con stroke/sombra, fondo imagen) comparadas con tolerancia.
 
