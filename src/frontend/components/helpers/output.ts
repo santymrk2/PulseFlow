@@ -7,6 +7,7 @@ import type { Resolution, Styles } from "../../../types/Settings"
 import type { Item, Layout, LayoutRef, Media, OutSlide, Show, Slide, SlideData, Template, TemplateSettings, Transition } from "../../../types/Show"
 import { AudioAnalyser } from "../../audio/audioAnalyser"
 import { requestMain, sendMain } from "../../IPC/main"
+import { invokeCommand } from "../../IPC/tauri"
 import {
     actions,
     activeFocus,
@@ -129,7 +130,11 @@ export function toggleOutputs(outputIds: string[] | null = null, options: { forc
 
     const autoPosition = options.force ? false : sortedOutputList.length === 1 && !sortedOutputList[0].forcedResolution?.width
 
-    send(OUTPUT, ["TOGGLE_OUTPUTS"], { outputs: sortedOutputList, state, autoStartup: options.autoStartup, autoPosition })
+    // F7.3: abrir/cerrar salidas es operación crítica → invokeCommand devuelve el
+    // error al call site en lugar de dejarlo sólo en la consola de la terminal.
+    void invokeCommand("TOGGLE_OUTPUTS", { outputs: sortedOutputList, state, autoStartup: options.autoStartup, autoPosition }).then((result) => {
+        if (!result.ok) console.error("[outputs] TOGGLE_OUTPUTS falló:", result.error)
+    })
 }
 
 export function toggleOutput(id: string) {

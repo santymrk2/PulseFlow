@@ -9,6 +9,7 @@ import { stopAllInteractions } from "../components/drawer/pages/interactions"
 import { clone, keysToID, removeDeleted } from "../components/helpers/array"
 import { isOutCleared, updateSyncedOutputs } from "../components/helpers/output"
 import { sendMain } from "../IPC/main"
+import { invokeCommand } from "../IPC/tauri"
 import {
     actionTags,
     actions,
@@ -248,7 +249,9 @@ export function save(closeWhenFinished = false, customTriggers: SaveActions = {}
 
     if (customTriggers.backup) newToast("settings.backup_started")
     // trigger toast before saving
-    setTimeout(() => sendMain(Main.SAVE, saveData))
+    // F7.3: guardar es operación crítica → invokeCommand devuelve el error (el
+    // toast de persistencia lo dispara el propio helper, igual que en `send`).
+    setTimeout(() => void invokeCommand(Main.SAVE, saveData))
 }
 
 export function getSyncedSettings(): { [key in SaveListSyncedSettings]: any } {

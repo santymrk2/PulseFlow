@@ -7,6 +7,7 @@ pub mod app;
 pub mod backup;
 pub mod blackmagic;
 pub mod files;
+pub mod import;
 pub mod media;
 pub mod midi;
 pub mod ndi;
