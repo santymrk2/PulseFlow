@@ -16,6 +16,7 @@
 import { invoke } from "@tauri-apps/api/core"
 import { listen, type UnlistenFn } from "@tauri-apps/api/event"
 import { OUTPUT } from "../../types/Channels"
+import { Main } from "../../types/IPC/Main"
 import { newToast, setStatus } from "../utils/common"
 
 type Receiver = (args: any, listenedId?: string) => void
@@ -49,8 +50,74 @@ const OUTPUT_COMMANDS = new Set(["TOGGLE_OUTPUTS", "RENDER_SCENE", "UPDATE_BOUND
 // indicador de estado pasa a "error" (deja el "saving" para poder reintentar).
 const PERSISTENCE_COMMANDS = new Set(["SAVE", "SET_STORE_VALUE", "SET_MEDIA_FOLDER_PATH", "UPDATE_DATA_PATH"])
 
+// Canales marcados *posponer* en el inventario de F7.1 (`PLAN.md`): no tienen
+// comando Rust y no están previstos a corto plazo (Now Playing, providers de
+// contenido, Spotify, lyrics, PPT externo, …). Para no castigar al frontend con
+// la espera de `requestMain` (15 s), `send` responde `undefined` al instante al
+// listener que hizo la petición. En desarrollo se avisa una sola vez por canal.
+const POSTPONED_COMMANDS = new Set<Main>([
+    Main.DEVICE_ID,
+    Main.GET_DEVICE_NAME,
+    Main.CHECK_RAM_USAGE,
+    Main.ACCESS_CAMERA_PERMISSION,
+    Main.ACCESS_MICROPHONE_PERMISSION,
+    Main.ACCESS_SCREEN_PERMISSION,
+    Main.GET_GRAPHICS_DEVICES,
+    Main.NOW_PLAYING,
+    Main.NOW_PLAYING_UNSET,
+    Main.OPEN_NOW_PLAYING,
+    Main.LOG_ERROR,
+    Main.SPELLCHECK,
+    Main.AUTO_UPDATE,
+    Main.DOWNLOAD_LESSONS_MEDIA,
+    Main.MEDIA_DOWNLOAD,
+    Main.MEDIA_IS_DOWNLOADED,
+    Main.MEDIA_FOLDER_COPY,
+    Main.GET_SIMILAR,
+    Main.CHECK_MEDIA_LICENSE,
+    Main.CAPTURE_SLIDE,
+    Main.PPT_TO_PDF,
+    Main.SLIDESHOW_GET_APPS,
+    Main.START_SLIDESHOW,
+    Main.PRESENTATION_CONTROL,
+    Main.SEND_MIDI,
+    Main.RECEIVE_MIDI,
+    Main.CLOSE_MIDI,
+    Main.TIMECODE_AUDIO_DATA,
+    Main.TIMECODE_STATUS,
+    Main.GET_LYRICS,
+    Main.SEARCH_LYRICS,
+    Main.RECORDER,
+    Main.API_TRIGGER,
+    Main.EMIT_OSC,
+    Main.CLOUD_SYNC,
+    Main.RESTORE_CLOUD_BACKUP,
+    Main.GET_CONVERSATION_ID,
+    Main.SEND_SOCKET_MESSAGE,
+    Main.PROVIDER_LOAD_SERVICES,
+    Main.PROVIDER_CONNECTIONS,
+    Main.PROVIDER_DISCONNECT,
+    Main.PROVIDER_STARTUP_LOAD,
+    Main.PROVIDER_FETCH_FOLDERS,
+    Main.PCO_LIVE_GET,
+    Main.PCO_FETCH_SERVICE_TREE,
+    Main.PCO_LOAD_PLAN,
+    Main.ONSTAGE_LOAD_SERVICE,
+    Main.ONSTAGE_GET_TEAMS,
+    Main.ONSTAGE_SWITCH_TEAM,
+    Main.GET_CONTENT_PROVIDERS,
+    Main.GET_CONTENT_LIBRARY,
+    Main.GET_PROVIDER_CONTENT,
+    Main.SPOTIFY_GET_STATE,
+    Main.SPOTIFY_COMMAND,
+    Main.FFMPEG_DOWNLOAD,
+    Main.ENCODER_DETECT,
+    Main.SET_RTMP_ENCODER
+])
+
 // Comandos ya avisados en desarrollo, para no repetir el warning en cada envío.
 const warnedOutputCommands = new Set<string>()
+const warnedPostponedCommands = new Set<string>()
 
 const isTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window
 
@@ -105,6 +172,19 @@ async function send(channel: string, data?: any, id?: string) {
     // invocar. Sin esto, un `receive()` seguido de un `send()` inmediato (p. ej.
     // el handshake STARTUP/READY) puede perder el evento de respuesta.
     await Promise.all(Object.values(listenerPromises))
+
+    // Canal pospuesto (F7.2): se responde `undefined` al instante, sin invocar y
+    // sin esperar el timeout de `requestMain` (15 s). Va después del `await`
+    // anterior porque `requestMain` registra su listener de forma síncrona
+    // apenas retorna el control de este `send`.
+    if (POSTPONED_COMMANDS.has(command as Main)) {
+        if (!warnedPostponedCommands.has(command)) {
+            warnedPostponedCommands.add(command)
+            if (import.meta.env.DEV) console.warn(`[tauri] canal pospuesto: "${command}" → respuesta inmediata undefined`)
+        }
+        dispatch(channel, { channel: command, data: undefined }, id)
+        return
+    }
 
     invoke(command, { data: payload })
         .then((result) => dispatch(channel, { channel: command, data: result }, id))

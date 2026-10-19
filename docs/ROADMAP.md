@@ -582,7 +582,7 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   `SAVE_IMAGE`, `PDF_TO_IMAGE`, `SEND_MIDI`, `IP`, `MAXIMIZED`.
   *(Resultado en `PLAN.md`: 7 a implementar — `BACKUP` ya estaba hecho —, 12 a
   eliminar, ~58 pospuestos.)*
-- [ ] **F7.2 Respuesta inmediata para canales no implementados.** `tauri.ts` responde
+- [x] **F7.2 Respuesta inmediata para canales no implementados.** `tauri.ts` responde
   `undefined` al instante (sin esperar el timeout de 15 s) a los canales marcados
   *posponer*, con un único aviso en desarrollo.
 - [ ] **F7.3 `invokeCommand<T>()` tipado.** Helper en `tauri.ts` que devuelve
