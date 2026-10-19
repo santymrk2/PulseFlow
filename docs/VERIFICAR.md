@@ -204,6 +204,33 @@ cosmético en la UI.
 ## F3 — Transiciones GPU (WGSL)
 A completar: comprobar transiciones suaves en la misma pantalla, sin parpadeo, a 60 fps.
 
+## F4.4 — Transiciones (crossfade y corte)
+Verificado 2026-10-19 (automatizado): `cargo check` limpio y `cargo test --lib` 53/53
+(3 tests nuevos sobre el motor de doble buffer: el corte muestra siempre el buffer
+nuevo aunque el progreso sea 0; el crossfade mezcla los dos buffers —0 = anterior,
+0,5 ≈ (128, 0, 128), 1 = nuevo—; y `trigger` sólo pide copiar el fotograma anterior
+cuando la transición es real). No se tocó `src/`, así que `test:unit`/`test:svelte`/
+`build` no cambian.
+
+La verificación visual (la transición animada en una ventana real) necesita GUI.
+Prueba manual con `bun run dev:tauri` y **2 monitores**:
+
+1. Settings → Outputs → dar un estilo de audiencia a la salida "Primary" y ponerla en
+   vivo. Abrir una canción y pasar a la siguiente slide.
+2. Con la transición de la salida en **crossfade** (duración > 0 ms): el cambio de
+   slide debe ser un fundido suave entre la slide anterior y la nueva, sin parpadeo ni
+   fotogramas negros, a la frecuencia del monitor.
+3. Con la transición en **corte** (tipo "none" o duración 0 ms): el cambio debe ser
+   instantáneo (sin fundido).
+4. Cambiar algo ajeno a la salida (p. ej. mover un ajuste de la UI de control, o abrir
+   una segunda salida) **no** debe producir un fundido en la primera: el engine sólo
+   dispara transición si el contenido visible cambió de verdad.
+5. Repetir en **Windows**.
+
+### Resultado (pendiente de ejecutar por el usuario)
+- macOS: 
+- Windows: 
+
 ## F4 — NDI directo desde framebuffer GPU
 A completar: verificar que START_NDI_NATIVE_FEED inicia la captura y que el feed está activo.
 

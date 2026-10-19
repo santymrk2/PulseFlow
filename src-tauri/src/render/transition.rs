@@ -1,9 +1,17 @@
 //! Motor de transiciones de GPU por hardware (Doble Buffer y Shaders WGSL).
 //!
-//! Soporta:
-//! - Doble Buffer (Texture A y Texture B) para swapchain suave.
-//! - Efectos en GPU: Crossfade, Dip to Black, Wipe y Push.
-//! - Curvas de aceleración (Easing) computadas directamente en hardware.
+//! Uso desde el bucle de render (F4.4):
+//! 1. Se dibuja la escena actual en `view_b` (el buffer "hacia").
+//! 2. Al llegar una escena nueva, si `trigger` devuelve `true` se copia `texture_b`
+//!    (la escena anterior) a `texture_a` (el buffer "desde") antes de dibujar la nueva.
+//! 3. `render` compone `texture_a` → `texture_b` según `progress` sobre el framebuffer
+//!    final (el shader recibe `a` como origen y `b` como destino).
+//!
+//! El corte (`None` o duración 0) no copia ni anima: `progress` es 1 desde el inicio y
+//! el shader muestra directamente `texture_b`.
+//!
+//! - Efectos en GPU: crossfade, dip to black, wipe y push.
+//! - Curvas de aceleración (easing) computadas directamente en hardware.
 
 use std::time::{Duration, Instant};
 use wgpu::{
@@ -124,7 +132,6 @@ pub struct TransitionEngine {
     pub bind_group: BindGroup,
     pub width: u32,
     pub height: u32,
-    pub active_is_b: bool,
     pub active_transition: ActiveTransition,
 }
 
@@ -268,7 +275,6 @@ impl TransitionEngine {
             bind_group,
             width,
             height,
-            active_is_b: false,
             active_transition: ActiveTransition::new(),
         }
     }
@@ -299,16 +305,25 @@ impl TransitionEngine {
         self.view_b = view_b;
     }
 
-    /// Comienza una nueva transición intercambiando el buffer objetivo.
-    pub fn trigger(&mut self, trans_type: TransitionType, duration_ms: u64, easing: EasingType) {
+    /// Comienza una transición. Devuelve `true` si de verdad hay que animarla (una
+    /// transición con duración distinta de `None`): en ese caso el bucle debe copiar
+    /// el fotograma anterior a la textura A antes de dibujar el nuevo en B. Un corte
+    /// (`None` o duración 0) devuelve `false`: el resultado ya es el buffer nuevo.
+    pub fn trigger(&mut self, trans_type: TransitionType, duration_ms: u64, easing: EasingType) -> bool {
         self.active_transition.start(trans_type, duration_ms, easing);
-        self.active_is_b = !self.active_is_b;
+        self.active_transition.is_active
     }
 
     /// Dibuja la composición de la transición sobre el framebuffer final de la ventana.
     pub fn render(&mut self, queue: &Queue, render_pass: &mut RenderPass<'_>) {
         let progress = self.active_transition.current_progress();
+        self.render_with_progress(queue, render_pass, progress);
+    }
 
+    /// Escribe los uniforms y dibuja el quad de composición con un `progress` dado
+    /// (0 = `texture_a`, 1 = `texture_b`). Separado de `render` para poder fijar el
+    /// progreso en los tests sin depender del reloj.
+    fn render_with_progress(&mut self, queue: &Queue, render_pass: &mut RenderPass<'_>, progress: f32) {
         let uniforms = TransitionUniforms {
             progress,
             transition_type: self.active_transition.transition_type as u32,
@@ -342,7 +357,10 @@ fn create_target_texture(
         sample_count: 1,
         dimension: TextureDimension::D2,
         format,
-        usage: TextureUsages::RENDER_ATTACHMENT | TextureUsages::TEXTURE_BINDING | TextureUsages::COPY_SRC,
+        usage: TextureUsages::RENDER_ATTACHMENT
+            | TextureUsages::TEXTURE_BINDING
+            | TextureUsages::COPY_SRC
+            | TextureUsages::COPY_DST,
         view_formats: &[],
     });
 
@@ -380,4 +398,218 @@ fn create_transition_bind_group(
             },
         ],
     })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const SIZE: u32 = 64;
+    /// Formato sin conversión sRGB: los bytes escritos se leen tal cual, así el test
+    /// puede comparar los colores del crossfade directamente.
+    const FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
+
+    fn device() -> (Device, Queue) {
+        let instance = wgpu::Instance::default();
+        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
+            power_preference: wgpu::PowerPreference::HighPerformance,
+            compatible_surface: None,
+            force_fallback_adapter: false,
+            ..Default::default()
+        }))
+        .expect("adaptador GPU");
+        pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
+            label: Some("Transition Test Device"),
+            ..Default::default()
+        }))
+        .expect("device de prueba")
+    }
+
+    fn solid() -> (Device, Queue, TransitionEngine) {
+        let (device, queue) = device();
+        let engine = TransitionEngine::new(&device, FORMAT, SIZE, SIZE);
+        (device, queue, engine)
+    }
+
+    /// Rellena una textura con un color sólido.
+    fn fill(queue: &Queue, texture: &Texture, color: [u8; 4]) {
+        let data: Vec<u8> = color.iter().copied().cycle().take((SIZE * SIZE * 4) as usize).collect();
+        queue.write_texture(
+            texture.as_image_copy(),
+            &data,
+            wgpu::TexelCopyBufferLayout {
+                offset: 0,
+                bytes_per_row: Some(SIZE * 4),
+                rows_per_image: Some(SIZE),
+            },
+            Extent3d {
+                width: SIZE,
+                height: SIZE,
+                depth_or_array_layers: 1,
+            },
+        );
+    }
+
+    /// Compone la transición en una textura offscreen y devuelve el color del píxel
+    /// central.
+    fn composite_center(
+        device: &Device,
+        queue: &Queue,
+        engine: &mut TransitionEngine,
+        trans_type: TransitionType,
+        easing: EasingType,
+        progress: f32,
+    ) -> [u8; 4] {
+        engine.active_transition.transition_type = trans_type;
+        engine.active_transition.easing = easing;
+
+        let target = device.create_texture(&TextureDescriptor {
+            label: Some("Transition Test Target"),
+            size: Extent3d {
+                width: SIZE,
+                height: SIZE,
+                depth_or_array_layers: 1,
+            },
+            mip_level_count: 1,
+            sample_count: 1,
+            dimension: TextureDimension::D2,
+            format: FORMAT,
+            usage: TextureUsages::RENDER_ATTACHMENT | TextureUsages::COPY_SRC,
+            view_formats: &[],
+        });
+        let view = target.create_view(&TextureViewDescriptor::default());
+
+        let mut encoder = device.create_command_encoder(&wgpu::CommandEncoderDescriptor {
+            label: Some("Transition Test Encoder"),
+        });
+        {
+            let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: Some("Transition Test Pass"),
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &view,
+                    resolve_target: None,
+                    ops: wgpu::Operations {
+                        load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
+                        store: wgpu::StoreOp::Store,
+                    },
+                    depth_slice: None,
+                })],
+                depth_stencil_attachment: None,
+                timestamp_writes: None,
+                occlusion_query_set: None,
+                multiview_mask: None,
+            });
+            engine.render_with_progress(queue, &mut pass, progress);
+        }
+
+        let bytes_per_row = SIZE * 4; // múltiplo del alineamiento de wgpu
+        let buffer = device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("Transition Test Readback"),
+            size: u64::from(bytes_per_row) * u64::from(SIZE),
+            usage: wgpu::BufferUsages::COPY_DST | wgpu::BufferUsages::MAP_READ,
+            mapped_at_creation: false,
+        });
+        encoder.copy_texture_to_buffer(
+            target.as_image_copy(),
+            wgpu::TexelCopyBufferInfo {
+                buffer: &buffer,
+                layout: wgpu::TexelCopyBufferLayout {
+                    offset: 0,
+                    bytes_per_row: Some(bytes_per_row),
+                    rows_per_image: Some(SIZE),
+                },
+            },
+            Extent3d {
+                width: SIZE,
+                height: SIZE,
+                depth_or_array_layers: 1,
+            },
+        );
+        queue.submit([encoder.finish()]);
+
+        let slice = buffer.slice(..);
+        let (tx, rx) = std::sync::mpsc::channel();
+        slice.map_async(wgpu::MapMode::Read, move |result| {
+            let _ = tx.send(result);
+        });
+        device.poll(wgpu::PollType::wait_indefinitely()).expect("poll");
+        rx.recv().expect("mapeo listo").expect("mapeo ok");
+
+        let mapped = slice.get_mapped_range().expect("rango mapeado");
+        let center = ((SIZE / 2) * bytes_per_row + (SIZE / 2) * 4) as usize;
+        let pixel = [mapped[center], mapped[center + 1], mapped[center + 2], mapped[center + 3]];
+        drop(mapped);
+        buffer.unmap();
+        pixel
+    }
+
+    fn assert_near(actual: [u8; 4], expected: [u8; 4], what: &str) {
+        for c in 0..3 {
+            let diff = i32::from(actual[c]) - i32::from(expected[c]);
+            assert!(diff.abs() <= 10, "{what}: {actual:?} vs {expected:?}");
+        }
+    }
+
+    #[test]
+    fn corte_muestra_el_buffer_nuevo_aunque_el_progreso_sea_cero() {
+        let (device, queue, mut engine) = solid();
+        fill(&queue, &engine.texture_a, [255, 0, 0, 255]); // anterior: rojo
+        fill(&queue, &engine.texture_b, [0, 0, 255, 255]); // nuevo: azul
+
+        // Con corte (`None`) el shader ignora el progreso y muestra siempre `b`.
+        let center = composite_center(
+            &device,
+            &queue,
+            &mut engine,
+            TransitionType::None,
+            EasingType::Linear,
+            0.0,
+        );
+        assert_near(center, [0, 0, 255, 255], "corte debe mostrar el buffer nuevo");
+    }
+
+    #[test]
+    fn crossfade_mezcla_los_dos_buffers() {
+        let (device, queue, mut engine) = solid();
+        fill(&queue, &engine.texture_a, [255, 0, 0, 255]); // anterior: rojo
+        fill(&queue, &engine.texture_b, [0, 0, 255, 255]); // nuevo: azul
+
+        let at = |engine: &mut TransitionEngine, progress: f32| {
+            composite_center(
+                &device,
+                &queue,
+                engine,
+                TransitionType::Crossfade,
+                EasingType::Linear,
+                progress,
+            )
+        };
+
+        assert_near(at(&mut engine, 0.0), [255, 0, 0, 255], "progreso 0 = buffer anterior");
+        assert_near(at(&mut engine, 1.0), [0, 0, 255, 255], "progreso 1 = buffer nuevo");
+
+        // Al 50% el crossfade mezcla rojo y azul: (127, 0, 127).
+        let middle = at(&mut engine, 0.5);
+        assert!(
+            (i32::from(middle[0]) - 128).abs() <= 10
+                && middle[1] <= 10
+                && (i32::from(middle[2]) - 128).abs() <= 10,
+            "el crossfade al 50% debe mezclar los dos buffers: {middle:?}"
+        );
+    }
+
+    #[test]
+    fn trigger_indica_si_hace_falta_copiar_el_buffer_anterior() {
+        let (_device, _queue, mut engine) = solid();
+
+        // Crossfade con duración: hay que animar y copiar el fotograma anterior.
+        assert!(engine.trigger(TransitionType::Crossfade, 300, EasingType::EaseInOut));
+        assert!(engine.active_transition.is_active);
+        assert!(engine.active_transition.current_progress() < 1.0);
+
+        // Corte: no hay nada que copiar ni animar, el resultado ya es el buffer nuevo.
+        assert!(!engine.trigger(TransitionType::None, 300, EasingType::EaseInOut));
+        assert!(!engine.active_transition.is_active);
+        assert_eq!(engine.active_transition.current_progress(), 1.0);
+    }
 }

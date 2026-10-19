@@ -154,9 +154,14 @@ mod tests {
             1080,
         );
 
-        engine.trigger(transition::TransitionType::Crossfade, 500, transition::EasingType::EaseInOut);
+        // Crossfade con duración: hay que animar y copiar el fotograma anterior.
+        assert!(engine.trigger(transition::TransitionType::Crossfade, 500, transition::EasingType::EaseInOut));
         assert!(engine.active_transition.is_active);
         assert_eq!(engine.active_transition.transition_type, transition::TransitionType::Crossfade);
+
+        // Corte: no hay nada que copiar ni animar, el resultado ya es el buffer nuevo.
+        assert!(!engine.trigger(transition::TransitionType::None, 500, transition::EasingType::EaseInOut));
+        assert!(!engine.active_transition.is_active);
     }
 
     #[test]

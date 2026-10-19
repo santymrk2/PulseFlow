@@ -135,6 +135,16 @@ pub struct ScreenScene {
     pub stage: StageData,
 }
 
+/// Petición de transición pendiente de una pantalla. La escribe el hilo que aplica
+/// la escena (`RENDER_SCENE`) y la consume el bucle de render (F4.4), que es quien
+/// tiene la `TransitionEngine`.
+#[derive(Debug, Clone, Copy)]
+struct TransitionRequest {
+    transition_type: super::transition::TransitionType,
+    duration_ms: u64,
+    easing: super::transition::EasingType,
+}
+
 /// Pantalla abierta: ventana + hilo de render + video de fondo.
 struct ScreenHandle {
     kind: ScreenKind,
@@ -143,6 +153,8 @@ struct ScreenHandle {
     thread: Option<JoinHandle<()>>,
     video_frame: Arc<Mutex<Option<VideoFrame>>>,
     video: Option<(String, VideoPlayback)>,
+    /// Última transición pedida (la toma el bucle al dibujar el próximo frame).
+    transition: Arc<Mutex<Option<TransitionRequest>>>,
 }
 
 impl ScreenHandle {
@@ -357,6 +369,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
     let window = Arc::new(window);
     let scene = state.scene(&config.id);
     let video_frame: Arc<Mutex<Option<VideoFrame>>> = Arc::new(Mutex::new(None));
+    let transition: Arc<Mutex<Option<TransitionRequest>>> = Arc::new(Mutex::new(None));
     let running = Arc::new(AtomicBool::new(true));
 
     let thread = match spawn_render_loop(
@@ -365,6 +378,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
         Arc::clone(&scene),
         Arc::clone(&video_frame),
         Arc::clone(&running),
+        Arc::clone(&transition),
     ) {
         Ok(thread) => thread,
         Err(err) => {
@@ -397,6 +411,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
         thread: Some(thread),
         video_frame,
         video: None,
+        transition,
     };
 
     // Arrancar el video de fondo si la escena actual ya tiene uno.
@@ -556,12 +571,14 @@ fn open_identify_window(app: &AppHandle, number: &str, monitor: &Monitor) -> App
     let running = Arc::new(AtomicBool::new(true));
     let video_frame: Arc<Mutex<Option<VideoFrame>>> = Arc::new(Mutex::new(None));
 
+    // La ventana de identificación no transiciona: nace con su contenido.
     let render_thread = match spawn_render_loop(
         Arc::clone(&window),
         ScreenKind::Audience,
         Arc::clone(&scene),
         video_frame,
         Arc::clone(&running),
+        Arc::new(Mutex::new(None)),
     ) {
         Ok(thread) => thread,
         Err(err) => {
@@ -631,8 +648,23 @@ pub fn set_audience_scene(
     text: Vec<TextBlock>,
     background: Option<BackgroundMedia>,
 ) -> AppResult<()> {
+    let state = manager(app)?;
+    // El frontend reenvía la escena ante cualquier cambio de `outputs`, no sólo al
+    // cambiar de diapositiva; por eso sólo se pide transición si el contenido visible
+    // cambió de verdad (F4.4).
+    let changed = {
+        let scene = state.scene(id);
+        let current = scene.read_safe();
+        current.text != text || current.background != background
+    };
+
     set_scene_text(app, id, text)?;
-    set_scene_background(app, id, background)
+    set_scene_background(app, id, background)?;
+
+    if changed {
+        request_transition(&state, id);
+    }
+    Ok(())
 }
 
 /// Reemplaza sólo el texto de la escena de una salida.
@@ -664,8 +696,14 @@ pub fn set_scene_background(
 
 /// Reemplaza los datos de una pantalla de stage.
 pub fn set_stage_scene(app: &AppHandle, id: &str, data: StageData) -> AppResult<()> {
-    let scene = manager(app)?.scene(id);
+    let state = manager(app)?;
+    let scene = state.scene(id);
+    let changed = scene.read_safe().stage != data;
     scene.write_safe().stage = data;
+
+    if changed {
+        request_transition(&state, id);
+    }
     Ok(())
 }
 
@@ -686,6 +724,19 @@ pub fn set_transition_config(
     };
     *cfg = (trans_type, duration_ms, easing);
     Ok(())
+}
+
+/// Pide al bucle de la pantalla `id` una transición con la config global actual.
+/// Sólo se llama cuando el contenido renderizable cambió (ver `set_audience_scene`).
+fn request_transition(state: &ScreenManager, id: &str) {
+    let (transition_type, duration_ms, easing) = *state.transition_config.lock_safe();
+    if let Some(handle) = state.screens.lock_safe().get(id) {
+        *handle.transition.lock_safe() = Some(TransitionRequest {
+            transition_type,
+            duration_ms,
+            easing,
+        });
+    }
 }
 
 /// Arranca, mantiene o detiene el video de fondo de una pantalla según el fondo actual.
@@ -735,6 +786,7 @@ fn spawn_render_loop(
     scene: Arc<RwLock<ScreenScene>>,
     video_frame: Arc<Mutex<Option<VideoFrame>>>,
     running: Arc<AtomicBool>,
+    pending_transition: Arc<Mutex<Option<TransitionRequest>>>,
 ) -> AppResult<JoinHandle<()>> {
     let instance = wgpu::Instance::default();
     let surface = instance
@@ -768,6 +820,13 @@ fn spawn_render_loop(
             let background_pipeline = BackgroundPipeline::new(&device, config.format);
             let mut text_engine = TextEngine::new(&device, &queue, config.format);
             let mut media_pool = MediaPool::new();
+            // F4.4: doble buffer offscreen donde se compone la escena + la transición.
+            let mut transition_engine = super::transition::TransitionEngine::new(
+                &device,
+                config.format,
+                config.width,
+                config.height,
+            );
             let mut failed_images: HashSet<String> = HashSet::new();
 
             while running.load(Ordering::Relaxed) {
@@ -781,6 +840,7 @@ fn spawn_render_loop(
                         config.width = current.width;
                         config.height = current.height;
                         surface.configure(&device, &config);
+                        transition_engine.resize(&device, config.format, config.width, config.height);
                     }
                 }
 
@@ -817,11 +877,37 @@ fn spawn_render_loop(
                     label: Some("PulseFlow Screen Encoder"),
                 });
 
+                // F4.4: si llegó una escena nueva, se dispara la transición. Sólo hay
+                // que copiar el fotograma anterior cuando de verdad se anima (crossfade
+                // y demás); el corte muestra el buffer nuevo sin copiar nada.
+                let copy_previous = match pending_transition.lock_safe().take() {
+                    Some(request) => transition_engine.trigger(
+                        request.transition_type,
+                        request.duration_ms,
+                        request.easing,
+                    ),
+                    None => false,
+                };
+                if copy_previous {
+                    let size = wgpu::Extent3d {
+                        width: transition_engine.width,
+                        height: transition_engine.height,
+                        depth_or_array_layers: 1,
+                    };
+                    encoder.copy_texture_to_texture(
+                        transition_engine.texture_b.as_image_copy(),
+                        transition_engine.texture_a.as_image_copy(),
+                        size,
+                    );
+                }
+
                 {
+                    // La escena se dibuja en el buffer B; la transición compone A -> B
+                    // sobre la superficie de la ventana.
                     let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
                         label: Some("PulseFlow Screen Pass"),
                         color_attachments: &[Some(wgpu::RenderPassColorAttachment {
-                            view: &view,
+                            view: &transition_engine.view_b,
                             resolve_target: None,
                             ops: wgpu::Operations {
                                 load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
@@ -883,6 +969,28 @@ fn spawn_render_loop(
                     if !blocks.is_empty() {
                         let _ = text_engine.render(&device, &queue, &mut pass, w, h, &blocks);
                     }
+                }
+
+                // Compone la transición (o, sin transición activa, copia el buffer B,
+                // que ya tiene la escena actual) sobre la superficie de la ventana.
+                {
+                    let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                        label: Some("PulseFlow Transition Pass"),
+                        color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                            view: &view,
+                            resolve_target: None,
+                            ops: wgpu::Operations {
+                                load: wgpu::LoadOp::Clear(wgpu::Color::BLACK),
+                                store: wgpu::StoreOp::Store,
+                            },
+                            depth_slice: None,
+                        })],
+                        depth_stencil_attachment: None,
+                        timestamp_writes: None,
+                        occlusion_query_set: None,
+                        multiview_mask: None,
+                    });
+                    transition_engine.render(&queue, &mut pass);
                 }
 
                 queue.submit([encoder.finish()]);

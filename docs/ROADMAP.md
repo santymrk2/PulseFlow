@@ -432,8 +432,33 @@ Va antes que las features nuevas porque Looks agrega datos persistidos.
 
 Después, ampliar el contrato **de a un tipo por tarea** (cada una con fixture + golden):
 
-- [ ] **F4.4** Transiciones: conectar `render/transition.rs` al bucle (hoy existe pero
-  no se usa) — crossfade y corte.
+- [x] **F4.4 Transiciones: conectar `render/transition.rs` al bucle.** (verificado
+  2026-10-19: `cargo check` limpio y `cargo test --lib` 53/53 —3 tests nuevos de
+  transición—. No se tocó `src/`, así que `test:unit`/`test:svelte`/`build` no cambian.
+  La comprobación visual end-to-end en la app queda pendiente de la sesión gráfica: se
+  documenta el procedimiento en `docs/VERIFICAR.md`.)
+  El motor de doble buffer sigue el contrato que describe su cabecera: la escena se
+  dibuja siempre en `view_b`; al llegar una escena nueva, si `trigger` devuelve `true`
+  (transición real, no corte) se copia `texture_b` → `texture_a` antes de dibujar, y
+  `render` compone `a` → `b` sobre la superficie de la ventana según el progreso. Con
+  corte (`None` o duración 0) no se copia: `progress` es 1 desde el inicio y el shader
+  muestra `b` (la escena nueva). `create_target_texture` ahora incluye `COPY_DST` para
+  poder usar las texturas como destino de la copia.
+  El bucle (`spawn_render_loop`) recibe una petición `TransitionRequest` por pantalla
+  (`ScreenHandle.transition`), la consume en cada frame y redimensiona el motor junto
+  con la superficie (`resize`). La ventana de identificación no transiciona (se le pasa
+  un `None`), porque nace con su contenido.
+  Decisión, anotada a propósito: la transición se pide **sólo cuando el contenido
+  renderizable cambia de verdad** (`set_audience_scene` compara texto y fondo;
+  `set_stage_scene` compara `StageData`). El frontend reenvía la escena ante *cualquier*
+  cambio del store `outputs`, no sólo al cambiar de diapositiva; sin esta deducción del
+  lado del engine habría fundidos espurios ante cambios ajenos a la salida. Para eso se
+  derivó `PartialEq` en `TextBlock`, `TextSpan`, `OverlayItem` y `StageData` (tipos de
+  datos planos). Queda fuera de F4.4 comparar overlays (llegan en F4.6), así que un
+  cambio que sólo afecte a overlays no dispara transición todavía.
+  *Archivos:* `src-tauri/src/render/transition.rs`,
+  `src-tauri/src/render/screens.rs`, `src-tauri/src/render/types.rs`,
+  `src-tauri/src/render/mod.rs`.
 - [ ] **F4.5** Items de imagen/medio dentro de la slide.
 - [ ] **F4.6** Overlays (texto e imagen) como capa propia.
 - [ ] **F4.7** Timers/relojes (el engine dibuja el valor que manda el frontend).

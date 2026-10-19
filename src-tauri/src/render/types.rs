@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 
 /// Bloque de texto para proyectar en pantalla.
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TextBlock {
     /// Contenido textual (canción, versículo, título, notas).
@@ -95,7 +95,7 @@ impl Default for TextBlock {
 
 /// Tramo de texto con estilo propio dentro de un `TextBlock`.
 /// Los campos ausentes heredan el estilo del bloque.
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct TextSpan {
     pub text: String,
@@ -162,7 +162,7 @@ fn default_aspect_mode() -> u32 {
 }
 
 /// Elemento de superposición superior (reloj, avisos, tercios inferiores).
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct OverlayItem {
     pub id: String,
@@ -187,7 +187,7 @@ fn default_overlay_font_size() -> f32 {
 }
 
 /// Datos para el Stage Display (retorno de escenario para músicos/pastor).
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct StageData {
     /// Texto de la diapositiva actual.
