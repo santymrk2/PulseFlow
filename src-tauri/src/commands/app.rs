@@ -61,3 +61,25 @@ pub fn URL(app: AppHandle, data: String) -> AppResult<()> {
     let _ = app.opener().open_url(data, None::<&str>);
     Ok(())
 }
+
+/// `IP`: direcciones IP locales del equipo (equivale a `Main.IP`).
+#[tauri::command]
+pub fn IP() -> Vec<String> {
+    let mut ips = Vec::new();
+    // Truco estándar: conectar un socket UDP a una dirección pública (sin enviar
+    // datos) y leer la dirección local asignada por el SO.
+    if let Ok(socket) = std::net::UdpSocket::bind("0.0.0.0:0") {
+        if socket.connect("8.8.8.8:80").is_ok() {
+            if let Ok(addr) = socket.local_addr() {
+                let ip = addr.ip().to_string();
+                if !ip.is_empty() && ip != "0.0.0.0" {
+                    ips.push(ip);
+                }
+            }
+        }
+    }
+    if ips.is_empty() {
+        ips.push("localhost".to_string());
+    }
+    ips
+}
