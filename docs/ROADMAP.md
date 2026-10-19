@@ -632,12 +632,11 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   se elimina del frontend; `SEND_MIDI` se saltea — requiere crate MIDI.)
   Hecho: `IMPORT`/`IMPORT_FILES`, `URL`, `SAVE_IMAGE`, `IP`, `MAXIMIZED`
   (integrados 2026-10-19). `PDF_TO_IMAGE` quedó como **no-op** → ver F7.5.
-- [ ] **F7.5 `PDF_TO_IMAGE` real.** El comando devuelve `[]` y no emite nada, así que
-  convertir un PDF en slides (`PdfPreview.svelte:185`, `responsesMain.ts:556`) no hace
-  nada. Revisar qué esperaba el frontend en Electron (eventos `PDF_IMPORT_PROGRESS` /
-  `IMAGES_TO_SHOW` o rutas de imágenes) y elegir: (a) renderizar las páginas con
-  pdf.js en el webview y guardarlas con `SAVE_IMAGE`, o (b) hacerlo en Rust con
-  `pdfium-render` (dependencia pesada: preguntar antes). Recomendado: (a).
+- [x] **F7.5 `PDF_TO_IMAGE` real.** Hecho con la opción recomendada (a): el frontend
+  (`PdfPreview.svelte`) renderiza cada página ya cargada por pdf.js en su canvas, la
+  exporta a JPEG y la guarda con `SAVE_IMAGE` (que ahora devuelve la ruta escrita);
+  luego `createImageShow` arma el show de imágenes. El comando Rust `PDF_TO_IMAGE`
+  queda como no-op residual (usado por el flujo de import, sin cambio).
 
 ---
 
