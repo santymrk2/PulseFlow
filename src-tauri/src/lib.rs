@@ -45,6 +45,7 @@ pub fn run() {
             // WINDOW
             commands::window::CLOSE,
             commands::window::MAXIMIZE,
+            commands::window::MAXIMIZED,
             commands::import::IMPORT,
             commands::import::IMPORT_FILES,
             commands::window::MINIMIZE,

@@ -12,7 +12,7 @@
 #![allow(non_snake_case)]
 
 use crate::error::{AppError, AppResult};
-use tauri::WebviewWindow;
+use tauri::{AppHandle, Manager, WebviewWindow};
 
 /// Cierra la ventana actual (equivale a `Main.CLOSE`).
 #[tauri::command]
@@ -41,4 +41,13 @@ pub fn FULLSCREEN(window: WebviewWindow) -> AppResult<bool> {
         .set_fullscreen(!is_fullscreen)
         .map_err(AppError::from)?;
     Ok(!is_fullscreen)
+}
+
+/// `MAXIMIZED`: indica si la ventana principal está maximizada
+/// (equivale a `Main.MAXIMIZED`).
+#[tauri::command]
+pub fn MAXIMIZED(app: AppHandle) -> bool {
+    app.get_webview_window("main")
+        .and_then(|w| w.is_maximized().ok())
+        .unwrap_or(false)
 }
