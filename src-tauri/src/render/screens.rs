@@ -157,15 +157,16 @@ struct ScreenHandle {
     running: Arc<AtomicBool>,
     thread: Option<JoinHandle<()>>,
     video_frame: Arc<Mutex<Option<VideoFrame>>>,
-    video: Option<(String, VideoPlayback)>,
+    /// Ruta del video suscrito actualmente (el decodificador lo comparte el hub).
+    video: Option<String>,
     /// Última transición pedida (la toma el bucle al dibujar el próximo frame).
     transition: Arc<Mutex<Option<TransitionRequest>>>,
 }
 
 impl ScreenHandle {
-    fn stop(&mut self) {
-        if let Some((_, mut playback)) = self.video.take() {
-            playback.stop();
+    fn stop(&mut self, app: &AppHandle) {
+        if let Some(path) = self.video.take() {
+            let _ = video_hub_release(app, &path, &self.video_frame);
         }
         self.running.store(false, Ordering::SeqCst);
         if let Some(handle) = self.thread.take() {
@@ -174,12 +175,27 @@ impl ScreenHandle {
     }
 }
 
+/// Suscriptor de un decodificador compartido: su slot de frames y el id de fondo
+/// con el que su bucle de render busca la textura.
+struct VideoSubscriber {
+    bg_id: String,
+    slot: Arc<Mutex<Option<VideoFrame>>>,
+}
+
+/// Un video en el hub: un único proceso ffmpeg y sus pantallas suscritas.
+struct SharedVideo {
+    playback: VideoPlayback,
+    subscribers: Arc<Mutex<Vec<VideoSubscriber>>>,
+}
+
 /// Estado de todas las pantallas del engine (gestionado por Tauri en `lib.rs`).
 pub struct ScreenManager {
     /// Escena por id de salida. Se conserva aunque la pantalla esté cerrada, para
     /// que al abrirla muestre de inmediato el contenido actual.
     scenes: Mutex<HashMap<String, Arc<RwLock<ScreenScene>>>>,
     screens: Mutex<HashMap<String, ScreenHandle>>,
+    /// Un decodificador por archivo de video, compartido entre pantallas (F8.2).
+    video_hub: Mutex<HashMap<String, SharedVideo>>,
     /// Captura de framebuffer para NDI (recurso de engine, hasta F8).
     pub(crate) ndi_capture: Mutex<Option<super::ndi_stream::GpuFramebufferCapture>>,
     /// Configuración global de transición hasta que F3 la aplique por pantalla.
@@ -192,6 +208,7 @@ impl ScreenManager {
         Self {
             scenes: Mutex::new(HashMap::new()),
             screens: Mutex::new(HashMap::new()),
+            video_hub: Mutex::new(HashMap::new()),
             ndi_capture: Mutex::new(None),
             transition_config: Mutex::new((
                 super::transition::TransitionType::Crossfade,
@@ -402,7 +419,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
                     .ok()
                     .and_then(|s| s.screens.lock_safe().remove(&id));
                 if let Some(mut handle) = handle {
-                    handle.stop();
+                    handle.stop(&app_handle);
                 }
                 emit_output_state(&app_handle, &[(id.clone(), false)]);
             }
@@ -434,7 +451,7 @@ pub fn close_screen(app: &AppHandle, id: &str) -> AppResult<()> {
     let state = manager(app)?;
     let handle = state.screens.lock_safe().remove(id);
     if let Some(mut handle) = handle {
-        handle.stop();
+        handle.stop(app);
         if let Some(window) = app.get_window(&handle.label) {
             let _ = window.destroy();
         }
@@ -767,30 +784,102 @@ fn request_transition(state: &ScreenManager, id: &str) {
 }
 
 /// Arranca, mantiene o detiene el video de fondo de una pantalla según el fondo actual.
+/// Usa el hub de decodificadores compartidos (uno por archivo, F8.2).
 fn sync_video(app: &AppHandle, handle: &mut ScreenHandle, background: Option<&BackgroundMedia>) {
     let wanted = background
         .filter(|bg| is_video(bg))
-        .and_then(|bg| bg.path.clone().map(|p| (bg.id.clone(), p)));
+        .and_then(|bg| bg.path.clone());
 
-    let current = handle.video.as_ref().map(|(id, _)| id.clone());
-    if current == wanted.as_ref().map(|(id, _)| id.clone()) {
+    if handle.video == wanted {
         return;
     }
 
-    if let Some((_, mut playback)) = handle.video.take() {
-        playback.stop();
+    // Dejar el decodificador anterior (lo detiene si era el único suscriptor).
+    if let Some(old_path) = handle.video.take() {
+        let _ = video_hub_release(app, &old_path, &handle.video_frame);
     }
 
-    if let Some((id, path)) = wanted {
-        let slot = Arc::clone(&handle.video_frame);
-        let result = video::start_video_playback(app, &path, &id, 1920, 1080, move |vid_id, w, h, bytes| {
-            *slot.lock_safe() = Some((vid_id.to_string(), w, h, bytes.to_vec()));
-        });
-        match result {
-            Ok(playback) => handle.video = Some((id, playback)),
-            Err(err) => eprintln!("[screens] no se pudo reproducir el video {path}: {err}"),
+    if let Some(path) = wanted {
+        let bg_id = background.map(|bg| bg.id.clone()).unwrap_or_default();
+        if video_hub_acquire(app, &path, &bg_id, &handle.video_frame).is_err() {
+            eprintln!("[screens] no se pudo reproducir el video {path}");
+        } else {
+            handle.video = Some(path);
         }
     }
+}
+
+/// Suscribe el slot de una pantalla al decodificador compartido de `path`.
+/// Si el archivo ya se está decodificando, sólo agrega el suscriptor (sin
+/// otro proceso ffmpeg); si no, inicia uno nuevo.
+fn video_hub_acquire(
+    app: &AppHandle,
+    path: &str,
+    bg_id: &str,
+    slot: &Arc<Mutex<Option<VideoFrame>>>,
+) -> AppResult<()> {
+    let state = manager(app)?;
+    let mut hub = state.video_hub.lock_safe();
+
+    // Ya hay un decodificador para este archivo: agregar el suscriptor.
+    if let Some(existing) = hub.get_mut(path) {
+        existing.subscribers.lock_safe().push(VideoSubscriber {
+            bg_id: bg_id.to_string(),
+            slot: Arc::clone(slot),
+        });
+        return Ok(());
+    }
+
+    // Nuevo decodificador: un proceso ffmpeg que difunde cada fotograma a todos
+    // los suscriptores (cada uno con su propio id de fondo).
+    let subscribers: Arc<Mutex<Vec<VideoSubscriber>>> = Arc::new(Mutex::new(vec![VideoSubscriber {
+        bg_id: bg_id.to_string(),
+        slot: Arc::clone(slot),
+    }]));
+    let broadcast = Arc::clone(&subscribers);
+
+    let result = video::start_video_playback(app, path, path, 1920, 1080, move |_vid_id, w, h, bytes| {
+        for sub in broadcast.lock_safe().iter() {
+            *sub.slot.lock_safe() = Some((sub.bg_id.clone(), w, h, bytes.to_vec()));
+        }
+    });
+
+    match result {
+        Ok(playback) => {
+            hub.insert(path.to_string(), SharedVideo { playback, subscribers });
+            Ok(())
+        }
+        Err(err) => Err(err),
+    }
+}
+
+/// Da de baja la suscripción de una pantalla al decodificador de `path`.
+/// Si queda sin suscriptores, detiene el proceso ffmpeg y libera la entrada.
+fn video_hub_release(
+    app: &AppHandle,
+    path: &str,
+    slot: &Arc<Mutex<Option<VideoFrame>>>,
+) -> AppResult<()> {
+    let state = manager(app)?;
+    let mut hub = state.video_hub.lock_safe();
+
+    let should_stop = match hub.get_mut(path) {
+        Some(entry) => {
+            entry
+                .subscribers
+                .lock_safe()
+                .retain(|sub| !Arc::ptr_eq(&sub.slot, slot));
+            entry.subscribers.lock_safe().is_empty()
+        }
+        None => false,
+    };
+
+    if should_stop {
+        if let Some(mut entry) = hub.remove(path) {
+            entry.playback.stop();
+        }
+    }
+    Ok(())
 }
 
 fn is_video(bg: &BackgroundMedia) -> bool {
