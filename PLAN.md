@@ -214,3 +214,64 @@ Clasificación:
 Los números de la columna "Envíos" son las ocurrencias de `send(OUTPUT, ["X"]...)` en `src/frontend/`
 (los `//` comentados incluidos en algunos casos). Para limpiar la categoría "eliminar" hay que revisar
 cada llamador porque algunas de esas señales también las consume el receptor de la ventana principal.
+
+---
+
+## Inventario de canales `Main.*` sin comando en Rust (F7.1)
+
+`src/types/IPC/Main.ts` declara 153 canales; `src-tauri/src/lib.rs` registra 90
+comandos. Los 76 canales restantes hoy quedan sin destinatario: `requestMain`
+espera 15 s y resuelve `undefined` (F7.2 agrega la respuesta inmediata para los
+pospuestos). Estado: ✅ implementado / 🗑 eliminar / ⏸ posponer.
+
+### Implementar (F7.4)
+
+| Canal | Pantalla / uso | Notas |
+| --- | --- | --- |
+| `IMPORT` | Drawer Import (`startImport` en `helpers/import.ts`) | Diálogo nativo; zip→`IMPORT_FILES`, `.pdf`→`IMPORT2`, media→`IMAGES_TO_SHOW`. Formats: `.pro`/`.pdf`/`.zip` |
+| `IMPORT_FILES` | Mismo `startImport` (files explícitos) | Comparte el pipeline con `IMPORT`, sin diálogo |
+| `URL` | Drawer Import | Descarga `url` a `Media/<folder>`; requiere `createFolder`/`readFolder` (F5.1) |
+| `SAVE_IMAGE` | `components/output/` (guardado de imágenes exportadas) | Escribe base64 en `Exports/` y abre la carpeta (`open_in_system`, F4.1) |
+| `PDF_TO_IMAGE` | `utils/apiHelper.ts::getPDFThumbnails` | pdfjs ya corre en el frontend; falta el comando Rust que vuelca las páginas a `Imports/PDF/<name>/N.jpg` |
+| `IP` | `components/systemInfo/Info.svelte` | Direcciones locales vía UDP socket trick, sin dependencias |
+| `MAXIMIZED` | `components/systemInfo/Info.svelte` / estado de ventana | Comando `window.is_maximized()`; y `MAXIMIZE` debe alternar + emitir `MAIN{MAXIMIZED}` como en Electron |
+
+`BACKUP` ya está implementado (`BACKUPS`/`DELETE_BACKUP`/`RESTORE`, ver
+`commands/backup.rs`).
+
+### Eliminar (canal → destinatario inexistente)
+
+| Canal | Motivo |
+| --- | --- |
+| `LANGUAGE` | Su destinatario era `setGlobalMenu` (menú nativo de Electron). PulseFlow no tiene menú nativo |
+| `OUTPUT` (este canal, no `TOGGLE_OUTPUTS`) | En Electron hacía un `send()` a la ventana de salidas; las respuestas acá llegan por eventos `OUTPUT`/`OUTPUT_STATE` |
+| `AI_*` (9 canales: `IMAGE`, `STYLES`, `SCRIPTURE`, `SUGGESTION`, `SUGGESTION2`, `TEXT`, `TRANSLATION`, `TRANSCRIPTION`, `VIDEO`) | Sin uso en el frontend; la feature AI no existe en PulseFlow |
+| `PCO_PUSHER_AUTH` | Sin uso (integración Planning Center está en pausa) |
+
+### Posponer (57 canales)
+
+Responden `undefined` inmediato vía F7.2. Nombre real de cada canal:
+
+- **Permisos / sistema** (7): `DEVICE_ID`, `GET_DEVICE_NAME`, `CHECK_RAM_USAGE`,
+  `ACCESS_CAMERA_PERMISSION`, `ACCESS_MICROPHONE_PERMISSION`, `ACCESS_SCREEN_PERMISSION`,
+  `GET_GRAPHICS_DEVICES`.
+- **Now Playing / spotlight** (4): `NOW_PLAYING`, `NOW_PLAYING_UNSET`, `OPEN_NOW_PLAYING`,
+  `LOG_ERROR`.
+- **Config del navegador** (2): `SPELLCHECK`, `AUTO_UPDATE` (updater de Electron).
+- **Media / descargas** (7): `DOWNLOAD_LESSONS_MEDIA`, `MEDIA_DOWNLOAD`,
+  `MEDIA_IS_DOWNLOADED`, `MEDIA_FOLDER_COPY`, `GET_SIMILAR`, `CHECK_MEDIA_LICENSE`,
+  `CAPTURE_SLIDE` (requiere el engine de render; ver `docs/VERIFICAR-F7.md`).
+- **PPT/slideshow externo** (4): `PPT_TO_PDF`, `SLIDESHOW_GET_APPS`, `START_SLIDESHOW`,
+  `PRESENTATION_CONTROL`.
+- **MIDI realtime / timecode** (5): `SEND_MIDI` (stubeado en `commands/midi.rs`, requiere
+  crate MIDI), `RECEIVE_MIDI`, `CLOSE_MIDI`, `TIMECODE_AUDIO_DATA`, `TIMECODE_STATUS`.
+- **Lyrics / recorder / OSC** (5): `GET_LYRICS`, `SEARCH_LYRICS`, `RECORDER`,
+  `API_TRIGGER`, `EMIT_OSC`.
+- **Cloud / providers** (12): `CLOUD_SYNC`, `RESTORE_CLOUD_BACKUP`, `GET_CONVERSATION_ID`,
+  `SEND_SOCKET_MESSAGE`, `PROVIDER_LOAD_SERVICES`, `PROVIDER_CONNECTIONS`,
+  `PROVIDER_DISCONNECT`, `PROVIDER_STARTUP_LOAD`, `PROVIDER_FETCH_FOLDERS`,
+  `GET_CONTENT_PROVIDERS`, `GET_CONTENT_LIBRARY`, `GET_PROVIDER_CONTENT`.
+- **Planning Center / OnStage** (6): `PCO_LIVE_GET`, `PCO_FETCH_SERVICE_TREE`,
+  `PCO_LOAD_PLAN`, `ONSTAGE_LOAD_SERVICE`, `ONSTAGE_GET_TEAMS`, `ONSTAGE_SWITCH_TEAM`.
+- **Spotify / ffmpeg / RTMP** (4): `SPOTIFY_GET_STATE`, `SPOTIFY_COMMAND`, `FFMPEG_DOWNLOAD`,
+  `ENCODER_DETECT`, `SET_RTMP_ENCODER`.
