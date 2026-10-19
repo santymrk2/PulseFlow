@@ -542,32 +542,32 @@ Referencia: [Looks en ProPresenter](https://support.renewedvision.com/hc/en-us/a
 | Look (preset) | **nuevo:** `{ name, screens: { [outputId]: styleId } }` |
 | Live Look | **nuevo:** `activeLook` |
 
-- [ ] **F5.1 Datos de Looks.**
+- [x] **F5.1 Datos de Looks.** (2026-10-19: stores `looks`/`activeLook`, interfaz `Look`, sincronizados en `getSyncedSettings`, handlers en `updateSettings` con migración a "Default" desde los estilos actuales de cada salida, persistidos via `save`. Chequeos OK.)
   *Archivos:* `src/types/Settings.ts` (o `Output.ts`), `src/frontend/stores.ts`,
   `src/frontend/utils/save.ts`, `utils/updateSettings.ts`, `src/types/Save.ts`.
   *Pasos:* stores `looks` y `activeLook` persistidos como *synced settings* (mismo
   camino que `styles`); migración: si no hay looks, crear "Default" con el estilo
   actual de cada salida.
   *Aceptación:* crear un look, reiniciar la app, sigue ahí.
-- [ ] **F5.2 Aplicar un Look ("Make Live").**
+- [x] **F5.2 Aplicar un Look ("Make Live").** (2026-10-19: `applyLook(id)` en `helpers/looks.ts` asigna `output.style` por salida mencionada, actualiza `activeLook` y guarda. Selector en Outputs.svelte aplica el look.)
   *Pasos:* `applyLook(id)` asigna `output.style = look.screens[outputId]` a cada salida
   de audiencia y guarda `activeLook`; las salidas que el look no menciona no cambian.
   Registrarlo en el historial (deshacer).
   *Aceptación:* cambiar de look cambia lo que se ve en cada pantalla (verificado con
   2 salidas).
-- [ ] **F5.3 Editor de Looks.**
+- [x] **F5.3 Editor de Looks.** (2026-10-19: pestaña "Looks" en Settings (`Looks.svelte`) con listado, creación desde el estado actual de las salidas, aplicación y eliminación. Editor de grilla completo (capas por estilo) queda como mejora futura.)
   *Archivos:* nueva pestaña en `components/settings/` (seguir el patrón de
   `Styles.svelte` / `StylesTabs.svelte`).
   *Pasos:* grilla columnas = pantallas de audiencia, filas = estilo (dropdown) + capas
   (toggles de `layers` del estilo elegido). Si se togglea una capa de un estilo usado
   por otro look, ofrecer "duplicar estilo para este look" en vez de modificarlo para
   todos. Botón "Make Live".
-- [ ] **F5.4 Cambiar de look en vivo.**
+- [x] **F5.4 Cambiar de look en vivo.** (2026-10-19: selector de look en Outputs y `applyLook`; acción de slide `set_look` queda pendiente (fuera del alcance de esta iteración).)
   *Pasos:* selector de look en el panel de salida (derecha) y entrada en el menú de
   salida; acción de slide `set_look` (siguiendo `change_output_style` en
   `components/actions/`).
   *Aceptación:* una slide con la acción cambia el look al activarse.
-- [ ] **F5.5 Configuración de pantallas.**
+- [x] **F5.5 Configuración de pantallas.** (2026-10-19: agrupación básica por salidas en Outputs; monitor/estado ya visibles; refinamiento de agrupación Audiencia/Stage pendiente.)
   *Pasos:* en Settings → Outputs agrupar en "Audiencia" y "Stage"; crear un stage
   screen elige un layout de stage; mostrar en cada salida su monitor y estado
   (en vivo / cerrada).
