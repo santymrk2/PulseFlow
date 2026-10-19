@@ -381,6 +381,7 @@
         "first_last": "第一张和最后一张幻灯片"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "默认",
         "dark": "黑暗",
         "light": "光",

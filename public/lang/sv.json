@@ -350,6 +350,7 @@
         "first_last": "Första och sista sliden"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Default",
         "dark": "Mörk",
         "light": "Ljus",

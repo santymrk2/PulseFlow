@@ -237,6 +237,7 @@
         "first_last": "Перший і останній слайд"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "За замовчуванням",
         "dark": "Темний",
         "light": "Світла",

@@ -381,6 +381,7 @@
         "first_last": "İlk ve son slayt"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Varsayılan",
         "dark": "Karanlık",
         "light": "Aydınlık",

@@ -5,6 +5,7 @@ import * as Sentry from "@sentry/browser"
 import { mount } from "svelte"
 import App from "./App.svelte"
 import "./app.css"
+import "@fontsource-variable/geist"
 import { setupTauriApi } from "./IPC/tauri"
 import { ERROR_FILTER } from "./utils/common"
 

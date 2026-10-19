@@ -350,6 +350,7 @@
         "first_last": "Prima e ultima diapositiva"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Predefinito",
         "dark": "Scuro",
         "light": "Chiaro",

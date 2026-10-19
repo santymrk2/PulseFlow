@@ -345,6 +345,7 @@
         "first_last": "第一張與最後一張"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "預設",
         "dark": "深色",
         "light": "淺色",

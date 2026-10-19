@@ -248,6 +248,7 @@
         "first_last": "Slide đầu và cuối"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Mặc định",
         "dark": "Tối",
         "light": "Sáng",

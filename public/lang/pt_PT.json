@@ -378,6 +378,7 @@
         "first_last": "Primeiro e último slide"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Predefinido",
         "dark": "Escuro",
         "light": "Claro",

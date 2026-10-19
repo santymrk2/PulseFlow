@@ -28,16 +28,17 @@
 }
 
 :root {
-    --primary: #18181b;
-    --primary-lighter: #27272a;
-    --primary-darker: #121215;
-    --primary-darkest: #09090b;
-    --text: #f4f4f5;
-    --textInvert: #09090b;
-    --secondary: #6366f1;
-    --secondary-opacity: rgba(99, 102, 241, 0.4);
-    --secondary-text: #ffffff;
-    --transparent: #18181b;
+    /* Defaults = tema "PulseFlow" (idénticos a defaultThemes.ts, tema por defecto) */
+    --primary: #0a0a0a;
+    --primary-lighter: #262626;
+    --primary-darker: #171717;
+    --primary-darkest: #050505;
+    --text: #fafafa;
+    --textInvert: #0a0a0a;
+    --secondary: #1447e6;
+    --secondary-opacity: rgba(20, 71, 230, 0.4);
+    --secondary-text: #fafafa;
+    --transparent: #0a0a0a;
 
     --accent: #818cf8;
 
@@ -49,8 +50,8 @@
     --hover: rgba(255, 255, 255, 0.06);
     --focus: rgba(255, 255, 255, 0.12);
 
-    /* Modern clean font stack */
-    --font-family: system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Geist", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    /* Geist (tema PulseFlow): la variable se carga desde main.ts (@fontsource-variable/geist) */
+    --font-family: "Geist Variable", system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
     --font-size: 1em;
 
     --radius: 0.625rem;

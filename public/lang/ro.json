@@ -381,6 +381,7 @@
         "first_last": "Primul și ultimul slide"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Implicit",
         "dark": "Întunecat",
         "light": "Luminos",

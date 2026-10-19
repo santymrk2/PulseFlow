@@ -237,6 +237,7 @@
         "first_last": "Prvi i poslednji slajd"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Podrazumevano",
         "dark": "Tamna",
         "light": "Svetla",

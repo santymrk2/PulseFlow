@@ -1,44 +1,25 @@
 import type { Themes } from "../../../../types/Settings"
 
 export const defaultThemes: { [key: string]: Themes } = {
+    // Tema por defecto "PulseFlow": los valores del tema `.dark` de la referencia
+    // (docs/design-reference/index.css) mapeados por valor según la tabla de F6.1.
     default: {
-        name: "default",
-        default: true,
-        font: {
-            family: "system-ui, -apple-system, BlinkMacSystemFont, 'Inter', 'Geist', 'Segoe UI', Roboto, sans-serif",
-            size: "1em"
-        },
-        colors: {
-            primary: "#18181b",
-            "primary-lighter": "#27272a",
-            "primary-darker": "#121215",
-            "primary-darkest": "#09090b",
-            text: "#f4f4f5",
-            textInvert: "#09090b",
-            "secondary-text": "#ffffff",
-            secondary: "#6366f1",
-            "secondary-opacity": "rgba(99, 102, 241, 0.4)",
-            hover: "rgba(255, 255, 255, 0.06)",
-            focus: "rgba(255, 255, 255, 0.12)"
-        }
-    },
-    pulseflow: {
         name: "PulseFlow",
         default: true,
         font: {
-            family: "system-ui, -apple-system, BlinkMacSystemFont, 'Inter', 'Geist', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif",
+            family: '"Geist Variable", system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
             size: "1em"
         },
         colors: {
-            primary: "#0f0f0f",
-            "primary-lighter": "#262626",
-            "primary-darker": "#1a1a1a",
-            "primary-darkest": "#0a0a0a",
-            text: "#fafafa",
-            textInvert: "#0f0f0f",
+            primary: "#0a0a0a", // --background
+            "primary-lighter": "#262626", // --accent / --muted
+            "primary-darker": "#171717", // --card / --sidebar
+            "primary-darkest": "#050505",
+            text: "#fafafa", // --foreground
+            textInvert: "#0a0a0a",
             "secondary-text": "#fafafa",
-            secondary: "#8b5cf6",
-            "secondary-opacity": "rgba(139, 92, 246, 0.4)",
+            secondary: "#1447e6", // --sidebar-primary
+            "secondary-opacity": "rgba(20, 71, 230, 0.4)",
             hover: "rgba(255, 255, 255, 0.06)",
             focus: "rgba(255, 255, 255, 0.12)"
         }

@@ -327,6 +327,7 @@
         "first_last": "Pirmoje ir paskutinėje skaidrėje"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Numatytasis",
         "dark": "Tamsus",
         "light": "Šviesus",
