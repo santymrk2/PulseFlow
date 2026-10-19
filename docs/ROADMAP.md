@@ -285,7 +285,12 @@ monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
   hasta F8.
   *Aceptación:* `commands/output.rs` < 200 líneas, sólo adaptadores.
 
-- [ ] **F2.8 Prueba manual guiada.**
+- [ ] **F2.8 Prueba manual guiada.** (listo para ejecutar: requiere 2 monitores reales en
+  macOS y Windows, algo que no se puede hacer en este entorno sin display físico. El
+  checklist guiado completo —elegir monitor con la lupa, poner en vivo, pasar slides de
+  una canción, fondos imagen y video, limpiar, stage, cerrar salida— está en
+  `docs/VERIFICAR.md`, sección "F2.8", con espacio para anotar el resultado por sistema.
+  Al ejecutarla, anotar el resultado ahí mismo.)
   *Pasos:* en macOS y Windows con 2 monitores: elegir pantalla, poner en vivo, pasar
   slides de una canción, poner imagen y video de fondo, limpiar, cerrar salida.
   Anotar en `PLAN.md` ("Estado real") qué funciona y qué no.
