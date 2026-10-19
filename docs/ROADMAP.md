@@ -265,7 +265,18 @@ monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
 
 - [x] **F2.6 Puente `OUTPUT` sin ruido.** (verificado 2026-10-18: `bun run test:unit` 47/47;\n  `svelte-check` 59 errores (línea base, sin aumento); Prettier limpio. No se toca Rust.)\n  En `src/frontend/IPC/tauri.ts` hay una lista blanca `OUTPUT_COMMANDS` con los comandos\n  del canal `OUTPUT` que existen en Rust (`TOGGLE_OUTPUTS`, `RENDER_SCENE`,\n  `UPDATE_BOUNDS`, `IDENTIFY_SCREENS` y el no-op `OUTPUTS`, que se elimina en F2.7).\n  `send()` descarta cualquier otro comando del canal `OUTPUT` antes de `invoke`: eran\n  señales heredadas de la ventana webview de Electron (`CREATE`, `DRAW`, `SHOWS`,\n  `CAPTURE`, `SET_VALUE`, …) que sólo producían \"Command … not found\" al cambiar de\n  slide. En desarrollo se avisa una sola vez por nombre (`warnedOutputCommands`); en\n  producción el descarte es silencioso. El filtro va tras la destructuración\n  `{ channel, data }` y sólo aplica a `channel === OUTPUT`, así que el canal `MAIN` y las\n  respuestas entrantes (`OUTPUT_STATE`, `BUFFER`, …) no se ven afectados. Aceptación\n  comprobada de forma determinista (todo comando no listado se descarta antes de\n  `invoke`, por lo que no puede generar el error); la prueba visual en la app quedó para\n  el usuario en `docs/VERIFICAR.md`, sección \"F2.6\".)\n  *Archivos:* `src/frontend/IPC/tauri.ts`.\n  *Pasos:* lista blanca de comandos del canal `OUTPUT` que existen en Rust\n  (`TOGGLE_OUTPUTS`, `RENDER_SCENE`, `UPDATE_BOUNDS`, `IDENTIFY_SCREENS`, …). Los demás\n  no se invocan (eran para la ventana webview); en desarrollo, loguear una sola vez por\n  nombre.\n  *Aceptación:* cambiar de slide no produce ningún "Command … not found".
 
-- [ ] **F2.7 Borrar API muerta del engine.**
+- [x] **F2.7 Borrar API muerta del engine.** (verificado 2026-10-18, commit `86c029b6`:
+  `grep` en `src/` confirmó 0 usos en el frontend de los 15 comandos listados; se
+  eliminaron de `commands/output.rs` y de la lista `invoke_handler` en `lib.rs`, junto
+  con los helpers de render que sólo usaban esos comandos (`close_all_of_kind`,
+  `has_open`, `open_ids_of_kind`, `set_scene_overlays`, `feed_video_frame`) y los
+  structs `SceneGraph`/`SelectSlidePayload` de `render/types.rs`. Se quitó `OUTPUTS` de
+  la lista blanca `OUTPUT_COMMANDS` en `IPC/tauri.ts`. Se conservan los 3 comandos NDI
+  hasta F8 y `RENDER_SNAPSHOT` (F0.2). Código de comandos vivo: 214 líneas, sólo
+  adaptadores delgados; el total del archivo (322) incluye además la herramienta de
+  verificación `RENDER_SNAPSHOT` + sus 2 tests (~82 líneas) y los NDI (~26). Chequeos:
+  `cargo check` limpio, `cargo test --lib` 29/29, `test:unit` 47/47, `test:svelte` 59
+  errores (línea base), Prettier limpio. Diff: −397 líneas en 6 archivos.)
   *Pasos:* con `grep` en `src/`, confirmar que el frontend no usa y eliminar:
   `UPDATE_SCENE_TEXT`, `CLEAR_SCENE_TEXT`, `SELECT_SLIDE`, `SET_BACKGROUND_IMAGE`,
   `CLEAR_BACKGROUND`, `FEED_VIDEO_FRAME`, `UPDATE_SCENE_OVERLAYS`, `SET_TRANSITION`,
