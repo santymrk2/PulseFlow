@@ -83,6 +83,7 @@ pub fn run() {
             commands::files::GET_MEDIA_FOLDER_PATH,
             commands::files::SET_MEDIA_FOLDER_PATH,
             commands::files::SAVE_IMAGE,
+            commands::files::PDF_TO_IMAGE,
             commands::files::LOCATE_MEDIA_FILE,
             commands::files::BUNDLE_MEDIA_FILES,
             // SHOWS
