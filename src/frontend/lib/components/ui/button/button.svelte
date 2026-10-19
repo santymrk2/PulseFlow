@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { cn } from "$lib/utils.js"
+    import { cn, type WithElementRef } from "$lib/utils.js"
     import type { Snippet } from "svelte"
     import type { HTMLButtonAttributes } from "svelte/elements"
     import { type VariantProps, tv } from "tailwind-variants"
@@ -38,7 +38,7 @@
         ref = $bindable(null),
         children,
         ...restProps
-    }: HTMLButtonAttributes & {
+    }: WithElementRef<HTMLButtonAttributes, HTMLButtonElement> & {
         variant?: ButtonVariant
         size?: ButtonSize
         children?: Snippet

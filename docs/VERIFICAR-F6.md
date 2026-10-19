@@ -151,3 +151,46 @@ Qué cambió (verificado con tests, sin GUI), comparando la referencia
 ### Resultado
 
 (acompletar al ejecutar los pasos)
+
+---
+
+## F6.5 — Componentes shadcn-svelte
+
+Qué cambió (verificado con tests, sin GUI): se generaron con el CLI de
+shadcn-svelte y se instalaron en `src/frontend/lib/components/ui/` los
+componentes `input`, `label`, `select`, `separator`, `skeleton`, `switch`,
+`tabs` y `scroll-area` (además del `button` preexistente), con el alias `$lib`
+→ `src/frontend/lib`. Detalles:
+
+- `src/frontend/lib/utils.ts` ahora exporta también los tipos auxiliares que el
+  CLI espera (`WithElementRef`, `WithoutChild`, …).
+- Los tokens `--shui-*` de `src/frontend/app.css` se ataron a las variables del
+  tema de FreeShow (`--primary`, `--text`, `--secondary`, `--border-color`,
+  `--radius`, `--disconnected`…): los componentes siguen el tema activo sin
+  bloque `.dark` y sin duplicar la paleta.
+- `button.svelte` quedó tipado con `WithElementRef<HTMLButtonAttributes, …>`,
+  lo que **corrige un error preexistente** de svelte-check (59 → 58 errores).
+- Regla de uso documentada en `src/frontend/lib/components/ui/README.md`:
+  **sólo pantallas nuevas** (p. ej. Looks, F5.3); no reemplazar componentes
+  existentes en masa.
+- Actualizada la sección "Idea a futuro" de `docs/design-reference/README.md`.
+
+### Pasos (verificación visual)
+
+Hoy ningún componente nuevo está renderizado en una pantalla (son opt-in para
+pantallas nuevas), así que la verificación se reduce a comprobar que **no hay
+regresión** y a dejar constancia:
+
+1. Con la app corriendo (F6.2, paso 1), recorrer Show / Edit / Settings / Stage:
+   no debe cambiar absolutamente nada respecto de F6.4 (mismos colores,
+   bordes, radios; en particular, ningún fondo blanco o texto negro de
+   shadcn clásico aparece en ninguna parte).
+2. Verificar que el tema "PulseFlow" sigue aplicado (misma comprobación que el
+   paso 5 de F6.2).
+3. Cuando F5.3 (Looks) use estos componentes, verificar ahí su apariencia
+   (botones, inputs, tabs, switch) contra `docs/design-reference/`.
+4. Anotar el resultado abajo.
+
+### Resultado
+
+(acompletar al ejecutar los pasos)

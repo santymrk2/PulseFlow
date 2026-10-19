@@ -16,49 +16,33 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/*
+ * Los tokens shadcn se atan a las variables del tema activo de FreeShow (que
+ * <html> inyecta desde el tema elegido en Settings). Así los componentes de
+ * `lib/components/ui/` siguen el tema del usuario —oscuro o claro— sin duplicar
+ * la paleta: no hay bloque `.dark`, el "modo" lo decide el tema de FreeShow.
+ */
 :root {
-    --shui-radius: 0.625rem;
-    --shui-background: oklch(1 0 0);
-    --shui-foreground: oklch(0.145 0 0);
-    --shui-card: oklch(1 0 0);
-    --shui-card-foreground: oklch(0.145 0 0);
-    --shui-popover: oklch(1 0 0);
-    --shui-popover-foreground: oklch(0.145 0 0);
-    --shui-primary: oklch(0.205 0 0);
-    --shui-primary-foreground: oklch(0.985 0 0);
-    --shui-secondary: oklch(0.97 0 0);
-    --shui-secondary-foreground: oklch(0.205 0 0);
-    --shui-muted: oklch(0.97 0 0);
-    --shui-muted-foreground: oklch(0.556 0 0);
-    --shui-accent: oklch(0.97 0 0);
-    --shui-accent-foreground: oklch(0.205 0 0);
-    --shui-destructive: oklch(0.577 0.245 27.325);
-    --shui-destructive-foreground: oklch(0.985 0 0);
-    --shui-border: oklch(0.922 0 0);
-    --shui-input: oklch(0.922 0 0);
-    --shui-ring: oklch(0.708 0 0);
-}
-
-.dark {
-    --shui-background: oklch(0.145 0 0);
-    --shui-foreground: oklch(0.985 0 0);
-    --shui-card: oklch(0.205 0 0);
-    --shui-card-foreground: oklch(0.985 0 0);
-    --shui-popover: oklch(0.205 0 0);
-    --shui-popover-foreground: oklch(0.985 0 0);
-    --shui-primary: oklch(0.922 0 0);
-    --shui-primary-foreground: oklch(0.205 0 0);
-    --shui-secondary: oklch(0.269 0 0);
-    --shui-secondary-foreground: oklch(0.985 0 0);
-    --shui-muted: oklch(0.269 0 0);
-    --shui-muted-foreground: oklch(0.708 0 0);
-    --shui-accent: oklch(0.269 0 0);
-    --shui-accent-foreground: oklch(0.985 0 0);
-    --shui-destructive: oklch(0.704 0.191 22.216);
-    --shui-destructive-foreground: oklch(0.985 0 0);
-    --shui-border: oklch(1 0 0 / 10%);
-    --shui-input: oklch(1 0 0 / 15%);
-    --shui-ring: oklch(0.556 0 0);
+    --shui-radius: var(--radius, 0.625rem);
+    --shui-background: var(--primary);
+    --shui-foreground: var(--text);
+    --shui-card: var(--primary-darker);
+    --shui-card-foreground: var(--text);
+    --shui-popover: var(--primary-darker);
+    --shui-popover-foreground: var(--text);
+    --shui-primary: var(--secondary);
+    --shui-primary-foreground: var(--secondary-text, #ffffff);
+    --shui-secondary: var(--primary-lighter);
+    --shui-secondary-foreground: var(--text);
+    --shui-muted: var(--primary-lighter);
+    --shui-muted-foreground: color-mix(in srgb, var(--text) 60%, transparent);
+    --shui-accent: var(--primary-lighter);
+    --shui-accent-foreground: var(--text);
+    --shui-destructive: var(--disconnected, #ef4444);
+    --shui-destructive-foreground: var(--secondary-text, #ffffff);
+    --shui-border: var(--border-color, var(--primary-lighter));
+    --shui-input: var(--border-color, var(--primary-lighter));
+    --shui-ring: var(--secondary);
 }
 
 @theme inline {
