@@ -168,7 +168,7 @@
         font-size: 0.9em;
         font-weight: 500;
         font-family: inherit;
-        border-radius: 6px;
+        border-radius: var(--radius, 6px);
         cursor: pointer;
         transition:
             opacity 0.4s ease,

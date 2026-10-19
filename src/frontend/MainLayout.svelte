@@ -168,11 +168,11 @@
     }
 
     .right :global(.border) {
-        border-top: 2px solid var(--primary-lighter);
+        border-top: 2px solid var(--border-color, var(--primary-lighter));
     }
     .right.row :global(.border) {
         border: none;
-        border-inline-end: 2px solid var(--primary-lighter);
+        border-inline-end: 2px solid var(--border-color, var(--primary-lighter));
         min-width: 50%;
     }
 

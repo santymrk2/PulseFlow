@@ -34,7 +34,7 @@
         display: flex;
         align-items: center;
         padding: 0.25em 0.8em;
-        border-radius: 6px;
+        border-radius: var(--radius, 6px);
 
         transition:
             background-color 0.15s ease,

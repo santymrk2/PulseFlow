@@ -1319,7 +1319,7 @@
         scroll-behavior: smooth;
     }
     .main div:not(.verses):not(.grid):not(.list):not(.list .content):not(.grid div) {
-        border-inline-end: 2px solid var(--primary-lighter);
+        border-inline-end: 2px solid var(--border-color, var(--primary-lighter));
     }
     .main div:not(.grid):not(.list):not(.list .content):not(.grid div) {
         padding-bottom: 60px;
@@ -1448,10 +1448,10 @@
         flex-direction: column;
     }
     .grid .books {
-        border-bottom: 2px solid var(--primary-lighter);
+        border-bottom: 2px solid var(--border-color, var(--primary-lighter));
     }
     .grid .chapters {
-        border-inline-end: 2px solid var(--primary-lighter);
+        border-inline-end: 2px solid var(--border-color, var(--primary-lighter));
     }
 
     .grid .books,

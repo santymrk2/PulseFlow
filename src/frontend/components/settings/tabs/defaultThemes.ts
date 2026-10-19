@@ -22,6 +22,27 @@ export const defaultThemes: { [key: string]: Themes } = {
             focus: "rgba(255, 255, 255, 0.12)"
         }
     },
+    pulseflow: {
+        name: "PulseFlow",
+        default: true,
+        font: {
+            family: "system-ui, -apple-system, BlinkMacSystemFont, 'Inter', 'Geist', 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif",
+            size: "1em"
+        },
+        colors: {
+            primary: "#0f0f0f",
+            "primary-lighter": "#262626",
+            "primary-darker": "#1a1a1a",
+            "primary-darkest": "#0a0a0a",
+            text: "#fafafa",
+            textInvert: "#0f0f0f",
+            "secondary-text": "#fafafa",
+            secondary: "#8b5cf6",
+            "secondary-opacity": "rgba(139, 92, 246, 0.4)",
+            hover: "rgba(255, 255, 255, 0.06)",
+            focus: "rgba(255, 255, 255, 0.12)"
+        }
+    },
     dark: {
         name: "dark",
         default: true,

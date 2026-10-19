@@ -33,10 +33,27 @@ hardware/importación).
   - **MediaBar** abajo (reproducción de medios, timers, controles de limpieza).
 - Paneles redimensionables con `react-resizable-panels`; iconos `lucide`.
 
+## Mapeo a variables FreeShow (tema Svelte actual)
+
+El frontend Svelte no renombra variables shadcn: mantiene nombres históricos FreeShow con otra semántica. Por ello el port se hace **por valores**, no por nombres. Comparando con `src/frontend/components/settings/tabs/defaultThemes.ts` y `public/global.css`:
+
+| Token shadcn (referencia) | Variable FreeShow (Svelte) | Uso en FreeShow |
+| --- | --- | --- |
+| `--background` | `--primary` | fondo del panel / base |
+| `--card` / `--sidebar` | `--primary-darker` | superficies secundarias / paneles |
+| `--accent` | `--primary-lighter` | superficies resaltadas |
+| `--foreground` | `--text` | texto principal |
+| `--sidebar-primary` | `--secondary` | acento / color secundario |
+| `--border` | `--border-color` (propuesto o existente según componente) | bordes |
+| `--radius` | `--radius` (propuesto) | radios globales |
+
+Notas: el tema se aplica inline desde `defaultThemes.ts` sobre `<html>`. Geist ya figura en la pila de fuentes (`--font-family` incluye `"Geist"`); si faltara cargar la font, instalar `@fontsource-variable/geist`.
+
 ## Idea a futuro
 
 Portar estos tokens y estilos al frontend Svelte actual (`src/frontend/`), que ya
-tiene Tailwind v4 + `bits-ui` + shadcn-svelte en `src/frontend/lib`: copiar las
-variables de `index.css` a la hoja global, instalar la fuente Geist y reescribir
-los componentes de `components/ui/` con sus equivalentes de shadcn-svelte. Esto
-**no** se aplica todavía.
+tiene Tailwind v4 + `bits-ui` + shadcn-svelte en `src/frontend/lib`: copiar los
+valores del tema `.dark` de `index.css` al tema "PulseFlow" en `defaultThemes.ts`,
+incorporar fuente Geist y ajustar componentes base (`Button`, `MaterialButton`,
+inputs `Material*`, paneles y popups) para usar radios/bordes globales. Esto se
+hará en F6.2–F6.3, solo donde se indique.
