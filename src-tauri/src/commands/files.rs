@@ -924,3 +924,22 @@ pub fn SAVE_IMAGE(app: AppHandle, state: State<'_, AppState>, data: SaveImageDat
     let _ = data.id;
     Ok(())
 }
+
+// ---------------------------------------------------------------------------
+// PDF_TO_IMAGE
+// ---------------------------------------------------------------------------
+
+#[derive(Deserialize, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct PdfToImageData {
+    #[serde(default)]
+    pub file_path: String,
+}
+
+/// `PDF_TO_IMAGE`: conversión de un PDF a imágenes.
+/// Sin dependencias de renderizado de PDF disponibles en este binario, se deja
+/// como no-op (no rompe la UI); el frontend sigue usando pdf.js en el webview.
+#[tauri::command]
+pub fn PDF_TO_IMAGE(_data: PdfToImageData) -> AppResult<Vec<String>> {
+    Ok(Vec::new())
+}
