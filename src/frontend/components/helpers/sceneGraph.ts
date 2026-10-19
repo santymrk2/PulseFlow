@@ -7,13 +7,15 @@
 // El payload final lo arma `sceneGraphPayload.ts`, único lugar que enumera las claves del contrato.
 //
 // F4.5: los items de medio (imagen) se envían con su caja en la resolución lógica de la escena.
-// El engine dibuja fondo → medios → texto (no respeta el orden de apilado de la slide).
+// F4.6: los items de las overlays activas viajan en `overlays`, una capa propia que el engine
+// dibuja encima de la slide (fondo → medios de la slide → texto de la slide → medios → texto de
+// los overlays). El engine no respeta el orden de apilado de la slide (fondo → medios → texto).
 import { get } from "svelte/store"
 import { OUTPUT } from "../../../types/Channels"
 import type { Output } from "../../../types/Output"
 import type { SceneBackground, SceneGraph, SceneItem, SceneMediaItem, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
 import type { Item, OutSlide, Slide } from "../../../types/Show"
-import { media, outputs, stageShows, styles, transitionData } from "../../stores"
+import { media, overlays, outputs, stageShows, styles, transitionData } from "../../stores"
 import { send } from "../../utils/request"
 import { getItemText } from "../edit/scripts/textStyle"
 import { shouldItemBeShown } from "../edit/scripts/itemHelpers"
@@ -27,6 +29,12 @@ import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, scen
 
 const DEFAULT_FONT_SIZE = 100
 const DEFAULT_LINE_HEIGHT = 1.1
+
+/** Contexto para `replaceDynamicValues`: slide de la show o overlay activa (F4.6). */
+type DynamicRef = { showId?: string; layoutId?: string; slideIndex?: number; type?: string; id?: string }
+
+/** Ventana de líneas visibles de `getOutputLines` (`null` = sin límite en ese extremo). */
+type LineWindow = { start?: number | null; end?: number | null; linesStart?: number | null; linesEnd?: number | null; clickRevealed?: boolean }
 
 // ITEMS
 
@@ -50,7 +58,7 @@ function getSlideItems(slide: OutSlide, outputId: string, currentStyle: ReturnTy
     return setTemplateStyle(slide, currentStyle, slideItems, outputId, customDynamicValues)
 }
 
-function buildTextItem(item: Item, index: number, allItems: Item[], slide: OutSlide, outputId: string, resolution: { width: number; height: number }, lineWindow: ReturnType<typeof getOutputLines>): SceneTextItem | null {
+function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: DynamicRef, outputId: string, resolution: { width: number; height: number }, lineWindow: LineWindow): SceneTextItem | null {
     if ((item.type || "text") !== "text") return null
     if (!shouldItemBeShown(item, allItems, { outputId, type: "default" })) return null
     if (item.clickReveal && lineWindow.clickRevealed === false) return null
@@ -72,7 +80,6 @@ function buildTextItem(item: Item, index: number, allItems: Item[], slide: OutSl
     let lineHeight: number | undefined
 
     const visibleLines = lines.filter((_line, i) => !hasWindow || (i >= (start as number) && i < (end as number)))
-    const dynamicRef = { showId: slide.id, layoutId: slide.layout, slideIndex: slide.index ?? 0, type: "show" }
 
     visibleLines.forEach((line, lineIndex) => {
         if (!align) align = parseTextAlign(line.align)
@@ -133,7 +140,7 @@ function buildTextItem(item: Item, index: number, allItems: Item[], slide: OutSl
     })
 }
 
-function buildMediaItem(item: Item, index: number, allItems: Item[], slide: OutSlide, outputId: string, resolution: { width: number; height: number }, lineWindow: ReturnType<typeof getOutputLines>): SceneMediaItem | null {
+function buildMediaItem(item: Item, index: number, allItems: Item[], outputId: string, resolution: { width: number; height: number }, lineWindow: LineWindow): SceneMediaItem | null {
     if (item.type !== "media") return null
     if (!shouldItemBeShown(item, allItems, { outputId, type: "default" })) return null
     if (item.clickReveal && lineWindow.clickRevealed === false) return null
@@ -201,15 +208,16 @@ function buildSlideItems(showSlide: OutSlide, outputId: string, currentStyle: Re
 
     const items: SceneItem[] = []
     const textItems: SceneTextItem[] = []
+    const dynamicRef: DynamicRef = { showId: showSlide.id, layoutId: showSlide.layout, slideIndex: showSlide.index ?? 0, type: "show" }
     slideItems.forEach((item, index) => {
-        const textItem = buildTextItem(item, index, slideItems, showSlide, outputId, resolution, lineWindow)
+        const textItem = buildTextItem(item, index, slideItems, dynamicRef, outputId, resolution, lineWindow)
         if (textItem) {
             items.push(textItem)
             textItems.push(textItem)
             return
         }
 
-        const mediaItem = buildMediaItem(item, index, slideItems, showSlide, outputId, resolution, lineWindow)
+        const mediaItem = buildMediaItem(item, index, slideItems, outputId, resolution, lineWindow)
         if (mediaItem) items.push(mediaItem)
     })
 
@@ -221,6 +229,51 @@ function plainTextOf(items: SceneTextItem[], slideItems: Item[]): string {
     let text = items.map((a) => a.text).join("\n")
     if (!text) text = slideItems.map((a) => getItemText(a)).join("\n")
     return text.trim()
+}
+
+// OVERLAYS (F4.6)
+
+/** Sin límite de líneas y sin revelado: los overlays no participan del líneas del estilo. */
+const OVERLAY_LINE_WINDOW: LineWindow = { start: null, end: null, clickRevealed: true }
+
+/**
+ * Items de la capa de overlays (F4.6): los ids activos en la salida, con el mismo criterio
+ * que `Output.svelte` — overlays de la escena (siempre) más los activados en la salida si la
+ * capa `overlays` está habilitada (y la escena no manda sobre las capas por no tener `style`).
+ * La capa incluye también los overlays con `placeUnderSlide`, que el engine todavía no dibuja
+ * debajo de la slide.
+ */
+function buildOverlayItems(outputId: string, output: Output, layers: string[], resolution: { width: number; height: number }): SceneItem[] {
+    const scene = output.out?.scene || null
+    const sceneHiddenOverlays = scene?.hiddenOverlays || []
+    const sceneOverlays = (scene?.overlays || []).filter((id) => !sceneHiddenOverlays.includes(id))
+    const sceneHideLayers = scene !== null && !scene.style
+    const outputtedOverlayIds = sceneHideLayers ? [] : output.out?.overlays || []
+    const overlayIds = [...new Set([...sceneOverlays, ...(layers.includes("overlays") ? outputtedOverlayIds : [])])]
+
+    const items: SceneItem[] = []
+    const overlayStore = get(overlays)
+    // Overlay.svelte evalúa las condiciones de cada item sólo contra su propio texto (`allItems` = [])
+    const noAllItems: Item[] = []
+
+    overlayIds.forEach((overlayId) => {
+        const overlay = overlayStore[overlayId]
+        if (!Array.isArray(overlay?.items)) return
+
+        const dynamicRef: DynamicRef = { type: "overlay", id: overlayId }
+        overlay.items.forEach((item, index) => {
+            const textItem = buildTextItem(item, index, noAllItems, dynamicRef, outputId, resolution, OVERLAY_LINE_WINDOW)
+            if (textItem) {
+                items.push(textItem)
+                return
+            }
+
+            const mediaItem = buildMediaItem(item, index, noAllItems, outputId, resolution, OVERLAY_LINE_WINDOW)
+            if (mediaItem) items.push(mediaItem)
+        })
+    })
+
+    return items
 }
 
 export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
@@ -247,6 +300,7 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
         height: resolution.height,
         background: getBackground(output, currentStyle, showSlide, layers),
         items,
+        overlays: buildOverlayItems(outputId, output, layers, resolution),
         transition: getTransition(output, currentStyle, !!showSlide),
         plainText: plainText.trim()
     })
@@ -313,6 +367,7 @@ function buildStageScene(outputId: string, output: Output, outputsData: { [id: s
         height: resolution.height,
         background: null,
         items: [],
+        overlays: [],
         transition: null,
         plainText,
         nextText

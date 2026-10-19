@@ -13,6 +13,7 @@
         "muted": true
     },
     "items": [],
+    "overlays": [],
     "transition": {
         "type": "fade",
         "durationMs": 500

@@ -136,12 +136,13 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
         // Los videos no se decodifican fuera del bucle de render.
         let background = scene.background_media();
         let media_items = scene.media_items();
+        let overlay_media_items = scene.overlay_media_items();
         let has_background_image = background
             .as_ref()
             .map(|b| b.media_type == "image")
             .unwrap_or(false);
 
-        if has_background_image || !media_items.is_empty() {
+        if has_background_image || !media_items.is_empty() || !overlay_media_items.is_empty() {
             let pipeline = media::BackgroundPipeline::new(&device, SNAPSHOT_FORMAT);
             let mut pool = MediaPool::new();
 
@@ -187,6 +188,33 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
                     item.aspect_mode,
                 );
             }
+
+            // Capa 4: medios (imágenes) de los overlays (F4.6).
+            for item in &overlay_media_items {
+                if item.media_type != "image" || item.path.is_empty() {
+                    continue;
+                }
+                let texture = pool.load_image(&device, &queue, &pipeline, &item.path)?;
+                let scale = match item.design_width {
+                    Some(dw) if dw > 0.0 => width as f32 / dw,
+                    _ => 1.0,
+                };
+                pipeline.render_rect(
+                    &queue,
+                    &mut render_pass,
+                    &texture,
+                    width,
+                    height,
+                    [
+                        item.x * scale,
+                        item.y * scale,
+                        item.width * scale,
+                        item.height * scale,
+                    ],
+                    item.opacity,
+                    item.aspect_mode,
+                );
+            }
         }
 
         // Capa 3: texto principal.
@@ -194,6 +222,13 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
         if !blocks.is_empty() {
             let mut text_engine = TextEngine::new(&device, &queue, SNAPSHOT_FORMAT);
             text_engine.render(&device, &queue, &mut render_pass, width, height, &blocks)?;
+        }
+
+        // Capa 5: texto de los overlays (F4.6).
+        let overlay_blocks = scene.overlay_text_blocks();
+        if !overlay_blocks.is_empty() {
+            let mut text_engine = TextEngine::new(&device, &queue, SNAPSHOT_FORMAT);
+            text_engine.render(&device, &queue, &mut render_pass, width, height, &overlay_blocks)?;
         }
     }
 
@@ -380,6 +415,7 @@ mod tests {
             height: 180.0,
             background: None,
             items: vec![SceneItem::Unknown],
+            overlays: Vec::new(),
             transition: None,
             plain_text: String::new(),
             next_text: None,

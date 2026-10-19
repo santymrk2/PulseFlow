@@ -21,14 +21,16 @@
 //!   `opacity` (F4.5). Los videos se aceptan pero el engine todavía no los dibuja.
 //! - `transition`: crossfade y corte en el bucle de render (F4.4).
 //! - `plainText`/`nextText`: texto del Stage Display.
+//! - `overlays`: capa propia con los items de las overlays activas (texto e imagen),
+//!   dibujada encima de la slide (F4.6): fondo → medios de la slide → texto de la
+//!   slide → medios de los overlays → texto de los overlays. Los overlays con
+//!   `placeUnderSlide` viajan igual en esta capa (limitación anotada a propósito).
 //!
 //! Sólo tipo (llega al engine pero todavía no se dibuja):
 //!
 //! - `height`.
 //! - Items que no son `text` ni `media` (cámaras, web, temporizadores…): se
 //!   deserializan como `SceneItem::Unknown` y se ignoran.
-//! - Los overlays de `ScreenScene::overlays` son el modelo previo, no del Scene
-//!   Graph (F4.6 en el roadmap).
 //!
 //! El contrato se verifica con los fixtures de `src-tauri/tests/fixtures/scene/`
 //! (F4.2): los genera el test de vitest `sceneGraphPayload.test.ts` —el payload lo
@@ -62,6 +64,8 @@ pub struct ScenePayload {
     pub height: f32,
     pub background: Option<SceneBackground>,
     pub items: Vec<SceneItem>,
+    /// Items de las overlays activas: capa propia dibujada encima de la slide (F4.6).
+    pub overlays: Vec<SceneItem>,
     pub transition: Option<SceneTransition>,
     /// Todo el texto de la slide en una cadena (lo usa el Stage Display).
     pub plain_text: String,
@@ -81,6 +85,7 @@ impl Default for ScenePayload {
             height: 0.0,
             background: None,
             items: Vec::new(),
+            overlays: Vec::new(),
             transition: None,
             plain_text: String::new(),
             next_text: None,
@@ -334,6 +339,68 @@ impl ScenePayload {
                 _ => 0,
             },
         })
+    }
+
+    /// Texto de las overlays activas (capa propia dibujada encima de la slide, F4.6).
+    pub fn overlay_text_blocks(&self) -> Vec<TextBlock> {
+        let design_width = self.design_width();
+        self.overlays
+            .iter()
+            .filter_map(|item| match item {
+                SceneItem::Text(t) => Some(t),
+                _ => None,
+            })
+            .filter(|t| !t.text.trim().is_empty() || t.spans.iter().any(|s| !s.text.trim().is_empty()))
+            .map(|t| TextBlock {
+                text: t.text.clone(),
+                font_family: t.font_family.clone(),
+                font_size: t.font_size,
+                font_weight: t.font_weight,
+                font_style: t.font_style.clone(),
+                color: t.color,
+                alignment: t.align.clone(),
+                x: t.x,
+                y: t.y,
+                width: t.width,
+                height: t.height,
+                line_height_ratio: t.line_height,
+                outline_color: t.stroke.as_ref().map(|s| s.color),
+                outline_width: t.stroke.as_ref().map(|s| s.width),
+                shadow_color: t.shadow.as_ref().map(|s| s.color),
+                shadow_offset: t.shadow.as_ref().map(|s| [s.offset_x, s.offset_y]),
+                spans: t.spans.clone(),
+                vertical_align: t.vertical_align.clone(),
+                design_width: Some(design_width),
+            })
+            .collect()
+    }
+
+    /// Items de medio (imágenes) de las overlays activas (F4.6).
+    pub fn overlay_media_items(&self) -> Vec<MediaItem> {
+        self.overlays
+            .iter()
+            .filter_map(|item| match item {
+                SceneItem::Media(m) => Some(m),
+                _ => None,
+            })
+            .filter(|m| !m.src.trim().is_empty())
+            .map(|m| MediaItem {
+                id: m.src.clone(),
+                path: m.src.clone(),
+                media_type: m.media_type.clone(),
+                x: m.x,
+                y: m.y,
+                width: m.width,
+                height: m.height,
+                aspect_mode: match m.fit.as_deref() {
+                    Some("contain") => 1,
+                    Some("fill") | Some("stretch") => 2,
+                    _ => 0,
+                },
+                opacity: m.opacity.clamp(0.0, 1.0),
+                design_width: Some(self.width),
+            })
+            .collect()
     }
 }
 

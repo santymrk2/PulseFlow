@@ -132,6 +132,10 @@ pub struct ScreenScene {
     pub text: Vec<TextBlock>,
     pub media: Vec<MediaItem>,
     pub background: Option<BackgroundMedia>,
+    /// Items de texto de las overlays activas (Scene Graph, F4.6).
+    pub overlay_text: Vec<TextBlock>,
+    /// Items de medio (imágenes) de las overlays activas (Scene Graph, F4.6).
+    pub overlay_media: Vec<MediaItem>,
     pub overlays: Vec<OverlayItem>,
     pub stage: StageData,
 }
@@ -649,6 +653,8 @@ pub fn set_audience_scene(
     text: Vec<TextBlock>,
     media: Vec<MediaItem>,
     background: Option<BackgroundMedia>,
+    overlay_text: Vec<TextBlock>,
+    overlay_media: Vec<MediaItem>,
 ) -> AppResult<()> {
     let state = manager(app)?;
     // El frontend reenvía la escena ante cualquier cambio de `outputs`, no sólo al
@@ -657,12 +663,23 @@ pub fn set_audience_scene(
     let changed = {
         let scene = state.scene(id);
         let current = scene.read_safe();
-        current.text != text || current.media != media || current.background != background
+        current.text != text
+            || current.media != media
+            || current.background != background
+            || current.overlay_text != overlay_text
+            || current.overlay_media != overlay_media
     };
 
     set_scene_text(app, id, text)?;
     set_scene_media(app, id, media)?;
     set_scene_background(app, id, background)?;
+    // Overlays del Scene Graph (F4.6): capa propia encima de la slide.
+    {
+        let scene = state.scene(id);
+        let mut scene = scene.write_safe();
+        scene.overlay_text = overlay_text;
+        scene.overlay_media = overlay_media;
+    }
 
     if changed {
         request_transition(&state, id);
@@ -1009,18 +1026,84 @@ fn spawn_render_loop(
                                 }
                             }
 
-                            let mut blocks = current.text;
-                            // Overlays (relojes, avisos): modelo previo, hasta F2.7.
-                            blocks.extend(
-                                current.overlays.into_iter().map(|o| overlay_block(o, w)),
-                            );
-                            blocks
+                            // Texto de la slide (capa 3). Los overlays del Scene Graph
+                            // (F4.6) se dibujan después, en su propia capa.
+                            current.text.clone()
                         }
                         ScreenKind::Stage => super::stage::stage_blocks(&current.stage, w as f32, h as f32),
                     };
 
                     if !blocks.is_empty() {
                         let _ = text_engine.render(&device, &queue, &mut pass, w, h, &blocks);
+                    }
+
+                    // Capa de overlays del Scene Graph (F4.6): fondo → medios slide →
+                    // texto slide → medios overlay → texto overlay. Sólo en audiencia.
+                    if matches!(kind, ScreenKind::Audience) {
+                        // Medios (imágenes) de los overlays.
+                        for item in &current.overlay_media {
+                            if item.media_type != "image" || item.path.is_empty() {
+                                continue;
+                            }
+                            if media_pool.get(&item.id).is_none()
+                                && !failed_images.contains(&item.id)
+                            {
+                                if let Err(err) = media_pool.load_image(
+                                    &device,
+                                    &queue,
+                                    &background_pipeline,
+                                    &item.path,
+                                ) {
+                                    eprintln!("[screens] {err}");
+                                    failed_images.insert(item.id.clone());
+                                }
+                            }
+                            if let Some(texture) = media_pool.get(&item.id) {
+                                let scale = match item.design_width {
+                                    Some(dw) if dw > 0.0 => w as f32 / dw,
+                                    _ => 1.0,
+                                };
+                                background_pipeline.render_rect(
+                                    &queue,
+                                    &mut pass,
+                                    &texture,
+                                    w,
+                                    h,
+                                    [
+                                        item.x * scale,
+                                        item.y * scale,
+                                        item.width * scale,
+                                        item.height * scale,
+                                    ],
+                                    item.opacity,
+                                    item.aspect_mode,
+                                );
+                            }
+                        }
+
+                        // Texto de los overlays.
+                        if !current.overlay_text.is_empty() {
+                            let _ = text_engine.render(
+                                &device,
+                                &queue,
+                                &mut pass,
+                                w,
+                                h,
+                                &current.overlay_text,
+                            );
+                        }
+
+                        // Overlays del modelo previo (relojes/avisos): se dibujan
+                        // por encima de todo, como antes.
+                        let old_blocks: Vec<TextBlock> = current
+                            .overlays
+                            .clone()
+                            .into_iter()
+                            .map(|o| overlay_block(o, w))
+                            .collect();
+                        if !old_blocks.is_empty() {
+                            let _ = text_engine.render(&device, &queue, &mut pass, w, h, &old_blocks);
+                        }
                     }
                 }
 

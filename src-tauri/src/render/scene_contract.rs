@@ -14,8 +14,8 @@ use super::scene::{SceneItem, ScenePayload, SCENE_GRAPH_VERSION};
 use serde_json::Value;
 
 /// Nombres de los fixtures; el mismo listado que `sceneGraphPayload.test.ts`.
-const SCENE_FIXTURES: [&str; 5] =
-    ["audience-text", "audience-background-video", "audience-media", "stage", "cleared"];
+const SCENE_FIXTURES: [&str; 6] =
+    ["audience-text", "audience-background-video", "audience-media", "audience-overlays", "stage", "cleared"];
 
 fn fixture(name: &str) -> &'static str {
     match name {
@@ -24,6 +24,7 @@ fn fixture(name: &str) -> &'static str {
             include_str!("../../tests/fixtures/scene/audience-background-video.json")
         }
         "audience-media" => include_str!("../../tests/fixtures/scene/audience-media.json"),
+        "audience-overlays" => include_str!("../../tests/fixtures/scene/audience-overlays.json"),
         "stage" => include_str!("../../tests/fixtures/scene/stage.json"),
         "cleared" => include_str!("../../tests/fixtures/scene/cleared.json"),
         other => panic!("fixture de contrato desconocida: {other}"),
@@ -55,7 +56,7 @@ fn assert_keys(value: &Value, expected: &[&str]) {
 /// Cualquier fixture del contrato deserializa y declara la versión que entiende el engine.
 #[test]
 fn cada_fixture_deserializa_y_valida_la_version() {
-    assert_eq!(SCENE_FIXTURES.len(), 5, "el test de vitest debe generar 5 fixtures");
+    assert_eq!(SCENE_FIXTURES.len(), 6, "el test de vitest debe generar 6 fixtures");
     for name in SCENE_FIXTURES {
         let (payload, _) = parse(name);
         assert_eq!(payload.version, SCENE_GRAPH_VERSION, "versión en {name}");
@@ -78,7 +79,7 @@ fn audience_text_mantiene_el_contrato() {
 
     assert_keys(
         &json,
-        &["version", "outputId", "stage", "width", "height", "background", "items", "transition", "plainText"],
+        &["version", "outputId", "stage", "width", "height", "background", "items", "overlays", "transition", "plainText"],
     );
     assert_keys(
         &json["items"][0],
@@ -190,7 +191,7 @@ fn stage_mantiene_su_contrato() {
 
     assert_keys(
         &json,
-        &["version", "outputId", "stage", "width", "height", "background", "items", "transition", "plainText", "nextText"],
+        &["version", "outputId", "stage", "width", "height", "background", "items", "overlays", "transition", "plainText", "nextText"],
     );
 }
 
@@ -210,7 +211,7 @@ fn escena_vacia_mantiene_su_contrato() {
     // sin nextText: la clave no existe en el payload
     assert_keys(
         &json,
-        &["version", "outputId", "stage", "width", "height", "background", "items", "transition", "plainText"],
+        &["version", "outputId", "stage", "width", "height", "background", "items", "overlays", "transition", "plainText"],
     );
 }
 
@@ -256,6 +257,38 @@ fn audience_media_mantiene_su_contrato() {
     assert_eq!(video.media_type, "video");
     assert_eq!(video.aspect_mode, 2, "fit fill");
     assert_eq!(video.opacity, 0.5);
+}
+
+/// Escena de audiencia con overlays (texto e imagen) en su propia capa (F4.6).
+#[test]
+fn audience_overlays_mantiene_su_contrato() {
+    let (payload, json) = parse("audience-overlays");
+
+    assert_eq!(payload.output_id, "audience-4");
+    assert!(!payload.stage);
+    assert_eq!(payload.items.len(), 1);
+    assert_eq!(payload.overlays.len(), 2);
+
+    assert_keys(
+        &json,
+        &["version", "outputId", "stage", "width", "height", "background", "items", "overlays", "transition", "plainText"],
+    );
+
+    // lo que el engine dibuja: slide + overlays en capas separadas
+    let slide_blocks = payload.text_blocks();
+    assert_eq!(slide_blocks.len(), 1, "sólo el texto de la slide llega a text_blocks");
+    assert_eq!(slide_blocks[0].text, "Slide");
+
+    let overlay_text = payload.overlay_text_blocks();
+    assert_eq!(overlay_text.len(), 1, "un texto de overlay");
+    assert_eq!(overlay_text[0].text, "Aviso");
+    assert_eq!(overlay_text[0].color, [1.0, 1.0, 0.0, 1.0]);
+
+    let overlay_media = payload.overlay_media_items();
+    assert_eq!(overlay_media.len(), 1, "un medio de overlay");
+    assert_eq!(overlay_media[0].path, "/media/logo.png");
+    assert_eq!(overlay_media[0].media_type, "image");
+    assert_eq!(overlay_media[0].opacity, 0.9);
 }
 
 /// El engine ignora los items de tipos que todavía no soporta (F4.5) en vez de fallar.

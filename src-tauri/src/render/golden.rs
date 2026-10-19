@@ -233,6 +233,46 @@ fn item_imagen(image_path: &str) -> ScenePayload {
     }))
 }
 
+/// Escena con overlays (texto e imagen) encima de un texto de slide (F4.6).
+fn overlays(image_path: &str) -> ScenePayload {
+    scene(serde_json::json!({
+        "outputId": "golden-overlays",
+        "stage": false,
+        "width": WIDTH,
+        "height": HEIGHT,
+        "background": null,
+        "items": [{
+            "type": "text",
+            "id": "item-0",
+            "x": 0, "y": 120, "width": WIDTH, "height": 120,
+            "align": "center", "verticalAlign": "center", "lineHeight": 1.2,
+            "fontSize": 64, "fontWeight": 700, "color": [1, 1, 1, 1],
+            "text": "Slide"
+        }],
+        "overlays": [
+            {
+                "type": "media",
+                "id": "overlay-media",
+                "x": 160, "y": 90, "width": 320, "height": 180,
+                "src": image_path,
+                "mediaType": "image",
+                "fit": "fill",
+                "opacity": 0.9
+            },
+            {
+                "type": "text",
+                "id": "overlay-text",
+                "x": 0, "y": 0, "width": WIDTH, "height": 60,
+                "align": "left", "verticalAlign": "center", "lineHeight": 1.2,
+                "fontSize": 32, "fontWeight": 700, "color": [1, 1, 0, 1],
+                "text": "Aviso"
+            }
+        ],
+        "transition": null,
+        "plainText": "Slide"
+    }))
+}
+
 /// Escribe en la carpeta temporal una imagen de 4 cuadrantes (rojo/verde/azul/blanco)
 /// y devuelve su ruta. Es determinista, así el golden del fondo no depende de assets.
 fn reference_background() -> String {
@@ -350,4 +390,24 @@ fn golden_item_imagen() {
     assert_eq!(pixel_at(&rgba, WIDTH, 620, 340), [0, 0, 0], "esquina opuesta sin item");
 
     assert_golden("item-imagen", &rgba, WIDTH, HEIGHT);
+}
+
+/// F4.6: los overlays (imagen y texto) se dibujan encima de la slide.
+#[test]
+fn golden_overlays() {
+    let scene = overlays(&reference_background());
+    let rgba = render_snapshot_rgba(&scene, WIDTH, HEIGHT).expect("render del snapshot");
+
+    // texto de la slide (blanco) presente
+    let blancos = count_pixels(&rgba, |[r, g, b]| r > 200 && g > 200 && b > 200);
+    assert!(blancos > 50, "debe haber texto de slide ({blancos})");
+
+    // imagen del overlay en su caja (cuadrante rojo)
+    assert_color_near(pixel_at(&rgba, WIDTH, 240, 135), [255, 0, 0], "overlay rojo");
+
+    // texto del overlay (amarillo) presente
+    let amarillos = count_pixels(&rgba, |[r, g, b]| r > 200 && g > 200 && b < 80);
+    assert!(amarillos > 20, "debe haber texto de overlay amarillo ({amarillos})");
+
+    assert_golden("overlays", &rgba, WIDTH, HEIGHT);
 }
