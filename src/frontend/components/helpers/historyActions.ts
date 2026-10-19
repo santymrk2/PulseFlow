@@ -2,7 +2,7 @@ import { get } from "svelte/store"
 import { uid } from "uid"
 import type { Item, Slide, SlideData, Template } from "../../../types/Show"
 import { breakLongLines, removeItemValues } from "../../show/slides"
-import { activeEdit, activePage, activePopup, activeProject, activeShow, alertMessage, cachedShowsData, deletedShows, groups, notFound, projects, refreshEditSlide, renamedShows, shows, showsCache, templates } from "../../stores"
+import { activeEdit, activeLook, activePage, activePopup, activeProject, activeShow, alertMessage, cachedShowsData, deletedShows, groups, notFound, outputs, projects, refreshEditSlide, renamedShows, shows, showsCache, templates } from "../../stores"
 import { save } from "../../utils/save"
 import { EMPTY_SHOW_SLIDE } from "../../values/empty"
 import { customActionActivation } from "../actions/actions"
@@ -29,12 +29,41 @@ export const historyActions = ({ obj, undo = null }: any) => {
         SLIDES: () => handleSlides(obj, data, initializing),
         TEMPLATE: () => handleTemplate(obj, data, initializing),
         SHOW_LAYOUT: () => handleShowLayout(obj, data, initializing),
-        SHOW_ITEMS: () => handleShowItems(obj, data, initializing)
+        SHOW_ITEMS: () => handleShowItems(obj, data, initializing),
+        APPLY_LOOK: () => handleApplyLook(obj, data, initializing)
     }
 
     if (obj) console.info("HISTORY " + (initializing ? "INIT" : undo ? "UNDO" : "REDO") + ` [${obj.id}]:`, clone(obj))
 
     return actions
+}
+
+function applyLookStyles(screens: { [outputId: string]: string }) {
+    outputs.update((outs) => {
+        Object.keys(screens || {}).forEach((outputId) => {
+            if (!outs[outputId]) return
+            // replace the object so the history "previousData" reference stays untouched
+            outs[outputId] = { ...outs[outputId], style: screens[outputId] }
+        })
+        return outs
+    })
+}
+
+// APPLY_LOOK (F5.2): aplicar un look cambia el estilo de varias salidas a la vez,
+// así que no puede usar el updater genérico "settings_output" (es por salida única)
+function handleApplyLook(obj, data, initializing) {
+    if (initializing) {
+        const previousStyles: { [outputId: string]: string } = {}
+        Object.keys(data.screens || {}).forEach((outputId) => {
+            previousStyles[outputId] = get(outputs)[outputId]?.style || "default"
+        })
+
+        obj.oldData = { lookId: get(activeLook), screens: previousStyles }
+    }
+
+    // undo/redo already swapped oldData/newData, so "data" is always the state to apply
+    applyLookStyles(data.screens || {})
+    if (data.lookId) activeLook.set(data.lookId)
 }
 
 function handleUpdate(obj, data, initializing) {
