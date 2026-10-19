@@ -846,3 +846,81 @@ pub async fn BUNDLE_MEDIA_FILES(
 
     Ok(())
 }
+
+// ---------------------------------------------------------------------------
+// SAVE_IMAGE
+// ---------------------------------------------------------------------------
+
+#[derive(Deserialize, Default)]
+#[serde(rename_all = "camelCase")]
+pub struct SaveImageData {
+    pub id: Option<String>,
+    pub path: Option<String>,
+    #[serde(default)]
+    pub base64: Option<String>,
+    #[serde(default)]
+    pub buffer: Option<Vec<u8>>,
+    #[serde(default)]
+    pub file_path: Option<Vec<String>>,
+    #[serde(default)]
+    pub format: Option<String>,
+    #[serde(default)]
+    pub open_folder: Option<bool>,
+}
+
+/// `SAVE_IMAGE`: guarda una imagen (base64 o buffer) en disco.
+#[tauri::command]
+pub fn SAVE_IMAGE(app: AppHandle, state: State<'_, AppState>, data: SaveImageData) -> AppResult<()> {
+    if let (Some(path), Some(buffer)) = (data.path.as_deref(), data.buffer.as_ref()) {
+        if let Some(parent) = Path::new(path).parent() {
+            let _ = std::fs::create_dir_all(parent);
+        }
+        std::fs::write(path, buffer)?;
+        return Ok(());
+    }
+
+    if let Some(b64) = data.base64.as_deref() {
+        let stripped = if let Some(idx) = b64.find(',') {
+            &b64[idx + 1..]
+        } else {
+            b64
+        };
+        let bytes = base64::Engine::decode(
+            &base64::engine::general_purpose::STANDARD,
+            stripped.trim(),
+        )
+        .map_err(|e| AppError::new(format!("base64 inválido: {e}")))?;
+
+        let root = {
+            let stores = state.stores.lock().map_err(|_| AppError::new("lock poisoned"))?;
+            std::path::PathBuf::from(stores.data_folder_root())
+        };
+
+        let mut target = root.clone();
+        if let Some(parts) = data.file_path.as_ref() {
+            for part in parts {
+                target = target.join(part);
+            }
+        }
+        if let Some(fmt) = data.format.as_deref() {
+            let fmt = fmt.trim_start_matches('.');
+            if target.extension().is_none() {
+                target = target.with_extension(fmt);
+            }
+        }
+        if let Some(parent) = target.parent() {
+            std::fs::create_dir_all(parent)?;
+        }
+        std::fs::write(&target, &bytes)?;
+
+        if data.open_folder.unwrap_or(false) {
+            if let Some(parent) = target.parent() {
+                let _ = app.opener().open_path(parent.to_string_lossy().to_string(), None::<&str>);
+            }
+        }
+        return Ok(());
+    }
+
+    let _ = data.id;
+    Ok(())
+}
