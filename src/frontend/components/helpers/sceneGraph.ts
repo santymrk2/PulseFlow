@@ -11,21 +11,27 @@
 // dibuja encima de la slide (fondo → medios de la slide → texto de la slide → medios → texto de
 // los overlays). El engine no respeta el orden de apilado de la slide (fondo → medios → texto).
 import { get } from "svelte/store"
+import dayjs from "dayjs"
+import localizedFormat from "dayjs/plugin/localizedFormat"
 import { OUTPUT } from "../../../types/Channels"
 import type { Output } from "../../../types/Output"
 import type { SceneBackground, SceneGraph, SceneItem, SceneMediaItem, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
 import type { Item, OutSlide, Slide } from "../../../types/Show"
-import { media, overlays, outputs, stageShows, styles, transitionData } from "../../stores"
+import { activeTimers, media, overlays, outputs, stageShows, styles, timeFormat as timeFormatStore, timers, transitionData } from "../../stores"
 import { send } from "../../utils/request"
 import { getItemText } from "../edit/scripts/textStyle"
 import { shouldItemBeShown } from "../edit/scripts/itemHelpers"
 import { clone } from "./array"
 import { getExtension, getMediaStyle, getMediaType } from "./media"
+import { joinTimeBig } from "./time"
+import { getCurrentTimerValue } from "../drawer/timers/timers"
 import { defaultLayers, getCurrentStyle, getOutputLines, getOutputResolution, getOutputTransitions, getStyleTemplate, percentageStylePos, setTemplateStyle } from "./output"
 import { _show } from "./shows"
 import { replaceDynamicValues } from "./showActions"
 import { applyTextTransform, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
 import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
+
+dayjs.extend(localizedFormat)
 
 const DEFAULT_FONT_SIZE = 100
 const DEFAULT_LINE_HEIGHT = 1.1
@@ -159,6 +165,102 @@ function buildMediaItem(item: Item, index: number, allItems: Item[], outputId: s
     return sceneMediaItem({ id: item.id, x: box.x, y: box.y, width: box.width, height: box.height, src, mediaType, fit, opacity: 1 })
 }
 
+// TIMERS / RELOJES (F4.7): el engine dibuja el valor que manda el frontend.
+
+function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: string, resolution: { width: number; height: number }, lineWindow: LineWindow): SceneTextItem | null {
+    if (item.type !== "timer" && item.type !== "clock") return null
+    if (!shouldItemBeShown(item, allItems, { outputId, type: "default" })) return null
+    if (item.clickReveal && lineWindow.clickRevealed === false) return null
+
+    const box = parseItemBox(percentageStylePos(item.style, resolution), { x: 0, y: 0, width: resolution.width, height: resolution.height })
+    const base = parseTextStyle(item.style)
+
+    let value = ""
+    const today = new Date()
+
+    if (item.type === "timer") {
+        const timerId = item.timer?.id || item.timerId || ""
+        const timer = (get(timers) as any)?.[timerId] || {}
+        if (timer?.type) {
+            try {
+                const currentTime = getCurrentTimerValue(timer, { id: timerId }, today, get(activeTimers))
+                const showHours = item.timer?.showHours !== false
+                const padding = item.timer?.padding !== false
+                value = joinTimeBig(typeof currentTime === "number" ? currentTime : 0, showHours, padding)
+            } catch {
+                value = ""
+            }
+        }
+        // overflow color not handled in engine (cosmetic)
+    } else {
+        const clock = item.clock || {}
+        const type = clock.type || "digital"
+        if (type === "analog") return null
+
+        const offsetDays = Number(clock.offsetDays) || 0
+        const target = offsetDays ? new Date(today.getTime() + offsetDays * 86400000) : today
+
+        if (type === "custom") {
+            const fmt = clock.customFormat || "hh:mm a"
+            value = dayjs(target).format(fmt)
+        } else {
+            const dateFormat = clock.dateFormat || "none"
+            const showTime = clock.showTime !== false
+            const seconds = clock.seconds !== false
+            const twelve = get(timeFormatStore) === "12"
+
+            let parts: string[] = []
+            if (dateFormat && dateFormat !== "none") {
+                parts.push(dayjs(target).format(dateFormat))
+            }
+            if (showTime) {
+                const d = target
+                let h = d.getHours()
+                let m = d.getMinutes()
+                let s = d.getSeconds()
+                let pm = false
+                if (twelve) {
+                    if (h === 0) h = 12
+                    else if (h > 12) {
+                        h -= 12
+                        pm = true
+                    }
+                }
+                const pad = (n: number) => String(n).padStart(2, "0")
+                let timeStr = `${pad(h)}:${pad(m)}`
+                if (seconds) timeStr += `:${pad(s)}`
+                if (twelve) timeStr += pm ? " PM" : " AM"
+                parts.push(timeStr)
+            }
+            value = parts.join(" ").trim()
+        }
+    }
+
+    if (!value) return null
+
+    const fontSize = base.fontSize || 100
+    const color = base.color || [1, 1, 1, 1]
+    const spans = [sceneTextSpan({ text: value, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color })]
+
+    return sceneTextItem({
+        id: item.id || `item-${index}`,
+        x: box.x,
+        y: box.y,
+        width: box.width,
+        height: box.height,
+        align: parseTextAlign(item.align) || "center",
+        verticalAlign: parseVerticalAlign(item.align),
+        lineHeight: base.lineHeight || 1.1,
+        fontFamily: base.fontFamily,
+        fontSize,
+        fontWeight: base.fontWeight ?? 400,
+        fontStyle: base.fontStyle,
+        color,
+        text: value,
+        spans
+    })
+}
+
 // BACKGROUND
 
 function getBackground(output: Output, currentStyle: ReturnType<typeof getCurrentStyle>, slide: OutSlide | null, layers: string[]): SceneBackground | null {
@@ -217,6 +319,13 @@ function buildSlideItems(showSlide: OutSlide, outputId: string, currentStyle: Re
             return
         }
 
+        const timerItem = buildTimerItem(item, index, slideItems, outputId, resolution, lineWindow)
+        if (timerItem) {
+            items.push(timerItem)
+            textItems.push(timerItem)
+            return
+        }
+
         const mediaItem = buildMediaItem(item, index, slideItems, outputId, resolution, lineWindow)
         if (mediaItem) items.push(mediaItem)
     })
@@ -265,6 +374,12 @@ function buildOverlayItems(outputId: string, output: Output, layers: string[], r
             const textItem = buildTextItem(item, index, noAllItems, dynamicRef, outputId, resolution, OVERLAY_LINE_WINDOW)
             if (textItem) {
                 items.push(textItem)
+                return
+            }
+
+            const timerItem = buildTimerItem(item, index, noAllItems, outputId, resolution, OVERLAY_LINE_WINDOW)
+            if (timerItem) {
+                items.push(timerItem)
                 return
             }
 

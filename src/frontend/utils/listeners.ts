@@ -165,6 +165,15 @@ export function storeSubscriber() {
         // el Scene Graph de cada salida incluye los items de las overlays activas (F4.6)
         sendOutputScenes(get(outputs))
     })
+
+    // Timers/relojes (F4.7): el engine dibuja el valor que manda el frontend; al
+    // cambiar el valor del timer se reenvía la escena de cada salida.
+    activeTimers.subscribe(() => {
+        sendOutputScenes(get(outputs))
+    })
+    timers.subscribe(() => {
+        sendOutputScenes(get(outputs))
+    })
     overlayCategories.subscribe(async (data) => {
         if (await hasNewerUpdate("LISTENER_OVERLAY_CATEGORIES", 50)) return
 
