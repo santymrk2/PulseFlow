@@ -175,6 +175,8 @@ pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<b
 /// `plainText`/`nextText`. La transición sigue siendo global hasta F3.
 #[tauri::command]
 pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
+    data.validate_version()?;
+
     if let Some(transition) = &data.transition {
         crate::render::set_transition_config(
             &app,
@@ -233,6 +235,7 @@ pub struct SnapshotPayload {
 #[tauri::command]
 #[cfg(debug_assertions)]
 pub fn RENDER_SNAPSHOT(app: AppHandle, data: SnapshotPayload) -> AppResult<String> {
+    data.scene.validate_version()?;
     let base_dir = app.path().app_cache_dir()?;
     let path = crate::render::snapshot::render_snapshot(
         &data.scene,

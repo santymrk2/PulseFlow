@@ -336,6 +336,7 @@ mod tests {
     #[test]
     fn snapshot_escena_vacia_da_todo_negro() {
         let scene = ScenePayload {
+            version: crate::render::scene::SCENE_GRAPH_VERSION,
             output_id: "snapshot-empty".to_string(),
             stage: false,
             width: 320.0,

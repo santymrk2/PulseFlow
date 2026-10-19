@@ -1,10 +1,36 @@
 // Scene Graph que la UI de control envía al engine de render nativo (Rust) con `RENDER_SCENE`.
-// Espejo de `src-tauri/src/render/scene.rs` (serde camelCase). Si cambias uno, cambia el otro.
+// Espejo exacto de `src-tauri/src/render/scene.rs` (serde camelCase). Si cambias un campo en un
+// lado, cambia el otro: el test de contrato (`src-tauri/tests/scene_contract.rs`, F4.2) deserializa
+// fixtures generadas desde aquí y falla si los nombres no coinciden.
+//
+// # Qué está implementado en el engine (F4.1)
+//
+// El contrato describe más de lo que el engine dibuja hoy. Implementado de verdad:
+//
+// - `outputId`: rutea la escena a la pantalla con ese id.
+// - `stage`: elige el layout de Stage Display (`plainText`/`nextText`).
+// - `width`: resolución lógica; escala `x`, `width` y `fontSize` de los items.
+// - `background`: imagen o video (con `opacity` y `fit`).
+// - `items` de tipo `text`: caja, alineación horizontal y vertical, línea, fuente por
+//   tramo (`spans`), color, contorno (`stroke`) y sombra (`shadow`).
+// - `plainText`/`nextText`: texto del Stage Display.
+//
+// Sólo tipo (llega al engine pero todavía no se dibuja):
+//
+// - `transition`: el engine guarda la config pero el bucle aún no la aplica (F4.4).
+// - `height`.
+// - Items que no son `text` (`media`, `image`, overlays…): Rust los ignora.
+// - Los overlays de la UI salen del modelo previo de `ScreenScene`, no de este contrato.
+
+/** Versión del contrato. El engine rechaza cualquier otra (F4.1). */
+export const SCENE_GRAPH_VERSION = 1
 
 /** Color RGBA normalizado: cada canal entre 0 y 1. */
 export type SceneColor = [number, number, number, number]
 
 export interface SceneGraph {
+    /** Versión del contrato (`SCENE_GRAPH_VERSION`). El engine la valida. */
+    version: number
     outputId: string
     /** La salida es un Stage Display */
     stage: boolean

@@ -352,7 +352,20 @@ Va antes que las features nuevas porque Looks agrega datos persistidos.
 
 ## F4 — Contrato del Scene Graph
 
-- [ ] **F4.1 Fuente de verdad del contrato.**
+- [x] **F4.1 Fuente de verdad del contrato.** (verificado 2026-10-18: `cargo check` limpio,
+  `cargo test --lib` 41/41 —3 tests nuevos en `render/scene.rs`: `version_actual_se_acepta`,
+  `version_ausente_se_asume_la_actual` y `version_desconocida_se_rechaza` (comprueba que el
+  mensaje nombra la versión recibida y la soportada)—; `test:unit` 47/47, `test:svelte` 59
+  errores (línea base), Prettier limpio. Ambos lados llevan ahora la tabla de qué campos
+  **dibuja** el engine (`outputId`, `stage`, `width`, `background`, items `text`,
+  `plainText`/`nextText`) y cuáles son **sólo tipo** (`transition`, `height`, items no-text,
+  overlays del modelo previo). El payload lleva `version` (constante
+  `SCENE_GRAPH_VERSION = 1` en TS y Rust, `SCENE_GRAPH_VERSION` en `render/scene.rs`);
+  `ScenePayload::validate_version()` rechaza con mensaje claro cualquier otra versión y se
+  llama al principio de `RENDER_SCENE` y de `RENDER_SNAPSHOT`. Un payload sin `version` se
+  interpreta como la versión actual, así no se rompen los snippets de consola documentados
+  en `docs/VERIFICAR.md` (F0.2). `Default` de `ScenePayload` es manual para que no quede
+  `version: 0`.)
   *Archivos:* `src/types/SceneGraph.ts`, `src-tauri/src/render/scene.rs`.
   *Pasos:* documentar en ambos archivos qué campos están **implementados** en el engine
   y cuáles son sólo tipos; agregar `version: 1` al payload y rechazar (con error

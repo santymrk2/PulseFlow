@@ -1,16 +1,57 @@
 //! Scene Graph que viaja desde Svelte (`RENDER_SCENE`) hacia el engine.
 //!
-//! Espejo de `src/types/SceneGraph.ts`. Las coordenadas de los items están en la
-//! resolución lógica de la salida (`width` x `height`, normalmente 1920 de ancho);
-//! el engine las escala a la resolución real de la ventana.
+//! Espejo exacto de `src/types/SceneGraph.ts` (serde `camelCase`): si cambias un
+//! campo en un lado, cambia el otro. El payload lleva `version` y este engine
+//! rechaza las versiones que no entiende. Las coordenadas de los items están en
+//! la resolución lógica de la salida (`width`), y el engine las escala a la
+//! resolución real de la ventana.
+//!
+//! # Qué está implementado en el engine (F4.1)
+//!
+//! El contrato describe más de lo que el engine dibuja hoy. Implementado de verdad:
+//!
+//! - `outputId`: rutea la escena a la pantalla con ese id (`ScreenManager`).
+//! - `stage`: elige el layout de Stage Display (`plainText`/`nextText`).
+//! - `width`: resolución lógica; escala `x`, `width` y `fontSize` (los items
+//!   vienen en unidades de diseño). `height` se acepta pero el engine no lo usa.
+//! - `background`: imagen o video (con `opacity` y `fit` → `aspect_mode`).
+//! - `items` de tipo `text`: caja, alineación horizontal y vertical, línea,
+//!   fuente por tramo (`spans`), color, contorno (`stroke`) y sombra (`shadow`).
+//! - `plainText`/`nextText`: texto del Stage Display.
+//!
+//! Sólo tipo (llega al engine pero todavía no se dibuja):
+//!
+//! - `transition`: se guarda en la config global del engine pero el bucle de
+//!   render aún no la aplica (ver F4.4 en `docs/ROADMAP.md`).
+//! - `height`.
+//! - Items que no son `text` (`media`, `image`, overlays…): se deserializan como
+//!   `SceneItem::Unknown` y se ignoran (F4.5 en el roadmap).
+//! - Los overlays de `ScreenScene::overlays` son el modelo previo, no del Scene
+//!   Graph (F4.6 en el roadmap).
+//!
+//! Espejo exacto de `src/types/SceneGraph.ts` (serde `camelCase`): si cambias un
+//! campo en un lado, cambia el otro. El payload lleva `version` y este engine
+//! rechaza las versiones que no entiende.
 
 use super::types::{BackgroundMedia, TextBlock, TextSpan};
+use crate::error::{AppError, AppResult};
 use serde::{Deserialize, Serialize};
 
+/// Versión del contrato `SceneGraph` (F4.1). El frontend la manda en cada payload
+/// y este engine rechaza cualquier otra (viaja acoplado al frontend).
+pub const SCENE_GRAPH_VERSION: u32 = 1;
+
+fn default_scene_version() -> u32 {
+    SCENE_GRAPH_VERSION
+}
+
 /// Escena completa de una salida.
-#[derive(Debug, Clone, Default, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct ScenePayload {
+    /// Versión del contrato. Si falta en el JSON se asume la actual.
+    #[serde(default = "default_scene_version")]
+    pub version: u32,
     pub output_id: String,
     /// `true` si la salida es de tipo Stage.
     pub stage: bool,
@@ -24,6 +65,25 @@ pub struct ScenePayload {
     pub plain_text: String,
     /// Texto de la slide siguiente, si la hay (lo usa el Stage Display).
     pub next_text: Option<String>,
+}
+
+impl Default for ScenePayload {
+    /// Igual que el `Default` derivado, pero con la versión actual del contrato
+    /// (el derivado dejaría `version: 0`, que no es una versión válida).
+    fn default() -> Self {
+        Self {
+            version: SCENE_GRAPH_VERSION,
+            output_id: String::new(),
+            stage: false,
+            width: 0.0,
+            height: 0.0,
+            background: None,
+            items: Vec::new(),
+            transition: None,
+            plain_text: String::new(),
+            next_text: None,
+        }
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -159,6 +219,19 @@ impl ScenePayload {
         if self.width > 0.0 { self.width } else { 1920.0 }
     }
 
+    /// F4.1: rechaza un payload de una versión del contrato que este engine no
+    /// entiende. Ausente en el JSON = versión actual (compatible con payloads a
+    /// mano, p. ej. la consola de `RENDER_SNAPSHOT`).
+    pub fn validate_version(&self) -> AppResult<()> {
+        if self.version != SCENE_GRAPH_VERSION {
+            return Err(AppError::new(format!(
+                "Scene Graph versión {} desconocida: este engine entiende la versión {}. Actualizá PulseFlow.",
+                self.version, SCENE_GRAPH_VERSION
+            )));
+        }
+        Ok(())
+    }
+
     /// Convierte los items de texto en `TextBlock`s del engine.
     pub fn text_blocks(&self) -> Vec<TextBlock> {
         let design_width = self.design_width();
@@ -264,5 +337,47 @@ mod tests {
         let payload: ScenePayload = serde_json::from_value(json!({})).expect("payload vacío");
         assert!(payload.text_blocks().is_empty());
         assert!(payload.background_media().is_none());
+    }
+
+    /// F4.1: la versión ausente se interpreta como la actual (payloads escritos a
+    /// mano o de una versión anterior del frontend siguen funcionando).
+    #[test]
+    fn version_ausente_se_asume_la_actual() {
+        let payload: ScenePayload =
+            serde_json::from_value(json!({ "outputId": "out1" })).expect("payload sin versión");
+        assert_eq!(payload.version, SCENE_GRAPH_VERSION);
+        assert!(payload.validate_version().is_ok());
+        assert_eq!(ScenePayload::default().version, SCENE_GRAPH_VERSION);
+    }
+
+    /// F4.1: una versión conocida del contrato se acepta.
+    #[test]
+    fn version_actual_se_acepta() {
+        let payload: ScenePayload =
+            serde_json::from_value(json!({ "version": SCENE_GRAPH_VERSION, "outputId": "out1" }))
+                .expect("payload de la versión actual");
+        assert!(payload.validate_version().is_ok());
+    }
+
+    /// F4.1: una versión que el engine no conoce se rechaza con un mensaje claro
+    /// (no se renderiza a medias).
+    #[test]
+    fn version_desconocida_se_rechaza() {
+        let future: ScenePayload =
+            serde_json::from_value(json!({ "version": 99, "outputId": "out1" }))
+                .expect("payload de versión futura");
+        let err = future
+            .validate_version()
+            .expect_err("la versión 99 debe rechazarse");
+        let message = err.message();
+
+        assert!(
+            message.contains("99"),
+            "el mensaje debe decir la versión recibida: {message}"
+        );
+        assert!(
+            message.contains(&SCENE_GRAPH_VERSION.to_string()),
+            "el mensaje debe decir la versión soportada: {message}"
+        );
     }
 }

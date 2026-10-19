@@ -9,6 +9,7 @@ import { get } from "svelte/store"
 import { OUTPUT } from "../../../types/Channels"
 import type { Output } from "../../../types/Output"
 import type { SceneBackground, SceneGraph, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
+import { SCENE_GRAPH_VERSION } from "../../../types/SceneGraph"
 import type { Item, OutSlide, Slide } from "../../../types/Show"
 import { media, outputs, stageShows, styles, transitionData } from "../../stores"
 import { send } from "../../utils/request"
@@ -210,6 +211,7 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
     }
 
     return {
+        version: SCENE_GRAPH_VERSION,
         outputId,
         stage: !!output.stageOutput,
         width: resolution.width,
@@ -276,6 +278,7 @@ function buildStageScene(outputId: string, output: Output, outputsData: { [id: s
     }
 
     return {
+        version: SCENE_GRAPH_VERSION,
         outputId,
         stage: true,
         width: resolution.width,
