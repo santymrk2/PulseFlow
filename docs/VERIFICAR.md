@@ -140,12 +140,17 @@ monitor, alwaysOnTop, cierre). Ver también F2.2 (ubicación en el monitor), F2.
 - Windows: 
 
 ## F3.1 — Errores de escritura visibles
-Verificado 2026-10-18 (automatizado): `cargo check` limpio, `cargo test --lib` 36/36
-(incluido `set_store_value_devuelve_error_en_carpeta_sin_permisos`, que invoca el
-comando con `tauri::test::mock_app()` sobre una carpeta `chmod 555` y comprueba que
-devuelve error, que `settings.json` conserva su contenido original y que no queda
-ningún `.tmp`), `bun run test:unit` 47/47, `svelte-check` 59 errores (línea base) y
+Verificado 2026-10-18 (automatizado): `cargo check` limpio, `cargo test --lib` 36/36,
+`bun run test:unit` 47/47, `svelte-check` 59 errores (línea base) y
 Prettier limpio.
+
+Actualizado 2026-10-19 (`F3.1: tests de escritura portables`): los tests de escritura
+dejaron de usar `chmod` y ahora simulan el fallo dejando el destino ocupado por una
+carpeta (el renombre atómico falla en macOS **y** Windows, con cualquier usuario). El
+test de aceptación es `set_store_value_devuelve_error_si_no_se_puede_escribir`, que
+invoca el comando con `tauri::test::mock_app()` y comprueba que devuelve error, que el
+contenido original sigue intacto y que no queda ningún `.tmp`; `cargo test --lib`
+56/56.
 
 El toast y el indicador de estado no se pueden comprobar sin GUI. Prueba manual:
 

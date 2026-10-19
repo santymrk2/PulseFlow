@@ -313,30 +313,31 @@ mod tests {
         names
     }
 
-    /// `set` es la vía que usa `SAVE` para las tiendas (F3.1): en una carpeta
-    /// sin permisos debe fallar a la vista, dejar el archivo original y no
-    /// marcar el valor como guardado en memoria (así un reintento vuelve a
-    /// intentar escribirlo).
-    #[cfg(unix)]
+    /// `set` es la vía que usa `SAVE` para las tiendas (F3.1): cuando la
+    /// escritura no puede completarse debe fallar a la vista, dejar el
+    /// contenido original y no marcar el valor como guardado en memoria (así
+    /// un reintento vuelve a intentarlo).
+    ///
+    /// El fallo se simula dejando `settings.json` ocupado por una carpeta, de
+    /// modo que el renombre atómico falla. Portable: no usa permisos de
+    /// carpeta (en Windows no hay `chmod`) y no depende de no ser root.
     #[test]
-    fn set_en_carpeta_sin_permisos_falla_sin_tocar_el_archivo() {
-        use std::os::unix::fs::PermissionsExt;
-
-        let dir = temp_dir("sin-permisos");
-        fs::write(dir.join("settings.json"), ORIGINAL).expect("archivo original");
+    fn set_en_destino_no_escribible_falla_sin_tocar_el_archivo() {
+        let dir = temp_dir("set-destino-ocupado");
+        let target = dir.join("settings.json");
+        fs::create_dir(&target).expect("destino ocupado por una carpeta");
+        fs::write(target.join("dentro.txt"), ORIGINAL).expect("contenido original");
 
         let mut manager = StoreManager::new(dir.clone());
         let before = manager.get("SETTINGS");
 
-        fs::set_permissions(&dir, fs::Permissions::from_mode(0o555)).expect("chmod 555");
         let result = manager.set("SETTINGS", json!({ "language": "fr" }));
-        fs::set_permissions(&dir, fs::Permissions::from_mode(0o755)).expect("chmod 755");
 
-        assert!(result.is_err(), "debe devolver error en una carpeta sin permisos");
+        assert!(result.is_err(), "debe devolver error si no se pudo escribir");
         assert_eq!(
-            fs::read_to_string(dir.join("settings.json")).expect("leer original"),
+            fs::read_to_string(target.join("dentro.txt")).expect("leer original"),
             ORIGINAL,
-            "el archivo original debe quedar intacto"
+            "el contenido original debe quedar intacto"
         );
         assert_eq!(file_names(&dir), vec!["settings.json".to_string()], "no debe quedar ningún temporal");
         assert_eq!(manager.get("SETTINGS"), before, "la memoria no debe actualizarse si no se escribió");
@@ -360,30 +361,30 @@ mod tests {
     }
 
     /// `set_value` (usado por `SET_STORE_VALUE`) también propaga el error de
-    /// escritura en lugar de ignorarlo.
-    #[cfg(unix)]
+    /// escritura en lugar de ignorarlo, y con el mismo escenario portable
+    /// (destino ocupado por una carpeta) que el test anterior.
     #[test]
-    fn set_value_en_carpeta_sin_permisos_falla_sin_tocar_el_archivo() {
-        use std::os::unix::fs::PermissionsExt;
-
-        let dir = temp_dir("valor-sin-permisos");
-        fs::write(dir.join("settings.json"), ORIGINAL).expect("archivo original");
+    fn set_value_en_destino_no_escribible_falla_sin_tocar_el_archivo() {
+        let dir = temp_dir("valor-destino-ocupado");
+        let target = dir.join("settings.json");
+        fs::create_dir(&target).expect("destino ocupado por una carpeta");
+        fs::write(target.join("dentro.txt"), ORIGINAL).expect("contenido original");
 
         let mut manager = StoreManager::new(dir.clone());
+        let before = manager.get_value("SETTINGS", "theme");
 
-        fs::set_permissions(&dir, fs::Permissions::from_mode(0o555)).expect("chmod 555");
         let result = manager.set_value("SETTINGS", "theme", json!("dark"));
-        fs::set_permissions(&dir, fs::Permissions::from_mode(0o755)).expect("chmod 755");
 
-        assert!(result.is_err(), "debe devolver error en una carpeta sin permisos");
+        assert!(result.is_err(), "debe devolver error si no se pudo escribir");
         assert_eq!(
-            fs::read_to_string(dir.join("settings.json")).expect("leer original"),
+            fs::read_to_string(target.join("dentro.txt")).expect("leer original"),
             ORIGINAL,
-            "el archivo original debe quedar intacto"
+            "el contenido original debe quedar intacto"
         );
+        assert_eq!(file_names(&dir), vec!["settings.json".to_string()], "no debe quedar ningún temporal");
         assert_eq!(
             manager.get_value("SETTINGS", "theme"),
-            Value::Null,
+            before,
             "la memoria no debe actualizarse si no se escribió"
         );
 

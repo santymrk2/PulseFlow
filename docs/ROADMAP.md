@@ -302,13 +302,15 @@ monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
 Va antes que las features nuevas porque Looks agrega datos persistidos.
 
 - [x] **F3.1 Errores de escritura visibles.** (verificado 2026-10-18: `cargo check`
-  limpio, `cargo test --lib` 36/36 —7 tests nuevos: `set_store_value_devuelve_error_en_
-  carpeta_sin_permisos` (el de aceptación, a nivel de comando), `set_store_value_guarda_
-  cuando_hay_permisos` (control), `set_en_carpeta_sin_permisos_falla_sin_tocar_el_
-  archivo`, `set_value_en_carpeta_sin_permisos_falla_sin_tocar_el_archivo`,
-  `set_escribe_atomicamente_y_actualiza_la_memoria`, `write_file_en_carpeta_sin_
-  permisos_falla_y_conserva_el_original` y `write_file_escribe_y_no_deja_archivos_
-  temporales`—, `test:unit` 47/47, `test:svelte` 59 errores (línea base, sin aumento),
+  limpio, `cargo test --lib` 36/36 —7 tests nuevos: `set_store_value_devuelve_error_si_
+  no_se_puede_escribir` (el de aceptación, a nivel de comando),
+  `set_store_value_guarda_cuando_se_puede_escribir` (control),
+  `set_en_destino_no_escribible_falla_sin_tocar_el_archivo`,
+  `set_value_en_destino_no_escribible_falla_sin_tocar_el_archivo`,
+  `set_escribe_atomicamente_y_actualiza_la_memoria`,
+  `write_file_en_destino_no_escribible_falla_y_conserva_el_original` y
+  `write_file_escribe_y_no_deja_archivos_temporales`—, `test:unit` 47/47,
+  `test:svelte` 59 errores (línea base, sin aumento),
   Prettier limpio. Cambios: `files::write_file` escribe a un `.tmp` en la misma carpeta
   y lo renombra (un fallo nunca deja el destino truncado y borra el temporal);
   `StoreManager::set`/`set_value`/`update_data_path` devuelven `AppResult`, serializan
@@ -320,13 +322,20 @@ Va antes que las features nuevas porque Looks agrega datos persistidos.
   `public/lang/en.json`). Se añadió `tauri` con la feature `test` en `[dev-dependencies]`
   sólo para invocar comandos en tests sin GUI. El toast no se puede ver sin GUI: prueba
   manual en `docs/VERIFICAR.md`, sección "F3.1".)
+  *Tests portables (2026-10-19, commit `F3.1: tests de escritura portables`):* los 4
+  tests de escritura ya no simulan el fallo con `chmod` —en Windows no hay permisos de
+  carpeta equivalentes y siendo root no aplican— sino dejando el destino ocupado por una
+  carpeta: el renombre atómico falla en macOS **y** Windows con cualquier usuario. Se
+  fusionaron las variantes `#[cfg(windows)]` duplicadas y los tests `#[cfg(unix)]` en un
+  solo test por archivo, así los mismos 4 tests corren en ambas plataformas.
   *Archivos:* `src-tauri/src/domain/data/store.rs`, `commands/stores.rs`,
   `commands/shows.rs`.
   *Pasos:* reemplazar `let _ = fs::write` / `unwrap_or_default()` por `AppResult`;
   escritura atómica (archivo temporal + `rename`); propagar el error al frontend y
   mostrar un toast.
-  *Aceptación:* test que simula una carpeta sin permisos y verifica que el comando
-  devuelve error y el archivo original queda intacto.
+  *Aceptación:* test portable (macOS y Windows, con cualquier usuario) que simula una
+  escritura imposible y verifica que el comando devuelve error y el contenido original
+  queda intacto.
 
 - [x] **F3.2 Estilo por defecto válido.** (verificado 2026-10-18: `cargo check` limpio,
   `cargo test --lib` 38/38 —2 tests nuevos: `instalacion_limpia_el_estilo_de_la_salida_
@@ -576,7 +585,14 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
 
 ## F7 — IPC tipado
 
-- [ ] **F7.1 Inventario de `Main.*`.** Tabla en `PLAN.md` de los ~95 canales sin
+- [x] **F7.1 Inventario de `Main.*`.** (verificado 2026-10-19 en `feature/ipc`:
+  diff exacto entre los 153 miembros del enum `Main` y los 90 comandos
+  registrados en `lib.rs` → 76 canales sin comando, clasificados en `PLAN.md`
+  sección "Inventario de canales Main sin comando Rust (F7.1)": 13
+  *implementar* (P1–P13), 47 *posponer*, 5 *saltear* por dependencia pesada o
+  permisos (anotados en `docs/VERIFICAR-F7.md`) y 11 *eliminar del frontend*
+  con cero envíos demostrados. `BACKUP` no figura: `BACKUPS`/`DELETE_BACKUP`/
+  `RESTORE` ya existen en `commands/backup.rs`.) Tabla en `PLAN.md` de los ~95 canales sin
   comando Rust: *implementar* / *eliminar del frontend* / *posponer*, con la pantalla
   que se rompe. Prioridad sugerida: `IMPORT`, `BACKUP`, `URL`, `LANGUAGE`,
   `SAVE_IMAGE`, `PDF_TO_IMAGE`, `SEND_MIDI`, `IP`, `MAXIMIZED`.

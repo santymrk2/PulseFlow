@@ -159,43 +159,29 @@ mod tests {
         }
     }
 
-    /// Carpeta sin permisos de escritura (F3.1): el comando debe devolver el
-    /// error en lugar de ignorarlo, y el archivo original debe quedar intacto.
-    #[cfg(unix)]
-    #[test]
-    fn set_store_value_devuelve_error_en_carpeta_sin_permisos() {
-        use std::os::unix::fs::PermissionsExt;
-
-        let dir = temp_data_dir("set-store-value");
-        std::fs::write(dir.join("settings.json"), ORIGINAL).expect("archivo original");
-        std::fs::set_permissions(&dir, std::fs::Permissions::from_mode(0o555)).expect("chmod 555");
-
-        let app = tauri::test::mock_app();
-        app.manage(AppState::new(StoreManager::new(dir.clone())));
-        let result = SET_STORE_VALUE(app.state::<AppState>(), payload());
-
-        // Restaurar permisos para verificar y limpiar.
-        std::fs::set_permissions(&dir, std::fs::Permissions::from_mode(0o755)).expect("chmod 755");
-
-        assert!(result.is_err(), "el comando debe devolver error si no se pudo escribir");
-        assert_eq!(
-            std::fs::read_to_string(dir.join("settings.json")).expect("leer original"),
-            ORIGINAL,
-            "el archivo original debe quedar intacto"
-        );
-        assert!(!dir.join("settings.json.tmp").exists(), "no debe quedar un temporal");
-
-        let _ = std::fs::remove_dir_all(&dir);
+    /// Nombres que quedan en la carpeta (para detectar temporales sueltos).
+    fn file_names(dir: &std::path::Path) -> Vec<String> {
+        let mut names: Vec<String> = std::fs::read_dir(dir)
+            .expect("leer carpeta")
+            .filter_map(|entry| entry.ok())
+            .map(|entry| entry.file_name().to_string_lossy().into_owned())
+            .collect();
+        names.sort();
+        names
     }
 
-    /// Equivalente en Windows (no hay chmod de carpeta): el destino no es
-    /// escribible porque es una carpeta, y el renombre atómico falla.
-    #[cfg(windows)]
+    /// Escritura imposible (F3.1): el comando debe devolver el error en lugar
+    /// de ignorarlo, y el contenido original debe quedar intacto.
+    ///
+    /// El fallo se simula dejando `settings.json` ocupado por una carpeta, de
+    /// modo que el renombre atómico falla. Es portable: no usa permisos de
+    /// carpeta (en Windows no hay `chmod`) y no depende de no ser root (un
+    /// renombre sobre una carpeta falla con cualquier usuario).
     #[test]
-    fn set_store_value_devuelve_error_si_el_destino_no_es_escribible() {
+    fn set_store_value_devuelve_error_si_no_se_puede_escribir() {
         let dir = temp_data_dir("set-store-value");
         let target = dir.join("settings.json");
-        std::fs::create_dir(&target).expect("destino no escribible");
+        std::fs::create_dir(&target).expect("destino ocupado por una carpeta");
         std::fs::write(target.join("dentro.txt"), ORIGINAL).expect("contenido original");
 
         let app = tauri::test::mock_app();
@@ -208,15 +194,15 @@ mod tests {
             ORIGINAL,
             "el contenido original debe quedar intacto"
         );
-        assert!(!dir.join("settings.json.tmp").exists(), "no debe quedar un temporal");
+        assert_eq!(file_names(&dir), vec!["settings.json".to_string()], "no debe quedar ningún temporal");
 
         let _ = std::fs::remove_dir_all(&dir);
     }
 
-    /// Con la carpeta escribible, la misma llamada guarda el valor (control
-    /// del test anterior: falla por permisos, no por otra razón).
+    /// Con el destino escribible, la misma llamada guarda el valor (control
+    /// del test anterior: falla la escritura, no la lógica del comando).
     #[test]
-    fn set_store_value_guarda_cuando_hay_permisos() {
+    fn set_store_value_guarda_cuando_se_puede_escribir() {
         let dir = temp_data_dir("set-store-value-ok");
 
         let app = tauri::test::mock_app();

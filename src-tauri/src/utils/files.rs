@@ -337,50 +337,28 @@ mod tests {
         let _ = fs::remove_dir_all(&dir);
     }
 
-    /// Carpeta de sólo lectura: la escritura falla antes de tocar el destino
-    /// y el archivo original queda intacto (F3.1).
-    #[cfg(unix)]
-    #[test]
-    fn write_file_en_carpeta_sin_permisos_falla_y_conserva_el_original() {
-        use std::os::unix::fs::PermissionsExt;
-
-        let dir = temp_dir("sin-permisos");
-        let path = dir.join("data.json");
-        fs::write(&path, "original").expect("archivo original");
-
-        fs::set_permissions(&dir, fs::Permissions::from_mode(0o555)).expect("chmod 555");
-        let result = write_file(&path, "nuevo");
-        fs::set_permissions(&dir, fs::Permissions::from_mode(0o755)).expect("chmod 755");
-
-        assert!(result.is_err(), "debe devolver error en una carpeta sin permisos");
-        assert!(
-            result.unwrap_err().message().contains("data.json"),
-            "el error debe indicar el archivo que falló"
-        );
-        assert_eq!(fs::read_to_string(&path).expect("leer original"), "original");
-        assert_eq!(file_names(&dir), vec!["data.json".to_string()], "no debe quedar ningún temporal");
-
-        let _ = fs::remove_dir_all(&dir);
-    }
-
-    /// En Windows no hay chmod de carpeta equivalente: se simula un destino
-    /// no escribible con una carpeta donde debería ir el archivo. El renombre
-    /// atómico falla y el original (la carpeta) queda intacto.
-    #[cfg(windows)]
+    /// Destino ocupado por una carpeta: el renombre atómico falla antes de
+    /// tocar el destino y el contenido original queda intacto (F3.1).
+    ///
+    /// Portable: no usa permisos de carpeta (en Windows no hay `chmod`) y no
+    /// depende de no ser root (renombrar un archivo sobre una carpeta falla
+    /// con cualquier usuario).
     #[test]
     fn write_file_en_destino_no_escribible_falla_y_conserva_el_original() {
         let dir = temp_dir("no-escribible");
         let path = dir.join("data.json");
-        fs::create_dir(&path).expect("destino no escribible");
+        fs::create_dir(&path).expect("destino ocupado por una carpeta");
         fs::write(path.join("dentro.txt"), "original").expect("contenido original");
 
         let result = write_file(&path, "nuevo");
 
         assert!(result.is_err(), "debe devolver error en un destino no escribible");
-        assert_eq!(
-            fs::read_to_string(path.join("dentro.txt")).expect("leer original"),
-            "original"
+        assert!(
+            result.unwrap_err().message().contains("data.json"),
+            "el error debe indicar el archivo que falló"
         );
+        assert_eq!(fs::read_to_string(path.join("dentro.txt")).expect("leer original"), "original");
+        assert_eq!(file_names(&dir), vec!["data.json".to_string()], "no debe quedar ningún temporal");
 
         let _ = fs::remove_dir_all(&dir);
     }
