@@ -60,7 +60,7 @@ cargo test 59/59, svelte-check **58 errores** (nueva referencia), build OK.
 | --- | --- | --- |
 | F4.6 overlays | rama `wip/f4` (`4f9fb7a`) | **A medias.** Hecho: campo `overlays` en `SceneGraph.ts`/`scene.rs`, armado en `sceneGraph.ts`, envío desde `listeners.ts`, test de contrato. Falta: inicializar `overlays` en los `ScenePayload` de Rust (no compila: `E0063`), dibujar la capa en `render/screens.rs` (orden: fondo → medios slide → texto slide → medios overlay → texto overlay), regenerar el fixture `audience-*.json` (falla `sceneGraphPayload.test.ts`) y golden. Ignorar de ese commit los cambios en `PLAN.md` y `docs/VERIFICAR-F7.md` (ya integrados). |
 | F6.2–F6.5 diseño | integrado | Implementado; **falta verificación visual** (capturas) según `docs/VERIFICAR-F6.md`. Por eso los checkboxes siguen sin marcar. |
-| F7.4 canales Main | integrado hasta `IMPORT` | Faltan `URL`, `SAVE_IMAGE`, `PDF_TO_IMAGE`, `IP`, `MAXIMIZED`. |
+| F7.4 canales Main | integrado | `IMPORT`/`IMPORT_FILES`/`URL`/`SAVE_IMAGE`/`PDF_TO_IMAGE`/`IP`/`MAXIMIZED` implementados. |
 | `wip/f7` (`af2a2a8`) | rama `wip/f7` | **Descartar**: es `cargo fmt` sobre todo el crate, sin cambios funcionales. Sus notas ya están en `docs/VERIFICAR-F7.md`. |
 | `f6-pulseflow`, `feature/diseno`, `feature/ipc` | ramas remotas | Ya integradas; se pueden borrar. |
 
@@ -625,7 +625,7 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
 - [x] **F7.3 `invokeCommand<T>()` tipado.** Helper en `tauri.ts` que devuelve
   `Promise<Result<T, AppError>>`; migrar a él **sólo** las operaciones críticas
   (abrir/cerrar salida, renderizar escena, guardar). `window.api` se mantiene.
-- [ ] **F7.4** Implementar los canales marcados *implementar*, de a uno por tarea.
+- [x] **F7.4** Implementar los canales marcados *implementar*, de a uno por tarea. (2026-10-19: `IMPORT`/`IMPORT_FILES` + `URL` + `SAVE_IMAGE` + `PDF_TO_IMAGE` + `IP` + `MAXIMIZED` registrados en Rust; `cargo test --lib` 61/61.)
   Orden de prioridad: `IMPORT` → `IMPORT_FILES` → `URL` → `SAVE_IMAGE` →
   `PDF_TO_IMAGE` → `IP` → `MAXIMIZED`. (`BACKUP` ya estaba hecho; `LANGUAGE`
   se elimina del frontend; `SEND_MIDI` se saltea — requiere crate MIDI.)
