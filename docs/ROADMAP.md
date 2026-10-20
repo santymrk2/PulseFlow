@@ -919,7 +919,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   en macOS; en Windows Ctrl+1/Ctrl+2 siguen cambiando de pestaña del drawer (los items
   de "Pantallas" no registran aceleradores). Commits `831f2a93`, `f43d0cd2`.
 
-- [ ] **F10.8 Quitar la UI vieja.**
+- [x] **F10.8 Quitar la UI vieja.**
   *Pasos:* eliminar Settings → Outputs, Styles y Looks (y sus `*Tabs`/`*Buttons`), los
   popups "Elegir pantalla" y "Cambiar valores de salida", y las entradas en
   `values/tabs.ts`; en Settings dejar un botón "Configurar pantallas…". Antes de borrar,
