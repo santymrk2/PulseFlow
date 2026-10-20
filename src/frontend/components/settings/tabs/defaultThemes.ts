@@ -11,17 +11,18 @@ export const defaultThemes: { [key: string]: Themes } = {
             size: "1em"
         },
         colors: {
-            primary: "#0a0a0a", // --background
-            "primary-lighter": "#262626", // --accent / --muted
-            "primary-darker": "#171717", // --card / --sidebar
-            "primary-darkest": "#050505",
-            text: "#fafafa", // --foreground
+            // monocromo (docs/design/kit.md); los mismos valores están en public/global.css
+            primary: "#0a0a0a", // --bg
+            "primary-lighter": "#1f1f1f", // gris 850
+            "primary-darker": "#0f0f0f", // pasa a --bg en F14.4
+            "primary-darkest": "#0d0d0d", // pasa a --bg en F14.4
+            text: "#ededed",
             textInvert: "#0a0a0a",
-            "secondary-text": "#fafafa",
-            secondary: "#1447e6", // --sidebar-primary
-            "secondary-opacity": "rgba(20, 71, 230, 0.4)",
-            hover: "rgba(255, 255, 255, 0.06)",
-            focus: "rgba(255, 255, 255, 0.12)"
+            "secondary-text": "#0a0a0a", // --action-text
+            secondary: "#ededed", // --action
+            "secondary-opacity": "rgb(255 255 255 / 0.1)", // --bg-selected
+            hover: "rgb(255 255 255 / 0.05)", // --bg-hover
+            focus: "rgb(255 255 255 / 0.08)" // --bg-active
         }
     },
     dark: {

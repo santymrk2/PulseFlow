@@ -93,7 +93,7 @@
 
         padding: 16px;
 
-        background-color: rgb(0 0 0 / 0.6);
+        background-color: var(--backdrop);
         backdrop-filter: blur(2px);
     }
 
@@ -108,8 +108,8 @@
 
         background-color: var(--primary);
         border: 1px solid var(--border-color, var(--primary-lighter));
-        border-radius: calc(var(--radius, 10px) * 1.5);
-        box-shadow: 0 16px 48px rgb(0 0 0 / 0.5);
+        border-radius: var(--radius-modal, 8px);
+        box-shadow: var(--shadow-float);
 
         overflow: hidden;
         outline: none;

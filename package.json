@@ -96,6 +96,7 @@
     },
     "dependencies": {
         "@fontsource-variable/geist": "^5.3.0",
+        "@fontsource-variable/geist-mono": "^5.3.0",
         "@googleapis/drive": "^8.16.0",
         "@sentry/browser": "^11.8.0",
         "@tauri-apps/api": "^2.12.4",

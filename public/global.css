@@ -28,34 +28,72 @@
 }
 
 :root {
-    /* Defaults = tema "PulseFlow" (idénticos a defaultThemes.ts, tema por defecto) */
+    /* Escala de grises (docs/design/kit.md). Los componentes usan los tokens semánticos de abajo, no ésta. */
+    --gray-50: #fafafa;
+    --gray-100: #ededed;
+    --gray-200: #d4d4d4;
+    --gray-300: #a1a1a1;
+    --gray-400: #8f8f8f;
+    --gray-500: #737373;
+    --gray-600: #5c5c5c;
+    --gray-700: #3d3d3d;
+    --gray-800: #262626;
+    --gray-850: #1f1f1f;
+    --gray-900: #141414;
+    --gray-950: #0a0a0a;
+
+    /* Tokens semánticos. Tema fijo: monocromo y sólo oscuro. */
+    --bg: #0a0a0a;
+    --bg-elevated: #141414;
+    --bg-hover: rgb(255 255 255 / 0.05);
+    --bg-active: rgb(255 255 255 / 0.08);
+    --bg-selected: rgb(255 255 255 / 0.1);
+    --border: rgb(255 255 255 / 0.08);
+    --border-strong: rgb(255 255 255 / 0.16);
+    --text-muted: #a1a1a1;
+    --text-subtle: #8f8f8f;
+    --text-disabled: #5c5c5c;
+    --action: #ededed;
+    --action-hover: #ffffff;
+    --action-text: #0a0a0a;
+    --danger: #e5484d;
+    --success: #46a758;
+    --warning: #ffb224;
+    --ring: rgb(255 255 255 / 0.4);
+    --shadow-float: 0 8px 24px rgb(0 0 0 / 0.5);
+    --backdrop: rgb(0 0 0 / 0.6);
+
+    /* Tokens heredados de FreeShow: mismos valores que defaultThemes.ts (el tema los vuelve a aplicar al arrancar) */
     --primary: #0a0a0a;
-    --primary-lighter: #262626;
-    --primary-darker: #171717;
-    --primary-darkest: #050505;
-    --text: #fafafa;
+    --primary-lighter: #1f1f1f;
+    --primary-darker: #0f0f0f;
+    --primary-darkest: #0d0d0d;
+    --text: #ededed;
     --textInvert: #0a0a0a;
-    --secondary: #1447e6;
-    --secondary-opacity: rgba(20, 71, 230, 0.4);
-    --secondary-text: #fafafa;
+    --secondary: #ededed;
+    --secondary-opacity: rgb(255 255 255 / 0.1);
+    --secondary-text: #0a0a0a;
     --transparent: #0a0a0a;
 
-    --accent: #818cf8;
+    --accent: var(--text-muted);
 
-    --connected: #22c55e;
-    --disconnected: #ef4444;
+    --connected: var(--success);
+    --disconnected: var(--danger);
 
-    --red: rgba(239, 68, 68, 0.25);
+    --red: rgb(229 72 77 / 0.25);
 
-    --hover: rgba(255, 255, 255, 0.06);
-    --focus: rgba(255, 255, 255, 0.12);
+    --hover: rgb(255 255 255 / 0.05);
+    --focus: rgb(255 255 255 / 0.08);
 
-    /* Geist (tema PulseFlow): la variable se carga desde main.ts (@fontsource-variable/geist) */
+    /* Geist y Geist Mono (tema PulseFlow): las variables se cargan desde main.ts (@fontsource-variable) */
     --font-family: "Geist Variable", system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+    --font-mono: "Geist Mono Variable", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
     --font-size: 1em;
 
-    --radius: 0.625rem;
-    --border-color: rgba(255, 255, 255, 0.1);
+    --radius: 6px;
+    --radius-chip: 4px;
+    --radius-modal: 8px;
+    --border-color: var(--border);
 
     --navigation-width: 290px;
 }

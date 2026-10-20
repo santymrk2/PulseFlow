@@ -15,7 +15,7 @@
                 ghost: "hover:bg-accent hover:text-accent-foreground",
                 link: "text-primary underline-offset-4 hover:underline",
                 // Audiencia / Stage: rojo mientras está activo (`aria-pressed="true"`)
-                live: "bg-muted text-foreground hover:bg-accent aria-pressed:bg-destructive aria-pressed:text-destructive-foreground"
+                live: "bg-muted text-foreground hover:bg-accent aria-pressed:border-destructive/50 aria-pressed:bg-transparent aria-pressed:text-destructive"
             },
             size: {
                 // medidas del kit (docs/design/kit.md): 28 compacto, 32 normal

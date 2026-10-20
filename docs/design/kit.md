@@ -141,7 +141,7 @@ un tamaño mayor, siempre en mono, `--text`, peso 400.
 | Alto de fila de lista | 28 px |
 | Alto de encabezado de sección | 28 px |
 | Alto de barra superior | 40 px |
-| Radio | 4 px (badges, `kbd`, chips) · 6 px (controles) · 8 px (modales, popovers) |
+| Radio | 4 px (badges, `kbd`, chips: `--radius-chip`) · 6 px (controles: `--radius`) · 8 px (modales y popovers: `--radius-modal`) |
 | Borde | 1 px siempre. 2 px sólo en la barra de selección de `list-row` y en el indicador de pestaña activa |
 | Íconos | 16 px en controles, 14 px en listas y controles mini. Piezas nuevas del kit: Lucide (`@lucide/svelte`), trazo 1.5. El set heredado (`components/helpers/Icon.svelte`, rellenos, usado en 188 archivos) se mantiene: unificarlo no es parte de F14 |
 

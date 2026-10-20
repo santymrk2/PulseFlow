@@ -1293,7 +1293,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   (se usan en otros contextos). Verificado: `test:unit` 89/89, `test:svelte` 56 errores
   (línea base), prettier. `build` y la app **no se corrieron**.
 
-- [ ] **F14.2 Tokens monocromo.**
+- [x] **F14.2 Tokens monocromo.**
   *Archivos:* `src/frontend/components/settings/tabs/defaultThemes.ts` (tema `default`),
   `public/global.css` (`:root`), `src/frontend/app.css` (mapeo `--shui-*` y `@theme`).
   *Pasos:* `--secondary` pasa a ser la acción blanca y `--secondary-opacity` un gris de
@@ -1304,6 +1304,20 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   temas del usuario.
   *Aceptación:* `rg -i '1447e6|20, ?71, ?230|818cf8' src public` = 0. Las capturas de
   Show y Configuración no muestran azul.
+  **Hecho** (2026-10-20). Los tokens nuevos (`--bg`, `--border`, `--text-muted`,
+  `--action`, `--danger`, … y la escala `--gray-*`) viven en `public/global.css`; los
+  heredados (`--primary*`, `--secondary*`, `--text`, `--hover`, `--focus`) conservan su
+  nombre y toman el valor nuevo, en `global.css` y en `defaultThemes.ts` (el tema los
+  reaplica al arrancar, por eso llevan los mismos literales). `--accent`, `--connected` y
+  `--disconnected` pasan a alias de `--text-muted`/`--success`/`--danger`. Radios:
+  `--radius` 6 px, `--radius-chip` 4 px, `--radius-modal` 8 px (`Modal.svelte` los usa).
+  El botón `live` del kit pasa de relleno rojo a contorno rojo (texto blanco sobre rojo da
+  3.9:1). Se agregó `@fontsource-variable/geist-mono`. *Quedan* azules que son **datos** de
+  usuario (series de `Chart`, colores de calendario) y `OBS.svelte` (F14.3). Se revisó que
+  ninguna regla ponga texto claro sobre fondo `--secondary` (ahora claro). Verificado:
+  `test:unit` 89/89, `test:svelte` 56 errores (línea base), prettier. **No verificado
+  visualmente:** hay que mirar la app (lo que más puede notarse: texto o íconos que
+  dependían de que `--secondary` fuera oscuro/azul).
 
 - [ ] **F14.3 Colores sueltos a tokens.** En tres commits: (a) `components/main/`,
   `show/`, `settings/`; (b) `drawer/`, `edit/`; (c) el resto.
