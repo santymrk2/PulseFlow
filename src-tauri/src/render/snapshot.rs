@@ -75,23 +75,9 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
     let width = width.max(1);
     let height = height.max(1);
 
-    // 1. Instance + adapter sin superficie (no hay ventana que presentar).
-    let instance = wgpu::Instance::default();
-    let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
-        power_preference: wgpu::PowerPreference::HighPerformance,
-        compatible_surface: None,
-        force_fallback_adapter: false,
-        ..Default::default()
-    }))
-    .map_err(|e| AppError::new(format!("GPU no disponible para snapshot: {e}")))?;
-
-    let (device, queue) = pollster::block_on(adapter.request_device(
-        &wgpu::DeviceDescriptor {
-            label: Some("PulseFlow Snapshot Device"),
-            ..Default::default()
-        },
-    ))
-    .map_err(|e| AppError::new(format!("Device no disponible para snapshot: {e}")))?;
+    // 1. Contexto GPU compartido (no hay ventana que presentar).
+    let gpu = super::gpu::shared()?;
+    let (device, queue) = (&gpu.device, &gpu.queue);
 
     // 2. Textura offscreen + render pass con limpieza a negro.
     let texture = device.create_texture(&wgpu::TextureDescriptor {

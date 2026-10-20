@@ -8,6 +8,7 @@
 //! (`ScreenManager`, una pantalla por salida); el layout de stage en `stage`;
 //! texto, media, video y transiciones en sus propios módulos.
 
+pub mod gpu;
 pub mod media;
 pub mod scene;
 pub mod screens;
@@ -42,16 +43,8 @@ mod tests {
 
     #[test]
     fn test_wgpu_instance_and_adapter() {
-        let instance = wgpu::Instance::default();
-        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
-            power_preference: wgpu::PowerPreference::HighPerformance,
-            compatible_surface: None,
-            force_fallback_adapter: false,
-            ..Default::default()
-        }));
-        assert!(adapter.is_ok(), "Debe existir al menos un adaptador GPU disponible");
-        let adapter = adapter.unwrap();
-        let info = adapter.get_info();
+        let gpu = gpu::shared().expect("Debe existir al menos un adaptador GPU disponible");
+        let info = gpu.adapter.get_info();
         println!("GPU detectada para PulseFlow: {} ({:?})", info.name, info.backend);
         assert!(!info.name.is_empty());
     }
@@ -87,24 +80,10 @@ mod tests {
 
     #[test]
     fn test_media_pool_and_background_pipeline() {
-        let instance = wgpu::Instance::default();
-        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
-            power_preference: wgpu::PowerPreference::HighPerformance,
-            compatible_surface: None,
-            force_fallback_adapter: false,
-            ..Default::default()
-        }))
-        .unwrap();
+        let gpu = gpu::shared().unwrap();
+        let (device, queue) = (&gpu.device, &gpu.queue);
 
-        let (device, queue) = pollster::block_on(adapter.request_device(
-            &wgpu::DeviceDescriptor {
-                label: Some("Test Device"),
-                ..Default::default()
-            },
-        ))
-        .unwrap();
-
-        let pipeline = media::BackgroundPipeline::new(&device, wgpu::TextureFormat::Bgra8UnormSrgb);
+        let pipeline = media::BackgroundPipeline::new(device, wgpu::TextureFormat::Bgra8UnormSrgb);
         let mut pool = media::MediaPool::new();
 
         // Crear una textura sintética de prueba 64x64 RGBA en VRAM
@@ -129,25 +108,10 @@ mod tests {
 
     #[test]
     fn test_transition_engine_and_curves() {
-        let instance = wgpu::Instance::default();
-        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
-            power_preference: wgpu::PowerPreference::HighPerformance,
-            compatible_surface: None,
-            force_fallback_adapter: false,
-            ..Default::default()
-        }))
-        .unwrap();
-
-        let (device, _queue) = pollster::block_on(adapter.request_device(
-            &wgpu::DeviceDescriptor {
-                label: Some("Test Transition Device"),
-                ..Default::default()
-            },
-        ))
-        .unwrap();
+        let gpu = gpu::shared().unwrap();
 
         let mut engine = transition::TransitionEngine::new(
-            &device,
+            &gpu.device,
             wgpu::TextureFormat::Bgra8UnormSrgb,
             1920,
             1080,

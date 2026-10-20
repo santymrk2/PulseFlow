@@ -410,19 +410,8 @@ mod tests {
     const FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
 
     fn device() -> (Device, Queue) {
-        let instance = wgpu::Instance::default();
-        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
-            power_preference: wgpu::PowerPreference::HighPerformance,
-            compatible_surface: None,
-            force_fallback_adapter: false,
-            ..Default::default()
-        }))
-        .expect("adaptador GPU");
-        pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
-            label: Some("Transition Test Device"),
-            ..Default::default()
-        }))
-        .expect("device de prueba")
+        let gpu = crate::render::gpu::shared().expect("GPU compartida");
+        (gpu.device.clone(), gpu.queue.clone())
     }
 
     fn solid() -> (Device, Queue, TransitionEngine) {
