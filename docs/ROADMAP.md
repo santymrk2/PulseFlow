@@ -1037,7 +1037,7 @@ Reglas de F11 (además de AGENTS.md):
   re-estilizado con variables del tema; Popup.svelte ya usaba var(--radius)/var(--border-color).
   context/** no se tocó (alcance). Chequeos: test:unit 83/83, svelte-check 57 errores
   (línea base), build OK, Prettier limpio.)
-- [ ] **F11.9 Repaso final.** Recorrer todas las pantallas (Show, Edit, Stage,
+- [ ] **F11.9 Repaso final.** (Reemplazada por F12.10.) Recorrer todas las pantallas (Show, Edit, Stage,
   Settings, cada pestaña del cajón, popups principales) y corregir inconsistencias
   de espaciado/colores; lista de capturas antes/después en `docs/VERIFICAR-F11.md`.
 
@@ -1090,6 +1090,30 @@ ninguna función (verificar cada función movida y listarla en el commit).
   columna quede: BIBLIOTECA · PLAYLIST (lista de proyectos) · "N ÍTEMS +" (contenido
   del proyecto seleccionado, con Filtro abajo) · MEDIA. Mantener arrastrar/soltar,
   reordenar, menú contextual y doble clic igual que hoy.
+
+## F12 — Coherencia visual (plan detallado en `docs/PLAN-F12.md`)
+
+Hoy conviven tres maneras de hacer interfaz (CSS heredado + `Material*`, shadcn-svelte
+de `lib/components/ui/` y HTML suelto) y se nota: modales donde no entra el contenido,
+cosas encimadas, una barra superior con tres estilos y textos mezclados. Se arma **un
+kit base** con Tailwind + shadcn-svelte (ya instalados) y se rehacen con él las
+pantallas más visibles, una por tarea. **No es una migración global a Tailwind.**
+
+- [ ] **F12.0** Preparación y capturas "antes".
+- [ ] **F12.1** Modales de pantalla completa fuera de la tarjeta de `Popup.svelte`; una
+  sola base `main/Modal.svelte` (se borra `looks/Modal.svelte`).
+- [ ] **F12.2** Kit base: botón, cápsula, encabezado de sección, fila de lista, campo,
+  menú; medidas en `docs/design/kit.md`.
+- [ ] **F12.3** Modal de pantallas con el kit; los monitores escalan al panel.
+- [ ] **F12.4** Modal de Looks con el kit.
+- [ ] **F12.5** Barra superior unificada; menú de Look con "Editar looks…".
+- [ ] **F12.6** Columna izquierda: encabezados y filas del kit, categorías traducidas,
+  sin título duplicado.
+- [ ] **F12.7** Panel derecho: tira vertical de limpiar y ⓧ de limpiar todo.
+- [ ] **F12.8** Textos fijos a traducciones; pestaña activa correcta en Configuración.
+- [ ] **F12.9** Pantalla de inicio con el logo.
+- [ ] **F12.10** Repaso final con capturas (reemplaza a F11.9).
+- [ ] **F12.11** Roadmap e informe.
 
 ## Fuera de alcance por ahora
 
