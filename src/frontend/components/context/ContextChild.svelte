@@ -78,7 +78,7 @@
 <div bind:this={elem} class="item" class:open class:highlighted on:click={click} tabindex={0} on:keydown={keydown} role="menuitem">
     <span style="display: flex;gap: 10px;justify-content: space-between;width: 100%;">
         <div class="left" style="display: flex;align-items: center;gap: 15px;">
-            {#if menu?.icon}<Icon style="opacity: 0.7;color: {(topBar ? '' : menu.iconColor) || 'var(--text)'};" id={menu.icon} white />{/if}
+            {#if menu?.icon}<Icon style="color: var(--text-muted);" id={menu.icon} white />{/if}
             {#key menu}
                 <T id={menu?.label || id} />
             {/key}

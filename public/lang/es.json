@@ -1905,6 +1905,9 @@
         "playlist": "Playlist",
         "items": "$1 ítems",
         "media": "Media",
+                "present": "Proyectar",
+        "slide": "$1 diapositiva",
+        "slides": "$1 diapositivas",
         "filter": "Filtro"
     },
     "screen_config": {

@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { outputs } from "../../stores"
+    import { outputs, outputState } from "../../stores"
     import { translateText } from "../../utils/language"
     import Button from "../../lib/components/ui/button/button.svelte"
     import ListRow from "../../lib/components/ui/list-row/list-row.svelte"
@@ -20,6 +20,10 @@
         dispatch("select", id)
     }
 
+    // en vivo = alguna salida del grupo está activa (mismo criterio que la barra superior)
+    $: audienceLive = ($outputState || []).some((s: any) => s.active === true && audience.some((o) => o.id === s.id))
+    $: stageLive = ($outputState || []).some((s: any) => s.active === true && stage.some((o) => o.id === s.id))
+
     function toggleGroup(group: "audience" | "stage") {
         const ids = (group === "stage" ? stage : audience).map((o) => o.id)
         toggleOutputs(ids)
@@ -31,8 +35,8 @@
     <SectionHeader>
         {translateText("screen_config.audience")}
         {#snippet actions()}
-            <Button variant="ghost" size="icon-sm" title="audience" onclick={() => toggleGroup("audience")}>●</Button>
-            <Button variant="ghost" size="icon-sm" title="add" onclick={() => dispatch("addAudience")}>+</Button>
+            <Button variant="live" size="icon-sm" icon="outputs" iconSize={0.9} aria-pressed={audienceLive} title="screen_config.show_audience" onclick={() => toggleGroup("audience")} />
+            <Button variant="ghost" size="icon-sm" icon="add" iconSize={0.9} title="settings.new_output" onclick={() => dispatch("addAudience")} />
         {/snippet}
     </SectionHeader>
     {#each audience as out}
@@ -50,8 +54,8 @@
     <SectionHeader>
         {translateText("screen_config.stage")}
         {#snippet actions()}
-            <Button variant="ghost" size="icon-sm" title="stage" onclick={() => toggleGroup("stage")}>●</Button>
-            <Button variant="ghost" size="icon-sm" title="add" onclick={() => dispatch("addStage")}>+</Button>
+            <Button variant="live" size="icon-sm" icon="stage" iconSize={0.9} aria-pressed={stageLive} title="screen_config.show_stage" onclick={() => toggleGroup("stage")} />
+            <Button variant="ghost" size="icon-sm" icon="add" iconSize={0.9} title="settings.new_output" onclick={() => dispatch("addStage")} />
         {/snippet}
     </SectionHeader>
     {#each stage as out}

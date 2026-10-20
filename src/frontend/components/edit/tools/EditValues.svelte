@@ -23,7 +23,6 @@
     import { getShapeOutsideStyle, parseShapeOutsideValue } from "../scripts/shapeOutside"
     import type { EditBoxSection, EditInput } from "../values/boxes"
     import { captionTranslateLanguages } from "../values/captionLanguages"
-    import { sectionColors } from "../values/item"
 
     export let sections: { [key: string]: EditBoxSection } = {}
     export let styles: { [key: string]: string } = {}
@@ -357,7 +356,7 @@
                                 <Icon id="code" white />
                                 <p>CSS</p>
                             {:else}
-                                <Icon {id} style="color: {sectionColors[id]};" white />
+                                <Icon {id} />
                                 <p>{translateText(section.name || "edit." + id)}</p>
                             {/if}
                         </span>

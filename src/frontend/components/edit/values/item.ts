@@ -1,24 +1,5 @@
 import { splitIntoRows, type EditBoxSection } from "./boxes"
 
-export const sectionColors = {
-    font: "#f079b4",
-    align: "#f079b2",
-    text: "#e490c9",
-    lines: "#ffb6e7",
-    list: "#a16adb",
-    outline: "#d8d8d8",
-    border: "#d8d8d8",
-    shadow: "#9e9e9e",
-    shape_outside: "#d8d8d8",
-    chords: "#ffbe86",
-    scrolling: "#ceffbe",
-    special: "#e9e495",
-    position: "#f079b4",
-    transform: "#f079b2",
-    backdrop_filters: "#ceffbe",
-    filters: "#ceffbe"
-}
-
 const borderOptions = [
     { value: "solid", label: "borders.solid" },
     { value: "dashed", label: "borders.dashed" },

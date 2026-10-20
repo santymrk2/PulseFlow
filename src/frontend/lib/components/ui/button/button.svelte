@@ -221,7 +221,7 @@
             border-left-color: var(--text);
         }
         .btn.showOutline {
-            outline: 1px solid var(--ring);
+            outline: 1px solid var(--border-strong);
             outline-offset: -1px;
         }
         .btn:focus-visible:not(:disabled) {

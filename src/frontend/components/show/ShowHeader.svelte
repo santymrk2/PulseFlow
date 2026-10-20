@@ -112,7 +112,7 @@
 
     <div class="right">
         {#if currentShow}
-            <span class="count">{slideCount} {slideCount === 1 ? "diapositiva" : "diapositivas"}</span>
+            <span class="count">{translateText(slideCount === 1 ? "ui.slide" : "ui.slides", null, [String(slideCount)])}</span>
 
             <Button
                 variant="ghost"
@@ -143,7 +143,7 @@
                 }}
             >
                 <Icon id="play" size={0.9} white right />
-                Proyectar
+                {translateText("ui.present")}
             </Button>
         {/if}
 

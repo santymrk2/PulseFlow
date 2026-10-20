@@ -207,9 +207,9 @@
 </div>
 
 <div class="tabs">
-    <Button variant={activeTab === "hardware" ? "default" : "ghost"} size="sm" onclick={() => (activeTab = "hardware")}>{translateText("screen_config.hardware")}</Button>
-    <Button variant={activeTab === "cropping" ? "default" : "ghost"} size="sm" onclick={() => (activeTab = "cropping")}>{translateText("screen_config.cropping")}</Button>
-    <Button variant={activeTab === "sending" ? "default" : "ghost"} size="sm" onclick={() => (activeTab = "sending")}>{translateText("screen_config.sending")}</Button>
+    <Button variant="ghost" size="sm" isActive={activeTab === "hardware"} onclick={() => (activeTab = "hardware")}>{translateText("screen_config.hardware")}</Button>
+    <Button variant="ghost" size="sm" isActive={activeTab === "cropping"} onclick={() => (activeTab = "cropping")}>{translateText("screen_config.cropping")}</Button>
+    <Button variant="ghost" size="sm" isActive={activeTab === "sending"} onclick={() => (activeTab = "sending")}>{translateText("screen_config.sending")}</Button>
 </div>
 
 {#if activeTab === "hardware"}

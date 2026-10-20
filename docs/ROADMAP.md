@@ -1540,13 +1540,28 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   primero a revisar es el botón (variante por defecto `ghost`, `@layer components`) y las
   tarjetas de audio.
 
-- [ ] **F14.9 Panel derecho (antes F12.7).** Tira vertical de limpiar y ⓧ de limpiar
-  todo sobre la vista previa, con el estilo nuevo. Ver "Decisiones pendientes" en
-  `docs/informes/f12.md`.
+- [x] **F14.9 Panel derecho (antes F12.7).** **Hecho con otro alcance** (2026-10-20). La captura
+  `despues-edit.png` mostró el defecto real: fuera de Show, la barra de controles (`‹ › ↻ 🔒`)
+  se posicionaba de forma **absoluta** sobre las miniaturas de salida, con fondo translúcido y
+  desenfoque (`.section.float`, herencia de FreeShow). Se quitó ese modo: la barra queda
+  siempre en el flujo (junto con `light`, `isSplitted` y tres imports que sólo la servían).
+  *No se hizo* la tira vertical de limpiar con ⓧ sobre la vista previa: el diseño actual (una
+  fila "Clear all" con contorno rojo y una tira de 5 íconos) ya es de dos filas y es
+  consistente con el resto; si se la quiere igual, es una tarea propia con captura.
 
-- [ ] **F14.10 Repaso final (reemplaza F12.10).** Capturas en macOS y Windows a 1280 y
-  1920 de todas las pantallas de F14.1. Checklist: sin azul, sin degradés, sin fondos para
-  delimitar, sin tamaños fuera de escala. Informe en `docs/informes/f14.md`.
+- [ ] **F14.10 Repaso final (reemplaza F12.10).** **Parcial** (2026-10-20). Hay 7 capturas en
+  macOS de Show, Edit, Pantallas, Looks y el menú de Looks (`docs/capturas/f14/despues-*.png`);
+  **faltan Windows y la prueba a 1280×800.** Lo que mostraron y se corrigió en este repaso:
+  íconos de sección de Edit en rosa/violeta/naranja/verde (`sectionColors`, borrado), íconos
+  de menús contextuales con `iconColor` (ahora grises), pestañas activas de Pantallas como
+  píldora blanca (ahora `isActive`), glifos `●` de Audiencia/Stage (ahora íconos que se ponen
+  rojos en vivo), "Proyectar" y "diapositiva(s)" fijos en español (claves `ui.present`,
+  `ui.slide`, `ui.slides`), contorno de énfasis más suave y el panel flotante (F14.9).
+  *Decisiones pendientes del usuario:* (1) el color de cada **salida** (azul, rosa) **no** se
+  neutralizó porque es funcional: marca qué salida muestra cada slide (`helpers/output.ts`);
+  (2) los íconos de **categorías y shows** (`customIconsColors`: Songs azul, Scripture naranja)
+  siguen en color; (3) `Tipbar` ("Donate" de FreeShow) sigue; (4) los botones "New collection"
+  / "New category" se ven con borde claro (contorno de énfasis `showOutline`).
 
 ---
 
