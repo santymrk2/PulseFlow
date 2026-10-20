@@ -1350,6 +1350,11 @@
     "looks": {
         "looks": "Looks",
         "change_look": "Cambiar look",
+        "audience": "Audiencia",
+        "monitor": "Monitor",
+        "create_stage_screen": "Crear pantalla de escenario",
+        "open": "Abierta",
+        "closed": "Cerrada",
         "name": "Nombre del look",
         "new": "Nuevo look",
         "make_live": "Make Live",
