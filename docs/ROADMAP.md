@@ -951,12 +951,14 @@ Reglas de F11 (además de AGENTS.md):
   stage, de temas y de overlays) · Media/Look/Live · Audiencia/Stage (redondos, rojos
   en vivo; clic derecho → Configurar pantallas…) · Estado. Reemplaza al botón único de
   salida y a las pestañas actuales. Sólo reubica accesos que ya existen.
-- [ ] **F11.2 Cajón inferior como "media bin".** (referencia `Drawer.tsx` + captura;
-  archivos `drawer/Drawer.svelte`, `drawer/MaterialDrawerTab.svelte`,
-  `drawer/Navigation.svelte`) migas de navegación arriba ("Medios › Carpeta"), pie con
-  `+`, Filtro centrado, vista grilla/lista y slider de tamaño a la derecha; manija de
-  redimensionar de 4 px. Las pestañas actuales (Shows, Media, Audio, Scripture,
-  Overlays, Templates…) quedan como fila compacta de íconos hasta F11.10.
+- [x] **F11.2 Cajón inferior como "media bin".** (2026-10-20, carril D:
+  `drawer/breadcrumb.ts` (+test vitest) calcula las migas; `Drawer.svelte` con handle de
+  4 px, pestañas solo-icono, barra de migas y pie (+ / filtro 256 px / toggle
+  grilla-lista / slider de columnas); `Media.svelte` pierde los controles flotantes
+  duplicados (MaterialZoom oculto conserva Ctrl+rueda); filas de 32 px en
+  `MaterialDrawerTab`/`Navigation`; lang `ui.filter`. Chequeos: test:unit 68/68,
+  svelte-check 60 errores (mismo set que HEAD limpio; la línea base documentada de 58
+  quedó obsoleta por la migración), build OK, Prettier limpio.)
 - [ ] **F11.3 Panel izquierdo (proyectos y navegación).** (referencia
   `LibraryPanel.tsx`; archivos `show/Projects.svelte`, `show/ProjectList.svelte`,
   `show/ProjectContentList.svelte`, `drawer/navigation/*`) filas de 32 px redondeadas,
