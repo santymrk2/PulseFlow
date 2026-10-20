@@ -121,7 +121,7 @@ con sus reglas). Para usar la app, respetá el lock de "Compartir la app".
 ```
 
 - **A:** `Carril A — Pantallas. Tareas en orden: F10.3, F10.4, F10.5. Rama feature/f10-pantallas. Informe: docs/informes/pantallas.md.`
-- **B:** `Carril B — Looks. Tarea: F10.6 completa. Rama feature/f10-looks. Informe: docs/informes/looks.md.`
+- **B:** (agente principal, carpeta original) `Carril B — Looks. Tareas en orden: terminar F10.1 y F10.2, después F10.6. Rama feature/tauri-rust-migration. Informe: docs/informes/looks.md.`
 - **C:** `Carril C — Barra y menú. Tareas en orden: F10.0f, F10.7, F11.1. Rama feature/f10-menu. Informe: docs/informes/menu.md.`
 - **D:** `Carril D — Interfaz. Tareas en orden: F11.2, F11.3, F11.4, F11.5, F11.6, F11.8, F11.10. Rama feature/f11-ui. Informe: docs/informes/ui.md.`
 
