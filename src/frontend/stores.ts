@@ -1,5 +1,13 @@
 // ----- FreeShow -----
 // Here are all the global app variables
+//
+// Organización (F9.2): el archivo se divide en dos grandes bloques —
+//   · TEMPORARY VARIABLES: estado de sesión que no se guarda en disco.
+//   · SAVED VARIABLES: estado que forma parte de la configuración/proyecto guardado.
+// Dentro de cada bloque los stores se agrupan por dominio, en el mismo orden en que
+// aparecen: general/activo, salidas (outputs), shows, calendario, audio, etc.
+// Los stores de salidas (`outputs`, `outputState`, `styles`, `looks`, `outputDisplay`,
+// `allOutputs`) ya están tipados; no agregar `any` nuevos ahí.
 
 import type { Bible } from "json-bible/lib/Bible"
 import type { ICommonTagsResult } from "music-metadata"
@@ -29,6 +37,7 @@ import type { WebsiteAction } from "./components/helpers/websiteControls"
 import type { PlayingVideoState, VideoAudioData } from "./components/media/video/videoPlayer"
 
 // ----- TEMPORARY VARIABLES -----
+// Estado de sesión: no se persiste en disco (se recalcula al arrancar).
 
 // GENERAL
 export const os: Writable<OS> = writable({ platform: "win32", name: "", arch: "" })
@@ -136,7 +145,8 @@ export const paintCache: Writable<DrawLine[]> = writable([])
 
 // OUTPUTS
 export const outputDisplay: Writable<boolean> = writable(false)
-export const outputState: Writable<{ id: string; active: boolean | "invisible" }[]> = writable([])
+export type OutputState = { id: string; active: boolean | "invisible" }
+export const outputState: Writable<OutputState[]> = writable([])
 export const currentOutputSettings: Writable<string | null> = writable(null)
 export const slideTimers: Writable<{ [key: string]: SlideTimer }> = writable({})
 export const outputCache: Writable<any> = writable(null)
@@ -226,6 +236,7 @@ export const sttTranscript: Writable<{ finalized: string; unprocessed: string }>
 export const sttTempDisabled: Writable<boolean> = writable(false)
 
 // ----- SAVED VARIABLES -----
+// Estado persistido: se guarda con el proyecto/configuración (main/settings).
 
 // HISTORY
 export const undoHistory: Writable<(History | HistoryNew)[]> = writable([])
@@ -377,11 +388,14 @@ export const theme: Writable<string> = writable("default") // "default"
 export const themes: Writable<{ [key: string]: Themes }> = writable({}) // {default}
 
 // STYLES
+// Estilos y looks de la salida: mapas `{ [styleId]: Styles }` / `{ [lookId]: Look }`.
+// `Styles` y `Look` ya son tipos propios, así que no hace falta `any` (F9.2).
 export const styles: Writable<{ [key: string]: Styles }> = writable({}) // {}
 export const looks: Writable<{ [key: string]: Look }> = writable({}) // {}
 export const activeLook: Writable<string> = writable("default") // ""
 
 // OUTPUTS
+// Salidas de la app. `Outputs` es un mapa `{ [outputId]: Output }` (F9.2).
 export const outputs: Writable<Outputs> = writable({}) // {default}
 export const syncedOutputs: Writable<SyncedOutputs> = writable({}) // {}
 export const outLocked: Writable<boolean> = writable(false) // false

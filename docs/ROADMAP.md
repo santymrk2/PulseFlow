@@ -691,8 +691,13 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   OutputShow (`loaded`/`disabledServers`/`outputDisplay`), el reset de `closeAd` y la
   dirección/idioma del documento (`localeDirection`/`language`). `App.svelte` sólo los
   arranca; quedan las reactivas de presentación (contraste, `isWindows`, `ready`).
-- [ ] **F9.2** `stores.ts`: agrupar por dominio con comentarios; tipar primero los
+- [x] **F9.2** `stores.ts`: agrupar por dominio con comentarios; tipar primero los
   stores de salidas (`outputs`, `outputState`, `styles`, `looks`).
+  Hecho 2026-10-19: encabezado con el criterio (temporales vs guardados, agrupados por
+  dominio), alias `OutputState` para `outputState`, y comentarios en los stores de
+  salidas. `outputs` (`Outputs`) y `styles`/`looks` (`Styles`/`Look`) ya tenían tipo
+  propio. Nota: `styles`/`looks` siguen siendo mapas `{ [id]: … }`; pasarlos a arrays
+  tocaba ~170 usos en todo el frontend (fuera del alcance de esta tarea).
 - [ ] **F9.3** Eliminar ramas `$currentWindow === "output"` (lista en `PLAN.md`) una por
   componente, verificando cada una en la app.
 - [ ] **F9.4** Branding pendiente: `Splash.svelte`, `ImportScripture.svelte`, logo de
