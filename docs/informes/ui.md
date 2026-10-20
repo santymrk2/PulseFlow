@@ -303,3 +303,23 @@ Sin cambiar entradas ni su orden.
 ### Chequeos
 
 - `test:unit` 83/83, `test:svelte` 56 errores (línea base), `build` OK, Prettier limpio.
+
+## F11.10b — Ítems del proyecto en la columna izquierda (2026-10-20)
+
+Commit `40be0a2c`.
+
+### Qué se hizo
+
+- `ProjectContentList` se movió fuera de `Projects.svelte` para que la columna
+  izquierda quede: BIBLIOTECA · PLAYLIST (lista de proyectos) · 'N ÍTEMS' (contenido
+  del proyecto seleccionado, con Filtro abajo) · MEDIA.
+- `MainLayout.svelte`: renderiza `<ProjectContentList tree={[]} />` cuando hay proyecto
+  activo, con título 'N ÍTEMS' (N = shows del proyecto).
+- `Projects.svelte`: eliminado el bloque `{:else}` que renderizaba `ProjectContentList`.
+
+Drag & drop, reordenar, menú contextual y doble clic se mantienen (ProjectContentList
+no cambió; sólo se movió su punto de montaje).
+
+### Chequeos
+
+- `test:unit` 83/83, `test:svelte` 56 errores (línea base), `build` OK, Prettier limpio.

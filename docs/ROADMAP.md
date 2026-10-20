@@ -1039,7 +1039,10 @@ ninguna función (verificar cada función movida y listarla en el commit).
   ítems de 32 px con ícono 14 px, separadores de 1 px, submenús igual. Sin cambiar
   ninguna entrada ni su orden.
 
-- [ ] **F11.10b Ítems del proyecto en la columna izquierda.** (F11.10 dejó la lista
+- [x] **F11.10b Ítems del proyecto en la columna izquierda.** (2026-10-20, carril D:
+  ProjectContentList movido fuera de Projects.svelte a MainLayout.svelte (columna
+  izquierda): BIBLIOTECA · PLAYLIST · 'N ÍTEMS' · MEDIA. Chequeos: test:unit 83/83,
+  svelte-check 56 errores (linea base), build OK, Prettier limpio.) (F11.10 dejó la lista
   dentro de `Projects`.) Mover `ProjectContentList` fuera de `Projects` para que la
   columna quede: BIBLIOTECA · PLAYLIST (lista de proyectos) · "N ÍTEMS +" (contenido
   del proyecto seleccionado, con Filtro abajo) · MEDIA. Mantener arrastrar/soltar,
