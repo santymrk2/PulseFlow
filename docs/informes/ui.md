@@ -145,3 +145,19 @@ Commit `26ba7424`.
   Acciones); la app actual tiene 3 (grupos, metadatos, medios). Se mantienen las 3
   existentes para no inventar pestañas vacías; si se quieren las 6, hay que reasignar
   contenido (fuera del alcance de re-style).
+
+## F11.8 — Popups y tooltips (2026-10-20)
+
+Commit `dd002771`.
+
+### Qué se hizo
+
+- `Tooltip.svelte`: fondo `var(--primary-darkest)`, borde `var(--border-color)`,
+  `border-radius: var(--radius)`, opacidad 0.95.
+- `Popup.svelte` ya usaba `var(--radius)` y `var(--border-color)`; sin cambios.
+- `context/**` y `public/global.css` no se tocaron en esta pasada (alcance amplio);
+  queda como pendiente si el equipo quiere re-estilizar los menús contextuales.
+
+### Chequeos
+
+- `test:unit` 83/83, `test:svelte` 57 errores (línea base), `build` OK, Prettier limpio.

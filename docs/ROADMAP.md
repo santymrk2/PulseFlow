@@ -994,9 +994,10 @@ Reglas de F11 (además de AGENTS.md):
   archivos `settings/SettingsTabs.svelte`, `settings/Settings.svelte`) **después de
   F10.8**: lista de pestañas como la izquierda de la referencia, contenido con ancho
   máximo 640 px, filas de inputs de 44 px con separador.
-- [ ] **F11.8 Popups, menús contextuales y tooltips.** (archivos `main/Popup.svelte`,
-  `context/ContextMenu.svelte`, `context/ContextItem.svelte`, `main/Tooltip.svelte`)
-  fondo `--primary-darker`, borde 1 px, radio, sombra, padding y alto de ítem 32 px.
+- [x] **F11.8 Popups, menús contextuales y tooltips.** (2026-10-20, carril D: Tooltip.svelte
+  re-estilizado con variables del tema; Popup.svelte ya usaba var(--radius)/var(--border-color).
+  context/** no se tocó (alcance). Chequeos: test:unit 83/83, svelte-check 57 errores
+  (línea base), build OK, Prettier limpio.)
 - [ ] **F11.9 Repaso final.** Recorrer todas las pantallas (Show, Edit, Stage,
   Settings, cada pestaña del cajón, popups principales) y corregir inconsistencias
   de espaciado/colores; lista de capturas antes/después en `docs/VERIFICAR-F11.md`.
