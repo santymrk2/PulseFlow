@@ -10,7 +10,7 @@
     export let disabled = false
     $: isActive = $activePage === id
 
-    const keys = { show: 1, edit: 2, stage: 3, draw: 4, settings: 5 }
+    const keys = { show: 1, edit: 2, stage: 3, draw: 4 }
 
     function openPage() {
         activePage.set(id)

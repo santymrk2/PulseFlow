@@ -7,7 +7,6 @@
     import Tipbar from "./components/main/Tipbar.svelte"
     import Top from "./components/main/Top.svelte"
     import Preview from "./components/output/preview/Preview.svelte"
-    import SettingsTabs from "./components/settings/SettingsTabs.svelte"
     import Projects from "./components/show/Projects.svelte"
     import ProjectContentList from "./components/show/ProjectContentList.svelte"
     import Show from "./components/show/Show.svelte"
@@ -103,8 +102,6 @@
                     <StageLayouts />
                 {:else if page === "draw"}
                     <DrawTabs />
-                {:else if page === "settings"}
-                    <SettingsTabs />
                 {/if}
             </div>
         </Resizeable>
@@ -120,8 +117,6 @@
                 <LazyLoad component={() => import("./components/edit/Editor.svelte")} show={page === "edit"} />
             {:else if page === "draw"}
                 <LazyLoad component={() => import("./components/draw/Slide.svelte")} show={page === "draw"} />
-            {:else if page === "settings"}
-                <LazyLoad component={() => import("./components/settings/Settings.svelte")} show={page === "settings"} />
             {:else if page === "stage"}
                 <LazyLoad component={() => import("./components/stage/StageLayout.svelte")} show={page === "stage"} />
             {/if}
@@ -154,8 +149,6 @@
                     <LazyLoad component={() => import("./components/draw/DrawSettings.svelte")} show={page === "draw"} />
                 {:else if page === "stage" && $activeStage.id}
                     <LazyLoad component={() => import("./components/stage/StageTools.svelte")} show={page === "stage" && !!$activeStage.id} />
-                {:else if page === "settings"}
-                    <LazyLoad component={() => import("./components/settings/SettingsTools.svelte")} show={page === "settings"} />
                 {/if}
             </div>
         </Resizeable>

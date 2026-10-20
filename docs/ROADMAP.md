@@ -1219,7 +1219,7 @@ Reglas que valen para todas las tareas de F14:
 Las tareas F14.1a–c (decididas 2026-10-20) cambian la estructura de la interfaz y van
 antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
 
-- [ ] **F14.1a Configuración como modal.**
+- [x] **F14.1a Configuración como modal.**
   *Archivos:* `components/settings/Settings.svelte`, `SettingsTools.svelte`,
   `MainLayout.svelte`, `utils/popup.ts`, `components/main/Modal.svelte` (base de F12.1),
   y los que hacen `activePage.set("settings")` (`quicksearch.ts`, `SceneTools.svelte`,
@@ -1234,7 +1234,15 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   Que Esc cierre el modal sin limpiar la salida (regla de F12.1).
   *Aceptación:* en macOS, Configuración se abre como modal sobre Show y sobre Edit, se
   cierra con Esc y la página de atrás no cambia. Todas las pestañas muestran contenido.
-  `rg 'activePage.set\("settings"\)|display_settings' src/frontend` sólo deja el ícono.
+  `rg 'activePage.set\("settings"\)' src/frontend` = 0; `display_settings`/`styles` sólo
+  quedan como argumento de `openSettings(...)`, que redirige a Pantallas/Looks.
+  **Hecho** (2026-10-20). *Decisión:* Configuración no es un valor de `activePopup` sino
+  un store propio (`settingsOpen`) montado en `App.svelte` antes de `<Popup />`; así los
+  ~20 popups que se abren desde sus pestañas (conexión, restaurar, alertas…) quedan
+  encima en vez de reemplazarla, y Esc cierra primero el de arriba. Punto de entrada único:
+  `components/settings/openSettings.ts`. Verificado: `test:unit` 89/89, `test:svelte`
+  56 errores (línea base), prettier. **No verificado en la app** (no se levantó):
+  apertura, Esc, popups encima y cada pestaña quedan para probar en macOS.
 
 - [ ] **F14.1b Configuración al menú de la app; barra superior sin botones de más.**
   *Archivos:* `src-tauri/src/menu.rs`, `components/main/MenuBar.svelte` (Windows),

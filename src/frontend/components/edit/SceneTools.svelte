@@ -1,7 +1,8 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import type { TabsObj } from "../../../types/Tabs"
-    import { activeEdit, activePage, activePopup, activeStyle, overlays, popupData, scenes, selected, settingsTab, styles } from "../../stores"
+    import { activeEdit, activePopup, activeStyle, overlays, popupData, scenes, selected, styles } from "../../stores"
+    import { openSettings } from "../settings/openSettings"
     import { translateText } from "../../utils/language"
     import { clone } from "../helpers/array"
     import { history } from "../helpers/history"
@@ -24,8 +25,7 @@
     $: styleId = content?.style || ""
     function editStyle() {
         activeStyle.set(styleId)
-        settingsTab.set("styles")
-        activePage.set("settings")
+        openSettings("styles")
     }
 
     function updateContent(key: string, data: any, shouldOverride = false) {

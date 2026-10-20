@@ -38,7 +38,7 @@ import { invoke } from "@tauri-apps/api/core"
 import { activeLook, looks } from "../stores"
 import { derived } from "svelte/store"
 
-const menus: TopViews[] = ["show", "edit", "stage", "draw", "settings"]
+const menus: TopViews[] = ["show", "edit", "stage", "draw"]
 
 const ctrlKeys = {
     a: () => selectAll(),

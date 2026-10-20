@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { activePage, activeRecording, activeStyle, audioChannelsData, dictionary, outputs, rtmpStatus, selected, settingsTab, special, styles, templates, toggleOutputEnabled } from "../../../stores"
+    import { activeRecording, activeStyle, audioChannelsData, dictionary, outputs, rtmpStatus, selected, special, styles, templates, toggleOutputEnabled } from "../../../stores"
+    import { openSettings } from "../../settings/openSettings"
     import { translateText } from "../../../utils/language"
     import AudioMeter from "../../drawer/audio/AudioMeter.svelte"
     import { stopMediaRecorder } from "../../drawer/live/recorder"
@@ -58,8 +59,7 @@
             const outputId = e.target.closest(".outputPreview")?.id
             const output = $outputs[outputId]
             activeStyle.set(output?.style || "")
-            settingsTab.set("styles")
-            activePage.set("settings")
+            openSettings("styles")
             return
         }
 

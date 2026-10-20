@@ -75,6 +75,8 @@ export const activeStyle: Writable<string> = writable("")
 export const selectedProfile: Writable<string | null> = writable(null)
 export const activeProfile: Writable<string | null> = writable(null)
 export const settingsTab: Writable<SettingsTabs> = writable("general")
+/** Configuración es un modal propio (no pasa por `activePopup`): así los popups que se abren desde sus pestañas quedan encima en vez de reemplazarla. */
+export const settingsOpen: Writable<boolean> = writable(false)
 export const projectView: Writable<boolean> = writable(false)
 export const showRecentlyUsedProjects: Writable<boolean> = writable(true)
 export const globalGroupViewEnabled: Writable<boolean> = writable(false)
@@ -450,6 +452,7 @@ export const $ = {
     activeRename,
     activeDrawerTab,
     settingsTab,
+    settingsOpen,
     projectView,
     eventEdit,
     playingAudio,

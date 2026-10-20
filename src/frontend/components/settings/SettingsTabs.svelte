@@ -1,8 +1,7 @@
 <script lang="ts">
     import type { SettingsTabs } from "../../../types/Tabs"
-    import { activePage, activeProfile, focusMode, profiles, settingsTab } from "../../stores"
+    import { activeProfile, profiles, settingsTab } from "../../stores"
     import { settingsTabs } from "../../values/tabs"
-    import { translateText } from "../../utils/language"
     import { clone } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
@@ -40,47 +39,16 @@
 
 <svelte:window on:keydown={keydown} />
 
-{#if $focusMode}
-    <button class="back-btn" on:click={() => activePage.set("show")}>
-        <Icon id="back" right />
-        <T id="actions.back" />
-    </button>
-{/if}
-
-<aside class="settings-tabs">
-    <header class="settings-tabs-header">{translateText("menu.settings")}</header>
-    <nav class="settings-tabs-nav">
-        {#each activeTabs as tab}
-            <button class="settings-tab" class:active={$settingsTab === tab} on:click={() => settingsTab.set(tab)}>
-                <Icon id={tab} size={1} />
-                <span><T id="settings.{tab}" /></span>
-            </button>
-        {/each}
-    </nav>
-</aside>
+<nav class="settings-tabs-nav">
+    {#each activeTabs as tab}
+        <button class="settings-tab" class:active={$settingsTab === tab} on:click={() => settingsTab.set(tab)}>
+            <Icon id={tab} size={1} />
+            <span><T id="settings.{tab}" /></span>
+        </button>
+    {/each}
+</nav>
 
 <style>
-    .settings-tabs {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        min-height: 0;
-        overflow: hidden;
-        background-color: var(--primary-darker, #1a1a1a);
-    }
-    .settings-tabs-header {
-        height: 36px;
-        flex: 0 0 36px;
-        display: flex;
-        align-items: center;
-        padding: 0 12px;
-        font-size: 0.75em;
-        font-weight: 600;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        opacity: 0.6;
-        border-bottom: 1px solid var(--border-color, var(--primary-lighter));
-    }
     .settings-tabs-nav {
         flex: 1;
         min-height: 0;
@@ -115,15 +83,5 @@
     .settings-tab.active {
         background-color: var(--primary-lighter, rgb(255 255 255 / 0.1));
         opacity: 1;
-    }
-    .back-btn {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 8px 12px;
-        border: none;
-        background: transparent;
-        color: var(--text);
-        cursor: pointer;
     }
 </style>

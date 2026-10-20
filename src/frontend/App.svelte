@@ -8,6 +8,7 @@
     import ProgressPanel from "./components/main/ProgressPanel.svelte"
     import MenuBar from "./components/main/MenuBar.svelte"
     import Popup from "./components/main/Popup.svelte"
+    import SettingsModal from "./components/settings/SettingsModal.svelte"
     import ProfileSelector from "./components/main/ProfileSelector.svelte"
     import Recorder from "./components/main/Recorder.svelte"
     import StatusIndicator from "./components/main/StatusIndicator.svelte"
@@ -57,6 +58,8 @@
         <TooltipManager />
 
         {#if $loaded}
+            <!-- antes de Popup: los popups abiertos desde Configuración quedan encima -->
+            <SettingsModal />
             <Popup />
             <QuickSearch />
             <Toast />

@@ -2,7 +2,8 @@
     import { uid } from "uid"
     import type { OutData } from "../../../../types/Output"
     import type { Styles } from "../../../../types/Settings"
-    import { activePage, activePopup, activeStyle, currentOutputSettings, outputs, popupData, settingsTab, styles } from "../../../stores"
+    import { activePopup, activeStyle, currentOutputSettings, outputs, popupData, styles } from "../../../stores"
+    import { openSettings } from "../../settings/openSettings"
     import Card from "../../drawer/Card.svelte"
     import { DEFAULT_ITEM_STYLE } from "../../edit/scripts/itemHelpers"
     import { clone, keysToID, sortByName } from "../../helpers/array"
@@ -57,8 +58,7 @@
         history({ id: "UPDATE", newData: { data: { name: "" } }, oldData: { id: styleId }, location: { page: "settings", id: "settings_style" } })
         select(styleId)
         activeStyle.set(styleId)
-        settingsTab.set("styles")
-        activePage.set("settings")
+        openSettings("styles")
     }
 </script>
 

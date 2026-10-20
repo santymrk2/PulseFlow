@@ -60,6 +60,6 @@ export interface DrawerTabs {
 }
 
 export type DrawerTabIds = "shows" | "media" | "overlays" | "audio" | "scripture" | "calendar" | "timers" | "templates" | "functions"
-export type SettingsTabs = "general" | "files" | "display_settings" | "audio" | "styles" | "looks" | "connection" | "profiles" | "other" // "calendar"
-export type TopViews = "show" | "edit" | "reflow" | "draw" | "stage" | "calendar" | "settings"
+export type SettingsTabs = "general" | "files" | "audio" | "connection" | "profiles" | "other"
+export type TopViews = "show" | "edit" | "reflow" | "draw" | "stage" | "calendar"
 export type EditMode = "default" | "chords" | "text_edit"

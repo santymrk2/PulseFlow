@@ -266,7 +266,7 @@
     {/if}
 
     {#if enablePreview}
-        <div class="section" style="margin-bottom: 2px;" class:float={!isSplitted && $activePage !== "show" && $activePage !== "settings"} class:light class:isOptimized>
+        <div class="section" style="margin-bottom: 2px;" class:float={!isSplitted && $activePage !== "show"} class:light class:isOptimized>
             <ShowActions {currentOutput} {ref} {linesIndex} {maxLines} />
         </div>
 

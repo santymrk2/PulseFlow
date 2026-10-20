@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { activeEdit, activePage, activePopup, activeShow, activeStyle, alertMessage, categories, groups, settingsTab, showsCache, special, styles, templates } from "../../../stores"
+    import { activeEdit, activePage, activePopup, activeShow, activeStyle, alertMessage, categories, groups, showsCache, special, styles, templates } from "../../../stores"
+    import { openSettings } from "../../settings/openSettings"
     import { translateText } from "../../../utils/language"
     import Icon from "../../helpers/Icon.svelte"
     import { allOutputsHasStyleTemplate, getFirstActiveOutput } from "../../helpers/output"
@@ -33,8 +34,7 @@
 
     function openStylePage() {
         activeStyle.set(outputStyleId)
-        settingsTab.set("styles")
-        activePage.set("settings")
+        openSettings("styles")
         // scroll to bottom
         setTimeout(() => {
             document.querySelector(".row")?.querySelector(".center")?.querySelector(".scroll")?.scrollTo(0, 1000)

@@ -2,7 +2,7 @@
     import { Main } from "../../../types/IPC/Main"
     import type { Popups } from "../../../types/Main"
     import { sendMain } from "../../IPC/main"
-    import { activePopup, ai, dataPath, outputs, popupData, settingsTab } from "../../stores"
+    import { activePopup, ai, dataPath, popupData, settingsTab } from "../../stores"
     import T from "../helpers/T.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
 
@@ -46,14 +46,6 @@
         <MaterialButton variant="outlined" icon="color" on:click={() => open("manage_colors")} small>
             <T id="popup.manage_colors" />
         </MaterialButton>
-    </div>
-{:else if openedTab === "display_settings"}
-    <div class="bottom">
-        {#if Object.values($outputs).filter((o) => !o.invisible).length > 1}
-            <MaterialButton variant="outlined" icon="screen" on:click={() => open("output_selector")} small>
-                <T id="popup.output_selector" />
-            </MaterialButton>
-        {/if}
     </div>
 {:else if openedTab === "other"}
     <div class="bottom">

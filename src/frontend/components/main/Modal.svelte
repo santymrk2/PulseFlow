@@ -16,6 +16,10 @@
     export let closable = true
     /** true: clic afuera NO cierra (evita perder cambios sin guardar). */
     export let lockOutsideClick = true
+    /** false: el modal no es el popup activo (ej. Configuración) y cerrarlo no debe tocar `activePopup`. */
+    export let managesPopup = true
+    /** true: Esc pasa de largo (hay otro popup encima que lo necesita). */
+    export let blockEscape = false
 
     const dispatch = createEventDispatcher()
 
@@ -25,12 +29,12 @@
     function close() {
         if (!closable) return
         dispatch("close")
-        activePopup.set(null)
+        if (managesPopup) activePopup.set(null)
     }
 
     // capture: Esc cierra el modal sin llegar a utils/shortcuts.ts (que limpia la salida con Esc)
     function onKeydown(e: KeyboardEvent) {
-        if (e.key !== "Escape") return
+        if (e.key !== "Escape" || blockEscape) return
         e.preventDefault()
         e.stopPropagation()
         close()

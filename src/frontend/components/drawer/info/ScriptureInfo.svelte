@@ -2,7 +2,8 @@
     import type { MediaStyle } from "../../../../types/Main"
     import type { BibleContent } from "../../../../types/Scripture"
     import type { Item } from "../../../../types/Show"
-    import { activeEdit, activePage, activeScripture, activeStyle, drawerTabsData, media, outputs, scriptureSettings, settingsTab, styles, templates } from "../../../stores"
+    import { activeEdit, activePage, activeScripture, activeStyle, drawerTabsData, media, outputs, scriptureSettings, styles, templates } from "../../../stores"
+    import { openSettings } from "../../settings/openSettings"
     import { setDefaultScriptureTemplates } from "../../../utils/createData"
     import { confirmCustom } from "../../../utils/popup"
     import { mediaExtensions } from "../../../values/extensions"
@@ -124,8 +125,7 @@
     function editTemplate() {
         if (styleScriptureTemplate) {
             activeStyle.set(styleId)
-            settingsTab.set("styles")
-            activePage.set("settings")
+            openSettings("styles")
             return
         }
 

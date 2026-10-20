@@ -74,7 +74,6 @@ import {
     scenes,
     scriptures,
     selected,
-    settingsTab,
     showRecentlyUsedProjects,
     shows,
     showsCache,
@@ -89,6 +88,7 @@ import {
     toggleOutputEnabled,
     variables
 } from "../../stores"
+import { openSettings } from "../settings/openSettings"
 import { escapeRegExp, hideDisplay, isOutputWindow, newToast, triggerFunction, wait } from "../../utils/common"
 import { setExampleEffects, setExampleOverlays, setExampleTemplates } from "../../utils/createData"
 import { translateText } from "../../utils/language"
@@ -143,11 +143,7 @@ const clickActions = {
     save: () => save(),
     import_more: () => activePopup.set("import"),
     export_more: () => activePopup.set("export"),
-    settings: () => {
-        if (get(activePage) === "stage") settingsTab.set("connection")
-        else if (get(activePage) === "settings") settingsTab.set("general")
-        activePage.set("settings")
-    },
+    settings: () => openSettings(get(activePage) === "stage" ? "connection" : undefined),
     quit: () => initializeClosing(),
     // view
     focus_mode: () => {
@@ -1339,8 +1335,7 @@ const clickActions = {
             activePopup.set("edit_event")
         } else if (obj.contextElem?.classList.value.includes("output_button")) {
             currentOutputSettings.set(obj.contextElem.id)
-            settingsTab.set("display_settings")
-            activePage.set("settings")
+            openSettings("display_settings")
         } else if (obj.contextElem?.classList.value.includes("#edit_custom_action")) {
             activePopup.set("custom_action")
         }
@@ -1378,8 +1373,6 @@ const clickActions = {
             }
         })
 
-        // activeStyle.set(output.style)
-        // settingsTab.set("styles")
         activePopup.set("select_style")
     },
     change_look: () => {
@@ -1401,12 +1394,9 @@ const clickActions = {
         if (!output.style) return
 
         activeStyle.set(output.style)
-        settingsTab.set("styles")
-        activePage.set("settings")
+        openSettings("styles")
     },
     manage_groups: () => {
-        // settingsTab.set("general")
-        // activePage.set("settings")
         activePopup.set("manage_groups")
     },
     manage_metadata: () => {

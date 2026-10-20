@@ -86,7 +86,7 @@
 
         position: relative;
 
-        --padding: 150px;
+        --padding: 24px;
     }
 
     .title {
@@ -113,7 +113,8 @@
 
         overflow-y: auto;
         /* overflow-x: hidden; */
-        height: 100%;
+        flex: 1;
+        min-height: 0;
         padding: 20px var(--padding);
         max-width: 640px;
         margin-inline: auto;
@@ -121,21 +122,5 @@
 
     .tabs {
         z-index: 1;
-    }
-
-    @media (max-width: 1300px) {
-        main {
-            --padding: 100px;
-        }
-    }
-    @media (max-width: 1100px) {
-        main {
-            --padding: 50px;
-        }
-    }
-    @media (max-width: 800px) {
-        main {
-            --padding: 20px;
-        }
     }
 </style>

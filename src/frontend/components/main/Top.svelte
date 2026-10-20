@@ -1,5 +1,6 @@
 <script lang="ts">
-    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, drawSettings, drawTool, editMode, outputDisplay, outputState, outputs, paintCache, profiles, quickSearchActive, saved, settingsTab, shows, activeDrawerTab, drawer, looks, activeLook, activePopup } from "../../stores"
+    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, drawSettings, drawTool, editMode, outputDisplay, outputState, outputs, paintCache, profiles, quickSearchActive, saved, shows, activeDrawerTab, drawer, looks, activeLook, activePopup } from "../../stores"
+    import { openSettings } from "../settings/openSettings"
     import { getCloudUsers } from "../../utils/cloudSync"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
@@ -27,8 +28,7 @@
     $: physicalOutputWindows = Object.values($outputs).filter((a) => a.enabled && !a.invisible)
 
     function openOutputSettings() {
-        settingsTab.set("display_settings")
-        activePage.set("settings")
+        openSettings("display_settings")
     }
 
     // disabled tabs
@@ -82,8 +82,7 @@
     }
 
     function openLiveSettings() {
-        settingsTab.set("display_settings")
-        activePage.set("settings")
+        openSettings("display_settings")
     }
 
     function toggleAudience() {
@@ -190,7 +189,9 @@
     <Capsule>
         <TopButton id="draw" red={$drawTool === "fill" || ($drawTool === "zoom" && $drawSettings.zoom?.size !== 100) || !!($drawTool === "paint" && $paintCache?.length)} />
         {#if !settingsDisabled}
-            <TopButton id="settings" />
+            <Button variant="ghost" size="sm" data-title={translateText("menu.settings")} onclick={() => openSettings()}>
+                <Icon id="settings" size={1} white />
+            </Button>
         {/if}
     </Capsule>
 

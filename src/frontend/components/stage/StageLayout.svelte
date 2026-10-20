@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onDestroy, setContext } from "svelte"
-    import { activePage, activeStage, allOutputs, currentOutputSettings, outputs, settingsTab, stageShows, toggleOutputEnabled } from "../../stores"
+    import { activeStage, allOutputs, currentOutputSettings, outputs, stageShows, toggleOutputEnabled } from "../../stores"
+    import { openSettings } from "../settings/openSettings"
     import { getAccess } from "../../utils/profile"
     import ItemAddMenu from "../edit/ItemAddMenu.svelte"
     import { getSortedStageItems, shouldItemBeShown } from "../edit/scripts/itemHelpers"
@@ -138,8 +139,7 @@
         setTimeout(() => {
             let id = enableStageOutput({ stageOutput: stageLayoutId, name: layout?.name || "" })
             currentOutputSettings.set(id)
-            settingsTab.set("display_settings")
-            activePage.set("settings")
+            openSettings("display_settings")
         }, 100)
     }
 </script>

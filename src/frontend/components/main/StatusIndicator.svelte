@@ -1,6 +1,7 @@
 <script lang="ts">
     import { slide } from "svelte/transition"
-    import { activePage, os, settingsTab, statusIndicator } from "../../stores"
+    import { os, statusIndicator } from "../../stores"
+    import { openSettings } from "../settings/openSettings"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
 
@@ -23,8 +24,7 @@
             case "saved":
             case "syncing":
             case "synced":
-                settingsTab.set("files")
-                activePage.set("settings")
+                openSettings("files")
                 break
         }
     }

@@ -73,6 +73,7 @@ import {
     recentFiles,
     redoHistory,
     rtmpStatus,
+    settingsOpen,
     shows,
     showsCache,
     spellcheck,
@@ -203,7 +204,7 @@ export const mainResponses: MainResponses = {
 
         shows.set(a)
 
-        if (get(activePopup) || get(activePage) !== "settings") return
+        if (get(activePopup) || !get(settingsOpen)) return
         alertMessage.set("<h3>Updated shows</h3><br>● Old shows: " + oldCount + "<br>● New shows: " + newCount)
         activePopup.set("alert")
     },

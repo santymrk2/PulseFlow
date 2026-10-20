@@ -35,7 +35,6 @@ import {
     selected,
     selectedProfile,
     serverData,
-    settingsTab,
     showRecentlyUsedProjects,
     showsCache,
     slidesOptions,
@@ -43,6 +42,7 @@ import {
     stageShows,
     styles
 } from "../../stores"
+import { openSettings } from "../settings/openSettings"
 import { triggerFunction } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { getAccess } from "../../utils/profile"
@@ -338,18 +338,15 @@ const triggerActions = {
     },
     settings_output: (id: string) => {
         currentOutputSettings.set(id)
-        settingsTab.set("display_settings")
-        activePage.set("settings")
+        openSettings("display_settings")
     },
     settings_styles: (id: string) => {
         activeStyle.set(id)
-        settingsTab.set("styles")
-        activePage.set("settings")
+        openSettings("styles")
     },
     settings_profiles: (id: string) => {
         selectedProfile.set(id)
-        settingsTab.set("profiles")
-        activePage.set("settings")
+        openSettings("profiles")
     },
     stage_layout: (id: string) => {
         activeStage.set({ id, items: [] })
@@ -383,12 +380,15 @@ const triggerActions = {
             return
         }
 
+        if (id === "settings") {
+            openSettings("general")
+            return
+        }
+
         if (!top.includes(id)) {
             openDrawer(id)
             return
         }
-
-        if (id === "settings") settingsTab.set("general")
 
         activePage.set(id as any)
 
@@ -413,10 +413,7 @@ const triggerActions = {
         }
 
         if (data?.drawerTab) openDrawer(data.drawerTab)
-        if (data?.settingsTab) {
-            settingsTab.set(data.settingsTab)
-            activePage.set("settings")
-        }
+        if (data?.settingsTab) openSettings(data.settingsTab)
 
         if (id === "overlay" || id === "template" || id === "effect" || id === "scene") {
             // make sure tab is opened before creating so rename input gets focused
@@ -449,15 +446,11 @@ const triggerActions = {
 
         activePopup.set(id as any)
     },
-    settings: (id: string) => {
-        settingsTab.set(id as any)
-        activePage.set("settings")
-    },
+    settings: (id: string) => openSettings(id),
     settings_connection: (id: string) => {
         enableConnection(id)
 
-        settingsTab.set("connection")
-        activePage.set("settings")
+        openSettings("connection")
 
         activePopup.set(null)
         // let popup close first
@@ -564,7 +557,7 @@ function enableConnection(id: string) {
 
 /// //
 
-const top = ["show", "edit", "stage", "draw", "settings"]
+const top = ["show", "edit", "stage", "draw"]
 const mainPages = [
     // top pages
     { id: "show", name: "menu.show", icon: "show", aliases: ["-Home"] },
