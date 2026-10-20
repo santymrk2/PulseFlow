@@ -285,3 +285,21 @@ Las 3 pestañas originales de ShowTools (grupos, metadatos, medios) quedan al fi
 ### Chequeos
 
 - `test:unit` 83/83, `test:svelte` 56 errores (línea base), `build` OK, Prettier limpio.
+
+## F11.8b — Menús contextuales (2026-10-20)
+
+Commit `24e79035`.
+
+### Qué se hizo
+
+- `ContextMenu.svelte`: fondo `var(--primary-darker)`, borde 1px `var(--border-color)`,
+  radio `var(--radius)`, separadores (hr) 1px `var(--border-color)`.
+- `ContextItem.svelte`: ítems min-height 32px, hover `var(--hover)`.
+- `ContextChild.svelte`: ítems min-height 32px, hover `var(--hover)`; submenú con fondo
+  `var(--primary-darker)`, borde `var(--border-color)`, radio `var(--radius)`.
+
+Sin cambiar entradas ni su orden.
+
+### Chequeos
+
+- `test:unit` 83/83, `test:svelte` 56 errores (línea base), `build` OK, Prettier limpio.

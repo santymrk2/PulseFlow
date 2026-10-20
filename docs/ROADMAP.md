@@ -1031,7 +1031,9 @@ ninguna función (verificar cada función movida y listarla en el commit).
   *Aceptación:* captura comparada con la de ProPresenter de la especificación; cada
   función que antes estaba en el panel derecho sigue accesible.
 
-- [ ] **F11.8b Menús contextuales.** (F11.8 no tocó `context/**`.) Archivos:
+- [x] **F11.8b Menús contextuales.** (2026-10-20, carril D: ContextMenu/ContextItem/
+  ContextChild re-estilizados con variables del tema, ítems 32px, hover --hover.
+  Chequeos: test:unit 83/83, svelte-check 56 errores (linea base), build OK, Prettier limpio.) (F11.8 no tocó `context/**`.) Archivos:
   `context/ContextMenu.svelte`, `context/ContextItem.svelte`, `context/ContextChild.svelte`.
   Fondo `--primary-darker`, borde 1 px `--border-color`, radio `--radius`, sombra,
   ítems de 32 px con ícono 14 px, separadores de 1 px, submenús igual. Sin cambiar
