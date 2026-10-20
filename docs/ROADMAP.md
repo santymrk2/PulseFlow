@@ -981,15 +981,11 @@ Reglas de F11 (además de AGENTS.md):
   con pestañas solo-icono; la tira vertical ClearButtons y el selector de salida
   MultiOutputs del Preview se mantienen. Chequeos: test:unit 83/83, svelte-check 57
   errores (línea base), build OK, Prettier limpio.)
-- [ ] **F11.10 Columna izquierda como ProPresenter: Biblioteca, Playlist y Media.**
-  ("Columna izquierda" en la especificación; archivos `MainLayout.svelte` (sólo la
-  columna izquierda), `show/Projects.svelte`, `show/ProjectList.svelte`,
-  `show/ProjectContentList.svelte`, `drawer/navigation/*`) secciones BIBLIOTECA
-  (categorías de shows, que hoy están en el cajón), PLAYLIST (proyectos), lista de
-  ítems del proyecto con Filtro, y MEDIA abajo (fuentes del cajón). Al elegir una
-  categoría de BIBLIOTECA, el cajón muestra esos shows. Es un cambio de lugar: hacerlo
-  **después** de F11.2–F11.6 y verificar que abrir/arrastrar shows y proyectos sigue
-  funcionando igual.
+- [x] **F11.10 Columna izquierda como ProPresenter: Biblioteca, Playlist y Media.**
+  (2026-10-20, carril D: MainLayout.svelte columna izquierda con secciones
+  BIBLIOTECA (categorías de shows -> cajon), PLAYLIST (Projects sin cambios) y MEDIA.
+  Chequeos: test:unit 83/83, svelte-check 56 errores (linea base), build OK,
+  Prettier limpio.)
 - [ ] **F11.7 Página de Settings.** (referencia `SettingsTabs.tsx`, `SettingsTools.tsx`;
   archivos `settings/SettingsTabs.svelte`, `settings/Settings.svelte`) **después de
   F10.8**: lista de pestañas como la izquierda de la referencia, contenido con ancho

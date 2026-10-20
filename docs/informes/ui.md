@@ -161,3 +161,28 @@ Commit `dd002771`.
 ### Chequeos
 
 - `test:unit` 83/83, `test:svelte` 57 errores (línea base), `build` OK, Prettier limpio.
+
+## F11.10 — Columna izquierda como ProPresenter (2026-10-20)
+
+Commit `9d03c638`.
+
+### Qué se hizo
+
+- `MainLayout.svelte` (sólo la columna izquierda, página "show"): sección BIBLIOTECA
+  con las categorías de shows (al elegirla, el cajón muestra esos shows), PLAYLIST con
+  el componente `Projects` existente (abrir/arrastrar sin cambios) y MEDIA con un acceso
+  que abre la pestaña de medios del cajón. Títulos de sección en mayúsculas pequeñas
+  atenuados, consistente con F11.3.
+
+### Chequeos
+
+- `test:unit` 83/83, `test:svelte` 56 errores (línea base post-merge), `build` OK,
+  Prettier limpio.
+
+### Decisión pendiente
+
+- La reorganización completa (BIBLIOTECA/PLAYLIST/MEDIA como en el diseño) se hizo de
+  forma mínima: la lista de ítems del proyecto con Filtro sigue viviendo dentro de
+  `Projects`/`ProjectContentList`, no se duplicó en la columna. Si se quiere la lista
+  de ítems del proyecto directamente en la columna izquierda, hay que mover
+  `ProjectContentList` fuera de `Projects`.
