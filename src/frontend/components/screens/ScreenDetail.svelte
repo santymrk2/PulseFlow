@@ -3,11 +3,14 @@
     import { OUTPUT } from "../../../types/Channels"
     import { activePage, activePopup, activeStage, currentOutputSettings, outputs, stageShows } from "../../stores"
     import { send } from "../../utils/request"
+    import { translateText } from "../../utils/language"
     import { toggleOutputs } from "../helpers/output"
     import { clone } from "../helpers/array"
     import DisplayLayout from "./DisplayLayout.svelte"
     import ScreenOutputOptions from "./ScreenOutputOptions.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
+    import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
+    import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
     import MaterialPopupButton from "../inputs/MaterialPopupButton.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
 
@@ -34,6 +37,23 @@
         activeStage.set({ id: stageId, items: [] })
         activePage.set("stage")
         activePopup.set(null)
+    }
+
+    function setOutputValue(key: string, value: any) {
+        outputs.update((a) => {
+            if (a[outputId]) (a[outputId] as any)[key] = value
+            return a
+        })
+    }
+    function setForcedResolution(side: "width" | "height", value: number) {
+        outputs.update((a) => {
+            const out = a[outputId]
+            if (!out) return a
+            const res = { width: out.forcedResolution?.width || 0, height: out.forcedResolution?.height || 0, [side]: Number(value) || 0 }
+            if (!res.width || !res.height) delete out.forcedResolution
+            else out.forcedResolution = res
+            return a
+        })
     }
 
     let activeTab = "hardware"
@@ -273,6 +293,13 @@
             <MaterialButton on:click={() => dispatch("refreshDisplays")}>Identificar pantallas</MaterialButton>
             <MaterialButton on:click={toggleEnabled}>{currentOutput.enabled && currentOutput.active ? "Apagar" : "Encender"}</MaterialButton>
         </div>
+        <MaterialToggleSwitch label="settings.invisible_window" checked={!!currentOutput.invisible} defaultValue={false} on:change={(e) => setOutputValue("invisible", e.detail)} />
+        <MaterialToggleSwitch label="settings.transparent" checked={!!currentOutput.transparent} defaultValue={false} on:change={(e) => setOutputValue("transparent", e.detail)} />
+        <MaterialToggleSwitch label="context.hide_from_preview" checked={!!currentOutput.hideFromPreview} defaultValue={false} on:change={(e) => setOutputValue("hideFromPreview", e.detail)} />
+        <MaterialColorInput label="edit.color" value={currentOutput.color || "#F0008C"} defaultValue="#F0008C" on:change={(e) => setOutputValue("color", e.detail)} />
+        <div class="label">{translateText("settings.resolution")}</div>
+        <MaterialNumberInput label="screen.width" value={currentOutput.forcedResolution?.width || 0} defaultValue={0} max={8192} on:change={(e) => setForcedResolution("width", e.detail)} />
+        <MaterialNumberInput label="screen.height" value={currentOutput.forcedResolution?.height || 0} defaultValue={0} max={8192} on:change={(e) => setForcedResolution("height", e.detail)} />
     </div>
 {:else if activeTab === "cropping"}
     <div class="tab-panel">
