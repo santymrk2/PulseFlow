@@ -3,8 +3,7 @@
 //! `GET_DISPLAYS` se apoya en la API nativa de monitores de Tauri
 //! (`available_monitors`). `GET_SCREENS` y `GET_WINDOWS` en Electron usan
 //! `desktopCapturer`, que no tiene equivalente directo: aquí se derivan de los
-//! monitores disponibles y de las ventanas de la propia app. La captura real de
-//! pantalla/ventana (para salidas NDI/streaming).
+//! monitores disponibles y de las ventanas de la propia app.
 //!
 //! Las utilidades de rutas del sistema (`OPEN_LOG`, `OPEN_CACHE`, `OPEN_APPDATA`,
 //! `OPEN_FOLDER_PATH`) quedaron implementadas en `commands/files.rs`.
@@ -251,31 +250,8 @@ pub fn RENDER_SNAPSHOT(app: AppHandle, data: SnapshotPayload) -> AppResult<Strin
 }
 
 // ---------------------------------------------------------------------------
-// Stage Display y NDI (captura de framebuffer)
+// Stage Display
 // ---------------------------------------------------------------------------
-
-/// `START_NDI_NATIVE_FEED`: activa la captura directa de Framebuffer en GPU (`copy_texture_to_buffer`)
-/// para transmisión NDI en red local sin consumir CPU.
-#[tauri::command]
-pub fn START_NDI_NATIVE_FEED(
-    app: AppHandle,
-    width: Option<u32>,
-    height: Option<u32>,
-) -> AppResult<()> {
-    crate::render::ndi_stream::start_feed(&app, width, height)
-}
-
-/// `STOP_NDI_NATIVE_FEED`: detiene la captura de Framebuffer de GPU para NDI.
-#[tauri::command]
-pub fn STOP_NDI_NATIVE_FEED(app: AppHandle) -> AppResult<()> {
-    crate::render::ndi_stream::stop_feed(&app)
-}
-
-/// `IS_NDI_NATIVE_FEED_ACTIVE`: comprueba si la captura directa de Framebuffer NDI está activa.
-#[tauri::command]
-pub fn IS_NDI_NATIVE_FEED_ACTIVE(app: AppHandle) -> bool {
-    crate::render::ndi_stream::is_feed_active(&app)
-}
 
 #[cfg(all(test, debug_assertions))]
 mod tests {

@@ -196,8 +196,6 @@ pub struct ScreenManager {
     screens: Mutex<HashMap<String, ScreenHandle>>,
     /// Un decodificador por archivo de video, compartido entre pantallas (F8.2).
     video_hub: Mutex<HashMap<String, SharedVideo>>,
-    /// Captura de framebuffer para NDI (recurso de engine, hasta F8).
-    pub(crate) ndi_capture: Mutex<Option<super::ndi_stream::GpuFramebufferCapture>>,
     /// Configuración global de transición hasta que F3 la aplique por pantalla.
     pub(crate) transition_config:
         Mutex<(super::transition::TransitionType, u64, super::transition::EasingType)>,
@@ -209,7 +207,6 @@ impl ScreenManager {
             scenes: Mutex::new(HashMap::new()),
             screens: Mutex::new(HashMap::new()),
             video_hub: Mutex::new(HashMap::new()),
-            ndi_capture: Mutex::new(None),
             transition_config: Mutex::new((
                 super::transition::TransitionType::Crossfade,
                 300,

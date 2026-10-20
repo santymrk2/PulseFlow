@@ -6,10 +6,9 @@
 //! **Fachada**: declara los módulos del engine y re-exporta su API pública.
 //! El ciclo de vida de las ventanas y escenas vive en `screens`
 //! (`ScreenManager`, una pantalla por salida); el layout de stage en `stage`;
-//! texto, media, video, transiciones y NDI en sus propios módulos.
+//! texto, media, video y transiciones en sus propios módulos.
 
 pub mod media;
-pub mod ndi_stream;
 pub mod scene;
 pub mod screens;
 pub mod snapshot;
@@ -39,7 +38,6 @@ pub use types::{BackgroundMedia, MediaItem, OverlayItem, StageData, TextBlock};
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::atomic::Ordering;
     use std::sync::Arc;
 
     #[test]
@@ -179,36 +177,5 @@ mod tests {
         assert_eq!(blocks[0].text, "11:45 AM");
         assert_eq!(blocks[1].text, stage_data.current_slide);
         assert_eq!(blocks[3].text, "Pastor listo para predicar");
-    }
-
-    #[test]
-    fn test_gpu_ndi_capture_buffer() {
-        let instance = wgpu::Instance::default();
-        let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
-            power_preference: wgpu::PowerPreference::HighPerformance,
-            compatible_surface: None,
-            force_fallback_adapter: false,
-            ..Default::default()
-        }))
-        .unwrap();
-
-        let (device, _queue) = pollster::block_on(adapter.request_device(
-            &wgpu::DeviceDescriptor {
-                label: Some("Test NDI Device"),
-                ..Default::default()
-            },
-        ))
-        .unwrap();
-
-        let capture = ndi_stream::GpuFramebufferCapture::new(&device, 1920, 1080);
-        assert_eq!(capture.width, 1920);
-        assert_eq!(capture.height, 1080);
-        assert!(!capture.is_active.load(Ordering::Relaxed));
-
-        capture.start();
-        assert!(capture.is_active.load(Ordering::Relaxed));
-
-        capture.stop();
-        assert!(!capture.is_active.load(Ordering::Relaxed));
     }
 }
