@@ -1319,12 +1319,28 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   visualmente:** hay que mirar la app (lo que más puede notarse: texto o íconos que
   dependían de que `--secondary` fuera oscuro/azul).
 
-- [ ] **F14.3 Colores sueltos a tokens.** En tres commits: (a) `components/main/`,
+- [x] **F14.3 Colores sueltos a tokens.** En tres commits: (a) `components/main/`,
   `show/`, `settings/`; (b) `drawer/`, `edit/`; (c) el resto.
   *Pasos:* reemplazar hex/`rgb()` de interfaz por tokens. Quedan sólo los que son
   **datos** (colores de grupos, presets de color, plantillas), cada uno con un comentario.
   *Aceptación:* el contador de colores de F13.2 baja en cada commit; no hay regresión
   visual en las capturas.
+  **Hecho, con alcance recortado** (2026-10-20, commits F14.3a/b/c): 573 → 488 literales
+  de interfaz (−85, 62 archivos tocados con un script que sólo lee `<style>` y `style=""`,
+  nunca `<script>`). Se reemplazó lo que tiene token inequívoco: blancos translúcidos
+  → `--bg-hover`/`--bg-selected`/`--border`/`--border-strong` según la propiedad, rojo →
+  `--danger`, verde → `--success`, ámbar → `--warning`, texto `#fff`/`#000` →
+  `--text`/`--action-text`. **Fuera de alcance** (contenido o previsualización de
+  contenido): `slide/`, `export/`, `output/effects/`, `edit/editbox/`, `Stagebox` y los
+  popups `MediaFit`, `MetadataDisplay` y `Transition`. *Lo que queda (488) no es "color de
+  interfaz suelto"* y se resuelve en otras tareas: rellenos oscuros translúcidos
+  (`rgb(0 0 20 / 0.08)`…, ~35) → **F14.4**; `box-shadow` (47) → **F14.5**; scrims sobre
+  miniaturas (`rgb(0 0 0 / 0.6)`, 15); colores de medidores de audio y de marcas (OBS);
+  colores de grupo (datos); y ~160 literales en el marcado y ~67 en `<script>` (props y
+  valores de datos) que el script no toca a propósito. **El contador de F13.2 debe medir
+  sólo la interfaz en alcance, no un `rg` global.** Verificado: `test:svelte` 56 errores
+  (línea base), `test:unit` 89/89, prettier (`MaterialButton.svelte` ya venía mal
+  formateado y se dejó limpio). No verificado visualmente.
 
 - [ ] **F14.4 Bordes en lugar de fondos.**
   *Archivos:* contenedores de layout (`components/main/`), filas de Configuración,
