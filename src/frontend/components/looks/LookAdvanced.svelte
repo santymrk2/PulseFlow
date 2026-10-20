@@ -5,7 +5,7 @@
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
     import InputRow from "../input/InputRow.svelte"
-    import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
+    import ColorField from "../../lib/components/ui/color-field/color-field.svelte"
     import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
 
@@ -49,7 +49,7 @@
                         <span>{screen.name || t("settings.output_screen")}</span>
                     </div>
 
-                    <MaterialColorInput label="edit.background_color" value={cell.background || "#000000"} defaultValue="#000000" on:input={(e) => patch(screen.id, { background: e.detail })} />
+                    <ColorField label="edit.background_color" value={cell.background || "#000000"} defaultValue="#000000" on:input={(e) => patch(screen.id, { background: e.detail })} />
 
                     <InputRow>
                         <MaterialToggleSwitch label="settings.clear_style_background_on_text" checked={!!cell.clearStyleBackgroundOnText} defaultValue={false} on:change={(e) => patch(screen.id, { clearStyleBackgroundOnText: e.detail })} />

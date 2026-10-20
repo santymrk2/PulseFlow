@@ -8,8 +8,8 @@
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import MetronomeInputs from "./MetronomeInputs.svelte"
@@ -54,11 +54,11 @@
 
 {#if options}
     <div class="settings">
-        <MaterialDropdown label="audio.click_sound" disabled={!paused} options={clickSounds} value={$special.clickSound || "metal"} on:change={(e) => updateSpecial("clickSound", e.detail)} />
+        <SelectField label="audio.click_sound" disabled={!paused} options={clickSounds} value={$special.clickSound || "metal"} on:change={(e) => updateSpecial("clickSound", e.detail)} />
         {#if $special.clickSound === "custom"}
             <InputRow>
-                <MaterialFilePicker label="tabs.audio (Hi)" icon="music" disabled={!paused} value={$special.clickSound_hi || ""} filter={{ name: "Audio files", extensions: audioExtensions }} on:change={(e) => updateSpecial("clickSound_hi", e.detail)} />
-                <MaterialFilePicker label="tabs.audio (Lo)" icon="music" disabled={!paused} value={$special.clickSound_lo || ""} filter={{ name: "Audio files", extensions: audioExtensions }} on:change={(e) => updateSpecial("clickSound_lo", e.detail)} />
+                <FileField label="tabs.audio (Hi)" icon="music" disabled={!paused} value={$special.clickSound_hi || ""} filter={{ name: "Audio files", extensions: audioExtensions }} on:change={(e) => updateSpecial("clickSound_hi", e.detail)} />
+                <FileField label="tabs.audio (Lo)" icon="music" disabled={!paused} value={$special.clickSound_lo || ""} filter={{ name: "Audio files", extensions: audioExtensions }} on:change={(e) => updateSpecial("clickSound_lo", e.detail)} />
             </InputRow>
         {/if}
         <InputRow>

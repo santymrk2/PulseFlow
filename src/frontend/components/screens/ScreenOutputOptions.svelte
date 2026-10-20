@@ -18,7 +18,7 @@
     import Title from "../input/Title.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../inputs/MaterialCheckbox.svelte"
-    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
 
@@ -330,7 +330,7 @@
 {#if currentOutput?.blackmagic}
     <Title label="Blackmagic Design" icon="blackmagic" />
 
-    <MaterialDropdown
+    <SelectField
         label="settings.device"
         value={currentOutput?.blackmagicData?.deviceId || ""}
         options={(() => {
@@ -346,8 +346,8 @@
 
     {#if currentOutput?.blackmagicData?.deviceId}
         <InputRow>
-            <MaterialDropdown label="settings.display_mode" value={currentOutput.blackmagicData?.displayMode} options={currentOutput.blackmagicData?.displayModes?.map((mode) => ({ label: mode.name, value: mode.name })) || []} on:change={(e) => updateBlackmagicData(e.detail, "displayMode")} />
-            <MaterialDropdown label="settings.pixel_format" value={currentOutput.blackmagicData?.pixelFormat} options={currentOutput.blackmagicData?.pixelFormats?.map((format) => ({ label: format.name, value: format.name })) || []} on:change={(e) => updateBlackmagicData(e.detail, "pixelFormat")} />
+            <SelectField label="settings.display_mode" value={currentOutput.blackmagicData?.displayMode} options={currentOutput.blackmagicData?.displayModes?.map((mode) => ({ label: mode.name, value: mode.name })) || []} on:change={(e) => updateBlackmagicData(e.detail, "displayMode")} />
+            <SelectField label="settings.pixel_format" value={currentOutput.blackmagicData?.pixelFormat} options={currentOutput.blackmagicData?.pixelFormats?.map((format) => ({ label: format.name, value: format.name })) || []} on:change={(e) => updateBlackmagicData(e.detail, "pixelFormat")} />
         </InputRow>
 
         {#if currentOutput.blackmagicData?.pixelFormat?.includes("YUV")}
@@ -364,7 +364,7 @@
     <Title label="NDI®" icon="ndi" />
 
     <InputRow>
-        <MaterialDropdown label="settings.frame_rate" value={currentOutput.ndiData?.framerate || "30"} defaultValue="30" options={framerates} on:change={(e) => updateNdiData(e.detail, "framerate")} />
+        <SelectField label="settings.frame_rate" value={currentOutput.ndiData?.framerate || "30"} defaultValue="30" options={framerates} on:change={(e) => updateNdiData(e.detail, "framerate")} />
     </InputRow>
 
     <InputRow>
@@ -387,12 +387,12 @@
     <Title label="OMT" icon="omt" />
 
     <InputRow>
-        <MaterialDropdown label="settings.frame_rate" value={currentOutput.omtData?.framerate || "30"} defaultValue="30" options={framerates} on:change={(e) => updateOmtData(e.detail, "framerate")} />
+        <SelectField label="settings.frame_rate" value={currentOutput.omtData?.framerate || "30"} defaultValue="30" options={framerates} on:change={(e) => updateOmtData(e.detail, "framerate")} />
     </InputRow>
 
     <InputRow>
         <TextField label="inputs.name" value={currentOutput.omtData?.name || `PulseFlow OMT${currentOutput.name ? ` - ${currentOutput.name}` : ""}`} defaultValue={`PulseFlow OMT${currentOutput.name ? ` - ${currentOutput.name}` : ""}`} on:change={(e) => updateOmtData(e.detail, "name")} />
-        <MaterialDropdown label="settings.quality" value={currentOutput.omtData?.quality || "Default"} defaultValue="Default" options={omtQualities} on:change={(e) => updateOmtData(e.detail, "quality")} />
+        <SelectField label="settings.quality" value={currentOutput.omtData?.quality || "Default"} defaultValue="Default" options={omtQualities} on:change={(e) => updateOmtData(e.detail, "quality")} />
     </InputRow>
 
     <MaterialToggleSwitch label="settings.transparent" checked={currentOutput.transparent} defaultValue={true} on:change={(e) => updateOutput("transparent", e.detail)} />
@@ -402,7 +402,7 @@
     <Title label="WebRTC" icon="broadcast" />
 
     <InputRow>
-        <MaterialDropdown label="settings.frame_rate" value={currentOutput.webrtcData?.fps?.toString() || "30"} defaultValue="30" options={framerates} on:change={(e) => updateWebrtcData(e.detail, "fps")} />
+        <SelectField label="settings.frame_rate" value={currentOutput.webrtcData?.fps?.toString() || "30"} defaultValue="30" options={framerates} on:change={(e) => updateWebrtcData(e.detail, "fps")} />
         <TextField label="Bitrate (kbps)" value={currentOutput.webrtcData?.bitrate?.toString() || "4000"} defaultValue="4000" placeholder="4000" on:change={(e) => updateWebrtcData(e.detail, "bitrate")} />
     </InputRow>
     <TextField label="WHIP Endpoint URL" value={currentOutput.webrtcData?.url || ""} placeholder="e.g. https://live.restream.io/whip/live/YOUR_KEY" on:change={(e) => updateWebrtcData(e.detail, "url")} pasteBtn />
@@ -422,16 +422,16 @@
     <Title label="RTMP" icon="broadcast" />
 
     <InputRow>
-        <MaterialDropdown label="settings.frame_rate" value={currentOutput.rtmpData?.fps?.toString() || "30"} defaultValue="30" options={framerates} on:change={(e) => updateRtmpData(e.detail, "fps")} />
+        <SelectField label="settings.frame_rate" value={currentOutput.rtmpData?.fps?.toString() || "30"} defaultValue="30" options={framerates} on:change={(e) => updateRtmpData(e.detail, "fps")} />
     </InputRow>
 
     <InputRow>
         <TextField label="settings.bitrate (kbps)" value={currentOutput.rtmpData?.bitrate?.toString() || "4000"} defaultValue="4000" placeholder="4000" on:change={(e) => updateRtmpData(e.detail, "bitrate")} />
-        <MaterialDropdown label="actions.mode" value={currentOutput.rtmpData?.rateControl || "cbr"} options={rateControlOptions} on:change={(e) => updateRtmpData(e.detail, "rateControl")} />
+        <SelectField label="actions.mode" value={currentOutput.rtmpData?.rateControl || "cbr"} options={rateControlOptions} on:change={(e) => updateRtmpData(e.detail, "rateControl")} />
     </InputRow>
 
     <InputRow style="margin-bottom: 10px;">
-        <MaterialDropdown label="settings.video_encoder" value={currentOutput.rtmpData?.encoder || "auto"} defaultValue="auto" options={encoderOptions} on:change={(e) => updateRtmpData(e.detail, "encoder")} />
+        <SelectField label="settings.video_encoder" value={currentOutput.rtmpData?.encoder || "auto"} defaultValue="auto" options={encoderOptions} on:change={(e) => updateRtmpData(e.detail, "encoder")} />
         <!-- <Button variant="outline" icon="refresh" title="Re-detect encoders" disabled={detectingEncoders} on:click={() => loadEncoders(true)} /> -->
     </InputRow>
 

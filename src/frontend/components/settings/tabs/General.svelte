@@ -4,8 +4,8 @@
     import { isGroupHidden } from "../../../utils/profile"
     import { sortByName } from "../../helpers/array"
     import Title from "../../input/Title.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     function updateSpecial(value: any, key: string, allowEmpty = false) {
@@ -39,7 +39,7 @@
     }
 </script>
 
-<MaterialDropdown label="settings.language" value={$language} options={getLanguageList()} on:change={(e) => setLanguage(e.detail)} flags />
+<SelectField label="settings.language" value={$language} options={getLanguageList()} on:change={(e) => setLanguage(e.detail)} flags />
 <MaterialToggleSwitch label="settings.use24hClock" checked={$timeFormat === "24"} on:change={(e) => timeFormat.set(e.detail ? "24" : "12")} />
 <MaterialToggleSwitch label="settings.disable_labels" checked={$labelsDisabled} defaultValue={false} on:change={(e) => labelsDisabled.set(e.detail)} />
 <MaterialToggleSwitch label="settings.full_colors" checked={$fullColors} defaultValue={false} on:change={(e) => fullColors.set(e.detail)} />
@@ -49,7 +49,7 @@
 <!-- info.slides -->
 <Title label="tools.slide" icon="slide" />
 
-<MaterialPopupButton label={translateText("popup.manage_groups", $dictionary)} name={groupsString} value={groupsString ? "." : ""} popupId="manage_groups" icon="groups" />
+<PopupField label={translateText("popup.manage_groups", $dictionary)} name={groupsString} value={groupsString ? "." : ""} popupId="manage_groups" icon="groups" />
 
 <!-- shortcuts: -->
 <MaterialToggleSwitch label="settings.next_item_on_last_slide" checked={$special.nextItemOnLastSlide !== false} defaultValue={true} on:change={(e) => updateSpecial(e.detail, "nextItemOnLastSlide", true)} />

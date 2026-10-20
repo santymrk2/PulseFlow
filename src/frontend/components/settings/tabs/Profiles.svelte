@@ -10,7 +10,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import MaterialMultiButtons from "../../inputs/MaterialMultiButtons.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
@@ -241,7 +241,7 @@
 
     <!-- profile action -->
     <InputRow style="margin-top: 20px;">
-        <MaterialDropdown label="midi.start_action" options={actionOptions.map((a) => ({ label: a.name, value: a.id }))} value={currentAction} on:change={(e) => updateProfile("action", e.detail)} allowEmpty />
+        <SelectField label="midi.start_action" options={actionOptions.map((a) => ({ label: a.name, value: a.id }))} value={currentAction} on:change={(e) => updateProfile("action", e.detail)} allowEmpty />
         {#if currentAction && $actions[currentAction]}
             <Button title="titlebar.edit" icon="edit" on:click={editAction} />
         {/if}

@@ -9,10 +9,10 @@
     import DisplayLayout from "./DisplayLayout.svelte"
     import ScreenOutputOptions from "./ScreenOutputOptions.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
-    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
+    import ColorField from "../../lib/components/ui/color-field/color-field.svelte"
+    import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
-    import MaterialPopupButton from "../inputs/MaterialPopupButton.svelte"
+    import PopupField from "../../lib/components/ui/popup-field/popup-field.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
 
     export let outputId: string
@@ -180,16 +180,16 @@
 
 {#if !isStage}
     <div class="row">
-        <MaterialDropdown label="screen_config.type" value={currentOutput.screenType || "single"} options={typeOptions} on:change={(e) => setOutputValue("screenType", e.detail)} />
+        <SelectField label="screen_config.type" value={currentOutput.screenType || "single"} options={typeOptions} on:change={(e) => setOutputValue("screenType", e.detail)} />
     </div>
     {#if currentOutput.screenType === "mirror"}
         <div class="row">
-            <MaterialDropdown label="screen_config.mirror_of" value={currentOutput.mirrorOf || ""} options={mirrorOptions} on:change={(e) => setOutputValue("mirrorOf", e.detail || undefined)} />
+            <SelectField label="screen_config.mirror_of" value={currentOutput.mirrorOf || ""} options={mirrorOptions} on:change={(e) => setOutputValue("mirrorOf", e.detail || undefined)} />
         </div>
     {/if}
 {:else}
     <div class="row">
-        <MaterialPopupButton label="stage.stage_layout" value={stageId} name={$stageShows[stageId]?.name} icon="stage" popupId="select_stage_layout" on:change={(e) => setStageLayout(e.detail)} />
+        <PopupField label="stage.stage_layout" value={stageId} name={$stageShows[stageId]?.name} icon="stage" popupId="select_stage_layout" on:change={(e) => setStageLayout(e.detail)} />
         {#if $stageShows[stageId]}
             <Button title="titlebar.edit" icon="edit" on:click={editStage} />
         {/if}
@@ -215,10 +215,10 @@
 {#if activeTab === "hardware"}
     <div class="tab-panel">
         <div class="row">
-            <MaterialDropdown label="screen_config.output" value={currentOutput.screen || currentOutput.display?.screen || ""} options={screenOptions} on:change={(e) => setOutputScreen(e.detail)} />
+            <SelectField label="screen_config.output" value={currentOutput.screen || currentOutput.display?.screen || ""} options={screenOptions} on:change={(e) => setOutputScreen(e.detail)} />
         </div>
         <div class="row">
-            <MaterialDropdown label="screen_config.target" value={currentOutput.target || "full"} options={targetOptions} on:change={(e) => setOutputValue("target", e.detail)} />
+            <SelectField label="screen_config.target" value={currentOutput.target || "full"} options={targetOptions} on:change={(e) => setOutputValue("target", e.detail)} />
         </div>
         {#if currentOutput.target === "custom"}
             <div class="row">
@@ -240,7 +240,7 @@
         <MaterialToggleSwitch label="settings.invisible_window" checked={!!currentOutput.invisible} defaultValue={false} on:change={(e) => setOutputValue("invisible", e.detail)} />
         <MaterialToggleSwitch label="settings.transparent" checked={!!currentOutput.transparent} defaultValue={false} on:change={(e) => setOutputValue("transparent", e.detail)} />
         <MaterialToggleSwitch label="context.hide_from_preview" checked={!!currentOutput.hideFromPreview} defaultValue={false} on:change={(e) => setOutputValue("hideFromPreview", e.detail)} />
-        <MaterialColorInput label="edit.color" value={currentOutput.color || "#F0008C"} defaultValue="#F0008C" on:change={(e) => setOutputValue("color", e.detail)} />
+        <ColorField label="edit.color" value={currentOutput.color || "#F0008C"} defaultValue="#F0008C" on:change={(e) => setOutputValue("color", e.detail)} />
         <div class="label">{translateText("settings.resolution")}</div>
         <NumberField label="screen.width" value={currentOutput.forcedResolution?.width || 0} defaultValue={0} max={8192} on:change={(e) => setForcedResolution("width", e.detail)} />
         <NumberField label="screen.height" value={currentOutput.forcedResolution?.height || 0} defaultValue={0} max={8192} on:change={(e) => setForcedResolution("height", e.detail)} />
@@ -249,7 +249,7 @@
     <div class="tab-panel">
         {#if !isStage}
             <div class="row">
-                <MaterialDropdown label="screen_config.aspect_ratio" value={aspectValue} options={aspectOptions} on:change={(e) => setAspectRatio(e.detail)} />
+                <SelectField label="screen_config.aspect_ratio" value={aspectValue} options={aspectOptions} on:change={(e) => setAspectRatio(e.detail)} />
             </div>
         {/if}
         <div class="row">

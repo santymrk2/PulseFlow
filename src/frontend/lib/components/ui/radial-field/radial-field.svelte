@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { translateText } from "../../utils/language"
+    import { translateText } from "../../../../utils/language"
 
     export let value = 0
     export let label: string

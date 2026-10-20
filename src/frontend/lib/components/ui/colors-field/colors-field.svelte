@@ -1,11 +1,11 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { translateText } from "../../utils/language"
-    import { hexToHSL, hslToHex } from "../helpers/color"
-    import Icon from "../helpers/Icon.svelte"
-    import InputRow from "../input/InputRow.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialColorInput from "./MaterialColorInput.svelte"
+    import { translateText } from "../../../../utils/language"
+    import { hexToHSL, hslToHex } from "../../../../components/helpers/color"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import InputRow from "../../../../components/input/InputRow.svelte"
+    import Button from "../button/button.svelte"
+    import ColorField from "../color-field/color-field.svelte"
 
     export let value: string[] = []
     export let label: string = ""
@@ -90,7 +90,7 @@
         <svelte:fragment slot="menu">
             {#each colors as color, i}
                 <InputRow>
-                    <MaterialColorInput label="{translateText('edit.color')} {i + 1}" value={color} on:input={(e) => updateColor(i, e.detail)} on:change={(e) => updateColor(i, e.detail)} allowOpacity />
+                    <ColorField label="{translateText('edit.color')} {i + 1}" value={color} on:input={(e) => updateColor(i, e.detail)} on:change={(e) => updateColor(i, e.detail)} allowOpacity />
                     {#if colors.length > minColors}
                         <Button title="actions.delete" on:click={() => removeColor(i)}>
                             <Icon id="delete" white />

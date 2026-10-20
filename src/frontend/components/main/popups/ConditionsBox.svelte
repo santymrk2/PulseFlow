@@ -4,7 +4,7 @@
     import { translateText } from "../../../utils/language"
     import { clone, sortByName } from "../../helpers/array"
     import { getDynamicIds, getVariablesIds } from "../../helpers/showActions"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import { newToast } from "../../../utils/common"
@@ -115,11 +115,11 @@
             {@const label = conditionId === "operator" ? "actions.mode" : conditionId === "data" ? "variables.value" : "sort.type"}
 
             {#if conditionId !== "data" || options.length > 1}
-                <MaterialDropdown {label} {options} value={conditionId === "element" ? input[conditionId] : value?.value} on:change={(e) => setValue(conditionId, e)} />
+                <SelectField {label} {options} value={conditionId === "element" ? input[conditionId] : value?.value} on:change={(e) => setValue(conditionId, e)} />
             {/if}
 
             {#if conditionId === "element" && elementOptions[value.value]}
-                <MaterialDropdown label="tools.item" options={elementOptions[value.value]} value={input.elementId} on:change={(e) => setValue("elementId", e)} />
+                <SelectField label="tools.item" options={elementOptions[value.value]} value={input.elementId} on:change={(e) => setValue("elementId", e)} />
 
                 {#if input.element === "variable" && input.elementId?.includes("__")}
                     <!-- 0 = active -->

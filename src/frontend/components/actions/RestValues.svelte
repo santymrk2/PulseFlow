@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
 
-    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import type { API_rest_command } from "./api"
     import InputRow from "../input/InputRow.svelte"
@@ -73,7 +73,7 @@
 <TextField label="inputs.url" value={rest.url || ""} placeholder="127.0.0.1" on:change={updateUrl} />
 
 <InputRow>
-    <MaterialDropdown label="inputs.method" value={rest.method || "GET"} options={dropdownInputs} on:change={updateMethod} />
+    <SelectField label="inputs.method" value={rest.method || "GET"} options={dropdownInputs} on:change={updateMethod} />
     <TextField label="inputs.contentType" disabled={emitter} value={rest.contentType || "application/json"} placeholder="application/json" on:change={updateContentType} />
 </InputRow>
 

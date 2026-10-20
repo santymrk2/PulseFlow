@@ -6,7 +6,7 @@
     import { clone, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import { getLayoutRef } from "../../helpers/show"
-    import Dropdown from "../../inputs/Dropdown.svelte"
+    import Dropdown from "../../../lib/components/ui/dropdown/dropdown.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
 

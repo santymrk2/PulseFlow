@@ -8,7 +8,7 @@
     import T from "../helpers/T.svelte"
     import InputRow from "../input/InputRow.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
+    import ColorField from "../../lib/components/ui/color-field/color-field.svelte"
     import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
     import Tabs from "../main/Tabs.svelte"
     import EditValues from "./tools/EditValues.svelte"
@@ -118,7 +118,7 @@
         {:else if active === "options"}
             <!-- canvas settings -->
             <div class="section">
-                <MaterialColorInput
+                <ColorField
                     label="edit.background_color"
                     value={currentEffect.background}
                     on:input={(e) => {

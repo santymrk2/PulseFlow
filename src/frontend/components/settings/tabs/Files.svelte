@@ -15,9 +15,9 @@
     import InputRow from "../../input/InputRow.svelte"
     import Title from "../../input/Title.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialMediaPicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialFolderPicker from "../../inputs/MaterialFolderPicker.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
+    import FolderField from "../../../lib/components/ui/folder-field/folder-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
@@ -266,10 +266,10 @@
     }
 </script>
 
-<MaterialDropdown label="settings.autosave{autosaveInfo}" value={$autosave} defaultValue="15min" options={autosaveList} on:change={updateAutosave} />
-<MaterialDropdown label="settings.auto_backup{autoBackupInfo}" value={autoBackup} defaultValue="weekly" options={autobackupList} on:change={(e) => updateSpecial(e.detail, "autoBackup")} />
+<SelectField label="settings.autosave{autosaveInfo}" value={$autosave} defaultValue="15min" options={autosaveList} on:change={updateAutosave} />
+<SelectField label="settings.auto_backup{autoBackupInfo}" value={autoBackup} defaultValue="weekly" options={autobackupList} on:change={(e) => updateSpecial(e.detail, "autoBackup")} />
 
-<MaterialFolderPicker label="settings.data_location" value={$dataPath} on:change={updateDataPath} />
+<FolderField label="settings.data_location" value={$dataPath} on:change={updateDataPath} />
 
 <!-- {#key refreshInput}
     <MaterialToggleSwitch label="settings.user_data_location" disabled={!$dataPath} checked={$special.customUserDataLocation || false} defaultValue={false} on:change={(e) => toggle(e.detail, "customUserDataLocation")} />
@@ -323,7 +323,7 @@
             <MaterialToggleSwitch label="media.media_sync_folder" title="media.media_sync_folder_tip" style="width: 100%;" checked={$special.cloudSyncMediaFolder} defaultValue={false} on:change={toggleMediaFolder} />
 
             {#if $special.cloudSyncMediaFolder}
-                <MaterialFolderPicker label="media.media_sync_folder" value={mediaFolderPath} on:change={updateMediaFolderPath} allowEmpty={!mediaFolderPath.endsWith("Documents\\PulseFlow\\Media") && !mediaFolderPath.endsWith("Documents/PulseFlow/Media")} />
+                <FolderField label="media.media_sync_folder" value={mediaFolderPath} on:change={updateMediaFolderPath} allowEmpty={!mediaFolderPath.endsWith("Documents\\PulseFlow\\Media") && !mediaFolderPath.endsWith("Documents/PulseFlow/Media")} />
             {/if}
 
             <!-- <Button variant="outline" icon="delete" on:click={deleteCloudData} red white>Delete cloud data</Button> -->
@@ -338,7 +338,7 @@
 <!-- DEPRECATED: -->
 
 {#if !$providerConnections.churchApps && validKeys}
-    <MaterialMediaPicker label="Google API service account key" title="Import keys file" value="Update keys file" filter={{ name: "Key file", extensions: ["json"] }} icon="key" on:change={receiveKeysFile} allowEmpty />
+    <FileField label="Google API service account key" title="Import keys file" value="Update keys file" filter={{ name: "Key file", extensions: ["json"] }} icon="key" on:change={receiveKeysFile} allowEmpty />
     <MaterialToggleSwitch label="Disable uploading data" checked={$driveData.disableUpload} defaultValue={false} on:change={(e) => toggleData(e.detail, "disableUpload")} />
 
     <MaterialToggleSwitch label="cloud.enable" checked={!$driveData.disabled} defaultValue={true} on:change={(e) => toggleData(e.detail, "disabled", true)} />

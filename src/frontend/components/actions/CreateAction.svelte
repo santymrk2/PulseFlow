@@ -11,7 +11,7 @@
     import InputRow from "../input/InputRow.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import CombinedInput from "../inputs/CombinedInput.svelte"
-    import Dropdown from "../inputs/Dropdown.svelte"
+    import Dropdown from "../../lib/components/ui/dropdown/dropdown.svelte"
     import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
     import { spotifyState } from "../output/preview/SpotifyManager"

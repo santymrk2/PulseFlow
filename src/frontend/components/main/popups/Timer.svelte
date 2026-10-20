@@ -11,8 +11,8 @@
     import { secondsToTime } from "../../helpers/time"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
@@ -305,7 +305,7 @@
 
             {#if eventList.length}
                 <div>
-                    <MaterialDropdown label="timer.event" style="width: 100%;" options={eventList} value={timer.event || ""} on:change={updateEvent} />
+                    <SelectField label="timer.event" style="width: 100%;" options={eventList} value={timer.event || ""} on:change={updateEvent} />
                 </div>
             {:else}
                 <div style="padding: 10px;display: flex;align-items: center;opacity: 0.5;"><T id="timer.no_events" /></div>
@@ -318,7 +318,7 @@
 
         <div slot="menu">
             <NumberField label="timer.warn_offset" value={timer.warnOffset || 30} min={1} defaultValue={30} max={Math.abs((timer.start ?? 300) - (timer.end || 0))} on:change={(e) => updateTimerValue("warnOffset", e.detail)} />
-            <MaterialColorInput label="edit.color" value={timer.warnColor || "#FF8000"} defaultValue="#FF8000" on:input={(e) => updateTimerValue("warnColor", e.detail)} />
+            <ColorField label="edit.color" value={timer.warnColor || "#FF8000"} defaultValue="#FF8000" on:input={(e) => updateTimerValue("warnColor", e.detail)} />
             <MaterialToggleSwitch label="timer.flash" checked={timer.warnFlash} defaultValue={false} on:change={(e) => updateTimerValue("warnFlash", e.detail)} />
         </div>
     </InputRow>
@@ -327,7 +327,7 @@
         <MaterialToggleSwitch label="timer.overflow" style="width: 100%;" checked={timer.overflow} defaultValue={false} on:change={(e) => updateTimerValue("overflow", e.detail)} />
 
         <div slot="menu">
-            <MaterialColorInput label="edit.color" value={timer.overflowColor || "#FF4136"} defaultValue="#FF4136" on:input={(e) => updateTimerValue("overflowColor", e.detail)} />
+            <ColorField label="edit.color" value={timer.overflowColor || "#FF4136"} defaultValue="#FF4136" on:input={(e) => updateTimerValue("overflowColor", e.detail)} />
             <!-- <MaterialToggleSwitch label="timer.flash" checked={timer.overflowFlash} defaultValue={false} on:change={(e) => updateTimerValue("overflowFlash", e.detail)} /> -->
         </div>
     </InputRow>

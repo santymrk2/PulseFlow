@@ -5,8 +5,8 @@
     import { keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import StageItemsList from "./StageItemsList.svelte"
 
@@ -32,7 +32,7 @@
 
 <div class="tools">
     <div style="display: flex;flex-direction: column;gap: 5px;">
-        <MaterialDropdown label="stage.source_output" options={outputsList} value={settings.output || ""} on:change={(e) => updateStageSettings(e.detail, "output")} allowEmpty />
+        <SelectField label="stage.source_output" options={outputsList} value={settings.output || ""} on:change={(e) => updateStageSettings(e.detail, "output")} allowEmpty />
         <TextField label="remote.password" type="password" value={currentStage?.password || ""} defaultValue="" on:change={updateStagePassword} />
     </div>
 
@@ -44,11 +44,11 @@
             </span>
         </div>
 
-        <MaterialColorInput label="edit.background_color" value={settings.color || "#000000"} defaultValue="#000000" on:input={(e) => updateStageSettings(e.detail, "color")} />
+        <ColorField label="edit.background_color" value={settings.color || "#000000"} defaultValue="#000000" on:input={(e) => updateStageSettings(e.detail, "color")} />
 
         <MaterialCheckbox label="stage.labels" checked={settings.labels} on:change={(e) => updateStageSettings(e.detail, "labels")} />
         {#if settings.labels}
-            <MaterialColorInput label="stage.label_color" value={settings.labelColor || "#ac9c35"} defaultValue={"#ac9c35"} on:input={(e) => updateStageSettings(e.detail, "labelColor")} />
+            <ColorField label="stage.label_color" value={settings.labelColor || "#ac9c35"} defaultValue={"#ac9c35"} on:input={(e) => updateStageSettings(e.detail, "labelColor")} />
         {/if}
     </div>
 

@@ -7,7 +7,7 @@
     import { clone, keysToID } from "../../../helpers/array"
     import InputRow from "../../../input/InputRow.svelte"
     import Button from "../../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../../../lib/components/ui/text-field/text-field.svelte"
 
     export let effectKey: EffectType = "equalizer"
@@ -178,7 +178,7 @@
 </script>
 
 <InputRow>
-    <MaterialDropdown label="audio.preset" value={selectedPreset} options={presetOptions} defaultValue="default" on:change={(e) => selectPreset(e.detail)} />
+    <SelectField label="audio.preset" value={selectedPreset} options={presetOptions} defaultValue="default" on:change={(e) => selectPreset(e.detail)} />
 
     {#if selectedPreset === "custom"}
         <TextField label="inputs.name" value={customName} on:change={(e) => (customName = e.detail)} />

@@ -1,14 +1,14 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from "svelte"
     import { uid } from "uid"
-    import { activePopup, popupData, special } from "../../stores"
-    import { translateText } from "../../utils/language"
-    import { addOpacityToGradient, getGradientOpacity } from "../edit/scripts/edit"
-    import { defaultColors, defaultGradients, getContrast, hexToRgb, rgbToHex, splitRgb } from "../helpers/color"
-    import Icon from "../helpers/Icon.svelte"
-    import Tabs from "../main/Tabs.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
-    import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
+    import { activePopup, popupData, special } from "../../../../stores"
+    import { translateText } from "../../../../utils/language"
+    import { addOpacityToGradient, getGradientOpacity } from "../../../../components/edit/scripts/edit"
+    import { defaultColors, defaultGradients, getContrast, hexToRgb, rgbToHex, splitRgb } from "../../../../components/helpers/color"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import Tabs from "../../../../components/main/Tabs.svelte"
+    import Button from "../button/button.svelte"
+    import NumberField from "../number-field/number-field.svelte"
 
     export let value = "#000000"
     export let defaultValue = ""
@@ -255,7 +255,6 @@
                             })
                             activePopup.set("color_gradient")
                         }}
-                        center
                     >
                         <p style="color: var(--outline-color);max-width: 150px;">{translateText("actions." + (editMode ? "add_color" : "choose_custom"))}</p>
                     </Button>

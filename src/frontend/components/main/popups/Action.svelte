@@ -19,9 +19,9 @@
     import { _show } from "../../helpers/shows"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
@@ -442,7 +442,7 @@
                 {/key}
 
                 {#if showMore && !mode}
-                    <MaterialFilePicker label="items.icon" style="width: 120px;" value={action.customIcon} filter={{ name: "Image files", extensions: imageExtensions }} on:change={(e) => updateValue("customIcon", e.detail)} noLabel={action.customIcon} showThumbnail allowEmpty />
+                    <FileField label="items.icon" style="width: 120px;" value={action.customIcon} filter={{ name: "Image files", extensions: imageExtensions }} on:change={(e) => updateValue("customIcon", e.detail)} noLabel={action.customIcon} showThumbnail allowEmpty />
                 {/if}
             </InputRow>
         {/if}
@@ -463,7 +463,7 @@
 
         <!-- if not slide specific trigger action -->
         {#if showMore && !mode && !actionSelector && !actionActivationSelector}
-            <MaterialPopupButton
+            <PopupField
                 label="midi.activate_keypress"
                 disabled={!action.name}
                 style="margin-top: 10px;"
@@ -488,7 +488,7 @@
             {/if}
 
             <InputRow arrow={customActionActivations.find((a) => a.id === customActivation)?.inputs}>
-                <MaterialPopupButton
+                <PopupField
                     label="actions.custom_activation"
                     disabled={!action.name}
                     name={customActionActivations.find((a) => a.id === customActivation)?.name || ""}
@@ -505,7 +505,7 @@
 
                 <div slot="menu">
                     {#if ["timer_end", "timer_start", "group_start"].includes(customActivation)}
-                        <MaterialDropdown label={specificActivations[customActivation]?.name} options={getSpecificActivation(customActivation)} value={specificActivation} on:change={(e) => updateValue("specificActivation", `${customActivation}__${e.detail}`)} />
+                        <SelectField label={specificActivations[customActivation]?.name} options={getSpecificActivation(customActivation)} value={specificActivation} on:change={(e) => updateValue("specificActivation", `${customActivation}__${e.detail}`)} />
                     {:else if customActivation === "midi_signal_received"}
                         <MidiValues value={clone(action.midi || actionMidi)} firstActionId={action.triggers?.[0]} on:change={(e) => updateValue("midi", e)} simple />
                     {/if}

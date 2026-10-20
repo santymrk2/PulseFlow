@@ -3,7 +3,7 @@
     import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
     import { GAIN_FILTER_TYPES, updateFilterConfig, type FilterConfig, type FilterType } from "../../../../audio/effects/audioFilter"
     import InputRow from "../../../input/InputRow.svelte"
-    import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let effectId: string = ""
@@ -152,7 +152,7 @@
     <div style="height: 8px;" />
 
     <InputRow>
-        <MaterialDropdown label="audio.filter_type" value={config.type} options={filterTypeOptions} on:change={handleTypeChange} />
+        <SelectField label="audio.filter_type" value={config.type} options={filterTypeOptions} on:change={handleTypeChange} />
     </InputRow>
 
     <InputRow>

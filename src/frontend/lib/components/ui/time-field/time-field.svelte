@@ -1,9 +1,9 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { translateText } from "../../utils/language"
-    import Icon from "../helpers/Icon.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
-    import { dictionary } from "../../stores"
+    import { translateText } from "../../../../utils/language"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import Button from "../button/button.svelte"
+    import { dictionary } from "../../../../stores"
 
     export let label: string
     export let value: string // expected format: "12:00"

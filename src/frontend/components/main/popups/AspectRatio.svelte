@@ -5,7 +5,7 @@
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
@@ -85,7 +85,7 @@
             </div>
         {/if}
 
-        <MaterialDropdown style="width: 200px;" label="edit.position" disabled={active.outputResolutionAsRatio} options={alignOptions} value={active.alignPosition || "center"} on:change={(e) => setAspectRatio({ ...active, alignPosition: e.detail })} />
+        <SelectField style="width: 200px;" label="edit.position" disabled={active.outputResolutionAsRatio} options={alignOptions} value={active.alignPosition || "center"} on:change={(e) => setAspectRatio({ ...active, alignPosition: e.detail })} />
     </div>
 {/if}
 

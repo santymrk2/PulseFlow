@@ -6,7 +6,7 @@
     import { translateText } from "../../../utils/language"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     onMount(() => {
@@ -80,7 +80,7 @@
 <MaterialToggleSwitch label="settings.disable_hardware_acceleration" checked={disableHardwareAcceleration} defaultValue={false} on:change={toggleHardwareAcceleration} />
 
 {#if graphicsDeviceSupported}
-    <MaterialDropdown label="settings.graphics_device" value={graphicsDevice} defaultValue="" options={graphicsDeviceOptions} on:change={changeGraphicsDevice} />
+    <SelectField label="settings.graphics_device" value={graphicsDevice} defaultValue="" options={graphicsDeviceOptions} on:change={changeGraphicsDevice} />
 {/if}
 
 <!-- Optimized mode is enabled automatically based on the memory usage -->

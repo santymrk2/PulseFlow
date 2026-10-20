@@ -5,7 +5,7 @@
     import T from "../../helpers/T.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialFolderPicker from "../../inputs/MaterialFolderPicker.svelte"
+    import FolderField from "../../../lib/components/ui/folder-field/folder-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import { VideoPlayer } from "../../media/video/videoPlayer"
@@ -55,7 +55,7 @@
         <!-- ReplayGain enabled always as it uses audio metadata info -->
         <!-- <MaterialToggleSwitch label="ReplayGain" checked={$special.replayGain || false} on:change={(e) => updateSpecial(e.detail, "replayGain")} /> -->
 
-        <MaterialFolderPicker label="settings.recordings_path" value={recordingsPath} allowEmpty={!!$special?.audioRecordingsPath} on:change={(e) => updateRecordingsPath(e.detail)} />
+        <FolderField label="settings.recordings_path" value={recordingsPath} allowEmpty={!!$special?.audioRecordingsPath} on:change={(e) => updateRecordingsPath(e.detail)} />
 
         <Button variant="outline" style="width: 100%;margin-top: 10px;" on:click={() => activePopup.set("now_playing")}>
             <Icon id="document" />

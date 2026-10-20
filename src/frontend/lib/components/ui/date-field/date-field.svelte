@@ -1,5 +1,5 @@
 <script lang="ts">
-    import MaterialTimePicker from "./MaterialTimePicker.svelte"
+    import TimeField from "../time-field/time-field.svelte"
 
     export let label: string
     export let value: string // expected format: "YYYY-MM-DD"
@@ -12,4 +12,4 @@
     export let autofocus = false
 </script>
 
-<MaterialTimePicker {label} {value} {defaultValue} {id} {title} {disabled} {autofocus} style={$$props.style} on:input on:change isDate />
+<TimeField {label} {value} {defaultValue} {id} {title} {disabled} {autofocus} style={$$props.style} on:input on:change isDate />

@@ -15,7 +15,7 @@
     import { _show } from "../../helpers/shows"
     import { newSlideTimer } from "../../helpers/tick"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import ShowActions from "../ShowActions.svelte"
     import MediaControls from "../tools/MediaControls.svelte"
     import Show from "../tools/Show.svelte"
@@ -267,7 +267,7 @@
 
         {#if lookOptions.length > 1}
             <div style="margin: 0 5px;">
-                <MaterialDropdown label="looks.looks" value={$activeLook} options={lookOptions} on:change={(e) => applyLook(e.detail)} />
+                <SelectField label="looks.looks" value={$activeLook} options={lookOptions} on:change={(e) => applyLook(e.detail)} />
             </div>
         {/if}
     {/if}

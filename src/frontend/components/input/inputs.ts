@@ -1,24 +1,24 @@
 import type { Input } from "../../../types/Input"
 import MidiValues from "../actions/MidiValues.svelte"
 import RestValues from "../actions/RestValues.svelte"
-import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
-import MaterialColorsInput from "../inputs/MaterialColorsInput.svelte"
-import MaterialDatePicker from "../inputs/MaterialDatePicker.svelte"
-import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
+import ColorField from "../../lib/components/ui/color-field/color-field.svelte"
+import ColorsField from "../../lib/components/ui/colors-field/colors-field.svelte"
+import DateField from "../../lib/components/ui/date-field/date-field.svelte"
+import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
 import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
 import TextField from "../../lib/components/ui/text-field/text-field.svelte"
-import MaterialTimePicker from "../inputs/MaterialTimePicker.svelte"
+import TimeField from "../../lib/components/ui/time-field/time-field.svelte"
 
 // [DEFAULT] IN: value= OUT=on:change
 export const commonInputs = {
     // eslint-disable-next-line
     string: TextField,
     number: NumberField,
-    dropdown: MaterialDropdown,
-    color: MaterialColorInput,
-    colors: MaterialColorsInput,
-    date: MaterialDatePicker,
-    time: MaterialTimePicker,
+    dropdown: SelectField,
+    color: ColorField,
+    colors: ColorsField,
+    date: DateField,
+    time: TimeField,
 
     midi: MidiValues,
     rest: RestValues

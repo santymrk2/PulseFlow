@@ -14,7 +14,7 @@
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import Tabs from "../Tabs.svelte"
 
@@ -319,14 +319,14 @@
 </div>
 
 {#if currentTransition.type === "slide"}
-    <MaterialDropdown label="transition.direction" style="margin-bottom: 10px;" options={slideTypes} value={correctedSlideDirection} on:change={(e) => changeTransition(selectedType, "custom", { ...(currentTransition.custom || {}), direction: getCorrectedDirection(e.detail) })} />
+    <SelectField label="transition.direction" style="margin-bottom: 10px;" options={slideTypes} value={correctedSlideDirection} on:change={(e) => changeTransition(selectedType, "custom", { ...(currentTransition.custom || {}), direction: getCorrectedDirection(e.detail) })} />
 {/if}
 
 <InputRow>
     <!-- defaultValue={selectedType === "media" ? 0.8 : 0.5} -->
     <NumberField label="transition.duration" disabled={isDisabled} value={durationValue / 1000} max={20} step={0.1} on:change={(e) => changeTransition(selectedType, "duration", e.detail * 1000)} />
     <!-- defaultValue="sine" -->
-    <MaterialDropdown label="transition.easing" disabled={isDisabled} options={easings.map((a) => ({ ...a, label: translateText(a.label) }))} value={easingValue} on:change={(e) => changeTransition(selectedType, "easing", e.detail)} />
+    <SelectField label="transition.easing" disabled={isDisabled} options={easings.map((a) => ({ ...a, label: translateText(a.label) }))} value={easingValue} on:change={(e) => changeTransition(selectedType, "easing", e.detail)} />
 </InputRow>
 
 {#if showMore && selectedType === "text"}

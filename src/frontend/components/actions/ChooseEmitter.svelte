@@ -9,7 +9,7 @@
     import DynamicList from "../input/DynamicList.svelte"
     import InputRow from "../input/InputRow.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import type { API_emitter } from "./api"
     import { formatData } from "./emitters"
@@ -98,7 +98,7 @@
 </script>
 
 <InputRow>
-    <MaterialDropdown
+    <SelectField
         label="emitters.emitter {emitter?.type ? `<span style='color: var(--text);opacity: 0.5;font-weight: normal;font-size: 0.8em;margin-left: 10px;'>${emitter.type.toUpperCase()}</span>` : ''}"
         options={emittersList}
         value={value.emitter}
@@ -138,7 +138,7 @@
         </InputRow>
     {/if}
 
-    <MaterialDropdown label="emitters.message_template" options={templatesList} value={activeTemplate || "custom"} on:change={(e) => updateValue("template", e.detail)} />
+    <SelectField label="emitters.message_template" options={templatesList} value={activeTemplate || "custom"} on:change={(e) => updateValue("template", e.detail)} />
 
     {#if templateInputs.length}
         {#if emitter?.templates?.[activeTemplate]?.description}

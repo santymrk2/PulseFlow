@@ -9,7 +9,7 @@
     import { getLayoutRef } from "../../helpers/show"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import MaterialZoom from "../../inputs/MaterialZoom.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Stagebox from "../../stage/Stagebox.svelte"
@@ -221,7 +221,7 @@
 </script>
 
 {#if itemOptions.length > 1}
-    <MaterialDropdown label="tools.item" style="margin-bottom: 10px;" options={itemOptions} value={itemIndex.toString()} on:change={updateItemIndex} />
+    <SelectField label="tools.item" style="margin-bottom: 10px;" options={itemOptions} value={itemIndex.toString()} on:change={updateItemIndex} />
 
     <div class="preview" style={showItemState ? "" : "opacity: 0.2;"}>
         <div class="slide">

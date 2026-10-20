@@ -8,11 +8,11 @@
     import Icon from "../../helpers/Icon.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import ItemsList from "./ItemsList.svelte"
 
@@ -61,11 +61,11 @@
 
 <div class="tools">
     <div>
-        <MaterialDropdown label="actions.mode" options={modes} value={mode} defaultValue="default" on:change={(e) => setValue(e.detail, "mode")} />
+        <SelectField label="actions.mode" options={modes} value={mode} defaultValue="default" on:change={(e) => setValue(e.detail, "mode")} />
     </div>
 
     <div>
-        <MaterialColorInput
+        <ColorField
             label="edit.background_color"
             value={settings.backgroundColor}
             on:input={(e) => {
@@ -78,7 +78,7 @@
         />
 
         <InputRow>
-            <MaterialFilePicker label="edit.background_media" value={settings.backgroundPath} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => setValue(e, "backgroundPath")} allowEmpty />
+            <FileField label="edit.background_media" value={settings.backgroundPath} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => setValue(e, "backgroundPath")} allowEmpty />
             <!-- {#if settings.backgroundPath}<Button title="titlebar.edit" icon="edit" on:click={editBackgroundImage} />{/if} -->
         </InputRow>
     </div>
@@ -105,10 +105,10 @@
             </span>
         </div>
 
-        <MaterialDropdown label="edit.overlay_content" options={overlayList} value={settings.overlayId || ""} on:change={(e) => setValue(e.detail, "overlayId")} allowEmpty />
+        <SelectField label="edit.overlay_content" options={overlayList} value={settings.overlayId || ""} on:change={(e) => setValue(e.detail, "overlayId")} allowEmpty />
 
         <InputRow>
-            <MaterialPopupButton
+            <PopupField
                 label="edit.different_first_template"
                 value={settings.firstSlideTemplate}
                 name={$templates[settings.firstSlideTemplate || ""]?.name}
@@ -131,7 +131,7 @@
         {/if}
 
         <!-- <InputRow>
-            <MaterialPopupButton
+            <PopupField
                 label="edit.different_last_template"
                 value={settings.lastSlideTemplate}
                 name={$templates[settings.lastSlideTemplate || ""]?.name}

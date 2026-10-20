@@ -14,7 +14,7 @@
     import { formatTimeInteraction, getInteraction, initConnection, startInteraction, stopInteraction } from "./interactions"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
 
     export let searchValue: string
     console.log(searchValue)
@@ -230,7 +230,7 @@
                 <NumberField label="interaction.max_time (conditions.seconds)" value={openedInteraction?.options?.maxTime ?? 0} defaultValue={0} on:change={(e) => setOption("maxTime", e.detail)} />
 
                 <InputRow>
-                    <MaterialDropdown label="interaction.score_system" value={openedInteraction?.options?.scoreSystem || "incremental"} options={scoreSystems} on:change={(e) => setOption("scoreSystem", e.detail)} />
+                    <SelectField label="interaction.score_system" value={openedInteraction?.options?.scoreSystem || "incremental"} options={scoreSystems} on:change={(e) => setOption("scoreSystem", e.detail)} />
                     <NumberField label="interaction.points" value={openedInteraction?.options?.scorePoints ?? defaultScorePoints} defaultValue={defaultScorePoints} on:change={(e) => setOption("scorePoints", e.detail)} />
                 </InputRow>
             {/if}

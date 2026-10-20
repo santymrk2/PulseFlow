@@ -1,11 +1,11 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
     import { slide } from "svelte/transition"
-    import type { Option } from "../../../types/Main"
-    import { language } from "../../stores"
-    import { triggerClickOnEnterSpace } from "../../utils/clickable"
-    import { translateText } from "../../utils/language"
-    import Icon from "../helpers/Icon.svelte"
+    import type { Option } from "../../../../../types/Main"
+    import { language } from "../../../../stores"
+    import { triggerClickOnEnterSpace } from "../../../../utils/clickable"
+    import { translateText } from "../../../../utils/language"
+    import Icon from "../../../../components/helpers/Icon.svelte"
 
     const dispatch = createEventDispatcher()
     export let options: Option[]

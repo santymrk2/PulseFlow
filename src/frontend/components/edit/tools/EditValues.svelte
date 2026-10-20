@@ -12,9 +12,9 @@
     import Input from "../../input/Input.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialFontDropdown from "../../inputs/MaterialFontDropdown.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
+    import FontField from "../../../lib/components/ui/font-field/font-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import TextareaField from "../../../lib/components/ui/textarea-field/textarea-field.svelte"
     import { getIsoLanguages } from "../../main/popups/localization/translation"
     import { SlideTimeline } from "../../timeline/SlideTimeline"
@@ -384,7 +384,7 @@
                                 {@const hasTimelineAction = $special.slideTimelineActive && $activePage === "edit" && ($activeEdit.type || "show") === "show" && SlideTimeline.hasActionAtTime(input.key || "", type, $activeEdit?.items?.length ? $activeEdit.items : [0], timelineUpdater)}
 
                                 {#if input.type === "fontDropdown"}
-                                    <MaterialFontDropdown label={values.label} {value} style={values.style} fontStyleValue={input.styleValue} {customLocalFonts} on:change={(e) => changed(e, input)} on:fontStyle={(e) => changed(e, { ...input, key: "font" })} enableFontStyles />
+                                    <FontField label={values.label} {value} style={values.style} fontStyleValue={input.styleValue} {customLocalFonts} on:change={(e) => changed(e, input)} on:fontStyle={(e) => changed(e, { ...input, key: "font" })} enableFontStyles />
                                 {:else if input.type === "toggle"}
                                     <Button style="min-width: 50px;flex: 1;" title={values.label} on:click={() => toggle(input)}>
                                         <Icon id={values.icon} size={1.2} white />
@@ -398,9 +398,9 @@
                                 {:else if input.type === "textarea"}
                                     <TextareaField label={values.label} {value} on:change={(e) => changed(e, input, id)} />
                                 {:else if input.type === "media"}
-                                    <MaterialFilePicker label={(value ? values.label : "") || "edit.choose_media"} {value} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => changed(e, input, id)} autoTrigger={$activeEdit.type !== "template"} allowEmpty />
+                                    <FileField label={(value ? values.label : "") || "edit.choose_media"} {value} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => changed(e, input, id)} autoTrigger={$activeEdit.type !== "template"} allowEmpty />
                                 {:else if input.type === "popup"}
-                                    <MaterialPopupButton {...values} {value} on:change={(e) => changed(e, input, id)} allowEmpty={values.allowEmpty !== false} />
+                                    <PopupField {...values} {value} on:change={(e) => changed(e, input, id)} allowEmpty={values.allowEmpty !== false} />
                                 {:else if input.type === "tip"}
                                     <p class="tip">
                                         {#if values.label}{translateText(values.label)}{/if}

@@ -9,7 +9,7 @@
     import { getResolution } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
     import Icon from "../../helpers/Icon.svelte"
@@ -156,7 +156,7 @@
 <TextField label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
 
 {#if customTypes}
-    <MaterialDropdown label="scripture.translations" options={types} value={selectedType} on:change={(e) => (selectedType = e.detail)} />
+    <SelectField label="scripture.translations" options={types} value={selectedType} on:change={(e) => (selectedType = e.detail)} />
 {/if}
 
 <div style="position: relative;height: 100%;width: calc(100vw - (var(--navigation-width) + 20px) * 2);margin-top: 10px;overflow-y: auto;">

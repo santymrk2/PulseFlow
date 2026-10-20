@@ -6,7 +6,7 @@
     import T from "../../../helpers/T.svelte"
     import InputRow from "../../../input/InputRow.svelte"
     import Button from "../../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
     import { isoLanguages } from "./isoLanguages"
     import { getIsoLanguages, removeTranslationFromShow, translateShow } from "./translation"
     import { registerPopupSubmit } from "../../../../utils/popup"
@@ -66,7 +66,7 @@
 </script>
 
 <div class="main">
-    <MaterialDropdown label="settings.language" options={languageList} value={$special.translationLanguage} on:change={updateLanguage} flags />
+    <SelectField label="settings.language" options={languageList} value={$special.translationLanguage} on:change={updateLanguage} flags />
 
     <Button variant="default" style="margin-top: 20px;width: 100%;" disabled={!$special.translationLanguage} on:click={convert}>
         <Icon size={1.1} id="translate" white />

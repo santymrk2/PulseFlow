@@ -15,10 +15,10 @@
     import InputRow from "../../input/InputRow.svelte"
     import Link from "../../inputs/Link.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import Media from "../../output/layers/Media.svelte"
     import Textbox from "../../slide/Textbox.svelte"
@@ -217,7 +217,7 @@
             <!-- Verse numbers -->
             <MaterialToggleSwitch label="scripture.verse_numbers" style="width: 100%;" checked={$scriptureSettings.verseNumbers} on:change={(e) => update("verseNumbers", e.detail)} />
             <!-- DEPRECATED -->
-            <!-- <MaterialColorInput label="edit.color" value={$scriptureSettings.numberColor || "#919191"} defaultValue="#919191" on:change={(e) => update("numberColor", e.detail)} />
+            <!-- <ColorField label="edit.color" value={$scriptureSettings.numberColor || "#919191"} defaultValue="#919191" on:change={(e) => update("numberColor", e.detail)} />
                 <NumberField label="edit.size (%)" value={$scriptureSettings.numberSize || 50} defaultValue={50} on:change={(e) => update("numberSize", e.detail)} /> -->
 
             <!-- {#if $scriptureSettings.versesOnIndividualLines || sorted.length > 1} -->
@@ -242,7 +242,7 @@
             {#if $scriptureSettings.redJesus || containsJesusWords}
                 <MaterialToggleSwitch label="scripture.red_jesus" style="width: 100%;" checked={$scriptureSettings.redJesus} defaultValue={false} on:change={(e) => update("redJesus", e.detail)} />
                 <!-- DEPRECATED -->
-                <MaterialColorInput label="edit.color" value={$scriptureSettings.jesusColor || "#FF4136"} defaultValue="#FF4136" on:change={(e) => update("jesusColor", e.detail)} />
+                <ColorField label="edit.color" value={$scriptureSettings.jesusColor || "#FF4136"} defaultValue="#FF4136" on:change={(e) => update("jesusColor", e.detail)} />
             {/if}
 
             <!-- Smart split -->
@@ -254,7 +254,7 @@
         {:else}
             <!-- Template -->
             <InputRow style={templateBackground ? "" : "margin-bottom: 10px;"}>
-                <MaterialPopupButton id="scripture_drawer" label="info.template" disabled={!!styleScriptureTemplate} value={templateId} name={template?.name} popupId="select_template" icon="templates" on:change={(e) => update("template", e.detail)} allowEmpty={!isDefault} />
+                <PopupField id="scripture_drawer" label="info.template" disabled={!!styleScriptureTemplate} value={templateId} name={template?.name} popupId="select_template" icon="templates" on:change={(e) => update("template", e.detail)} allowEmpty={!isDefault} />
                 {#if (templateId && template) || styleScriptureTemplate}
                     <Button title="titlebar.edit" icon="edit" on:click={editTemplate} />
                 {/if}
@@ -263,7 +263,7 @@
             <!-- Template Settings - Quick Edit -->
             {#if templateBackground}
                 <InputRow style="margin-bottom: 10px;border-left: 4px solid var(--primary-lighter);">
-                    <MaterialFilePicker label="edit.background_media" value={templateBackground} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => setTemplateSettings("backgroundPath", e.detail)} />
+                    <FileField label="edit.background_media" value={templateBackground} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => setTemplateSettings("backgroundPath", e.detail)} />
                 </InputRow>
             {/if}
 

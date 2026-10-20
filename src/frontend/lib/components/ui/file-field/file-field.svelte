@@ -1,13 +1,13 @@
 <script lang="ts">
     import { createEventDispatcher, onDestroy, onMount } from "svelte"
     import { uid } from "uid"
-    import { Main } from "../../../types/IPC/Main"
-    import { ToMain } from "../../../types/IPC/ToMain"
-    import { destroyMain, receiveToMain, sendMain } from "../../IPC/main"
-    import { translateText } from "../../utils/language"
-    import Icon from "../helpers/Icon.svelte"
-    import { getFileName } from "../helpers/media"
-    import Button from "../../lib/components/ui/button/button.svelte"
+    import { Main } from "../../../../../types/IPC/Main"
+    import { ToMain } from "../../../../../types/IPC/ToMain"
+    import { destroyMain, receiveToMain, sendMain } from "../../../../IPC/main"
+    import { translateText } from "../../../../utils/language"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import { getFileName } from "../../../../components/helpers/media"
+    import Button from "../button/button.svelte"
 
     export let label: string
     export let value: string | undefined

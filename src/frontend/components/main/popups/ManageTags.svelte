@@ -8,7 +8,7 @@
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
 
@@ -76,7 +76,7 @@
             {#each tags as tag}
                 <InputRow>
                     <TextField label="inputs.name" value={tag.name} on:change={(e) => updateKey(e.detail, tag.id, "name")} autofocus={!tag.name} />
-                    <MaterialColorInput label="edit.color" value={tag.color} style="min-width: 200px;max-width: 200px;" on:change={(e) => updateKey(e.detail, tag.id, "color")} noLabel />
+                    <ColorField label="edit.color" value={tag.color} style="min-width: 200px;max-width: 200px;" on:change={(e) => updateKey(e.detail, tag.id, "color")} noLabel />
                     <Button icon="delete" title="actions.delete" on:click={() => deleteTag(tag.id)} white />
                 </InputRow>
             {/each}

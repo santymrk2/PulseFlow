@@ -1,15 +1,15 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from "svelte"
-    import type { DropdownOptions } from "../../../types/Input"
-    import { dictionary } from "../../stores"
-    import { translateText } from "../../utils/language"
-    import { formatSearch } from "../../utils/search"
-    import VirtualList from "../drawer/VirtualList.svelte"
-    import { newDropdown } from "../edit/scripts/edit"
-    import Icon from "../helpers/Icon.svelte"
-    import InputRow from "../input/InputRow.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
-    import TextField from "../../lib/components/ui/text-field/text-field.svelte"
+    import type { DropdownOptions } from "../../../../../types/Input"
+    import { dictionary } from "../../../../stores"
+    import { translateText } from "../../../../utils/language"
+    import { formatSearch } from "../../../../utils/search"
+    import VirtualList from "../../../../components/drawer/VirtualList.svelte"
+    import { newDropdown } from "../../../../components/edit/scripts/edit"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import InputRow from "../../../../components/input/InputRow.svelte"
+    import Button from "../button/button.svelte"
+    import TextField from "../text-field/text-field.svelte"
 
     export let label: string
     export let value: string
@@ -352,7 +352,7 @@
 
                         {#if allowDeleting && option.value !== value}
                             <Button
-                                label="actions.delete"
+                                title="actions.delete"
                                 class="delete-button"
                                 style="position: absolute;right: 2px;width: 40px;"
                                 icon="delete"
@@ -395,7 +395,7 @@
 
                         {#if allowDeleting && option.value !== value}
                             <Button
-                                label="actions.delete"
+                                title="actions.delete"
                                 class="delete-button"
                                 style="position: absolute;right: 2px;width: 40px;"
                                 icon="delete"

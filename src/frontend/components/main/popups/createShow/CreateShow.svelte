@@ -13,7 +13,7 @@
     import T from "../../../helpers/T.svelte"
     import List from "../../../input/List.svelte"
     import Button from "../../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
     import MaterialMultiChoice from "../../../inputs/MaterialMultiChoice.svelte"
     import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
     import TextareaField from "../../../../lib/components/ui/textarea-field/textarea-field.svelte"
@@ -213,7 +213,7 @@
 {#if !selectedOption}
     <List bottom={20}>
         <TextField id="name" label="show.name" autofocus value={values.name} autofill={values.name ? "" : getName(values)} on:input={(e) => changeValue(e, "name")} />
-        <MaterialDropdown label="show.category" value={selectedCategory?.id} options={cats.map((a) => ({ label: translateText(a.name || "main.unnamed"), value: a.id, icon: a.icon, iconColor: a.iconColor }))} on:change={(e) => (selectedCategory = cats.find((a) => a.id === e.detail))} addNew="new.category" on:new={addNewCategory} />
+        <SelectField label="show.category" value={selectedCategory?.id} options={cats.map((a) => ({ label: translateText(a.name || "main.unnamed"), value: a.id, icon: a.icon, iconColor: a.iconColor }))} on:change={(e) => (selectedCategory = cats.find((a) => a.id === e.detail))} addNew="new.category" on:new={addNewCategory} />
     </List>
 
     <MaterialMultiChoice options={resolvedCreateOptions} on:click={(e) => selectOption(e.detail)} />

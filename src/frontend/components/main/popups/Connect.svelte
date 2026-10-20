@@ -10,7 +10,7 @@
     import T from "../../helpers/T.svelte"
     import Link from "../../inputs/Link.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
@@ -150,7 +150,7 @@
         <TextField label="remote.password" value={$serverData?.companion?.password || ""} on:change={(e) => updateData(e.detail || "", "password")} />
     {:else if id === "output_stream"}
         <!-- {#if enableOutputSelector} -->
-        <MaterialDropdown label="midi.output" options={outputsList} value={$serverData?.output_stream?.outputId || ""} on:change={(e) => updateData(e.detail, "outputId")} allowEmpty />
+        <SelectField label="midi.output" options={outputsList} value={$serverData?.output_stream?.outputId || ""} on:change={(e) => updateData(e.detail, "outputId")} allowEmpty />
         <!-- {/if} -->
 
         <!-- WIP disable for now until it's working again -->

@@ -13,7 +13,7 @@
     import { getValues } from "../../input/inputs"
     import Inputs from "../../input/Inputs.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Tip from "../Tip.svelte"
 
@@ -210,7 +210,7 @@
     <TextField label="midi.name" value={emitter.name} on:change={(e) => updateValue("name", e.detail)} autofocus={!emitter.name} />
     <TextField label="midi.description" value={emitter.description || ""} on:change={(e) => updateValue("description", e.detail)} />
 
-    <MaterialDropdown label="midi.type" disabled={!!Object.keys(emitter.templates || {})?.length} options={emitterTypes} value={emitter.type} on:change={(e) => updateValue("type", e.detail)} />
+    <SelectField label="midi.type" disabled={!!Object.keys(emitter.templates || {})?.length} options={emitterTypes} value={emitter.type} on:change={(e) => updateValue("type", e.detail)} />
 
     <Inputs inputs={signalInputs} title="emitters.signal" on:change={(e) => changed(e, "signal")} />
 

@@ -7,11 +7,11 @@
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
 
     const alwaysEnabledIds = ["time", "show", "$"]
     const toggleSections = ["time", "project", "show", "slide_text", "video", "audio", "meta", "timer", "rss", "txt", "$"]
@@ -207,7 +207,7 @@
             </InputRow>
 
             <InputRow>
-                <MaterialDropdown style="width: 75%;" label="edit.interval" options={updateIntervalList} value={rss.updateInterval || "60"} on:change={(e) => setValue(e, i, "updateInterval")} />
+                <SelectField style="width: 75%;" label="edit.interval" options={updateIntervalList} value={rss.updateInterval || "60"} on:change={(e) => setValue(e, i, "updateInterval")} />
                 <NumberField style="width: 25%;" label="edit.count" value={rss.count || 5} min={1} max={1000} on:change={(e) => setValue(e, i, "count")} />
             </InputRow>
         </div>
@@ -229,11 +229,11 @@
         <div slot="menu">
             <InputRow>
                 <TextField style="flex: 1;" label="inputs.url" value={txt.url} on:change={(e) => setTxtValue(e, i, "url")} />
-                <MaterialFilePicker style="flex: 0;" label="" title="scripture.local" value="" filter={{ name: "Text files", extensions: ["txt"] }} icon="folder" on:change={(e) => setTxtValue(e, i, "url")} noLabel />
+                <FileField style="flex: 0;" label="" title="scripture.local" value="" filter={{ name: "Text files", extensions: ["txt"] }} icon="folder" on:change={(e) => setTxtValue(e, i, "url")} noLabel />
             </InputRow>
 
             <InputRow>
-                <MaterialDropdown style="width: 75%;" label="edit.interval" options={txtUpdateIntervalList} value={txt.updateInterval || "3"} on:change={(e) => setTxtValue(e, i, "updateInterval")} />
+                <SelectField style="width: 75%;" label="edit.interval" options={txtUpdateIntervalList} value={txt.updateInterval || "3"} on:change={(e) => setTxtValue(e, i, "updateInterval")} />
                 <TextField style="width: 25%;" label="meta.text_divider" value={txt.divider || "<br>"} on:change={(e) => setTxtValue(e, i, "divider")} />
             </InputRow>
         </div>

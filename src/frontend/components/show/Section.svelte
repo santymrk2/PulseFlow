@@ -8,8 +8,8 @@
     import InputRow from "../input/InputRow.svelte"
     import Title from "../input/Title.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
-    import MaterialTimePicker from "../inputs/MaterialTimePicker.svelte"
+    import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
+    import TimeField from "../../lib/components/ui/time-field/time-field.svelte"
     import Input from "../../lib/components/ui/input/input.svelte"
     import Tip from "../main/Tip.svelte"
     import Notes from "./tools/Notes.svelte"
@@ -99,8 +99,8 @@
         <Tip type="info" value="settings.section_trigger_action" style="justify-content: left;" bottom={10} />
 
         <InputRow>
-            <MaterialDropdown label="groups.global" disabled={localAction && $actions[localAction]} options={actionOptions} value={$special.sectionTriggerAction} on:change={updateTrigger} allowEmpty />
-            <MaterialDropdown label="groups.current" options={actionOptions} value={localAction} on:change={updateTriggerLocal} allowEmpty />
+            <SelectField label="groups.global" disabled={localAction && $actions[localAction]} options={actionOptions} value={$special.sectionTriggerAction} on:change={updateTrigger} allowEmpty />
+            <SelectField label="groups.current" options={actionOptions} value={localAction} on:change={updateTriggerLocal} allowEmpty />
         </InputRow>
     </div>
 {:else}
@@ -111,7 +111,7 @@
             </h4>
             <!-- WIP suggest titles based on previous titles? (maybe not needed as we have project templates) -->
 
-            <MaterialTimePicker label="calendar.time" value={sectionUpdated?.data?.time} disabled={isLocked} style="flex: 1;height: 100%;" on:change={(e) => updateSectionData("time", e.detail)} />
+            <TimeField label="calendar.time" value={sectionUpdated?.data?.time} disabled={isLocked} style="flex: 1;height: 100%;" on:change={(e) => updateSectionData("time", e.detail)} />
         </InputRow>
 
         <Notes value={note} disabled={isLocked} on:edit={edit} />

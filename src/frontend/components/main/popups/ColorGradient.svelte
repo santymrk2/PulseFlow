@@ -6,10 +6,10 @@
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
-    import MaterialRadialPicker from "../../inputs/MaterialRadialPicker.svelte"
+    import RadialField from "../../../lib/components/ui/radial-field/radial-field.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
     registerPopupSubmit(change)
@@ -64,12 +64,12 @@
 <div class="preview" style="background: {newValue};"></div>
 
 <InputRow>
-    <MaterialDropdown label="sort.type" value={activeType} options={types} on:change={(e) => (activeType = e.detail)} />
+    <SelectField label="sort.type" value={activeType} options={types} on:change={(e) => (activeType = e.detail)} />
 
     {#if activeType === "radial-gradient"}
-        <MaterialDropdown label="color.shape" value={activeShape} options={shapes} on:change={(e) => (activeShape = e.detail)} />
+        <SelectField label="color.shape" value={activeShape} options={shapes} on:change={(e) => (activeShape = e.detail)} />
     {:else}
-        <MaterialRadialPicker label="color.angle" value={parsedValue.deg} on:change={(e) => (parsedValue.deg = e.detail)} />
+        <RadialField label="color.angle" value={parsedValue.deg} on:change={(e) => (parsedValue.deg = e.detail)} />
     {/if}
 </InputRow>
 
@@ -80,7 +80,7 @@
         {@const nextPos = parsedValue.colors[i + 1]?.pos || 100}
 
         <InputRow>
-            <MaterialColorInput style="min-width: 50%;" label="edit.color" value={colorPart.color} on:input={(e) => (colorPart.color = e.detail)} allowOpacity />
+            <ColorField style="min-width: 50%;" label="edit.color" value={colorPart.color} on:input={(e) => (colorPart.color = e.detail)} allowOpacity />
             <NumberField label="settings.position" value={pos} min={prevPos} max={nextPos} on:change={(e) => (colorPart.pos = e.detail)} currentProgress={pos} showSlider />
             {#if i > 0}
                 <Button icon="up" on:click={() => moveUp(i)} />

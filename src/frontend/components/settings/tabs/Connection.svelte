@@ -12,7 +12,7 @@
     import InputRow from "../../input/InputRow.svelte"
     import Title from "../../input/Title.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
@@ -318,7 +318,7 @@
         </Button>
     </InputRow>
 
-    <MaterialDropdown label="Song origin" options={providerOriginOptions} value={$contentProviderData.churchApps?.songOrigin || ""} on:change={(e) => updateProvider("churchApps", "songOrigin", e.detail)} />
+    <SelectField label="Song origin" options={providerOriginOptions} value={$contentProviderData.churchApps?.songOrigin || ""} on:change={(e) => updateProvider("churchApps", "songOrigin", e.detail)} />
 
     {#if $cloudSyncData.enabled}
         <Tip type="warning" value="This is unrelated to the Cloud sync found in 'Files'. This is for the content manager / curriculum." top={20} />
@@ -355,10 +355,10 @@
     <MaterialToggleSwitch label="settings.auto_sync_startup" checked={$contentProviderData.onstage?.autoSync !== false} on:change={(e) => updateProvider("onstage", "autoSync", e.detail)} />
 
     {#if onstageTeams.length > 1}
-        <MaterialDropdown label="Team" options={onstageTeamOptions} value={onstageCurrentTeamId} on:change={(e) => switchOnStageTeam(e.detail)} />
+        <SelectField label="Team" options={onstageTeamOptions} value={onstageCurrentTeamId} on:change={(e) => switchOnStageTeam(e.detail)} />
     {/if}
 
-    <MaterialDropdown label="Song origin" options={providerOriginOptions} value={$contentProviderData.onstage?.songOrigin || ""} on:change={(e) => updateProvider("onstage", "songOrigin", e.detail)} />
+    <SelectField label="Song origin" options={providerOriginOptions} value={$contentProviderData.onstage?.songOrigin || ""} on:change={(e) => updateProvider("onstage", "songOrigin", e.detail)} />
 {/if}
 
 <!-- OBS Studio Controller -->

@@ -1,11 +1,11 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from "svelte"
-    import type { DropdownOptions } from "../../../types/Input"
-    import { customFonts } from "../../stores"
-    import type { CustomFont } from "../../../types/Show"
-    import { getFontName, getFontStyleList, getSystemFontsList, mergeCustomFonts } from "../helpers/fonts"
-    import MaterialDropdown from "./MaterialDropdown.svelte"
-    import InputRow from "../input/InputRow.svelte"
+    import type { DropdownOptions } from "../../../../../types/Input"
+    import { customFonts } from "../../../../stores"
+    import type { CustomFont } from "../../../../../types/Show"
+    import { getFontName, getFontStyleList, getSystemFontsList, mergeCustomFonts } from "../../../../components/helpers/fonts"
+    import SelectField from "../select-field/select-field.svelte"
+    import InputRow from "../../../../components/input/InputRow.svelte"
     export let label: string
     export let value: string
     export let fontStyleValue = ""
@@ -46,8 +46,8 @@
 </script>
 
 <InputRow style={$$props.style || ""}>
-    <MaterialDropdown {label} options={allFontsList} value={quotedValue} style={fontStylesVisible ? "max-width: 85%;" : ""} on:change={change} {allowEmpty} />
+    <SelectField {label} options={allFontsList} value={quotedValue} style={fontStylesVisible ? "max-width: 85%;" : ""} on:change={change} {allowEmpty} />
     {#if fontStylesVisible}
-        <MaterialDropdown label="settings.font_style" disabled={fontsStylesList.length < 2} options={fontsStylesList} value={fontStyleValue || defaultFontStyleValue} on:change={styleChange} onlyArrow />
+        <SelectField label="settings.font_style" disabled={fontsStylesList.length < 2} options={fontsStylesList} value={fontStyleValue || defaultFontStyleValue} on:change={styleChange} onlyArrow />
     {/if}
 </InputRow>

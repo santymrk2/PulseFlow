@@ -7,7 +7,7 @@
     import { keysToID, sortByName } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
     import MaterialCheckbox from "../inputs/MaterialCheckbox.svelte"
-    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import LookAdvanced from "./LookAdvanced.svelte"
 
     // F10.6 — grilla: una columna por pantalla de audiencia, filas =
@@ -56,7 +56,7 @@
         {#each screens as screen (screen.id)}
             {@const cell = getCell(screen.id)}
             <div class="cell">
-                <MaterialDropdown label="looks.theme" value={cell.theme || ""} options={themeOptions} allowEmpty on:change={(e) => patch(screen.id, { theme: e.detail || undefined })} />
+                <SelectField label="looks.theme" value={cell.theme || ""} options={themeOptions} allowEmpty on:change={(e) => patch(screen.id, { theme: e.detail || undefined })} />
             </div>
         {/each}
     </div>

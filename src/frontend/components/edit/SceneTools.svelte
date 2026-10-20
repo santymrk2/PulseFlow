@@ -10,7 +10,7 @@
     import { updateActiveSceneOutputs } from "../helpers/output"
     import InputRow from "../input/InputRow.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialPopupButton from "../inputs/MaterialPopupButton.svelte"
+    import PopupField from "../../lib/components/ui/popup-field/popup-field.svelte"
     import Tabs from "../main/Tabs.svelte"
 
     let tabs: TabsObj = {
@@ -122,12 +122,12 @@
 
     <div class="content">
         <!-- Choose media input -->
-        <MaterialPopupButton label="popup.choose_media_input" value={content.media} name={content.media?.name || content.media?.id || ""} icon={content.media?.type || "camera"} popupId="choose_media_input" on:change={(e) => updateContent("media", e.detail || null)} allowEmpty />
+        <PopupField label="popup.choose_media_input" value={content.media} name={content.media?.name || content.media?.id || ""} icon={content.media?.type || "camera"} popupId="choose_media_input" on:change={(e) => updateContent("media", e.detail || null)} allowEmpty />
 
         <!-- Output style -->
         <InputRow style="margin-top: 5px;">
-            <!-- <MaterialPopupButton label="actions.id_select_output_style" value={styleId || "empty"} name={styleId ? $styles[styleId]?.name || "" : "main.empty"} icon="styles" popupId="select_style" on:change={(e) => updateContent("style", e.detail || "")} allowEmpty={!!styleId} /> -->
-            <MaterialPopupButton label="actions.id_select_output_style" value={styleId} name={$styles[styleId]?.name || ""} icon="styles" popupId="select_style" on:change={(e) => updateContent("style", e.detail || "")} allowEmpty />
+            <!-- <PopupField label="actions.id_select_output_style" value={styleId || "empty"} name={styleId ? $styles[styleId]?.name || "" : "main.empty"} icon="styles" popupId="select_style" on:change={(e) => updateContent("style", e.detail || "")} allowEmpty={!!styleId} /> -->
+            <PopupField label="actions.id_select_output_style" value={styleId} name={$styles[styleId]?.name || ""} icon="styles" popupId="select_style" on:change={(e) => updateContent("style", e.detail || "")} allowEmpty />
             {#if $styles[styleId]}
                 <Button title="titlebar.edit" icon="edit" on:click={editStyle} />
             {/if}

@@ -4,7 +4,7 @@
     import { defaultColors, defaultGradients } from "../../helpers/color"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
     import Tip from "../Tip.svelte"
 
     function changeColor(e, key = "") {
@@ -64,7 +64,7 @@
 
 <Tip value="actions.click_disable" bottom={20} />
 
-<MaterialColorInput label="" value="" on:change={changeColor} alwaysVisible editMode />
+<ColorField label="" value="" on:change={changeColor} alwaysVisible editMode />
 
 <span style="font-size: 0;position: absolute;">{console.log(clipboardColors)}</span>
 {#if clipboardColors.length}

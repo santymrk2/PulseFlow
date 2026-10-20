@@ -10,7 +10,7 @@
     import { getActiveOutputs, getOutputContent, setOutput } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import Dropdown from "../../inputs/Dropdown.svelte"
+    import Dropdown from "../../../lib/components/ui/dropdown/dropdown.svelte"
     import { clearBackground, clearSlide } from "../../output/clear"
     import Center from "../../system/Center.svelte"
     import ScreenCapture from "./ScreenCapture.svelte"

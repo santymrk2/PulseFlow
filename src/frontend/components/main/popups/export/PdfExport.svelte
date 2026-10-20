@@ -5,8 +5,8 @@
     import T from "../../../helpers/T.svelte"
     import Button from "../../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../../inputs/MaterialCheckbox.svelte"
-    import MaterialColorInput from "../../../inputs/MaterialColorInput.svelte"
-    import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
+    import ColorField from "../../../../lib/components/ui/color-field/color-field.svelte"
+    import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let pdfOptions: any
@@ -67,7 +67,7 @@
 <!-- min-width: 42vw; -->
 <div style="display: flex;gap: 15px;">
     <div class="options" style="flex: 0 0 300px;">
-        <MaterialDropdown label="clock.type" style="margin-bottom: 10px;" options={pdfTypeOptions} value={pdfOptions.type || "default"} on:change={(e) => (pdfOptions.type = e.detail)} />
+        <SelectField label="clock.type" style="margin-bottom: 10px;" options={pdfTypeOptions} value={pdfOptions.type || "default"} on:change={(e) => (pdfOptions.type = e.detail)} />
 
         <!-- {#if showCount > 1}
             <MaterialCheckbox label="export.oneFile" style="margin-bottom: 10px;" checked={pdfOptions.oneFile} disabled={exportType === "project"} on:change={(e) => updatePdfOptions(e, "oneFile")} />
@@ -104,7 +104,7 @@
             <h5 style="margin: 10px 0;text-align: center;color: var(--text);"><T id="edit.chords" /></h5>
 
             <NumberField label="edit.font_size" value={pdfOptions.chordFontSize} min={6} max={20} on:change={(e) => (pdfOptions.chordFontSize = e.detail)} />
-            <MaterialColorInput label="edit.color" value={pdfOptions.chordColor || "#0066cc"} defaultValue="#0066cc" on:change={(e) => (pdfOptions.chordColor = e.detail)} on:input={(e) => (pdfOptions.chordColor = e.detail)} />
+            <ColorField label="edit.color" value={pdfOptions.chordColor || "#0066cc"} defaultValue="#0066cc" on:change={(e) => (pdfOptions.chordColor = e.detail)} on:input={(e) => (pdfOptions.chordColor = e.detail)} />
         {/if}
     </div>
 

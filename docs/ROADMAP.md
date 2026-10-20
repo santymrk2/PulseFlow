@@ -1493,10 +1493,18 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
     identificadores en un mapa (`string: MaterialTextInput`); la herramienta sólo renombraba
     etiquetas y se corrigió (ahora renombra también identificadores). *Verificado:*
     `svelte-check` 45 errores (base 56), 0 nuevos; `test:unit` 93/93; prettier.
-  - [ ] **F14.8c Listas y pickers.** `MaterialDropdown`, `MaterialPopupButton`,
-    `MaterialFilePicker`, `MaterialFolderPicker`, `MaterialTimePicker`,
-    `MaterialDatePicker`, `MaterialRadialPicker`, `MaterialColorInput`,
-    `MaterialColorsInput`, `MaterialFontDropdown`, legacy `Dropdown`.
+  - [x] **F14.8c Listas y pickers.** **Hecho** (2026-10-20): `MaterialDropdown`→`select-field/`,
+    `MaterialPopupButton`→`popup-field/`, `MaterialFilePicker`→`file-field/`,
+    `MaterialFolderPicker`→`folder-field/`, `MaterialTimePicker`→`time-field/`,
+    `MaterialDatePicker`→`date-field/`, `MaterialRadialPicker`→`radial-field/`,
+    `MaterialColorInput`→`color-field/`, `MaterialColorsInput`→`colors-field/`,
+    `MaterialFontDropdown`→`font-field/`; el `Dropdown` legacy (desplegable pelado, `on:click`
+    con el ítem) conserva su nombre: `dropdown/` (`Dropdown` = pelado, `SelectField` = con
+    etiqueta). Se borró el `select` shadcn sin uso. 73 archivos reescritos. Aparecieron 3
+    errores por atributos huérfanos que el botón anterior ignoraba en silencio: `center`
+    (se quitó) y `label="actions.delete"` en dos botones de borrar, que era un tooltip y
+    pasó a `title`. *Verificado:* `svelte-check` 42 errores (base 56), 0 nuevos; `test:unit`
+    93/93; prettier.
   - [ ] **F14.8d Interruptores y demás.** `MaterialToggleSwitch`, `MaterialCheckbox`,
     `MaterialMultiChoice`, `MaterialMultiButtons`, `MaterialToggleButtons`, `MaterialZoom`,
     `Slider`.

@@ -8,9 +8,9 @@
     import { _show } from "../../helpers/shows"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import ItemsList from "./ItemsList.svelte"
 
     $: slideId = getLayoutRef()[$activeEdit.slide || 0]?.id
@@ -61,7 +61,7 @@
 
 <div class="tools">
     <div>
-        <MaterialColorInput
+        <ColorField
             label="edit.background_color"
             value={settings.color}
             on:input={(e) => {
@@ -75,7 +75,7 @@
 
         <!-- WIP TIP about layout background image -->
         <InputRow>
-            <MaterialFilePicker
+            <FileField
                 label="edit.background_media"
                 value={bgImage}
                 filter={{ name: "Media files", extensions: mediaExtensions }}
@@ -94,7 +94,7 @@
             <!-- {#if groupTemplate && !settings.template}
                 <span style="display: flex;align-items: center;padding: 0 10px;font-size: 0.8em;opacity: 0.7;"><T id="settings.overrided_value" /></span>
             {/if} -->
-            <MaterialPopupButton
+            <PopupField
                 label="show.slide_template"
                 value={settings.template}
                 name={$templates[settings.template || ""]?.name}

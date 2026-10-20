@@ -8,8 +8,8 @@
     import { history } from "../../helpers/history"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
@@ -95,8 +95,8 @@
         {#each g as group}
             <InputRow>
                 <TextField label="inputs.name" style="flex: 1;" value={group.name} on:change={(e) => changeGroup(e.detail, group.id)} />
-                <MaterialColorInput label="edit.color" noLabel style="flex: 0;min-width: 200px;" value={group.color} on:input={(e) => changeGroup(e.detail, group.id, "color")} />
-                <MaterialPopupButton
+                <ColorField label="edit.color" noLabel style="flex: 0;min-width: 200px;" value={group.color} on:input={(e) => changeGroup(e.detail, group.id, "color")} />
+                <PopupField
                     label="groups.group_shortcut"
                     style="width: 28%;"
                     id={group.id}
@@ -114,7 +114,7 @@
                 />
                 <!-- template -->
                 {#if showMore}
-                    <MaterialPopupButton
+                    <PopupField
                         label="groups.group_template"
                         style="width: 22%;"
                         value={group.template}

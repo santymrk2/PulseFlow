@@ -1,10 +1,10 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import type { Popups } from "../../../types/Main"
-    import { activePopup, popupData } from "../../stores"
-    import { translateText } from "../../utils/language"
-    import Icon from "../helpers/Icon.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
+    import type { Popups } from "../../../../../types/Main"
+    import { activePopup, popupData } from "../../../../stores"
+    import { translateText } from "../../../../utils/language"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import Button from "../button/button.svelte"
 
     export let id = ""
     export let label: string

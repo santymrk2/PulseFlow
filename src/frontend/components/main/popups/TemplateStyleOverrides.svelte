@@ -10,7 +10,7 @@
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
     import Tip from "../Tip.svelte"
@@ -130,9 +130,9 @@
                 {#if override.globalRegex}
                     <Button title="titlebar.edit" icon="edit" on:click={() => editRegexes(override.id, override.globalRegex)} />
                 {/if}
-                <MaterialDropdown label="/regex/" options={regexes} value={override.globalRegex || ""} on:change={(e) => setRegex(override.id, e.detail)} on:new={(e) => editRegexes(override.id, "", e.detail)} addNew="Create Regex" on:delete={(e) => deleteRegex(e.detail)} allowDeleting onlyArrow />
+                <SelectField label="/regex/" options={regexes} value={override.globalRegex || ""} on:change={(e) => setRegex(override.id, e.detail)} on:new={(e) => editRegexes(override.id, "", e.detail)} addNew="Create Regex" on:delete={(e) => deleteRegex(e.detail)} allowDeleting onlyArrow />
 
-                <MaterialDropdown label="formats.template" style="flex: 2;border-left: 3px solid var(--primary-lighter) !important;" options={templatesList} value={override.templateId || ""} on:change={(e) => updateOverride(override.id, "templateId", e.detail)} on:new={(e) => updateOverride(override.id, "templateId", createTemplate(e))} addNew="new.template" on:delete={(e) => deleteTemplate(e.detail)} allowDeleting />
+                <SelectField label="formats.template" style="flex: 2;border-left: 3px solid var(--primary-lighter) !important;" options={templatesList} value={override.templateId || ""} on:change={(e) => updateOverride(override.id, "templateId", e.detail)} on:new={(e) => updateOverride(override.id, "templateId", createTemplate(e))} addNew="new.template" on:delete={(e) => deleteTemplate(e.detail)} allowDeleting />
                 {#if override.templateId && $templates[override.templateId]}
                     <Button title="titlebar.edit" icon="edit" on:click={() => editTemplate(override.templateId)} white />
                 {/if}

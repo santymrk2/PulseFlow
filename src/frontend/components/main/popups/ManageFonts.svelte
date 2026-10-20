@@ -9,7 +9,7 @@
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
 
@@ -166,7 +166,7 @@
     <TextField label="settings.font_family" value={fontFamily} disabled={addingFont} on:change={(e) => updateFontFamily(e.detail)} />
 
     <InputRow>
-        <MaterialFilePicker label="scripture.local (.woff/.ttf/.otf)" title="actions.import" value="" icon="text" filter={{ name: "Font File", extensions: ["woff", "woff2", "ttf", "otf"] }} disabled={!isValidFamily || addingFont} style="width: initial;flex: 1;" on:change={(e) => addLocalFont(e.detail)} />
+        <FileField label="scripture.local (.woff/.ttf/.otf)" title="actions.import" value="" icon="text" filter={{ name: "Font File", extensions: ["woff", "woff2", "ttf", "otf"] }} disabled={!isValidFamily || addingFont} style="width: initial;flex: 1;" on:change={(e) => addLocalFont(e.detail)} />
 
         <Button icon="web" title="Import from Google Fonts" disabled={!isValidFamily || addingFont} on:click={addGoogleFont}>Google Fonts</Button>
     </InputRow>

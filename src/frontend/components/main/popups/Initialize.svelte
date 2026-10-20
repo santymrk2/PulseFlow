@@ -10,8 +10,8 @@
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialFolderPicker from "../../inputs/MaterialFolderPicker.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import FolderField from "../../../lib/components/ui/folder-field/folder-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     onMount(() => {
@@ -61,11 +61,11 @@
     <p style="margin-bottom: 10px;font-style: italic;font-size: 0.8em;opacity: 0.5;"><T id="setup.change_later" />:</p>
 
     <InputRow>
-        <MaterialDropdown style="width: 50%;" label={languageLabel} value={$language} options={getLanguageList()} on:change={(e) => setLanguage(e.detail)} flags />
+        <SelectField style="width: 50%;" label={languageLabel} value={$language} options={getLanguageList()} on:change={(e) => setLanguage(e.detail)} flags />
         <MaterialToggleSwitch style="width: 50%;" label="settings.use24hClock" checked={$timeFormat === "24"} on:change={(e) => timeFormat.set(e.detail ? "24" : "12")} />
     </InputRow>
 
-    <MaterialFolderPicker PICK_ID="DATA_SHOWS" label={translateText("settings.data_location", $dictionary)} value={$dataPath} on:change={updateDataPath} openButton={false} />
+    <FolderField PICK_ID="DATA_SHOWS" label={translateText("settings.data_location", $dictionary)} value={$dataPath} on:change={updateDataPath} openButton={false} />
 
     <Button variant="outline" class="start" style="font-size: 1.8em;padding: 15px;margin-top: 20px;" on:click={create} white>
         <Icon id="check" size={2.5} />
