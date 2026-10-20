@@ -117,10 +117,10 @@ Limitaciones reales:
   El no-op `OUTPUTS` se eliminó en F2.7 (sin uso).
 - [x] Eliminado el camino de la ventana webview de salida (`MainOutput.svelte`, `startupOutput`, `receiveOUTPUTasOUTPUT`); `isOutputWindow()` devuelve siempre `false`.
 - [x] Inventario de comandos `send(OUTPUT, ...)` (ver más abajo).
-- [ ] Limpieza pendiente (ambigua, no se borró): ramas `$currentWindow === "output"` / `"output"` que quedan como código inerte en
+- [x] Limpieza de ramas `$currentWindow === "output"` (F9.3, inerte): se quitaron de
   `Textbox.svelte`, `Zoomed.svelte`, `Output.svelte` (`updateLinesTime`), `SlideItemTransition.svelte`, `SlideItems.svelte`,
   `Website.svelte`, `Captions.svelte`, `drawer/player/YouTube.svelte`, `drawer/player/Vimeo.svelte`, `stage/Stagebox.svelte`.
-  El tipo del store `currentWindow` sigue incluyendo `"output"` para no romper esas comparaciones en svelte-check.
+  El tipo del store `currentWindow` sigue incluyendo `"output"` aunque ya no se compare (se mantiene para no romper svelte-check; ver F9.2).
   Además `Output.svelte` y `stage/StageLayout.svelte` se usan sólo para las previews dentro de la UI de control.
 - [ ] Limpiar los `send(OUTPUT, ...)` obsoletos del frontend (ver tabla, categoría "eliminar").
 - **Prueba manual con monitor real (Fase 2 / F2.8) pendiente para el usuario**: texto,
