@@ -11,7 +11,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { findMatchingOut, getResolution, setOutput } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
@@ -194,26 +194,26 @@
 </div>
 
 {#if overlayWithNonExistentCategory}
-    <FloatingInputs side="left" onlyOne>
+    <FloatingBar side="left" onlyOne>
         <Button on:click={createNonExistentCategories}>
             <Icon id="autofill" />
             <T id="category.create_nonexistent" />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 {#if active === "effects"}
-    <FloatingInputs onlyOne>
+    <FloatingBar onlyOne>
         <Button disabled={readOnly} icon="add" title="new.effect" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "effect" } })}>
             {#if !$labelsDisabled}<T id="new.effect" />{/if}
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {:else}
-    <FloatingInputs onlyOne>
+    <FloatingBar onlyOne>
         <Button disabled={readOnly} icon="add" title="new.overlay" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "overlay" } })}>
             {#if !$labelsDisabled}<T id="new.overlay" />{/if}
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 <style>

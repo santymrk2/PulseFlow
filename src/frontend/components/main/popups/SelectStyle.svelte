@@ -10,7 +10,7 @@
     import { history } from "../../helpers/history"
     import { getResolution } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import CombinedInput from "../../inputs/CombinedInput.svelte"
+    import CombinedInput from "../../../lib/components/ui/combined-input/combined-input.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Output from "../../output/Output.svelte"
     import { getStyleResolution } from "../../slide/getStyleResolution"

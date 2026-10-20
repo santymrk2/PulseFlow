@@ -10,7 +10,7 @@
     import { actionData } from "../actions/actionData"
     import { clone } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import { ShowTimeline } from "./ShowTimeline"
     import TimelineEasing from "./TimelineEasing.svelte"
@@ -912,7 +912,7 @@
         </div>
 
         {#if easingActive === null || type !== "slide"}
-            <FloatingInputs side="left" style="margin-bottom: 8px;margin-left: 120px;">
+            <FloatingBar side="left" style="margin-bottom: 8px;margin-left: 120px;">
                 {#if disablePlayback}
                     <Button style="min-width: 40px;padding: 10px;" title={isPlaying ? "media.stop" : "media.play"} on:click={() => (isPlaying ? player.pause() : player.play())}>
                         <Icon id={isPlaying ? "stop" : "microphone"} white={!isPlaying} />
@@ -944,11 +944,11 @@
                 <!-- <div class="divider" />
 
             <Button icon="focus" title="actions.resetZoom" on:click={resetView} /> -->
-            </FloatingInputs>
+            </FloatingBar>
         {/if}
 
         {#if type === "project"}
-            <FloatingInputs style="margin-bottom: 8px;">
+            <FloatingBar style="margin-bottom: 8px;">
                 <Button title="popup.timecode" on:click={() => activePopup.set("timecode")}>
                     <Icon id="clock" white />
                 </Button>
@@ -958,7 +958,7 @@
                 <Button title="popup.timeline" on:click={() => activePopup.set("timeline")}>
                     <Icon id="options" white />
                 </Button>
-            </FloatingInputs>
+            </FloatingBar>
         {/if}
     {/if}
 </div>

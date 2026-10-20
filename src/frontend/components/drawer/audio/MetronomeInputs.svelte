@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte"
     import type { MetronomeSettings } from "../../../types/Audio"
     import type { API_metronome } from "../../actions/api"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 

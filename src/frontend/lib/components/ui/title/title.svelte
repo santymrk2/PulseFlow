@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { dictionary } from "../../stores"
-    import { translateText } from "../../utils/language"
-    import Icon from "../helpers/Icon.svelte"
+    import { dictionary } from "../../../../stores"
+    import { translateText } from "../../../../utils/language"
+    import Icon from "../../../../components/helpers/Icon.svelte"
 
     export let label: string
     export let icon: string

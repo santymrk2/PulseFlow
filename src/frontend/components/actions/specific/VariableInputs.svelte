@@ -7,7 +7,7 @@
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
 
     export let value
 

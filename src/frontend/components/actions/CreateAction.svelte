@@ -7,10 +7,10 @@
     import T from "../helpers/T.svelte"
     import { clone } from "../helpers/array"
     import { _show } from "../helpers/shows"
-    import HRule from "../input/HRule.svelte"
-    import InputRow from "../input/InputRow.svelte"
+    import HRule from "../../lib/components/ui/h-rule/h-rule.svelte"
+    import InputRow from "../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import CombinedInput from "../inputs/CombinedInput.svelte"
+    import CombinedInput from "../../lib/components/ui/combined-input/combined-input.svelte"
     import Dropdown from "../../lib/components/ui/dropdown/dropdown.svelte"
     import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import ToggleField from "../../lib/components/ui/toggle-field/toggle-field.svelte"
@@ -321,7 +321,6 @@
         <InputRow style="background-color: var(--primary-darker);" arrow={dataInputs && !dataOpened} bind:open={dataMenuOpened}>
             {#if !choosePopup}
                 <Dropdown activeId={actionId} value={findName(actionId) || "—"} options={[...(actionNameIndex ? [{ id: "remove", name: "—" }] : []), ...ACTIONS]} on:click={(e) => changeAction(e.detail)} />
-                <!-- <MaterialDropdown value={actionId} options={[...(actionNameIndex ? [{ value: "remove", label: "—" }] : []), ...ACTIONS]} on:change={(e) => changeAction(e.detail)} /> -->
             {:else}
                 <Button style="flex: 1;justify-content: start;{actionId ? 'font-weight: normal;' : ''}" title="actions.choose_action" on:click={() => dispatch("choose")}>
                     <Icon id={findIcon(actionId)} style="margin-inline-start: 0.5em;" />

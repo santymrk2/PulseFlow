@@ -8,7 +8,7 @@
     import { history } from "../helpers/history"
     import Icon from "../helpers/Icon.svelte"
     import { updateActiveSceneOutputs } from "../helpers/output"
-    import InputRow from "../input/InputRow.svelte"
+    import InputRow from "../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import PopupField from "../../lib/components/ui/popup-field/popup-field.svelte"
     import Tabs from "../main/Tabs.svelte"

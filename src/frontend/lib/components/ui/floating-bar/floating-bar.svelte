@@ -1,7 +1,7 @@
 <script lang="ts">
-    import { special } from "../../stores"
-    import Icon from "../helpers/Icon.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
+    import { special } from "../../../../stores"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import Button from "../button/button.svelte"
 
     export let side: "right" | "left" | "center" = "right"
     export let onlyOne = false

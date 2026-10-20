@@ -13,7 +13,7 @@
     import { clone } from "../../../helpers/array"
     import { loadShows } from "../../../helpers/setShow"
     import T from "../../../helpers/T.svelte"
-    import HRule from "../../../input/HRule.svelte"
+    import HRule from "../../../../lib/components/ui/h-rule/h-rule.svelte"
     import Button from "../../../../lib/components/ui/button/button.svelte"
     import ChoiceGrid from "../../../../lib/components/ui/choice-grid/choice-grid.svelte"
     import ToggleField from "../../../../lib/components/ui/toggle-field/toggle-field.svelte"

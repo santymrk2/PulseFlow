@@ -3,7 +3,7 @@
     import { translateText } from "../../../../utils/language"
     import { hexToHSL, hslToHex } from "../../../../components/helpers/color"
     import Icon from "../../../../components/helpers/Icon.svelte"
-    import InputRow from "../../../../components/input/InputRow.svelte"
+    import InputRow from "../input-row/input-row.svelte"
     import Button from "../button/button.svelte"
     import ColorField from "../color-field/color-field.svelte"
 

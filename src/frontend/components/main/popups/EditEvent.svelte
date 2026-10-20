@@ -12,7 +12,7 @@
     import T from "../../helpers/T.svelte"
     import { history } from "../../helpers/history"
     import { changeTime } from "../../helpers/time"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
     import DateField from "../../../lib/components/ui/date-field/date-field.svelte"

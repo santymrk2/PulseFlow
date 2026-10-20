@@ -6,7 +6,7 @@
     import { getAccess } from "../../utils/profile"
     import Icon from "../helpers/Icon.svelte"
     import { getLayoutRef } from "../helpers/show"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import Splash from "../main/Splash.svelte"
     import Tabs from "../main/Tabs.svelte"
@@ -81,7 +81,7 @@
         {:else if $activeEdit.type === "effect"}
             <EffectEditor />
 
-            <FloatingInputs>
+            <FloatingBar>
                 <Button
                     class="addButton"
                     title="edit.add_items"
@@ -94,7 +94,7 @@
                 >
                     <Icon id="add" size={1} white />
                 </Button>
-            </FloatingInputs>
+            </FloatingBar>
         {:else if $activeEdit.type === "media"}
             <MediaEditor />
         {:else if $activeEdit.type === "camera"}

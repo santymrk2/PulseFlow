@@ -5,7 +5,7 @@
     import { removeDuplicates, sortByTime } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import { MILLISECONDS_IN_A_DAY, copyDate, getDaysInMonth, getWeekNumber, isBetween, isSameDay } from "./calendar"
     import { isCalendarHidden } from "./calendars"
@@ -252,7 +252,7 @@
     </div>
 </div>
 
-<FloatingInputs style="margin-left: 25px;" side="left">
+<FloatingBar style="margin-left: 25px;" side="left">
     <Button title="media.previous" on:click={() => previousMonth()}>
         <Icon id="previous" size={1.1} />
     </Button>
@@ -272,9 +272,9 @@
         {translateText("month." + (current.getMonth() + 1))}
         {current.getFullYear()}
     </span>
-</FloatingInputs>
+</FloatingBar>
 
-<FloatingInputs onlyOne>
+<FloatingBar onlyOne>
     <Button
         on:click={() => {
             eventEdit.set(null)
@@ -285,7 +285,7 @@
         <Icon id="add" right={!$labelsDisabled} />
         {#if !$labelsDisabled}<T id="new.{active === 'action' ? 'event_action' : 'event'}" />{/if}
     </Button>
-</FloatingInputs>
+</FloatingBar>
 
 <style>
     .calendar {

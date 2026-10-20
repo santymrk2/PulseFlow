@@ -4,9 +4,9 @@
     import { getActionIcon, runAction } from "../actions/actions"
     import { keysToID, sortByName } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
-    import InputRow from "../input/InputRow.svelte"
-    import Title from "../input/Title.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import InputRow from "../../lib/components/ui/input-row/input-row.svelte"
+    import Title from "../../lib/components/ui/title/title.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import TimeField from "../../lib/components/ui/time-field/time-field.svelte"
@@ -119,19 +119,19 @@
 {/if}
 
 {#if currentAction && !settingsOpened}
-    <FloatingInputs side="left" onlyOne>
+    <FloatingBar side="left" onlyOne>
         <Button title="actions.run_action" on:click={() => runAction(currentAction, { source: "section" })}>
             <Icon id={getActionIcon(currentActionId)} />
             {currentAction.name}
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
-<FloatingInputs round>
+<FloatingBar round>
     <Button isActive={settingsOpened} title="menu.settings" on:click={() => (settingsOpened = !settingsOpened)}>
         <Icon size={1.1} id="options" white={!settingsOpened} />
     </Button>
-</FloatingInputs>
+</FloatingBar>
 
 <style>
     h4 {

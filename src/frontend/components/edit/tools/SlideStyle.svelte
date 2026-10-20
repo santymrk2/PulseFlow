@@ -6,7 +6,7 @@
     import { history } from "../../helpers/history"
     import { getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
     import FileField from "../../../lib/components/ui/file-field/file-field.svelte"

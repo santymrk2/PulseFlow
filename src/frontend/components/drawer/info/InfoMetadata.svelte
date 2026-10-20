@@ -1,7 +1,7 @@
 <script lang="ts">
     import { translateText } from "../../../utils/language"
     import { dateToString } from "../../helpers/time"
-    import Link from "../../inputs/Link.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
 
     export let title: string | undefined
     export let info: { label: string; value: string | number | undefined | null; type?: string }[]

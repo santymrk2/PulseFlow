@@ -6,7 +6,7 @@
     import T from "../../helpers/T.svelte"
     import { clone, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
     import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"

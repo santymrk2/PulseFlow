@@ -7,7 +7,7 @@
     import T from "../../helpers/T.svelte"
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { joinTime, secondsToTime } from "../../helpers/time"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Slider from "../../../lib/components/ui/slider/slider.svelte"
     import Timer from "../../slide/views/Timer.svelte"
@@ -180,11 +180,11 @@
 {/if}
 
 {#if !onlyPlaying}
-    <FloatingInputs onlyOne>
+    <FloatingBar onlyOne>
         <Button disabled={readOnly} icon="add" title="new.timer" on:click={() => activePopup.set("timer")}>
             {#if !$labelsDisabled}<T id="new.timer" />{/if}
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 <style>

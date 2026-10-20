@@ -13,8 +13,8 @@
     import { history } from "../helpers/history"
     import { _show } from "../helpers/shows"
     import { joinTime, secondsToTime } from "../helpers/time"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
-    import HiddenInput from "../inputs/HiddenInput.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import ZoomControl from "../../lib/components/ui/zoom-control/zoom-control.svelte"
     import SelectElem from "../system/SelectElem.svelte"
@@ -134,7 +134,7 @@
 {#if referenceType === "lessons"}
     <ZoomControl hidden columns={$slidesOptions.columns} on:change={(e) => slidesOptions.set({ ...$slidesOptions, columns: e.detail })} />
 {:else if layoutSlides.length}
-    <FloatingInputs arrow={!isLocked} let:open>
+    <FloatingBar arrow={!isLocked} let:open>
         <div slot="menu">
             {#if Object.keys($actions).length && !reference && (!isLocked || customAction)}
                 <Button title="show.custom_action_tip" on:click={() => runCustomAction(true)}>
@@ -191,11 +191,11 @@
         <Button class="context #slideViews" title="show.change_view: show.{$slidesOptions.mode} [Ctrl+Shift+V]" on:click={changeSlidesView}>
             <Icon size={1.3} id={$slidesOptions.mode} white={$slidesOptions.mode === "grid"} />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 {#if $slidesOptions.mode !== "simple"}
-    <FloatingInputs style="max-width: {referenceType ? 90 : 70}%;" side="left" onlyOne={!reference && !multipleLayouts}>
+    <FloatingBar style="max-width: {referenceType ? 90 : 70}%;" side="left" onlyOne={!reference && !multipleLayouts}>
         {#if reference}
             <Reference {showId} show={currentShow} />
         {:else if layouts}
@@ -222,7 +222,7 @@
                 {#if !multipleLayouts && !$labelsDisabled}<T id="show.new_arrangement" />{/if}
             </Button>
         {/if}
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 <style>

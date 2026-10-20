@@ -14,8 +14,8 @@
     import { setDrawerTabData } from "../../helpers/historyHelpers"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
@@ -1219,7 +1219,7 @@
 </div>
 
 {#if $scriptureMode !== "grid"}
-    <FloatingInputs side="left">
+    <FloatingBar side="left">
         <span class="version" style={isCollection && $scriptureSettings.showAllVersions === false ? "padding-left: 0;" : ""}>
             {#if previewBibleData?.name}
                 <!-- swap translation preview in collections -->
@@ -1259,15 +1259,15 @@
                 {/key}
             {/if}
         </span>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 {#if contentSearchFieldActive}
-    <FloatingInputs>
+    <FloatingBar>
         <Input placeholder={translateText("scripture.search")} value={contentSearchValue} on:input={searchValueChanged} on:change={searchInBible} style="width: 300px;border-radius: 20px;" autofocus />
-    </FloatingInputs>
+    </FloatingBar>
 {:else if $scriptureMode !== "grid" || $resized.rightPanelDrawer > 5}
-    <FloatingInputs>
+    <FloatingBar>
         {#if isActiveInOutput}
             <Button disabled={activeReference.book?.toString() === "1" && !!activeReference.chapters?.find((a) => a.toString() === "1") && !!activeReference.verses[0]?.find((a) => a.toString() === "1")} title="{translateText('preview._previous_slide')} [Ctrl+Arrow Left]" on:click={() => _moveSelection(true)}>
                 <Icon size={1.3} id="previous" />
@@ -1299,7 +1299,7 @@
         <Button title="scripture.search [Ctrl+B]" disabled={typeof $scriptures[activeScriptureId]?.id === "string" ? $scriptures[activeScriptureId].id.includes("YOUVERSION") : false} on:click={() => (contentSearchFieldActive = true)}>
             <Icon size={1.1} id="search" white />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 <style>

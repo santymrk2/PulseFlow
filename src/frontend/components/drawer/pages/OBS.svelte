@@ -4,8 +4,8 @@
     import { connectToOBS } from "../../../utils/obsTalk"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import Link from "../../inputs/Link.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
 
@@ -366,11 +366,11 @@
         </div>
     </div>
 
-    <FloatingInputs round>
+    <FloatingBar round>
         <Button isActive={showAll} title="create_show.more_options" on:click={() => (showAll = !showAll)}>
             <Icon id={showAll ? "eye" : "hide"} white={!showAll} />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {:else}
     <Center>
         <Link url="https://freeshow.app/docs/livestreaming#setting-up-obs-control-from-freeshow">

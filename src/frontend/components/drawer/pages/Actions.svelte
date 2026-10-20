@@ -8,7 +8,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import { keysToID, sortByName } from "../../helpers/array"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
@@ -185,18 +185,18 @@
 </div>
 
 {#if $activeActionTagFilter.length === 1}
-    <FloatingInputs side="left">
+    <FloatingBar side="left">
         <Button on:click={toggleShowGrid} title="show.{showGrid ? 'grid' : 'list'}">
             <Icon size={1.3} id={showGrid ? "grid" : "list"} white />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
-<FloatingInputs onlyOne>
+<FloatingBar onlyOne>
     <Button disabled={readOnly} icon="add" title="new.action" on:click={newAction}>
         {#if !$labelsDisabled}<T id="new.action" />{/if}
     </Button>
-</FloatingInputs>
+</FloatingBar>
 
 <style>
     .actions {

@@ -5,7 +5,7 @@
     import Icon from "../helpers/Icon.svelte"
     import { toggleOutputs } from "../helpers/output"
 
-    import TopButton from "../inputs/TopButton.svelte"
+    import TopButton from "./TopButton.svelte"
     import { DEFAULT_DISPLAY_NAME } from "../../utils/SocketHelper"
     import Button from "../../lib/components/ui/button/button.svelte"
     import Capsule from "../../lib/components/ui/capsule/capsule.svelte"

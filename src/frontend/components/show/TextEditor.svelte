@@ -7,7 +7,7 @@
     import { translateText } from "../../utils/language"
     import { getNormalizedKey } from "../../utils/shortcuts"
     import Icon from "../helpers/Icon.svelte"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import ZoomControl from "../../lib/components/ui/zoom-control/zoom-control.svelte"
     import { formatText } from "./formatTextEditor"
@@ -62,7 +62,7 @@
 
 <HighlightedNotes class="context #editbox_text" disabled={isLocked} style="padding: 30px;padding-bottom: 60px;scroll-padding-bottom: 60px;font-size: {$textEditZoom / 8}em;" placeholder={getQuickExample()} value={text} on:change={(e) => formatText(e.detail, "", itemIndex)} on:keydown={keydown} />
 
-<FloatingInputs side="left">
+<FloatingBar side="left">
     {#if showHasChords && itemIndex === 0}
         <Button on:click={transposeUp} title="edit.transpose_up">
             <Icon id="arrow_up" size={1.3} white />
@@ -73,10 +73,10 @@
     {/if}
 
     <ZoomControl hidden={showHasChords && itemIndex === 0} columns={$textEditZoom / 10} min={0.5} max={2} defaultValue={1} addValue={-0.1} on:change={(e) => textEditZoom.set(e.detail * 10)} />
-</FloatingInputs>
+</FloatingBar>
 
 {#if maxTextboxes > 1}
-    <FloatingInputs side="right">
+    <FloatingBar side="right">
         <Button disabled={itemIndex <= 0} on:click={decreaseItemIndex} title="media.previous">
             <Icon id="remove" size={1.1} white />
         </Button>
@@ -88,5 +88,5 @@
         <Button disabled={itemIndex >= maxTextboxes} on:click={increaseItemIndex} title="media.next">
             <Icon id="add" size={1.1} white />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}

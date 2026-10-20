@@ -5,7 +5,7 @@
     import { destroyMain, receiveToMain, requestMain } from "../../IPC/main"
     import { popupData } from "../../stores"
     import T from "../helpers/T.svelte"
-    import InputRow from "../input/InputRow.svelte"
+    import InputRow from "../../lib/components/ui/input-row/input-row.svelte"
     import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
     import ToggleField from "../../lib/components/ui/toggle-field/toggle-field.svelte"

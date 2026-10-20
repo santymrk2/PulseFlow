@@ -11,7 +11,7 @@
     import { enableStageOutput, getStageOutputId, getStageResolution } from "../helpers/output"
     import { getStyles } from "../helpers/style"
     import T from "../helpers/T.svelte"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import ZoomControl from "../../lib/components/ui/zoom-control/zoom-control.svelte"
     import { getStyleResolution } from "../slide/getStyleResolution"
@@ -179,7 +179,7 @@
     </div>
 
     {#if edit && stageLayoutId}
-        <FloatingInputs side="left" onlyOne>
+        <FloatingBar side="left" onlyOne>
             {#if !hasStageOutput}
                 <Button title="stage.create_stage_output" on:click={createStageOutput}>
                     <Icon id="autofill" />
@@ -188,7 +188,7 @@
             {/if}
 
             <ZoomControl hidden={!hasStageOutput} columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
-        </FloatingInputs>
+        </FloatingBar>
 
         <ItemAddMenu {isLocked} />
     {/if}

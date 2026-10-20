@@ -8,7 +8,7 @@
     import { getAllNormalOutputs } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import Link from "../../inputs/Link.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
     import CanvaInfo from "./CanvaInfo.svelte"
     import InfoMetadata from "./InfoMetadata.svelte"
 

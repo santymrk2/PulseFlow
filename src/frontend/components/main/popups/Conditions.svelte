@@ -7,7 +7,7 @@
     import { getItemText } from "../../edit/scripts/textStyle"
     import { clone } from "../../helpers/array"
     import { getLayoutRef } from "../../helpers/show"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
@@ -321,9 +321,9 @@
         {/if}
     </div>
 
-    <FloatingInputs style={addMoreOuter ? "" : "border: none;"} round>
+    <FloatingBar style={addMoreOuter ? "" : "border: none;"} round>
         <ZoomControl hidden={!addMoreOuter} columns={zoom} min={0.5} max={1.5} defaultValue={1} addValue={-0.1} on:change={(e) => (zoom = e.detail)} />
-    </FloatingInputs>
+    </FloatingBar>
 </div>
 
 <style>

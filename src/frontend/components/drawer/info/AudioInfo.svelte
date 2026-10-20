@@ -3,7 +3,7 @@
     import { activeAudioEffects, activePopup, dataPath, special } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import FolderField from "../../../lib/components/ui/folder-field/folder-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
@@ -69,9 +69,9 @@
 {/if}
 
 {#if !$activeAudioEffects}
-    <FloatingInputs round>
+    <FloatingBar round>
         <Button isActive={settingsOpened} title="audio.settings" on:click={() => (settingsOpened = !settingsOpened)}>
             <Icon size={1.1} id="options" white={!settingsOpened} />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}

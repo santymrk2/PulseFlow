@@ -1,7 +1,7 @@
 <script lang="ts">
     import { effects, outLocked, outputs } from "../../../stores"
     import { findMatchingOut, setOutput } from "../../helpers/output"
-    import HoverButton from "../../inputs/HoverButton.svelte"
+    import HoverPlay from "../../helpers/HoverPlay.svelte"
 
     import Effect from "../../output/effects/Effect.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
@@ -12,7 +12,7 @@
 </script>
 
 <div class="effectPreview context #effect_preview">
-    <HoverButton
+    <HoverPlay
         icon={isOutputted ? "clear" : "play"}
         size={isOutputted ? 8 : 10}
         on:click={() => {
@@ -22,7 +22,7 @@
         <Zoomed background="transparent" checkered center mirror zoom={false}>
             <Effect effect={$effects[show.id]} preview={false} />
         </Zoomed>
-    </HoverButton>
+    </HoverPlay>
 </div>
 
 <style>

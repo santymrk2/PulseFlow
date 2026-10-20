@@ -17,9 +17,9 @@
     import { getExtension, getFileName, getMediaType, removeExtension } from "../helpers/media"
     import T from "../helpers/T.svelte"
     import { joinTimeBig } from "../helpers/time"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import ShowButton from "../inputs/ShowButton.svelte"
+    import ShowButton from "./ShowButton.svelte"
     import Autoscroll from "../system/Autoscroll.svelte"
     import Center from "../system/Center.svelte"
     import DropArea from "../system/DropArea.svelte"
@@ -501,12 +501,12 @@
         </div>
     {/if}
 
-    <FloatingInputs>
+    <FloatingBar>
         <!-- {addMenuOpen ? 'border-color: white;' : ''} -->
         <Button class="addButton" title={addMenuOpen ? "actions.close" : "context.addToProject"} on:click={() => (addMenuOpen = !addMenuOpen)} on:dblclick={() => (addMenuOpen ? null : addSection())}>
             <Icon id="add" size={1} style={addMenuOpen ? "transform: rotate(135deg);" : ""} white />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 <style>

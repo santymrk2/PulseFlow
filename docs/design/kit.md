@@ -1,12 +1,39 @@
-# Kit base de componentes (F12.2)
+# Librería de componentes (F12.2 → F14.8)
 
-Un solo juego de piezas para toda interfaz nueva o rehecha. Están en
-`src/frontend/lib/components/ui/` (una carpeta por pieza, con `index.ts`) y se
-apoyan en los tokens del tema (`--primary`, `--secondary`, `--text`, …) a través de
-`src/frontend/app.css`. Sin hex sueltos.
+**Una sola librería** para toda la interfaz: `src/frontend/lib/components/ui/`, una carpeta
+por pieza (`button/button.svelte`) importada con ruta relativa. Se apoya en los tokens
+del tema (`--bg`, `--text`, `--border`, …) a través de `public/global.css` y
+`src/frontend/app.css`. Sin hex sueltos. Ya no existen `Material*`, `components/inputs/`
+ni `components/input/` (F14.8).
 
 Página de muestra: en dev, `activePopup.set("kit_demo")` desde la consola
-(`components/main/popups/KitDemo.svelte`). Muestra todas las piezas y variantes.
+(`components/main/popups/KitDemo.svelte`).
+
+## Convención de nombres
+
+| Nombre | Qué es | Ejemplos |
+| --- | --- | --- |
+| `Button` | El botón (único) | `button/` |
+| `Input` | `<input>` pelado, con eventos DOM nativos | `input/` |
+| `*Field` | Control **con etiqueta**, valor y restablecer (`defaultValue`) | `TextField`, `NumberField`, `TextareaField`, `SelectField`, `PopupField`, `FileField`, `FolderField`, `TimeField`, `DateField`, `RadialField`, `ColorField`, `ColorsField`, `FontField`, `ToggleField`, `CheckboxField`, `SegmentedField`, `ToggleGroupField` |
+| `Dropdown` / `Stepper` / `Slider` | Controles pelados (lista, −/+, rango) | `dropdown/`, `stepper/`, `slider/` |
+| Distribución | Contenedores y filas | `InputRow`, `FloatingBar`, `Tabs`, `List`, `HRule`, `Title`, `DynamicList`, `Capsule`, `ListRow`, `SectionHeader`, `Menu` |
+| Otros | `Link`, `HiddenInput`, `CombinedInput`, `ChoiceGrid`, `ZoomControl` | |
+
+Lo que depende del dominio **no** va en la librería: `ShowButton`, `TopButton`,
+`MediaPicker`, `HoverPlay`, y el constructor de formularios por esquema
+(`components/form/`: `FormInput`, `FormInputs`).
+
+## Contrato de eventos
+
+Las piezas conservan `on:click` / `on:change` / `on:input` (dispatcher de Svelte con
+`detail`) y, además, aceptan el atributo nativo (`onclick`, …). No se reescriben los
+manejadores de los padres a callbacks: AGENTS.md prohíbe migrar a runes de forma masiva.
+
+- `Button`: `on:click` y `on:dblclick` con `detail = { ctrl, shift, alt, doubleClick, target }`
+  (`ctrl` ya incluye `meta`). **No** entrega el `MouseEvent`: para eso, `onclick`.
+- `*Field`: `on:change` con el valor nuevo en `detail` (y `on:input` donde aplica).
+- `Input`, `Slider`: reenvían los eventos DOM (`e.target.value`).
 
 ## Especificación visual (F14.1)
 
@@ -161,25 +188,25 @@ inactivas, `--text-muted` sin indicador. Los toggles (switch) prendidos van en
 `--action` con el círculo en `--action-text`, y apagados en borde `--border-strong` con
 el círculo en `--text-muted`.
 
-### Campos de formulario (`Material*`)
+### Campos de formulario
 
-Las 21 piezas `Material*` (`components/inputs/`) son la **capa de campos** de la app y
-**no se migran al kit** (decisión de F14.8, 2026-10-20): traen lo que las primitivas del
-kit no tienen (`defaultValue` con su botón de restablecer, `flags` del idioma, etiqueta
-integrada, punto de "cambiado", `allowEmpty`). Siguen las mismas reglas que el kit y se
-re-estilaron en su lugar, con las mismas props y eventos:
+Medidas de los `*Field` y de las filas (todos con las mismas reglas del kit):
 
 | Pieza | Medidas |
 | --- | --- |
-| Campo (texto, número, área de texto, desplegable, botón de popup, archivo, carpeta, hora, selector radial) | 38 px de alto, borde de 1 px `--border`, radio `--radius`; foco = `--border-strong`. Etiqueta **fija** arriba a la izquierda (11 px, `--text-subtle`, peso 500); el valor debajo (13 px). Sin fondo propio ni subrayado animado |
-| Interruptor y checkbox | Fila de 36 px, padding horizontal de 12 px, separador inferior de 1 px `--border`. Interruptor de 32×18 (perilla de 14); checkbox de 16 px con borde de 1 px. Foco = anillo de 1 px `--ring` |
-| `MaterialButton` | 28 px de alto (24 en `small`), padding horizontal de 12 px, 13 px (12 en `small`). `outlined` = borde `--border-strong` sin fondo; `contained` = `--action`; `red` = texto y borde `--danger`, sin relleno; pestaña activa = barra de 2 px `--text`. Sin ripple |
+| Campo (`TextField`, `NumberField`, `TextareaField`, `SelectField`, `PopupField`, `FileField`, `FolderField`, `TimeField`, `RadialField`) | 38 px de alto, borde de 1 px `--border`, radio `--radius`; foco = `--border-strong`. Etiqueta **fija** arriba a la izquierda (11 px, `--text-subtle`, peso 500); el valor debajo (13 px). Sin fondo propio ni subrayado animado |
+| `ToggleField` y `CheckboxField` | Fila de 36 px, padding horizontal de 12 px, separador inferior de 1 px `--border`. Interruptor de 32×18 (perilla de 14); checkbox de 16 px con borde de 1 px. Foco = anillo de 1 px `--ring` |
 
-Regla de implementación: Svelte **elimina** los selectores que no ve en el marcado del
-componente. Para apuntar a algo que pinta un hijo (por ejemplo el botón de borrar de
-`MaterialButton`) hay que escribir `.campo:has(.remove :global(button))`. El botón de
-borrar/restablecer va absoluto sobre el campo: reservar su ancho (`margin-inline-end` del
-texto o `padding-inline-end` del input) para que no pise el valor.
+Reglas de implementación:
+
+- Svelte **elimina** los selectores que no ve en el marcado del componente. Para apuntar a
+  algo que pinta un hijo (el botón de borrar) hay que escribir
+  `.campo:has(.remove :global(button))`.
+- El botón de borrar/restablecer va absoluto sobre el campo: reservar su ancho
+  (`margin-inline-end` del texto o `padding-inline-end` del input) para que no pise el valor.
+- El CSS de un componente va en `@layer components` cuando debe poder sobrescribirse con
+  utilidades de Tailwind o con el CSS de un padre (lo hace `Button`). El orden de capas se
+  declara en la primera línea de `public/global.css`.
 
 ### Movimiento
 
@@ -197,31 +224,23 @@ culpa de la interfaz.
 - Íconos de color, o texto en `--action` sobre `--bg` como si fuera un link.
 - Tamaños de texto fuera de la escala, o `em`/`rem` sueltos en componentes nuevos.
 
-## Uso desde componentes legacy
-
-Los componentes legacy (`Button.svelte`, `MaterialButton`, …) usan `on:click` y no
-pasan a runes. Las piezas del kit son runes y reciben el evento como prop
-`onclick={...}`. Desde un padre legacy:
-
-```svelte
-<script lang="ts">
-    import Button from "../../lib/components/ui/button/button.svelte"
-    let open = false
-</script>
-
-<Button variant="outline" size="sm" onclick={() => (open = !open)}>Abrir</Button>
-```
-
 ## `button`
 
-Variantes: `default` (acento `--secondary`), `secondary` (`--primary-lighter`),
-`ghost`, `outline`, `destructive`, `live` (rojo `--disconnected` mientras
-`aria-pressed="true"`: Audiencia y Stage).
+El botón único (F14.8a): sustituye al `MaterialButton`, al `Button` legacy y al de shadcn.
 
-Tamaños: `sm` (28 px), `default` (32 px), `icon` (28×28), `icon-sm` (24×24).
+Variantes: `ghost` (**por defecto**), `default` (acción: `--action` sobre `--action-text`),
+`secondary`, `outline`, `destructive`, `link` y `live` (Audiencia y Stage: rojo mientras
+`aria-pressed="true"`). Tamaños: `xs` (24 px), `sm` (28 px, por defecto), `md` (32 px),
+`icon` (28×28), `icon-sm` (24×24).
+
+Banderas: `isActive`, `showOutline`, `tab`, `red` (texto y borde rojos), `redHover`, `bold`,
+`align="start"` (contenido a la izquierda, para botones tipo fila), `icon` / `iconSize` /
+`info` / `title` (tooltip traducido).
 
 ```svelte
-<Button variant="live" aria-pressed={audienceOn} onclick={toggleAudience}>Audiencia</Button>
+<Button variant="default" on:click={save}>Guardar</Button>
+<Button icon="add" title="new.slide" on:click={add} />
+<Button variant="live" size="sm" aria-pressed={audienceOn} onclick={toggleAudience}>Audiencia</Button>
 ```
 
 ## `section-header`
@@ -263,17 +282,6 @@ fondo `--primary-darker`. Dentro, botones `ghost` de `sm` o `icon-sm`.
 </Capsule>
 ```
 
-## `field`
-
-Etiqueta + control. Por defecto la etiqueta va a la izquierda con ancho fijo
-(`labelWidth`, 140 px) y el control ocupa el resto. `stacked` la pone arriba.
-
-```svelte
-<Field label="Nombre">
-    <input class="input" bind:value={name} />
-</Field>
-```
-
 ## `menu`
 
 Desplegable simple: `Menu` (contenedor), `MenuItem` (28 px, `checked` muestra una
@@ -294,8 +302,8 @@ llegue a `utils/shortcuts.ts`).
 </div>
 ```
 
-`select` ya existía (`ui/select/`) y cubre los desplegables con valor; `menu` es para
-acciones y listas de elegir (look activo, "Editar looks…").
+`SelectField` y `Dropdown` cubren los desplegables con valor; `Menu` es para acciones y
+listas de elegir (look activo, "Editar looks…").
 
 ## Capturas
 

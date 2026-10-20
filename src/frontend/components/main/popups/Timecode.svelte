@@ -4,7 +4,7 @@
     import { AudioPlayer } from "../../../audio/audioPlayer"
     import { requestMain } from "../../../IPC/main"
     import { timecode } from "../../../stores"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
 

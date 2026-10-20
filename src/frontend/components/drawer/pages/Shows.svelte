@@ -14,9 +14,9 @@
     import { history } from "../../helpers/history"
     import { updateShowsList } from "../../helpers/show"
     import { dateToString } from "../../helpers/time"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import ShowButton from "../../inputs/ShowButton.svelte"
+    import ShowButton from "../../show/ShowButton.svelte"
     import Autoscroll from "../../system/Autoscroll.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
@@ -286,28 +286,28 @@
 </Autoscroll>
 
 {#if showWithNonExistentCategory}
-    <FloatingInputs side="left" onlyOne>
+    <FloatingBar side="left" onlyOne>
         <Button on:click={createNonExistentCategories}>
             <Icon id="autofill" />
             <T id="category.create_nonexistent" />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {:else if active === "all" && !searchValue && filteredShows.length < 20}
-    <FloatingInputs side="left" onlyOne>
+    <FloatingBar side="left" onlyOne>
         <Button variant="outline" title="actions.import [Ctrl+I]" on:click={() => activePopup.set("import")}>
             <Icon id="import" />
             <T id="actions.import" />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
-<FloatingInputs onlyOne>
+<FloatingBar onlyOne>
     <div role="none" class="overflow-interact" on:click={(e) => createShow(e, true)}>
         <Button icon="add" class="context #drawer_new_show" title="tooltip.show [Ctrl+N]" disabled={readOnly} on:click={createShow} white>
             {#if !$labelsDisabled}<T id="new.show" />{/if}
         </Button>
     </div>
-</FloatingInputs>
+</FloatingBar>
 
 <style>
     .column {

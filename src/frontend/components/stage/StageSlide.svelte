@@ -8,7 +8,7 @@
     import { clone } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
     import { getStageOutputId, getStageResolution } from "../helpers/output"
-    import HiddenInput from "../inputs/HiddenInput.svelte"
+    import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
     import Zoomed from "../slide/Zoomed.svelte"
     import SelectElem from "../system/SelectElem.svelte"
     import { getSlideTextItems, stageItemToItem } from "./stage"

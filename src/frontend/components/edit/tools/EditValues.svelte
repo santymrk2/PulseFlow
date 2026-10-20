@@ -9,8 +9,8 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import { getFilters, getStyles } from "../../helpers/style"
-    import Input from "../../input/Input.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import FormInput from "../../form/FormInput.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
     import FontField from "../../../lib/components/ui/font-field/font-field.svelte"
@@ -408,7 +408,7 @@
                                         {#if input.values?.subtext.includes("<a href=")}<Icon id="launch" white />{/if}
                                     </p>
                                 {:else}
-                                    <Input input={{ type: input.type, ...values, value }} {hasTimelineAction} on:change={(e) => changed(e, input, id)} on:keyframe={(e) => changed(e, input, id, true)} />
+                                    <FormInput input={{ type: input.type, ...values, value }} {hasTimelineAction} on:change={(e) => changed(e, input, id)} on:keyframe={(e) => changed(e, input, id, true)} />
                                 {/if}
                             {/if}
                         {/each}

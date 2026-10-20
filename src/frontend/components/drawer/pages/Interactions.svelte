@@ -6,9 +6,9 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import { clone, keysToID, sortByName } from "../../helpers/array"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import HiddenInput from "../../inputs/HiddenInput.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import HiddenInput from "../../../lib/components/ui/hidden-input/hidden-input.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import { formatTimeInteraction, getInteraction, initConnection, startInteraction, stopInteraction } from "./interactions"
@@ -398,7 +398,7 @@
         </div>
 
         {#if $activeInteractions.includes(openedId)}
-            <FloatingInputs side="left">
+            <FloatingBar side="left">
                 <Button
                     icon="stop"
                     on:click={async () => {
@@ -409,10 +409,10 @@
                 >
                     <T id="media.stop" />
                 </Button>
-            </FloatingInputs>
+            </FloatingBar>
 
             {#if !openedInteraction?.options?.allAtOnce}
-                <FloatingInputs side="right">
+                <FloatingBar side="right">
                     <!-- go to next/previous index -->
                     <Button disabled={inputIndex < ((openedInteraction?.inputs?.length || 0) < 2 ? 1 : 0)} title="media.previous" on:click={() => getInteraction(openedId)?.previous()}>
                         <Icon size={1.3} id="previous" white />
@@ -429,23 +429,23 @@
                             <Icon size={1.3} id="next" white />
                         </Button>
                     {/if}
-                </FloatingInputs>
+                </FloatingBar>
             {/if}
         {:else}
-            <FloatingInputs side="left">
+            <FloatingBar side="left">
                 <Button icon="play" disabled={!(openedInteraction?.inputs?.length || 0)} on:click={start} white>
                     <T id="inputs.start" />
                 </Button>
-            </FloatingInputs>
+            </FloatingBar>
         {/if}
     {/if}
 
     {#if !$activeInteractions.includes(openedId) && !showHistory}
-        <FloatingInputs round>
+        <FloatingBar round>
             <Button isActive={showOptions} title="create_show.more_options" on:click={() => (showOptions = !showOptions)}>
                 <Icon size={1.1} id="options" white={!showOptions} />
             </Button>
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 {:else}
     <div class="interactions">
@@ -468,7 +468,7 @@
         {/each}
     </div>
 
-    <FloatingInputs onlyOne>
+    <FloatingBar onlyOne>
         <Button
             icon="add"
             title="new.interaction"
@@ -480,7 +480,7 @@
         >
             {#if !$labelsDisabled}<T id="new.interaction" />{/if}
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 <style>

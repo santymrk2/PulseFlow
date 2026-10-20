@@ -1,5 +1,5 @@
 <script lang="ts">
-    // Botón único de la app (F14.8a). Reemplaza al `MaterialButton`, al `Button` legacy y al botón shadcn.
+    // Botón único de la app (F14.8a). Reemplaza a los tres botones anteriores (el "Material", el legacy y el de shadcn).
     //
     // Contrato de eventos (docs/design/kit.md): `on:click` / `on:dblclick` con el `detail` de abajo
     // (modificadores y objetivo) y, además, el atributo nativo `onclick` con el `MouseEvent`.

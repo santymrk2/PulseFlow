@@ -8,7 +8,7 @@
     import { clone } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import { getStyles } from "../../helpers/style"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
     import Center from "../../system/Center.svelte"
@@ -96,7 +96,7 @@
         {/if}
     </div>
 
-    <FloatingInputs side="left">
+    <FloatingBar side="left">
         <ZoomControl columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
 
         {#if styleOverrides > 0}
@@ -113,7 +113,7 @@
                 <span style="font-size: 0.8em;opacity: 0.5;">{styleOverrides}</span>
             </Button>
         {/if}
-    </FloatingInputs>
+    </FloatingBar>
 </div>
 
 <style>

@@ -3,7 +3,7 @@
     import { getLanguageList, setLanguage, translateText } from "../../../utils/language"
     import { isGroupHidden } from "../../../utils/profile"
     import { sortByName } from "../../helpers/array"
-    import Title from "../../input/Title.svelte"
+    import Title from "../../../lib/components/ui/title/title.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { activeInteractions, interactions, openedInteractionId, shows } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
-    import Link from "../../inputs/Link.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
     import { getInteraction } from "./interactions"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import { generateSlide } from "./interactionSlides"

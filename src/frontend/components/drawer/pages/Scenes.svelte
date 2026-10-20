@@ -7,7 +7,7 @@
     import { history } from "../../helpers/history"
     import { findMatchingOut, getResolution, startScene } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import DropArea from "../../system/DropArea.svelte"
@@ -127,11 +127,11 @@
     </DropArea>
 </div>
 
-<FloatingInputs onlyOne>
+<FloatingBar onlyOne>
     <Button disabled={readOnly} icon="add" title="new.scene" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "scene" } })}>
         {#if !$labelsDisabled}<T id="new.scene" />{/if}
     </Button>
-</FloatingInputs>
+</FloatingBar>
 
 <style>
     .grid {

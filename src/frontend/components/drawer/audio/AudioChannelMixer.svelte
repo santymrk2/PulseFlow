@@ -50,8 +50,6 @@
 </script>
 
 <section class="context #audio_channel_mixer" id={channelId}>
-    <!-- <MaterialNumberInput style="width: 100px;" label="media.volume (%)" value={volumeValue * 100} min={0} max={allowGaining ? 125 : 100} on:change={(e) => setVolume(e.detail / 100)} showSlider /> -->
-
     <div class="output" class:inactive style="--color: {color || 'var(--secondary)'};">
         <div class="label" style="margin-right: 7px;">
             <!-- {translateText("media.volume")} -->

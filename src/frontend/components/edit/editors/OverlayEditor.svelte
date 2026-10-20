@@ -10,7 +10,7 @@
     import { history } from "../../helpers/history"
     import { getResolution } from "../../helpers/output"
     import { getStyles } from "../../helpers/style"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
     import { getStyleResolution } from "../../slide/getStyleResolution"
@@ -111,9 +111,9 @@
         {/if}
     </div>
 
-    <FloatingInputs side="left">
+    <FloatingBar side="left">
         <ZoomControl columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
-    </FloatingInputs>
+    </FloatingBar>
 </div>
 
 <style>

@@ -3,7 +3,7 @@
     import { AudioPlayer } from "../../../audio/audioPlayer"
     import { dbToGain, gainToDb, MIN_DB } from "../../../audio/dBUtils"
     import { audioChannelsData, audioRouting, popupData, special } from "../../../stores"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"

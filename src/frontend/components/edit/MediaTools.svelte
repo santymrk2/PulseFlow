@@ -5,7 +5,7 @@
     import { getExtension, getMediaType } from "../helpers/media"
     import { getFirstActiveOutput, setOutput } from "../helpers/output"
     import { removeStore, updateStore } from "../helpers/update"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import Tabs from "../main/Tabs.svelte"
     import { VideoPlayer } from "../media/video/videoPlayer"
@@ -118,9 +118,9 @@
         {/if}
     </div>
 
-    <FloatingInputs>
+    <FloatingBar>
         <Button icon="reset" title="actions.reset" on:click={reset} />
-    </FloatingInputs>
+    </FloatingBar>
 </div>
 
 <style>

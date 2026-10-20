@@ -3,7 +3,7 @@
     // componente y Svelte 5 sólo reenvía esas directivas en componentes legacy.
     import { onMount } from "svelte"
     import { translateText } from "../../utils/language"
-    import Icon from "../helpers/Icon.svelte"
+    import Icon from "./Icon.svelte"
 
     export let icon: string
     export let size = 5

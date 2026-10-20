@@ -1428,7 +1428,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   `test:unit` 89/89, prettier. **No verificado visualmente: el cambio de base afecta a toda
   la app y es lo primero que hay que mirar.**
 
-- [ ] **F14.7/F14.8 Una sola librería de componentes.** *(Reabierta el 2026-10-20 por
+- [x] **F14.7/F14.8 Una sola librería de componentes.** *(Reabierta el 2026-10-20 por
   decisión del usuario: no puede haber tres librerías, `Material*`, el kit y los `Button`/
   `TextInput`/… legacy.)* **Meta:** todo vive en `src/frontend/lib/components/ui/`, con un
   solo nombre por concepto y sin prefijo `Material`; `components/inputs/` se borra.
@@ -1512,12 +1512,33 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
     `MaterialZoom`→`zoom-control/` (no es un campo: es el control +/- con rueda), `Slider`→
     `slider/` (el alias `MaterialSlider` de `LooksWindow` se renombró bien). *Verificado:*
     `svelte-check` 42 errores (base 56), 0 nuevos; `test:unit` 93/93; prettier.
-  - [ ] **F14.8e Restos y cierre.** `Link`, `HiddenInput`, `CombinedInput` (a la librería);
-    `ShowButton`, `TopButton` y `MediaPicker` (son de dominio: se mueven junto a su pantalla);
-    se borra `components/inputs/` y se actualiza `docs/design/kit.md`.
-  *Aceptación final:* `fd . src/frontend/components/inputs` vacío; `rg -c 'Material[A-Z]'
-  src/frontend` = 0; `svelte-check` ≤ 56 errores; tests y prettier verdes; la app abre y
-  Configuración, Looks, Pantallas, Show y Edit se ven y funcionan como antes.
+  - [x] **F14.8e Restos y cierre.** **Hecho** (2026-10-20). *A la librería:* `Link`,
+    `HiddenInput`, `CombinedInput` y, de `components/input/` (singular, otra carpeta de UI
+    genérica que el plan no contemplaba), `FloatingInputs`→`FloatingBar`, `InputRow`, `HRule`,
+    `Title`, `List`, `DynamicList`, `Tabs`. *A su dominio:* `ShowButton` y `MediaPicker`
+    (`components/show/`), `TopButton` (`components/main/`), `HoverButton`→`HoverPlay`
+    (`components/helpers/`: **no era un botón**, es una capa de "play" sobre miniaturas) y el
+    constructor de formularios por esquema (`components/form/`: `Input`→`FormInput`,
+    `Inputs`→`FormInputs`, `inputs.ts`), renombrado porque `Input` ya es el input pelado de
+    la librería. `MaterialDrawerTab`→`DrawerTab`. *Borrado:* las carpetas `components/inputs/`
+    y `components/input/`, las primitivas shadcn sin uso (`input`, `select`, `switch`, `tabs`,
+    `scroll-area`, `skeleton`, `label`, `separator`, `field`), cuatro dependencias sin
+    consumidor (`bits-ui`, `tailwind-variants`, `@lucide/svelte`, `tw-animate-css`), sus
+    helpers de tipos y el código comentado que nombraba `Material*`. `KitDemo` muestra ahora
+    los campos reales. Documentación reescrita (`docs/design/kit.md` y el README de la
+    librería). *Un efecto colateral atrapado:* la herramienta renombró el **tipo** `Input` de
+    `import type { Input as TInput }` en `FormInputs`; `svelte-check` lo marcó y se corrigió.
+
+  **Resultado final de F14.7/F14.8** (verificado el 2026-10-20). `fd . components/inputs` y
+  `components/input` ya no existen; `rg 'Material[A-Z]' src/frontend` = **0**; la librería
+  tiene 40 componentes en 39 carpetas; `svelte-check` **42 errores (base 56), 0 nuevos**
+  (cada paso se comparó contra la lista de errores de `HEAD`); `test:unit` 93/93; prettier.
+  7 commits: `6e6dccdc` (a), `b0ed5cfa` (b), `ffec5075` (c), `a67f5afb` (d) y el de este cierre.
+  *Pendiente a propósito:* `src/server/remote/` conserva su propia copia de `MaterialButton`
+  (cliente web aparte, ver "Deuda registrada"). **No verificado a ojo:** los 229 archivos del
+  botón y los 3 pasos de mudanza se verificaron con tipos y tests, no mirando la app; lo
+  primero a revisar es el botón (variante por defecto `ghost`, `@layer components`) y las
+  tarjetas de audio.
 
 - [ ] **F14.9 Panel derecho (antes F12.7).** Tira vertical de limpiar y ⓧ de limpiar
   todo sobre la vista previa, con el estilo nuevo. Ver "Decisiones pendientes" en

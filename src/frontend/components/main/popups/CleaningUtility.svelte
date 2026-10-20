@@ -4,7 +4,7 @@
     import { destroyMain, receiveMain, requestMain, sendMain } from "../../../IPC/main"
     import { activePage, activePopup, deletedShows, popupData, shows, showsCache } from "../../../stores"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import Loader from "../Loader.svelte"

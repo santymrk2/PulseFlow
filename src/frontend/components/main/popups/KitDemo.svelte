@@ -1,12 +1,14 @@
 <script lang="ts">
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Capsule from "../../../lib/components/ui/capsule/capsule.svelte"
-    import Field from "../../../lib/components/ui/field/field.svelte"
     import ListRow from "../../../lib/components/ui/list-row/list-row.svelte"
     import Menu from "../../../lib/components/ui/menu/menu.svelte"
     import MenuItem from "../../../lib/components/ui/menu/menu-item.svelte"
     import MenuSeparator from "../../../lib/components/ui/menu/menu-separator.svelte"
     import SectionHeader from "../../../lib/components/ui/section-header/section-header.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     // Página de muestra del kit base (F12.2). Sólo para revisar piezas en dev:
     // activePopup.set("kit_demo") desde la consola.
@@ -68,14 +70,18 @@
     </section>
 
     <section>
-        <SectionHeader>Campo</SectionHeader>
+        <SectionHeader>Campos</SectionHeader>
         <div class="fields">
-            <Field label="Nombre">
-                <input class="input" value="Pantalla 1" />
-            </Field>
-            <Field label="Apilado" stacked>
-                <input class="input" value="Control debajo de la etiqueta" />
-            </Field>
+            <TextField label="Nombre" value="Pantalla 1" />
+            <SelectField
+                label="Tipo"
+                value="single"
+                options={[
+                    { value: "single", label: "Single" },
+                    { value: "multiple", label: "Multiple" }
+                ]}
+            />
+            <ToggleField label="Siempre arriba" checked />
         </div>
     </section>
 
@@ -132,15 +138,6 @@
 
     .list {
         width: 240px;
-    }
-
-    .input {
-        height: 32px;
-        padding: 0 8px;
-        border-radius: var(--radius, 4px);
-        border: 1px solid var(--border-color, var(--primary-lighter));
-        background-color: var(--primary-darker);
-        color: var(--text);
     }
 
     .menu-anchor {

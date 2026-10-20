@@ -12,7 +12,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { _show } from "../../helpers/shows"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
@@ -186,7 +186,7 @@
         {/if}
     </div>
 
-    <FloatingInputs round={!(!isLocked && duplicateGroups.length)}>
+    <FloatingBar round={!(!isLocked && duplicateGroups.length)}>
         {#if !isLocked && duplicateGroups.length}
             <Button title="groups.merge_duplicated_groups" on:click={() => mergeDuplicateGroups(showId, duplicateGroups)}>
                 <Icon id="autofill" />
@@ -199,7 +199,7 @@
         <Button isActive={displayGlobalGroups} title="groups.toggle_global_group" on:click={() => globalGroupViewEnabled.set(!$globalGroupViewEnabled)}>
             <Icon style={displayGlobalGroups ? "" : "opacity: 0.8;"} id="groups" white={!displayGlobalGroups} />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 </div>
 
 <style>

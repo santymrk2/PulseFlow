@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { activeEdit, activePage, activeProject, activeRename, dictionary, projectView } from "../../stores"
-    import { translateText } from "../../utils/language"
+    import { activeEdit, activePage, activeProject, activeRename, dictionary, projectView } from "../../../../stores"
+    import { translateText } from "../../../../utils/language"
 
     export let value = ""
     export let style = ""

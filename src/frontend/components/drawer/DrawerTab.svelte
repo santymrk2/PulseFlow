@@ -9,7 +9,7 @@
     import Icon from "../helpers/Icon.svelte"
     import { getFirstActiveOutput } from "../helpers/output"
     import { metadataDisplayValues } from "../helpers/show"
-    import HiddenInput from "../inputs/HiddenInput.svelte"
+    import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import SelectElem from "../system/SelectElem.svelte"
 

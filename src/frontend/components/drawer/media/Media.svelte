@@ -12,7 +12,7 @@
     import { splitPath } from "../../helpers/get"
     import { countFolderMediaItems, getExtension, getFileName, getMediaLayerType, getMediaStyle, getMediaType, isMediaExtension, removeExtension } from "../../helpers/media"
     import { getFirstActiveOutput, setOutput } from "../../helpers/output"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
     import { clearBackground, clearSlide } from "../../output/clear"
@@ -638,7 +638,7 @@
     <ZoomControl hidden columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
 {:else if active === "online"}
     {#if onlineTab === "youtube" || onlineTab === "vimeo"}
-        <FloatingInputs onlyOne>
+        <FloatingBar onlyOne>
             <Button
                 title="groups.toggle_global_group"
                 on:click={() => {
@@ -649,9 +649,9 @@
                 <Icon id="add" />
                 {#if !$labelsDisabled}<T id="settings.add" />{/if}
             </Button>
-        </FloatingInputs>
+        </FloatingBar>
     {:else if onlineTab !== "canva" || $providerConnections.canva}
-        <FloatingInputs>
+        <FloatingBar>
             {#if onlineTab === "pixabay"}
                 <Button title="media.image" on:click={() => setView("image")}>
                     <Icon size={1.2} id="image" white={activeView === "video"} />
@@ -660,7 +660,7 @@
                     <Icon size={1.2} id="video" white={activeView !== "video"} />
                 </Button>
             {/if}
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 
     <ZoomControl hidden columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
@@ -671,7 +671,7 @@
 {:else}
     {#if active !== "all" && active !== "favourites"}
         {#if rootPath !== path}
-            <FloatingInputs side="left">
+            <FloatingBar side="left">
                 <Button disabled={rootPath === path} title="actions.back" on:click={goBack}>
                     <Icon id="back" white />
                 </Button>
@@ -686,9 +686,9 @@
                         <span style="opacity: 0.5;font-size: 0.9em;margin-inline-start: 10px;">{fileCount}</span>
                     {/if}
                 </p>
-            </FloatingInputs>
+            </FloatingBar>
         {:else if hasAudio.count}
-            <FloatingInputs side="left" onlyOne>
+            <FloatingBar side="left" onlyOne>
                 <Button on:click={hasAudio.exists ? openAudioFolder : createAudioFolder}>
                     <Icon id="autofill" />
                     <p>
@@ -696,7 +696,7 @@
                         <span style="opacity: 0.5;font-size: 0.8em;margin-left: 5px;">{hasAudio.count}</span>
                     </p>
                 </Button>
-            </FloatingInputs>
+            </FloatingBar>
         {/if}
     {/if}
 

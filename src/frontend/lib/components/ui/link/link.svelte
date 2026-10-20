@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { Main } from "../../../types/IPC/Main"
-    import { sendMain } from "../../IPC/main"
+    import { Main } from "../../../../../types/IPC/Main"
+    import { sendMain } from "../../../../IPC/main"
 
     export let url: string
 

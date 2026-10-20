@@ -9,7 +9,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { splitPath } from "../../helpers/get"
     import { getExtension, getMediaType } from "../../helpers/media"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import { VideoPlayer } from "../../media/video/videoPlayer"
     import { videoSync } from "../../media/video/videoSync"
@@ -110,7 +110,7 @@
     {#if big}
         <!--  -->
         {#if type === "video" || background?.type === "player"}
-            <FloatingInputs side="center" style="width: 80%;">
+            <FloatingBar side="center" style="width: 80%;">
                 <Button title={videoData.paused ? "media.play" : "media.pause"} disabled={$outLocked} on:click={playPause}>
                     <Icon id={videoData.paused ? "play" : "pause"} white={videoData.paused} size={1.5} />
                 </Button>
@@ -147,7 +147,7 @@
                 <Button title={videoData.muted === false ? "actions.mute" : "actions.unmute"} disabled={$outLocked} on:click={toggleMute}>
                     <Icon id={videoData.muted === false ? "volume" : "muted"} white={videoData.muted !== false} size={1.3} />
                 </Button>
-            </FloatingInputs>
+            </FloatingBar>
         {/if}
     {:else}
         <span class="name" style="font-size: 0.9em;" role="button" tabindex="0" on:click={openPreview} on:keydown={triggerClickOnEnterSpace}>

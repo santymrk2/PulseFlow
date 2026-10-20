@@ -23,10 +23,4 @@
     <Tip type="info" value="Select a team where you want to sync the data." bottom={20} />
 
     <ChoiceGrid options={teams} on:click={teamChosen} highlightFirst={false} />
-
-    <!-- <CombinedInput style="margin-top: 10px;width: initial;">
-        <MaterialButton style="width: 100%;" icon="arrow_forward" on:click={() => activePopup.set(null)}>
-            <T id="guide.skip" />
-        </MaterialButton>
-    </CombinedInput> -->
 {/if}

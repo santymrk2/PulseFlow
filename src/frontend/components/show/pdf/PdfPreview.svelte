@@ -10,7 +10,7 @@
     import { encodeFilePath, getFileName, locateMediaFile, removeExtension } from "../../helpers/media"
     import { getActiveOutputs, setOutput, startFolderTimer } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
     import Loader from "../../main/Loader.svelte"
@@ -220,11 +220,11 @@
 </div>
 
 {#if !$focusMode}
-    <!-- <FloatingInputs side="left">
+    <!-- <FloatingBar side="left">
     <span style="min-width: 60px;display: flex;align-items: center;justify-content: center;opacity: 0.8;">PDF</span>
-</FloatingInputs> -->
+</FloatingBar> -->
 
-    <FloatingInputs>
+    <FloatingBar>
         <Button icon="image" on:click={convertToImages} style="white-space: nowrap;">
             {#if !$labelsDisabled}<T id="actions.convert_to_images" />{/if}
         </Button>
@@ -246,7 +246,7 @@
         <div class="divider"></div>
 
         <ZoomControl columns={$slidesOptions.columns} on:change={(e) => slidesOptions.set({ ...$slidesOptions, columns: e.detail })} />
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 <style>

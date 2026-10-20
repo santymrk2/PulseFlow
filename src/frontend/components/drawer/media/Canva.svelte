@@ -10,7 +10,7 @@
     import ContentLibraryBrowser from "./ContentLibraryBrowser.svelte"
     import CLogo from "./CLogo.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import Link from "../../inputs/Link.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
     import Icon from "../../helpers/Icon.svelte"
 
     onMount(() => {

@@ -4,7 +4,7 @@
     import { getShortBibleName } from "../../drawer/bible/scripture"
     import { keysToID, sortByName } from "../../helpers/array"
     import T from "../../helpers/T.svelte"
-    import HRule from "../../input/HRule.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"

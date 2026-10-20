@@ -3,7 +3,7 @@
     import { translateText } from "../../../utils/language"
     import { clone } from "../../helpers/array"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"

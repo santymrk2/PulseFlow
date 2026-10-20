@@ -4,7 +4,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { getExtension, getMedia, getMediaStyle, getMediaType } from "../../helpers/media"
     import { getCurrentStyle, getFirstActiveOutput, getResolution } from "../../helpers/output"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import { VideoPlayer } from "../../media/video/videoPlayer"
     import Media from "../../output/layers/Media.svelte"
@@ -63,7 +63,7 @@
     </Zoomed>
 
     {#if type === "video"}
-        <FloatingInputs side="center" style="width: 60%;">
+        <FloatingBar side="center" style="width: 60%;">
             <Button title={videoData.paused ? "media.play" : "media.pause"} on:click={() => (videoData.paused = !videoData.paused)}>
                 <Icon id={videoData.paused ? "play" : "pause"} white={videoData.paused} size={1.3} />
             </Button>
@@ -77,7 +77,7 @@
             <Button title="media._loop" disabled>
                 <Icon id="loop" size={1.2} />
             </Button>
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 </div>
 

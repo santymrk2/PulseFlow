@@ -6,7 +6,7 @@
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import HiddenInput from "../inputs/HiddenInput.svelte"
+    import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
     import Loader from "../main/Loader.svelte"
     import Center from "../system/Center.svelte"
     import SelectElem from "../system/SelectElem.svelte"

@@ -8,7 +8,7 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import Icon from "../../helpers/Icon.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import SegmentedField from "../../../lib/components/ui/segmented-field/segmented-field.svelte"

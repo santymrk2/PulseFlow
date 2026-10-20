@@ -4,7 +4,7 @@
     import type { Look, LookScreen } from "../../../types/Settings"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
-    import InputRow from "../input/InputRow.svelte"
+    import InputRow from "../../lib/components/ui/input-row/input-row.svelte"
     import ColorField from "../../lib/components/ui/color-field/color-field.svelte"
     import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
     import ToggleField from "../../lib/components/ui/toggle-field/toggle-field.svelte"

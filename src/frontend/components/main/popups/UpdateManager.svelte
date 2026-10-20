@@ -8,7 +8,7 @@
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
     registerPopupSubmit(downloadLatest)

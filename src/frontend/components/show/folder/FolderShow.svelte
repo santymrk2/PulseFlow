@@ -16,7 +16,7 @@
     import { findMatchingOut, getFirstActiveOutput, setOutput, startFolderTimer } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
     import { joinTime, secondsToTime } from "../../helpers/time"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import { clearBackground, clearSlide } from "../../output/clear"
     import Center from "../../system/Center.svelte"
@@ -122,13 +122,13 @@
 </div>
 
 {#if !$focusMode}
-    <FloatingInputs side="left" onlyOne>
+    <FloatingBar side="left" onlyOne>
         <Button icon="folder" on:click={() => sendMain(Main.OPEN_FOLDER_PATH, path)}>
             <T id="main.open" />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 
-    <FloatingInputs onlyOne>
+    <FloatingBar onlyOne>
         <Button
             disabled={!folderFiles.length}
             on:click={() => {
@@ -140,7 +140,7 @@
             <Icon size={1.1} id="clock" white={totalTime === 0} />
             {joinTime(secondsToTime(totalTime))}
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 <style>

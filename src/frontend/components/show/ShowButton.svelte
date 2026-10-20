@@ -16,7 +16,7 @@
     import { joinTime, secondsToTime } from "../helpers/time"
     import { clearSlide } from "../output/clear"
     import { getTextSnippet, highlightText } from "../quicksearch/searchHighlight"
-    import HiddenInput from "./HiddenInput.svelte"
+    import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
 
     export let id: string

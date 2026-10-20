@@ -5,8 +5,8 @@
     import { audioExtensions } from "../../../values/extensions"
     import Icon from "../../helpers/Icon.svelte"
     import { clone } from "../../helpers/array"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
@@ -90,11 +90,11 @@
     <!-- TODO: last used values, click to play with preset values -->
 {/if}
 
-<FloatingInputs round>
+<FloatingBar round>
     <Button isActive={options} title="edit.options" on:click={() => (options = !options)}>
         <Icon size={1.1} id="options" white={!options} />
     </Button>
-</FloatingInputs>
+</FloatingBar>
 
 <style>
     .settings {

@@ -5,7 +5,7 @@
     import { translateText } from "../../../utils/language"
     import { registerPopupSubmit } from "../../../utils/popup"
     import Icon from "../../helpers/Icon.svelte"
-    import Link from "../../inputs/Link.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Loader from "../Loader.svelte"
 

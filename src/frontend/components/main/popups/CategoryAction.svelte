@@ -4,7 +4,7 @@
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import Tip from "../Tip.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
 
     let selectedCategory = $popupData?.id
     onMount(() => {

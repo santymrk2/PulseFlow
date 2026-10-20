@@ -15,8 +15,8 @@
     import Icon from "../helpers/Icon.svelte"
     import { checkInput } from "../helpers/showActions"
     import T from "../helpers/T.svelte"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
-    import HiddenInput from "../inputs/HiddenInput.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import ToggleField from "../../lib/components/ui/toggle-field/toggle-field.svelte"
@@ -501,13 +501,13 @@
                 </DropArea>
             </Autoscroll>
 
-            <!-- <FloatingInputs>
+            <!-- <FloatingBar>
                 <Button icon="folder" title="new.folder" on:click={() => createProject(true)} white />
                 <div class="divider"></div>
                 <Button icon="add" title="<b>new.project</b><br>tooltip.project" on:click={() => createProject()}>
                     {#if !$labelsDisabled}<T id="new.project" />{/if}
                 </Button>
-            </FloatingInputs> -->
+            </FloatingBar> -->
 
             {#if addMenuOpen}
                 <div class="addMenu" transition:fade={{ duration: 80 }} role="none" on:click={() => (addMenuOpen = false)}>
@@ -537,11 +537,11 @@
                 </div>
             {/if}
 
-            <FloatingInputs>
+            <FloatingBar>
                 <Button class="addButton" title={addMenuOpen ? "actions.close" : "context.addToProject"} on:click={() => (addMenuOpen = !addMenuOpen)} on:dblclick={() => (addMenuOpen ? null : createProject())}>
                     <Icon id="add" size={1} style={addMenuOpen ? "transform: rotate(135deg);" : ""} white />
                 </Button>
-            </FloatingInputs>
+            </FloatingBar>
         </div>
 
         {#if templates.length}

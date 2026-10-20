@@ -11,7 +11,7 @@
     import { history } from "../../../helpers/history"
     import { checkName } from "../../../helpers/show"
     import T from "../../../helpers/T.svelte"
-    import List from "../../../input/List.svelte"
+    import List from "../../../../lib/components/ui/list/list.svelte"
     import Button from "../../../../lib/components/ui/button/button.svelte"
     import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
     import ChoiceGrid from "../../../../lib/components/ui/choice-grid/choice-grid.svelte"

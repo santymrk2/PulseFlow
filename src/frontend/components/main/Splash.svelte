@@ -5,7 +5,7 @@
     import { history } from "../helpers/history"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import Link from "../inputs/Link.svelte"
+    import Link from "../../lib/components/ui/link/link.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import Center from "../system/Center.svelte"
     import { getVOTD } from "./votd"

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { translateText } from "../../utils/language"
+    import { translateText } from "../../../../utils/language"
 
     export let title = ""
 </script>

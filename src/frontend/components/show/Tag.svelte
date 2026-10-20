@@ -3,7 +3,7 @@
     import { triggerClickOnEnterSpace } from "../../utils/clickable"
     import { history } from "../helpers/history"
     import { _show } from "../helpers/shows"
-    import HiddenInput from "../inputs/HiddenInput.svelte"
+    import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
 
     export let tag
     export let active = false

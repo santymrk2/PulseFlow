@@ -7,7 +7,7 @@
     import VirtualList from "../../../../components/drawer/VirtualList.svelte"
     import { newDropdown } from "../../../../components/edit/scripts/edit"
     import Icon from "../../../../components/helpers/Icon.svelte"
-    import InputRow from "../../../../components/input/InputRow.svelte"
+    import InputRow from "../input-row/input-row.svelte"
     import Button from "../button/button.svelte"
     import TextField from "../text-field/text-field.svelte"
 

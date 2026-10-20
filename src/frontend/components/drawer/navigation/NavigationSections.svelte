@@ -2,7 +2,7 @@
     import { onMount } from "svelte"
     import { activeActionTagFilter, activeDrawerTab, activeEdit, activeVariableTagFilter, activeTimerTagFilter, dictionary, drawerTabsData, labelsDisabled } from "../../../stores"
     import { translateText } from "../../../utils/language"
-    import MaterialDrawerTab from "../MaterialDrawerTab.svelte"
+    import DrawerTab from "../DrawerTab.svelte"
 
     // interface Button extends Category {
     //     label: string
@@ -102,7 +102,7 @@
                                 <hr />
                             </div>
                         {:else if !category.hidden}
-                            <MaterialDrawerTab {active} {category} on:rename />
+                            <DrawerTab {active} {category} on:rename />
                         {/if}
                     {/each}
                     <!-- {:else}

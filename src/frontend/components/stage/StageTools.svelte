@@ -8,7 +8,7 @@
     import { history } from "../helpers/history"
     import { getStageOutputId, getStageResolution } from "../helpers/output"
     import { getStyles } from "../helpers/style"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import Tabs from "../main/Tabs.svelte"
     import BoxStyle from "./tools/BoxStyle.svelte"
@@ -201,9 +201,9 @@
         {/if}
 
         {#if activeItemId || active === "slide"}
-            <FloatingInputs>
+            <FloatingBar>
                 <Button icon="reset" title="actions.reset" on:click={resetStageStyle} />
-            </FloatingInputs>
+            </FloatingBar>
         {/if}
     {/if}
 </div>

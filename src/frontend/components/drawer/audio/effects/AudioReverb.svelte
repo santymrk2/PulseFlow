@@ -2,7 +2,7 @@
     import { onDestroy, onMount } from "svelte"
     import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
     import { type ReverbConfig, updateReverbConfig } from "../../../../audio/effects/audioReverb"
-    import InputRow from "../../../input/InputRow.svelte"
+    import InputRow from "../../../../lib/components/ui/input-row/input-row.svelte"
     import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let effectId: string = ""

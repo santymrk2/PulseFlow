@@ -7,7 +7,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { getSetChars, setRandomValue } from "../../helpers/randomValue"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import Stepper from "../../../lib/components/ui/stepper/stepper.svelte"
@@ -256,7 +256,7 @@
     {/if}
 </div>
 
-<FloatingInputs onlyOne>
+<FloatingBar onlyOne>
     <Button
         disabled={readOnly}
         icon="add"
@@ -268,7 +268,7 @@
     >
         {#if !$labelsDisabled}<T id="new.variable" />{/if}
     </Button>
-</FloatingInputs>
+</FloatingBar>
 
 <style>
     .variables {

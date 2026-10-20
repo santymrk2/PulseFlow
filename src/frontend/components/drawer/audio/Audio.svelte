@@ -14,7 +14,7 @@
     import { splitPath } from "../../helpers/get"
     import { getExtension, getFileName, getMediaType } from "../../helpers/media"
     import { joinTime, secondsToTime } from "../../helpers/time"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import Center from "../../system/Center.svelte"
@@ -394,14 +394,14 @@
     <!-- nothing -->
 {:else if active === "inputs"}
     {#if inputsTab === "audio_streams"}
-        <FloatingInputs onlyOne>
+        <FloatingBar onlyOne>
             <Button icon="add" style="flex: 1;" on:click={() => activePopup.set("audio_stream")} center title="new.audio_stream">
                 {#if !$labelsDisabled}<T id="new.audio_stream" />{/if}
             </Button>
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 {:else if playlist}
-    <FloatingInputs side="left">
+    <FloatingBar side="left">
         <Button
             disabled={$outLocked}
             title={$activePlaylist?.id === active ? "media.stop" : "media.play"}
@@ -460,19 +460,19 @@
                     )
                 )}
         </p>
-    </FloatingInputs>
+    </FloatingBar>
 
-    <FloatingInputs round>
+    <FloatingBar round>
         <Button isActive={playlistSettings} title="audio.playlist_settings" on:click={() => (playlistSettings = !playlistSettings)}>
             <Icon size={1.1} id="options" white={!playlistSettings} />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {:else if active === "all" || active === "favourites"}
     <!-- nothing -->
 {:else}
     <!--  -->
     {#if rootPath !== path}
-        <FloatingInputs side="left">
+        <FloatingBar side="left">
             <Button disabled={rootPath === path} title="actions.back" on:click={goBack}>
                 <Icon id="back" white />
             </Button>
@@ -488,17 +488,17 @@
             <span style="opacity: 0.5;font-size: 0.9em;margin-inline-start: 10px;">{content}</span>
         {/if} -->
             </p>
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 
     <!-- only show if audio content -->
     {#if filteredFiles.filter((a) => !a.isFolder)?.length}
-        <FloatingInputs onlyOne on:mousedown={storeSelected}>
+        <FloatingBar onlyOne on:mousedown={storeSelected}>
             <Button title="new.playlist" on:click={createPlaylist}>
                 <Icon size={1.2} id="playlist_create" />
                 {#if !$labelsDisabled}<p><T id="new.playlist" /></p>{/if}
             </Button>
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 {/if}
 

@@ -8,10 +8,10 @@
     import MidiValues from "../../actions/MidiValues.svelte"
     import { getDynamicValue } from "../../edit/scripts/itemHelpers"
     import { clone, keysToID, sortByName } from "../../helpers/array"
-    import DynamicList from "../../input/DynamicList.svelte"
-    import HRule from "../../input/HRule.svelte"
-    import { getValues } from "../../input/inputs"
-    import Inputs from "../../input/Inputs.svelte"
+    import DynamicList from "../../../lib/components/ui/dynamic-list/dynamic-list.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
+    import { getValues } from "../../form/inputs"
+    import FormInputs from "../../form/FormInputs.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
@@ -212,7 +212,7 @@
 
     <SelectField label="midi.type" disabled={!!Object.keys(emitter.templates || {})?.length} options={emitterTypes} value={emitter.type} on:change={(e) => updateValue("type", e.detail)} />
 
-    <Inputs inputs={signalInputs} title="emitters.signal" on:change={(e) => changed(e, "signal")} />
+    <FormInputs inputs={signalInputs} title="emitters.signal" on:change={(e) => changed(e, "signal")} />
 
     <!-- TEMPLATES: -->
     <!-- WIP message templates only working for OSC/HTTP - MIDI should have a custom template... -->

@@ -3,7 +3,7 @@
     import { sendMain } from "../../../IPC/main"
     import { special } from "../../../stores"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import TextareaField from "../../../lib/components/ui/textarea-field/textarea-field.svelte"
 

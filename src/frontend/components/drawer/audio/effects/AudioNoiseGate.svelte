@@ -3,7 +3,7 @@
     import { AudioAnalyser } from "../../../../audio/audioAnalyser"
     import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
     import { type NoiseGateConfig, updateNoiseGateConfig } from "../../../../audio/effects/audioNoiseGate"
-    import InputRow from "../../../input/InputRow.svelte"
+    import InputRow from "../../../../lib/components/ui/input-row/input-row.svelte"
     import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let effectId: string = ""

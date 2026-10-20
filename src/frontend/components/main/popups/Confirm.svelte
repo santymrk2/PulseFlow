@@ -3,7 +3,7 @@
     import { registerPopupSubmit } from "../../../utils/popup"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 

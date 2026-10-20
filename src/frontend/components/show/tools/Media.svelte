@@ -18,7 +18,7 @@
     import { findMatchingOut, getActiveOutputs, getCurrentStyle, getResolution, setOutput } from "../../helpers/output"
     import { _show } from "../../helpers/shows"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import HoverButton from "../../inputs/HoverButton.svelte"
+    import HoverPlay from "../../helpers/HoverPlay.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
     import Center from "../../system/Center.svelte"
@@ -203,7 +203,7 @@
 
                 <SelectElem id="media" data={{ ...background, path: media.path || background.path }} draggable>
                     <div class="media_item item context #show_media" class:active={findMatchingOut(media.path || "", $outputs)}>
-                        <HoverButton
+                        <HoverPlay
                             style="flex: 2;height: 50px;max-width: 100px;"
                             icon="play"
                             size={3}
@@ -218,7 +218,7 @@
                             }}
                         >
                             <MediaLoader name={background.name} path={media.path} thumbnailPath={media.thumbnail} type={background.type} {mediaStyle} />
-                        </HoverButton>
+                        </HoverPlay>
 
                         <p data-title={encodeFilePath(media.path || background.path || "")}>{background.name}</p>
 
@@ -247,7 +247,7 @@
 
                     <SelectElem id="media" data={{ ...background, type }} draggable>
                         <div class="media_item item context #show_media" class:active={findMatchingOut(background.path, $outputs)}>
-                            <HoverButton
+                            <HoverPlay
                                 style="flex: 2;height: 50px;max-width: 100px;"
                                 icon="play"
                                 size={3}
@@ -258,7 +258,7 @@
                                 }}
                             >
                                 <MediaLoader name={background.name} path={background.path} {type} {mediaStyle} />
-                            </HoverButton>
+                            </HoverPlay>
                             <p data-title={background.path}>{background.name}</p>
                         </div>
                     </SelectElem>
@@ -271,7 +271,7 @@
             {#each showOverlays as overlay}
                 <SelectElem id="overlay" data={overlay.id} draggable>
                     <div class="media_item item context #show_overlay" class:active={findMatchingOut(overlay.id, $outputs) !== null}>
-                        <HoverButton
+                        <HoverPlay
                             style="flex: 2;height: 50px;max-width: 100px;"
                             icon={findMatchingOut(overlay.id, $outputs) !== null ? "clear" : "play"}
                             size={3}
@@ -289,7 +289,7 @@
                                     <Textbox {item} ref={{ type: "overlay", id: overlay.id }} preview miniPreview />
                                 {/each}
                             </Zoomed>
-                        </HoverButton>
+                        </HoverPlay>
 
                         <p data-title={overlay.name}>{overlay.name}</p>
 

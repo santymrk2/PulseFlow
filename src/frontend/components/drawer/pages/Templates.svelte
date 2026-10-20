@@ -12,7 +12,7 @@
     import { getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Actions from "../../slide/Actions.svelte"
     import Center from "../../system/Center.svelte"
@@ -238,19 +238,19 @@
 </div>
 
 {#if templateWithNonExistentCategory}
-    <FloatingInputs side="left" onlyOne>
+    <FloatingBar side="left" onlyOne>
         <Button on:click={createNonExistentCategories}>
             <Icon id="autofill" />
             <T id="category.create_nonexistent" />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
-<FloatingInputs onlyOne>
+<FloatingBar onlyOne>
     <Button disabled={readOnly} icon="add" title="new.template" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "template" } })}>
         {#if !$labelsDisabled}<T id="new.template" />{/if}
     </Button>
-</FloatingInputs>
+</FloatingBar>
 
 <style>
     .grid {

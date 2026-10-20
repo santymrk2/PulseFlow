@@ -3,7 +3,7 @@
     import { customIcons, customIconsColors } from "../../../values/customIcons"
     import { addItem } from "../../edit/scripts/itemHelpers"
     import Icon from "../../helpers/Icon.svelte"
-    import HRule from "../../input/HRule.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
 
     const names = {

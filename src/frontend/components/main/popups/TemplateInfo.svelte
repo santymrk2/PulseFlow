@@ -6,7 +6,7 @@
     import { allOutputsHasStyleTemplate, getFirstActiveOutput } from "../../helpers/output"
     import { getLayoutRef, removeTemplatesFromShow } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
-    import HRule from "../../input/HRule.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
 
     const showId = $activeShow?.id || ""

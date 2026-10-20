@@ -6,7 +6,7 @@
     import { actionTags, activeActionTagFilter, activeMediaTagFilter, activePlayerTagFilter, activeTagFilter, activeTimerTagFilter, globalTags, mediaTags, playerTags, popupData, timerTags, variableTags } from "../../../stores"
     import { keysToID, sortByName } from "../../helpers/array"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"

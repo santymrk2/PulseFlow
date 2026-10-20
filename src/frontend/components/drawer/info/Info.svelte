@@ -1,7 +1,7 @@
 <script lang="ts">
     import { activeShow, focusMode, forceClock } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import Clock from "../../system/Clock.svelte"
@@ -46,11 +46,11 @@
     {/if}
 
     {#if !$forceClock && hasOptions.includes(id) && !$focusMode}
-        <FloatingInputs round>
+        <FloatingBar round>
             <Button isActive={optionsOpen} title="edit.options" on:click={() => (optionsOpen = !optionsOpen)}>
                 <Icon size={1.1} id="options" white={!optionsOpen} />
             </Button>
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 </div>
 

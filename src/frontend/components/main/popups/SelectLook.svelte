@@ -2,7 +2,7 @@
     import { activeLook, activePopup, looks, popupData } from "../../../stores"
     import { applyLook } from "../../helpers/looks"
     import Icon from "../../helpers/Icon.svelte"
-    import CombinedInput from "../../inputs/CombinedInput.svelte"
+    import CombinedInput from "../../../lib/components/ui/combined-input/combined-input.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
 

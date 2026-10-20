@@ -5,7 +5,7 @@
     import Icon from "../helpers/Icon.svelte"
     import { getDynamicIds, replaceDynamicValues } from "../helpers/showActions"
     import T from "../helpers/T.svelte"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import { addStageItem } from "../stage/stage"
     import { addItem } from "./scripts/itemHelpers"
@@ -193,11 +193,11 @@
         </div>
     {/if}
 
-    <FloatingInputs>
+    <FloatingBar>
         <Button class="addButton" title={isOpen ? "actions.close" : "edit.add_items"} on:click={() => (isOpen = !isOpen)} on:dblclick={handleDoubleClick}>
             <Icon id="add" size={1} style={isOpen ? "transform: rotate(135deg);" : ""} white />
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 {/if}
 
 <style>

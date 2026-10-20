@@ -1,6 +1,6 @@
 <script lang="ts">
     import { activePopup, globalRegexes, popupData } from "../../../stores"
-    import HRule from "../../input/HRule.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 

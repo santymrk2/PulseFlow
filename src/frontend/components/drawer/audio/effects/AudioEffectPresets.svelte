@@ -5,7 +5,7 @@
     import { audioEffectPresets } from "../../../../stores"
     import { translateText } from "../../../../utils/language"
     import { clone, keysToID } from "../../../helpers/array"
-    import InputRow from "../../../input/InputRow.svelte"
+    import InputRow from "../../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../../lib/components/ui/button/button.svelte"
     import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../../../lib/components/ui/text-field/text-field.svelte"

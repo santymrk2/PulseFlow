@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte"
     import { translateText } from "../../../../utils/language"
     import { removeDuplicates } from "../../../../components/helpers/array"
-    import InputRow from "../../../../components/input/InputRow.svelte"
+    import InputRow from "../input-row/input-row.svelte"
     import Button from "../button/button.svelte"
 
     export let label: string

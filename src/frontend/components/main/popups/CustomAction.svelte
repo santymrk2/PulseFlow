@@ -1,7 +1,7 @@
 <script lang="ts">
     import { actions, activePopup, activeShow, popupData, scenes, showsCache } from "../../../stores"
     import { _show } from "../../helpers/shows"
-    import InputRow from "../../input/InputRow.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import Tip from "../Tip.svelte"

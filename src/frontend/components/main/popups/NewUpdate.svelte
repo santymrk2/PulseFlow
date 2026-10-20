@@ -3,7 +3,7 @@
     import { sendMain } from "../../../IPC/main"
     import { activePopup, popupData, special } from "../../../stores"
     import T from "../../helpers/T.svelte"
-    import HRule from "../../input/HRule.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 

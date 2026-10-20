@@ -7,8 +7,8 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { generateLightRandomColor } from "../../helpers/color"
     import { history } from "../../helpers/history"
-    import Tabs from "../../input/Tabs.svelte"
-    import HiddenInput from "../../inputs/HiddenInput.svelte"
+    import Tabs from "../../../lib/components/ui/tabs/tabs.svelte"
+    import HiddenInput from "../../../lib/components/ui/hidden-input/hidden-input.svelte"
 
     $: profilesList = [{ id: "", color: "", name: translateText("profile.admin") }, ...sortByName(keysToID($profiles).filter((a) => a.id !== "admin"))]
 

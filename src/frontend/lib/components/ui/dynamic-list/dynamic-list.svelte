@@ -1,10 +1,10 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { translateText } from "../../utils/language"
-    import T from "../helpers/T.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
-    import Center from "../system/Center.svelte"
-    import InputRow from "./InputRow.svelte"
+    import { translateText } from "../../../../utils/language"
+    import T from "../../../../components/helpers/T.svelte"
+    import Button from "../button/button.svelte"
+    import Center from "../../../../components/system/Center.svelte"
+    import InputRow from "../input-row/input-row.svelte"
 
     type Item = {
         id: string

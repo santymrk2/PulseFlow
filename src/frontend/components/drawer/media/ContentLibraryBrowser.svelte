@@ -5,7 +5,7 @@
     import { requestMain } from "../../../IPC/main"
     import { mediaOptions, openedMediaFolders } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import Media from "./MediaCard.svelte"
@@ -149,7 +149,7 @@
 
 <div class="content-library">
     {#if showBackButton}
-        <FloatingInputs side="left">
+        <FloatingBar side="left">
             <Button title="actions.back" on:click={navigateBack}>
                 <Icon id="back" white />
             </Button>
@@ -160,7 +160,7 @@
                 <span style="opacity: 0.3;font-size: 0.9em;max-width: 500px;overflow: hidden;direction: rtl;">{currentPath.length ? "/" : ""}{currentPath.map((a) => a.name)?.join("/")}</span>
                 {currentCategory?.name || ""}
             </p>
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 
     {#if loading}

@@ -2,8 +2,8 @@
     import { createEventDispatcher } from "svelte"
     import type { Input as TInput } from "../../../types/Input"
     import { clone } from "../helpers/array"
-    import HRule from "./HRule.svelte"
-    import Input from "./Input.svelte"
+    import HRule from "../../lib/components/ui/h-rule/h-rule.svelte"
+    import FormInput from "./FormInput.svelte"
 
     export let inputs: TInput[]
     export let title = ""
@@ -21,6 +21,6 @@
 
 {#each inputs as input}
     {#if input?.type}
-        <Input {input} on:change={(e) => changed(e, input)} />
+        <FormInput {input} on:change={(e) => changed(e, input)} />
     {/if}
 {/each}

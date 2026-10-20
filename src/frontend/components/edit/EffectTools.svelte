@@ -6,7 +6,7 @@
     import { clone } from "../helpers/array"
     import { addToPos } from "../helpers/mover"
     import T from "../helpers/T.svelte"
-    import InputRow from "../input/InputRow.svelte"
+    import InputRow from "../../lib/components/ui/input-row/input-row.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import ColorField from "../../lib/components/ui/color-field/color-field.svelte"
     import NumberField from "../../lib/components/ui/number-field/number-field.svelte"

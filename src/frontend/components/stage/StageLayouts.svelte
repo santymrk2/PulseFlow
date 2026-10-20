@@ -5,7 +5,7 @@
     import { keysToID, sortByName } from "../helpers/array"
     import { history } from "../helpers/history"
     import T from "../helpers/T.svelte"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import Autoscroll from "../system/Autoscroll.svelte"
     import Center from "../system/Center.svelte"
@@ -130,11 +130,11 @@
         </Center>
     {/if}
 
-    <FloatingInputs onlyOne>
+    <FloatingBar onlyOne>
         <Button disabled={readOnly} icon="add" title="show.new_layout" on:click={addSlide}>
             {#if !$labelsDisabled}<T id="show.new_layout" />{/if}
         </Button>
-    </FloatingInputs>
+    </FloatingBar>
 </div>
 
 <style>

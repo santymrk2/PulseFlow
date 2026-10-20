@@ -1,48 +1,33 @@
-# Componentes UI (shadcn-svelte / Tailwind)
+# Librería de componentes (`lib/components/ui/`)
 
-Componentes portados de la referencia `docs/design-reference/` (que usa
-shadcn-svelte + Tailwind v4) con el CLI de shadcn-svelte. Son **opt-in**: no
-reemplazan a los componentes legacy de `src/frontend/components/`.
+**Es la única librería de UI de la app** (F14.8). Antes convivían tres: los `Material*`
+(`components/inputs/`), el kit shadcn y los `Button`/`TextInput`/… legacy. Se unificaron.
+Las medidas, la convención de nombres y el contrato de eventos están en
+[`docs/design/kit.md`](../../../../../docs/design/kit.md).
 
-## Regla de uso
+## Reglas
 
-- **Toda interfaz nueva o rehecha usa el kit** (F12): `button`, `capsule`,
-  `section-header`, `list-row`, `field`, `menu`, además de `select`, `tabs`, `switch`…
-  Ver `docs/design/kit.md` con las medidas y ejemplos.
-- Los componentes legacy se reemplazan **pantalla por pantalla** dentro de las tareas
-  de F12, nunca en masa.
-- **No migrar en masa** componentes existentes (`Button.svelte`,
-  `MaterialInput`, `CombinedInput`, etc.): los componentes legacy reciben
-  `on:*` de sus padres y migrarlos a runes los rompe (ver `AGENTS.md`). Esa
-  migración sería una tarea propia del roadmap, con revisión visual.
-- La apariencia sale del tema activo: `app.css` ata los tokens `--shui-*` a las
-  variables de FreeShow (`--primary`, `--text`, `--secondary`, `--radius`, …),
-  así que estos componentes siguen el tema del usuario sin clases `.dark`.
+- **Toda interfaz nueva o rehecha usa estas piezas.** Si falta una, se agrega acá (una
+  carpeta por pieza, `nombre/nombre.svelte`), no se crea otra en `components/`.
+- **Nombres:** `Input` (pelado), `*Field` (con etiqueta y restablecer), `Dropdown`,
+  `Stepper`, `Slider`. Nada de prefijos como `Material`.
+- **Eventos:** `on:click` / `on:change` con `detail` (más el atributo nativo). No migrar los
+  manejadores de los padres a callbacks de forma masiva (ver `AGENTS.md`).
+- **Apariencia:** sólo tokens (`--bg`, `--text`, `--border`, `--action`, …). Sin hex ni
+  degradés ni sombras fuera de flotantes. El CSS que deba poder sobrescribirse va en
+  `@layer components`.
+- **Lo que depende del dominio no va acá** (`ShowButton`, `TopButton`, `MediaPicker`,
+  `HoverPlay`, `components/form/`).
 
-## Componentes disponibles
+## Piezas
 
-`button`, `input`, `label`, `select`, `separator`, `skeleton`, `switch`, `tabs`,
-`scroll-area`, y del kit F12: `section-header`, `list-row`, `capsule`, `field`, `menu`
-(ver sus `*.svelte` y `index.ts` en cada carpeta).
-
-## Cómo agregar otro
-
-```sh
-bunx shadcn-svelte@latest add button
-```
-
-El CLI exige un `tsconfig.json` en la raíz (acá no existe; el alias `$lib`
-apunta a `src/frontend/lib` desde `vite.config.*` y
-`src/frontend/tsconfig.json`). Si el CLI se niega, generar en un scaffold
-temporal con un `tsconfig.json` que declare el alias y copiar el resultado a
-`src/frontend/lib/components/ui/`.
-
-Alcopiar, revisar dos desvíos conocidos del generado:
-
-1. Los iconos se importan del barrel: `import { Check as CheckIcon } from
-"@lucide/svelte"` (el subpath `@lucide/svelte/icons/*` no resuelve tipos).
-2. Los tipos auxiliares (`WithElementRef`, `WithoutChild`, …) viven en
-   `src/frontend/lib/utils.ts`, no en `$lib/types.ts`.
+`button`, `input`, `link`, `hidden-input`, `combined-input`, `dropdown`, `stepper`,
+`slider`, `zoom-control`, `choice-grid`; campos: `text-field`, `number-field`,
+`textarea-field`, `select-field`, `popup-field`, `file-field`, `folder-field`,
+`time-field`, `date-field`, `radial-field`, `color-field`, `colors-field`, `font-field`,
+`toggle-field`, `checkbox-field`, `segmented-field`, `toggle-group-field`;
+distribución: `input-row`, `floating-bar`, `tabs`, `list`, `h-rule`, `title`,
+`dynamic-list`, `capsule`, `list-row`, `section-header`, `menu`.
 
 ## Verificación
 

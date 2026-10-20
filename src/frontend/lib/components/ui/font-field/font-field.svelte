@@ -5,7 +5,7 @@
     import type { CustomFont } from "../../../../../types/Show"
     import { getFontName, getFontStyleList, getSystemFontsList, mergeCustomFonts } from "../../../../components/helpers/fonts"
     import SelectField from "../select-field/select-field.svelte"
-    import InputRow from "../../../../components/input/InputRow.svelte"
+    import InputRow from "../input-row/input-row.svelte"
     export let label: string
     export let value: string
     export let fontStyleValue = ""

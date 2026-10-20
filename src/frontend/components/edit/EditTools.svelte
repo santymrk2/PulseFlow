@@ -10,7 +10,7 @@
     import { getLayoutRef, isSlideLocked } from "../helpers/show"
     import { _show } from "../helpers/shows"
     import { getStyles } from "../helpers/style"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import Tabs from "../main/Tabs.svelte"
     import Center from "../system/Center.svelte"
@@ -444,7 +444,7 @@
         {/if}
 
         {#if item || active === "slide" || active === "filters"}
-            <FloatingInputs>
+            <FloatingBar>
                 {#if copiedStyleDifferent}
                     <Button icon="paste" title="actions.paste" on:click={() => pasteStyle()}>
                         <T id="actions.paste" />
@@ -482,7 +482,7 @@
                         <!-- {#if !isShow}<T id="actions.reset" />{/if} -->
                     </Button>
                 {/if}
-            </FloatingInputs>
+            </FloatingBar>
         {/if}
 
         <!-- <span style="display: flex;flex-wrap: wrap;white-space: nowrap;">
