@@ -173,7 +173,8 @@ Casos que la meta implica y ninguna tarea listaba explícitamente (cada uno tien
 **Interfaces:**
 - Produce:
   ```rust
-  pub enum DecodedFrame { Rgba { w: u32, h: u32, bytes: Vec<u8> }, Nv12Cpu { w: u32, h: u32, y: Vec<u8>, uv: Vec<u8>, matrix: YuvMatrix, full_range: bool }, Native(Nv12Frame) }
+  pub struct DecodedFrame { pub pts: Duration, pub pixels: FramePixels }   // pts: tiempo dentro del archivo, acumulado a través de los loops
+  pub enum FramePixels { Rgba { w: u32, h: u32, bytes: Vec<u8> }, Nv12Cpu { w: u32, h: u32, y: Vec<u8>, uv: Vec<u8>, matrix: YuvMatrix, full_range: bool }, Native(Nv12Frame) }
   pub trait FrameSink: Send + Sync { fn push(&self, frame: DecodedFrame); }
   pub trait VideoDecoder: Send { fn stop(&mut self); }
   pub fn start(app: &AppHandle, path: &str, sink: Arc<dyn FrameSink>) -> AppResult<Box<dyn VideoDecoder>>;
@@ -181,9 +182,10 @@ Casos que la meta implica y ninguna tarea listaba explícitamente (cada uno tien
   ```
   `MediaStore` gana `update_video_frame_nv12(&self, id, &Nv12Frame)` (guarda el frame vigente por id; las pantallas lo toman con `store.get_video(id)`).
 
-- [ ] **Paso 1: tests que fallan**: `backend_selection_by_extension` (`.mp4/.mov/.m4v` → candidato nativo; `.webm/.mkv/.avi` → ffmpeg directo) y `ffmpeg_backend_frame_size_nv12` (`w*h*3/2`).
+- [ ] **Paso 1: tests que fallan**: `backend_selection_by_extension` (`.mp4/.mov/.m4v` → candidato nativo; `.webm/.mkv/.avi` → ffmpeg directo), `ffmpeg_backend_frame_size_nv12` (`w*h*3/2`), `ffmpeg_frames_carry_monotonic_pts` (el n-ésimo frame de un video de 30 fps tiene `pts ≈ n/30 s`, creciente también al dar la vuelta del loop) y los tests del reloj de abajo.
 - [ ] **Paso 2:** correrlos → FAIL.
-- [ ] **Paso 3:** mover el código; cambiar el backend ffmpeg a `-pix_fmt nv12` y emitir `Nv12Cpu` (mitad del ancho de banda que RGBA; es también la red de seguridad en ambas plataformas). El `start_video_playback` actual queda como wrapper delgado hasta que F17.4/F18.3 se integren.
+- [ ] **Paso 2b: reloj del show (opción B, acordada 2026-10-20).** Crear `src-tauri/src/render/clock.rs` con `pub trait ShowClock: Send + Sync { fn now(&self) -> Duration; }` y `pub struct WallClock` (implementación por `Instant`, la única de hoy). Tests: `wall_clock_is_monotonic` y `wall_clock_advances` (tras `sleep(20 ms)` avanza ≥ 20 ms). **Nadie lo consume todavía**: es el punto de enganche para que, cuando exista un motor de audio en Rust, un `AudioClock` basado en el contador de muestras reemplace a `WallClock` sin tocar a los consumidores. El PTS que llevan los frames es la otra mitad de ese contrato.
+- [ ] **Paso 3:** mover el código; cambiar el backend ffmpeg a `-pix_fmt nv12` y poner el PTS en cada frame (`n / fps`, más la duración del archivo por cada vuelta del loop; el fps sale de `ffprobe`) y emitir `Nv12Cpu` (mitad del ancho de banda que RGBA; es también la red de seguridad en ambas plataformas). El `start_video_playback` actual queda como wrapper delgado hasta que F17.4/F18.3 se integren.
 - [ ] **Paso 4:** `cargo test --lib`; manual: un `.mp4` y un `.webm` reproducen en Audiencia.
 - [ ] **Paso 5: commit** `F18.3: trait VideoDecoder, ffmpeg en NV12`.
 
@@ -291,3 +293,4 @@ Casos que la meta implica y ninguna tarea listaba explícitamente (cada uno tien
   2. Windows no es verificable desde este equipo.
   3. AVFoundation no abre `.webm/.mkv/.avi`: esos siguen por ffmpeg (ahora en NV12, no RGBA), de modo que "zero-copy" aplica a `.mp4/.mov/.m4v`.
   4. `TextEngine` (glyphon) sigue siendo por pantalla; compartir `FontSystem` queda fuera de este plan.
+  5. **Reloj maestro (decisión del 2026-10-20: opción B).** Sólo se agrega el PTS en los frames y el trait `ShowClock` con `WallClock`. Presentar frames por PTS (cola corta, descartar atrasados), el contador de muestras de audio y la compensación de latencia por salida quedan para cuando exista un motor de audio en Rust. Hasta entonces el hub sigue con "gana el último frame" y no hay riesgo de desincronización porque no hay audio ni cues con tiempo en el engine.
