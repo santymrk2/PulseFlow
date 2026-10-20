@@ -2,6 +2,7 @@
     import type { SettingsTabs } from "../../../types/Tabs"
     import { activePage, activeProfile, focusMode, profiles, settingsTab } from "../../stores"
     import { settingsTabs } from "../../values/tabs"
+    import { translateText } from "../../utils/language"
     import { clone } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
@@ -47,7 +48,7 @@
 {/if}
 
 <aside class="settings-tabs">
-    <header class="settings-tabs-header">Configuración</header>
+    <header class="settings-tabs-header">{translateText("menu.settings")}</header>
     <nav class="settings-tabs-nav">
         {#each activeTabs as tab}
             <button class="settings-tab" class:active={$settingsTab === tab} on:click={() => settingsTab.set(tab)}>

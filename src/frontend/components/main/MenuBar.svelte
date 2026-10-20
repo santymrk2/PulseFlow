@@ -3,6 +3,7 @@
     import { Main } from "../../../types/IPC/Main"
     import { sendMain } from "../../IPC/main"
     import { activeProfile, profiles, saved, topContextActive, windowState } from "../../stores"
+    import { translateText } from "../../utils/language"
     import { initializeClosing } from "../../utils/save"
     import ContextChild from "../context/ContextChild.svelte"
     import ContextItem from "../context/ContextItem.svelte"
@@ -30,11 +31,11 @@
     // F10.7 — items del menú "Pantallas" definidos acá porque viven fuera de
     // `contextMenus.ts` (herramienta de escritorio, no de la lista de contextos).
     const screensMenuItems: { [key: string]: ContextMenuItem } = {
-        screens_toggle_audience: { label: "Mostrar pantallas de audiencia", translate: false, shortcuts: ["Ctrl+1"], icon: "outputs" },
-        screens_toggle_stage: { label: "Mostrar pantallas de stage", translate: false, shortcuts: ["Ctrl+2"], icon: "stage" },
-        screens_config: { label: "Configurar pantallas…", translate: false, icon: "settings" },
-        screens_looks: { label: "Gestionar looks…", translate: false, icon: "styles" },
-        screens_live: { label: "En vivo", translate: false, icon: "live" }
+        screens_toggle_audience: { label: "screen_config.show_audience", shortcuts: ["Ctrl+1"], icon: "outputs" },
+        screens_toggle_stage: { label: "screen_config.show_stage", shortcuts: ["Ctrl+2"], icon: "stage" },
+        screens_config: { label: "screen_config.configure", icon: "settings" },
+        screens_looks: { label: "screen_config.manage_looks", icon: "styles" },
+        screens_live: { label: "menu.live", icon: "live" }
     }
 
     function menu(e: any) {
@@ -145,7 +146,7 @@
                             </button>
                         {/each}
                     {:else}
-                        <span class="empty">(sin looks todavía)</span>
+                        <span class="empty">({translateText("looks.no_looks")})</span>
                     {/if}
                 </div>
             </div>

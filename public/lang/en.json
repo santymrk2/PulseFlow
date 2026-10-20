@@ -1363,6 +1363,7 @@
         "create_stage_output": "Create stage output"
     },
     "looks": {
+        "no_looks": "No looks yet",
         "look": "Look",
         "edit_looks": "Edit looks…",
         "looks": "Looks",
@@ -1908,6 +1909,10 @@
         "filter": "Filter"
     },
     "screen_config": {
+        "configure": "Configure screens…",
+        "manage_looks": "Manage looks…",
+        "show_audience": "Show audience screens",
+        "show_stage": "Show stage screens",
         "title": "Screen configuration",
         "audience": "Audience",
         "stage": "Stage",

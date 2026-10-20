@@ -1362,6 +1362,7 @@
         "create_stage_output": "Crear salida de pantalla de escenario"
     },
     "looks": {
+        "no_looks": "Sin looks todavía",
         "look": "Look",
         "edit_looks": "Editar looks…",
         "looks": "Looks",
@@ -1907,6 +1908,10 @@
         "filter": "Filtro"
     },
     "screen_config": {
+        "configure": "Configurar pantallas…",
+        "manage_looks": "Gestionar looks…",
+        "show_audience": "Mostrar pantallas de audiencia",
+        "show_stage": "Mostrar pantallas de stage",
         "title": "Configuración de pantallas",
         "audience": "Audiencia",
         "stage": "Stage",

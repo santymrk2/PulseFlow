@@ -1,6 +1,7 @@
 <script lang="ts">
     import { resetAudioRouting } from "../../audio/routing/audioRoutingInit"
     import { activePopup, dictionary, settingsTab } from "../../stores"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import { translateText } from "../../utils/language"
     import MaterialButton from "../inputs/MaterialButton.svelte"
     import Tip from "../main/Tip.svelte"
@@ -56,7 +57,7 @@
         {#if tabId === "general"}
             <General />
             <div style="margin-top: 16px;">
-                <MaterialButton variant="contained" icon="screen" on:click={() => activePopup.set("screen_config")}>Configurar pantallas…</MaterialButton>
+                <Button variant="default" size="sm" onclick={() => activePopup.set("screen_config")}>{translateText("screen_config.configure")}</Button>
             </div>
         {:else if tabId === "audio"}
             <AudioRouting />
