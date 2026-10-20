@@ -2,13 +2,14 @@ import { get } from "svelte/store"
 import { uid } from "uid"
 import { OUTPUT } from "../../types/Channels"
 import { Main } from "../../types/IPC/Main"
-import type { Output } from "../../types/Output"
+import type { Output, Outputs } from "../../types/Output"
 import type { SaveListSettings, SaveListSyncedSettings } from "../../types/Save"
 import type { Metadata, Themes } from "../../types/Settings"
 import { migrateAudioEffects } from "../audio/effects/audioEffectsHelpers"
 import { initAudioRouting } from "../audio/routing/audioRoutingInit"
 import { clone, keysToID } from "../components/helpers/array"
 import { checkFFmpeg, checkWindowCapture, setOutput, startScene, toggleOutputs } from "../components/helpers/output"
+import { type LooksMigrationResult, migrateLooksSettings } from "../components/helpers/looks"
 import { migrateOutputsRtmp } from "../components/helpers/rtmpDestinations"
 import { defaultThemes } from "../components/settings/tabs/defaultThemes"
 import { sendMain } from "../IPC/main"
@@ -87,6 +88,7 @@ import {
     activeLook,
     looks,
     styles,
+    stylesLegacyBackup,
     templateCategories,
     theme,
     themes,
@@ -107,6 +109,25 @@ import { setLanguage } from "./language"
 import { startRemoteController } from "./remoteController"
 import { send } from "./request"
 
+/** F10.1: migra looks/salidas al modelo nuevo si hace falta y actualiza los stores
+ *  afectados (looks, activeLook, stylesLegacyBackup). Los outputs migrados los
+ *  devuelve el resultado: quien llama decide cuándo ponerlos en el store. */
+function migrateLoadedLooks(outputsData: Outputs): LooksMigrationResult {
+    const result = migrateLooksSettings({
+        looks: get(looks),
+        styles: get(styles),
+        outputs: outputsData,
+        activeLook: get(activeLook),
+        stylesLegacyBackup: get(stylesLegacyBackup)
+    })
+    if (!result.changed) return result
+
+    looks.set(result.looks)
+    activeLook.set(result.activeLook)
+    stylesLegacyBackup.set(result.stylesLegacyBackup)
+    return result
+}
+
 export function updateSyncedSettings(data: any) {
     if (!data || !Object.keys(data).length) return
 
@@ -125,6 +146,10 @@ export function updateSyncedSettings(data: any) {
         if (updateList[key as SaveListSyncedSettings]) updateList[key as SaveListSyncedSettings](value)
         else console.info("RECEIVED UNKNOWN SETTINGS KEY:", key)
     })
+
+    // si los looks llegaron después de los outputs (orden no garantizado), migrar acá
+    const migrated = migrateLoadedLooks(get(outputs))
+    if (migrated.changed) outputs.set(migrated.outputs)
 
     loadedState.set([...get(loadedState), "synced_settings"])
 }
@@ -202,7 +227,8 @@ export function updateSettings(data: any) {
 
     loaded.set(true)
 
-    window.api.send("LOADED")
+    // F10.0f: el envío de "LOADED" se quitó: era el handshake de la ventana
+    // webview de Electron y en PulseFlow nada lo escuchaba ni lo comandaba.
 }
 
 // pre v1.6.1
@@ -345,6 +371,9 @@ const updateList: { [key in SaveListSettings | SaveListSyncedSettings]: any } = 
             if (v[id].rtmpData?.streaming) v[id].rtmpData.streaming = false
         })
         migrateOutputsRtmp(v)
+        // F10.1: migrar antes de que el puente (suscrito a outputs) vea los datos,
+        // así conserva el estilo original de cada salida
+        v = migrateLoadedLooks(v).outputs
         outputs.set(v)
 
         // RTMP check
@@ -367,19 +396,14 @@ const updateList: { [key in SaveListSettings | SaveListSyncedSettings]: any } = 
         styles.set(v)
     },
     looks: (v: any) => {
-        if (!v || !Object.keys(v).length) {
-            // migración: si no hay looks, crear "Default" con el estilo actual de cada salida
-            const screens: { [key: string]: string } = {}
-            Object.keys(get(outputs)).forEach((id) => {
-                screens[id] = get(outputs)[id]?.style || "default"
-            })
-            v = { default: { name: "Default", screens } }
-        }
-        looks.set(v)
+        // la migración al modelo F10 (celdas LookScreen) corre en
+        // migrateLoadedLooks, cuando ya están cargados outputs y styles
+        looks.set(v || {})
     },
     activeLook: (v: any) => {
         activeLook.set(v || "default")
     },
+    stylesLegacyBackup: (v: any) => stylesLegacyBackup.set(v || {}),
     profiles: (v: any) => profiles.set(v),
     audioFolders: (v: any) => audioFolders.set(v),
     categories: (v: any) => categories.set(v),

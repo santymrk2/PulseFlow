@@ -48,6 +48,12 @@
         overflow-x: hidden;
     }
 
+    /* F11.2 — aire alrededor de la lista de categorías */
+    .categories {
+        gap: 2px;
+        padding: 4px;
+    }
+
     /* .categories :global(button) {
         width: 100%;
         padding: 0.1em 0.8em !important;

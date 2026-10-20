@@ -35,7 +35,8 @@
         "file": "Carpeta",
         "edit": "Editar",
         "view": "Vista",
-        "help": "Ayuda"
+        "help": "Ayuda",
+        "screens": "Pantallas"
     },
     "screen": {
         "width": "Ancho",
@@ -306,7 +307,18 @@
         "_title_display": "Presentar",
         "_title_display_stop": "Detener presentación",
         "again_confirm": "Hacer clic otra vez para confirmar",
-        "unsaved": "Cambios sin guardar"
+        "unsaved": "Cambios sin guardar",
+        "search": "Buscar",
+        "text": "Texto",
+        "theme": "Tema",
+        "bible": "Biblia",
+        "more": "Más",
+        "stage_editor": "Editor de stage",
+        "theme_editor": "Editor de temas",
+        "overlay_editor": "Editor de overlays",
+        "media": "Media",
+        "live": "En vivo",
+        "audience": "Audiencia"
     },
     "empty": {
         "general": "Seleccionar un proyecto",
@@ -1360,7 +1372,23 @@
         "new": "Nuevo look",
         "make_live": "Make Live",
         "duplicate_style_message": "Este estilo se usa en otros looks. ¿Duplicarlo para este look?",
-        "no_screens": "Cree una pantalla de audiencia para configurar los looks."
+        "no_screens": "Cree una pantalla de audiencia para configurar los looks.",
+        "window_title": "Looks",
+        "live": "En vivo",
+        "presets": "Presets",
+        "presentation": "Presentación",
+        "theme": "Tema",
+        "slide": "Slide",
+        "media": "Media",
+        "overlays": "Overlays",
+        "transition": "Transición",
+        "more_options": "Más opciones",
+        "lines": "Líneas",
+        "blur_amount": "Desenfoque",
+        "blur_opacity": "Opacidad del desenfoque",
+        "show_as_faded": "Mostrar atenuado",
+        "open_window": "Editar looks",
+        "open_window_hint": "Los looks se editan en su propia ventana."
     },
     "settings": {
         "general": "General",
@@ -1867,5 +1895,8 @@
         "confidence_highest": "Si tiene confianza",
         "confidence_high": "Si tiene alta confianza",
         "confidence_medium": "Si tiene confianza moderada"
+    },
+    "ui": {
+        "filter": "Filtro"
     }
 }

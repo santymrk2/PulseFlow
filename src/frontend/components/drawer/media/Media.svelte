@@ -481,7 +481,6 @@
         path = folder.length > rootPath.length ? folder || rootPath : rootPath
     }
 
-    const slidesViews: any = { grid: "list", list: "grid" }
     // const nextActiveView = { all: "image", folder: "image", image: "video", video: "all" } // all: "folder"
     $: if (notFolders.includes(active || "") && activeView === "folder") setView("image")
 
@@ -636,9 +635,7 @@
 <!-- NAV -->
 
 {#if isProviderSection}
-    <FloatingInputs onlyOne>
-        <MaterialZoom columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
-    </FloatingInputs>
+    <MaterialZoom hidden columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
 {:else if active === "online"}
     {#if onlineTab === "youtube" || onlineTab === "vimeo"}
         <FloatingInputs onlyOne>
@@ -662,20 +659,7 @@
                 <MaterialButton title="media.video" on:click={() => setView("video")}>
                     <Icon size={1.2} id="video" white={activeView !== "video"} />
                 </MaterialButton>
-
-                <div class="divider"></div>
             {/if}
-
-            <MaterialButton
-                on:click={() =>
-                    mediaOptions.update((a) => {
-                        a.mode = slidesViews[$mediaOptions.mode]
-                        return a
-                    })}
-                title="show.{$mediaOptions.mode}"
-            >
-                <Icon size={1.3} id={$mediaOptions.mode} white />
-            </MaterialButton>
         </FloatingInputs>
     {/if}
 
@@ -716,26 +700,7 @@
         {/if}
     {/if}
 
-    <FloatingInputs>
-        <!-- {#if open}
-            <MaterialButton title="media.{activeView}" on:click={() => setView(nextActiveView[activeView])}>
-                <Icon size={1.2} id={activeView === "all" ? "media" : activeView} white={activeView === "all"} />
-            </MaterialButton>
-        {/if} -->
-
-        <MaterialZoom columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
-
-        <MaterialButton
-            on:click={() =>
-                mediaOptions.update((a) => {
-                    a.mode = slidesViews[$mediaOptions.mode]
-                    return a
-                })}
-            title="show.{$mediaOptions.mode}"
-        >
-            <Icon size={1.3} id={$mediaOptions.mode} white />
-        </MaterialButton>
-    </FloatingInputs>
+    <MaterialZoom hidden columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
 {/if}
 
 <style>

@@ -264,12 +264,11 @@
         padding: 8px 0;
         z-index: 5001;
 
-        border-radius: 6px;
+        border-radius: var(--radius, 6px);
 
-        border: 1px solid var(--primary-lighter);
+        border: 1px solid var(--border-color, var(--primary-lighter));
 
-        --background: rgba(35, 35, 45, 0.97);
-        background-color: var(--background);
+        background-color: var(--primary-darker);
         backdrop-filter: blur(8px);
     }
 
@@ -282,7 +281,7 @@
         margin: 8px 0;
         height: 1px;
         border: none;
-        background-color: var(--primary-lighter);
+        background-color: var(--border-color, var(--primary-lighter));
     }
 
     .group {

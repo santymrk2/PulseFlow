@@ -42,6 +42,9 @@ export type SaveListSyncedSettings =
     | "effects"
     | "deletedDefaults"
     | "syncedOutputs"
+    | "looks"
+    | "activeLook"
+    | "stylesLegacyBackup"
 
 export type SaveListSettings =
     | "initialized"

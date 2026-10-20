@@ -10,6 +10,8 @@
 pub mod commands;
 pub mod domain;
 pub mod error;
+#[cfg(target_os = "macos")]
+pub mod menu;
 pub mod render;
 pub mod server;
 pub mod state;
@@ -30,6 +32,9 @@ pub fn run() {
             let stores = crate::domain::data::store::StoreManager::new(config_dir);
             app.manage(crate::state::AppState::new(stores));
             app.manage(crate::render::ScreenManager::new());
+            // F10.7 — menú nativo (sólo macOS; en Windows lo hace MenuBar.svelte).
+            #[cfg(target_os = "macos")]
+            crate::menu::install(app.handle())?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -121,6 +126,10 @@ pub fn run() {
             commands::servers::SERVER_DATA,
             commands::servers::WEBSOCKET_START,
             commands::servers::WEBSOCKET_STOP,
+            commands::servers::SERVER_SEND,
+            // MENU (macOS)
+            #[cfg(target_os = "macos")]
+            menu::update_live_menu,
             // BACKUP
             commands::backup::BACKUPS,
             commands::backup::DELETE_BACKUP,

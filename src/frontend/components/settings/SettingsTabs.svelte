@@ -5,7 +5,6 @@
     import { clone } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import Button from "../inputs/Button.svelte"
 
     let activeTabs: SettingsTabs[] = []
     $: profile = $profiles[$activeProfile || ""]
@@ -41,39 +40,89 @@
 <svelte:window on:keydown={keydown} />
 
 {#if $focusMode}
-    <Button on:click={() => activePage.set("show")} center dark>
+    <button class="back-btn" on:click={() => activePage.set("show")}>
         <Icon id="back" right />
         <T id="actions.back" />
-    </Button>
+    </button>
 {/if}
 
-<div class="main">
-    {#each activeTabs as tab}
-        <Button id="button" on:click={() => settingsTab.set(tab)} active={$settingsTab === tab} bold={false}>
-            <Icon id={tab} right white={$settingsTab === tab} />
-            <p style="margin: 5px;"><T id="settings.{tab}" /></p>
-        </Button>
-    {/each}
-</div>
+<aside class="settings-tabs">
+    <header class="settings-tabs-header">Configuración</header>
+    <nav class="settings-tabs-nav">
+        {#each activeTabs as tab}
+            <button class="settings-tab" class:active={$settingsTab === tab} on:click={() => settingsTab.set(tab)}>
+                <Icon id={tab} size={1} />
+                <span><T id="settings.{tab}" /></span>
+            </button>
+        {/each}
+    </nav>
+</aside>
 
 <style>
-    .main {
+    .settings-tabs {
         display: flex;
         flex-direction: column;
         height: 100%;
-        overflow: auto;
+        min-height: 0;
+        overflow: hidden;
+        background-color: var(--primary-darker, #1a1a1a);
     }
-
-    .main :global(#button) {
-        padding: 0.3em 0.8em;
+    .settings-tabs-header {
+        height: 36px;
+        flex: 0 0 36px;
+        display: flex;
+        align-items: center;
+        padding: 0 12px;
+        font-size: 0.75em;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        opacity: 0.6;
+        border-bottom: 1px solid var(--border-color, var(--primary-lighter));
+    }
+    .settings-tabs-nav {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 8px;
+    }
+    .settings-tab {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         width: 100%;
+        text-align: left;
+        padding: 8px 10px;
+        border: none;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--text);
+        opacity: 0.7;
+        font-size: 0.85em;
+        cursor: pointer;
+        transition:
+            background-color 0.15s ease,
+            opacity 0.15s ease;
     }
-
-    .main :global(button:nth-child(even)) {
-        background-color: rgb(0 0 20 / 0.08);
+    .settings-tab:hover {
+        background-color: rgb(255 255 255 / 0.06);
+        opacity: 1;
     }
-
-    .main :global(button.active) {
-        background-color: var(--primary-darker);
+    .settings-tab.active {
+        background-color: var(--primary-lighter, rgb(255 255 255 / 0.1));
+        opacity: 1;
+    }
+    .back-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 8px 12px;
+        border: none;
+        background: transparent;
+        color: var(--text);
+        cursor: pointer;
     }
 </style>
