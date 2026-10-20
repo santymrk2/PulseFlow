@@ -5,7 +5,7 @@
     import { history } from "../../helpers/history"
     import { getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
 
     let action = $popupData.action
     let type = $activeEdit.type
@@ -65,4 +65,4 @@
     }
 </script>
 
-<MaterialNumberInput label="timer.seconds" {value} max={3600} on:change={updateValue} />
+<NumberField label="timer.seconds" {value} max={3600} on:change={updateValue} />

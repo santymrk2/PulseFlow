@@ -6,7 +6,7 @@
     import Icon from "../helpers/Icon.svelte"
     import InputRow from "../input/InputRow.svelte"
     import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
-    import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
 
     // F10.6 — "Más opciones": el resto de los campos del LookScreen por pantalla
@@ -56,13 +56,13 @@
                     </InputRow>
 
                     <InputRow>
-                        <MaterialNumberInput label="media.volume (%)" value={cell.volume ?? 100} defaultValue={100} max={100} on:change={(e) => patch(screen.id, { volume: e.detail })} />
-                        <MaterialNumberInput label="looks.lines" value={cell.lines ?? 0} defaultValue={0} on:change={(e) => patch(screen.id, { lines: e.detail })} />
+                        <NumberField label="media.volume (%)" value={cell.volume ?? 100} defaultValue={100} max={100} on:change={(e) => patch(screen.id, { volume: e.detail })} />
+                        <NumberField label="looks.lines" value={cell.lines ?? 0} defaultValue={0} on:change={(e) => patch(screen.id, { lines: e.detail })} />
                     </InputRow>
 
                     <InputRow>
-                        <MaterialNumberInput label="looks.blur_amount" value={cell.blurAmount ?? 0} defaultValue={0} on:change={(e) => patch(screen.id, { blurAmount: e.detail })} />
-                        <MaterialNumberInput label="looks.blur_opacity" value={cell.blurOpacity ?? 0} defaultValue={0} max={100} on:change={(e) => patch(screen.id, { blurOpacity: e.detail })} />
+                        <NumberField label="looks.blur_amount" value={cell.blurAmount ?? 0} defaultValue={0} on:change={(e) => patch(screen.id, { blurAmount: e.detail })} />
+                        <NumberField label="looks.blur_opacity" value={cell.blurOpacity ?? 0} defaultValue={0} max={100} on:change={(e) => patch(screen.id, { blurOpacity: e.detail })} />
                     </InputRow>
 
                     <InputRow>

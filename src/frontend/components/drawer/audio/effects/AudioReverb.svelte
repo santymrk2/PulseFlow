@@ -3,7 +3,7 @@
     import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
     import { type ReverbConfig, updateReverbConfig } from "../../../../audio/effects/audioReverb"
     import InputRow from "../../../input/InputRow.svelte"
-    import MaterialNumberInput from "../../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let effectId: string = ""
     export let channelId: string = ""
@@ -101,15 +101,15 @@
     <div style="height: 8px;" />
 
     <InputRow>
-        <MaterialNumberInput label="audio.room_size" value={Math.round(config.roomSize * 100)} min={0} max={100} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 100, step: 1 }} on:change={(e) => handleChange("roomSize", e.detail / 100)} />
+        <NumberField label="audio.room_size" value={Math.round(config.roomSize * 100)} min={0} max={100} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 100, step: 1 }} on:change={(e) => handleChange("roomSize", e.detail / 100)} />
     </InputRow>
 
     <InputRow>
-        <MaterialNumberInput label="audio.dampening" value={Math.round(config.dampening * 100)} min={0} max={100} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 100, step: 1 }} on:change={(e) => handleChange("dampening", e.detail / 100)} />
+        <NumberField label="audio.dampening" value={Math.round(config.dampening * 100)} min={0} max={100} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 100, step: 1 }} on:change={(e) => handleChange("dampening", e.detail / 100)} />
     </InputRow>
 
     <InputRow>
-        <MaterialNumberInput label="audio.wet" value={wetPct} min={0} max={100} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 100, step: 1 }} on:change={(e) => handleChange("wet", e.detail / 100)} />
+        <NumberField label="audio.wet" value={wetPct} min={0} max={100} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 100, step: 1 }} on:change={(e) => handleChange("wet", e.detail / 100)} />
     </InputRow>
 </div>
 

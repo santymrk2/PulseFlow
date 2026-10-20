@@ -15,7 +15,7 @@
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import Tabs from "../Tabs.svelte"
 
     let currentValue = $popupData.active || ""
@@ -324,13 +324,13 @@
 
 <InputRow>
     <!-- defaultValue={selectedType === "media" ? 0.8 : 0.5} -->
-    <MaterialNumberInput label="transition.duration" disabled={isDisabled} value={durationValue / 1000} max={20} step={0.1} on:change={(e) => changeTransition(selectedType, "duration", e.detail * 1000)} />
+    <NumberField label="transition.duration" disabled={isDisabled} value={durationValue / 1000} max={20} step={0.1} on:change={(e) => changeTransition(selectedType, "duration", e.detail * 1000)} />
     <!-- defaultValue="sine" -->
     <MaterialDropdown label="transition.easing" disabled={isDisabled} options={easings.map((a) => ({ ...a, label: translateText(a.label) }))} value={easingValue} on:change={(e) => changeTransition(selectedType, "easing", e.detail)} />
 </InputRow>
 
 {#if showMore && selectedType === "text"}
-    <MaterialNumberInput label="transition.fade_in_offset (%)" disabled={isDisabled} value={currentTransition?.fadeInOffset ?? 50} defaultValue={50} max={100} step={10} on:change={(e) => changeTransition(selectedType, "fadeInOffset", e.detail)} />
+    <NumberField label="transition.fade_in_offset (%)" disabled={isDisabled} value={currentTransition?.fadeInOffset ?? 50} defaultValue={50} max={100} step={10} on:change={(e) => changeTransition(selectedType, "fadeInOffset", e.detail)} />
 {/if}
 
 <style>

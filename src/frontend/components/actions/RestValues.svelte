@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte"
 
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
-    import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
+    import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import type { API_rest_command } from "./api"
     import InputRow from "../input/InputRow.svelte"
 
@@ -70,14 +70,14 @@
     ]
 </script>
 
-<MaterialTextInput label="inputs.url" value={rest.url || ""} placeholder="127.0.0.1" on:change={updateUrl} />
+<TextField label="inputs.url" value={rest.url || ""} placeholder="127.0.0.1" on:change={updateUrl} />
 
 <InputRow>
     <MaterialDropdown label="inputs.method" value={rest.method || "GET"} options={dropdownInputs} on:change={updateMethod} />
-    <MaterialTextInput label="inputs.contentType" disabled={emitter} value={rest.contentType || "application/json"} placeholder="application/json" on:change={updateContentType} />
+    <TextField label="inputs.contentType" disabled={emitter} value={rest.contentType || "application/json"} placeholder="application/json" on:change={updateContentType} />
 </InputRow>
 
 <!-- Body -->
 {#if !emitter}
-    <MaterialTextInput label="inputs.payload" disabled={emitter} value={rest.payload || ""} placeholder={"{}"} on:change={updatePayload} />
+    <TextField label="inputs.payload" disabled={emitter} value={rest.payload || ""} placeholder={"{}"} on:change={updatePayload} />
 {/if}

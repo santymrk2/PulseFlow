@@ -11,7 +11,7 @@
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
     import Tip from "../Tip.svelte"
 
@@ -126,7 +126,7 @@
             {@const pattern = override.globalRegex ? `${$globalRegexes[override.globalRegex]?.label || ""}: ${$globalRegexes[override.globalRegex]?.value || ""}` : override.pattern}
 
             <InputRow>
-                <MaterialTextInput label="edit.style_override_pattern" style="flex: 4;" disabled={!!override.globalRegex} value={pattern} on:change={(e) => updateOverride(override.id, "pattern", e.detail)} autofocus={!pattern} />
+                <TextField label="edit.style_override_pattern" style="flex: 4;" disabled={!!override.globalRegex} value={pattern} on:change={(e) => updateOverride(override.id, "pattern", e.detail)} autofocus={!pattern} />
                 {#if override.globalRegex}
                     <Button title="titlebar.edit" icon="edit" on:click={() => editRegexes(override.id, override.globalRegex)} />
                 {/if}

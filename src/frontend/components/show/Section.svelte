@@ -10,7 +10,7 @@
     import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
     import MaterialTimePicker from "../inputs/MaterialTimePicker.svelte"
-    import TextInput from "../inputs/TextInput.svelte"
+    import Input from "../../lib/components/ui/input/input.svelte"
     import Tip from "../main/Tip.svelte"
     import Notes from "./tools/Notes.svelte"
 
@@ -107,7 +107,7 @@
     {#key section}
         <InputRow>
             <h4 id="sectionTitle" class:empty={!sectionUpdated?.name} style="flex: 6;border-bottom: 1.2px solid {sectionUpdated.color || 'var(--primary-lighter)'};">
-                <TextInput value={sectionUpdated?.name || ""} placeholder={translateText("main.unnamed")} disabled={isLocked} on:input={updateName} on:keydown={keydown} />
+                <Input value={sectionUpdated?.name || ""} placeholder={translateText("main.unnamed")} disabled={isLocked} on:input={updateName} on:keydown={keydown} />
             </h4>
             <!-- WIP suggest titles based on previous titles? (maybe not needed as we have project templates) -->
 

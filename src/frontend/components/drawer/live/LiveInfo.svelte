@@ -3,7 +3,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import { mediaRecorderIsPaused, stopMediaRecorder, toggleMediaRecorder } from "./recorder"
 
     export let optionsOpen: boolean
@@ -66,7 +66,7 @@
 {:else if active === "ndi"}
     {#if optionsOpen}
         <div class="scroll" style="padding: 10px;">
-            <MaterialTextInput label="inputs.group" title="settings.comma_seperated" value={$special?.ndiInputGroups || ""} placeholder="public" on:change={(e) => updateSpecial("ndiInputGroups", e.detail)} />
+            <TextField label="inputs.group" title="settings.comma_seperated" value={$special?.ndiInputGroups || ""} placeholder="public" on:change={(e) => updateSpecial("ndiInputGroups", e.detail)} />
         </div>
     {/if}
 {/if}

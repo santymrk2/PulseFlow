@@ -14,8 +14,8 @@
     import { keysToID, sortByName } from "../helpers/array"
     import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
+    import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import { getGlobalGroupName } from "../show/tools/groups"
     import ChooseEmitter from "./ChooseEmitter.svelte"
     import MidiValues from "./MidiValues.svelte"
@@ -225,26 +225,26 @@
     <MaterialDropdown label="actions.start_audio_effect" options={getOptions.start_audio_effect()} value={value?.path} on:change={(e) => updateValue("path", e.detail)} />
 {:else if inputId === "number"}
     <!-- action wait (seconds) -->
-    <MaterialNumberInput label="timer.seconds" value={value?.number || 0} step={0.5} on:change={(e) => updateValue("number", e)} />
+    <NumberField label="timer.seconds" value={value?.number || 0} step={0.5} on:change={(e) => updateValue("number", e)} />
 {:else if inputId === "seconds"}
-    <MaterialNumberInput label="timer.seconds" value={value?.seconds || 0} on:change={(e) => updateValue("seconds", e)} />
+    <NumberField label="timer.seconds" value={value?.seconds || 0} on:change={(e) => updateValue("seconds", e)} />
 {:else if inputId === "index"}
     <!-- run by index -->
-    <MaterialNumberInput label="variables.value" value={value?.index || 0} on:change={(e) => updateValue("index", e)} />
+    <NumberField label="variables.value" value={value?.index || 0} on:change={(e) => updateValue("index", e)} />
 {:else if inputId === "obs_scene"}
     <MaterialDropdown label="Scene" options={obsScenes.map((s) => ({ value: s, label: s }))} value={value?.id} on:change={(e) => updateValue("id", e.detail)} />
 {:else if inputId === "strval"}
     <!-- run by name -->
-    <MaterialTextInput label="inputs.name" value={value?.value || ""} on:change={(e) => updateValue("value", e)} />
+    <TextField label="inputs.name" value={value?.value || ""} on:change={(e) => updateValue("value", e)} />
 {:else if inputId === "numval"}
-    <MaterialNumberInput label="variables.value" value={value?.value || 0} on:change={(e) => updateValue("value", e)} />
+    <NumberField label="variables.value" value={value?.value || 0} on:change={(e) => updateValue("value", e)} />
 {:else if inputId === "percentage"}
-    <MaterialNumberInput label="variables.value" value={(value?.value ?? 1) * 100} min={-1000} on:change={(e) => updateValue("value", e.detail / 100)} />
+    <NumberField label="variables.value" value={(value?.value ?? 1) * 100} min={-1000} on:change={(e) => updateValue("value", e.detail / 100)} />
 {:else if inputId === "toggle"}
     <MaterialDropdown label="variables.value" options={stateOptions} value={typeof value?.value === "boolean" ? (value.value ? "on" : "off") : ""} on:change={textStateChange} />
 {:else if inputId === "disable_slide"}
     <MaterialDropdown label="formats.show" options={[{ value: "", label: translateText("actions.active_show") }, ...convertToOptions($shows)]} value={value?.showId || ""} on:change={(e) => updateValue("showId", e.detail)} />
-    <MaterialNumberInput label="edit.slide_index" value={value?.index ?? 0} on:change={(e) => updateValue("index", e)} />
+    <NumberField label="edit.slide_index" value={value?.index ?? 0} on:change={(e) => updateValue("index", e)} />
     <MaterialDropdown label="variables.value" options={stateOptions} value={typeof value?.value === "boolean" ? (value.value ? "on" : "off") : ""} on:change={textStateChange} />
 {:else if inputId === "output_lock"}
     <MaterialDropdown label="stage.output" options={getOptions.output_lock()} value={value?.outputId || ""} on:change={(e) => updateValue("outputId", e.detail)} />
@@ -261,7 +261,7 @@
     {@const rawVolume = Number(value?.volume ?? 1)}
     {@const volumeValue = rawVolume > 5 ? rawVolume / 100 : rawVolume}
     {@const dbValue = Math.max(MIN_DB, Math.min(6, gainToDb(volumeValue)))}
-    <MaterialNumberInput label="media.volume (dB)" value={Number(dbValue.toFixed(1))} min={MIN_DB} max={6} step={0.5} defaultValue={0} on:change={(e) => updateValue("volume", dbToGain(e.detail))} showSlider />
+    <NumberField label="media.volume (dB)" value={Number(dbValue.toFixed(1))} min={MIN_DB} max={6} step={0.5} defaultValue={0} on:change={(e) => updateValue("volume", dbToGain(e.detail))} showSlider />
 {:else if inputId === "transition"}
     <!-- transition -->
 {:else if inputId === "variable"}

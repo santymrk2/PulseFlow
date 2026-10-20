@@ -5,15 +5,15 @@ import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
 import MaterialColorsInput from "../inputs/MaterialColorsInput.svelte"
 import MaterialDatePicker from "../inputs/MaterialDatePicker.svelte"
 import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
-import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
-import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
+import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
+import TextField from "../../lib/components/ui/text-field/text-field.svelte"
 import MaterialTimePicker from "../inputs/MaterialTimePicker.svelte"
 
 // [DEFAULT] IN: value= OUT=on:change
 export const commonInputs = {
     // eslint-disable-next-line
-    string: MaterialTextInput,
-    number: MaterialNumberInput,
+    string: TextField,
+    number: NumberField,
     dropdown: MaterialDropdown,
     color: MaterialColorInput,
     colors: MaterialColorsInput,

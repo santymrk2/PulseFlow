@@ -10,7 +10,7 @@
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
 
     $: fonts = $customFonts
@@ -163,7 +163,7 @@
 {#if newFontInput}
     {#if fonts.length}<div style="padding: 5px;" />{/if}
 
-    <MaterialTextInput label="settings.font_family" value={fontFamily} disabled={addingFont} on:change={(e) => updateFontFamily(e.detail)} />
+    <TextField label="settings.font_family" value={fontFamily} disabled={addingFont} on:change={(e) => updateFontFamily(e.detail)} />
 
     <InputRow>
         <MaterialFilePicker label="scripture.local (.woff/.ttf/.otf)" title="actions.import" value="" icon="text" filter={{ name: "Font File", extensions: ["woff", "woff2", "ttf", "otf"] }} disabled={!isValidFamily || addingFont} style="width: initial;flex: 1;" on:change={(e) => addLocalFont(e.detail)} />

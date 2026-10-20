@@ -5,7 +5,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
@@ -37,8 +37,8 @@
 {#if showMore}
     <MaterialToggleSwitch label="actions.case_sensitive" checked={caseSentitive} defaultValue={true} on:change={(e) => (caseSentitive = e.detail)} />
 {/if}
-<MaterialTextInput label="actions.find" value={findValue} on:input={(e) => (findValue = e.detail)} autofocus />
-<MaterialTextInput label="actions.replace" value={replaceValue} on:input={(e) => (replaceValue = e.detail)} />
+<TextField label="actions.find" value={findValue} on:input={(e) => (findValue = e.detail)} autofocus />
+<TextField label="actions.replace" value={replaceValue} on:input={(e) => (replaceValue = e.detail)} />
 
 <Button style="margin-top: 20px;" variant="default" on:click={replace}>
     <Icon id="find_replace" size={1.2} white />

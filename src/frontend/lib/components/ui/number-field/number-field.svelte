@@ -1,8 +1,8 @@
 <script lang="ts">
     import { createEventDispatcher, onMount } from "svelte"
-    import { translateText } from "../../utils/language"
-    import Icon from "../helpers/Icon.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
+    import { translateText } from "../../../../utils/language"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import Button from "../button/button.svelte"
 
     export let value = 0
     export let defaultValue: number | null = null

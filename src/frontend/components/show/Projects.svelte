@@ -18,7 +18,7 @@
     import FloatingInputs from "../input/FloatingInputs.svelte"
     import HiddenInput from "../inputs/HiddenInput.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
+    import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
     import Autoscroll from "../system/Autoscroll.svelte"
     import DropArea from "../system/DropArea.svelte"
@@ -490,7 +490,7 @@
         <ProjectContentList tree={[]} on:scrollElem={(e) => (contentScrollElem = e.detail)} isTemplate />
     {:else if !projectActive && showProjectsOptions}
         <div class="options">
-            <MaterialTextInput label="settings.default_project_name<span style='opacity: 0.5;padding-left: 8px;font-size: 0.8em;color: var(--text);'>{getProjectName('', $special)}</span>" title={projectReplacerTitle} value={projectName} defaultValue={getDefaultProjectName()} on:change={(e) => updateSpecial(e.detail, "default_project_name", true)} />
+            <TextField label="settings.default_project_name<span style='opacity: 0.5;padding-left: 8px;font-size: 0.8em;color: var(--text);'>{getProjectName('', $special)}</span>" title={projectReplacerTitle} value={projectName} defaultValue={getDefaultProjectName()} on:change={(e) => updateSpecial(e.detail, "default_project_name", true)} />
             <MaterialToggleSwitch label="settings.startup_projects_list" checked={$special.startupProjectsList} defaultValue={false} on:change={(e) => updateSpecial(e.detail, "startupProjectsList")} />
         </div>
     {:else if !projectActive}

@@ -8,7 +8,7 @@
     import InputRow from "../../../input/InputRow.svelte"
     import Button from "../../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
-    import MaterialTextInput from "../../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../../lib/components/ui/text-field/text-field.svelte"
 
     export let effectKey: EffectType = "equalizer"
     export let channelId: string = "main"
@@ -181,7 +181,7 @@
     <MaterialDropdown label="audio.preset" value={selectedPreset} options={presetOptions} defaultValue="default" on:change={(e) => selectPreset(e.detail)} />
 
     {#if selectedPreset === "custom"}
-        <MaterialTextInput label="inputs.name" value={customName} on:change={(e) => (customName = e.detail)} />
+        <TextField label="inputs.name" value={customName} on:change={(e) => (customName = e.detail)} />
         <Button icon="save" title="actions.save" on:click={saveCustomPreset} />
     {:else if selectedPreset !== "default"}
         <Button icon="delete" title="actions.delete" on:click={deletePreset} white />

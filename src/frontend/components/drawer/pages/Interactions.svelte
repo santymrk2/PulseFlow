@@ -13,7 +13,7 @@
     import SelectElem from "../../system/SelectElem.svelte"
     import { formatTimeInteraction, getInteraction, initConnection, startInteraction, stopInteraction } from "./interactions"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
 
     export let searchValue: string
@@ -227,11 +227,11 @@
             <MaterialToggleSwitch label="interaction.all_at_once" checked={openedInteraction?.options?.allAtOnce ?? false} defaultValue={false} disabled={openedInteraction?.inputs?.length <= 1} on:change={(e) => setOption("allAtOnce", e.detail)} />
 
             {#if !openedInteraction?.options?.allAtOnce}
-                <MaterialNumberInput label="interaction.max_time (conditions.seconds)" value={openedInteraction?.options?.maxTime ?? 0} defaultValue={0} on:change={(e) => setOption("maxTime", e.detail)} />
+                <NumberField label="interaction.max_time (conditions.seconds)" value={openedInteraction?.options?.maxTime ?? 0} defaultValue={0} on:change={(e) => setOption("maxTime", e.detail)} />
 
                 <InputRow>
                     <MaterialDropdown label="interaction.score_system" value={openedInteraction?.options?.scoreSystem || "incremental"} options={scoreSystems} on:change={(e) => setOption("scoreSystem", e.detail)} />
-                    <MaterialNumberInput label="interaction.points" value={openedInteraction?.options?.scorePoints ?? defaultScorePoints} defaultValue={defaultScorePoints} on:change={(e) => setOption("scorePoints", e.detail)} />
+                    <NumberField label="interaction.points" value={openedInteraction?.options?.scorePoints ?? defaultScorePoints} defaultValue={defaultScorePoints} on:change={(e) => setOption("scorePoints", e.detail)} />
                 </InputRow>
             {/if}
         </div>
@@ -290,7 +290,7 @@
                         <p style="flex: 1;">{client.name || `User #${i + 1}`}</p>
 
                         <!-- {#if hasScore} -->
-                        <MaterialNumberInput label="interaction.points" value={client.score ?? 0} style="width: 100px;" on:change={(e) => getInteraction(openedId)?.setScore(client.id, e.detail)} />
+                        <NumberField label="interaction.points" value={client.score ?? 0} style="width: 100px;" on:change={(e) => getInteraction(openedId)?.setScore(client.id, e.detail)} />
                         <!-- {/if} -->
                         <Button style="padding: 4px;" red on:click={() => kick(client.id)}><T id="interaction.kick" /></Button>
                     </div>

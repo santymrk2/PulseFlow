@@ -11,7 +11,7 @@
     import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
     import MaterialPopupButton from "../inputs/MaterialPopupButton.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
 
@@ -222,10 +222,10 @@
         </div>
         {#if currentOutput.target === "custom"}
             <div class="row">
-                <MaterialNumberInput label="X" value={currentOutput.bounds?.x || 0} min={null} on:change={(e) => setBounds("x", e.detail)} />
-                <MaterialNumberInput label="Y" value={currentOutput.bounds?.y || 0} min={null} on:change={(e) => setBounds("y", e.detail)} />
-                <MaterialNumberInput label="screen.width" value={currentOutput.bounds?.width || 0} on:change={(e) => setBounds("width", e.detail)} />
-                <MaterialNumberInput label="screen.height" value={currentOutput.bounds?.height || 0} on:change={(e) => setBounds("height", e.detail)} />
+                <NumberField label="X" value={currentOutput.bounds?.x || 0} min={null} on:change={(e) => setBounds("x", e.detail)} />
+                <NumberField label="Y" value={currentOutput.bounds?.y || 0} min={null} on:change={(e) => setBounds("y", e.detail)} />
+                <NumberField label="screen.width" value={currentOutput.bounds?.width || 0} on:change={(e) => setBounds("width", e.detail)} />
+                <NumberField label="screen.height" value={currentOutput.bounds?.height || 0} on:change={(e) => setBounds("height", e.detail)} />
             </div>
         {/if}
         <div class="info-box">
@@ -242,8 +242,8 @@
         <MaterialToggleSwitch label="context.hide_from_preview" checked={!!currentOutput.hideFromPreview} defaultValue={false} on:change={(e) => setOutputValue("hideFromPreview", e.detail)} />
         <MaterialColorInput label="edit.color" value={currentOutput.color || "#F0008C"} defaultValue="#F0008C" on:change={(e) => setOutputValue("color", e.detail)} />
         <div class="label">{translateText("settings.resolution")}</div>
-        <MaterialNumberInput label="screen.width" value={currentOutput.forcedResolution?.width || 0} defaultValue={0} max={8192} on:change={(e) => setForcedResolution("width", e.detail)} />
-        <MaterialNumberInput label="screen.height" value={currentOutput.forcedResolution?.height || 0} defaultValue={0} max={8192} on:change={(e) => setForcedResolution("height", e.detail)} />
+        <NumberField label="screen.width" value={currentOutput.forcedResolution?.width || 0} defaultValue={0} max={8192} on:change={(e) => setForcedResolution("width", e.detail)} />
+        <NumberField label="screen.height" value={currentOutput.forcedResolution?.height || 0} defaultValue={0} max={8192} on:change={(e) => setForcedResolution("height", e.detail)} />
     </div>
 {:else if activeTab === "cropping"}
     <div class="tab-panel">
@@ -255,20 +255,20 @@
         <div class="row">
             <div class="label">{translateText("screen_config.cropping")}</div>
             <div style="flex:1; display:flex; gap:4px;">
-                <MaterialNumberInput label="screen_config.top" value={cropping.top || 0} on:change={(e) => updateCropping(e.detail, "top")} />
-                <MaterialNumberInput label="screen_config.right" value={cropping.right || 0} on:change={(e) => updateCropping(e.detail, "right")} />
-                <MaterialNumberInput label="screen_config.bottom" value={cropping.bottom || 0} on:change={(e) => updateCropping(e.detail, "bottom")} />
-                <MaterialNumberInput label="screen_config.left" value={cropping.left || 0} on:change={(e) => updateCropping(e.detail, "left")} />
+                <NumberField label="screen_config.top" value={cropping.top || 0} on:change={(e) => updateCropping(e.detail, "top")} />
+                <NumberField label="screen_config.right" value={cropping.right || 0} on:change={(e) => updateCropping(e.detail, "right")} />
+                <NumberField label="screen_config.bottom" value={cropping.bottom || 0} on:change={(e) => updateCropping(e.detail, "bottom")} />
+                <NumberField label="screen_config.left" value={cropping.left || 0} on:change={(e) => updateCropping(e.detail, "left")} />
             </div>
         </div>
         {#if !isStage && currentOutput.screenType === "edge_blend"}
             <div class="row">
                 <div class="label">Edge blend</div>
                 <div style="flex:1; display:flex; gap:4px;">
-                    <MaterialNumberInput label="screen_config.left" value={blending.left || 0} on:change={(e) => updateBlending(e.detail, "left")} />
-                    <MaterialNumberInput label="screen_config.right" value={blending.right || 0} on:change={(e) => updateBlending(e.detail, "right")} />
-                    <MaterialNumberInput label="screen_config.rotation" value={blending.rotate ?? 90} on:change={(e) => updateBlending(e.detail, "rotate")} />
-                    <MaterialNumberInput label="screen_config.opacity" value={blending.opacity ?? 50} on:change={(e) => updateBlending(e.detail, "opacity")} />
+                    <NumberField label="screen_config.left" value={blending.left || 0} on:change={(e) => updateBlending(e.detail, "left")} />
+                    <NumberField label="screen_config.right" value={blending.right || 0} on:change={(e) => updateBlending(e.detail, "right")} />
+                    <NumberField label="screen_config.rotation" value={blending.rotate ?? 90} on:change={(e) => updateBlending(e.detail, "rotate")} />
+                    <NumberField label="screen_config.opacity" value={blending.opacity ?? 50} on:change={(e) => updateBlending(e.detail, "opacity")} />
                 </div>
             </div>
         {/if}

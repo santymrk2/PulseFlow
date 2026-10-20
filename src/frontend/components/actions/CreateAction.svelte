@@ -12,7 +12,7 @@
     import Button from "../../lib/components/ui/button/button.svelte"
     import CombinedInput from "../inputs/CombinedInput.svelte"
     import Dropdown from "../inputs/Dropdown.svelte"
-    import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
+    import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
     import { spotifyState } from "../output/preview/SpotifyManager"
     import { getGlobalGroupName } from "../show/tools/groups"
@@ -256,7 +256,7 @@
             </Button>
         </CombinedInput>
     {:else}
-        <MaterialTextInput label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
+        <TextField label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
 
         {#if mode !== "slide"}
             <Button

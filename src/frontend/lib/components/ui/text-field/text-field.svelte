@@ -1,10 +1,10 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { translateText } from "../../utils/language"
-    import Icon from "../helpers/Icon.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
-    import { dictionary } from "../../stores"
-    import { pasteText } from "../helpers/caretHelper"
+    import { translateText } from "../../../../utils/language"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import Button from "../button/button.svelte"
+    import { dictionary } from "../../../../stores"
+    import { pasteText } from "../../../../components/helpers/caretHelper"
 
     export let value: string
     export let type = "text"

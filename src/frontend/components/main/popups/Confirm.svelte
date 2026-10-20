@@ -5,7 +5,7 @@
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 
     registerPopupSubmit(confirm)
 
@@ -34,7 +34,7 @@
         <p class="message">{@html message}</p>
     {/if}
 
-    <MaterialTextInput label={prompt} type={inputType} value="" on:input={(e) => (textValue = e.detail)} autofocus />
+    <TextField label={prompt} type={inputType} value="" on:input={(e) => (textValue = e.detail)} autofocus />
 
     <Button variant="default" style="margin-top: 20px;" on:click={confirm}>
         <T id="remote.submit" />

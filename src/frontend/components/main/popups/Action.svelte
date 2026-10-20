@@ -22,7 +22,7 @@
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
     import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     $: id = $popupData.id || ""
@@ -438,7 +438,7 @@
         {:else}
             <InputRow>
                 {#key hasNoName}
-                    <MaterialTextInput label="midi.name" value={action.name} on:change={(e) => updateValue("name", e)} autofocus={hasNoName} />
+                    <TextField label="midi.name" value={action.name} on:change={(e) => updateValue("name", e)} autofocus={hasNoName} />
                 {/key}
 
                 {#if showMore && !mode}

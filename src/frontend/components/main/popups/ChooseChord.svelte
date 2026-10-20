@@ -5,7 +5,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     let chordData = {
@@ -85,7 +85,7 @@
     <MaterialToggleSwitch label="German notation (H/B)" checked={germanNotation} on:change={(e) => updateSpecial("germanNotation", e.detail)} />
 {/if}
 
-<MaterialTextInput label="actions.custom_key" value={chordData.custom} defaultValue="" on:input={(e) => (chordData.custom = e.detail)} />
+<TextField label="actions.custom_key" value={chordData.custom} defaultValue="" on:input={(e) => (chordData.custom = e.detail)} />
 
 <div class="chords" style="margin: 10px 0;">
     <div class="list">

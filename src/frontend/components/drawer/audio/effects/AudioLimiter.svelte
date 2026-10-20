@@ -5,7 +5,7 @@
     import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
     import { type LimiterConfig, getLimiterReduction, updateLimiterConfig } from "../../../../audio/effects/audioLimiter"
     import InputRow from "../../../input/InputRow.svelte"
-    import MaterialNumberInput from "../../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let effectId: string = ""
     export let channelId: string = ""
@@ -141,11 +141,11 @@
 
     <!-- Parameter inputs -->
     <InputRow>
-        <MaterialNumberInput label="audio.ceiling" value={config.ceiling} min={-30} max={0} step={0.5} maxDecimals={1} showSlider sliderValues={{ min: -30, max: 0, step: 0.5 }} on:change={(e) => handleChange("ceiling", e.detail)} />
+        <NumberField label="audio.ceiling" value={config.ceiling} min={-30} max={0} step={0.5} maxDecimals={1} showSlider sliderValues={{ min: -30, max: 0, step: 0.5 }} on:change={(e) => handleChange("ceiling", e.detail)} />
     </InputRow>
 
     <InputRow>
-        <MaterialNumberInput label="audio.release" value={releaseMs} min={1} max={500} step={1} maxDecimals={0} showSlider sliderValues={{ min: 1, max: 500, step: 1 }} on:change={(e) => handleChange("release", e.detail / 1000)} />
+        <NumberField label="audio.release" value={releaseMs} min={1} max={500} step={1} maxDecimals={0} showSlider sliderValues={{ min: 1, max: 500, step: 1 }} on:change={(e) => handleChange("release", e.detail / 1000)} />
     </InputRow>
 </div>
 

@@ -11,7 +11,7 @@
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import ItemsList from "./ItemsList.svelte"
@@ -92,8 +92,8 @@
                 </span>
             </div>
 
-            <MaterialNumberInput label="edit.max_lines_per_slide" value={settings?.maxLinesPerSlide || 0} max={100} on:change={(e) => setValue(e, "maxLinesPerSlide")} />
-            <MaterialNumberInput label="edit.break_long_lines_tip" value={settings?.breakLongLines || 0} max={100} on:change={(e) => setValue(e, "breakLongLines")} />
+            <NumberField label="edit.max_lines_per_slide" value={settings?.maxLinesPerSlide || 0} max={100} on:change={(e) => setValue(e, "maxLinesPerSlide")} />
+            <NumberField label="edit.break_long_lines_tip" value={settings?.breakLongLines || 0} max={100} on:change={(e) => setValue(e, "breakLongLines")} />
         </div>
     {/if}
 

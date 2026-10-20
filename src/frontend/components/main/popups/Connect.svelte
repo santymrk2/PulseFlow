@@ -11,8 +11,8 @@
     import Link from "../../inputs/Link.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import { startRemoteController, stopRemoteController } from "../../../utils/remoteController"
     import Tip from "../Tip.svelte"
@@ -141,13 +141,13 @@
 
 {#if options}
     <div class="reserved" class:isReserved>
-        <MaterialNumberInput label="settings.port" value={port} defaultValue={RESERVED_PORTS[id]?.[0]} min={1025} max={65535} on:change={(e) => updatePort(e)} />
+        <NumberField label="settings.port" value={port} defaultValue={RESERVED_PORTS[id]?.[0]} min={1025} max={65535} on:change={(e) => updatePort(e)} />
     </div>
 
     {#if id === "remote"}
-        <MaterialTextInput label="remote.password" value={$serverData?.remote?.password || ""} on:change={(e) => updateData(e.detail || "", "password")} />
+        <TextField label="remote.password" value={$serverData?.remote?.password || ""} on:change={(e) => updateData(e.detail || "", "password")} />
     {:else if id === "companion"}
-        <MaterialTextInput label="remote.password" value={$serverData?.companion?.password || ""} on:change={(e) => updateData(e.detail || "", "password")} />
+        <TextField label="remote.password" value={$serverData?.companion?.password || ""} on:change={(e) => updateData(e.detail || "", "password")} />
     {:else if id === "output_stream"}
         <!-- {#if enableOutputSelector} -->
         <MaterialDropdown label="midi.output" options={outputsList} value={$serverData?.output_stream?.outputId || ""} on:change={(e) => updateData(e.detail, "outputId")} allowEmpty />
@@ -162,7 +162,7 @@
     {#if id !== "companion"}
         <hr />
 
-        <MaterialNumberInput label="settings.max_connections" value={$maxConnections} max={100} on:change={(e) => maxConnections.set(e.detail)} />
+        <NumberField label="settings.max_connections" value={$maxConnections} max={100} on:change={(e) => maxConnections.set(e.detail)} />
         <MaterialToggleSwitch label="settings.use_hostname" checked={$special.connectionHostname} defaultValue={false} on:change={(e) => updateSpecial("connectionHostname", e.detail)} />
     {/if}
 {:else}

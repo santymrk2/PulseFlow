@@ -3,7 +3,7 @@
     import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
     import { type StereoShaperConfig, updateStereoShaperConfig } from "../../../../audio/effects/audioStereoShaper"
     import InputRow from "../../../input/InputRow.svelte"
-    import MaterialNumberInput from "../../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let effectId: string = ""
     export let channelId: string = ""
@@ -105,7 +105,7 @@
     <div style="height: 8px;" />
 
     <InputRow>
-        <MaterialNumberInput label="audio.width" value={config.width} min={0} max={200} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 200, step: 1 }} on:change={(e) => handleChange("width", e.detail)} />
+        <NumberField label="audio.width" value={config.width} min={0} max={200} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 200, step: 1 }} on:change={(e) => handleChange("width", e.detail)} />
     </InputRow>
 </div>
 

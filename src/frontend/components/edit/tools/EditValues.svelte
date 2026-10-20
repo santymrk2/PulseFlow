@@ -15,7 +15,7 @@
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
     import MaterialFontDropdown from "../../inputs/MaterialFontDropdown.svelte"
     import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
-    import MaterialTextarea from "../../inputs/MaterialTextarea.svelte"
+    import TextareaField from "../../../lib/components/ui/textarea-field/textarea-field.svelte"
     import { getIsoLanguages } from "../../main/popups/localization/translation"
     import { SlideTimeline } from "../../timeline/SlideTimeline"
     import { parseShadowValue } from "../scripts/edit"
@@ -396,7 +396,7 @@
                                         <div class="highlight radio" class:active={value === input.value}></div>
                                     </Button>
                                 {:else if input.type === "textarea"}
-                                    <MaterialTextarea label={values.label} {value} on:change={(e) => changed(e, input, id)} />
+                                    <TextareaField label={values.label} {value} on:change={(e) => changed(e, input, id)} />
                                 {:else if input.type === "media"}
                                     <MaterialFilePicker label={(value ? values.label : "") || "edit.choose_media"} {value} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => changed(e, input, id)} autoTrigger={$activeEdit.type !== "template"} allowEmpty />
                                 {:else if input.type === "popup"}

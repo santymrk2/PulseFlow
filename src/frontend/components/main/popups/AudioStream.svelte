@@ -7,7 +7,7 @@
     import { history } from "../../helpers/history"
     import { getLayoutRef } from "../../helpers/show"
     import Dropdown from "../../inputs/Dropdown.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
 
     const DEFAULT_STREAM = { name: "", value: "" }
@@ -58,6 +58,6 @@
         </Center>
     {/if}
 {:else}
-    <MaterialTextInput label="inputs.name" value={currentStream.name} on:change={(e) => updateValue(e.detail, "name")} autofocus={!currentStream.name} />
-    <MaterialTextInput label="variables.value" value={currentStream.value} placeholder="http://stream-url" on:change={(e) => updateValue(e.detail, "value")} />
+    <TextField label="inputs.name" value={currentStream.name} on:change={(e) => updateValue(e.detail, "name")} autofocus={!currentStream.name} />
+    <TextField label="variables.value" value={currentStream.value} placeholder="http://stream-url" on:change={(e) => updateValue(e.detail, "value")} />
 {/if}

@@ -10,7 +10,7 @@
     import T from "../../helpers/T.svelte"
     import HRule from "../../input/HRule.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
@@ -239,7 +239,7 @@
 <Button class="popup-options {showAll ? 'active' : ''}" icon={showAll ? "eye" : "hide"} iconSize={1.3} title={showAll ? "actions.close" : "create_show.more_options"} on:click={toggleShowAll} white />
 
 {#key resetInput}
-    <MaterialTextInput label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
+    <TextField label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
 {/key}
 
 <div style="position: relative;height: 100%;width: calc(100vw - (var(--navigation-width) + 20px) * 2);overflow-y: auto;">

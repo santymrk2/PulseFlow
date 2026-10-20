@@ -14,7 +14,7 @@
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
     import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
     import Loader from "../Loader.svelte"
 
@@ -124,7 +124,7 @@
             {translateText("captions.powered_by")} API.Bible & YouVersion
         </div>
 
-        <MaterialTextInput label="main.search" id="scriptureApiSearchInput" value="" on:input={search} autofocus />
+        <TextField label="main.search" id="scriptureApiSearchInput" value="" on:input={search} autofocus />
 
         <div class="list">
             {#if searchedRecommendedBibles.length}

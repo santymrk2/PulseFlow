@@ -6,7 +6,7 @@
     import { timecode } from "../../../stores"
     import InputRow from "../../input/InputRow.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
 
     const types = [
         { label: "Send", value: "send" },
@@ -91,4 +91,4 @@
     {/if}
 </InputRow>
 
-<MaterialNumberInput label="edit.offset (ms)" value={offset} min={-60000} max={60000} step={100} defaultValue={0} on:change={(e) => updateValue("offset", e.detail)} />
+<NumberField label="edit.offset (ms)" value={offset} min={-60000} max={60000} step={100} defaultValue={0} on:change={(e) => updateValue("offset", e.detail)} />

@@ -10,7 +10,7 @@
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     $: g = sortByName(
@@ -94,7 +94,7 @@
     {#if g.length}
         {#each g as group}
             <InputRow>
-                <MaterialTextInput label="inputs.name" style="flex: 1;" value={group.name} on:change={(e) => changeGroup(e.detail, group.id)} />
+                <TextField label="inputs.name" style="flex: 1;" value={group.name} on:change={(e) => changeGroup(e.detail, group.id)} />
                 <MaterialColorInput label="edit.color" noLabel style="flex: 0;min-width: 200px;" value={group.color} on:input={(e) => changeGroup(e.detail, group.id, "color")} />
                 <MaterialPopupButton
                     label="groups.group_shortcut"

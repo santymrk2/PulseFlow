@@ -6,7 +6,7 @@
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     // https://blog.depositphotos.com/common-aspect-ratios.html
@@ -72,8 +72,8 @@
     <div style="display: flex;justify-content: space-between;margin-top: 20px;">
         <div style="width: 200px;" data-title={translateText("actions.custom_key")}>
             <InputRow>
-                <MaterialNumberInput disabled={active.outputResolutionAsRatio} label="screen.width" value={active.width || 16} min={1} max={100} on:change={(e) => setAspectRatio({ width: e.detail, height: active.height || 9 })} />
-                <MaterialNumberInput disabled={active.outputResolutionAsRatio} label="screen.height" value={active.height || 9} min={1} max={100} on:change={(e) => setAspectRatio({ height: e.detail, width: active.width || 16 })} />
+                <NumberField disabled={active.outputResolutionAsRatio} label="screen.width" value={active.width || 16} min={1} max={100} on:change={(e) => setAspectRatio({ width: e.detail, height: active.height || 9 })} />
+                <NumberField disabled={active.outputResolutionAsRatio} label="screen.height" value={active.height || 9} min={1} max={100} on:change={(e) => setAspectRatio({ height: e.detail, width: active.width || 16 })} />
             </InputRow>
         </div>
 
@@ -94,7 +94,7 @@
 {#if showMore}
     <HRule />
 
-    <MaterialNumberInput label="settings.font_size_ratio" value={active.fontSizeRatio ?? 100} min={10} max={500} step={10} on:change={(e) => setAspectRatio({ ...active, fontSizeRatio: e.detail })} />
+    <NumberField label="settings.font_size_ratio" value={active.fontSizeRatio ?? 100} min={10} max={500} step={10} on:change={(e) => setAspectRatio({ ...active, fontSizeRatio: e.detail })} />
 {/if}
 
 <style>

@@ -1,8 +1,8 @@
 <script lang="ts">
     import { createEventDispatcher, onDestroy } from "svelte"
-    import Icon from "../helpers/Icon.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
-    import TextInput from "./TextInput.svelte"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import Button from "../button/button.svelte"
+    import Input from "../input/input.svelte"
 
     export let value: number
     export let title = ""
@@ -102,7 +102,7 @@
     {/if}
 
     <span class="input" data-title={title}>
-        <TextInput {disabled} value={(value * inputMultiplier).toFixed(fixed)} on:change={input} center />
+        <Input {disabled} value={(value * inputMultiplier).toFixed(fixed)} on:change={input} center />
 
         {#if visibleTitle}
             <div class="title">

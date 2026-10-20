@@ -9,7 +9,7 @@
     import InputRow from "../input/InputRow.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
-    import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
     import Tabs from "../main/Tabs.svelte"
     import EditValues from "./tools/EditValues.svelte"
     import { effectSections } from "./values/effects"
@@ -132,7 +132,7 @@
                     noLabel
                 />
                 <!-- allowGradients -->
-                <MaterialNumberInput
+                <NumberField
                     label="edit.opacity"
                     value={(currentEffect.opacity ?? 1) * 100}
                     max={100}

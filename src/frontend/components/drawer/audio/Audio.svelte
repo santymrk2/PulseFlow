@@ -16,7 +16,7 @@
     import { joinTime, secondsToTime } from "../../helpers/time"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import Center from "../../system/Center.svelte"
     import DropArea from "../../system/DropArea.svelte"
     import AudioStreams from "../live/AudioStreams.svelte"
@@ -341,8 +341,8 @@
             <Metronome />
         {:else if playlist && playlistSettings}
             <div class="settings">
-                <MaterialNumberInput label="settings.audio_crossfade (s)" value={playlist?.crossfade || 0} max={60} on:change={(e) => AudioPlaylist.update(active || "", "crossfade", e.detail)} sliderValues={{ max: 10, step: 0.5 }} showSlider />
-                <MaterialNumberInput label="settings.playlist_volume (%)" value={Number(((playlist?.volume || 1) * 100).toFixed(2))} min={1} max={100} on:change={(e) => AudioPlaylist.update(active || "", "volume", e.detail / 100)} showSlider />
+                <NumberField label="settings.audio_crossfade (s)" value={playlist?.crossfade || 0} max={60} on:change={(e) => AudioPlaylist.update(active || "", "crossfade", e.detail)} sliderValues={{ max: 10, step: 0.5 }} showSlider />
+                <NumberField label="settings.playlist_volume (%)" value={Number(((playlist?.volume || 1) * 100).toFixed(2))} min={1} max={100} on:change={(e) => AudioPlaylist.update(active || "", "volume", e.detail / 100)} showSlider />
             </div>
         {:else if playlist}
             <DropArea id="audio_playlist" selectChildren let:fileOver file>

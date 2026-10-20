@@ -6,7 +6,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
 
     $: sortedShows = $sortedShowsList
@@ -49,7 +49,7 @@
     let showPrivate = false
 </script>
 
-<MaterialTextInput label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
+<TextField label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
 
 <!-- probably not needed as private shows rarely need to be auto played (one could unprivate, add it, then make it private again) -->
 <!-- <CombinedInput>

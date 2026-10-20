@@ -3,7 +3,7 @@
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     const lines = [0, 1, 2, 3, 4]
@@ -61,13 +61,13 @@
 </div>
 
 {#if showMore}
-    <MaterialNumberInput style="margin-top: 20px;" label="actions.custom_key" value={active} min={0} max={99} on:change={(e) => setValue(e.detail)} />
+    <NumberField style="margin-top: 20px;" label="actions.custom_key" value={active} min={0} max={99} on:change={(e) => setValue(e.detail)} />
 
     <InputRow arrow={style?.showAsFaded}>
         <MaterialToggleSwitch label="edit.show_as_faded" style="width: 100%;" checked={!!style?.showAsFaded} defaultValue={false} on:change={(e) => updateStyle("showAsFaded", e.detail)} />
 
         <div slot="menu">
-            <MaterialNumberInput label="edit.opacity (%)" value={style?.lineOpacity ?? 50} min={0} max={99} on:change={(e) => updateStyle("lineOpacity", e.detail)} />
+            <NumberField label="edit.opacity (%)" value={style?.lineOpacity ?? 50} min={0} max={99} on:change={(e) => updateStyle("lineOpacity", e.detail)} />
         </div>
     </InputRow>
 

@@ -14,7 +14,7 @@
     import Inputs from "../../input/Inputs.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Tip from "../Tip.svelte"
 
     $: emittersList = sortByName(sortByName(keysToID($emitters)), "type")
@@ -181,8 +181,8 @@
 {#if editTemplate && template}
     <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (editTemplate = "")} />
 
-    <MaterialTextInput label="midi.name" value={template.name} on:change={(e) => updateTemplate("name", e)} autofocus={!template.name} />
-    <MaterialTextInput label="midi.description" value={template.description || ""} on:change={(e) => updateTemplate("description", e)} />
+    <TextField label="midi.name" value={template.name} on:change={(e) => updateTemplate("name", e)} autofocus={!template.name} />
+    <TextField label="midi.description" value={template.description || ""} on:change={(e) => updateTemplate("description", e)} />
 
     <HRule title="emitters.inputs" />
 
@@ -191,8 +191,8 @@
     {:else}
         <DynamicList addDisabled={!!templateInputs.find((a) => !a.name && !a.value)} items={templateInputs} let:item={input} on:add={createTemplateValue} on:delete={(e) => removeTemplateValue(e.detail)} allowOpen={false}>
             <div style="display: flex;width: 100%;">
-                <MaterialTextInput label="inputs.name" value={input.name} on:change={(e) => updateTemplateValue(input.id, "name", e)} style="width: 50%;" />
-                <MaterialTextInput label="variables.value" value={input.value} on:change={(e) => updateTemplateValue(input.id, "value", e)} style="width: 50%;" />
+                <TextField label="inputs.name" value={input.name} on:change={(e) => updateTemplateValue(input.id, "name", e)} style="width: 50%;" />
+                <TextField label="variables.value" value={input.value} on:change={(e) => updateTemplateValue(input.id, "value", e)} style="width: 50%;" />
             </div>
         </DynamicList>
     {/if}
@@ -207,8 +207,8 @@
         <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (editEmitter = "")} />
     {/if}
 
-    <MaterialTextInput label="midi.name" value={emitter.name} on:change={(e) => updateValue("name", e.detail)} autofocus={!emitter.name} />
-    <MaterialTextInput label="midi.description" value={emitter.description || ""} on:change={(e) => updateValue("description", e.detail)} />
+    <TextField label="midi.name" value={emitter.name} on:change={(e) => updateValue("name", e.detail)} autofocus={!emitter.name} />
+    <TextField label="midi.description" value={emitter.description || ""} on:change={(e) => updateValue("description", e.detail)} />
 
     <MaterialDropdown label="midi.type" disabled={!!Object.keys(emitter.templates || {})?.length} options={emitterTypes} value={emitter.type} on:change={(e) => updateValue("type", e.detail)} />
 

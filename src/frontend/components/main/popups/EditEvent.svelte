@@ -17,8 +17,8 @@
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialDatePicker from "../../inputs/MaterialDatePicker.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialTimePicker from "../../inputs/MaterialTimePicker.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
@@ -318,7 +318,7 @@
 
 {#if selectedType === "event"}
     <InputRow>
-        <MaterialTextInput label="calendar.name" value={editEvent.name} on:input={(e) => (editEvent.name = e.detail)} autofocus={!editEvent.name} />
+        <TextField label="calendar.name" value={editEvent.name} on:input={(e) => (editEvent.name = e.detail)} autofocus={!editEvent.name} />
         <MaterialColorInput label="calendar.color" style="min-width: 200px;max-width: 200px;" value={editEvent.color || ""} on:input={(e) => (editEvent.color = e.detail)} noLabel />
     </InputRow>
 
@@ -327,8 +327,8 @@
             <MaterialDropdown label="calendar.calendar" value={editEvent.origin || ""} options={calendarOptions} disabled={isCurrentOriginImported} allowEmpty addNew={isCurrentOriginImported ? null : "new.calendar"} on:change={(e) => handleCalendarChange(e.detail)} on:new={(e) => handleCreateCalendar(e.detail)} />
         </InputRow>
 
-        <MaterialTextInput label="calendar.location" value={editEvent.location || ""} on:input={(e) => (editEvent.location = e.detail)} />
-        <MaterialTextInput label="calendar.notes" value={editEvent.notes || ""} on:input={(e) => (editEvent.notes = e.detail)} />
+        <TextField label="calendar.location" value={editEvent.location || ""} on:input={(e) => (editEvent.location = e.detail)} />
+        <TextField label="calendar.notes" value={editEvent.notes || ""} on:input={(e) => (editEvent.notes = e.detail)} />
     {/if}
 
     <Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
@@ -381,7 +381,7 @@
                 <span style="display: flex;align-items: center;font-size: 0.9em;padding: 0 10px;">Repeat monthly on the</span>
             {:else}
                 <span style="display: flex;align-items: center;font-size: 0.9em;padding: 0 10px;"><T id="calendar.repeat_every" /></span>
-                <MaterialNumberInput label="edit.count" disabled={!!editEvent.group} style="width: 80px;" value={editEvent.repeatData.count} min={1} on:change={(e) => (editEvent.repeatData.count = e.detail)} />
+                <NumberField label="edit.count" disabled={!!editEvent.group} style="width: 80px;" value={editEvent.repeatData.count} min={1} on:change={(e) => (editEvent.repeatData.count = e.detail)} />
             {/if}
             <MaterialDropdown label="edit.interval" disabled={!!editEvent.group} style="width: 100px;" options={repeats} value={editEvent.repeatData.type} on:change={(e) => (editEvent.repeatData.type = e.detail)} />
             <!-- TODO: select weekdays? -->
@@ -395,7 +395,7 @@
             {#if editEvent.repeatData.ending === "date"}
                 <MaterialDatePicker label="calendar.to_date" style="flex: 0;" disabled={!!editEvent.group} value={editEvent.repeatData.endingDate} on:change={(e) => (editEvent.repeatData.endingDate = e.detail)} />
             {:else if editEvent.repeatData.ending === "after"}
-                <MaterialNumberInput label="edit.count" disabled={!!editEvent.group} style="width: 80px;" value={editEvent.repeatData.afterRepeats} min={1} on:change={(e) => (editEvent.repeatData.afterRepeats = e.detail)} />
+                <NumberField label="edit.count" disabled={!!editEvent.group} style="width: 80px;" value={editEvent.repeatData.afterRepeats} min={1} on:change={(e) => (editEvent.repeatData.afterRepeats = e.detail)} />
                 <span style="display: flex;align-items: center;padding: 0 10px;"><T id="calendar.ending_times" /></span>
             {/if}
         </InputRow>

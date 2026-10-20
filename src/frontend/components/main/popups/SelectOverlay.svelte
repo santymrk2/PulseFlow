@@ -8,7 +8,7 @@
     import { getResolution } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
     import Center from "../../system/Center.svelte"
@@ -80,7 +80,7 @@
 
 {#if allOverlays.length > 8}
     <div style="margin-bottom: 10px;">
-        <MaterialTextInput label="main.search" value={searchValue} on:input={(e) => (searchValue = e.detail || "")} autofocus />
+        <TextField label="main.search" value={searchValue} on:input={(e) => (searchValue = e.detail || "")} autofocus />
     </div>
 {/if}
 

@@ -19,7 +19,7 @@
     import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../inputs/MaterialCheckbox.svelte"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
-    import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
+    import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
 
     let currentOutput: Output | null = null
@@ -368,8 +368,8 @@
     </InputRow>
 
     <InputRow>
-        <MaterialTextInput label="inputs.name" value={currentOutput.ndiData?.name || `PulseFlow NDI${currentOutput.name ? ` - ${currentOutput.name}` : ""}`} defaultValue={`PulseFlow NDI${currentOutput.name ? ` - ${currentOutput.name}` : ""}`} on:change={(e) => updateNdiData(e.detail, "name")} />
-        <MaterialTextInput label="inputs.group" title="settings.comma_seperated" value={currentOutput.ndiData?.groups || ""} defaultValue="" placeholder="public" on:change={(e) => updateNdiData(e.detail, "groups")} />
+        <TextField label="inputs.name" value={currentOutput.ndiData?.name || `PulseFlow NDI${currentOutput.name ? ` - ${currentOutput.name}` : ""}`} defaultValue={`PulseFlow NDI${currentOutput.name ? ` - ${currentOutput.name}` : ""}`} on:change={(e) => updateNdiData(e.detail, "name")} />
+        <TextField label="inputs.group" title="settings.comma_seperated" value={currentOutput.ndiData?.groups || ""} defaultValue="" placeholder="public" on:change={(e) => updateNdiData(e.detail, "groups")} />
     </InputRow>
 
     <!-- not sure if we need to toggle this off? -->
@@ -391,7 +391,7 @@
     </InputRow>
 
     <InputRow>
-        <MaterialTextInput label="inputs.name" value={currentOutput.omtData?.name || `PulseFlow OMT${currentOutput.name ? ` - ${currentOutput.name}` : ""}`} defaultValue={`PulseFlow OMT${currentOutput.name ? ` - ${currentOutput.name}` : ""}`} on:change={(e) => updateOmtData(e.detail, "name")} />
+        <TextField label="inputs.name" value={currentOutput.omtData?.name || `PulseFlow OMT${currentOutput.name ? ` - ${currentOutput.name}` : ""}`} defaultValue={`PulseFlow OMT${currentOutput.name ? ` - ${currentOutput.name}` : ""}`} on:change={(e) => updateOmtData(e.detail, "name")} />
         <MaterialDropdown label="settings.quality" value={currentOutput.omtData?.quality || "Default"} defaultValue="Default" options={omtQualities} on:change={(e) => updateOmtData(e.detail, "quality")} />
     </InputRow>
 
@@ -403,10 +403,10 @@
 
     <InputRow>
         <MaterialDropdown label="settings.frame_rate" value={currentOutput.webrtcData?.fps?.toString() || "30"} defaultValue="30" options={framerates} on:change={(e) => updateWebrtcData(e.detail, "fps")} />
-        <MaterialTextInput label="Bitrate (kbps)" value={currentOutput.webrtcData?.bitrate?.toString() || "4000"} defaultValue="4000" placeholder="4000" on:change={(e) => updateWebrtcData(e.detail, "bitrate")} />
+        <TextField label="Bitrate (kbps)" value={currentOutput.webrtcData?.bitrate?.toString() || "4000"} defaultValue="4000" placeholder="4000" on:change={(e) => updateWebrtcData(e.detail, "bitrate")} />
     </InputRow>
-    <MaterialTextInput label="WHIP Endpoint URL" value={currentOutput.webrtcData?.url || ""} placeholder="e.g. https://live.restream.io/whip/live/YOUR_KEY" on:change={(e) => updateWebrtcData(e.detail, "url")} pasteBtn />
-    <MaterialTextInput label="Bearer Token (Optional)" value={currentOutput.webrtcData?.token || ""} placeholder="Authorization token" on:change={(e) => updateWebrtcData(e.detail, "token")} pasteBtn />
+    <TextField label="WHIP Endpoint URL" value={currentOutput.webrtcData?.url || ""} placeholder="e.g. https://live.restream.io/whip/live/YOUR_KEY" on:change={(e) => updateWebrtcData(e.detail, "url")} pasteBtn />
+    <TextField label="Bearer Token (Optional)" value={currentOutput.webrtcData?.token || ""} placeholder="Authorization token" on:change={(e) => updateWebrtcData(e.detail, "token")} pasteBtn />
     <!-- <MaterialToggleSwitch label="settings.transparent" checked={currentOutput.transparent} defaultValue={false} on:change={(e) => updateOutput("transparent", e.detail)} /> -->
 
     {#if currentOutput?.enabled && currentOutput?.webrtcData?.url}
@@ -426,7 +426,7 @@
     </InputRow>
 
     <InputRow>
-        <MaterialTextInput label="settings.bitrate (kbps)" value={currentOutput.rtmpData?.bitrate?.toString() || "4000"} defaultValue="4000" placeholder="4000" on:change={(e) => updateRtmpData(e.detail, "bitrate")} />
+        <TextField label="settings.bitrate (kbps)" value={currentOutput.rtmpData?.bitrate?.toString() || "4000"} defaultValue="4000" placeholder="4000" on:change={(e) => updateRtmpData(e.detail, "bitrate")} />
         <MaterialDropdown label="actions.mode" value={currentOutput.rtmpData?.rateControl || "cbr"} options={rateControlOptions} on:change={(e) => updateRtmpData(e.detail, "rateControl")} />
     </InputRow>
 
@@ -454,8 +454,8 @@
                     </InputRow>
                 {/if}
 
-                <MaterialTextInput label="Stream URL" value={destination.url} placeholder="e.g. rtmp://a.rtmp.youtube.com/live2" on:change={(e) => updateDestination(destination.id, "url", e.detail)} pasteBtn />
-                <MaterialTextInput label="Stream key" value={destination.key} type="password" on:change={(e) => updateDestination(destination.id, "key", e.detail)} pasteBtn />
+                <TextField label="Stream URL" value={destination.url} placeholder="e.g. rtmp://a.rtmp.youtube.com/live2" on:change={(e) => updateDestination(destination.id, "url", e.detail)} pasteBtn />
+                <TextField label="Stream key" value={destination.key} type="password" on:change={(e) => updateDestination(destination.id, "key", e.detail)} pasteBtn />
 
                 <!-- kept visible after recovery: a destination that reconnects repeatedly still looks
                      "live" between drops, so the count is the only signal that it is struggling -->

@@ -18,8 +18,8 @@
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import TextInput from "../../inputs/TextInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import Input from "../../../lib/components/ui/input/input.svelte"
     import Loader from "../../main/Loader.svelte"
     import Center from "../../system/Center.svelte"
     import { createScriptureShow, formatBibleText, getShortBibleName, getVerseIdParts, getVersePartLetter, joinRange, loadJsonBible, moveSelection, outputIsScripture, playScripture, sanitizeVerseText, scriptureRangeSelect, sortScriptureSelection, splitText, swapPreviewBible } from "./scripture"
@@ -1145,7 +1145,7 @@
                             <InputRow style="width: 100%;margin-bottom: 5px;">
                                 {#each activeScriptures as scriptureId, i}
                                     {@const scripture = $scriptures[scriptureId]}
-                                    <MaterialNumberInput label={scripture.name} value={getOffset(scriptureId, activeReference)} disabled={i === 0} min={-10} max={10} on:change={(e) => updateOffset(scriptureId, e.detail)} />
+                                    <NumberField label={scripture.name} value={getOffset(scriptureId, activeReference)} disabled={i === 0} min={-10} max={10} on:change={(e) => updateOffset(scriptureId, e.detail)} />
                                 {/each}
                             </InputRow>
                         {/if}
@@ -1264,7 +1264,7 @@
 
 {#if contentSearchFieldActive}
     <FloatingInputs>
-        <TextInput placeholder={translateText("scripture.search")} value={contentSearchValue} on:input={searchValueChanged} on:change={searchInBible} style="width: 300px;border-radius: 20px;" autofocus />
+        <Input placeholder={translateText("scripture.search")} value={contentSearchValue} on:input={searchValueChanged} on:change={searchInBible} style="width: 300px;border-radius: 20px;" autofocus />
     </FloatingInputs>
 {:else if $scriptureMode !== "grid" || $resized.rightPanelDrawer > 5}
     <FloatingInputs>

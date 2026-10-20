@@ -10,7 +10,7 @@
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
     import Icon from "../../helpers/Icon.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
@@ -153,7 +153,7 @@
     <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => activePopup.set(revert)} />
 {/if}
 
-<MaterialTextInput label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
+<TextField label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
 
 {#if customTypes}
     <MaterialDropdown label="scripture.translations" options={types} value={selectedType} on:change={(e) => (selectedType = e.detail)} />

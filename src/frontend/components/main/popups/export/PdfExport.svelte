@@ -7,7 +7,7 @@
     import MaterialCheckbox from "../../../inputs/MaterialCheckbox.svelte"
     import MaterialColorInput from "../../../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let pdfOptions: any
     export let previewShow: Show | null
@@ -88,22 +88,22 @@
             <MaterialCheckbox label="export.invert" disabled={pdfOptions.type === "text"} checked={pdfOptions.invert} on:change={(e) => updatePdfOptions(e, "invert")} />
 
             <MaterialCheckbox label="export.original_text_size" style="margin-top: 10px;" disabled={pdfOptions.type === "slides"} checked={pdfOptions.originalTextSize !== false} on:change={(e) => updatePdfOptions(e, "originalTextSize")} />
-            <MaterialNumberInput label="settings.font_size" disabled={pdfOptions.type === "slides" || pdfOptions.originalTextSize !== false} value={pdfOptions.textSize} on:change={(e) => (pdfOptions.textSize = e.detail)} />
+            <NumberField label="settings.font_size" disabled={pdfOptions.type === "slides" || pdfOptions.originalTextSize !== false} value={pdfOptions.textSize} on:change={(e) => (pdfOptions.textSize = e.detail)} />
 
             {#if pdfOptions.type !== "text"}
-                <MaterialNumberInput label="export.rows" style="margin-top: 10px;" value={pdfOptions.grid[1]} min={1} max={7} on:change={(e) => (pdfOptions.grid[1] = e.detail)} />
-                <MaterialNumberInput label="export.columns" disabled={pdfOptions.type !== "slides"} value={pdfOptions.grid[0]} min={1} max={6} on:change={(e) => (pdfOptions.grid[0] = e.detail)} />
+                <NumberField label="export.rows" style="margin-top: 10px;" value={pdfOptions.grid[1]} min={1} max={7} on:change={(e) => (pdfOptions.grid[1] = e.detail)} />
+                <NumberField label="export.columns" disabled={pdfOptions.type !== "slides"} value={pdfOptions.grid[0]} min={1} max={6} on:change={(e) => (pdfOptions.grid[0] = e.detail)} />
             {/if}
         {:else}
-            <MaterialNumberInput label="settings.font_size" value={pdfOptions.fontSize} min={8} max={24} on:change={(e) => (pdfOptions.fontSize = e.detail)} />
-            <MaterialNumberInput label="export.margin (mm)" value={pdfOptions.margin} min={5} max={50} on:change={(e) => (pdfOptions.margin = e.detail)} />
-            <MaterialNumberInput label="edit.line_spacing" value={pdfOptions.spacing * 10} min={1} max={30} on:change={(e) => (pdfOptions.spacing = e.detail / 10)} />
+            <NumberField label="settings.font_size" value={pdfOptions.fontSize} min={8} max={24} on:change={(e) => (pdfOptions.fontSize = e.detail)} />
+            <NumberField label="export.margin (mm)" value={pdfOptions.margin} min={5} max={50} on:change={(e) => (pdfOptions.margin = e.detail)} />
+            <NumberField label="edit.line_spacing" value={pdfOptions.spacing * 10} min={1} max={30} on:change={(e) => (pdfOptions.spacing = e.detail / 10)} />
 
-            <MaterialNumberInput label="export.columns" style="margin-top: 10px;" value={pdfOptions.columnsPerPage} min={1} max={3} on:change={(e) => (pdfOptions.columnsPerPage = e.detail)} />
+            <NumberField label="export.columns" style="margin-top: 10px;" value={pdfOptions.columnsPerPage} min={1} max={3} on:change={(e) => (pdfOptions.columnsPerPage = e.detail)} />
 
             <h5 style="margin: 10px 0;text-align: center;color: var(--text);"><T id="edit.chords" /></h5>
 
-            <MaterialNumberInput label="edit.font_size" value={pdfOptions.chordFontSize} min={6} max={20} on:change={(e) => (pdfOptions.chordFontSize = e.detail)} />
+            <NumberField label="edit.font_size" value={pdfOptions.chordFontSize} min={6} max={20} on:change={(e) => (pdfOptions.chordFontSize = e.detail)} />
             <MaterialColorInput label="edit.color" value={pdfOptions.chordColor || "#0066cc"} defaultValue="#0066cc" on:change={(e) => (pdfOptions.chordColor = e.detail)} on:input={(e) => (pdfOptions.chordColor = e.detail)} />
         {/if}
     </div>

@@ -4,7 +4,7 @@
     import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
     import { type NoiseGateConfig, updateNoiseGateConfig } from "../../../../audio/effects/audioNoiseGate"
     import InputRow from "../../../input/InputRow.svelte"
-    import MaterialNumberInput from "../../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let effectId: string = ""
     export let channelId: string = ""
@@ -108,19 +108,19 @@
     <div style="height: 8px;" />
 
     <InputRow>
-        <MaterialNumberInput label="audio.threshold" value={config.threshold} min={-100} max={0} step={1} maxDecimals={0} showSlider sliderValues={{ min: -80, max: 0, step: 1 }} on:change={(e) => handleChange("threshold", e.detail)} />
+        <NumberField label="audio.threshold" value={config.threshold} min={-100} max={0} step={1} maxDecimals={0} showSlider sliderValues={{ min: -80, max: 0, step: 1 }} on:change={(e) => handleChange("threshold", e.detail)} />
     </InputRow>
 
     <InputRow>
-        <MaterialNumberInput label="audio.hysteresis" value={config.hysteresis} min={0} max={24} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 24, step: 1 }} on:change={(e) => handleChange("hysteresis", e.detail)} />
+        <NumberField label="audio.hysteresis" value={config.hysteresis} min={0} max={24} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 24, step: 1 }} on:change={(e) => handleChange("hysteresis", e.detail)} />
     </InputRow>
 
     <InputRow>
-        <MaterialNumberInput label="audio.attack" value={attackMs} min={0} max={500} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 200, step: 1 }} on:change={(e) => handleChange("attack", e.detail / 1000)} />
+        <NumberField label="audio.attack" value={attackMs} min={0} max={500} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 200, step: 1 }} on:change={(e) => handleChange("attack", e.detail / 1000)} />
     </InputRow>
 
     <InputRow>
-        <MaterialNumberInput label="audio.release" value={releaseMs} min={1} max={2000} step={1} maxDecimals={0} showSlider sliderValues={{ min: 1, max: 1000, step: 1 }} on:change={(e) => handleChange("release", e.detail / 1000)} />
+        <NumberField label="audio.release" value={releaseMs} min={1} max={2000} step={1} maxDecimals={0} showSlider sliderValues={{ min: 1, max: 1000, step: 1 }} on:change={(e) => handleChange("release", e.detail / 1000)} />
     </InputRow>
 </div>
 

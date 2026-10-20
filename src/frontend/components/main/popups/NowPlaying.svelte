@@ -5,7 +5,7 @@
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialTextarea from "../../inputs/MaterialTextarea.svelte"
+    import TextareaField from "../../../lib/components/ui/textarea-field/textarea-field.svelte"
 
     function openFile() {
         sendMain(Main.OPEN_NOW_PLAYING)
@@ -92,7 +92,7 @@
 <div style="height: 20px;"></div>
 
 <!-- label="actions.format" -->
-<MaterialTextarea label="NowPlaying.txt" value={format} rows={8} on:change={(e) => updateSpecial("nowPlayingFormat", e.detail)} />
+<TextareaField label="NowPlaying.txt" value={format} rows={8} on:change={(e) => updateSpecial("nowPlayingFormat", e.detail)} />
 
 <style>
     .title {

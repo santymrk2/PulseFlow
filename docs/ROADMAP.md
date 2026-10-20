@@ -1477,8 +1477,22 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
     nuevo), prettier. `src/server/remote/` conserva su propio `MaterialButton`: es un cliente
     web aparte. **No verificado a ojo:** revisar tarjetas de audio (AudioEffect, AudioStreams,
     Mic), que usaban estilos que el `Button` legacy imponía a sus `div` hijos.
-  - [ ] **F14.8b Texto y número.** `MaterialTextInput`, `MaterialNumberInput`,
-    `MaterialTextarea` y los legacy `TextInput`/`NumberInput`.
+  - [x] **F14.8b Texto y número.** **Convención de nombres** (decidida acá): `Input` = `<input>`
+    pelado; `*Field` = control **con etiqueta** y valor/restablecer (`TextField`,
+    `NumberField`, `TextareaField`, y en los pasos siguientes `SelectField`, `ToggleField`…);
+    `Stepper` = −/+ con repetición al mantener. Los `TextInput`/`NumberInput` legacy **no eran
+    duplicados** de los `Material*` (un `<input>` pelado que reenvía eventos DOM y un
+    stepper), por eso no se fundieron: se mudaron con su nombre propio.
+    **Hecho** (2026-10-20): `MaterialTextInput`→`text-field/`, `MaterialNumberInput`→
+    `number-field/`, `MaterialTextarea`→`textarea-field/`, `TextInput`→`input/` (reemplaza al
+    `input` shadcn sin uso, borrado), `NumberInput`→`stepper/`; 91 archivos reescritos con
+    una herramienta de mudanza que mueve el archivo y reescribe **todos** los imports
+    relativos (los de quienes lo importan y los internos del movido) y renombra etiquetas e
+    identificadores. API sin cambios (`on:change`/`on:input` con `detail`). *Un bug que
+    `svelte-check` no atrapó:* `components/input/inputs.ts` usaba los componentes como
+    identificadores en un mapa (`string: MaterialTextInput`); la herramienta sólo renombraba
+    etiquetas y se corrigió (ahora renombra también identificadores). *Verificado:*
+    `svelte-check` 45 errores (base 56), 0 nuevos; `test:unit` 93/93; prettier.
   - [ ] **F14.8c Listas y pickers.** `MaterialDropdown`, `MaterialPopupButton`,
     `MaterialFilePicker`, `MaterialFolderPicker`, `MaterialTimePicker`,
     `MaterialDatePicker`, `MaterialRadialPicker`, `MaterialColorInput`,

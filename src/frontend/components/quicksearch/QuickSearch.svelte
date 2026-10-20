@@ -9,7 +9,7 @@
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import TextInput from "../inputs/TextInput.svelte"
+    import Input from "../../lib/components/ui/input/input.svelte"
     import Center from "../system/Center.svelte"
     import { quicksearch, quickSearchCategoryNames, selectQuicksearchValue, type SearchCategory } from "./quicksearch"
     import { getNormalizedKey } from "../../utils/shortcuts"
@@ -184,7 +184,7 @@
                     </div>
                 {/if}
 
-                <TextInput value={activeCategory ? actualSearchText : searchValue} placeholder={activeCategory ? `Search in ${activeCategory}...` : translateText("main.quick_search...")} autofocus autoselect on:input={search} style={activeCategory ? "padding-left: " + (90 + activeCategory.length * 8) + "px;" : "padding-left: 47px;"} />
+                <Input value={activeCategory ? actualSearchText : searchValue} placeholder={activeCategory ? `Search in ${activeCategory}...` : translateText("main.quick_search...")} autofocus autoselect on:input={search} style={activeCategory ? "padding-left: " + (90 + activeCategory.length * 8) + "px;" : "padding-left: 47px;"} />
             </div>
 
             {#if showValues && actualSearchText.length}

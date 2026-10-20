@@ -12,7 +12,7 @@
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialMultiButtons from "../../inputs/MaterialMultiButtons.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import Center from "../../system/Center.svelte"
 
@@ -216,7 +216,7 @@
 {#if !profileId || !profilesList.length}
     {#if profilesList.length && isAdmin}
         <!-- Admin settings -->
-        <MaterialTextInput label="remote.password" disabled={hasAdminPass} value={hasAdminPass ? "*****" : ""} defaultValue="" on:change={setAdminPassword} />
+        <TextField label="remote.password" disabled={hasAdminPass} value={hasAdminPass ? "*****" : ""} defaultValue="" on:change={setAdminPassword} />
 
         <MaterialToggleSwitch label="profile.auto_open_last_used" checked={$profiles.admin?.autoOpenLastUsed || false} defaultValue={false} on:change={(e) => updateAdmin("autoOpenLastUsed", e.detail)} />
     {/if}

@@ -9,7 +9,7 @@
     import Center from "../../system/Center.svelte"
     import ContentLibraryBrowser from "./ContentLibraryBrowser.svelte"
     import CLogo from "./CLogo.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Link from "../../inputs/Link.svelte"
     import Icon from "../../helpers/Icon.svelte"
 
@@ -88,8 +88,8 @@
                 <Icon id="launch" white />
             </Link>
 
-            <MaterialTextInput label="Client ID" value={canvaClientId} on:change={(e) => (canvaClientId = e.detail)} style="margin-top: 20px;width: 100%;max-width: 250px;" pasteBtn />
-            <MaterialTextInput label="Client secret" value={canvaClientSecret} disabled={!canvaClientId} type="password" on:change={(e) => (canvaClientSecret = e.detail)} style="width: 100%;max-width: 250px;" pasteBtn />
+            <TextField label="Client ID" value={canvaClientId} on:change={(e) => (canvaClientId = e.detail)} style="margin-top: 20px;width: 100%;max-width: 250px;" pasteBtn />
+            <TextField label="Client secret" value={canvaClientSecret} disabled={!canvaClientId} type="password" on:change={(e) => (canvaClientSecret = e.detail)} style="width: 100%;max-width: 250px;" pasteBtn />
 
             <Button variant="outline" disabled={!canvaClientId || !canvaClientSecret} on:click={handleConnect} style="margin-top: 10px;width: 100%;max-width: 250px;">
                 <CLogo />

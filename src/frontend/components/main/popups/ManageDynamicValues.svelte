@@ -8,8 +8,8 @@
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
 
@@ -196,19 +196,19 @@
 
 {#each rssList as rss, i}
     <InputRow arrow>
-        <MaterialTextInput label="inputs.name" value={rss.name} disabled={!!(rss.name && rss.url)} on:change={(e) => setValue(e, i, "name")} />
+        <TextField label="inputs.name" value={rss.name} disabled={!!(rss.name && rss.url)} on:change={(e) => setValue(e, i, "name")} />
 
         <Button icon="delete" title="actions.delete" on:click={() => deleteItem(i)} white />
 
         <div slot="menu">
             <InputRow>
-                <MaterialTextInput style="width: 75%;" label="inputs.url" value={rss.url} on:change={(e) => setValue(e, i, "url")} />
-                <MaterialTextInput style="width: 25%;" label="meta.text_divider" value={rss.divider || " | "} on:change={(e) => setValue(e, i, "divider")} />
+                <TextField style="width: 75%;" label="inputs.url" value={rss.url} on:change={(e) => setValue(e, i, "url")} />
+                <TextField style="width: 25%;" label="meta.text_divider" value={rss.divider || " | "} on:change={(e) => setValue(e, i, "divider")} />
             </InputRow>
 
             <InputRow>
                 <MaterialDropdown style="width: 75%;" label="edit.interval" options={updateIntervalList} value={rss.updateInterval || "60"} on:change={(e) => setValue(e, i, "updateInterval")} />
-                <MaterialNumberInput style="width: 25%;" label="edit.count" value={rss.count || 5} min={1} max={1000} on:change={(e) => setValue(e, i, "count")} />
+                <NumberField style="width: 25%;" label="edit.count" value={rss.count || 5} min={1} max={1000} on:change={(e) => setValue(e, i, "count")} />
             </InputRow>
         </div>
     </InputRow>
@@ -222,19 +222,19 @@
 
 {#each txtList as txt, i}
     <InputRow arrow>
-        <MaterialTextInput label="inputs.name" value={txt.name} disabled={!!(txt.name && txt.url)} on:change={(e) => setTxtValue(e, i, "name")} />
+        <TextField label="inputs.name" value={txt.name} disabled={!!(txt.name && txt.url)} on:change={(e) => setTxtValue(e, i, "name")} />
 
         <Button icon="delete" title="actions.delete" on:click={() => deleteTxtItem(i)} white />
 
         <div slot="menu">
             <InputRow>
-                <MaterialTextInput style="flex: 1;" label="inputs.url" value={txt.url} on:change={(e) => setTxtValue(e, i, "url")} />
+                <TextField style="flex: 1;" label="inputs.url" value={txt.url} on:change={(e) => setTxtValue(e, i, "url")} />
                 <MaterialFilePicker style="flex: 0;" label="" title="scripture.local" value="" filter={{ name: "Text files", extensions: ["txt"] }} icon="folder" on:change={(e) => setTxtValue(e, i, "url")} noLabel />
             </InputRow>
 
             <InputRow>
                 <MaterialDropdown style="width: 75%;" label="edit.interval" options={txtUpdateIntervalList} value={txt.updateInterval || "3"} on:change={(e) => setTxtValue(e, i, "updateInterval")} />
-                <MaterialTextInput style="width: 25%;" label="meta.text_divider" value={txt.divider || "<br>"} on:change={(e) => setTxtValue(e, i, "divider")} />
+                <TextField style="width: 25%;" label="meta.text_divider" value={txt.divider || "<br>"} on:change={(e) => setTxtValue(e, i, "divider")} />
             </InputRow>
         </div>
     </InputRow>

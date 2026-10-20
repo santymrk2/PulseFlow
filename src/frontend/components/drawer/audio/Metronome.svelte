@@ -10,7 +10,7 @@
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import MetronomeInputs from "./MetronomeInputs.svelte"
     import MetronomeVisualizer from "./MetronomeVisualizer.svelte"
@@ -62,8 +62,8 @@
             </InputRow>
         {/if}
         <InputRow>
-            <MaterialNumberInput label="media.volume (Hi)" value={Number(((values.accentVolume ?? 2) * 100).toFixed(0))} min={0} max={500} step={5} defaultValue={200} on:change={(e) => updateValue("accentVolume", e.detail / 100)} showSlider />
-            <MaterialNumberInput label="media.volume (Lo)" value={Number(((values.secondaryVolume ?? 1.75) * 100).toFixed(0))} min={0} max={500} step={5} defaultValue={175} on:change={(e) => updateValue("secondaryVolume", e.detail / 100)} showSlider />
+            <NumberField label="media.volume (Hi)" value={Number(((values.accentVolume ?? 2) * 100).toFixed(0))} min={0} max={500} step={5} defaultValue={200} on:change={(e) => updateValue("accentVolume", e.detail / 100)} showSlider />
+            <NumberField label="media.volume (Lo)" value={Number(((values.secondaryVolume ?? 1.75) * 100).toFixed(0))} min={0} max={500} step={5} defaultValue={175} on:change={(e) => updateValue("secondaryVolume", e.detail / 100)} showSlider />
         </InputRow>
     </div>
 {:else}

@@ -7,7 +7,7 @@
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import StageItemsList from "./StageItemsList.svelte"
 
     $: currentStage = $stageShows[$activeStage.id || ""]
@@ -33,7 +33,7 @@
 <div class="tools">
     <div style="display: flex;flex-direction: column;gap: 5px;">
         <MaterialDropdown label="stage.source_output" options={outputsList} value={settings.output || ""} on:change={(e) => updateStageSettings(e.detail, "output")} allowEmpty />
-        <MaterialTextInput label="remote.password" type="password" value={currentStage?.password || ""} defaultValue="" on:change={updateStagePassword} />
+        <TextField label="remote.password" type="password" value={currentStage?.password || ""} defaultValue="" on:change={updateStagePassword} />
     </div>
 
     <div>

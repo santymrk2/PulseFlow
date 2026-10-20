@@ -8,7 +8,7 @@
     import { _show } from "../../helpers/shows"
     import { joinTime, secondsToTime } from "../../helpers/time"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
     registerPopupSubmit(() => {
@@ -119,7 +119,7 @@
 </script>
 
 {#if allSlides}
-    <MaterialNumberInput style="margin-bottom: 10px;" label="timer.seconds" value={allTime} max={3600} on:change={(e) => (allTime = e.detail)} />
+    <NumberField style="margin-bottom: 10px;" label="timer.seconds" value={allTime} max={3600} on:change={(e) => (allTime = e.detail)} />
 
     <!-- reset if next timer applied, but not same on all slides ?? (set input to 0) -->
     {#if isProjectItem ? !allTime || allTime === value : totalTime && (appliedToSlides === allTime || allTime === 0)}
@@ -138,5 +138,5 @@
         </p>
     {/if}
 {:else}
-    <MaterialNumberInput label="timer.seconds" {value} max={3600} on:change={updateValue} />
+    <NumberField label="timer.seconds" {value} max={3600} on:change={updateValue} />
 {/if}

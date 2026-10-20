@@ -3,7 +3,7 @@
     import { type DelayConfig, updateDelayConfig } from "../../../../audio/effects/audioDelay"
     import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
     import InputRow from "../../../input/InputRow.svelte"
-    import MaterialNumberInput from "../../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let effectId: string = ""
     export let channelId: string = ""
@@ -99,15 +99,15 @@
     <div style="height: 8px;" />
 
     <InputRow>
-        <MaterialNumberInput label="audio.delay" value={delayMs} min={10} max={2000} step={1} maxDecimals={0} showSlider sliderValues={{ min: 10, max: 2000, step: 1 }} on:change={(e) => handleChange("delayTime", e.detail / 1000)} />
+        <NumberField label="audio.delay" value={delayMs} min={10} max={2000} step={1} maxDecimals={0} showSlider sliderValues={{ min: 10, max: 2000, step: 1 }} on:change={(e) => handleChange("delayTime", e.detail / 1000)} />
     </InputRow>
 
     <InputRow>
-        <MaterialNumberInput label="audio.feedback" value={feedbackPct} min={0} max={95} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 95, step: 1 }} on:change={(e) => handleChange("feedback", e.detail / 100)} />
+        <NumberField label="audio.feedback" value={feedbackPct} min={0} max={95} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 95, step: 1 }} on:change={(e) => handleChange("feedback", e.detail / 100)} />
     </InputRow>
 
     <InputRow>
-        <MaterialNumberInput label="audio.wet" value={wetPct} min={0} max={100} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 100, step: 1 }} on:change={(e) => handleChange("wet", e.detail / 100)} />
+        <NumberField label="audio.wet" value={wetPct} min={0} max={100} step={1} maxDecimals={0} showSlider sliderValues={{ min: 0, max: 100, step: 1 }} on:change={(e) => handleChange("wet", e.detail / 100)} />
     </InputRow>
 </div>
 

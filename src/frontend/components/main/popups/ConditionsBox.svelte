@@ -5,8 +5,8 @@
     import { clone, sortByName } from "../../helpers/array"
     import { getDynamicIds, getVariablesIds } from "../../helpers/showActions"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import { newToast } from "../../../utils/common"
 
     export let input: { [key: string]: string }
@@ -123,15 +123,15 @@
 
                 {#if input.element === "variable" && input.elementId?.includes("__")}
                     <!-- 0 = active -->
-                    <MaterialNumberInput label="variables.number" value={Number(input.index ?? 0)} on:change={(e) => setValue("index", e)} />
+                    <NumberField label="variables.number" value={Number(input.index ?? 0)} on:change={(e) => setValue("index", e)} />
                 {/if}
             {/if}
 
             {#if conditionId === "data"}
                 {#if value.value === "value"}
-                    <MaterialTextInput label="variables.value" placeholder={input.element === "volume" ? "-60 → 0" : translateText("conditions.empty")} value={typeof input.value === "string" ? input.value : ""} on:change={(e) => setValue("value", e)} />
+                    <TextField label="variables.value" placeholder={input.element === "volume" ? "-60 → 0" : translateText("conditions.empty")} value={typeof input.value === "string" ? input.value : ""} on:change={(e) => setValue("value", e)} />
                 {:else if value.value === "seconds"}
-                    <MaterialNumberInput label="timer.seconds" value={typeof input.seconds === "number" ? input.seconds : 0} max={800000} on:change={(e) => setValue("seconds", e)} />
+                    <NumberField label="timer.seconds" value={typeof input.seconds === "number" ? input.seconds : 0} max={800000} on:change={(e) => setValue("seconds", e)} />
                 {/if}
             {/if}
         {/if}

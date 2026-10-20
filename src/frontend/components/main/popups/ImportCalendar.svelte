@@ -6,7 +6,7 @@
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import { fetchAndImportIcs } from "../../drawer/calendar/calendars"
     import { newToast } from "../../../utils/common"
 
@@ -49,7 +49,7 @@
 
 {#if importType === "url"}
     <div class="url-import">
-        <MaterialTextInput label="inputs.url (.ics)" value={url} on:input={(e) => (url = e.detail)} autofocus />
+        <TextField label="inputs.url (.ics)" value={url} on:input={(e) => (url = e.detail)} autofocus />
         <Button variant="default" icon="import" style="margin-top: 20px;width: 100%;" disabled={!url.trim() || isSubmitting} on:click={handleUrlImport}>
             <T id="actions.import" />
         </Button>

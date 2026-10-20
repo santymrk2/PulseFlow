@@ -2,7 +2,7 @@
     import { activePopup, globalRegexes, popupData } from "../../../stores"
     import HRule from "../../input/HRule.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 
     const regexId = $popupData.id
     $: label = $globalRegexes[regexId]?.label || ""
@@ -153,8 +153,8 @@
 <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={goBack} />
 
 <!-- inputs.name -->
-<MaterialTextInput label="midi.description" value={label} on:change={(e) => update("label", e.detail)} />
-<MaterialTextInput label="/regex/" value={pattern} on:change={(e) => setRegex(e.detail)} autofocus />
+<TextField label="midi.description" value={label} on:change={(e) => update("label", e.detail)} />
+<TextField label="/regex/" value={pattern} on:change={(e) => setRegex(e.detail)} autofocus />
 
 <HRule />
 
@@ -166,7 +166,7 @@
         </div>
     {/if}
 
-    <MaterialTextInput label="timer.preview" value={testInput} on:change={(e) => (testInput = e.detail)} />
+    <TextField label="timer.preview" value={testInput} on:change={(e) => (testInput = e.detail)} />
     {#if testInput}
         <div class="preview-text">{@html previewHtml}</div>
     {/if}

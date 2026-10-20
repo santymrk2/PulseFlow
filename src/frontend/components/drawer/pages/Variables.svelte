@@ -10,8 +10,8 @@
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
-    import NumberInput from "../../inputs/NumberInput.svelte"
-    import TextInput from "../../inputs/TextInput.svelte"
+    import Stepper from "../../../lib/components/ui/stepper/stepper.svelte"
+    import Input from "../../../lib/components/ui/input/input.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
 
@@ -79,7 +79,7 @@
                         </div>
 
                         <div class="bigNumber">
-                            <NumberInput title={translateText("variables.value")} style="width: 100%;" value={number} {min} {max} step={stepSize} decimals={1} fixed={number.toString().includes(".") ? 1 : 0} buttons={false} on:change={(e) => updateVariable(e.detail, variable.id, "number")} />
+                            <Stepper title={translateText("variables.value")} style="width: 100%;" value={number} {min} {max} step={stepSize} decimals={1} fixed={number.toString().includes(".") ? 1 : 0} buttons={false} on:change={(e) => updateVariable(e.detail, variable.id, "number")} />
                         </div>
 
                         <span style="justify-content: center;padding: 5px;width: 100%;">
@@ -103,8 +103,8 @@
                         </div>
 
                         <div class="inputs">
-                            <NumberInput title={translateText("variables.step")} style="flex: 1;" value={stepSize} min={0.1} step={1} decimals={1} fixed={stepSize.toString().includes(".") ? 1 : 0} on:change={(e) => updateVariable(e.detail, variable.id, "step")} buttons={false} />
-                            <!-- <NumberInput
+                            <Stepper title={translateText("variables.step")} style="flex: 1;" value={stepSize} min={0.1} step={1} decimals={1} fixed={stepSize.toString().includes(".") ? 1 : 0} on:change={(e) => updateVariable(e.detail, variable.id, "step")} buttons={false} />
+                            <!-- <Stepper
                                 title={translateText("variables.default_value")}
                                 style="flex: 1;"
                                 value={defaultValue}
@@ -195,7 +195,7 @@
 
                         <span style="gap: 5px;width: 70%;">
                             {#if variable.type === "text"}
-                                <TextInput placeholder={translateText("variables.value") || ""} value={variable.text || ""} on:change={(e) => updateVariable(e, variable.id, "text")} />
+                                <Input placeholder={translateText("variables.value") || ""} value={variable.text || ""} on:change={(e) => updateVariable(e, variable.id, "text")} />
                                 <MaterialToggleSwitch label="" checked={variable.enabled ?? true} style="padding: 8px;height: 35px;" on:change={(e) => updateVariable(e, variable.id, "enabled")} />
                             {/if}
                         </span>
@@ -232,7 +232,7 @@
                         <span style="gap: 5px;width: 70%;">
                             <p style="display: flex;flex: 1;">
                                 <span style="color: var(--secondary);">#</span>
-                                <NumberInput title={translateText("variables.number")} style="width: 40px;" value={activeSet + 1} min={1} max={variable.textSets?.length ?? 1} on:change={(e) => updateVariable(e.detail - 1, variable.id, "activeTextSet")} buttons={false} />
+                                <Stepper title={translateText("variables.number")} style="width: 40px;" value={activeSet + 1} min={1} max={variable.textSets?.length ?? 1} on:change={(e) => updateVariable(e.detail - 1, variable.id, "activeTextSet")} buttons={false} />
                                 <span style="font-size: 0.8em;opacity: 0.5;">/{variable.textSets?.length || 1}</span>
                             </p>
 

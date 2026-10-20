@@ -1,6 +1,6 @@
 <script lang="ts">
     import { timeline } from "../../../stores"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import { formatTime, parseTime } from "../../timeline/timeline"
 
     $: startTime = $timeline.startTime || 0 // ms
@@ -14,4 +14,4 @@
     }
 </script>
 
-<MaterialTextInput label="timeline.start_time" value={formattedTime} defaultValue="00:00:00;00" on:change={(e) => update("startTime", parseTime(e.detail))} />
+<TextField label="timeline.start_time" value={formattedTime} defaultValue="00:00:00;00" on:change={(e) => update("startTime", parseTime(e.detail))} />

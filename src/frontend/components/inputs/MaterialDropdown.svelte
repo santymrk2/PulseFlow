@@ -9,7 +9,7 @@
     import Icon from "../helpers/Icon.svelte"
     import InputRow from "../input/InputRow.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialTextInput from "./MaterialTextInput.svelte"
+    import TextField from "../../lib/components/ui/text-field/text-field.svelte"
 
     export let label: string
     export let value: string
@@ -425,7 +425,7 @@
     {#if addNew && addNewTextbox}
         <div class="dropdown">
             <InputRow>
-                <MaterialTextInput label="inputs.name" value={newValue} autofocus on:input={(e) => (newValue = e.detail)} on:keydown={keydown} />
+                <TextField label="inputs.name" value={newValue} autofocus on:input={(e) => (newValue = e.detail)} on:keydown={keydown} />
                 <Button disabled={!newValue.length} title={addNew} on:click={createNewEvent}>
                     <Icon id="check" size={1.2} white />
                 </Button>

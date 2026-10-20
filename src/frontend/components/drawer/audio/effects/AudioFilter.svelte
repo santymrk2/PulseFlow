@@ -4,7 +4,7 @@
     import { GAIN_FILTER_TYPES, updateFilterConfig, type FilterConfig, type FilterType } from "../../../../audio/effects/audioFilter"
     import InputRow from "../../../input/InputRow.svelte"
     import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let effectId: string = ""
     export let channelId: string = ""
@@ -156,16 +156,16 @@
     </InputRow>
 
     <InputRow>
-        <MaterialNumberInput label="audio.frequency" value={config.frequency} min={20} max={20000} step={1} maxDecimals={0} showSlider sliderValues={{ min: 20, max: 20000, step: 1 }} on:change={(e) => handleChange("frequency", e.detail)} />
+        <NumberField label="audio.frequency" value={config.frequency} min={20} max={20000} step={1} maxDecimals={0} showSlider sliderValues={{ min: 20, max: 20000, step: 1 }} on:change={(e) => handleChange("frequency", e.detail)} />
     </InputRow>
 
     <InputRow>
-        <MaterialNumberInput label="audio.q_factor" value={config.q} min={0.1} max={30} step={0.1} maxDecimals={1} showSlider sliderValues={{ min: 0.1, max: 30, step: 0.1 }} on:change={(e) => handleChange("q", e.detail)} />
+        <NumberField label="audio.q_factor" value={config.q} min={0.1} max={30} step={0.1} maxDecimals={1} showSlider sliderValues={{ min: 0.1, max: 30, step: 0.1 }} on:change={(e) => handleChange("q", e.detail)} />
     </InputRow>
 
     {#if showGain}
         <InputRow>
-            <MaterialNumberInput label="audio.gain" value={config.gain} min={-24} max={24} step={0.5} maxDecimals={1} showSlider sliderValues={{ min: -24, max: 24, step: 0.5 }} on:change={(e) => handleChange("gain", e.detail)} />
+            <NumberField label="audio.gain" value={config.gain} min={-24} max={24} step={0.5} maxDecimals={1} showSlider sliderValues={{ min: -24, max: 24, step: 0.5 }} on:change={(e) => handleChange("gain", e.detail)} />
         </InputRow>
     {/if}
 </div>

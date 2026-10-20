@@ -8,7 +8,7 @@
     import Icon from "../helpers/Icon.svelte"
     import Tabs from "../main/Tabs.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialNumberInput from "./MaterialNumberInput.svelte"
+    import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
 
     export let value = "#000000"
     export let defaultValue = ""
@@ -239,7 +239,7 @@
 
                     {#if allowOpacity && value && hexValue.includes("gradient")}
                         <div class="opacity">
-                            <MaterialNumberInput label="edit.opacity" value={Math.round(opacity)} max={100} on:change={(e) => (opacity = Math.round(e.detail))} showSlider />
+                            <NumberField label="edit.opacity" value={Math.round(opacity)} max={100} on:change={(e) => (opacity = Math.round(e.detail))} showSlider />
                         </div>
                     {/if}
 
@@ -293,7 +293,7 @@
 
                     {#if allowOpacity && value && !hexValue.includes("gradient")}
                         <div class="opacity">
-                            <MaterialNumberInput label="edit.opacity" value={Math.round(opacity)} max={100} on:change={(e) => (opacity = Math.round(e.detail))} showSlider />
+                            <NumberField label="edit.opacity" value={Math.round(opacity)} max={100} on:change={(e) => (opacity = Math.round(e.detail))} showSlider />
                         </div>
                     {/if}
 

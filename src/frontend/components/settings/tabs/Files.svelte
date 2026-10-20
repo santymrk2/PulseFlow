@@ -18,7 +18,7 @@
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialMediaPicker from "../../inputs/MaterialFilePicker.svelte"
     import MaterialFolderPicker from "../../inputs/MaterialFolderPicker.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     function updateSpecial(value, key) {
@@ -311,7 +311,7 @@
         </InputRow>
 
         <svelte:fragment slot="menu">
-            <MaterialTextInput label="settings.device_name" value={$cloudSyncData.deviceName || ""} on:change={(e) => updateCloudData("deviceName", e.detail)} />
+            <TextField label="settings.device_name" value={$cloudSyncData.deviceName || ""} on:change={(e) => updateCloudData("deviceName", e.detail)} />
 
             <!-- changing team directly without toggling "Enable sync" off/on -->
             <MaterialToggleSwitch label="cloud.read_only" title="cloud.readonly_tip" checked={$cloudSyncData.cloudMethod === "read_only"} defaultValue={false} on:change={(e) => updateCloudData("cloudMethod", e.detail ? "read_only" : "merge")} />
@@ -342,5 +342,5 @@
     <MaterialToggleSwitch label="Disable uploading data" checked={$driveData.disableUpload} defaultValue={false} on:change={(e) => toggleData(e.detail, "disableUpload")} />
 
     <MaterialToggleSwitch label="cloud.enable" checked={!$driveData.disabled} defaultValue={true} on:change={(e) => toggleData(e.detail, "disabled", true)} />
-    <MaterialTextInput label="Set main folder manually{$driveData?.mainFolderId ? `<span style="margin-left: 10px;font-size: 0.7em;opacity: 0.5;color: var(--text);">drive.google.com/drive/folders/</span>` : ''}" value={$driveData?.mainFolderId || ""} on:change={(e) => updateValue(e.detail, "mainFolderId")} />
+    <TextField label="Set main folder manually{$driveData?.mainFolderId ? `<span style="margin-left: 10px;font-size: 0.7em;opacity: 0.5;color: var(--text);">drive.google.com/drive/folders/</span>` : ''}" value={$driveData?.mainFolderId || ""} on:change={(e) => updateValue(e.detail, "mainFolderId")} />
 {/if}

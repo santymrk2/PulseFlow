@@ -1,37 +1,50 @@
 <script lang="ts">
-    import { cn, type WithElementRef } from "$lib/utils.js"
-    import type { HTMLInputAttributes, HTMLInputTypeAttribute } from "svelte/elements"
+    export let id = ""
+    export let type = "text"
+    export let value: string
+    export let placeholder = ""
+    export let style = ""
 
-    type InputType = Exclude<HTMLInputTypeAttribute, "file">
+    export let center = false
+    export let light = false
+    export let disabled = false
+    export let autofocus = false
+    export let autoselect = false
 
-    type Props = WithElementRef<Omit<HTMLInputAttributes, "type"> & ({ type: "file"; files?: FileList } | { type?: InputType; files?: undefined })>
-
-    let { ref = $bindable(null), value = $bindable(), type, files = $bindable(), class: className, "data-slot": dataSlot = "input", ...restProps }: Props = $props()
+    function select(elem) {
+        if (autoselect) elem.select()
+    }
 </script>
 
-{#if type === "file"}
-    <input
-        bind:this={ref}
-        data-slot={dataSlot}
-        class={cn(
-            "dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 h-8 rounded-lg border bg-transparent px-2.5 py-1 text-base transition-colors file:h-6 file:text-sm file:font-medium focus-visible:ring-3 aria-invalid:ring-3 md:text-sm w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-            className
-        )}
-        type="file"
-        bind:files
-        bind:value
-        {...restProps}
-    />
-{:else}
-    <input
-        bind:this={ref}
-        data-slot={dataSlot}
-        class={cn(
-            "dark:bg-input/30 border-input focus-visible:border-ring focus-visible:ring-ring/50 aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive dark:aria-invalid:border-destructive/50 disabled:bg-input/50 dark:disabled:bg-input/80 h-8 rounded-lg border bg-transparent px-2.5 py-1 text-base transition-colors file:h-6 file:text-sm file:font-medium focus-visible:ring-3 aria-invalid:ring-3 md:text-sm w-full min-w-0 outline-none file:inline-flex file:border-0 file:bg-transparent file:text-foreground placeholder:text-muted-foreground disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50",
-            className
-        )}
-        {type}
-        bind:value
-        {...restProps}
-    />
-{/if}
+<!-- svelte-ignore a11y-autofocus -->
+<input {id} {type} class="edit" {value} {placeholder} {style} class:center class:light {disabled} {autofocus} use:select on:input on:change on:keydown />
+
+<style>
+    input {
+        background-color: var(--primary-darker);
+        color: var(--text);
+        width: 100%;
+        font-family: inherit;
+        font-size: inherit;
+        font-weight: inherit;
+        border: 0;
+        padding: 5px 10px;
+        outline-offset: -2px;
+    }
+    input::placeholder {
+        color: var(--text);
+        opacity: 0.5;
+    }
+    input:disabled {
+        opacity: 0.5;
+    }
+    input.center {
+        text-align: center;
+    }
+    input.light {
+        background-color: var(--primary);
+    }
+    input:hover:not(:disabled) {
+        background-color: var(--hover);
+    }
+</style>

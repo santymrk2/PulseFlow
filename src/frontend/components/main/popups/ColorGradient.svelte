@@ -8,7 +8,7 @@
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import MaterialRadialPicker from "../../inputs/MaterialRadialPicker.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
@@ -81,7 +81,7 @@
 
         <InputRow>
             <MaterialColorInput style="min-width: 50%;" label="edit.color" value={colorPart.color} on:input={(e) => (colorPart.color = e.detail)} allowOpacity />
-            <MaterialNumberInput label="settings.position" value={pos} min={prevPos} max={nextPos} on:change={(e) => (colorPart.pos = e.detail)} currentProgress={pos} showSlider />
+            <NumberField label="settings.position" value={pos} min={prevPos} max={nextPos} on:change={(e) => (colorPart.pos = e.detail)} currentProgress={pos} showSlider />
             {#if i > 0}
                 <Button icon="up" on:click={() => moveUp(i)} />
             {/if}

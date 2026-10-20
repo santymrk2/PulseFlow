@@ -1,6 +1,6 @@
 <script lang="ts">
     import { special } from "../../../stores"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import Center from "../../system/Center.svelte"
     import Clock from "../../system/Clock.svelte"
@@ -21,7 +21,7 @@
 <div class="scroll">
     {#if optionsOpen}
         <main style="overflow-x: hidden;padding: 10px;">
-            <MaterialTextInput label="settings.capitalize_words" title="settings.comma_seperated" value={$special.capitalize_words || ""} defaultValue="Jesus, Lord" on:change={(e) => updateSpecial(e.detail, "capitalize_words", true)} />
+            <TextField label="settings.capitalize_words" title="settings.comma_seperated" value={$special.capitalize_words || ""} defaultValue="Jesus, Lord" on:change={(e) => updateSpecial(e.detail, "capitalize_words", true)} />
             <!-- "text_can_overflow": "Allow text outside of the textbox bounds", -->
             <!-- <MaterialToggleSwitch label="settings.text_can_overflow" checked={$special.textCanOverflow !== false} defaultValue={true} on:change={(e) => updateSpecial(e.detail, "textCanOverflow", true)} /> -->
 

@@ -14,8 +14,8 @@
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     let currentTimer = getSelected("timer", 0)
@@ -209,7 +209,7 @@
         <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />
     {/if}
 
-    <MaterialTextInput label="inputs.name" value={timer.name} on:change={changeName} autoselect={created} />
+    <TextField label="inputs.name" value={timer.name} on:change={changeName} autoselect={created} />
 
     {#if timer.type === "counter"}
         <Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
@@ -231,15 +231,15 @@
                     {#if dynamicStart !== null}
                         <p style="font-size: 2.8em;font-weight: bold;">{dynamicStart}</p>
                     {:else}
-                        <MaterialNumberInput label="timer.minutes" value={timer.start === undefined ? 5 : getMinutes(timer.start)} padLength={2} max={MAX_MINUTES} on:change={(e) => (timer.start = getSeconds(timer.start || 0) + Number(e.detail) * 60)} />
+                        <NumberField label="timer.minutes" value={timer.start === undefined ? 5 : getMinutes(timer.start)} padLength={2} max={MAX_MINUTES} on:change={(e) => (timer.start = getSeconds(timer.start || 0) + Number(e.detail) * 60)} />
                         <span style="padding: 0 10px;font-size: 3em;font-weight: bold;line-height: 1.7;">:</span>
-                        <MaterialNumberInput label="timer.seconds" value={timer.start === undefined ? 0 : getSeconds(timer.start)} padLength={2} max={59} on:change={(e) => (timer.start = getMinutes(timer.start ?? 300) * 60 + Number(e.detail))} />
+                        <NumberField label="timer.seconds" value={timer.start === undefined ? 0 : getSeconds(timer.start)} padLength={2} max={59} on:change={(e) => (timer.start = getMinutes(timer.start ?? 300) * 60 + Number(e.detail))} />
                     {/if}
                 </div>
 
                 {#if showMore}
                     <div style="padding-top: 0;">
-                        <MaterialTextInput label="actions.dynamic_value (s)" value={timer.startDynamic || ""} placeholder={`{$min} * 60`} defaultValue="" style="flex: 1;" on:change={(e) => (timer.startDynamic = e.detail)} />
+                        <TextField label="actions.dynamic_value (s)" value={timer.startDynamic || ""} placeholder={`{$min} * 60`} defaultValue="" style="flex: 1;" on:change={(e) => (timer.startDynamic = e.detail)} />
                     </div>
                 {/if}
             </div>
@@ -259,15 +259,15 @@
                     {#if dynamicEnd !== null}
                         <p style="font-size: 2.8em;font-weight: bold;">{dynamicEnd}</p>
                     {:else}
-                        <MaterialNumberInput label="timer.minutes" value={timer.end === undefined ? 5 : getMinutes(timer.end)} padLength={2} max={MAX_MINUTES} on:change={(e) => (timer.end = getSeconds(timer.end || 0) + Number(e.detail) * 60)} />
+                        <NumberField label="timer.minutes" value={timer.end === undefined ? 5 : getMinutes(timer.end)} padLength={2} max={MAX_MINUTES} on:change={(e) => (timer.end = getSeconds(timer.end || 0) + Number(e.detail) * 60)} />
                         <span style="padding: 0 10px;font-size: 3em;font-weight: bold;line-height: 1.7;">:</span>
-                        <MaterialNumberInput label="timer.seconds" value={timer.end === undefined ? 0 : getSeconds(timer.end)} padLength={2} max={59} on:change={(e) => (timer.end = getMinutes(timer.end ?? 300) * 60 + Number(e.detail))} />
+                        <NumberField label="timer.seconds" value={timer.end === undefined ? 0 : getSeconds(timer.end)} padLength={2} max={59} on:change={(e) => (timer.end = getMinutes(timer.end ?? 300) * 60 + Number(e.detail))} />
                     {/if}
                 </div>
 
                 {#if showMore}
                     <div style="padding-top: 0;">
-                        <MaterialTextInput label="actions.dynamic_value (s)" value={timer.endDynamic || ""} defaultValue="" style="flex: 1;" on:change={(e) => (timer.endDynamic = e.detail)} />
+                        <TextField label="actions.dynamic_value (s)" value={timer.endDynamic || ""} defaultValue="" style="flex: 1;" on:change={(e) => (timer.endDynamic = e.detail)} />
                     </div>
                 {/if}
             </div>
@@ -317,7 +317,7 @@
         <MaterialToggleSwitch label="timer.warn_early" style="width: 100%;" checked={timer.warn} defaultValue={false} on:change={(e) => updateTimerValue("warn", e.detail)} />
 
         <div slot="menu">
-            <MaterialNumberInput label="timer.warn_offset" value={timer.warnOffset || 30} min={1} defaultValue={30} max={Math.abs((timer.start ?? 300) - (timer.end || 0))} on:change={(e) => updateTimerValue("warnOffset", e.detail)} />
+            <NumberField label="timer.warn_offset" value={timer.warnOffset || 30} min={1} defaultValue={30} max={Math.abs((timer.start ?? 300) - (timer.end || 0))} on:change={(e) => updateTimerValue("warnOffset", e.detail)} />
             <MaterialColorInput label="edit.color" value={timer.warnColor || "#FF8000"} defaultValue="#FF8000" on:input={(e) => updateTimerValue("warnColor", e.detail)} />
             <MaterialToggleSwitch label="timer.flash" checked={timer.warnFlash} defaultValue={false} on:change={(e) => updateTimerValue("warnFlash", e.detail)} />
         </div>

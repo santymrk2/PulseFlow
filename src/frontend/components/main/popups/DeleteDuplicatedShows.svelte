@@ -9,7 +9,7 @@
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialTextarea from "../../inputs/MaterialTextarea.svelte"
+    import TextareaField from "../../../lib/components/ui/textarea-field/textarea-field.svelte"
     import Center from "../../system/Center.svelte"
     import Loader from "../Loader.svelte"
 
@@ -204,7 +204,7 @@
                 </p>
 
                 {#if loadedTexts[i]}
-                    <MaterialTextarea label="edit.text" rows={5} value={loadedTexts[i]} disabled />
+                    <TextareaField label="edit.text" rows={5} value={loadedTexts[i]} disabled />
                 {/if}
 
                 <Button icon="delete" style="padding: 5px;" on:click={() => deleteAtIndex(i)} white red>

@@ -15,9 +15,9 @@
     import Button from "../../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
     import MaterialMultiChoice from "../../../inputs/MaterialMultiChoice.svelte"
-    import MaterialNumberInput from "../../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextarea from "../../../inputs/MaterialTextarea.svelte"
-    import MaterialTextInput from "../../../inputs/MaterialTextInput.svelte"
+    import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
+    import TextareaField from "../../../../lib/components/ui/textarea-field/textarea-field.svelte"
+    import TextField from "../../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../../inputs/MaterialToggleSwitch.svelte"
     import WebSearch from "./WebSearch.svelte"
 
@@ -212,7 +212,7 @@
 
 {#if !selectedOption}
     <List bottom={20}>
-        <MaterialTextInput id="name" label="show.name" autofocus value={values.name} autofill={values.name ? "" : getName(values)} on:input={(e) => changeValue(e, "name")} />
+        <TextField id="name" label="show.name" autofocus value={values.name} autofill={values.name ? "" : getName(values)} on:input={(e) => changeValue(e, "name")} />
         <MaterialDropdown label="show.category" value={selectedCategory?.id} options={cats.map((a) => ({ label: translateText(a.name || "main.unnamed"), value: a.id, icon: a.icon, iconColor: a.iconColor }))} on:change={(e) => (selectedCategory = cats.find((a) => a.id === e.detail))} addNew="new.category" on:new={addNewCategory} />
     </List>
 
@@ -226,14 +226,14 @@
         {#if Number($splitLines)}<span class="state">{$splitLines}</span>{/if}
     </Button>
 
-    <MaterialTextarea label="create_show.quick_lyrics" placeholder={getQuickExample()} value={values.text} autofocus={!values.text} rows={showMore ? 6 : Math.max(6, Math.min(12, values.text.split("\n").length))} on:input={(e) => changeValue(e)} />
+    <TextareaField label="create_show.quick_lyrics" placeholder={getQuickExample()} value={values.text} autofocus={!values.text} rows={showMore ? 6 : Math.max(6, Math.min(12, values.text.split("\n").length))} on:input={(e) => changeValue(e)} />
     <!-- WIP buttons for paste / format(remove chords, remove empty lines), etc. -->
 
     {#if showMore}
         <List top={5}>
             <MaterialToggleSwitch label="create_show.auto_groups" checked={$special.autoGroups !== false} defaultValue={true} on:change={(e) => special.set({ ...$special, autoGroups: e.detail })} />
             <MaterialToggleSwitch label="create_show.format_new_show" checked={$formatNewShow} defaultValue={false} on:change={(e) => formatNewShow.set(e.detail)} />
-            <MaterialNumberInput label="create_show.split_lines" value={$splitLines} max={100} on:change={(e) => splitLines.set(e.detail)} hideWhenZero />
+            <NumberField label="create_show.split_lines" value={$splitLines} max={100} on:change={(e) => splitLines.set(e.detail)} hideWhenZero />
         </List>
     {/if}
 

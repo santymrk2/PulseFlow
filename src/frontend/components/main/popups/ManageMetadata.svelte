@@ -6,7 +6,7 @@
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 
     $: defaultMetadata = Object.keys(initializeMetadata({}))
 
@@ -62,7 +62,7 @@
 
 {#each customMetadataValues as name}
     <InputRow>
-        <MaterialTextInput label="inputs.name" value={name} on:change={(e) => updateCustom(name, e)} autofocus={!name} />
+        <TextField label="inputs.name" value={name} on:change={(e) => updateCustom(name, e)} autofocus={!name} />
         <Button icon="delete" on:click={() => removeCustom(name)} white />
     </InputRow>
 {/each}

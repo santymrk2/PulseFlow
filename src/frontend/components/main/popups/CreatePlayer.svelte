@@ -7,7 +7,7 @@
     import { clone } from "../../helpers/array"
     import { addVideoMarker } from "../../helpers/media"
     import { joinTime, secondsToTime } from "../../helpers/time"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 
     let active: "youtube" | "vimeo" = $popupData.active
     let editId: string = $popupData.id || ""
@@ -51,7 +51,7 @@
     }
 </script>
 
-<MaterialTextInput label="inputs.video_id" value={data.id || ""} placeholder="e.g. X-AJdKty74M" disabled={!!(data.id && editId)} on:change={(e) => setValue("id", e.detail)} autofocus={!data.id} pasteBtn={!data.id} />
+<TextField label="inputs.video_id" value={data.id || ""} placeholder="e.g. X-AJdKty74M" disabled={!!(data.id && editId)} on:change={(e) => setValue("id", e.detail)} autofocus={!data.id} pasteBtn={!data.id} />
 {#if !editId}
-    <MaterialTextInput label="inputs.name" value={data.name} disabled={!data.id} on:change={(e) => setValue("name", e.detail)} />
+    <TextField label="inputs.name" value={data.name} disabled={!data.id} on:change={(e) => setValue("name", e.detail)} />
 {/if}

@@ -9,8 +9,8 @@
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     let chosenType = ""
@@ -261,13 +261,13 @@
         <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />
     {/if}
 
-    <MaterialTextInput label="inputs.name" style="margin-bottom: 10px;" disabled={!created && !!currentVariable.name} value={currentVariable.name} on:change={(e) => updateValue(e.detail, "name")} autofocus={!currentVariable.name} on:keydown={nameKeydown} />
+    <TextField label="inputs.name" style="margin-bottom: 10px;" disabled={!created && !!currentVariable.name} value={currentVariable.name} on:change={(e) => updateValue(e.detail, "name")} autofocus={!currentVariable.name} on:keydown={nameKeydown} />
 
     {#if currentVariable.type === "number"}
-        <MaterialNumberInput label="variables.default_value" value={currentVariable.default || 0} step={1} {min} {max} on:change={(e) => updateValue(e.detail, "default")} />
+        <NumberField label="variables.default_value" value={currentVariable.default || 0} step={1} {min} {max} on:change={(e) => updateValue(e.detail, "default")} />
         <InputRow>
-            <MaterialNumberInput label="variables.minimum" value={currentVariable.minValue ?? minDefault} step={1} min={minAbsolute} max={maxAbsolute} on:change={(e) => updateValue(e.detail, "minValue")} />
-            <MaterialNumberInput label="variables.maximum" value={currentVariable.maxValue ?? maxDefault} step={1} min={minAbsolute} max={maxAbsolute} on:change={(e) => updateValue(e.detail, "maxValue")} />
+            <NumberField label="variables.minimum" value={currentVariable.minValue ?? minDefault} step={1} min={minAbsolute} max={maxAbsolute} on:change={(e) => updateValue(e.detail, "minValue")} />
+            <NumberField label="variables.maximum" value={currentVariable.maxValue ?? maxDefault} step={1} min={minAbsolute} max={maxAbsolute} on:change={(e) => updateValue(e.detail, "maxValue")} />
         </InputRow>
 
         <!-- WIP custom step sizes "1,8:2,10:2" ?? -->
@@ -285,7 +285,7 @@
             </InputRow>
             {#if currentVariable.animate}
                 <InputRow>
-                    <MaterialNumberInput label="transition.duration (s)" value={currentVariable.animationDuration ?? 3} step={0.1} min={0.1} max={10} defaultValue={3} on:change={(e) => updateValue(e.detail, "animationDuration")} />
+                    <NumberField label="transition.duration (s)" value={currentVariable.animationDuration ?? 3} step={0.1} min={0.1} max={10} defaultValue={3} on:change={(e) => updateValue(e.detail, "animationDuration")} />
                 </InputRow>
             {/if}
 
@@ -296,12 +296,12 @@
             <InputRow style="border-radius: 4px;overflow: hidden;">
                 {#if (currentVariable.sets?.length || 0) > 1}
                     <span style="background-color: var(--primary-darker);font-weight: bold;font-size: 0.8em;display: flex;align-items: center;padding: 0 10px;"><span style="color: var(--secondary);display: flex;align-items: center;">#</span>{i + 1}</span>
-                    <MaterialTextInput label="inputs.name" style="flex: 2;" value={set.name} on:change={(e) => updateSet(i, e.detail, "name")} autofocus={!!currentVariable.name && !set.name} />
+                    <TextField label="inputs.name" style="flex: 2;" value={set.name} on:change={(e) => updateSet(i, e.detail, "name")} autofocus={!!currentVariable.name && !set.name} />
                 {/if}
 
                 <!-- WIP no negative numbers at the moment -->
-                <MaterialNumberInput label="variables.minimum" style="flex: 1;" value={set.minValue ?? DEFAULT_SET.minValue} step={1} min={0} max={maxAbsolute} on:change={(e) => updateSet(i, e.detail, "minValue")} />
-                <MaterialNumberInput label="variables.maximum" style="flex: 1;" value={set.maxValue ?? DEFAULT_SET.maxValue} step={1} min={0} max={maxAbsolute} on:change={(e) => updateSet(i, e.detail, "maxValue")} />
+                <NumberField label="variables.minimum" style="flex: 1;" value={set.minValue ?? DEFAULT_SET.minValue} step={1} min={0} max={maxAbsolute} on:change={(e) => updateSet(i, e.detail, "minValue")} />
+                <NumberField label="variables.maximum" style="flex: 1;" value={set.maxValue ?? DEFAULT_SET.maxValue} step={1} min={0} max={maxAbsolute} on:change={(e) => updateSet(i, e.detail, "maxValue")} />
                 <!-- {#if i > 0 && i === (currentVariable.sets?.length || 0) - 1} -->
                 {#if (currentVariable.sets?.length || 1) > 1}
                     <Button icon="duplicate" title="actions.duplicate" on:click={() => duplicateSet(i)} />
@@ -345,12 +345,12 @@
                 {#each currentVariable.textSetKeys ?? [""] as key, keyIndex}
                     <InputRow>
                         {#if i === 0}
-                            <MaterialTextInput label="inputs.name" disabled={!!(key && textSet?.[key]) || i > 0} value={key} on:input={(e) => updateTextSetVariableName(keyIndex, e)} on:keydown={textSetKeydown} />
+                            <TextField label="inputs.name" disabled={!!(key && textSet?.[key]) || i > 0} value={key} on:input={(e) => updateTextSetVariableName(keyIndex, e)} on:keydown={textSetKeydown} />
                         {:else}
                             <p style="width: 50%;display: flex;align-items: center;padding: 0 10px;border-bottom: 1px solid var(--primary-lighter);">{key}</p>
                         {/if}
 
-                        <MaterialTextInput label="variables.value" disabled={!key} value={textSet[key] || ""} on:change={(e) => updateTextSetValue(i, key, e)} />
+                        <TextField label="variables.value" disabled={!key} value={textSet[key] || ""} on:change={(e) => updateTextSetValue(i, key, e)} />
 
                         {#if (currentVariable.textSetKeys?.length ?? 1) > 1 && i === 0}
                             {#if keyIndex > 0}
