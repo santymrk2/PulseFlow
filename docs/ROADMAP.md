@@ -878,7 +878,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   *Aceptación:* una pantalla en espejo muestra lo mismo que su origen (golden o prueba
   manual anotada).
 
-- [ ] **F10.6 Modal "Looks".** (agente B; mismo estilo y comportamiento que el modal de
+- [x] **F10.6 Modal "Looks".** (agente B; mismo estilo y comportamiento que el modal de
   pantallas — ver "Modales" en la especificación; si `Modal.svelte` todavía no existe en
   tu rama, creá uno con la misma API en `components/looks/` y se unifica al integrar)
   *Archivos:* `src/frontend/components/looks/` (`LooksWindow.svelte`, `LookGrid.svelte`,
@@ -889,6 +889,9 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   de traducción (en `en.json` y `es.json`), botones con ícono.
   *Aceptación:* crear "Sólo letras" (Media apagado en Principal), ponerlo en vivo y
   volver a "Default"; con `RENDER_SNAPSHOT` se verifica que el fondo desaparece y vuelve.
+  *Estado:* hecho (`df01772a`). El cambio de capas del look en vivo se verificó
+  inspeccionando `styles['__look__out1'].layers`; la verificación visual con
+  `RENDER_SNAPSHOT` queda pendiente del usuario (ver `docs/informes/looks.md`).
 
 - [ ] **F10.7 Menú "Pantallas", atajos y selector en la barra superior.** (agente C)
   *Archivos:* `src-tauri/src/lib.rs` (menú nativo macOS con `tauri::menu`),
