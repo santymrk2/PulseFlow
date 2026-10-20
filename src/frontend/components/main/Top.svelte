@@ -91,14 +91,14 @@
     </div>
 {/if}
 
-<div class="top" class:drag={!isWindows}>
+<div class="top" data-tauri-drag-region>
     <!-- {#if !isWindows}
     <div class="dragZone" />
     {/if} -->
-    <span style="width: var(--navigation-width);">
+    <span style="width: var(--navigation-width);" data-tauri-drag-region>
         {#if !isWindows}
             <!-- macOS: espacio libre para los botones de ventana (titleBarStyle: Overlay) -->
-            <div class="macTitleSpace" />
+            <div class="macTitleSpace" data-tauri-drag-region />
         {/if}
     </span>
     <span>
@@ -106,7 +106,7 @@
         <TopButton id="edit" disabled={editDisabled} />
         <TopButton id="stage" />
     </span>
-    <span style="width: var(--navigation-width);justify-content: flex-end;">
+    <span style="width: var(--navigation-width);justify-content: flex-end;" data-tauri-drag-region>
         <TopButton id="draw" red={$drawTool === "fill" || ($drawTool === "zoom" && $drawSettings.zoom?.size !== 100) || !!($drawTool === "paint" && $paintCache?.length)} hideLabel />
         {#if !settingsDisabled}
             <TopButton id="settings" hideLabel />
@@ -166,19 +166,11 @@
         /* separador inferior (referencia: Topbar.tsx "border-b") */
         border-bottom: 1px solid var(--border-color, var(--primary-lighter));
 
-        /* disabled because it's causing unexpected behaviour in Windows 11 */
-        /* -webkit-app-region: drag; */
+        /* El arrastre de la ventana lo maneja Tauri con `data-tauri-drag-region`
+           en el contenedor y sus zonas vacías (F10.0b). */
     }
     .top span {
         display: flex;
-    }
-
-    .top.drag {
-        -webkit-app-region: drag;
-    }
-
-    .top.drag :global(button) {
-        -webkit-app-region: no-drag;
     }
 
     /* .dragZone {
