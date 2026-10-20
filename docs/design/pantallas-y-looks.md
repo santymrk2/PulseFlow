@@ -202,39 +202,67 @@ y desde el menú contextual del botón de salida.
 
 ## Distribución general (como ProPresenter 7)
 
-Objetivo: que quien viene de ProPresenter encuentre las cosas donde las espera. No se
-mueven features de lugar si no figuran acá.
+Basada en una captura real de ProPresenter 7 en macOS (2026-10-20). Objetivo: que quien
+viene de ProPresenter encuentre cada cosa donde la espera.
 
 ```
-┌───────────────────────────────────────────────────────────────────────────────┐
-│ ● ● ●  [ Show | Edit | Stage ]        Look: Default ▾  [▣ Audiencia] [▣ Stage] ⚙ │
-├──────────────┬─────────────────────────────────────────────┬──────────────────┤
-│ Proyectos /  │ Nombre del show · layout          12 slides │ ┌──────────────┐ │
-│ playlists    │                    [+ Añadir] [▶ Proyectar] │ │  Audiencia   │ │
-│              │ ┌────┐ ┌────┐ ┌────┐ ┌────┐                 │ │  (preview)   │ │
-│              │ │ 1  │ │ 2  │ │ 3  │ │ 4  │  grilla de      │ └──────────────┘ │
-│              │ └────┘ └────┘ └────┘ └────┘  slides         │ [ Limpiar todo ] │
-│              │                                             │ ▭  🖼  ◧  ♪      │
-│              │                                             │ Timers│Overlays│…│
-│              │                                             │ (controles)      │
-├──────────────┴─────────────────────────────────────────────┴──────────────────┤
-│ Shows │ Media │ Audio │ Scripture │ Overlays │ Templates │ …      🔍 Buscar     │
-│ (cajón de bibliotecas, como el Media Bin de ProPresenter)                      │
-└───────────────────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│● ● ● [🔍 Buscar][Aa Texto][▦ Tema] [▶ Show][✎ Edit][📖 Biblia][⋯]   [🖼 Media][🎭 Default][((·)) Live][◉ Audiencia][◉ Stage] [● Estado] │
+├───────────────┬──────────────────────────────────────────────┬──────────────────────────┤
+│ BIBLIOTECA + ^│ ▣ Nombre del show            [⊞][≡][T] ...  │ ┌──────────────────┐ ▎♪ │
+│  Default      │ ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐          │ │                  │ ▎✈ │
+│ PLAYLIST      │ │      │ │▒▒▒▒▒▒│ │      │ │      │          │ │   Audiencia      │ⓧ▎◧ │
+│  Domingo      │ │1     │ │2     │ │3     │ │4     │          │ │   (preview)      │ ▎▤ │
+│───────────────│ └──────┘ └──────┘ └──────┘ └──────┘          │ └──────────────────┘ ▎🖼 │
+│ 3 ÍTEMS     + │  (seleccionada: borde naranja/acento)        │ Pantalla 1 ▾             │
+│  Canción 1    │                                              │ [♪][▤][🖼]  ───────●──    │
+│  Canción 2    │                                              │   ⏮  ▶  ⏭   (transporte)  │
+│ 🔍 Filtro     │ [+] [▦▦]                  [⊞][T][≡] ──●──     │ [♪][▤][⏱][✈][◧][M]       │
+├───────────────┼──────────────────────────────────────────────┤ TIMERS                 + │
+│ MEDIA       ^ │ ▭ ‹ ›  Playlists › Playlist                  │  Cuenta regresiva 05:00 ▶│
+│  Carpetas     │                                              │  Pre-show        05:00 ▶│
+│  Playlists  + │           (grilla de medios / Importar)      │                          │
+│  Cámaras      │ [+]            🔍 Filtro           [⊞][≡] ──●── │                          │
+└───────────────┴──────────────────────────────────────────────┴──────────────────────────┘
 ```
 
-| Elemento | Dónde | Qué hace |
+**Barra superior** (botones con ícono arriba y etiqueta chica debajo, agrupados en
+"cápsulas" con separadores, alto ≈ 64 px):
+
+| Grupo | Botones (PulseFlow) | Qué abre / hace |
 | --- | --- | --- |
-| Botón **Audiencia** | barra, derecha | enciende/apaga todas las pantallas de audiencia (⌘1); resaltado cuando están en vivo; clic derecho → Configurar pantallas… |
-| Botón **Stage** | barra, derecha | igual para las de stage (⌘2) |
-| **Look: X ▾** | barra, a la izquierda de los botones de pantallas | cambia el look en vivo; última opción "Editar looks…" abre el modal |
-| Vista previa | panel derecho, arriba | muestra la pantalla de audiencia principal; encima, "Look: X" |
-| **Limpiar todo** + limpiar por capa | debajo de la vista previa | lo que hoy hacen los botones de limpiar, con el mismo orden de capas que la grilla de looks |
-| Controles (Timers, Overlays/Mensajes, Stage, Acciones) | panel derecho, debajo de limpiar | las herramientas que hoy muestra `ShowTools` |
-| Configurar pantallas… / Looks… | menú **Pantallas**, clic derecho en los botones de pantallas, selector de look | abren los modales |
+| Izquierda 1 | **Buscar** · **Texto** · **Tema** | búsqueda rápida (QuickSearch); formato de texto de la slide; elegir template del show |
+| Izquierda 2 (modos) | **Show** · **Edit** · **Biblia** · **⋯** | páginas Show/Edit; Biblia abre Scripture; ⋯ = menú con *Editor de stage* (la página Stage actual), *Editor de temas* (templates), *Editor de overlays* |
+| Derecha 1 | **Media** · **Look** (muestra el nombre del look en vivo, ej. "Default") · **Live** | Media muestra/oculta el cajón inferior; Look = menú de looks + "Editar looks…"; Live = estado y control de RTMP/NDI |
+| Derecha 2 | **Audiencia** · **Stage** | botones redondos de encendido (rojo = en vivo) para cada grupo de pantallas; clic derecho → Configurar pantallas… |
+| Extremo derecho | **Estado** | el actual `StatusIndicator` (conexiones, remotos) |
 
-Pendiente de decidir por el usuario (no hacerlo sin preguntar): mover la biblioteca de
-shows del cajón inferior a la columna izquierda, como en ProPresenter.
+**Columna izquierda** (≈ 200 px, de arriba abajo):
+- **BIBLIOTECA** (con `+` y colapsar): categorías de shows (hoy en el cajón inferior).
+- **PLAYLIST**: los proyectos de FreeShow.
+- Lista de ítems del proyecto seleccionado ("3 ÍTEMS" + `+`) y **Filtro** abajo.
+- **MEDIA** (sección inferior, alineada con el cajón): fuentes del cajón inferior
+  (carpetas de medios, playlists de medios, cámaras / entradas de video).
+
+**Centro:**
+- Cabecera con el nombre del show y los íconos de vista/herramientas a la derecha.
+- Grilla de slides: miniatura con **barra inferior** que tiene el número (y el grupo con
+  su color); la seleccionada con borde de acento grueso.
+- Pie de la grilla: `+` y accesos a la izquierda; vista grilla/texto/lista y **slider de
+  tamaño** a la derecha.
+- Cajón inferior (**media bin**): navegación con migas ("Playlists › Playlist"),
+  contenido en grilla, pie con `+`, **Filtro** centrado, vista y slider de tamaño.
+
+**Columna derecha:**
+- Vista previa de la pantalla de audiencia; a su derecha, **tira vertical de botones
+  de limpiar por capa** (audio, mensajes, overlays, slide, media, cámara) y una **ⓧ
+  "limpiar todo"** superpuesta al borde de la vista previa. La capa que tiene contenido
+  se resalta.
+- Debajo: **"Pantalla 1 ▾"** para elegir qué pantalla se previsualiza.
+- Transporte de medios/audio (pestañas chicas de ícono, barra de progreso, botones).
+- **Barra de pestañas de íconos** de los controles: Audio, Stage, Timers, Mensajes,
+  Overlays, Acciones/Macros. Debajo, el contenido de la pestaña (ej. TIMERS con `+` y
+  cada timer con reset y play).
 
 ## Dónde se accede (y qué desaparece)
 

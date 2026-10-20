@@ -944,17 +944,19 @@ Reglas de F11 (además de AGENTS.md):
 - Íconos: se mantiene `Icon.svelte`. Sólo donde la tarea lo dice se puede usar
   `@lucide/svelte` (ya está en devDependencies).
 
-- [ ] **F11.1 Barra superior al estilo ProPresenter.** (distribución en
-  `docs/design/pantallas-y-looks.md` → "Distribución general"; estilo de `Topbar.tsx`;
-  archivos `main/Top.svelte`, `main/TopButton.svelte`) Izquierda (después de los botones
-  de macOS): modos Show/Edit/Stage como grupo "pill". Derecha: selector de look
-  (F10.7), **dos botones de pantallas — Audiencia y Stage —** que encienden/apagan cada
-  grupo (resaltados cuando están en vivo; clic derecho → "Configurar pantallas…") y
-  Settings. Reemplaza al botón único de salida actual.
-- [ ] **F11.2 Cajón inferior (Drawer).** (referencia `Drawer.tsx`; archivos
-  `drawer/Drawer.svelte`, `drawer/MaterialDrawerTab.svelte`, `drawer/Navigation.svelte`)
-  barra de 40 px con pestañas ícono + texto, manija de redimensionar de 4 px arriba,
-  buscador de 256 px a la derecha con `Ctrl/⌘+F`, borde superior de 1 px.
+- [ ] **F11.1 Barra superior como ProPresenter.** (tabla "Barra superior" en
+  `docs/design/pantallas-y-looks.md` → "Distribución general"; archivos
+  `main/Top.svelte`, `main/TopButton.svelte`) Botones con ícono + etiqueta debajo,
+  agrupados en cápsulas: Buscar/Texto/Tema · Show/Edit/Biblia/⋯ (menú con Editor de
+  stage, de temas y de overlays) · Media/Look/Live · Audiencia/Stage (redondos, rojos
+  en vivo; clic derecho → Configurar pantallas…) · Estado. Reemplaza al botón único de
+  salida y a las pestañas actuales. Sólo reubica accesos que ya existen.
+- [ ] **F11.2 Cajón inferior como "media bin".** (referencia `Drawer.tsx` + captura;
+  archivos `drawer/Drawer.svelte`, `drawer/MaterialDrawerTab.svelte`,
+  `drawer/Navigation.svelte`) migas de navegación arriba ("Medios › Carpeta"), pie con
+  `+`, Filtro centrado, vista grilla/lista y slider de tamaño a la derecha; manija de
+  redimensionar de 4 px. Las pestañas actuales (Shows, Media, Audio, Scripture,
+  Overlays, Templates…) quedan como fila compacta de íconos hasta F11.10.
 - [ ] **F11.3 Panel izquierdo (proyectos y navegación).** (referencia
   `LibraryPanel.tsx`; archivos `show/Projects.svelte`, `show/ProjectList.svelte`,
   `show/ProjectContentList.svelte`, `drawer/navigation/*`) filas de 32 px redondeadas,
@@ -965,18 +967,27 @@ Reglas de F11 (además de AGENTS.md):
   slides a la derecha, botones "Añadir" (ghost) y "Proyectar" (secundario) usando las
   acciones que ya existen.
 - [ ] **F11.5 Grilla de slides y miniaturas.** (referencia `SlideGrid.tsx`,
-  `SlideThumbnail.tsx`; archivos `show/Slides.svelte` y el **marco** de
-  `slide/Slide.svelte`) separación 8 px, miniatura con borde de 1 px y radio, activa
-  con anillo `--secondary`, etiqueta de grupo como chip con su color, número en
-  esquina. Probar en modo grilla, lista y "texto".
-- [ ] **F11.6 Panel derecho al estilo ProPresenter.** (distribución en
-  `docs/design/pantallas-y-looks.md` → "Distribución general"; estilo de
-  `RightPanel.tsx`/`ClearControls.tsx`; archivos `output/preview/Preview.svelte`,
-  `output/preview/ClearButtons.svelte`, `show/ShowTools.svelte`) En este orden: vista
-  previa de Audiencia con el nombre del Look en vivo encima; fila **Limpiar**: botón
-  ancho "Limpiar todo" + un botón de ícono por capa (Slide, Media, Overlays, Audio);
-  debajo, los **Controles** en pestañas (Timers, Overlays/Mensajes, Stage, Acciones —
-  las herramientas que hoy muestra `ShowTools`). Sin quitar funciones.
+  `SlideThumbnail.tsx` + captura; archivos `show/Slides.svelte` y el **marco** de
+  `slide/Slide.svelte`) miniatura con **barra inferior** (número a la izquierda, grupo
+  con su color), seleccionada con borde de acento de 2 px, separación 12 px; pie de la
+  grilla con `+` a la izquierda y vista grilla/texto/lista + slider de tamaño a la
+  derecha (usar los controles que ya existen). Probar en los tres modos.
+- [ ] **F11.6 Panel derecho como ProPresenter.** ("Columna derecha" en la
+  especificación; archivos `output/preview/Preview.svelte`,
+  `output/preview/ClearButtons.svelte`, `show/ShowTools.svelte` y el transporte de
+  medios existente) vista previa con **tira vertical de limpiar por capa** a su derecha
+  y ⓧ "limpiar todo" superpuesta; "Pantalla 1 ▾" debajo; transporte de medios/audio;
+  **barra de pestañas de íconos** (Audio, Stage, Timers, Mensajes, Overlays, Acciones)
+  con el contenido que hoy muestra `ShowTools`. Sin quitar funciones.
+- [ ] **F11.10 Columna izquierda como ProPresenter: Biblioteca, Playlist y Media.**
+  ("Columna izquierda" en la especificación; archivos `MainLayout.svelte` (sólo la
+  columna izquierda), `show/Projects.svelte`, `show/ProjectList.svelte`,
+  `show/ProjectContentList.svelte`, `drawer/navigation/*`) secciones BIBLIOTECA
+  (categorías de shows, que hoy están en el cajón), PLAYLIST (proyectos), lista de
+  ítems del proyecto con Filtro, y MEDIA abajo (fuentes del cajón). Al elegir una
+  categoría de BIBLIOTECA, el cajón muestra esos shows. Es un cambio de lugar: hacerlo
+  **después** de F11.2–F11.6 y verificar que abrir/arrastrar shows y proyectos sigue
+  funcionando igual.
 - [ ] **F11.7 Página de Settings.** (referencia `SettingsTabs.tsx`, `SettingsTools.tsx`;
   archivos `settings/SettingsTabs.svelte`, `settings/Settings.svelte`) **después de
   F10.8**: lista de pestañas como la izquierda de la referencia, contenido con ancho
