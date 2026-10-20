@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { activeRecording, activeStyle, audioChannelsData, dictionary, outputs, rtmpStatus, selected, special, styles, templates, toggleOutputEnabled } from "../../../stores"
+    import { activeRecording, activeStyle, audioChannelsData, dictionary, outputs, previewOutputId, rtmpStatus, selected, styles, templates, toggleOutputEnabled } from "../../../stores"
     import { openSettings } from "../../settings/openSettings"
     import { translateText } from "../../../utils/language"
     import AudioMeter from "../../drawer/audio/AudioMeter.svelte"
@@ -13,38 +13,18 @@
     import { bindSlidesToOutput, getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import Button from "../../../lib/components/ui/button/button.svelte"
+    import Dropdown from "../../../lib/components/ui/dropdown/dropdown.svelte"
     import OutputPreviewLabel from "./OutputPreviewLabel.svelte"
     import PreviewOutput from "./PreviewOutput.svelte"
 
     export let disableTransitions = false
 
     $: allEnabledOuts = sortObject(sortByName(keysToID($outputs).filter((a) => a.enabled)), "stageOutput")
-    $: outs = allEnabledOuts.length > 1 ? allEnabledOuts.filter((a) => !a.hideFromPreview) : allEnabledOuts
-    $: hiddenOuts = allEnabledOuts.length > 1 ? allEnabledOuts.filter((a) => a.hideFromPreview) : []
-
-    $: maxColumns = Math.max(1, outs.length)
-    $: gridColumns = allEnabledOuts.length > 1 ? Math.min($special.outputPreviewGrid || 2, maxColumns) : 1
-
-    let nextZoomTimeout: NodeJS.Timeout | null = null
-    function handleWheel(e: WheelEvent) {
-        if (!e.ctrlKey && !e.metaKey) return
-        if (allEnabledOuts.length <= 1) return
-        e.preventDefault()
-        if (nextZoomTimeout) return
-
-        const current = gridColumns
-        const direction = e.deltaY < 0 ? -1 : 1
-        const nextValue = Math.max(1, Math.min(maxColumns, current + direction))
-
-        if (nextValue !== ($special.outputPreviewGrid || 2)) {
-            special.update((s) => ({ ...s, outputPreviewGrid: nextValue }))
-        }
-
-        if (Math.abs(e.deltaY) >= 100) return
-        nextZoomTimeout = setTimeout(() => {
-            nextZoomTimeout = null
-        }, 300)
-    }
+    // una sola salida a la vez (F14.11); las ocultas de la vista previa no aparecen en el selector
+    $: pickable = allEnabledOuts.length > 1 ? allEnabledOuts.filter((a) => !a.hideFromPreview) : allEnabledOuts
+    $: shown = pickable.find((a) => a.id === $previewOutputId) || pickable[0] || allEnabledOuts[0]
+    $: outs = shown ? [shown] : []
+    $: pickerOptions = pickable.map((o) => ({ id: o.id, name: o.name || o.id }))
 
     let fullscreen = false
     let fullscreenId = ""
@@ -160,7 +140,7 @@
 <!-- role="button"
 tabindex="0"
 aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"} -->
-<div on:click={toggleFullscreen} on:wheel={handleWheel} class="multipleOutputs" class:multiple={outs.length > 1} class:fullscreen style={fullscreen ? "width: 100%;height: 100%;" : "width: calc(100% - 4px);"} role="none">
+<div on:click={toggleFullscreen} class="multipleOutputs" class:fullscreen style={fullscreen ? "width: 100%;height: 100%;" : "width: calc(100% - 4px);"} role="none">
     {#if fullscreen}
         <Button class="hide" style="z-index: 2;opacity: 1;inset-inline-end: 10px;" title="actions.close" on:click={() => (fullscreen = false)}>
             <Icon id="close" size={1.2} white />
@@ -173,14 +153,6 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
                 <p><b><T id="settings.aspect_ratio" />:</b> {Number((resolution.width / resolution.height).toFixed(2))} ({toFraction(resolution.width / resolution.height)})</p>
             {/if}
         </span>
-    {:else if hiddenOuts.length}
-        <div class="hiddenOutputTitles">
-            {#each hiddenOuts as output (output.id)}
-                <div style="flex: 1 1 {100 / gridColumns}%;min-width: 0;">
-                    <OutputPreviewLabel {output} outs={allEnabledOuts} />
-                </div>
-            {/each}
-        </div>
     {/if}
 
     {#each outs as output (output.id)}
@@ -190,13 +162,18 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
         {@const isMuted = $audioChannelsData[`channel_${output.id}`]?.isMuted}
         {@const isNetworkOutput = output.ndi || output.webrtc || output.rtmp}
 
-        <div id={output.id} class="outputPreview output_button context #output_preview" class:drop-target={!fullscreen && dragOverOutputId === output.id} on:dragover={(e) => handleDragOver(e, output.id)} on:dragleave={(e) => handleDragLeave(e, output.id)} on:drop={(e) => handleDrop(e, output.id)} style={fullscreen ? (fullscreenId === output.id ? "display: contents;" : "opacity: 0;position: absolute;") : outs.length > 1 ? `width: ${100 / gridColumns}%;` : "display: contents;"}>
+        <div id={output.id} class="outputPreview output_button context #output_preview" class:drop-target={!fullscreen && dragOverOutputId === output.id} on:dragover={(e) => handleDragOver(e, output.id)} on:dragleave={(e) => handleDragLeave(e, output.id)} on:drop={(e) => handleDrop(e, output.id)} style={fullscreen ? (fullscreenId === output.id ? "display: contents;" : "opacity: 0;position: absolute;") : "display: contents;"}>
             {#if !fullscreen && allEnabledOuts.length > 1}
-                <OutputPreviewLabel {output} outs={allEnabledOuts} />
+                <div class="outputBar">
+                    <OutputPreviewLabel {output} outs={allEnabledOuts} />
+                    {#if pickerOptions.length > 1}
+                        <Dropdown arrow options={pickerOptions} value={output.name || output.id} activeId={output.id} on:click={(e) => previewOutputId.set(e.detail.id)} />
+                    {/if}
+                </div>
             {/if}
 
-            <div class="previewContainer" style={outs.length > 1 && !fullscreen ? `border: 2px solid ${output?.color};` : ""}>
-                <PreviewOutput outputId={output.id} {disableTransitions} disabled={outs.length > 1 && !fullscreen && !output?.active} {fullscreen} />
+            <div class="previewContainer">
+                <PreviewOutput outputId={output.id} {disableTransitions} disabled={allEnabledOuts.length > 1 && !fullscreen && !output?.active} {fullscreen} />
 
                 <!-- BADGES (LIVE / REC) -->
                 {#if !fullscreen}
@@ -285,11 +262,11 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
 </div>
 
 <style>
-    .hiddenOutputTitles {
+    .outputBar {
         display: flex;
-        flex-wrap: wrap;
+        align-items: center;
         width: 100%;
-        background-color: var(--primary-darker);
+        border-bottom: 1px solid var(--border);
     }
 
     .multipleOutputs {
@@ -298,16 +275,7 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
         /* this is changed in electron v31 (chromium) */
         height: fit-content;
         /* height: 100%; */
-
-        /* width: calc(50% - 0.5px); */
-        /* margin-top: 1px;
-        gap: 1px; */
     }
-    /*
-    .multipleOutputs.multiple:not(.fullscreen) :global(.zoomed) {
-        width: 50% !important;
-    }
-    */
 
     .fullscreen {
         position: fixed;

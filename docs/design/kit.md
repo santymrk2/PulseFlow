@@ -272,15 +272,18 @@ Slot `trailing` a la derecha (contador, acción).
 
 ## `capsule`
 
-Grupo de botones de la barra superior: alto 32 px, borde 1 px, radio completo,
-fondo `--primary-darker`. Dentro, botones `ghost` de `sm` o `icon-sm`.
+Grupo de botones de la barra superior: alto 32 px, borde de 1 px `--border`, **el mismo radio
+que los botones normales** (`--radius`, 6 px) y sin fondo propio. Los botones de adentro usan
+el radio chico (4 px) para que las esquinas encajen. Dentro, botones `ghost` de `sm` o
+`icon-sm`.
 
 ```svelte
 <Capsule>
     <Button variant="ghost" size="sm" onclick={openSearch}>Buscar</Button>
-    <Button variant="ghost" size="sm" onclick={openText}>Texto</Button>
 </Capsule>
 ```
+
+Íconos de la barra: Audiencia = `display` (monitor liso), Stage = `stage` (monitor con ondas).
 
 ## `menu`
 

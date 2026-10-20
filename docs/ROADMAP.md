@@ -1563,6 +1563,27 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   siguen en color; (3) `Tipbar` ("Donate" de FreeShow) sigue; (4) los botones "New collection"
   / "New category" se ven con borde claro (contorno de énfasis `showOutline`).
 
+- [ ] **F14.11 Ajustes de estructura tras el repaso** (pedidos del usuario, 2026-10-20).
+  *Hecho:* (1) **`+` de LIBRARY** (`components/show/LibraryAddMenu.svelte`): un solo ícono sin
+  texto que abre New show, New category, New project, New folder e Import; se escondió la
+  **pestaña Shows del cajón** (se entra por LIBRARY; `Ctrl+1` sigue abriéndola) y se quitó el `+`
+  del pie del cajón con su lógica por pestaña (`addClick`, `showAddButton`): Media/Audio
+  (`MediaTabs`/`AudioTabs`), Scripture, overlays y templates ya tienen su propio botón de crear.
+  (2) **Vista previa de una sola salida** (`MultiOutputs.svelte`): store `previewOutputId`, barra
+  con el estado de la salida y un dropdown (`Dropdown arrow`) para cambiar de pantalla; se
+  quitaron la grilla, el zoom con rueda (`outputPreviewGrid`) y los títulos de las ocultas;
+  `hideFromPreview` ahora significa "no aparece en el selector". El borde de color de la
+  salida en la vista previa se sacó (el color sigue en la línea inferior de la etiqueta y en
+  los slides: es funcional). `OutputPreviewLabel` pierde las props del botón legacy
+  (`active=`) y sus hex de estado pasan a `--danger/--success/--warning`. (3) **`Capsule`**:
+  radio `--radius` (6 px) como los botones normales, sin fondo propio, botones internos a 4 px.
+  (4) **Íconos de la barra:** Audiencia = `display` (monitor liso), Stage = `stage` (monitor con
+  ondas, el que ya usan las etiquetas de salida; antes usaba `user`).
+  *Pendiente de decisión del usuario:* el **`Filter` del pie del cajón**. Lo consumen 20
+  archivos (cada pestaña filtra su lista con él) y la **entrada de versículos por referencia**
+  de Scripture ("Genesis 1:1" con autocompletado) vive ahí; el buscador rápido **no** cubre la
+  Biblia (`quicksearch.ts:248` está comentado). Quitarlo sin más elimina esa función.
+
 ---
 
 ## F15 — Robustez y orden

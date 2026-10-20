@@ -1,12 +1,10 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import type { DrawerTabIds } from "../../../types/Tabs"
-    import { Main } from "../../../types/IPC/Main"
     import { activeDrawerTab, activeEdit, activePage, activePopup, activeProject, activeShow, activeTriggerFunction, audioFolders, audioPlaylists, categories, dictionary, drawer, drawerOpenedInEdit, drawerTabsData, focusMode, labelsDisabled, mediaFolders, mediaOptions, os, overlayCategories, previousShow, projects, quickTextCache, scriptureSettings, scriptures, selected, showsCache, templateCategories } from "../../stores"
     import { DEFAULT_DRAWER_HEIGHT, DEFAULT_WIDTH, MENU_BAR_HEIGHT } from "../../utils/common"
     import { startResizing, stopResizing } from "../../utils/cursor"
     import { translateText } from "../../utils/language"
-    import { sendMain } from "../../IPC/main"
     import { getAccess } from "../../utils/profile"
     import { getNormalizedKey, shouldOpenReplace } from "../../utils/shortcuts"
     import { isTypingTarget } from "../../utils/shortcutsHelper"
@@ -266,31 +264,8 @@
     })
 
     // F11.2 — pie del cajón: agregar, vista grilla/lista y tamaño
-    const addCategoryTabs = ["overlays", "templates"]
-    $: showAddButton = ["shows", "media", "audio", "scripture", ...addCategoryTabs].includes($activeDrawerTab)
     $: showViewToggle = $activeDrawerTab === "media"
     $: showSizeSlider = ["media", "overlays", "templates"].includes($activeDrawerTab) || ($activeDrawerTab === "functions" && $drawerTabsData.functions?.activeSubTab === "scenes")
-
-    function addClick() {
-        switch ($activeDrawerTab) {
-            case "shows":
-                activePopup.set("show")
-                break
-            case "media":
-                sendMain(Main.OPEN_FOLDER, { channel: "MEDIA", title: translateText("new.folder") })
-                break
-            case "audio":
-                sendMain(Main.OPEN_FOLDER, { channel: "AUDIO", title: translateText("new.folder") })
-                break
-            case "scripture":
-                activePopup.set("import_scripture")
-                break
-            case "overlays":
-            case "templates":
-                history({ id: "UPDATE", location: { page: "drawer", id: "category_" + $activeDrawerTab } })
-                break
-        }
-    }
 
     function toggleView() {
         mediaOptions.update((a) => ({ ...a, mode: a.mode === "grid" ? "list" : "grid" }))
@@ -317,7 +292,8 @@
         tabindex="0" -->
         <span class="tabs">
             {#each tabs as tab, i}
-                {#if $drawerTabsData[tab.id]?.enabled !== false && getAccess(tab.id).global !== "none" && (!$focusMode || !hiddenInFocusMode.includes(tab.id))}
+                <!-- Shows no tiene pestaña: se entra por LIBRARY (columna izquierda) -->
+                {#if tab.id !== "shows" && $drawerTabsData[tab.id]?.enabled !== false && getAccess(tab.id).global !== "none" && (!$focusMode || !hiddenInFocusMode.includes(tab.id))}
                     <!-- overflow: unset; -->
                     <Button id={tab.id} style="border-radius: var(--radius) var(--radius) 0 0;border-bottom: 2px solid var(--primary);padding: 0 0.75em;height: 100%;" class="context #drawer_top" title="<b>{tab.name.split('.')[0]}.{tab.name.split('.')[1]}</b>{tab.title ? `\n${tab.title}` : ''} [Ctrl+{i + 1}]" isActive={activeTab === tab.id} on:click={() => openDrawerTab(tab)} on:dblclick={closeDrawer}>
                         <Icon id={tab.icon} size={1} white={activeTab === tab.id} />
@@ -349,9 +325,7 @@
     </div>
 
     <div class="footer">
-        <Button disabled={!showAddButton} on:click={addClick} title="settings.add">
-            <Icon id="add" size={1.2} white />
-        </Button>
+        <div></div>
 
         <div class="searchBox">
             <input bind:this={searchElem} class:hidden={!searchActive && !searchValue.length} class="search edit drawer_search" type="text" placeholder={translateText("ui.filter", $dictionary)} bind:value={searchValue} on:input={search} on:keydown={searchKeydown} use:selectTextOnFocus />

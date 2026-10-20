@@ -166,10 +166,10 @@
     <!-- Derecha 2: Audiencia · Stage (rojo mientras están en vivo); clic derecho abre Configurar pantallas -->
     <Capsule>
         <Button variant="live" size="sm" aria-pressed={audienceLive} data-title={translateText("menu.audience")} oncontextmenu={onScreensContextMenu} onclick={toggleAudience}>
-            <Icon id="people" size={1} white />
+            <Icon id="display" size={1} white />
         </Button>
         <Button variant="live" size="sm" aria-pressed={stageLive} data-title={translateText("menu.stage")} oncontextmenu={onScreensContextMenu} onclick={toggleStage}>
-            <Icon id="user" size={1} white />
+            <Icon id="stage" size={1} white />
         </Button>
         {#if users.length}
             <div class="users" data-data-title={translateText("settings.connections")}>

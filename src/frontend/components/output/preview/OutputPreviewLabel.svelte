@@ -46,53 +46,39 @@
     }
 </script>
 
-<div class="outputTitle">
-    <Button id={output.id} title={output.stageOutput ? "" : "actions.toggle_output_lock"} active={output.active} style="width: 100%;font-weight: normal;border-radius: 0;padding: 0.2em 0.8em;{output.active ? 'border-bottom: 2px solid ' + output.color + ' !important;' : ''}" class="output_button context #output_active_button" on:click={(e) => toggleOutput(e, output.id)}>
-        <div class="indicator" class:locked={!output.active} class:invisible={output.invisible} class:ndi={$ndiData[output?.id || ""]?.connections > 0} class:active={$outputState.find((a) => a.id === output.id)?.active === true} data-title={translateText(getOutputStateTitle(output, { $outputState, $ndiData }), $dictionary)}></div>
-        {#if output.stageOutput}<Icon id="stage" size={0.8} white />{/if}
+<Button id={output.id} variant="ghost" align="start" title={output.stageOutput ? "" : "actions.toggle_output_lock"} style="flex: 1;min-width: 0;border-radius: 0;font-weight: normal;border-bottom: 2px solid {output.active ? output.color : 'transparent'};" class="output_button context #output_active_button" on:click={(e) => toggleOutput(e, output.id)}>
+    <div class="indicator" class:locked={!output.active} class:invisible={output.invisible} class:ndi={$ndiData[output?.id || ""]?.connections > 0} class:active={$outputState.find((a) => a.id === output.id)?.active === true} data-title={translateText(getOutputStateTitle(output, { $outputState, $ndiData }), $dictionary)}></div>
+    {#if output.stageOutput}<Icon id="stage" size={0.8} white />{/if}
 
-        <p style={output.active ? "" : "text-decoration: line-through;"}>{output.name}</p>
-    </Button>
-</div>
+    <p style={output.active ? "" : "text-decoration: line-through;"}>{output.name}</p>
+</Button>
 
 <style>
-    .outputTitle {
-        width: 100%;
-        background-color: var(--primary-darker);
-    }
-
-    .outputTitle :global(button) {
-        cursor: pointer;
-        border-bottom: 2px solid var(--primary-lighter) !important;
-        white-space: nowrap;
-    }
-    .outputTitle :global(button.active:hover) {
-        filter: brightness(0.8);
-    }
-
+    /* estado de la salida: color semántico (apagada · en vivo · bloqueada · red · NDI) */
     .indicator {
         padding: 0;
         width: 8px;
         height: 8px;
+        flex: none;
         border-radius: 50%;
 
         transition: 0.3s background-color ease;
-        background-color: #ce3535;
+        background-color: var(--danger);
     }
     .indicator.invisible {
-        background-color: #897f7f;
+        background-color: var(--text-subtle);
     }
     .indicator.ndi {
-        background-color: #48cbe9;
+        background-color: var(--text);
     }
     .indicator.active {
-        background-color: #6dff85;
+        background-color: var(--success);
     }
     .indicator.locked {
-        background-color: #c98b55;
+        background-color: var(--warning);
     }
     .indicator.locked.active,
     .indicator.locked.ndi {
-        background-color: #ffb16d;
+        background-color: var(--warning);
     }
 </style>

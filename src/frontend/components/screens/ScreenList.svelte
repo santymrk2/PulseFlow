@@ -35,7 +35,7 @@
     <SectionHeader>
         {translateText("screen_config.audience")}
         {#snippet actions()}
-            <Button variant="live" size="icon-sm" icon="outputs" iconSize={0.9} aria-pressed={audienceLive} title="screen_config.show_audience" onclick={() => toggleGroup("audience")} />
+            <Button variant="live" size="icon-sm" icon="display" iconSize={0.9} aria-pressed={audienceLive} title="screen_config.show_audience" onclick={() => toggleGroup("audience")} />
             <Button variant="ghost" size="icon-sm" icon="add" iconSize={0.9} title="settings.new_output" onclick={() => dispatch("addAudience")} />
         {/snippet}
     </SectionHeader>

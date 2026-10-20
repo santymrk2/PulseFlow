@@ -6,6 +6,7 @@
     import Tipbar from "./components/main/Tipbar.svelte"
     import Top from "./components/main/Top.svelte"
     import Preview from "./components/output/preview/Preview.svelte"
+    import LibraryAddMenu from "./components/show/LibraryAddMenu.svelte"
     import Projects from "./components/show/Projects.svelte"
     import ProjectContentList from "./components/show/ProjectContentList.svelte"
     import Show from "./components/show/Show.svelte"
@@ -59,7 +60,12 @@
                 {#if page === "show"}
                     {#key $activeProfile}
                         <div class="librarySection">
-                            <SectionHeader>{translateText("ui.library")}</SectionHeader>
+                            <SectionHeader>
+                                {translateText("ui.library")}
+                                {#snippet actions()}
+                                    <LibraryAddMenu />
+                                {/snippet}
+                            </SectionHeader>
                             {#each Object.entries($categories || {}) as [id, cat]}
                                 {#if !cat?.isArchive && $activeProfile ? getAccess(id).global !== "none" : true}
                                     <ListRow onclick={() => openLibraryCategory(id)}>

@@ -31,7 +31,7 @@
     // F10.7 — items del menú "Pantallas" definidos acá porque viven fuera de
     // `contextMenus.ts` (herramienta de escritorio, no de la lista de contextos).
     const screensMenuItems: { [key: string]: ContextMenuItem } = {
-        screens_toggle_audience: { label: "screen_config.show_audience", shortcuts: ["Ctrl+1"], icon: "outputs" },
+        screens_toggle_audience: { label: "screen_config.show_audience", shortcuts: ["Ctrl+1"], icon: "display" },
         screens_toggle_stage: { label: "screen_config.show_stage", shortcuts: ["Ctrl+2"], icon: "stage" },
         screens_config: { label: "screen_config.configure", icon: "settings" },
         screens_looks: { label: "screen_config.manage_looks", icon: "styles" },
