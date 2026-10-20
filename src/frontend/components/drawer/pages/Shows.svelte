@@ -288,7 +288,7 @@
 {#if showWithNonExistentCategory}
     <FloatingInputs side="left" onlyOne>
         <MaterialButton on:click={createNonExistentCategories}>
-            <Icon id="autofill" gradient />
+            <Icon id="autofill" />
             <T id="category.create_nonexistent" />
         </MaterialButton>
     </FloatingInputs>
@@ -301,7 +301,7 @@
     </FloatingInputs>
 {/if}
 
-<FloatingInputs onlyOne gradient>
+<FloatingInputs onlyOne>
     <div role="none" class="overflow-interact" on:click={(e) => createShow(e, true)}>
         <MaterialButton icon="add" class="context #drawer_new_show" title="tooltip.show [Ctrl+N]" disabled={readOnly} on:click={createShow} white>
             {#if !$labelsDisabled}<T id="new.show" />{/if}
@@ -343,7 +343,7 @@
         height: 28px;
         border-radius: 4px;
         background-color: var(--primary-darker);
-        /* box-shadow: 0 3px 8px rgb(0 0 0 / 0.2); */
+        /* */
         border-bottom: 1px solid var(--primary-lighter);
     }
 

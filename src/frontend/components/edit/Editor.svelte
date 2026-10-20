@@ -81,11 +81,10 @@
         {:else if $activeEdit.type === "effect"}
             <EffectEditor />
 
-            <FloatingInputs gradient style="width: 50px;height: 50px;border: none;">
+            <FloatingInputs>
                 <MaterialButton
                     class="addButton"
                     title="edit.add_items"
-                    style="width: 50px;height: 50px;"
                     on:click={() => {
                         activePopup.set("effect_items")
                         // const currentEffect = $effects[$activeEdit.id || ""] || {}
@@ -93,7 +92,7 @@
                         // if (!openedMenus[nextIndex]) openedMenus[nextIndex] = true
                     }}
                 >
-                    <Icon id="add" size={1.5} white />
+                    <Icon id="add" size={1} white />
                 </MaterialButton>
             </FloatingInputs>
         {:else if $activeEdit.type === "media"}

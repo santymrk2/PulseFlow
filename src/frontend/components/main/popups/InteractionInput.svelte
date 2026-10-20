@@ -92,7 +92,6 @@
             chosenType = e.detail
             updateValue(chosenType, "type")
         }}
-        gradient
     />
 {:else if !existing && !chosenInputType}
     <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />

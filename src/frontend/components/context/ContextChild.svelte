@@ -147,9 +147,7 @@
         overflow: auto;
         position: absolute;
         transform: translate(100%, -14px);
-        box-shadow:
-            2px 2px 3px rgb(0 0 0 / 0.2),
-            inset 4px 0 2px -3px rgb(20 0 0 / 0.15);
+        box-shadow: var(--shadow-float);
         padding: 8px 0;
         z-index: 5000;
 

@@ -537,9 +537,9 @@
                 </div>
             {/if}
 
-            <FloatingInputs gradient style="width: 50px;height: 50px;border: none;">
-                <MaterialButton class="addButton" title={addMenuOpen ? "actions.close" : "context.addToProject"} style="width: 50px;height: 50px;" on:click={() => (addMenuOpen = !addMenuOpen)} on:dblclick={() => (addMenuOpen ? null : createProject())}>
-                    <Icon id="add" size={1.5} style={addMenuOpen ? "transform: rotate(135deg);" : ""} white />
+            <FloatingInputs>
+                <MaterialButton class="addButton" title={addMenuOpen ? "actions.close" : "context.addToProject"} on:click={() => (addMenuOpen = !addMenuOpen)} on:dblclick={() => (addMenuOpen ? null : createProject())}>
+                    <Icon id="add" size={1} style={addMenuOpen ? "transform: rotate(135deg);" : ""} white />
                 </MaterialButton>
             </FloatingInputs>
         </div>
@@ -611,7 +611,6 @@
     }
     .tabs .header.shadow {
         background-color: rgb(0 0 10 / 0.12);
-        box-shadow: 0 2px 4px rgb(0 0 10 / 0.3);
     }
     .tabs .header.isScrollbarVisible {
         left: 0;
@@ -676,7 +675,6 @@
         flex-direction: column;
 
         border-top: 1px solid var(--primary-lighter);
-        box-shadow: 0 -3px 5px rgb(0 0 0 / 0.05);
 
         background-color: var(--primary-darker);
 
@@ -730,7 +728,7 @@
 
     .addMenu {
         position: absolute;
-        bottom: 70px; /* 10px + 50px + 10px */
+        bottom: 52px; /* 12px + 32px + 8px */
         right: 12px;
 
         display: flex;
@@ -741,24 +739,21 @@
         overflow-y: auto;
         overflow-x: hidden;
 
-        background: rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(15px);
-        border-radius: 25px;
-        border: 1px solid var(--border);
-        padding: 6px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        background: var(--bg-elevated);
+        border-radius: var(--radius-modal);
+        border: 1px solid var(--border-strong);
+        padding: 4px;
+        box-shadow: var(--shadow-float);
     }
 
     .addMenu :global(button) {
         justify-content: start;
-        padding: 10px 16px;
+        padding: 0 8px;
 
-        border-radius: 50px;
-
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        border-radius: var(--radius);
 
         /* for overflow shrinking */
-        min-height: 35px;
+        min-height: 28px;
     }
 
     /* remove blur from individual buttons to avoid double blur */
@@ -813,7 +808,7 @@
         border: 1px solid var(--primary-lighter);
 
         z-index: 1;
-        box-shadow: 0 2px 5px rgb(0 0 0 / 0.3);
+        box-shadow: var(--shadow-float);
     }
 
     .projectDropdown :global(button) {

@@ -124,7 +124,6 @@
     }
     .header.shadow {
         background-color: rgb(0 0 10 / 0.12);
-        box-shadow: 0 2px 4px rgb(0 0 10 / 0.3);
     }
 
     .header .right {
@@ -163,7 +162,7 @@
         border: 1px solid var(--primary-lighter);
 
         z-index: 1;
-        box-shadow: 0 2px 5px rgb(0 0 0 / 0.3);
+        box-shadow: var(--shadow-float);
     }
 
     .showDropdown :global(button) {

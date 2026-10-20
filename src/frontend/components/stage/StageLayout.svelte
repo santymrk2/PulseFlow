@@ -182,7 +182,7 @@
         <FloatingInputs side="left" onlyOne>
             {#if !hasStageOutput}
                 <MaterialButton title="stage.create_stage_output" on:click={createStageOutput}>
-                    <Icon id="autofill" gradient />
+                    <Icon id="autofill" />
                     <T id="stage.create_stage_output" />
                 </MaterialButton>
             {/if}

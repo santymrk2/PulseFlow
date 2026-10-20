@@ -213,7 +213,6 @@
 
     .submenus {
         border-top: 1px solid var(--primary-lighter);
-        box-shadow: inset 0 6px 5px -6px rgb(0 0 0 / 0.4);
 
         /* margin-left: 20px; */
         border-inline-start: 8px solid var(--primary-darkest);

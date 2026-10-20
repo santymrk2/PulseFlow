@@ -223,7 +223,7 @@
         position: fixed;
         min-width: 250px;
         background-color: var(--primary-darker);
-        box-shadow: 1px 1px 3px 2px rgb(0 0 0 / 0.2);
+        box-shadow: var(--shadow-float);
         border-radius: 4px;
         padding: 8px 0;
         z-index: 6000;

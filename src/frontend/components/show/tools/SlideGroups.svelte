@@ -189,7 +189,7 @@
     <FloatingInputs round={!(!isLocked && duplicateGroups.length)}>
         {#if !isLocked && duplicateGroups.length}
             <MaterialButton title="groups.merge_duplicated_groups" on:click={() => mergeDuplicateGroups(showId, duplicateGroups)}>
-                <Icon id="autofill" gradient />
+                <Icon id="autofill" />
                 <T id="groups.merge_duplicated_groups" />
             </MaterialButton>
 

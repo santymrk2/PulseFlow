@@ -434,7 +434,7 @@
                 {/each}
             {:else if hasBackground}
                 <MaterialButton on:click={convertBackgroundToMedia}>
-                    <Icon id="autofill" gradient />
+                    <Icon id="autofill" />
                     <T id="edit.convert_to_media_item" />
                 </MaterialButton>
             {/if}

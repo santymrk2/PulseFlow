@@ -260,9 +260,7 @@
         border-radius: 12px;
         padding: 12px;
 
-        box-shadow:
-            0 12px 40px rgb(0 0 0 / 0.6),
-            0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        box-shadow: var(--shadow-float);
         border: 1px solid var(--primary-lighter);
 
         --background: rgba(35, 35, 45, 0.8);
@@ -373,7 +371,6 @@
         border: 1px solid var(--focus);
         border-radius: 14px;
         padding: 4px 6px 4px 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .tag-text {

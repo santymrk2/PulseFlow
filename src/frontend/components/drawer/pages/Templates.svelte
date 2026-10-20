@@ -240,7 +240,7 @@
 {#if templateWithNonExistentCategory}
     <FloatingInputs side="left" onlyOne>
         <MaterialButton on:click={createNonExistentCategories}>
-            <Icon id="autofill" gradient />
+            <Icon id="autofill" />
             <T id="category.create_nonexistent" />
         </MaterialButton>
     </FloatingInputs>

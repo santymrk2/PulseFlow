@@ -410,7 +410,7 @@
 
         background-color: var(--primary);
 
-        /* box-shadow: 0 -2px 14px rgb(0 0 0 / 0.12); */
+        /* */
     }
 
     .handle {
@@ -430,7 +430,6 @@
         display: flex;
         justify-content: space-between;
 
-        box-shadow: 0 -1.8px 8px rgb(0 0 0 / 0.2);
         z-index: 1;
     }
 

@@ -260,7 +260,7 @@
     .contextMenu {
         position: fixed;
         min-width: 250px;
-        box-shadow: 1px 1px 3px 2px rgb(0 0 0 / 0.2);
+        box-shadow: var(--shadow-float);
         padding: 8px 0;
         z-index: 5001;
 

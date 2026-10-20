@@ -63,8 +63,8 @@
             {message}
 
             {#if activeMessage === "donate"}
-                <MaterialButton style="margin-left: 10px;padding: 2px 10px;background: linear-gradient(160deg, #f0008c 0%, #d100db 10%, #b300f0 30%, #9000f0 50%, #8000f0 100%) !important;" on:click={donate}>
-                    <span style="font-weight: bold;color: white;">Donate</span>
+                <MaterialButton variant="outlined" style="margin-left: 10px;padding: 2px 10px;" on:click={donate}>
+                    <span style="font-weight: 600;">Donate</span>
                     <Icon id="launch" white />
                 </MaterialButton>
             {/if}
@@ -79,8 +79,7 @@
 <style>
     section {
         width: 100%;
-        background-color: var(--primary-darkest);
-        /* background: linear-gradient(120deg, #1a0121 0%, #2a001f 40%, #390023 100%); */
+        background-color: var(--bg);
 
         display: flex;
         align-items: center;
@@ -88,9 +87,7 @@
 
         padding: 4px 12px;
 
-        /* border-top: 1px solid; */
-        border-bottom: 2px solid;
-        border-image: linear-gradient(160deg, #8000f0 0%, #9000f0 10%, #b300f0 30%, #d100db 50%, #f0008c 100%) 1;
+        border-bottom: 1px solid var(--border);
     }
 
     .text {

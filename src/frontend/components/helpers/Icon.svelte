@@ -1,11 +1,10 @@
 <script lang="ts">
-    import { uid } from "uid"
     import type { Selected } from "../../../types/Main"
-    import { activePopup, localeDirection, selected, theme, themes } from "../../stores"
+    import { activePopup, localeDirection, selected } from "../../stores"
     import { triggerClickOnEnterSpace } from "../../utils/clickable"
     import { customIcons } from "../../values/customIcons"
     import icons from "../../values/icons"
-    import { fadeColor, hexToHSL, hslToHex } from "./color"
+    import { fadeColor } from "./color"
 
     export let id: string
     export let color: string = ""
@@ -18,23 +17,7 @@
     export let select = false
     export let selectData: Selected | null = null
     export let box = 24
-    export let gradient = false
     export let boxed = false
-
-    const gradientId = `icon-gradient-${uid(5)}`
-    export let gradientColor: string | null = null
-    let baseColor = gradientColor || (gradient ? "#e800f0" : "#f0008c")
-    $: if ($themes[$theme]) updateBaseColor()
-    function updateBaseColor() {
-        if (gradientColor || gradient) return
-        baseColor = $themes[$theme]?.colors?.secondary || "#f0008c"
-    }
-
-    // smaller change
-    $: hsl = hexToHSL(baseColor)
-    $: colorStart = gradient ? (gradientColor ? hslToHex(hsl.h, hsl.s, Math.min(hsl.l + 15, 100)) : hslToHex(340, hsl.s, Math.min(hsl.l + 15, 100))) : hslToHex(hsl.h, hsl.s, Math.min(hsl.l + 6, 100)) // lighter
-    $: colorMid = baseColor
-    $: colorEnd = gradient ? (gradientColor ? hslToHex(hsl.h, hsl.s, Math.max(hsl.l - 30, 0)) : hslToHex(270, hsl.s, Math.max(hsl.l - 30, 0))) : hslToHex(hsl.h, hsl.s, Math.max(hsl.l - 6, 0)) // darker
 
     $: width = size * (boxed ? 1.2 : 1) + "rem"
     $: height = size * (boxed ? 1.2 : 1) + "rem"
@@ -56,46 +39,18 @@
 
 {#if select}
     <svg class={$$props.class} class:flip class:white class:right class:fill class:select class:boxed on:click={click} on:keydown={triggerClickOnEnterSpace} tabindex={0} role="button" style="{$$props.style || ''};{color ? `color: ${color};` : ''}{boxed && color ? `background-color: ${fadeColor(color, 0.3)};` : ''}min-width: {width};{boxed ? `min-height: ${height};` : ''}" {width} {height} viewBox="0 0 {box} {box}" data-title={title}>
-        {#if !white && colorMid && colorEnd && colorStart}
-            <defs>
-                <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-                    <!-- <stop offset="0%" stop-color="#f0008c" />
-                    <stop offset="50%" stop-color="#e800f0" />
-                    <stop offset="100%" stop-color="#8000f0" /> -->
-                    <stop offset="0%" stop-color={colorStart} />
-                    <stop offset="50%" stop-color={colorMid} />
-                    <stop offset="100%" stop-color={colorEnd} />
-                </linearGradient>
-            </defs>
-            <g fill={`url(#${gradientId})`}>
-                {@html icon ? icon : icons.noIcon}
-            </g>
-        {:else}
-            {@html icon ? icon : icons.noIcon}
-        {/if}
+        {@html icon ? icon : icons.noIcon}
     </svg>
 {:else}
     <svg class={$$props.class} class:flip class:white class:right class:fill class:boxed style="{$$props.style || ''};{color ? `color: ${color};` : ''}{boxed && color ? `background-color: ${fadeColor(color, 0.3)};` : ''}min-width: {width};{boxed ? `min-height: ${height};` : ''}" {width} {height} viewBox="0 0 {box} {box}" data-title={title}>
-        {#if !white && colorMid && colorEnd && colorStart}
-            <defs>
-                <linearGradient id={gradientId} x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color={colorStart} />
-                    <stop offset="50%" stop-color={colorMid} />
-                    <stop offset="100%" stop-color={colorEnd} />
-                </linearGradient>
-            </defs>
-            <g fill={`url(#${gradientId})`}>
-                {@html icon ? icon : icons.noIcon}
-            </g>
-        {:else}
-            {@html icon ? icon : icons.noIcon}
-        {/if}
+        {@html icon ? icon : icons.noIcon}
     </svg>
 {/if}
 
 <style>
+    /* docs/design/kit.md: íconos en gris, el activo/hover pasa a --text (`white` = currentColor) */
     svg {
-        fill: var(--secondary);
+        fill: var(--text-muted);
     }
 
     svg.select {

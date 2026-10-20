@@ -37,7 +37,7 @@
         padding: 0.5em 1.2em;
 
         border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        box-shadow: var(--shadow-float);
 
         display: flex;
         gap: 1.2em;

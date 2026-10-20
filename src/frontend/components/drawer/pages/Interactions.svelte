@@ -328,7 +328,7 @@
                         }}
                         role="none"
                     >
-                        <Icon id={input.type === "heading" ? "info" : input.type} size={1.5} gradient />
+                        <Icon id={input.type === "heading" ? "info" : input.type} size={1.5} />
                         {#if input.inputType && input.inputType !== "none"}
                             <Icon id={inputTypeIcons[input.inputType]} white />
                         {/if}
@@ -432,7 +432,7 @@
                 </FloatingInputs>
             {/if}
         {:else}
-            <FloatingInputs side="left" gradient>
+            <FloatingInputs side="left">
                 <MaterialButton icon="play" disabled={!(openedInteraction?.inputs?.length || 0)} on:click={start} white>
                     <T id="inputs.start" />
                 </MaterialButton>

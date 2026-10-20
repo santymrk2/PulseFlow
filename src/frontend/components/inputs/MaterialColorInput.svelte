@@ -421,7 +421,7 @@
         display: flex;
         flex-wrap: wrap;
 
-        box-shadow: 0 0 5px 5px rgb(0 0 0 / 0.2);
+        box-shadow: var(--shadow-float);
     }
     .picker.isOverflowing {
         left: unset;

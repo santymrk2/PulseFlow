@@ -239,7 +239,7 @@
         left: 50%;
         transform: translateX(-50%);
         width: 14px;
-        background: linear-gradient(to top, #ad6852, #e8a87c);
+        background: var(--text-muted);
         border-radius: 2px 2px 0 0;
         transition: height 0.05s linear;
     }

@@ -447,7 +447,6 @@
         height: 12px;
         border-radius: 50%;
         background: var(--secondary);
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.18);
         border: 2px solid var(--secondary);
 
         transition:
@@ -458,7 +457,6 @@
     }
     .slider:focus::-webkit-slider-thumb,
     .slider:hover::-webkit-slider-thumb {
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.28);
     }
     .slider:focus {
         outline: none;

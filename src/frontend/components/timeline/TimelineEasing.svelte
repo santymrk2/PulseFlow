@@ -427,7 +427,7 @@
         background-color: var(--primary-darker);
         border: 1px solid var(--primary-lighter);
         border-radius: 4px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        box-shadow: var(--shadow-float);
         z-index: 9999;
         min-width: 120px;
     }

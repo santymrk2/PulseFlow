@@ -356,7 +356,7 @@
         border-radius: var(--radius, 8px);
         /* padding: 8px 5px; */
         padding: 5px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+        box-shadow: var(--shadow-float);
         display: flex;
         flex-direction: column;
         align-items: center;

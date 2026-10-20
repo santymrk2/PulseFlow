@@ -127,7 +127,7 @@
                     activePopup.set("cleaning_utility")
                 }}
             >
-                <Icon id="autofill" gradient />
+                <Icon id="autofill" />
                 <T id="popup.cleaning_utility" />
             </MaterialButton>
         </main>

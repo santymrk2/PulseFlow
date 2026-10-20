@@ -100,7 +100,5 @@
     }
     .highlight.active {
         background-color: var(--secondary);
-
-        box-shadow: 0 0 3px rgb(255 255 255 / 0.2);
     }
 </style>

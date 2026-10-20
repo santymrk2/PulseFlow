@@ -6,7 +6,6 @@
     export let options: { id: string; name: string; title?: string; icon: string; tip?: string; disabled?: boolean; colored?: boolean }[] = []
     export let value: string = ""
     export let highlightFirst = true
-    export let gradient = false
     export let canDeselect = false
 
     let dispatch = createEventDispatcher()
@@ -26,7 +25,7 @@
                 {#if option.icon.includes(".webp")}
                     <img src={option.icon} alt="{option.id}-logo" draggable={false} />
                 {:else}
-                    <Icon id={option.icon} size={5} white={!option.colored && !gradient} {gradient} />
+                    <Icon id={option.icon} size={5} white={!option.colored} />
                 {/if}
                 <div class="text">
                     <p>{option.name}</p>

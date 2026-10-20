@@ -124,7 +124,7 @@
         right: 12px;
         width: 320px;
 
-        box-shadow: 1px 1px 3px 2px rgb(0 0 0 / 0.2);
+        box-shadow: var(--shadow-float);
         border: 1px solid var(--primary-lighter);
         border-radius: 6px;
 
@@ -183,7 +183,7 @@
 
     .progress-fill {
         height: 100%;
-        background: linear-gradient(90deg, #8000f0 0%, var(--secondary) 100%);
+        background: var(--action);
         transition: width 0.3s ease;
         border-radius: 3px;
     }

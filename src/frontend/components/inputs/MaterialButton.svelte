@@ -23,17 +23,15 @@
         isActive?: boolean
         showOutline?: boolean
         disabled?: boolean
-        gradient?: boolean
         small?: boolean
         tab?: boolean
         red?: boolean
         children?: Snippet
     }
 
-    let { variant = "text", title = "", info = "", icon = "", iconSize = 1, children, white = !children, isActive = false, showOutline = false, disabled = false, gradient = false, small = false, tab = false, red = false, class: className = "", style = "", ...restProps }: Props = $props()
+    let { variant = "text", title = "", info = "", icon = "", iconSize = 1, children, white = !children, isActive = false, showOutline = false, disabled = false, small = false, tab = false, red = false, class: className = "", style = "", ...restProps }: Props = $props()
 
     let button = $state<HTMLButtonElement | null>(null)
-    let ripples = $state<{ x: number; y: number; size: number; id: number }[]>([])
 
     const dispatch = createEventDispatcher<{
         click: CustomClickDetail
@@ -63,27 +61,6 @@
         click(e, true)
     }
 
-    function triggerRipple(e: MouseEvent) {
-        if (disabled || !button) return
-        const targetElem = e.target as HTMLElement | null
-        if (targetElem?.closest(".edit")) return
-        if (targetElem?.closest("button") !== button) return
-
-        const rect = button.getBoundingClientRect()
-        const size = Math.max(rect.width, rect.height)
-        const x = (e.clientX ?? rect.width / 2) - rect.left - size / 2
-        const y = (e.clientY ?? rect.height / 2) - rect.top - size / 2
-
-        const ripple = {
-            x,
-            y,
-            size,
-            id: Date.now() + Math.random()
-        }
-
-        ripples = [...ripples, ripple]
-    }
-
     function handleKey(e: KeyboardEvent) {
         if (disabled || !button) return
         const targetElem = e.target as HTMLElement | null
@@ -92,10 +69,6 @@
         if (e.key === "Enter" || e.key === " ") {
             click(e as unknown as MouseEvent)
         }
-    }
-
-    function handleAnimationEnd(id: number) {
-        ripples = ripples.filter((r) => r.id !== id)
     }
 </script>
 
@@ -114,12 +87,11 @@
     class:red
     {disabled}
     style="
-    background: {variant === 'contained' ? (gradient ? 'linear-gradient(160deg, #8000f0 0%, #9000f0 10%, #b300f0 30%, #d100db 50%, #f0008c 100%)' : 'var(--secondary)') : variant === 'outlined' ? 'var(--primary-darkest)' : 'transparent'};
+    background: {variant === 'contained' ? 'var(--secondary)' : variant === 'outlined' ? 'var(--primary-darkest)' : 'transparent'};
     color: {variant === 'contained' ? 'var(--secondary-text)' : white ? 'var(--text)' : 'var(--text)'};
     border-color: {white ? 'rgb(255 255 255 / 0.08)' : variant === 'outlined' ? 'var(--primary-lighter)' : 'transparent'};
     {style}
   "
-    onmousedown={triggerRipple}
     onkeydown={handleKey}
     onclick={click}
     ondblclick={dblclick}
@@ -133,10 +105,6 @@
     {#if info}
         <span class="info">{info}</span>
     {/if}
-
-    {#each ripples as { x, y, size, id } (id)}
-        <span class="ripple" style="top: {y}px; left: {x}px; width: {size}px; height: {size}px;" onanimationend={() => handleAnimationEnd(id)} />
-    {/each}
 </button>
 
 <style>
@@ -249,7 +217,6 @@
     }
 
     button:hover:not(:disabled) {
-        box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.2);
     }
 
     button:focus-visible:not(:disabled) {
@@ -259,23 +226,6 @@
 
     button.white :global(svg) {
         fill: currentColor;
-    }
-
-    .ripple {
-        position: absolute;
-        border-radius: 50%;
-        background-color: rgba(255, 255, 255, 0.25);
-        transform: scale(0);
-        animation: ripple 600ms ease-out forwards;
-        pointer-events: none;
-        will-change: transform, opacity;
-    }
-
-    @keyframes ripple {
-        to {
-            transform: scale(2.5);
-            opacity: 0;
-        }
     }
 
     .info {

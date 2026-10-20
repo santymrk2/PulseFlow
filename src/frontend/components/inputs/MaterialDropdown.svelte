@@ -587,7 +587,7 @@
         max-height: 350px;
         overflow-y: auto;
         overflow-x: hidden;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+        box-shadow: var(--shadow-float);
 
         /* .popup size is set to 1.2em, reset that */
         font-size: initial;

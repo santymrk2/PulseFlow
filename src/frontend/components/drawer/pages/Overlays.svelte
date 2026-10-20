@@ -196,7 +196,7 @@
 {#if overlayWithNonExistentCategory}
     <FloatingInputs side="left" onlyOne>
         <MaterialButton on:click={createNonExistentCategories}>
-            <Icon id="autofill" gradient />
+            <Icon id="autofill" />
             <T id="category.create_nonexistent" />
         </MaterialButton>
     </FloatingInputs>
@@ -225,7 +225,7 @@
         place-content: flex-start;
 
         padding-bottom: 60px;
-        /* box-shadow: inset 0 -40px 25px -20px rgb(0 0 0 / 0.3); */
+        /* */
     }
 
     .grid :global(.selectElem) {

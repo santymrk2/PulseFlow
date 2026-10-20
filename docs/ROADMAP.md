@@ -1368,13 +1368,32 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   "Asignado:" sigue fijo en español (F12.8). El botón flotante `+`, el degradé de
   "New show" y el menú "agregar ítems" de Edit son de **F14.5**.
 
-- [ ] **F14.5 Quitar decoración.**
+- [x] **F14.5 Quitar decoración.**
   *Pasos:* borrar degradés (`rg -n 'gradient' src/frontend`), el `+` flotante de la
   columna izquierda (su acción va al encabezado de sección, como en el kit), los radios
   completos y las sombras fuera de flotantes. El reloj del cajón: Geist Mono, `--text`,
   tamaño acotado, sin acento.
   *Aceptación:* `rg -n 'linear-gradient|radial-gradient' src/frontend` sólo deja casos
   justificados (vista previa de contenido) con un comentario.
+  **Hecho** (2026-10-20). *Degradés:* el violeta salía de pocas fuentes centrales y se
+  cortó ahí: `Icon` pierde toda la maquinaria de degradé (relleno sólido `--text-muted`;
+  `white` = `currentColor`; se sacó `gradient`/`gradientColor` y el atributo de 11
+  llamadores; el aviso de `Tip` usa `--warning`), `MaterialButton` pierde la variante
+  `gradient`, `Tipbar` y `ProgressPanel` (borde y barra), waveform del editor de audio y
+  compresor. *Botón flotante:* `FloatingInputs` pasa de píldora de 50 px con borde
+  degradé a barra rectangular de 32 px (`--radius`, borde `--border-strong`,
+  `--shadow-float`) y se quitaron los 50 px en línea de los 4 botones `+`; los menús
+  "agregar" de Edit, Projects y ProjectContentList (radio 25 px, desenfoque, filas "outlined"
+  apiladas de 35 px) pasan a superficie elevada con filas de 28 px sin fondo. *Sombras:*
+  19 flotantes unificadas en `--shadow-float`; 19 decorativas borradas (cabeceras, brillo
+  de pestaña activa, sombra al hover del botón, bandas del cajón, thumb del slider).
+  *Ripple* de `MaterialButton` eliminado (kit: sólo transiciones de color). *Quedan a
+  propósito:* medidores de nivel de audio (cian→rojo, semánticos), vista previa de colores
+  del usuario, portada de Spotify, relleno monocromo del slider, esquinas de pestañas,
+  sombras de la línea de tiempo y de los nodos de audio (diagramas). `Tipbar` es el aviso de
+  **"Donate" de FreeShow**: sólo se le sacó el degradé, quitarlo es decisión del usuario.
+  El reloj del cajón en mono va con F14.6. Verificado: `test:svelte` 56 (línea base),
+  `test:unit` 89/89, prettier. **No verificado visualmente.**
 
 - [ ] **F14.6 Escala tipográfica.**
   *Pasos:* exponer la escala de F14.1 como utilidades de Tailwind (`text-xs` … ) y como

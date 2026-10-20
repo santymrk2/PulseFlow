@@ -193,9 +193,9 @@
         </div>
     {/if}
 
-    <FloatingInputs gradient style="width: 50px;height: 50px;border: none;">
-        <MaterialButton class="addButton" title={isOpen ? "actions.close" : "edit.add_items"} style="width: 50px; height: 50px;" on:click={() => (isOpen = !isOpen)} on:dblclick={handleDoubleClick}>
-            <Icon id="add" size={1.5} style={isOpen ? "transform: rotate(135deg);" : ""} white />
+    <FloatingInputs>
+        <MaterialButton class="addButton" title={isOpen ? "actions.close" : "edit.add_items"} on:click={() => (isOpen = !isOpen)} on:dblclick={handleDoubleClick}>
+            <Icon id="add" size={1} style={isOpen ? "transform: rotate(135deg);" : ""} white />
         </MaterialButton>
     </FloatingInputs>
 {/if}
@@ -203,7 +203,7 @@
 <style>
     .addMenu {
         position: absolute;
-        bottom: 70px;
+        bottom: 52px;
         right: 12px;
 
         display: flex;
@@ -211,12 +211,11 @@
         gap: 2px;
         min-width: 160px;
 
-        background: rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(15px);
-        border-radius: 25px;
-        border: 1px solid var(--border);
-        padding: 6px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        background: var(--bg-elevated);
+        border-radius: var(--radius-modal);
+        border: 1px solid var(--border-strong);
+        padding: 4px;
+        box-shadow: var(--shadow-float);
 
         /* over all slide items */
         z-index: 999;
@@ -242,9 +241,9 @@
         width: 100%;
         flex-shrink: 0;
         justify-content: start;
-        padding: 10px 16px;
-        border-radius: 50px;
-        min-height: 35px;
+        padding: 0 8px;
+        border-radius: var(--radius);
+        min-height: 28px;
         gap: 8px;
     }
 
@@ -266,14 +265,16 @@
         margin-left: auto;
     }
 
-    /* remove blur from individual buttons to avoid double blur */
+    /* filas sin fondo propio: sólo hover */
+    .addMenu :global(.add-item-button),
     .addMenu :global(.add-item-button .surface) {
         backdrop-filter: none !important;
-        background: var(--bg-hover) !important;
+        background: transparent !important;
+        border-color: transparent !important;
     }
 
     .addMenu :global(.add-item-button:hover) {
-        background: var(--bg-selected) !important;
+        background: var(--bg-hover) !important;
     }
 
     .submenu {
@@ -281,9 +282,6 @@
         right: calc(100% + 4px);
         width: 260px;
         z-index: 1000;
-
-        /* backdrop blur does not work for this apparently */
-        background: rgba(15, 15, 15, 0.7);
 
         max-height: 45vh;
 
@@ -313,12 +311,11 @@
     }
 
     .group-label {
-        font-size: 0.7rem;
+        font-size: 11px;
         text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: var(--primary-light);
-        padding: 8px 10px 4px;
-        opacity: 0.8;
+        letter-spacing: 0.04em;
+        color: var(--text-subtle);
+        padding: 8px 8px 4px;
     }
 
     .group-spacer {
