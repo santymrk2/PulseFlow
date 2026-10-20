@@ -708,11 +708,12 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   salidas. `outputs` (`Outputs`) y `styles`/`looks` (`Styles`/`Look`) ya tenían tipo
   propio. Nota: `styles`/`looks` siguen siendo mapas `{ [id]: … }`; pasarlos a arrays
   tocaba ~170 usos en todo el frontend (fuera del alcance de esta tarea).
-- [ ] **F9.3** Eliminar ramas `$currentWindow === "output"` (lista en `PLAN.md`) una por
+- [x] **F9.3** Eliminar ramas `$currentWindow === "output"` (lista en `PLAN.md`) una por
   componente, verificando cada una en la app.
 - [ ] **F9.4** Branding pendiente: `Splash.svelte`, `ImportScripture.svelte`, logo de
   `Top.svelte`/`About.svelte` (`public/import-logos/freeshow.webp`) e íconos de la app
-  cuando haya logo de PulseFlow.
+  cuando haya logo de PulseFlow. (Texto "FreeShow" → "PulseFlow" ya reemplazado en
+  `Splash.svelte` e `ImportScripture.svelte`; logo e íconos siguen pendientes.)
 
 ---
 

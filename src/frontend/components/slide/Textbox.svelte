@@ -3,7 +3,7 @@
     import { OUTPUT } from "../../../types/Channels"
     import type { Styles } from "../../../types/Settings"
     import type { Item, Slide, TemplateStyleOverride, Transition } from "../../../types/Show"
-    import { currentWindow, groups, outputs, overlays, scriptureSettings, showsCache, styles, templates, variables } from "../../stores"
+    import { groups, outputs, overlays, scriptureSettings, showsCache, styles, templates, variables } from "../../stores"
     import { wait } from "../../utils/common"
     import { send } from "../../utils/request"
     import autosize from "../edit/scripts/autosize"
@@ -346,7 +346,7 @@
     $: currentShowTemplateId = $showsCache[ref.showId || ""]?.settings?.template || ""
     $: outputSlide = getFirstActiveOutput($outputs)?.out?.slide
     $: if (item?.type === "slide_tracker" && outputSlide) debouncedCalculateAutosize(50) // overlay progress update
-    $: if ($currentWindow === "output" && outputStyle?.template && outputStyle.template !== currentShowTemplateId && !stageAutoSize) calculateAutosize()
+    // el frontend ya no tiene ventana webview de salida: el autosize del template lo hace el engine nativo
     // else outputTemplateAutoSize = false
 
     // $: fontSizeValue = stageAutoSize || item.auto || outputTemplateAutoSize ? fontSize : fontSize
@@ -633,7 +633,7 @@
     }
 
     function setItemAutoFontSize(fontSize) {
-        if (isStage || itemIndex < 0 || $currentWindow || ref.showId === "temp") return
+        if (isStage || itemIndex < 0 || ref.showId === "temp") return
 
         if (ref.type === "overlay") {
             const currentOverlays = $overlays
@@ -663,7 +663,7 @@
     }
 
     function setItemPreviewAutoFontSize(fontSize) {
-        if (isStage || itemIndex < 0 || $currentWindow || ref.showId === "temp") return
+        if (isStage || itemIndex < 0 || ref.showId === "temp") return
 
         if (ref.type === "overlay") {
             const currentOverlays = $overlays
@@ -720,15 +720,14 @@
     let paddingCorrection = ""
     $: paddingCorrection = getPaddingCorrection(stageItem)
 
+    // en la UI de control los botones de las slides los maneja el engine nativo de la salida
     function press() {
-        if ($currentWindow !== "output") return
         if (!item.button?.press) return
 
         send(OUTPUT, ["ACTION_MAIN"], { id: item.button.press })
     }
 
     function release() {
-        if ($currentWindow !== "output") return
         if (!item.button?.release) return
 
         send(OUTPUT, ["ACTION_MAIN"], { id: item.button.release })
@@ -809,7 +808,7 @@
     class:isDisabledVariable
     class:noTransition
     class:chords={chordLines.length}
-    class:clickable={$currentWindow === "output" && (item?.button?.press || item?.button?.release)}
+    class:clickable={item?.button?.press || item?.button?.release}
     class:reveal={(centerPreview || isStage) && item?.clickReveal && !clickRevealed}
     class:hidden
     bind:this={itemElem}

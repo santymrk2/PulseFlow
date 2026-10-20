@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getContext, onDestroy } from "svelte"
     import type { StageItem, StageLayout as TStageLayout } from "../../../types/Stage"
-    import { activePopup, activeStage, activeTimers, allOutputs, currentWindow, dictionary, outputs, outputSlideCache, refreshEditSlide, stageShows, timers, variables } from "../../stores"
+    import { activePopup, activeStage, activeTimers, allOutputs, dictionary, outputs, outputSlideCache, refreshEditSlide, stageShows, timers, variables } from "../../stores"
     import { startResizing } from "../../utils/cursor"
     import { translateText } from "../../utils/language"
     import { sendBackgroundToStage } from "../../utils/stageTalk"
@@ -217,9 +217,9 @@
 
     // SLIDE
     $: sourceOutputId = currentShow?.settings?.output
-    $: outputStores = $currentWindow === "output" ? $allOutputs : $outputs
-    $: stageOutputId = sourceOutputId && outputStores[sourceOutputId] ? sourceOutputId : getActiveOutputs(outputStores, false, true, true)[0]
-    $: currentOutput = outputStores[stageOutputId] || {}
+    // la ventana webview de salida ya no existe: la UI siempre usa el store `outputs`
+    $: stageOutputId = sourceOutputId && $outputs[sourceOutputId] ? sourceOutputId : getActiveOutputs($outputs, false, true, true)[0]
+    $: currentOutput = $outputs[stageOutputId] || {}
     $: currentSlide = currentOutput.out?.slide || (slideOffset !== 0 ? $outputSlideCache[stageOutputId] || null : null)
 
     $: outputWindowId = item?.currentOutput?.source || stageOutputId
@@ -234,8 +234,8 @@
     async function getCurrentBackground() {
         if (item?.type ? !item.includeMedia : !id.includes("slide")) return
 
-        let currentOutputs = $currentWindow ? $allOutputs : $outputs
-        let bg = await sendBackgroundToStage(stageOutputId, currentOutputs, true)
+        // la ventana webview de salida ya no existe: la UI siempre usa el store `outputs`
+        let bg = await sendBackgroundToStage(stageOutputId, $outputs, true)
 
         // show thumbnails instead of playing videos when "Slide offset" is not 0
         if (bg && slideOffset !== 0) {
@@ -370,7 +370,6 @@
     class:outline={edit}
     class:selected={edit && $activeStage.items.includes(id)}
     class:isDisabledVariable
-    class:isOutput={!!$currentWindow}
     class:isShiftPressed
     style="{customStyle}{id.includes('slide') && !id.includes('tracker') ? '' : textStyle}{edit ? `outline: ${3 / ratio}px solid rgb(255 255 255 / 0.2);` : ''}--labelColor: {currentShow?.settings?.labelColor || '#d0a853'};{fixedWidth}{cssVariables}"
     on:mousedown={mousedown}
@@ -415,9 +414,6 @@
         <div bind:this={alignElem} class="align" style="--align: {item.align};--text-align: {item.alignX || 'center'};{item.type !== 'slide_text' || item.keepStyle ? 'height: 100%;' : ''}">
             <span style="pointer-events: none;width: 100%;height: 100%;{item.type === 'current_output' ? 'position: relative;' : ''}">
                 {#if item.type === "current_output" || id.includes("current_output")}
-                    <!-- use PreviewCanvas only in remote StageShow -->
-                    <!-- {#if $currentWindow === "output" && !$special.optimizedMode} -->
-                    <!-- <PreviewCanvas capture={$previewBuffers[outputWindowId]} id={outputWindowId} fullscreen /> -->
                     {#if ($outputs[outputWindowId] || $allOutputs[outputWindowId])?.stageOutput}
                         {#if !disableStagePreview}
                             <StageLayout outputId={outputWindowId} stageId={($outputs[outputWindowId] || $allOutputs[outputWindowId])?.stageOutput} edit={false} disableStagePreview={true} />
@@ -479,7 +475,7 @@
                             {/if}
                         {:else if id.includes("variables")}
                             {#if $variables[id.split("#")[1]]}
-                                <Variable id={id.split("#")[1]} style="font-size: {item.auto !== false ? autoSize : fontSize}px;" ref={{ type: "stage", id }} hideText={!!$currentWindow} />
+                                <Variable id={id.split("#")[1]} style="font-size: {item.auto !== false ? autoSize : fontSize}px;" ref={{ type: "stage", id }} hideText />
                             {/if}
                         {:else}
                             {id}
@@ -549,9 +545,6 @@
 
     .isDisabledVariable {
         opacity: 0.5;
-    }
-    .isDisabledVariable.isOutput {
-        display: none;
     }
 
     .label {
