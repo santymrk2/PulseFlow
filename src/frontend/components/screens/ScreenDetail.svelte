@@ -1,15 +1,15 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { NDI, OMT, OUTPUT } from "../../../types/Channels"
-    import { activePage, activePopup, activeStage, outputs, stageShows } from "../../stores"
+    import { OUTPUT } from "../../../types/Channels"
+    import { activePage, activePopup, activeStage, currentOutputSettings, outputs, stageShows } from "../../stores"
     import { send } from "../../utils/request"
-    import { addRtmpDestination, removeRtmpDestination, startRtmpStreaming, startStreaming, stopRtmpStreaming, stopStreaming, toggleOutputs, updateOutputRtmpData, updateOutputWebrtcData } from "../helpers/output"
+    import { toggleOutputs } from "../helpers/output"
     import { clone } from "../helpers/array"
     import DisplayLayout from "./DisplayLayout.svelte"
+    import ScreenOutputOptions from "./ScreenOutputOptions.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
     import MaterialPopupButton from "../inputs/MaterialPopupButton.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
-    import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
 
     export let outputId: string
     export let displays: any[] = []
@@ -19,6 +19,7 @@
     $: currentOutput = $outputs[outputId] || {}
     $: isStage = !!currentOutput.stageOutput || currentOutput.kind === "stage"
     $: stageId = currentOutput.stageLayout || currentOutput.stageOutput || ""
+    $: if (outputId && $currentOutputSettings !== outputId) currentOutputSettings.set(outputId)
 
     function setStageLayout(id: string) {
         outputs.update((a) => {
@@ -103,43 +104,6 @@
             a[outputId].blending![side] = Number(value)
             return a
         })
-    }
-
-    // NDI/OMT/Blackmagic/WebRTC/RTMP (mirror minimal logic)
-    function updateNdiData(e: any, key: string) {
-        let newData = $outputs[outputId]?.ndiData || {}
-        let value = e?.detail?.id ?? e
-        newData[key] = value
-        outputs.update((a) => {
-            if (a[outputId]) a[outputId].ndiData = newData
-            return a
-        })
-        send(NDI, ["NDI_DATA"], { id: outputId, ...newData })
-    }
-    function updateOmtData(e: any, key: string) {
-        let newData = $outputs[outputId]?.omtData || {}
-        let value = e?.detail?.id ?? e
-        newData[key] = value
-        outputs.update((a) => {
-            if (a[outputId]) a[outputId].omtData = newData
-            return a
-        })
-        send(OMT, ["OMT_DATA"], { id: outputId, ...newData })
-    }
-    function updateWebrtcData(e: any, key: string) {
-        let value = e?.detail?.id ?? e
-        updateOutputWebrtcData(outputId, key, value)
-    }
-    function addDest() {
-        addRtmpDestination(outputId)
-    }
-    function removeDest(id: string) {
-        removeRtmpDestination(outputId, id)
-    }
-    function updateDest(destId: string, key: string, value: any) {
-        const existing = $outputs[outputId]?.rtmpData?.destinations || []
-        const next = existing.map((d: any) => (d.id === destId ? { ...d, [key]: value } : d))
-        updateOutputRtmpData(outputId, "destinations", next)
     }
 </script>
 
@@ -359,10 +323,6 @@
                         return a
                     })}
             />
-            {#if currentOutput.ndi}
-                <MaterialTextInput label="Nombre" value={currentOutput.ndiData?.name || ""} on:change={(e) => updateNdiData(e.detail, "name")} />
-                <MaterialTextInput label="Grupos" value={currentOutput.ndiData?.groups || ""} on:change={(e) => updateNdiData(e.detail, "groups")} />
-            {/if}
         </div>
         <div class="section">
             <div class="section-title">OMT</div>
@@ -376,9 +336,6 @@
                         return a
                     })}
             />
-            {#if currentOutput.omt}
-                <MaterialTextInput label="Nombre" value={currentOutput.omtData?.name || ""} on:change={(e) => updateOmtData(e.detail, "name")} />
-            {/if}
         </div>
         <div class="section">
             <div class="section-title">Blackmagic</div>
@@ -405,11 +362,6 @@
                         return a
                     })}
             />
-            {#if currentOutput.webrtc}
-                <MaterialTextInput label="URL" value={currentOutput.webrtcData?.url || ""} on:change={(e) => updateWebrtcData(e.detail, "url")} />
-                <MaterialTextInput label="Token" value={currentOutput.webrtcData?.token || ""} on:change={(e) => updateWebrtcData(e.detail, "token")} />
-                <MaterialButton on:click={() => (currentOutput?.webrtcData?.streaming ? stopStreaming(outputId) : startStreaming(outputId))}>{currentOutput.webrtcData?.streaming ? "Detener" : "Iniciar"}</MaterialButton>
-            {/if}
         </div>
         <div class="section">
             <div class="section-title">RTMP</div>
@@ -423,18 +375,8 @@
                         return a
                     })}
             />
-            {#if currentOutput.rtmp}
-                {#each currentOutput.rtmpData?.destinations || [] as dest (dest.id)}
-                    <div class="dest">
-                        <MaterialTextInput label="URL" value={dest.url || ""} on:change={(e) => updateDest(dest.id, "url", e.detail)} />
-                        <MaterialTextInput label="Clave" value={dest.key || ""} type="password" on:change={(e) => updateDest(dest.id, "key", e.detail)} />
-                        <MaterialButton on:click={() => removeDest(dest.id)}>Quitar</MaterialButton>
-                    </div>
-                {/each}
-                <MaterialButton on:click={addDest}>Agregar destino</MaterialButton>
-                <MaterialButton on:click={() => (currentOutput?.rtmpData?.streaming ? stopRtmpStreaming(outputId) : startRtmpStreaming(outputId))}>{currentOutput.rtmpData?.streaming ? "Detener" : "Iniciar"}</MaterialButton>
-            {/if}
         </div>
+        <ScreenOutputOptions />
     </div>
 {/if}
 
@@ -555,13 +497,5 @@
     .section-title {
         font-size: 0.9em;
         opacity: 0.8;
-    }
-    .dest {
-        border: 1px solid var(--border-color, var(--primary-lighter));
-        border-radius: var(--radius, 4px);
-        padding: 6px;
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
     }
 </style>
