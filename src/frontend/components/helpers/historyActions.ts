@@ -38,32 +38,17 @@ export const historyActions = ({ obj, undo = null }: any) => {
     return actions
 }
 
-function applyLookStyles(screens: { [outputId: string]: string }) {
-    outputs.update((outs) => {
-        Object.keys(screens || {}).forEach((outputId) => {
-            if (!outs[outputId]) return
-            // replace the object so the history "previousData" reference stays untouched
-            outs[outputId] = { ...outs[outputId], style: screens[outputId] }
-        })
-        return outs
-    })
-}
-
-// APPLY_LOOK (F5.2): aplicar un look cambia el estilo de varias salidas a la vez,
-// así que no puede usar el updater genérico "settings_output" (es por salida única)
+// APPLY_LOOK (F5.2/F10): aplicar un look ahora sólo cambia activeLook; el bridge
+// (helpers/looks.ts::startLookBridge) propaga el look a los punteros de outputs,
+// así que el updater sólo tiene que setear el store y "touchar" outputs para que
+// listeners.ts reenvíe las escenas al Scene Graph.
 function handleApplyLook(obj, data, initializing) {
-    if (initializing) {
-        const previousStyles: { [outputId: string]: string } = {}
-        Object.keys(data.screens || {}).forEach((outputId) => {
-            previousStyles[outputId] = get(outputs)[outputId]?.style || "default"
-        })
-
-        obj.oldData = { lookId: get(activeLook), screens: previousStyles }
-    }
+    if (initializing) obj.oldData = { lookId: get(activeLook) }
 
     // undo/redo already swapped oldData/newData, so "data" is always the state to apply
-    applyLookStyles(data.screens || {})
-    if (data.lookId) activeLook.set(data.lookId)
+    activeLook.set(data.lookId || null)
+    // touch: shallow clone forces outputs subscribers (bridge + sendOutputScenes) to run
+    outputs.update((a) => ({ ...a }))
 }
 
 function handleUpdate(obj, data, initializing) {

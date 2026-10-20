@@ -529,6 +529,7 @@ export type Popups =
     | "pco_picker"
     | "sync_folders"
     | "node_options"
+    | "looks"
 
 export type DefaultProjectNames = "date" | "today" | "sunday" | "week" | "custom" | "blank"
 

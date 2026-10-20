@@ -5,6 +5,7 @@ import { Main } from "../../types/IPC/Main"
 import { checkStartupActions } from "../components/actions/actions"
 import { syncIcsCalendars } from "../components/drawer/calendar/calendars"
 import { getTimeFromInterval } from "../components/helpers/time"
+import { startLookBridge } from "../components/helpers/looks"
 import { checkTimers, startEventTimer, startTimer } from "../components/helpers/timerTick"
 import { requestMain, requestMainMultiple, sendMain, sendMainMultiple } from "../IPC/main"
 import { cameraManager } from "../media/cameraManager"
@@ -111,6 +112,8 @@ async function startupMain() {
     else autoOpenLastUsedProfile()
 
     storeSubscriber()
+    // F10.2: el bridge mantiene los punteros de outputs sincronizados con el look activo
+    startLookBridge()
     remoteListen()
 
     const hasProfiles = Object.keys(get(profiles)).filter((a) => a !== "admin").length > 0
