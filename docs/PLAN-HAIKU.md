@@ -455,9 +455,14 @@ según la regla 6 (incluye la línea `TERMINADO`).
 
 ## Cómo lanzarlo
 
-Con el script de reintento (desde la carpeta `FreeShow`; elegí el id del modelo Haiku
-que muestre `opencode models | grep -i haiku`):
+En una sesión de Claude Code (en la nube) con el modelo Haiku, sobre este repositorio y
+la rama `feature/tauri-rust-migration`, con este mensaje:
 
-```bash
-MODELO=<proveedor>/<modelo-haiku> scripts/carril.sh . docs/informes/haiku.md "Carril Haiku. Seguí docs/PLAN-HAIKU.md al pie de la letra: tareas H0 a H9 en orden, una por vez, con sus reglas. Rama feature/tauri-rust-migration. Informe: docs/informes/haiku.md."
+```
+Leé AGENTS.md y docs/PLAN-HAIKU.md completos. Ejecutá las tareas H0 a H9 en orden,
+una por vez, siguiendo al pie de la letra las reglas del plan (chequeos antes de cada
+commit, commit con el mensaje indicado y push a feature/tauri-rust-migration después
+de cada tarea). No toques nada fuera de lo que pide cada tarea. Si una tarea no se
+puede hacer como está escrita, deshacé sólo esa tarea, anotalo en
+docs/informes/haiku.md y seguí con la siguiente. Al terminar, completá el informe.
 ```
