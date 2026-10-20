@@ -128,4 +128,41 @@ Tareas asignadas: F10.0f → F10.7 → F11.1 (en ese orden).
 - Un conflicto de merge en `src/types/Main.ts` (el carril B agregó `| "looks"`) se
   resolvió conservando ambos; commit de merge `db562b3f`.
 
-## F11.1 — (pendiente)
+## F11.1 — Barra superior como ProPresenter ✅
+
+**Qué hice**
+
+Reorganicé `main/Top.svelte` en los 5 grupos capsulares de la tabla "Barra superior"
+(`docs/design/pantallas-y-looks.md`), reubicando accesos que ya existían:
+
+- **Izquierda 1** `Buscar · Texto · Tema`: QuickSearch (`quickSearchActive`), toggle de
+  formato de texto (`editMode`), drawer de templates.
+- **Izquierda 2** `Show · Edit · Biblia · ⋯`: `TopButton` show/edit + Biblia abre el
+  drawer de scripture + menú ⋯ con Editor de stage (`activePage="stage"`), Editor de
+  temas (drawer templates) y Editor de overlays (drawer overlays).
+- **Derecha 1** `Media · Look · Live`: toggle del cajón de medios, selector compacto
+  "Look" (`MaterialDropdown` → `applyLook`), botón Live abre Ajustes → display.
+- **Derecha 2** `Audiencia · Stage`: botones redondos que togglean cada grupo de salidas
+  (`toggleOutputs` sobre `getAllNormalOutputs`/`getAllStageOutputs`), rojos cuando hay
+  salidas en vivo (derivado de `outputState`); clic derecho → `choose_screen`.
+- **Estado**: se mantiene `StatusIndicator` flotante (App.svelte) + punto de "sin guardar".
+
+Se eliminó el botón único de salida y las pestañas sueltas; draw/settings/macTitleSpace/
+users/unsaved-dot se conservan.
+
+**Verificación**
+
+- `bun run test:unit`: 86/86.
+- `bun run test:svelte`: 56 = baseline (0 en mis archivos, sólo warnings de a11y heredados).
+- `bun run build`: OK.
+- **App real** (`bun run dev:tauri`, ~4 min): sin errores ni panic; barra reorganizada
+  compila. *Verificación visual* del layout no posible por falta de permiso de captura
+  de pantalla en este entorno (igual que F10.7).
+
+**Notas**
+
+- `public/lang/en.json` y `es.json`: claves nuevas dentro de `menu` (search, text,
+  theme, bible, more, stage_editor, theme_editor, overlay_editor, media, live, audience).
+- `TopButton.svelte` sin cambios (sigue en modo legacy con `export let`).
+- Clic derecho en Audiencia/Stage abre `choose_screen` (popup legacy), como indica la
+  spec hasta que exista la ventana "Configuración de pantallas" (lane E).

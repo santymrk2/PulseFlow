@@ -963,7 +963,14 @@ Reglas de F11 (además de AGENTS.md):
 - Íconos: se mantiene `Icon.svelte`. Sólo donde la tarea lo dice se puede usar
   `@lucide/svelte` (ya está en devDependencies).
 
-- [ ] **F11.1 Barra superior como ProPresenter.** (tabla "Barra superior" en
+- [x] **F11.1 Barra superior como ProPresenter.** (2026-10-20, carril C:
+  `main/Top.svelte` reorganizado en cápsulas Buscar/Texto/Tema · Show/Edit/Biblia/⋯ ·
+  Media/Look/Live · Audiencia/Stage (redondos, rojos en vivo) · Estado; botón único de
+  salida reemplazado por toggles por grupo; accesos reubicados (QuickSearch, formato de
+  texto, drawer templates/scripture/overlays/media, settings display). Checks: test:unit 86/86,
+  test:svelte 56 = baseline, build OK, app ~4 min sin errores. Clic derecho → Configurar
+  pantallas… abre `choose_screen` (popup legacy). Verificación visual del menú no posible
+  (sin permisos de captura).) (tabla "Barra superior" en
   `docs/design/pantallas-y-looks.md` → "Distribución general"; archivos
   `main/Top.svelte`, `main/TopButton.svelte`) Botones con ícono + etiqueta debajo,
   agrupados en cápsulas: Buscar/Texto/Tema · Show/Edit/Biblia/⋯ (menú con Editor de
