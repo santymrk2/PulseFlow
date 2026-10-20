@@ -120,6 +120,7 @@ pub fn run() {
             commands::output::RENDER_SNAPSHOT,
             commands::output::UPDATE_BOUNDS,
             commands::output::IDENTIFY_SCREENS,
+            commands::output::REMOVE_SCREEN,
             // SERVERS
             commands::servers::START,
             commands::servers::STOP,

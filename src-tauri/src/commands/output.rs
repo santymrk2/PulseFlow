@@ -159,6 +159,18 @@ pub fn IDENTIFY_SCREENS(app: AppHandle, data: Option<Vec<IdentifyScreen>>) -> Ap
     crate::render::identify_screens(&app, &data.unwrap_or_default())
 }
 
+/// Payload de `REMOVE_SCREEN` (espejo: `RemoveScreenPayload` en `src/types/Output.ts`).
+#[derive(Debug, Deserialize)]
+pub struct RemoveScreenPayload {
+    pub id: String,
+}
+
+/// `REMOVE_SCREEN`: elimina una salida; cierra su ventana nativa si estaba abierta.
+#[tauri::command]
+pub fn REMOVE_SCREEN(app: AppHandle, data: RemoveScreenPayload) -> AppResult<()> {
+    crate::render::remove_screen(&app, &data.id)
+}
+
 /// Payload para el comando `TOGGLE_OUTPUTS` de Svelte.
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -387,5 +399,13 @@ mod tests {
         assert_eq!(payload.width, None);
         assert_eq!(payload.height, None);
         assert!(payload.scene.items.is_empty());
+    }
+
+    #[test]
+    fn remove_screen_payload_deserializa_desde_el_frontend() {
+        let payload: RemoveScreenPayload =
+            serde_json::from_value(json!({ "id": "out-1" })).expect("payload válido");
+        assert_eq!(payload.id, "out-1");
+        assert!(serde_json::from_value::<RemoveScreenPayload>(json!({})).is_err());
     }
 }

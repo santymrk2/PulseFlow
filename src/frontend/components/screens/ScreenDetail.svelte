@@ -5,6 +5,10 @@
     import { send } from "../../utils/request"
     import { translateText } from "../../utils/language"
     import { toggleOutputs } from "../helpers/output"
+    import { deleteAction, duplicate } from "../helpers/clipboard"
+    import { invokeCommand } from "../../IPC/tauri"
+    import type { RemoveScreenPayload } from "../../../types/Output"
+    import { canRemoveScreen, nextScreenAfterRemove } from "./screenActions"
     import { clone } from "../helpers/array"
     import DisplayLayout from "./DisplayLayout.svelte"
     import ScreenOutputOptions from "./ScreenOutputOptions.svelte"
@@ -40,6 +44,24 @@
             .map(([id, o]) => ({ value: id, label: o.name || id }))
     ]
     $: if (outputId && $currentOutputSettings !== outputId) currentOutputSettings.set(outputId)
+
+    $: removable = canRemoveScreen($outputs, outputId)
+
+    function removeScreen() {
+        if (!removable) return
+        const next = nextScreenAfterRemove($outputs, outputId)
+        const payload: RemoveScreenPayload = { id: outputId }
+        // cierra la ventana nativa y olvida la escena; el historial borra la salida (deshacible)
+        void invokeCommand("REMOVE_SCREEN", payload).then((result) => {
+            if (!result.ok) console.error("[outputs] REMOVE_SCREEN falló:", result.error)
+        })
+        deleteAction({ id: "output", data: [{ id: outputId }] })
+        if (next) currentOutputSettings.set(next)
+    }
+
+    function duplicateScreen() {
+        duplicate({ id: "output", data: [{ id: outputId }] })
+    }
 
     function setStageLayout(id: string) {
         outputs.update((a) => {
@@ -176,6 +198,8 @@
     <input class="name-input" value={currentOutput.name || ""} on:change={rename} />
     <div class="res">{currentOutput.bounds?.width || 0} × {currentOutput.bounds?.height || 0}</div>
     <ToggleField label="settings.always_on_top" checked={currentOutput.alwaysOnTop !== false} defaultValue={true} on:change={toggleAlwaysOnTop} />
+    <Button variant="ghost" size="icon-sm" icon="duplicate" iconSize={0.9} title="actions.duplicate" onclick={duplicateScreen} />
+    <Button variant="ghost" size="icon-sm" icon="delete" iconSize={0.9} title="actions.delete" disabled={!removable} onclick={removeScreen} />
 </div>
 
 {#if !isStage}

@@ -67,6 +67,14 @@ export interface IdentifyScreen {
     bounds?: { x: number; y: number; width: number; height: number }
 }
 
+/**
+ * Payload de `REMOVE_SCREEN` (espejo de `RemoveScreenPayload` en
+ * `src-tauri/src/commands/output.rs`): cierra la ventana de la salida y olvida su escena.
+ */
+export interface RemoveScreenPayload {
+    id: string
+}
+
 // RTMP
 export interface RtmpDestination {
     id: string

@@ -30,7 +30,7 @@ mod golden;
 
 pub use screens::{
     close_all_screens, close_screen, emit_output_state, identify_screens, open_ids, open_screen,
-    reposition_screen, set_audience_scene, set_scene_background, set_scene_media, set_scene_text,
+    remove_screen, reposition_screen, set_audience_scene, set_scene_background, set_scene_media, set_scene_text,
     set_stage_scene, set_transition_config, IdentifyScreen, ScreenConfig, ScreenKind, ScreenManager,
     ScreenRect,
 };

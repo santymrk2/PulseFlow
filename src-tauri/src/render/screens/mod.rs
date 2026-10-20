@@ -261,6 +261,18 @@ impl ScreenManager {
         Arc::clone(scenes.entry(id.to_string()).or_default())
     }
 
+    /// Olvida la escena persistida de una salida eliminada. `true` si existía.
+    fn forget_scene(&self, id: &str) -> bool {
+        self.scenes.lock_safe().remove(id).is_some()
+    }
+
+    /// Parte de `remove_screen` que no toca ventanas: olvida la escena y saca la
+    /// pantalla del mapa para que quien llama la detenga.
+    fn detach(&self, id: &str) -> Option<ScreenHandle> {
+        self.forget_scene(id);
+        self.screens.lock_safe().remove(id)
+    }
+
     pub fn is_open(&self, id: &str) -> bool {
         self.screens.lock_safe().contains_key(id)
     }
@@ -297,7 +309,8 @@ mod video_hub;
 
 pub use identify::{identify_screens, IdentifyScreen};
 pub use lifecycle::{
-    close_all_screens, close_screen, emit_output_state, open_ids, open_screen, reposition_screen,
+    close_all_screens, close_screen, emit_output_state, open_ids, open_screen, remove_screen,
+    reposition_screen,
 };
 pub use monitors::{display_id, monitor_label};
 pub use scene_state::{

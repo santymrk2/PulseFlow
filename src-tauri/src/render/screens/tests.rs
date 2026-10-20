@@ -246,3 +246,21 @@ fn screen_config_deserializa_desde_output_del_frontend() {
     assert_eq!(stage.kind(), ScreenKind::Stage);
     assert_eq!(stage.screen_index(), None);
 }
+
+#[test]
+fn forget_scene_drops_the_persisted_scene() {
+    let manager = ScreenManager::new();
+    let _ = manager.scene("a");
+    assert!(manager.forget_scene("a"));
+    assert!(!manager.forget_scene("a"), "olvidar dos veces no encuentra nada");
+}
+
+#[test]
+fn detach_forgets_scene_and_tolerates_unknown_ids() {
+    let manager = ScreenManager::new();
+    let _ = manager.scene("a");
+
+    assert!(manager.detach("a").is_none(), "no había ventana abierta");
+    assert!(!manager.forget_scene("a"), "detach ya olvidó la escena");
+    assert!(manager.detach("nunca-existio").is_none(), "id desconocido no es un error");
+}

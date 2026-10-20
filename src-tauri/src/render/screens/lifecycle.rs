@@ -139,6 +139,18 @@ pub fn close_screen(app: &AppHandle, id: &str) -> AppResult<()> {
     Ok(())
 }
 
+/// Elimina una salida: cierra su ventana (si está abierta), olvida su escena
+/// persistida y avisa al frontend de que ya no está activa. Un id desconocido no
+/// es un error (borrar dos veces es inofensivo).
+pub fn remove_screen(app: &AppHandle, id: &str) -> AppResult<()> {
+    let handle = manager(app)?.detach(id);
+    if let Some(mut handle) = handle {
+        handle.stop(app, true);
+    }
+    emit_output_state(app, &[(id.to_string(), false)]);
+    Ok(())
+}
+
 /// Cierra todas las pantallas.
 pub fn close_all_screens(app: &AppHandle) -> AppResult<Vec<String>> {
     let ids = open_ids(app);
