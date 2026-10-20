@@ -5,7 +5,6 @@
     import { requestMain } from "../../../IPC/main"
     import { AudioPlayer } from "../../../audio/audioPlayer"
     import { AudioPlaylist } from "../../../audio/audioPlaylist"
-    import { addProjectItem } from "../../../converters/project"
     import { activePlaylist, activePopup, activeRename, audioFolders, audioPlaylists, drawerTabsData, effectsLibrary, labelsDisabled, media, outLocked, selectAllAudio, selected } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import Icon from "../../helpers/Icon.svelte"
@@ -27,7 +26,6 @@
     import Metronome from "./Metronome.svelte"
 
     export let active: string | null
-    export let searchValue = ""
 
     type File = { path: string; name: string; extension?: string; folder?: boolean; favourite?: boolean; audio?: boolean }
 
@@ -86,11 +84,8 @@
     let allRelevantFiles: FileFolder[] = []
 
     let requesting = 0
-    let currentDepth = 0
     async function requestFiles(path: string | string[], depth: number = 0) {
         if (!path) return
-
-        currentDepth = depth
 
         requesting++
         let currentRequest = requesting
@@ -116,14 +111,6 @@
             return
         }
 
-        if (searchValue.length > 1) {
-            foldersList = allRelevantFiles.filter((a) => a.isFolder)
-            filesList = allRelevantFiles.filter((a) => !a.isFolder)
-
-            filterFiles()
-            return
-        }
-
         const folder = allRelevantFiles.find((a) => a.isFolder && a.path === path)
         if (!folder) return
 
@@ -134,7 +121,6 @@
     }
 
     // $: if ($sorted) filterFiles()
-    $: if (searchValue !== undefined) filterSearch()
 
     let filteredFiles: FileFolder[] = []
     function filterFiles() {
@@ -153,62 +139,15 @@
         localFilteredFiles = [...sortFilenames(foldersList), ...localFilteredFiles]
 
         filteredFiles = clone(localFilteredFiles)
-        if (searchValue.length < 2) searchedFiles = clone(filteredFiles)
-        else filterSearch()
+        searchedFiles = clone(filteredFiles)
 
         // scroll to top
         scrollElem?.scrollTo(0, 0)
     }
 
-    // search
-    $: if (searchValue !== undefined) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()]/g, "")
-    let searchFilterActive = false
     let searchedFiles: FileFolder[] = []
-    async function filterSearch() {
-        if (searchFilterActive) return
-        searchFilterActive = true
-
-        if (searchValue.length === 1) {
-            searchFilterActive = false
-            return
-        }
-        if (searchValue.length < 2) {
-            if (active !== "all" && active !== "favourites" && active !== "effects_library") requestFiles(path)
-            else searchedFiles = clone(filteredFiles)
-            searchFilterActive = false
-            return
-        }
-
-        if (active !== "all" && active !== "favourites" && active !== "effects_library" && currentDepth < 5) {
-            await requestFiles(path, 5)
-        }
-
-        searchedFiles = clone(filteredFiles).filter((a) => filter(a.name).includes(filter(searchValue)))
-
-        // scroll to top
-        document.querySelector("svelte-virtual-list-viewport")?.scrollTo(0, 0)
-
-        searchFilterActive = false
-    }
 
     function keydown(e: KeyboardEvent) {
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest(".search")) {
-            let file = searchedFiles.filter((a) => !a.isFolder)[0]
-            if (!file) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                AudioPlayer.start(file.path, { name: file.name })
-                return
-            }
-
-            // add to project
-            const data = { id: file.path, name: file.name, type: "audio" as const }
-            addProjectItem(data)
-            return
-        }
-
         if (e.target?.closest?.("input") || e.target?.closest?.(".edit")) return
 
         if ((e.ctrlKey || e.metaKey) && e.key === "Backspace") {

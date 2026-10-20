@@ -16,7 +16,6 @@
     import { getCurrentTimerValue, getTimerDynamicValue, playPauseGlobal, resetTimer } from "./timers"
     import { openDrawer } from "../../edit/scripts/edit"
 
-    export let searchValue
     export let onlyPlaying: boolean = false
 
     const profile = getAccess("timers")
@@ -29,7 +28,7 @@
         .sort((a, b) => typeOrder[a.type] - typeOrder[b.type])
     $: filteredTimersTags = sortedTimers.filter((a) => !$activeTimerTagFilter.length || (a.tags?.length && !$activeTimerTagFilter.find((tagId) => !a.tags?.includes(tagId)))).filter((a) => !a.tags?.some((tagId) => profile[tagId] === "none"))
     $: sortedTimersWithProject = filteredTimersTags.sort((a, b) => (list.includes(a.id) && !list.includes(b.id) ? -1 : 1))
-    $: filteredTimers = searchValue.length > 1 ? sortedTimersWithProject.filter((a) => a.name.toLowerCase().includes(searchValue.toLowerCase())) : sortedTimersWithProject
+    $: filteredTimers = sortedTimersWithProject
 
     // place timers in shows in project first
     let list: string[] = []
@@ -83,24 +82,9 @@
         clock: "timer.to_time",
         event: "timer.to_event"
     }
-
-    function keydown(e: KeyboardEvent) {
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest(".search")) {
-            let timer = filteredTimers[0]
-            if (!timer) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                playPauseGlobal(timer.id, timer, true)
-                return
-            }
-
-            // add to project (no need)
-        }
-    }
 </script>
 
-<svelte:window on:keydown={keydown} on:mouseup={() => disableDragging.set(false)} />
+<svelte:window on:mouseup={() => disableDragging.set(false)} />
 
 {#if filteredTimers.length}
     <div class="timers context #timers{readOnly ? '_readonly' : ''}" style={onlyPlaying ? "" : "padding-bottom: 60px;"}>

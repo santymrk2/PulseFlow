@@ -79,11 +79,6 @@ export const guideSteps = [
             activeDrawerTab.set("shows")
         }
     },
-    {
-        title: "guide_title.drawer",
-        description: "guide_description.drawer_search",
-        query: ".drawer button.search"
-    },
     // shows
     {
         title: "guide_title.categories",

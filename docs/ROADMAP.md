@@ -1579,10 +1579,26 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   radio `--radius` (6 px) como los botones normales, sin fondo propio, botones internos a 4 px.
   (4) **Íconos de la barra:** Audiencia = `display` (monitor liso), Stage = `stage` (monitor con
   ondas, el que ya usan las etiquetas de salida; antes usaba `user`).
-  *Pendiente de decisión del usuario:* el **`Filter` del pie del cajón**. Lo consumen 20
-  archivos (cada pestaña filtra su lista con él) y la **entrada de versículos por referencia**
-  de Scripture ("Genesis 1:1" con autocompletado) vive ahí; el buscador rápido **no** cubre la
-  Biblia (`quicksearch.ts:248` está comentado). Quitarlo sin más elimina esa función.
+  (5) **Se eliminó el `Filter` del pie del cajón** (decisión del usuario, 2026-10-20, tomada
+  sabiendo el costo). Se borró el campo, el pie completo (la vista lista/grilla y el slider de
+  tamaño pasaron a la derecha de la fila de pestañas) y su plomería en 20 archivos
+  (`Content`, `Shows`, `Media`, `Audio`, `Scripture`, `Overlays`, `Templates`, `Scenes`,
+  `Timers`, `Actions`, `Variables`, `Calendar`, `Effects`, `Windows`, `PlayerVideos`,
+  `ContentLibraryBrowser`, `Canva`, `OBS`, `Interactions`, `ShowButton`), el popup
+  `drawer_search_options`, el paso de la guía y la entrada de atajos. `Ctrl+F` ahora abre el
+  buscador rápido de la barra superior. `utils/search.ts` **se conserva** (lo usan el
+  buscador rápido, `SelectShow` y el control remoto). *Funciones que se pierden:* filtrar por
+  texto dentro de cada pestaña; **crear un show escribiendo un nombre y Enter**; el resaltado
+  de coincidencias y su barra de porcentaje; la **entrada de versículos por referencia**
+  ("Genesis 1:1", con autocompletado; se borraron `referenceSearch` y
+  `parseMultiChapterReference`; queda la búsqueda de texto de la propia pestaña Scripture y la
+  navegación por libros/capítulos/versículos). *Se conservó a propósito:* la **búsqueda de
+  imágenes online de Pixabay y Unsplash**, que usaba el filtro como consulta a la API: ahora
+  tiene un campo propio dentro de esas dos vistas (confirma con Enter). *Un error propio
+  atrapado por `svelte-check`:* al cortar la búsqueda por referencia se borraron también las
+  declaraciones del estado de la búsqueda de texto de Scripture (`contentSearchValue`…); se
+  restauraron del código original. *Verificado:* `svelte-check` 41 errores (base 56), 0
+  nuevos; `test:unit` 93/93; prettier.
 
 ---
 

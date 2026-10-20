@@ -9,9 +9,6 @@
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
 
-    export let searchValue: string
-    console.log(searchValue)
-
     let connected = false
     let scenes: string[] = []
     let currentScene: string = ""

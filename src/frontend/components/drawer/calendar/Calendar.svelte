@@ -11,16 +11,8 @@
     import { isCalendarHidden } from "./calendars"
 
     export let active: string | null
-    export let searchValue = ""
 
-    // filter events based on search value
-    $: filteredEvents =
-        searchValue && searchValue.length >= 2
-            ? currentEvents.filter((event) => {
-                  const search = searchValue.toLowerCase()
-                  return event.name?.toLowerCase().includes(search) || event.notes?.toLowerCase().includes(search) || event.location?.toLowerCase().includes(search)
-              })
-            : [...currentEvents]
+    $: filteredEvents = [...currentEvents]
 
     $: sundayFirstDay = $special.firstDayOfWeek === "7"
 

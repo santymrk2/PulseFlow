@@ -16,8 +16,6 @@
     import SceneActions from "./SceneActions.svelte"
     import ScenePreview from "./ScenePreview.svelte"
 
-    export let searchValue = ""
-
     const profile = getAccess("scenes")
     $: readOnly = profile.global === "read"
 
@@ -27,12 +25,10 @@
     $: filteredScenes = sortByName(keysToID($scenes)).filter((s) => profile[s.id] !== "none")
 
     // search
-    $: if (filteredScenes || searchValue !== undefined) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()]/g, "")
+    $: if (filteredScenes) filterSearch()
     let fullFilteredScenes: (Scene & { id: string })[] = []
     function filterSearch() {
         fullFilteredScenes = clone(filteredScenes)
-        if (searchValue.length > 1) fullFilteredScenes = fullFilteredScenes.filter((a) => filter(a.name || "").includes(filter(searchValue)))
     }
 
     let nextScrollTimeout: NodeJS.Timeout | null = null
@@ -56,11 +52,6 @@
     onDestroy(() => {
         if (timeout) clearTimeout(timeout)
     })
-
-    $: if (searchValue !== undefined) {
-        loaded = false
-        lazyLoader = 0
-    }
 
     $: if (!loaded && fullFilteredScenes?.length) {
         if (lazyLoader >= fullFilteredScenes.length) {

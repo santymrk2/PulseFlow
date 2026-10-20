@@ -13,8 +13,6 @@
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
 
-    export let searchValue
-
     const profile = getAccess("actions")
     const readOnly = profile.global === "read"
 
@@ -25,7 +23,7 @@
 
     $: sortedActions = sortByName(keysToID($actions), "name", true).map(convertOldMidiToNewAction)
     $: filteredActionsTags = sortedActions.filter((a) => !$activeActionTagFilter.length || (a.tags?.length && !$activeActionTagFilter.some((tagId) => !a.tags?.includes(tagId)))).filter((a) => !a.tags?.some((tagId) => profile[tagId] === "none"))
-    $: filteredActionsSearch = searchValue.length > 1 ? filteredActionsTags.filter((a) => a.name.toLowerCase().includes(searchValue.toLowerCase())) : filteredActionsTags
+    $: filteredActionsSearch = filteredActionsTags
 
     // GRID VIEW
 
@@ -56,24 +54,7 @@
             return a
         })
     }
-
-    function keydown(e: KeyboardEvent) {
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest(".search")) {
-            let action = filteredActionsSearch[0]
-            if (!action) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                runAction(action, { source: "click" })
-                return
-            }
-
-            // add to project (no need)
-        }
-    }
 </script>
-
-<svelte:window on:keydown={keydown} />
 
 <div class="context #actions{readOnly ? '_readonly' : ''}" style="position: relative;height: 100%;overflow-y: auto;display: flex;flex-direction: column;">
     {#if filteredActionsSearch.length}

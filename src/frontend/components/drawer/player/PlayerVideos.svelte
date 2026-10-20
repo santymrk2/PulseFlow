@@ -13,7 +13,6 @@
     import Card from "../Card.svelte"
 
     export let active: string
-    export let searchValue = ""
 
     $: videos = sortByName(
         Object.entries($playerVideos)
@@ -22,8 +21,7 @@
     )
 
     // search
-    $: if (videos || searchValue !== undefined || $activePlayerTagFilter) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()]/g, "")
+    $: if (videos || $activePlayerTagFilter) filterSearch()
     let fullFilteredVideos: (Category & { rid: string })[] = []
     function filterSearch() {
         fullFilteredVideos = clone(videos)
@@ -32,8 +30,6 @@
         if ($activePlayerTagFilter.length) {
             fullFilteredVideos = fullFilteredVideos.filter((a) => a.tags?.length && !$activePlayerTagFilter.find((tagId) => !a.tags!.includes(tagId)))
         }
-
-        if (searchValue.length > 1) fullFilteredVideos = fullFilteredVideos.filter((a) => filter(a.name).includes(searchValue))
     }
 
     let loaded: { [key: string]: boolean } = {}

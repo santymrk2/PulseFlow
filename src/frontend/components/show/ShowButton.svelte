@@ -1,7 +1,7 @@
 <script lang="ts">
     import type { ClickEvent } from "../../../types/Main"
     import { AudioPlayer } from "../../audio/audioPlayer"
-    import { activeEdit, activeFocus, activePage, activeProject, activeShow, categories, editingProjectTemplate, effects, focusMode, globalTags, media, notFound, outLocked, outputs, overlayCategories, overlays, playerVideos, playingAudio, projects, projectTemplates, refreshEditSlide, shows, showsCache, special, styles, textCache } from "../../stores"
+    import { activeEdit, activeFocus, activePage, activeProject, activeShow, categories, editingProjectTemplate, effects, focusMode, globalTags, media, notFound, outLocked, outputs, overlayCategories, overlays, playerVideos, playingAudio, projects, projectTemplates, refreshEditSlide, shows, showsCache, special, styles } from "../../stores"
     import { translateText } from "../../utils/language"
     import { getAccess } from "../../utils/profile"
     import { customIconsColors } from "../../values/customIcons"
@@ -12,10 +12,8 @@
     import { loadShows } from "../helpers/setShow"
     import { checkName, getLayoutRef } from "../helpers/show"
     import { playPdf, swichProjectItem, updateOut } from "../helpers/showActions"
-    import T from "../helpers/T.svelte"
     import { joinTime, secondsToTime } from "../helpers/time"
     import { clearSlide } from "../output/clear"
-    import { getTextSnippet, highlightText } from "../quicksearch/searchHighlight"
     import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
 
@@ -23,23 +21,15 @@
     export let show: any // ShowList | ShowRef
     export let data: null | string = null
     export let index: null | number = null
-    export let isFirst: boolean = false
     export let isProject: boolean = false
     $: type = show.type || "show"
     $: name = type === "show" ? $shows[show.id]?.name : type === "overlay" ? $overlays[show.id]?.name : type === "effect" ? $effects[show.id]?.name : type === "player" ? ($playerVideos[id] || show.data?.id ? $playerVideos[id]?.name || show.data?.name || show.data?.id : setNotFound(id)) : show.name
     // export let page: "side" | "drawer" = "drawer"
-    export let match: null | number = null
-    export let searchValue = ""
     $: showNumber = isProject ? "" : show?.quickAccess?.number || show?.meta?.number || ""
     $: showDuration = isProject ? $shows[show.id]?.quickAccess?.duration || show?.scheduleLength || 0 : 0
 
     let profile = getAccess("shows")
     let readOnly = profile.global === "read" || profile[show.category] === "read"
-
-    // search
-    $: searchStyle = match !== null ? `width: ${match}%;` : ""
-    // excerpt of the matching lyrics
-    $: snippet = !isProject && match !== null && searchValue.length > 2 ? getTextSnippet($textCache[id] || "", searchValue, show.name) : ""
 
     function setNotFound(id: string) {
         notFound.update((a) => {
@@ -294,11 +284,6 @@
                     {#if showDuration && Number(showDuration)}
                         <span class="layout">{joinTime(secondsToTime(showDuration))}</span>
                     {/if}
-                {:else}
-                    <!-- shows drawer list -->
-                    {#if match !== null && ($activeShow?.data?.searchInput ? $activeShow?.id === id : isFirst)}
-                        <span style="opacity: 0.4;font-size: 0.9em;padding: 0 10px;max-width: 40%;"><T id="tips.show_add_project" /></span>
-                    {/if}
                 {/if}
             </span>
 
@@ -332,17 +317,7 @@
                 </span>
             {/if}
         </div>
-
-        {#if snippet}
-            <p class="snippet">{@html highlightText(snippet, searchValue)}</p>
-        {/if}
     </Button>
-
-    {#if match !== null}
-        <span class="match-indicator" data-title="{match}%">
-            <span class="match-fill" style={searchStyle}></span>
-        </span>
-    {/if}
 </div>
 
 <style>
@@ -357,7 +332,6 @@
         width: 100%;
         padding: 0.15em 0.8em;
 
-        /* content under the name, like a search match snippet */
         flex-direction: column;
         align-items: stretch;
         gap: 0;
@@ -494,34 +468,5 @@
 
         border-radius: 20px;
         border: 2px solid var(--color);
-    }
-
-    /* search */
-
-    .main p.snippet {
-        font-size: 0.8em;
-        opacity: 0.6;
-        text-align: left;
-        margin: -2px 5px 3px;
-    }
-    .main p.snippet :global(mark) {
-        background: var(--secondary-opacity);
-        color: inherit;
-        padding: 0 2px;
-        border-radius: 4px;
-    }
-
-    .match-indicator {
-        position: relative;
-        display: block;
-        width: 100%;
-        height: 2px;
-        background: var(--bg-selected);
-        overflow: hidden;
-    }
-    .match-fill {
-        display: block;
-        height: 100%;
-        background: var(--secondary-opacity);
     }
 </style>

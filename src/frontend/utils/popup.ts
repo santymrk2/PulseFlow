@@ -35,7 +35,6 @@ import CustomText from "../components/main/popups/CustomText.svelte"
 import DeleteDuplicatedShows from "../components/main/popups/DeleteDuplicatedShows.svelte"
 import DeleteShow from "../components/main/popups/DeleteShow.svelte"
 import DisplayDuration from "../components/main/popups/DisplayDuration.svelte"
-import DrawerSearchOptions from "../components/main/popups/DrawerSearchOptions.svelte"
 import DynamicValues from "../components/main/popups/DynamicValues.svelte"
 import EditChart from "../components/main/popups/EditChart.svelte"
 import EditEvent from "../components/main/popups/EditEvent.svelte"
@@ -180,7 +179,6 @@ export const popups: { [key in Popups]: ComponentType } = {
     effect_items: EffectItems,
     timeline: TimelineSettings,
     timecode: Timecode,
-    drawer_search_options: DrawerSearchOptions,
     template_info: TemplateInfo,
     cleaning_utility: CleaningUtility,
     node_options: NodeOptions,

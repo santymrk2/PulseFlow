@@ -16,9 +16,6 @@
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
 
-    export let searchValue: string
-    console.log(searchValue)
-
     function createNew() {
         const id = uid()
         interactions.update((a) => {

@@ -4,18 +4,19 @@
     import { Main } from "../../../../types/IPC/Main"
     import type { ClickEvent, FileFolder } from "../../../../types/Main"
     import { requestMain } from "../../../IPC/main"
-    import { addProjectItem } from "../../../converters/project"
-    import { activeDrawerTab, activeEdit, activeFocus, activeMediaTagFilter, activePopup, activeShow, audioFolders, cloudSyncData, drawerTabsData, focusMode, labelsDisabled, media, mediaFolders, mediaOptions, openedMediaFolders, outLocked, outputs, popupData, providerConnections, selectAllMedia, selected, sorted, special, styles } from "../../../stores"
+    import { activeDrawerTab, activeEdit, activeFocus, activeMediaTagFilter, activePopup, activeShow, audioFolders, cloudSyncData, drawerTabsData, focusMode, labelsDisabled, media, mediaFolders, mediaOptions, openedMediaFolders, outLocked, outputs, popupData, providerConnections, selectAllMedia, selected, sorted, special } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import { clone, keysToID, sortFilenames } from "../../helpers/array"
     import { splitPath } from "../../helpers/get"
-    import { countFolderMediaItems, getExtension, getFileName, getMediaLayerType, getMediaStyle, getMediaType, isMediaExtension, removeExtension } from "../../helpers/media"
+    import { countFolderMediaItems, getExtension, getFileName, getMediaType, isMediaExtension, removeExtension } from "../../helpers/media"
     import { getFirstActiveOutput, setOutput } from "../../helpers/output"
     import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
+    import Input from "../../../lib/components/ui/input/input.svelte"
+    import { translateText } from "../../../utils/language"
     import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
-    import { clearBackground, clearSlide } from "../../output/clear"
+    import { clearBackground } from "../../output/clear"
     import Center from "../../system/Center.svelte"
     import VirtualList from "../VirtualList.svelte"
     import BMDStreams from "../live/BMDStreams.svelte"
@@ -35,7 +36,6 @@
     import { loadFromUnsplash } from "./unsplash"
 
     export let active: string | null
-    export let searchValue = ""
     export let streams: MediaStream[] = []
 
     const setView = (v: any) => mediaOptions.update((a) => ({ ...a, view: v }))
@@ -88,16 +88,15 @@
 
         let onlineFiles: any[] = []
         if (onlineTab === "pixabay") {
-            onlineFiles = await loadFromPixabay(searchValue || "landscape", activeView === "video")
+            onlineFiles = await loadFromPixabay(onlineQuery || "landscape", activeView === "video")
         } else if (onlineTab === "unsplash") {
-            onlineFiles = await loadFromUnsplash(searchValue || "landscape")
+            onlineFiles = await loadFromUnsplash(onlineQuery || "landscape")
         }
 
         hightlightActive()
 
         filteredFiles = clone(onlineFiles)
-        if (searchValue.length < 2) searchedFiles = clone(filteredFiles)
-        else filterSearch()
+        searchedFiles = clone(filteredFiles)
     }
 
     function setSubSubTab(id: string) {
@@ -143,8 +142,10 @@
     }
 
     let onlineTab = $drawerTabsData.media?.openedSubSubTab?.online || "youtube"
-    $: if (active === "online" && onlineTab === "pixabay" && (searchValue !== null || activeView)) loadFilesAsync()
-    $: if (active === "online" && onlineTab === "unsplash" && (searchValue !== null || activeView)) loadFilesAsync()
+    // consulta de las fuentes de imágenes online (Pixabay, Unsplash); se confirma con Enter para no pedir a la API por cada letra
+    let onlineQuery = ""
+    $: if (active === "online" && onlineTab === "pixabay" && (onlineQuery !== null || activeView)) loadFilesAsync()
+    $: if (active === "online" && onlineTab === "unsplash" && (onlineQuery !== null || activeView)) loadFilesAsync()
 
     let prevActive: null | string = null
     let prevTab = ""
@@ -210,11 +211,8 @@
     let allRelevantFiles: FileFolder[] = []
 
     let requesting = 0
-    let currentDepth = 0
     async function requestFiles(path: string | string[], depth: number = 0, captureFolderContent: boolean = false) {
         if (!path) return
-
-        currentDepth = depth
 
         if ($special.optimizedMode || $mediaOptions.mode !== "grid") {
             // depth = 0
@@ -268,14 +266,6 @@
             return
         }
 
-        if (searchValue.length > 1) {
-            foldersList = allRelevantFiles.filter((a) => a.isFolder)
-            filesList = allRelevantFiles.filter((a) => !a.isFolder)
-
-            filterFiles()
-            return
-        }
-
         const folder = allRelevantFiles.find((a) => a.isFolder && a.path === path)
         if (!folder) return
 
@@ -305,7 +295,6 @@
     // filter files
     $: activeView = $mediaOptions.view || "all"
     $: if (activeView || $activeMediaTagFilter || $sorted) filterFiles()
-    $: if (searchValue !== undefined) filterSearch()
 
     let filteredFiles: FileFolder[] = []
     function filterFiles() {
@@ -341,43 +330,13 @@
         }
 
         filteredFiles = clone(localFilteredFiles)
-        if (searchValue.length < 2) searchedFiles = clone(filteredFiles)
-        else filterSearch()
+        searchedFiles = clone(filteredFiles)
 
         // scroll to top
         scrollElem?.scrollTo(0, 0)
     }
 
-    // search
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~() ]/g, "")
-    let searchFilterActive = false
     let searchedFiles: FileFolder[] = []
-    async function filterSearch() {
-        if (searchFilterActive) return
-        searchFilterActive = true
-
-        if (searchValue.length === 1) {
-            searchFilterActive = false
-            return
-        }
-        if (searchValue.length < 2) {
-            if (active !== "all" && active !== "favourites") requestFiles(path, 0, true)
-            else searchedFiles = clone(filteredFiles)
-            searchFilterActive = false
-            return
-        }
-
-        if (active !== "all" && active !== "favourites" && currentDepth < 5) {
-            await requestFiles(path, 5)
-        }
-
-        searchedFiles = clone(filteredFiles).filter((a) => filter(a.name).includes(filter(searchValue)))
-
-        // scroll to top
-        document.querySelector("svelte-virtual-list-viewport")?.scrollTo(0, 0)
-
-        searchFilterActive = false
-    }
 
     $: fileCount = mediaFilesOnly.length
     const shortcuts = {
@@ -414,36 +373,6 @@
 
     function keydown(e: KeyboardEvent) {
         if (!fileCount) return
-
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest(".search")) {
-            // let file = mediaFilesOnly[0] // not updating
-            let file = searchedFiles.filter((a) => !a.isFolder)[0]
-            if (!file) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                const currentOutput = getFirstActiveOutput()
-                const outputStyle = $styles[currentOutput?.style || ""]
-                const mediaStyle = getMediaStyle($media[file.path], outputStyle)
-
-                const videoType = getMediaLayerType(file.path, mediaStyle)
-
-                // clear slide text
-                if (videoType === "foreground") clearSlide()
-
-                const type = getMediaType(getExtension(file.path))
-                setOutput("background", { path: file.path, ...mediaStyle, type, loop: false, muted: false })
-                return
-            }
-
-            // add to project
-            const data = { id: file.path, name: file.name, type: getMediaType(getExtension(file.name)) }
-            addProjectItem(data)
-
-            activeFile = searchedFiles.findIndex((a) => a.path === file.path)
-            if (activeFile < 0) activeFile = null
-            return
-        }
 
         if (e.target?.closest?.("input") || e.target?.closest?.(".edit") || $activeEdit.items.length) return
 
@@ -560,6 +489,12 @@
             <p>Canva</p>
         </Button>
     </div>
+
+    {#if onlineTab === "pixabay" || onlineTab === "unsplash"}
+        <div class="onlineSearch">
+            <Input value={onlineQuery} placeholder={translateText("main.search")} on:change={(e) => (onlineQuery = (e.target as HTMLInputElement).value.trim())} />
+        </div>
+    {/if}
 {/if}
 
 <!-- MAIN -->
@@ -567,13 +502,13 @@
 <div class="scroll" style="flex: 1;overflow-y: auto;" bind:this={scrollElem}>
     <div class="grid" class:list={$mediaOptions.mode === "list"} style="height: 100%;">
         {#if isProviderSection && activeProviderId}
-            <ContentLibraryBrowser providerId={activeProviderId} columns={$mediaOptions.columns} {searchValue} />
+            <ContentLibraryBrowser providerId={activeProviderId} columns={$mediaOptions.columns} />
         {:else if active === "online" && (onlineTab === "youtube" || onlineTab === "vimeo")}
             <div class="gridgap context #player">
-                <PlayerVideos active={onlineTab} {searchValue} />
+                <PlayerVideos active={onlineTab} />
             </div>
         {:else if active === "online" && onlineTab === "canva"}
-            <Canva {searchValue} />
+            <Canva />
         {:else if active === "inputs"}
             <div class="gridgap">
                 {#if inputsTab === "cameras"}
@@ -581,7 +516,7 @@
                 {:else if inputsTab === "screens"}
                     <Screens bind:streams on:click={({ detail }) => clickInput(detail.event, detail.screen, "screen")} />
                     <div style="width: 100%;height: 10px;" />
-                    <Windows bind:streams {searchValue} on:click={({ detail }) => clickInput(detail.event, detail.screen, "screen")} />
+                    <Windows bind:streams on:click={({ detail }) => clickInput(detail.event, detail.screen, "screen")} />
                 {:else if inputsTab === "ndi"}
                     <NDIStreams on:click={({ detail }) => clickInput(detail.event, detail.screen, "ndi")} />
                 {:else if inputsTab === "omt"}
@@ -709,6 +644,14 @@
         position: relative;
         background-color: var(--primary-darkest);
         align-items: stretch;
+    }
+
+    .onlineSearch {
+        padding: 6px 8px;
+        border-bottom: 1px solid var(--border);
+    }
+    .onlineSearch :global(input) {
+        width: 100%;
     }
 
     .tabs :global(button) {

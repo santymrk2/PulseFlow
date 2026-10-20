@@ -8,7 +8,6 @@
     import Capture from "./Capture.svelte"
 
     export let streams: MediaStream[]
-    export let searchValue = ""
 
     let windows: { name: string; id: string }[] = []
 
@@ -17,12 +16,10 @@
     })
 
     // search
-    $: if (windows || searchValue !== undefined) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~() ]/g, "")
+    $: if (windows) filterSearch()
     let fullFilteredWindows: { id: string; name: string }[] = []
     function filterSearch() {
         fullFilteredWindows = clone(windows)
-        if (searchValue.length > 1) fullFilteredWindows = fullFilteredWindows.filter((a) => filter(a.name).includes(searchValue))
     }
 
     let dispatch = createEventDispatcher()
@@ -34,11 +31,7 @@
 {#if fullFilteredWindows.length}
     {#key fullFilteredWindows}
         {#each fullFilteredWindows as window}
-            <Capture
-                bind:streams
-                screen={window}
-                on:click={(e) => click(e.detail || e, window)}
-            />
+            <Capture bind:streams screen={window} on:click={(e) => click(e.detail || e, window)} />
         {/each}
     {/key}
 {:else}

@@ -22,7 +22,6 @@
     import TemplateSlide from "./TemplateSlide.svelte"
 
     export let active: string | null
-    export let searchValue = ""
 
     const profile = getAccess("templates")
     $: readOnly = profile.global === "read" || profile[active || ""] === "read"
@@ -42,11 +41,9 @@
     }
 
     // search
-    $: if (searchValue !== undefined) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()]/g, "")
+    $: if (filteredTemplates) filterSearch()
     function filterSearch() {
         fullFilteredTemplates = clone(filteredTemplates)
-        if (searchValue.length > 1) fullFilteredTemplates = fullFilteredTemplates.filter((a) => filter(a.name).includes(filter(searchValue)))
     }
 
     let nextScrollTimeout: NodeJS.Timeout | null = null
@@ -72,7 +69,7 @@
         if (timeout) clearTimeout(timeout)
     })
 
-    $: if (active || searchValue !== undefined) {
+    $: if (active) {
         loaded = false
         lazyLoader = 0
     }
@@ -185,24 +182,7 @@
             }
         }
     }
-
-    function keydown(e: KeyboardEvent) {
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest(".search")) {
-            let template = fullFilteredTemplates[0]
-            if (!template) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                templateClick(null, template.id)
-                return
-            }
-
-            // add to project (no need)
-        }
-    }
 </script>
-
-<svelte:window on:keydown={keydown} />
 
 <div style="position: relative;height: 100%;overflow-y: auto;" class="context #drawer_templates" on:wheel={wheel}>
     <DropArea id="templates">

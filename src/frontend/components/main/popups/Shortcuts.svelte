@@ -87,9 +87,6 @@
         "actions.change_drawer_item": `${ctrl} + ← / →`,
         "actions.change_drawer_category": `${ctrl} + ↑ / ↓`,
 
-        "tabs.search_tip": "SEPARATOR",
-
-        "context.addToProject": `Enter`,
         "media.play": `${ctrl} + Enter`
     }
 </script>

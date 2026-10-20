@@ -5,7 +5,6 @@
     import type { ShowType } from "../../../types/Show"
     import { addProjectItem, addToProject, updateRecentlyAddedFiles } from "../../converters/project"
     import { actions, activeFocus, activePopup, activeProject, activeShow, contextActive, drawer, drawerTabsData, editingProjectTemplate, focusMode, fullColors, playerVideos, popupData, projects, projectTemplates, projectView, recentFiles, selected, special } from "../../stores"
-    import { triggerFunction } from "../../utils/common"
     import { getAccess } from "../../utils/profile"
     import { getActionIcon } from "../actions/actions"
     import { getTimeUntilClock } from "../drawer/timers/timers"
@@ -157,10 +156,7 @@
     //     activePopup.set("show")
     //     openDrawer("shows")
     // }
-    function openSearch(page: string) {
-        openDrawer(page)
-        triggerFunction("drawer_search")
-    }
+    const openPage = (page: string) => openDrawer(page)
 
     onMount(() => {
         // convert section times in title to actual times
@@ -430,7 +426,7 @@
         <!-- new show, new media, new PDF/PPT?, new scripture, new section -->
         <div class="addMenu" transition:fade={{ duration: 80 }} role="none" on:click={() => (addMenuOpen = false)}>
             <!-- createShow -->
-            <Button variant="outline" icon="slide" title="tooltip.show" on:click={() => openSearch("shows")}>
+            <Button variant="outline" icon="slide" title="tooltip.show" on:click={() => openPage("shows")}>
                 <div class="label">
                     <p><T id="formats.show" /></p>
                     <!-- <p class="description" data-title={translateText("tabs.shows_info")}><T id="tabs.shows_info" /></p> -->
@@ -450,7 +446,7 @@
             {/if}
 
             {#if $drawerTabsData.scripture?.enabled !== false}
-                <Button variant="outline" icon="scripture" title="new.scripture" on:click={() => openSearch("scripture")} white>
+                <Button variant="outline" icon="scripture" title="new.scripture" on:click={() => openPage("scripture")} white>
                     <div class="label">
                         <p><T id="tabs.scripture" /></p>
                     </div>
@@ -463,7 +459,7 @@
 
             <!-- WIP popup -->
             <!-- images/videos, (audio), YouTube, webpages? -->
-            <Button variant="outline" icon="image" title="guide_description.media" on:click={() => openSearch("media")} white>
+            <Button variant="outline" icon="image" title="guide_description.media" on:click={() => openPage("media")} white>
                 <div class="label">
                     <p><T id="items.media" /></p>
                 </div>

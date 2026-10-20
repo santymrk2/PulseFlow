@@ -44,7 +44,7 @@ const menus: TopViews[] = ["show", "edit", "stage"]
 const ctrlKeys = {
     a: () => selectAll(),
     c: () => copy(),
-    f: () => (shouldOpenReplace() ? activePopup.set("find_replace") : null),
+    f: () => (shouldOpenReplace() ? activePopup.set("find_replace") : quickSearchActive.set(true)),
     v: () => paste(),
     // give time for drawer to not toggle
     d: () => setTimeout(() => duplicate(get(selected))),

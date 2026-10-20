@@ -1,25 +1,18 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import type { DrawerTabIds } from "../../../types/Tabs"
-    import { activeDrawerTab, activeEdit, activePage, activePopup, activeProject, activeShow, activeTriggerFunction, audioFolders, audioPlaylists, categories, dictionary, drawer, drawerOpenedInEdit, drawerTabsData, focusMode, labelsDisabled, mediaFolders, mediaOptions, os, overlayCategories, previousShow, projects, quickTextCache, scriptureSettings, scriptures, selected, showsCache, templateCategories } from "../../stores"
+    import { activeDrawerTab, activeEdit, activePage, activeShow, audioFolders, audioPlaylists, categories, drawer, drawerOpenedInEdit, drawerTabsData, focusMode, mediaFolders, mediaOptions, os, overlayCategories, previousShow, scriptures, selected, templateCategories } from "../../stores"
     import { DEFAULT_DRAWER_HEIGHT, DEFAULT_WIDTH, MENU_BAR_HEIGHT } from "../../utils/common"
     import { startResizing, stopResizing } from "../../utils/cursor"
     import { translateText } from "../../utils/language"
     import { getAccess } from "../../utils/profile"
-    import { getNormalizedKey, shouldOpenReplace } from "../../utils/shortcuts"
+    import { getNormalizedKey } from "../../utils/shortcuts"
     import { isTypingTarget } from "../../utils/shortcutsHelper"
     import { drawerTabs } from "../../values/tabs"
     import Content from "../drawer/Content.svelte"
     import Navigation from "../drawer/Navigation.svelte"
     import { keysToID } from "../helpers/array"
-    import { history } from "../helpers/history"
     import Icon from "../helpers/Icon.svelte"
-    import { selectTextOnFocus } from "../helpers/inputActions"
-    import { setOutput } from "../helpers/output"
-    import { loadShows } from "../helpers/setShow"
-    import { getLayoutRef } from "../helpers/show"
-    import { updateOut } from "../helpers/showActions"
-    import T from "../helpers/T.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import Slider from "../../lib/components/ui/slider/slider.svelte"
     import Resizeable from "../system/Resizeable.svelte"
@@ -34,8 +27,6 @@
     let move = false
     let mouse: null | { x: number; y: number; offsetY: number } = null
     function mousedown(e: any) {
-        if (e.target.closest(".search")) return
-
         startResizing("ns-resize")
 
         maxHeight = window.innerHeight - topHeight - ($os.platform === "win32" ? MENU_BAR_HEIGHT - 0.3 : 0)
@@ -112,8 +103,6 @@
     }
 
     function mouseup(e: any) {
-        if (!e.target.closest("input") && !e.target.closest(".contextMenu") && !searchValue.length) searchActive = false
-
         if (animFrame) {
             cancelAnimationFrame(animFrame)
             animFrame = null
@@ -141,114 +130,22 @@
         // allow click event first
         setTimeout(() => {
             activeDrawerTab.set(newId)
-
-            // remove focus for search function to work
-            setTimeout(() => (document.activeElement as any)?.blur(), 10)
         }, 10)
     }
 
-    let searchValue = ""
-    $: if ($activeDrawerTab) searchValue = ""
-    // single space normalization for search input
-    const removeWhitespace = (v: string) => v.trim().replace(/\s+/g, " ")
-    $: searchValue = removeWhitespace(searchValue) + (searchValue.endsWith(" ") ? " " : "")
-    function search() {
-        if (storeHeight === null && $drawer.height > minHeight) return
-
-        click(null)
-        // if ($activeDrawerTab === "shows") {
-        // }
-    }
-
-    let firstMatch: null | any = null
-    let searchElem: HTMLInputElement | undefined
-    async function keydown(e: KeyboardEvent) {
+    function keydown(e: KeyboardEvent) {
         if (e.shiftKey || e.altKey) return
 
         const ctrlKey = e.ctrlKey || e.metaKey ? getNormalizedKey(e) : ""
 
-        if (ctrlKey === "f") {
-            if ($activePopup === "show" || shouldOpenReplace()) return
-            focusSearch()
-
-            // auto change to "Shows" tab, when closed on a "Media" tab, as commonly people don't change back after adding backgrounds
-            // (not really needed as we have Quick search)
-            const isClosed = $drawer.height <= minHeight
-            const mediaTab = ["media", "audio"].includes($activeDrawerTab)
-            if (isClosed && mediaTab) {
-                activeDrawerTab.set("shows")
-                drawerTabsData.update((a) => {
-                    a.shows.activeSubTab = "all"
-                    return a
-                })
-            }
-        } else if (ctrlKey === "d" && !isTypingTarget(document.activeElement)) {
+        if (ctrlKey === "d" && !isTypingTarget(document.activeElement)) {
             if (!$selected?.id && !$activeEdit.items.length) click(null)
-        } else if (e.key === "Enter") {
-            if (document.activeElement !== searchElem || !searchValue.trim().length || !firstMatch || $focusMode) return
-            if ($activeDrawerTab !== "shows") return
-
-            let match = $activeShow?.data?.searchInput === true ? { id: $activeShow.id } : firstMatch
-
-            // create from search
-            if (match === "SEARCH_CREATE") {
-                const name = searchValue.trim()
-                quickTextCache.set({ name: name[0]?.toUpperCase() + name.slice(1), text: "", fromSearch: true })
-                activePopup.set("show")
-                return
-            }
-
-            if (!$activeProject) {
-                // open the show
-                activeShow.set({ id: match.id, type: "show" })
-                return
-            }
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                const showId = match.id
-                await loadShows([showId])
-                if (!$showsCache[showId]) return
-
-                let layoutRef = getLayoutRef(showId)
-                let firstEnabledIndex = layoutRef.findIndex((a) => !a.data.disabled)
-                if (firstEnabledIndex === -1) return
-
-                updateOut("active", firstEnabledIndex, layoutRef)
-                setOutput("slide", { id: showId, layout: $showsCache[showId].settings.activeLayout, index: firstEnabledIndex })
-                return
-            }
-
-            searchElem.select()
-            let newIndex = ($activeShow?.index ?? $projects[$activeProject]?.shows?.length - 1) + 1
-            if ($activePage === "show") history({ id: "UPDATE", newData: { key: "shows", index: newIndex, data: { id: match.id } }, oldData: { id: $activeProject }, location: { page: "show", id: "project_ref" } })
-            activeShow.set({ ...match, index: newIndex })
-            searchValue = ""
-        }
-    }
-
-    function searchKeydown(e: KeyboardEvent) {
-        if (e.key === "Escape") {
-            searchActive = false
-            searchValue = ""
         }
     }
 
     $: if ($activeShow?.type === undefined || $activeShow?.type === "show") previousShow.set(JSON.stringify($activeShow))
 
     $: tabs = keysToID(drawerTabs)
-
-    let searchActive = false
-    $: if (searchActive) {
-        setTimeout(() => {
-            searchElem?.focus()
-        }, 10)
-    }
-    $: if ($activeTriggerFunction === "drawer_search") focusSearch()
-    function focusSearch() {
-        searchActive = false
-        setTimeout(() => (searchActive = true))
-    }
 
     const hiddenInFocusMode = ["templates", "calendar"]
 
@@ -301,6 +198,17 @@
                 {/if}
             {/each}
         </span>
+
+        <span class="topRight">
+            {#if showViewToggle}
+                <Button on:click={toggleView} title="show.{$mediaOptions.mode}">
+                    <Icon size={1.2} id={$mediaOptions.mode} white />
+                </Button>
+            {/if}
+            {#if showSizeSlider}
+                <Slider style="width: 110px;" bind:value={$mediaOptions.columns} min={2} max={10} invert />
+            {/if}
+        </span>
     </div>
 
     {#if crumbs.length}
@@ -316,61 +224,12 @@
         <Resizeable id="leftPanelDrawer">
             <Navigation id={$activeDrawerTab} />
         </Resizeable>
-        <Content id={$activeDrawerTab} bind:searchValue bind:firstMatch />
+        <Content id={$activeDrawerTab} />
         <Resizeable id="rightPanelDrawer" let:width side="right">
             <div class="right" class:row={width > DEFAULT_WIDTH * 1.8}>
                 <Info id={$activeDrawerTab} />
             </div>
         </Resizeable>
-    </div>
-
-    <div class="footer">
-        <div></div>
-
-        <div class="searchBox">
-            <input bind:this={searchElem} class:hidden={!searchActive && !searchValue.length} class="search edit drawer_search" type="text" placeholder={translateText("ui.filter", $dictionary)} bind:value={searchValue} on:input={search} on:keydown={searchKeydown} use:selectTextOnFocus />
-            {#if !searchActive && !searchValue.length}
-                <Button align="start" class="search" style="border-bottom: 2px solid var(--secondary);" on:click={() => (searchActive = true)} title={translateText("tabs.search_tip [Ctrl+F]")} bold={false}>
-                    <Icon id="search" size={1.4} white right={!$labelsDisabled && !$focusMode} />
-                    {#if !$labelsDisabled && !$focusMode}<p style="opacity: 0.8;font-size: 1.1em;"><T id="ui.filter" /></p>{/if}
-                </Button>
-            {:else}
-                {#if $activeDrawerTab === "scripture"}
-                    <div class="clearSearch autocomplete">
-                        <Icon id="autofill" white />
-                    </div>
-                    <div class="clearSearch options" on:mousedown|stopPropagation on:mouseup|stopPropagation>
-                        <Button align="start" style="height: 100%;" title={translateText("edit.options")} on:click={() => activePopup.set("drawer_search_options")}>
-                            <Icon id="options" white={!$scriptureSettings.enterSwapped} />
-                        </Button>
-                    </div>
-                {/if}
-                <div class="clearSearch">
-                    <Button
-                        align="start"
-                        style="height: 100%;"
-                        title={translateText("clear.search")}
-                        on:click={() => {
-                            searchValue = ""
-                            searchElem?.focus()
-                        }}
-                    >
-                        <Icon id="clear" white />
-                    </Button>
-                </div>
-            {/if}
-        </div>
-
-        <div class="footerRight">
-            {#if showViewToggle}
-                <Button on:click={toggleView} title="show.{$mediaOptions.mode}">
-                    <Icon size={1.2} id={$mediaOptions.mode} white />
-                </Button>
-            {/if}
-            {#if showSizeSlider}
-                <Slider style="width: 110px;" bind:value={$mediaOptions.columns} min={2} max={10} invert />
-            {/if}
-        </div>
     </div>
 </section>
 
@@ -439,77 +298,11 @@
         opacity: 0.3;
     }
 
-    .footer {
-        height: 36px;
-        flex: none;
-        display: grid;
-        grid-template-columns: 1fr auto 1fr;
-        align-items: center;
-        padding: 0 8px;
-        gap: 8px;
-
-        border-top: 1px solid var(--border-color);
-    }
-    .footerRight {
+    .topRight {
         display: flex;
         align-items: center;
-        justify-content: end;
         gap: 4px;
-    }
-
-    .searchBox {
-        position: relative;
-        width: 256px;
-    }
-
-    .search {
-        background-color: rgb(0 0 0 / 0.2);
-        color: var(--text);
-        font-size: inherit;
-        font-family: inherit;
-        width: 100%;
         padding: 0 8px;
-        padding-right: 40px;
-        height: 28px;
-        border: none;
-        border-radius: var(--radius, 4px);
-    }
-    .search:active,
-    .search:focus {
-        outline: 1px solid var(--ring);
-        outline-offset: -2px;
-    }
-    .search::placeholder {
-        color: inherit;
-        opacity: 0.4;
-    }
-    /* collapsed "Filter" button fills the same 256px box */
-    .searchBox :global(button.search) {
-        width: 100%;
-        height: 28px;
-        justify-content: start;
-    }
-
-    .clearSearch {
-        position: absolute;
-        right: 0;
-        top: 0;
-        height: 100%;
-        z-index: 1;
-    }
-    .clearSearch.options {
-        right: 40px;
-    }
-    .clearSearch.autocomplete {
-        right: 90px;
-        display: flex;
-        align-items: center;
-        opacity: 0.2;
-        pointer-events: none;
-    }
-
-    .hidden {
-        display: none;
     }
 
     .content {

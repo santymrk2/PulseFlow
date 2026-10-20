@@ -12,19 +12,15 @@
     import Card from "../Card.svelte"
     import EffectIcons from "./EffectIcons.svelte"
 
-    export let searchValue = ""
-
     $: resolution = getResolution(null, { $outputs, $styles })
     let filteredEffects: any[] = []
     $: filteredEffects = sortByName(keysToID($effects))
 
     // search
-    $: if (filteredEffects || searchValue !== undefined) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()]/g, "")
+    $: if (filteredEffects) filterSearch()
     let fullFilteredEffects: any[] = []
     function filterSearch() {
         fullFilteredEffects = clone(filteredEffects)
-        if (searchValue.length > 1) fullFilteredEffects = fullFilteredEffects.filter((a) => filter(a.name).includes(filter(searchValue)))
     }
 
     // HOVER

@@ -520,7 +520,6 @@ export type Popups =
     | "effect_items"
     | "timeline"
     | "timecode"
-    | "drawer_search_options"
     | "template_info"
     | "cleaning_utility"
     | "node_options"

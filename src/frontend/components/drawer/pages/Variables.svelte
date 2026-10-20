@@ -15,15 +15,13 @@
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
 
-    export let searchValue
-
     const profile = getAccess("variables")
     const readOnly = profile.global === "read"
 
     const typeOrder = { number: 1, text: 2 }
     $: sortedVariables = sortByName(keysToID($variables), "name", true).sort((a, b) => typeOrder[a.type] - typeOrder[b.type])
     $: filteredVariablesTags = sortedVariables.filter((a) => !$activeVariableTagFilter.length || (a.tags?.length && !$activeVariableTagFilter.find((tagId) => !a.tags?.includes(tagId)))).filter((a) => !a.tags?.some((tagId) => profile[tagId] === "none"))
-    $: filteredVariablesSearch = searchValue.length > 1 ? filteredVariablesTags.filter((a) => a.name.toLowerCase().includes(searchValue.toLowerCase())) : filteredVariablesTags
+    $: filteredVariablesSearch = filteredVariablesTags
 
     function updateVariable(e: any, id: string, key: string) {
         let value = e?.target?.value ?? e

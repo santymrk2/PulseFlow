@@ -27,8 +27,6 @@
         sendMain(Main.PROVIDER_LOAD_SERVICES, { providerId: "canva", data: { canvaClientId, canvaClientSecret } })
     }
 
-    export let searchValue = ""
-
     let canvaClientId = ""
     let canvaClientSecret = ""
     let currentCategory: ContentLibraryCategory | null = null
@@ -74,7 +72,7 @@
 {#if $providerConnections.canva}
     <div style="position: relative;width: 100%; height: 100%; display: flex; flex-direction: column;">
         <div style="flex: 1; overflow: hidden;">
-            <ContentLibraryBrowser providerId="canva" columns={$mediaOptions.columns} {searchValue} bind:currentCategory {getContentCategory} />
+            <ContentLibraryBrowser providerId="canva" columns={$mediaOptions.columns} bind:currentCategory {getContentCategory} />
         </div>
     </div>
     <!-- <div style="position: absolute;bottom: 0;width: 100%;padding: 10px;display: flex;justify-content: center;">

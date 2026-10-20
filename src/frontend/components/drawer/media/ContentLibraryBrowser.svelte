@@ -12,7 +12,6 @@
 
     export let providerId: ContentProviderId
     export let columns: number = 5
-    export let searchValue: string = ""
     export let currentCategory: ContentLibraryCategory | null = null
     export let getContentCategory: (item: ContentFileWithExtras) => ContentLibraryCategory | null = () => null
 
@@ -142,9 +141,8 @@
     // inline widths would override the stylesheet, so the list width has to be set here as well
     $: cardWidth = listMode ? "100%" : `calc(${100 / columns}% - 4px)`
 
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~() ]/g, "")
-    $: filteredCategories = searchValue.length > 1 ? categories.filter((cat) => filter(cat.name).includes(filter(searchValue))) : categories
-    $: filteredContent = searchValue.length > 1 ? content.filter((item) => filter(item.name || "").includes(filter(searchValue))) : content
+    $: filteredCategories = categories
+    $: filteredContent = content
 </script>
 
 <div class="content-library">

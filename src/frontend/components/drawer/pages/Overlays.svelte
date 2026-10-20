@@ -23,7 +23,6 @@
     import OverlayActions from "./OverlayActions.svelte"
 
     export let active: string | null
-    export let searchValue = ""
 
     const profile = getAccess("overlays")
     $: readOnly = profile.global === "read" || profile[active || ""] === "read"
@@ -34,12 +33,10 @@
     $: filteredOverlays = sortByName(keysToID($overlays).filter((s) => (active === "all" && !$overlayCategories[s?.category || ""]?.isArchive) || active === s.category || (active === "unlabeled" && (s.category === null || !$overlayCategories[s.category]))))
 
     // search
-    $: if (filteredOverlays || searchValue !== undefined) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()]/g, "")
+    $: if (filteredOverlays) filterSearch()
     let fullFilteredOverlays: (Overlay & { id: string })[] = []
     function filterSearch() {
         fullFilteredOverlays = clone(filteredOverlays)
-        if (searchValue.length > 1) fullFilteredOverlays = fullFilteredOverlays.filter((a) => filter(a.name || "").includes(filter(searchValue)))
     }
 
     let nextScrollTimeout: NodeJS.Timeout | null = null
@@ -65,7 +62,7 @@
         if (timeout) clearTimeout(timeout)
     })
 
-    $: if (active || searchValue !== undefined) {
+    $: if (active) {
         loaded = false
         lazyLoader = 0
     }
@@ -114,30 +111,11 @@
         if (isActive) timelineRecordingAction.set({ id: "clear_overlay", data: { id } })
         else timelineRecordingAction.set({ id: "id_select_overlay", data: { id } })
     }
-
-    function keydown(e: KeyboardEvent) {
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest?.(".search")) {
-            let overlay = fullFilteredOverlays[0]
-            if (!overlay) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                overlayClick({}, overlay.id)
-                return
-            }
-
-            // add to project
-            const data = { id: overlay.id, name: overlay.name, type: "overlay" as const }
-            addProjectItem(data)
-        }
-    }
 </script>
-
-<svelte:window on:keydown={keydown} />
 
 <div style="position: relative;height: 100%;overflow-y: auto;" class="context #drawer_overlays" on:wheel={wheel}>
     {#if active === "effects"}
-        <Effects {searchValue} />
+        <Effects />
     {:else}
         <DropArea id="overlays">
             {#if fullFilteredOverlays.length}
