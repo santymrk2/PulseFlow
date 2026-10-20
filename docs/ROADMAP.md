@@ -1204,7 +1204,7 @@ Reglas que valen para todas las tareas de F14:
 - Números, tiempos y timecodes en Geist Mono con `tabular-nums`.
 - Cada tarea: capturas antes/después **en macOS** a 1280 y 1920 en `docs/capturas/f14/`.
 
-- [ ] **F14.1 Especificación.**
+- [x] **F14.1 Especificación.**
   *Archivos:* `docs/design/kit.md` (reescribir la sección de medidas).
   *Pasos:* tabla de tokens con valores (gris 50→950, `--border` 8 % y `--border-strong`
   16 % de blanco, `--text`, `--text-muted`, `--text-subtle`, semánticos), escala de texto
@@ -1212,9 +1212,9 @@ Reglas que valen para todas las tareas de F14:
   activo, seleccionado, foco, deshabilitado) y la lista de reglas de arriba. Capturas
   "antes" de Show, Edit, Configuración, Pantallas, Looks y el cajón inferior.
   *Aceptación:* el documento alcanza para maquetar una pantalla nueva sin preguntar.
-  **Parcial** (2026-10-20): especificación en `docs/design/kit.md`; capturas "antes" de
-  Show, Edit, menú ⋯, cajón de plantillas y Configuración en `docs/capturas/f14/`. Faltan
-  `antes-pantallas.png` y `antes-looks.png`.
+  (2026-10-20) Especificación en `docs/design/kit.md`; capturas "antes" en macOS de Show,
+  Edit, menú ⋯, cajón de plantillas, Configuración, Pantallas y Looks en
+  `docs/capturas/f14/`.
 
 Las tareas F14.1a–c (decididas 2026-10-20) cambian la estructura de la interfaz y van
 antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
