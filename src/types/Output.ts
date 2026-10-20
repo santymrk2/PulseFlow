@@ -1,4 +1,4 @@
-import type { Cropping, Resolution } from "./Settings"
+import type { AspectRatio, Cropping, Resolution } from "./Settings"
 import type { OutBackground, OutScene, OutSlide, OutTransition } from "./Show"
 
 export interface Outputs {
@@ -9,6 +9,10 @@ export interface Output {
     id?: string
     hideFromPreview?: boolean
     stageOutput?: string
+    kind?: "audience" | "stage"
+    stageLayout?: string
+    screenType?: "single" | "mirror" | "edge_blend"
+    mirrorOf?: string
     enabled: boolean
     active: boolean
     name: string
@@ -20,6 +24,14 @@ export interface Output {
     screen: string | null
     alwaysOnTop?: boolean
     transparent?: boolean
+    display?: {
+        screen: string | null
+        bounds: { x: number; y: number; width: number; height: number }
+        boundsLocked?: boolean
+        alwaysOnTop?: boolean
+    }
+    target?: "full" | "custom"
+    aspectRatio?: AspectRatio
     ndi?: boolean
     ndiData?: any
     omt?: boolean

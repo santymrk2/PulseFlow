@@ -12,7 +12,27 @@ export interface Themes {
 type StyleLayers = "background" | "slide" | "overlays"
 export interface Look {
     name: string
-    screens: { [outputId: string]: string }
+    transitionMs?: number
+    screens: { [outputId: string]: LookScreen }
+}
+
+export interface LookScreen {
+    layers: { media: boolean; slide: boolean; overlays: boolean }
+    theme?: string
+    themeScripture?: string
+    background?: string
+    backgroundImage?: string
+    clearStyleBackgroundOnText?: boolean
+    fit?: MediaFit | null
+    blurAmount?: number
+    blurOpacity?: number
+    volume?: number
+    transition?: { [key: string]: Transition }
+    lines?: number
+    showAsFaded?: boolean
+    lineOpacity?: number
+    skipVirtualBreaks?: boolean
+    metadata?: Metadata
 }
 
 export interface Styles {

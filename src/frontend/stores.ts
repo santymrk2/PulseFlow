@@ -391,6 +391,7 @@ export const themes: Writable<{ [key: string]: Themes }> = writable({}) // {defa
 // Estilos y looks de la salida: mapas `{ [styleId]: Styles }` / `{ [lookId]: Look }`.
 // `Styles` y `Look` ya son tipos propios, así que no hace falta `any` (F9.2).
 export const styles: Writable<{ [key: string]: Styles }> = writable({}) // {}
+export const stylesLegacyBackup: Writable<{ [key: string]: Styles }> = writable({})
 export const looks: Writable<{ [key: string]: Look }> = writable({}) // {}
 export const activeLook: Writable<string> = writable("default") // ""
 
