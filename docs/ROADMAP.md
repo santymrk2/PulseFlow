@@ -722,7 +722,7 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
 Reportadas por el usuario en macOS el 2026-10-20. Un commit por tarea; todas se
 verifican en la app real (`bun run dev:tauri`).
 
-- [ ] **F10.0a Barra superior sin indicador rojo ni título.**
+- [x] **F10.0a Barra superior sin indicador rojo ni título.**
   *Archivo:* `src/frontend/components/main/Top.svelte`.
   *Causa:* el `<div class="unsaved">` (barra roja de "sin guardar") y el
   `<h1>PulseFlow</h1>` ocupan la esquina izquierda, que en macOS es de los botones de
@@ -735,7 +735,7 @@ verifican en la app real (`bun run dev:tauri`).
   *Aceptación:* en macOS la esquina izquierda sólo tiene los botones del sistema y no
   aparece nada al guardar o al tener cambios sin guardar.
 
-- [ ] **F10.0b Mover la ventana desde la barra superior.**
+- [x] **F10.0b Mover la ventana desde la barra superior.**
   *Archivos:* `Top.svelte`, `src-tauri/capabilities/default.json` (ya tiene
   `core:window:allow-start-dragging`).
   *Causa:* la barra usa `-webkit-app-region: drag`, que es de Electron; Tauri lo ignora.
@@ -745,7 +745,7 @@ verifican en la app real (`bun run dev:tauri`).
   *Aceptación:* en macOS se arrastra la ventana desde cualquier parte vacía de la barra
   y los botones siguen funcionando.
 
-- [ ] **F10.0c Monitores en coordenadas lógicas e identidad estable.**
+- [x] **F10.0c Monitores en coordenadas lógicas e identidad estable.**
   *Archivos:* `src-tauri/src/commands/output.rs` (`GET_DISPLAYS`),
   `src-tauri/src/render/screens.rs`, espejo TS en `src/types/`.
   *Causa:* `GET_DISPLAYS` devuelve `position()`/`size()` **físicos**; en una Mac con
@@ -761,7 +761,7 @@ verifican en la app real (`bun run dev:tauri`).
   devuelve rectángulos que no se superponen y coinciden con la disposición de
   Ajustes del Sistema → Pantallas.
 
-- [ ] **F10.0d La salida cubre la pantalla asignada (como ProPresenter).**
+- [x] **F10.0d La salida cubre la pantalla asignada (como ProPresenter).**
   *Archivo:* `src-tauri/src/render/screens.rs` (`place_window`, `target_monitor`).
   *Causa:* la regla "si es el monitor de la ventana de control → ventana flotante 16:9"
   (y, por la mezcla físico/lógico, el monitor externo se detecta como el de control).
@@ -776,7 +776,7 @@ verifican en la app real (`bun run dev:tauri`).
   externo queda cubierto por completo (sin barra de menú ni Dock) y la app sigue
   usable en la integrada.
 
-- [ ] **F10.0e Disposición de monitores que no se rompe.**
+- [x] **F10.0e Disposición de monitores que no se rompe.**
   *Archivos:* nuevo `src/frontend/components/screens/displayLayout.ts` (función pura +
   test de vitest) y `DisplayLayout.svelte`; usarlo en `settings/Screens.svelte` (el
   popup actual) y después en la ventana de F10.3.
@@ -835,7 +835,7 @@ Orden y paralelismo: **primero F10.0a–f** (correcciones urgentes). Después F1
 paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** = F10.6,
 **C** = F10.7. Al final, un agente: F10.8 → F10.9.
 
-- [ ] **F10.1 Modelo de datos y migración.**
+- [x] **F10.1 Modelo de datos y migración.**
   *Archivos:* `src/types/Output.ts`, `src/types/Settings.ts`, `utils/updateSettings.ts`,
   `helpers/looks.ts`, test nuevo `helpers/looks.migration.test.ts`.
   *Pasos:* tipos `Output` (`kind`, `stageLayout`, `screenType`, `mirrorOf`, `target`,
@@ -846,7 +846,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   salidas, 1 stage, 3 estilos y 2 looks) que verifica el resultado y que correr la
   migración dos veces da lo mismo.
 
-- [ ] **F10.2 Puente Look → render.**
+- [x] **F10.2 Puente Look → render.**
   *Archivos:* `helpers/looks.ts`, `stores.ts` (sólo lo necesario).
   *Pasos:* `lookScreenToStyle()`; al cambiar `looks` o `activeLook`, regenerar las
   entradas internas `__look__<outputId>` en `styles` y apuntar `output.style` a ellas.
@@ -882,7 +882,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   *Aceptación:* una pantalla en espejo muestra lo mismo que su origen (golden o prueba
   manual anotada).
 
-- [ ] **F10.6 Modal "Looks".** (agente B; mismo estilo y comportamiento que el modal de
+- [x] **F10.6 Modal "Looks".** (agente B; mismo estilo y comportamiento que el modal de
   pantallas — ver "Modales" en la especificación; si `Modal.svelte` todavía no existe en
   tu rama, creá uno con la misma API en `components/looks/` y se unifica al integrar)
   *Archivos:* `src/frontend/components/looks/` (`LooksWindow.svelte`, `LookGrid.svelte`,
@@ -893,6 +893,9 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   de traducción (en `en.json` y `es.json`), botones con ícono.
   *Aceptación:* crear "Sólo letras" (Media apagado en Principal), ponerlo en vivo y
   volver a "Default"; con `RENDER_SNAPSHOT` se verifica que el fondo desaparece y vuelve.
+  *Estado:* hecho (`df01772a`). El cambio de capas del look en vivo se verificó
+  inspeccionando `styles['__look__out1'].layers`; la verificación visual con
+  `RENDER_SNAPSHOT` queda pendiente del usuario (ver `docs/informes/looks.md`).
 
 - [ ] **F10.7 Menú "Pantallas", atajos y selector en la barra superior.** (agente C)
   *Archivos:* `src-tauri/src/lib.rs` (menú nativo macOS con `tauri::menu`),

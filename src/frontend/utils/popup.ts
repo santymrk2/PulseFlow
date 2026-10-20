@@ -57,6 +57,8 @@ import ManageGroups from "../components/main/popups/ManageGroups.svelte"
 import ManageIcons from "../components/main/popups/ManageIcons.svelte"
 import ManageMetadata from "../components/main/popups/ManageMetadata.svelte"
 import ManageTags from "../components/main/popups/ManageTags.svelte"
+import Loader from "../components/main/Loader.svelte"
+import LooksWindow from "../components/looks/LooksWindow.svelte"
 import MaxLines from "../components/main/popups/MaxLines.svelte"
 import MediaFit from "../components/main/popups/MediaFit.svelte"
 import MetadataDisplay from "../components/main/popups/MetadataDisplay.svelte"
@@ -183,7 +185,8 @@ export const popups: { [key in Popups]: ComponentType } = {
     cleaning_utility: CleaningUtility,
     pco_picker: PcoServicePicker,
     sync_folders: SyncFolders,
-    node_options: NodeOptions
+    node_options: NodeOptions,
+    looks: LooksWindow
 }
 
 export function waitForPopupData(popupId: Popups): Promise<any> {

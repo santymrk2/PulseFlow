@@ -529,6 +529,7 @@ export type Popups =
     | "pco_picker"
     | "sync_folders"
     | "node_options"
+    | "looks"
     // Pantallas y looks (F10.7). Los popups todavía no existen: lane A/B los
     // agregará en F10.3/F10.6. Hasta entonces abrirlos no hace nada visible.
     | "screens_config"
