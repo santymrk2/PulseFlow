@@ -31,3 +31,6 @@ Inicio: $(date -u +%Y-%m-%dT%H:%M:%SZ)
 - Panel derecho: nombre editable, resolución, lienzo clicable para asignar monitor, tipo Única/Espejo/Edge blend con mirrorOf, panel Hardware (Salida/Destino/Personalizado + info). Tabs Recorte/Envío esbozados (se completa en F10.4).
 - Creada carpeta `components/looks/` con `LooksWindow` (estructura modal), `LookGrid`, `LookAdvanced` (base para F10.6).
 
+
+### F10.4 (inicio)
+- Ampliando pestañas Recorte y Envío en ScreenDetail con lógica de outputs existente (cropping, aspect ratio placeholder, edge blend, NDI/OMT/Blackmagic/WebRTC/RTMP). Panel stage con layout dropdown + botón Editar layout.
