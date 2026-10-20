@@ -1,14 +1,35 @@
 # Plan de noche — 4 agentes en paralelo (F10 + F11)
 
-Para dejar opencode trabajando sin supervisión. Requiere que **F10.1 y F10.2 estén
-terminadas y pusheadas** en `feature/tauri-rust-migration` (son la base de todo).
+Para dejar opencode trabajando sin supervisión. Se puede arrancar **mientras el agente
+principal todavía termina F10.1–F10.2**:
+
+- **C** y **D** no dependen de F10.1–F10.2: arrancan ya.
+- **A** arranca ya; cuando necesite los tipos nuevos los espera (ver "Esperar la base").
+- **B** lo hace el **agente principal** en la carpeta original, a continuación de
+  F10.2, sin carpeta ni rama nueva.
+
+### Esperar la base (carril A)
+
+Cuando una tarea necesite los tipos de F10.1/F10.2 (por ejemplo `kind`, `screenType`,
+`LookScreen`), comprobar si ya están:
+
+```bash
+git fetch origin
+git show origin/feature/tauri-rust-migration:docs/ROADMAP.md | grep -c '\[x\] \*\*F10.2'
+```
+
+- Si da `1`: `git merge origin/feature/tauri-rust-migration` y seguir.
+- Si da `0`: avanzar con lo que no los necesite (estructura del modal, lista de
+  monitores, estilos). Si ya no queda nada para avanzar, esperar con `sleep 110` y volver
+  a comprobar (comandos cortos: no dejar un `sleep` largo). Máximo 2 horas esperando; si
+  se cumple, anotarlo en el informe y seguir con F10.5.
 
 ## Carriles
 
 | Carril | Carpeta | Rama | Tareas | Archivos que son SUYOS |
 | --- | --- | --- | --- | --- |
 | **A — Pantallas** | `../PulseFlow-pantallas` | `feature/f10-pantallas` | F10.3 → F10.4 → F10.5 | `components/main/Modal.svelte` (nuevo, lo crea A; B lo usa cuando exista — mientras tanto B crea su modal en `components/looks/` con la misma API y se unifica a la mañana), `components/screens/**`, `settings/Screens.svelte`, `settings/tabs/Outputs.svelte` (sólo leer/mover bloques), `components/output/**` excepto `output/preview/**`, `helpers/sceneGraph.ts` (sólo espejo, F10.5) |
-| **B — Looks** | `../PulseFlow-looks` | `feature/f10-looks` | F10.6 | `components/looks/**`, `settings/tabs/Looks.svelte`, `helpers/looks.ts`, `helpers/historyActions.ts` |
+| **B — Looks** | carpeta original `FreeShow` (agente principal) | `feature/tauri-rust-migration` | F10.1 → F10.2 → F10.6 | `components/looks/**`, `settings/tabs/Looks.svelte`, `helpers/looks.ts`, `helpers/historyActions.ts` |
 | **C — Barra y menú** | `../PulseFlow-menu` | `feature/f10-menu` | F10.0f → F10.7 → F11.1 | `IPC/tauri.ts`, `commands/servers.rs`, `utils/language.ts`, `main/Top.svelte`, `main/TopButton.svelte`, `main/MenuBar.svelte`, `utils/shortcuts.ts`, `src-tauri/src/lib.rs` (sólo el menú), `src-tauri/src/menu.rs` (nuevo) |
 | **D — Interfaz** | `../PulseFlow-ui` | `feature/f11-ui` | F11.2 → F11.3 → F11.4 → F11.5 → F11.6 → F11.8 → F11.10 | `components/drawer/**`, `components/show/**`, el marco de `slide/Slide.svelte`, `output/preview/**`, `main/Popup.svelte`, `main/Tooltip.svelte`, `context/**`, `public/global.css`, la columna izquierda de `MainLayout.svelte` (F11.10) |
 
@@ -67,7 +88,7 @@ imágenes, revisarlas; si no, describir qué se esperaba ver en el informe del c
 
 ## Antes de irte (vos, 5 minutos)
 
-1. Confirmá que F10.1 y F10.2 están pusheadas (`git log origin/feature/tauri-rust-migration`).
+1. No hace falta esperar a F10.1/F10.2: el agente principal las termina y sigue con el carril B.
 2. Ajustes del Sistema → Privacidad y seguridad → **Grabación de pantalla**: activá la
    app de terminal donde corre opencode (opcional; sin esto no hay capturas).
 3. Dejá el monitor externo conectado y la Mac sin suspender
@@ -76,8 +97,8 @@ imágenes, revisarlas; si no, describir qué se esperaba ver en el informe del c
 
 ```bash
 git fetch origin && git checkout feature/tauri-rust-migration && git pull
-for c in pantallas looks menu ui; do
-  case $c in pantallas) r=feature/f10-pantallas;; looks) r=feature/f10-looks;;
+for c in pantallas menu ui; do
+  case $c in pantallas) r=feature/f10-pantallas;;
              menu) r=feature/f10-menu;; ui) r=feature/f11-ui;; esac
   git worktree add ../PulseFlow-$c -b $r origin/feature/tauri-rust-migration
   (cd ../PulseFlow-$c && bun install)
@@ -107,10 +128,10 @@ con sus reglas). Para usar la app, respetá el lock de "Compartir la app".
 ## A la mañana
 
 1. Leer los 4 informes (`docs/informes/*.md` en cada rama).
-2. Integrar en este orden (menos conflictos): **B → A → C → D** sobre
+2. B ya está en la rama principal. Integrar el resto en este orden: **A → C → D** sobre
    `feature/tauri-rust-migration`, corriendo todos los chequeos después de cada merge.
    Lo puede hacer un agente con:
-   `Integrá origin/feature/f10-looks, f10-pantallas, f10-menu y f11-ui en ese orden en
+   `Integrá origin/feature/f10-pantallas, f10-menu y f11-ui en ese orden en
    feature/tauri-rust-migration, resolviendo conflictos y corriendo todos los chequeos
    después de cada merge. Si un merge rompe algo que no podés arreglar en 2 intentos,
    abortalo (git merge --abort), anotalo y seguí con el siguiente. Push y resumen.`
