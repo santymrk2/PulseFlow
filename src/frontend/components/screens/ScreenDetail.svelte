@@ -10,6 +10,7 @@
     import ScreenOutputOptions from "./ScreenOutputOptions.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
     import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
+    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
     import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
     import MaterialPopupButton from "../inputs/MaterialPopupButton.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
@@ -22,6 +23,22 @@
     $: currentOutput = $outputs[outputId] || {}
     $: isStage = !!currentOutput.stageOutput || currentOutput.kind === "stage"
     $: stageId = currentOutput.stageLayout || currentOutput.stageOutput || ""
+    const typeOptions = [
+        { value: "single", label: "Única" },
+        { value: "mirror", label: "Espejo" },
+        { value: "edge_blend", label: "Edge blend" }
+    ]
+    const targetOptions = [
+        { value: "full", label: "Completo" },
+        { value: "custom", label: "Personalizado" }
+    ]
+    $: screenOptions = [{ value: "", label: "Ninguna" }, ...displays.map((d) => ({ value: d.id?.toString() || d.label, label: String(d.label || d.id) }))]
+    $: mirrorOptions = [
+        { value: "", label: "Elegir" },
+        ...Object.entries($outputs)
+            .filter(([id, o]) => id !== outputId && !(o.stageOutput || o.kind === "stage"))
+            .map(([id, o]) => ({ value: id, label: o.name || id }))
+    ]
     $: if (outputId && $currentOutputSettings !== outputId) currentOutputSettings.set(outputId)
 
     function setStageLayout(id: string) {
@@ -87,6 +104,27 @@
         }, 50)
     }
 
+    function setOutputScreen(val: string) {
+        const disp = displays.find((d) => d.id?.toString() === val || d.label === val)
+        if (disp) setScreen({ detail: disp })
+        else
+            outputs.update((a) => {
+                const o = a[outputId]
+                if (o) {
+                    o.screen = val || null
+                    if (o.display) o.display.screen = o.screen
+                }
+                return a
+            })
+    }
+
+    function setBounds(key: "x" | "y" | "width" | "height", value: number) {
+        outputs.update((a) => {
+            if (a[outputId]) a[outputId].bounds[key] = Number(value)
+            return a
+        })
+    }
+
     function toggleEnabled() {
         toggleOutputs([outputId], { state: !(currentOutput.enabled && currentOutput.active) })
     }
@@ -104,8 +142,15 @@
     }
 
     // aspect ratio (stored on output as aspectRatio like spec)
-    function setAspectRatio(e: any) {
-        const val = e.detail?.id || e.target?.value
+    const aspectOptions = [
+        { value: "", label: "Original" },
+        { value: "16:9", label: "16:9" },
+        { value: "4:3", label: "4:3" },
+        { value: "16:10", label: "16:10" },
+        { value: "9:16", label: "9:16" }
+    ]
+    $: aspectValue = currentOutput.aspectRatio ? `${currentOutput.aspectRatio.width}:${currentOutput.aspectRatio.height}` : ""
+    function setAspectRatio(val: string) {
         outputs.update((a) => {
             if (!a[outputId]) return a
             if (val === "") delete a[outputId].aspectRatio
@@ -135,40 +180,11 @@
 
 {#if !isStage}
     <div class="row">
-        <div class="label">Tipo</div>
-        <select
-            class="select"
-            value={currentOutput.screenType || "single"}
-            on:change={(e) =>
-                outputs.update((a) => {
-                    if (a[outputId]) a[outputId].screenType = (e.target as HTMLSelectElement).value as any
-                    return a
-                })}
-        >
-            <option value="single">Única</option>
-            <option value="mirror">Espejo</option>
-            <option value="edge_blend">Edge blend</option>
-        </select>
+        <MaterialDropdown label="Tipo" value={currentOutput.screenType || "single"} options={typeOptions} on:change={(e) => setOutputValue("screenType", e.detail)} />
     </div>
     {#if currentOutput.screenType === "mirror"}
         <div class="row">
-            <div class="label">Espejar de</div>
-            <select
-                class="select"
-                value={currentOutput.mirrorOf || ""}
-                on:change={(e) =>
-                    outputs.update((a) => {
-                        if (a[outputId]) a[outputId].mirrorOf = (e.target as HTMLSelectElement).value || undefined
-                        return a
-                    })}
-            >
-                <option value="">Elegir</option>
-                {#each Object.entries($outputs) as [id, o]}
-                    {#if id !== outputId && !(o.stageOutput || o.kind === "stage")}
-                        <option value={id}>{o.name || id}</option>
-                    {/if}
-                {/each}
-            </select>
+            <MaterialDropdown label="Espejar de" value={currentOutput.mirrorOf || ""} options={mirrorOptions} on:change={(e) => setOutputValue("mirrorOf", e.detail || undefined)} />
         </div>
     {/if}
 {:else}
@@ -199,89 +215,17 @@
 {#if activeTab === "hardware"}
     <div class="tab-panel">
         <div class="row">
-            <div class="label">Salida</div>
-            <select
-                class="select"
-                value={currentOutput.screen || currentOutput.display?.screen || ""}
-                on:change={(e) => {
-                    const val = (e.target as HTMLSelectElement).value
-                    const disp = displays.find((d) => d.id?.toString() === val || d.label === val)
-                    if (disp) setScreen({ detail: disp })
-                    else
-                        outputs.update((a) => {
-                            const o = a[outputId]
-                            if (o) {
-                                o.screen = val || null
-                                if (o.display) o.display.screen = o.screen
-                            }
-                            return a
-                        })
-                }}
-            >
-                <option value="">Ninguna</option>
-                {#each displays as d}
-                    <option value={d.id?.toString() || d.label}>{d.label || d.id}</option>
-                {/each}
-            </select>
+            <MaterialDropdown label="Salida" value={currentOutput.screen || currentOutput.display?.screen || ""} options={screenOptions} on:change={(e) => setOutputScreen(e.detail)} />
         </div>
         <div class="row">
-            <div class="label">Destino</div>
-            <select
-                class="select"
-                value={currentOutput.target || "full"}
-                on:change={(e) =>
-                    outputs.update((a) => {
-                        if (a[outputId]) a[outputId].target = (e.target as HTMLSelectElement).value as any
-                        return a
-                    })}
-            >
-                <option value="full">Completo</option>
-                <option value="custom">Personalizado</option>
-            </select>
+            <MaterialDropdown label="Destino" value={currentOutput.target || "full"} options={targetOptions} on:change={(e) => setOutputValue("target", e.detail)} />
         </div>
         {#if currentOutput.target === "custom"}
             <div class="row">
-                <div class="label">x,y,w,h</div>
-                <input
-                    class="input"
-                    type="number"
-                    value={currentOutput.bounds?.x || 0}
-                    on:change={(e) =>
-                        outputs.update((a) => {
-                            if (a[outputId]) a[outputId].bounds.x = Number((e.target as HTMLInputElement).value)
-                            return a
-                        })}
-                />
-                <input
-                    class="input"
-                    type="number"
-                    value={currentOutput.bounds?.y || 0}
-                    on:change={(e) =>
-                        outputs.update((a) => {
-                            if (a[outputId]) a[outputId].bounds.y = Number((e.target as HTMLInputElement).value)
-                            return a
-                        })}
-                />
-                <input
-                    class="input"
-                    type="number"
-                    value={currentOutput.bounds?.width || 0}
-                    on:change={(e) =>
-                        outputs.update((a) => {
-                            if (a[outputId]) a[outputId].bounds.width = Number((e.target as HTMLInputElement).value)
-                            return a
-                        })}
-                />
-                <input
-                    class="input"
-                    type="number"
-                    value={currentOutput.bounds?.height || 0}
-                    on:change={(e) =>
-                        outputs.update((a) => {
-                            if (a[outputId]) a[outputId].bounds.height = Number((e.target as HTMLInputElement).value)
-                            return a
-                        })}
-                />
+                <MaterialNumberInput label="X" value={currentOutput.bounds?.x || 0} min={null} on:change={(e) => setBounds("x", e.detail)} />
+                <MaterialNumberInput label="Y" value={currentOutput.bounds?.y || 0} min={null} on:change={(e) => setBounds("y", e.detail)} />
+                <MaterialNumberInput label="Ancho" value={currentOutput.bounds?.width || 0} on:change={(e) => setBounds("width", e.detail)} />
+                <MaterialNumberInput label="Alto" value={currentOutput.bounds?.height || 0} on:change={(e) => setBounds("height", e.detail)} />
             </div>
         {/if}
         <div class="info-box">
@@ -305,33 +249,26 @@
     <div class="tab-panel">
         {#if !isStage}
             <div class="row">
-                <div class="label">Relación</div>
-                <select class="select" on:change={setAspectRatio}>
-                    <option value="">Original</option>
-                    <option value="16:9">16:9</option>
-                    <option value="4:3">4:3</option>
-                    <option value="16:10">16:10</option>
-                    <option value="9:16">9:16</option>
-                </select>
+                <MaterialDropdown label="Relación" value={aspectValue} options={aspectOptions} on:change={(e) => setAspectRatio(e.detail)} />
             </div>
         {/if}
         <div class="row">
             <div class="label">Recorte</div>
             <div style="flex:1; display:flex; gap:4px;">
-                <input class="input" type="number" placeholder="T" value={cropping.top || 0} on:change={(e) => updateCropping((e.target as HTMLInputElement).value, "top")} />
-                <input class="input" type="number" placeholder="R" value={cropping.right || 0} on:change={(e) => updateCropping((e.target as HTMLInputElement).value, "right")} />
-                <input class="input" type="number" placeholder="B" value={cropping.bottom || 0} on:change={(e) => updateCropping((e.target as HTMLInputElement).value, "bottom")} />
-                <input class="input" type="number" placeholder="L" value={cropping.left || 0} on:change={(e) => updateCropping((e.target as HTMLInputElement).value, "left")} />
+                <MaterialNumberInput label="Arriba" value={cropping.top || 0} on:change={(e) => updateCropping(e.detail, "top")} />
+                <MaterialNumberInput label="Derecha" value={cropping.right || 0} on:change={(e) => updateCropping(e.detail, "right")} />
+                <MaterialNumberInput label="Abajo" value={cropping.bottom || 0} on:change={(e) => updateCropping(e.detail, "bottom")} />
+                <MaterialNumberInput label="Izquierda" value={cropping.left || 0} on:change={(e) => updateCropping(e.detail, "left")} />
             </div>
         </div>
         {#if !isStage && currentOutput.screenType === "edge_blend"}
             <div class="row">
                 <div class="label">Edge blend</div>
                 <div style="flex:1; display:flex; gap:4px;">
-                    <input class="input" type="number" placeholder="L" value={blending.left || 0} on:change={(e) => updateBlending((e.target as HTMLInputElement).value, "left")} />
-                    <input class="input" type="number" placeholder="R" value={blending.right || 0} on:change={(e) => updateBlending((e.target as HTMLInputElement).value, "right")} />
-                    <input class="input" type="number" placeholder="Rot" value={blending.rotate ?? 90} on:change={(e) => updateBlending((e.target as HTMLInputElement).value, "rotate")} />
-                    <input class="input" type="number" placeholder="Op" value={blending.opacity ?? 50} on:change={(e) => updateBlending((e.target as HTMLInputElement).value, "opacity")} />
+                    <MaterialNumberInput label="Izquierda" value={blending.left || 0} on:change={(e) => updateBlending(e.detail, "left")} />
+                    <MaterialNumberInput label="Derecha" value={blending.right || 0} on:change={(e) => updateBlending(e.detail, "right")} />
+                    <MaterialNumberInput label="Rotación" value={blending.rotate ?? 90} on:change={(e) => updateBlending(e.detail, "rotate")} />
+                    <MaterialNumberInput label="Opacidad" value={blending.opacity ?? 50} on:change={(e) => updateBlending(e.detail, "opacity")} />
                 </div>
             </div>
         {/if}
@@ -434,22 +371,6 @@
         width: 80px;
         opacity: 0.8;
         font-size: 0.9em;
-    }
-    .select {
-        flex: 1;
-        background: var(--primary-darker);
-        color: var(--text);
-        border: 1px solid var(--border-color, var(--primary-lighter));
-        padding: 4px 6px;
-        border-radius: var(--radius, 4px);
-    }
-    .input {
-        flex: 1;
-        background: var(--primary-darker);
-        color: var(--text);
-        border: 1px solid var(--border-color, var(--primary-lighter));
-        padding: 4px 6px;
-        border-radius: var(--radius, 4px);
     }
     .canvas {
         border: 1px solid var(--border-color, var(--primary-lighter));
