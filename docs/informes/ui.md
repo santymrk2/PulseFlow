@@ -122,3 +122,26 @@ Commit `a46de5f5`.
 ### Chequeos
 
 - `test:unit` 83/83, `test:svelte` 57 errores (línea base), `build` OK, Prettier limpio.
+
+## F11.6 — Panel derecho como ProPresenter (2026-10-20)
+
+Commit `26ba7424`.
+
+### Qué se hizo
+
+- `ShowTools.svelte`: barra de pestañas renderizada solo con iconos (`labels={false}`),
+  conservando los tabs existentes (grupos, metadatos, medios) y su contenido.
+- La tira vertical de limpiar por capa (`ClearButtons`) y el selector de salida
+  (`MultiOutputs`) del `Preview` ya cubren el resto de la especificación; se mantienen
+  sin cambios para no perder funciones.
+
+### Chequeos
+
+- `test:unit` 83/83, `test:svelte` 57 errores (línea base), `build` OK, Prettier limpio.
+
+### Decisión pendiente
+
+- La especificación menciona 6 pestañas (Audio, Stage, Timers, Mensajes, Overlays,
+  Acciones); la app actual tiene 3 (grupos, metadatos, medios). Se mantienen las 3
+  existentes para no inventar pestañas vacías; si se quieren las 6, hay que reasignar
+  contenido (fuera del alcance de re-style).

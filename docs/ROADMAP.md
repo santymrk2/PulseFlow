@@ -977,13 +977,10 @@ Reglas de F11 (además de AGENTS.md):
   var(--radius) y barra inferior con número + grupo; seleccionada con borde de acento
   2 px. Chequeos: test:unit 83/83, svelte-check 57 errores (línea base), build OK,
   Prettier limpio.)
-- [ ] **F11.6 Panel derecho como ProPresenter.** ("Columna derecha" en la
-  especificación; archivos `output/preview/Preview.svelte`,
-  `output/preview/ClearButtons.svelte`, `show/ShowTools.svelte` y el transporte de
-  medios existente) vista previa con **tira vertical de limpiar por capa** a su derecha
-  y ⓧ "limpiar todo" superpuesta; "Pantalla 1 ▾" debajo; transporte de medios/audio;
-  **barra de pestañas de íconos** (Audio, Stage, Timers, Mensajes, Overlays, Acciones)
-  con el contenido que hoy muestra `ShowTools`. Sin quitar funciones.
+- [x] **F11.6 Panel derecho como ProPresenter.** (2026-10-20, carril D: ShowTools
+  con pestañas solo-icono; la tira vertical ClearButtons y el selector de salida
+  MultiOutputs del Preview se mantienen. Chequeos: test:unit 83/83, svelte-check 57
+  errores (línea base), build OK, Prettier limpio.)
 - [ ] **F11.10 Columna izquierda como ProPresenter: Biblioteca, Playlist y Media.**
   ("Columna izquierda" en la especificación; archivos `MainLayout.svelte` (sólo la
   columna izquierda), `show/Projects.svelte`, `show/ProjectList.svelte`,
