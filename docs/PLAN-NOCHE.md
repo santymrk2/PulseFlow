@@ -7,9 +7,9 @@ terminadas y pusheadas** en `feature/tauri-rust-migration` (son la base de todo)
 
 | Carril | Carpeta | Rama | Tareas | Archivos que son SUYOS |
 | --- | --- | --- | --- | --- |
-| **A — Pantallas** | `../PulseFlow-pantallas` | `feature/f10-pantallas` | F10.3 → F10.4 → F10.5 | `components/screens/**`, `settings/Screens.svelte`, `settings/tabs/Outputs.svelte` (sólo leer/mover bloques), `components/output/**` excepto `output/preview/**`, `helpers/sceneGraph.ts` (sólo espejo, F10.5) |
+| **A — Pantallas** | `../PulseFlow-pantallas` | `feature/f10-pantallas` | F10.3 → F10.4 → F10.5 | `components/main/Modal.svelte` (nuevo, lo crea A; B lo usa cuando exista — mientras tanto B crea su modal en `components/looks/` con la misma API y se unifica a la mañana), `components/screens/**`, `settings/Screens.svelte`, `settings/tabs/Outputs.svelte` (sólo leer/mover bloques), `components/output/**` excepto `output/preview/**`, `helpers/sceneGraph.ts` (sólo espejo, F10.5) |
 | **B — Looks** | `../PulseFlow-looks` | `feature/f10-looks` | F10.6 | `components/looks/**`, `settings/tabs/Looks.svelte`, `helpers/looks.ts`, `helpers/historyActions.ts` |
-| **C — Barra y menú** | `../PulseFlow-menu` | `feature/f10-menu` | F10.7 → F11.1 | `main/Top.svelte`, `main/TopButton.svelte`, `main/MenuBar.svelte`, `utils/shortcuts.ts`, `src-tauri/src/lib.rs` (sólo el menú), `src-tauri/src/menu.rs` (nuevo) |
+| **C — Barra y menú** | `../PulseFlow-menu` | `feature/f10-menu` | F10.0f → F10.7 → F11.1 | `IPC/tauri.ts`, `commands/servers.rs`, `utils/language.ts`, `main/Top.svelte`, `main/TopButton.svelte`, `main/MenuBar.svelte`, `utils/shortcuts.ts`, `src-tauri/src/lib.rs` (sólo el menú), `src-tauri/src/menu.rs` (nuevo) |
 | **D — Interfaz** | `../PulseFlow-ui` | `feature/f11-ui` | F11.2 → F11.3 → F11.4 → F11.5 → F11.6 → F11.8 | `components/drawer/**`, `components/show/**`, el marco de `slide/Slide.svelte`, `output/preview/**`, `main/Popup.svelte`, `main/Tooltip.svelte`, `context/**`, `public/global.css` |
 
 Archivos compartidos (todos pueden tocarlos, con cuidado):
@@ -101,7 +101,7 @@ con sus reglas). Para usar la app, respetá el lock de "Compartir la app".
 
 - **A:** `Carril A — Pantallas. Tareas en orden: F10.3, F10.4, F10.5. Rama feature/f10-pantallas. Informe: docs/informes/pantallas.md.`
 - **B:** `Carril B — Looks. Tarea: F10.6 completa. Rama feature/f10-looks. Informe: docs/informes/looks.md.`
-- **C:** `Carril C — Barra y menú. Tareas en orden: F10.7, F11.1. Rama feature/f10-menu. Informe: docs/informes/menu.md.`
+- **C:** `Carril C — Barra y menú. Tareas en orden: F10.0f, F10.7, F11.1. Rama feature/f10-menu. Informe: docs/informes/menu.md.`
 - **D:** `Carril D — Interfaz. Tareas en orden: F11.2, F11.3, F11.4, F11.5, F11.6, F11.8. Rama feature/f11-ui. Informe: docs/informes/ui.md.`
 
 ## A la mañana

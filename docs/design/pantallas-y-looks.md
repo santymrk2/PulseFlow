@@ -99,10 +99,24 @@ En la primera etapa:
 - Después, en tareas separadas, se reemplazan los usos por un helper
   `getOutputLook(outputId): LookScreen` y se elimina el puente.
 
+## Modales (cómo se ven y se comportan)
+
+"Configuración de pantallas" y "Looks" son **modales**, como las ventanas de
+ProPresenter, no páginas ni pestañas de Settings:
+
+- Centrados sobre la app con el fondo oscurecido; tamaño fijo cómodo (≈ 960×620 para
+  pantallas, ≈ 720×480 para looks), que se reduce si la ventana es más chica.
+- Barra de título propia de 36 px con el nombre centrado en texto chico y botón de
+  cerrar; `Esc` cierra. **No** se cierran con un clic afuera (evita perder cambios).
+- Dos columnas: lista a la izquierda (fondo `--primary-darker`), detalle a la derecha.
+- Los cambios de pantallas se aplican al momento; los de looks, al tocar "Guardar".
+- Se implementan con un componente base nuevo `components/main/Modal.svelte` (no con
+  el `Popup.svelte` actual, que es para diálogos chicos) para que ambos modales se vean
+  igual.
+
 ## Ventana "Configuración de pantallas"
 
-Popup grande (90% de la ventana, mínimo 900×600) con el lenguaje visual del tema
-PulseFlow (F6). Se abre desde **Pantallas → Configurar pantallas…** (`⌘⇧1` / `Ctrl+Shift+1`)
+Modal (ver arriba) con el lenguaje visual del tema PulseFlow (F6). Se abre desde **Pantallas → Configurar pantallas…** (`⌘⇧1` / `Ctrl+Shift+1`)
 y desde el menú contextual del botón de salida.
 
 ```
@@ -185,6 +199,42 @@ y desde el menú contextual del botón de salida.
   se ven en las pantallas al guardar (no en cada clic).
 - **Slider de transición** (`transitionMs`) y **Poner en vivo**.
 - Los cambios de Look se registran en el historial (deshacer).
+
+## Distribución general (como ProPresenter 7)
+
+Objetivo: que quien viene de ProPresenter encuentre las cosas donde las espera. No se
+mueven features de lugar si no figuran acá.
+
+```
+┌───────────────────────────────────────────────────────────────────────────────┐
+│ ● ● ●  [ Show | Edit | Stage ]        Look: Default ▾  [▣ Audiencia] [▣ Stage] ⚙ │
+├──────────────┬─────────────────────────────────────────────┬──────────────────┤
+│ Proyectos /  │ Nombre del show · layout          12 slides │ ┌──────────────┐ │
+│ playlists    │                    [+ Añadir] [▶ Proyectar] │ │  Audiencia   │ │
+│              │ ┌────┐ ┌────┐ ┌────┐ ┌────┐                 │ │  (preview)   │ │
+│              │ │ 1  │ │ 2  │ │ 3  │ │ 4  │  grilla de      │ └──────────────┘ │
+│              │ └────┘ └────┘ └────┘ └────┘  slides         │ [ Limpiar todo ] │
+│              │                                             │ ▭  🖼  ◧  ♪      │
+│              │                                             │ Timers│Overlays│…│
+│              │                                             │ (controles)      │
+├──────────────┴─────────────────────────────────────────────┴──────────────────┤
+│ Shows │ Media │ Audio │ Scripture │ Overlays │ Templates │ …      🔍 Buscar     │
+│ (cajón de bibliotecas, como el Media Bin de ProPresenter)                      │
+└───────────────────────────────────────────────────────────────────────────────┘
+```
+
+| Elemento | Dónde | Qué hace |
+| --- | --- | --- |
+| Botón **Audiencia** | barra, derecha | enciende/apaga todas las pantallas de audiencia (⌘1); resaltado cuando están en vivo; clic derecho → Configurar pantallas… |
+| Botón **Stage** | barra, derecha | igual para las de stage (⌘2) |
+| **Look: X ▾** | barra, a la izquierda de los botones de pantallas | cambia el look en vivo; última opción "Editar looks…" abre el modal |
+| Vista previa | panel derecho, arriba | muestra la pantalla de audiencia principal; encima, "Look: X" |
+| **Limpiar todo** + limpiar por capa | debajo de la vista previa | lo que hoy hacen los botones de limpiar, con el mismo orden de capas que la grilla de looks |
+| Controles (Timers, Overlays/Mensajes, Stage, Acciones) | panel derecho, debajo de limpiar | las herramientas que hoy muestra `ShowTools` |
+| Configurar pantallas… / Looks… | menú **Pantallas**, clic derecho en los botones de pantallas, selector de look | abren los modales |
+
+Pendiente de decidir por el usuario (no hacerlo sin preguntar): mover la biblioteca de
+shows del cajón inferior a la columna izquierda, como en ProPresenter.
 
 ## Dónde se accede (y qué desaparece)
 

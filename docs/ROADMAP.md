@@ -789,6 +789,34 @@ verifican en la app real (`bun run dev:tauri`).
   *Aceptación:* tests de la función con 3 casos (lado a lado, apilados, negativo); en
   la app la disposición se ve igual que en Ajustes del Sistema → Pantallas.
 
+- [ ] **F10.0f IPC sin ruido: mensajes al remoto/stage web y avisos únicos.**
+  *Archivos:* `src/frontend/IPC/tauri.ts` (+ `tauri.test.ts`), `src-tauri/src/commands/servers.rs`,
+  `src-tauri/src/lib.rs`, `src/frontend/utils/updateSettings.ts`, `src/frontend/utils/language.ts`.
+  *Causa:* `tauri.ts` convierte en `invoke()` todo lo que se manda por los canales
+  `REMOTE`, `STAGE`, `CONTROLLER` y `OUTPUT_STREAM` (`SCRIPTURE`, `SHOW_DATA`,
+  `AUDIO_ROUTING`, `TIMERS`, `FOLDERS`, `THEME_COLORS`, …). En Electron esos mensajes
+  iban por websocket a las apps web de control remoto y stage; acá fallan como
+  "Command not found". Además el canal `OUTPUT` loguea cada comando descartado en cada
+  actualización, y `LOADED` (`window.api.send("LOADED")`) y `LANGUAGE`
+  (`sendMain(Main.LANGUAGE)`) no tienen comando.
+  *Pasos:*
+  1. Comando Rust `SERVER_SEND { channel, message }` que llama a
+     `server::broadcast_to_room(<sala del canal>, message)` (ver qué nombre de sala usa
+     `server/mod.rs` para remote/stage/controller/output_stream) y no hace nada si el
+     servidor no está corriendo. Struct serde + test.
+  2. En `tauri.ts`: los canales `REMOTE`/`STAGE`/`CONTROLLER`/`OUTPUT_STREAM` van a
+     `SERVER_SEND`, nunca a `invoke(<nombre del mensaje>)`.
+  3. Avisos de comandos descartados o pospuestos: **una sola vez por nombre** y sólo si
+     `localStorage.pulseflowIpcDebug === "1"`.
+  4. `LOADED`: comando Rust trivial que devuelve `()` (o quitar el envío si nada lo
+     usa); `LANGUAGE`: quitar el `sendMain` de `language.ts` si el canal está marcado
+     "eliminar" en el inventario F7.1, si no, comando trivial.
+  5. Test en `tauri.test.ts`: un `send("REMOTE", {channel:"SCRIPTURE"})` llama a
+     `SERVER_SEND` y no a `invoke("SCRIPTURE")`.
+  *Aceptación:* abrir la app, abrir un show y pasar 10 slides: en la terminal **no
+  aparece ninguna línea `[webview] WARN: [tauri]`**. Con el remoto web abierto en el
+  celular, sigue recibiendo los cambios de slide.
+
 ## F10 — Pantallas y Looks como en ProPresenter (rediseño)
 
 Especificación completa, con bocetos: [`docs/design/pantallas-y-looks.md`](design/pantallas-y-looks.md).
@@ -799,7 +827,7 @@ la UI; lo que configuraba se reparte entre la Pantalla (hardware) y la celda
 Look × Pantalla (qué se ve y cómo). La configuración de pantallas y los Looks pasan a
 dos ventanas propias, no pestañas de Settings.
 
-Orden y paralelismo: **primero F10.0a–e** (correcciones urgentes). Después F10.1 → F10.2 (un solo agente, son la base). Después pueden ir en
+Orden y paralelismo: **primero F10.0a–f** (correcciones urgentes). Después F10.1 → F10.2 (un solo agente, son la base). Después pueden ir en
 paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** = F10.6,
 **C** = F10.7. Al final, un agente: F10.8 → F10.9.
 
@@ -826,7 +854,8 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   *Archivos:* nueva carpeta `src/frontend/components/screens/` (`ScreenConfig.svelte`,
   `ScreenList.svelte`, `ScreenDetail.svelte`, `SystemDisplays.svelte`), registro del
   popup en `utils/popup.ts`.
-  *Pasos:* popup grande con columna izquierda (Audiencia/Stage con interruptor, `+`,
+  *Pasos:* **modal** (crear antes el componente base `components/main/Modal.svelte`
+  según "Modales" en la especificación) con columna izquierda (Audiencia/Stage con interruptor, `+`,
   lista, punto "en vivo"; Sistema con monitores detectados y NDI) y panel derecho con
   nombre, resolución, lienzo clicable y pestaña **Hardware** (Salida, Destino, ficha).
   Reutilizar la lógica de `Screens.svelte` (detección, posiciones, identificar) en vez
@@ -849,7 +878,9 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   *Aceptación:* una pantalla en espejo muestra lo mismo que su origen (golden o prueba
   manual anotada).
 
-- [ ] **F10.6 Ventana "Looks".** (agente B)
+- [ ] **F10.6 Modal "Looks".** (agente B; mismo estilo y comportamiento que el modal de
+  pantallas — ver "Modales" en la especificación; si `Modal.svelte` todavía no existe en
+  tu rama, creá uno con la misma API en `components/looks/` y se unifica al integrar)
   *Archivos:* `src/frontend/components/looks/` (`LooksWindow.svelte`, `LookGrid.svelte`,
   `LookAdvanced.svelte`), reemplaza a `settings/tabs/Looks.svelte`.
   *Pasos:* lista de presets con "En vivo", grilla pantallas × (Presentación/tema, Slide,
@@ -913,12 +944,13 @@ Reglas de F11 (además de AGENTS.md):
 - Íconos: se mantiene `Icon.svelte`. Sólo donde la tarea lo dice se puede usar
   `@lucide/svelte` (ya está en devDependencies).
 
-- [ ] **F11.1 Barra superior.** (referencia `Topbar.tsx`; archivo `main/Top.svelte` y
-  `main/TopButton.svelte`) Pestañas Show/Edit/Stage como grupo "pill" centrado (fondo
-  `--primary-lighter`, activa con fondo `--primary` y sombra suave, ícono + texto);
-  a la derecha: selector de look (de F10.7), Settings (botón ghost de ícono) y botón de
-  salida (rojo cuando está en vivo; clic derecho abre Configuración de pantallas).
-  Izquierda: espacio de los botones de macOS (F10.0a) y zona de arrastre.
+- [ ] **F11.1 Barra superior al estilo ProPresenter.** (distribución en
+  `docs/design/pantallas-y-looks.md` → "Distribución general"; estilo de `Topbar.tsx`;
+  archivos `main/Top.svelte`, `main/TopButton.svelte`) Izquierda (después de los botones
+  de macOS): modos Show/Edit/Stage como grupo "pill". Derecha: selector de look
+  (F10.7), **dos botones de pantallas — Audiencia y Stage —** que encienden/apagan cada
+  grupo (resaltados cuando están en vivo; clic derecho → "Configurar pantallas…") y
+  Settings. Reemplaza al botón único de salida actual.
 - [ ] **F11.2 Cajón inferior (Drawer).** (referencia `Drawer.tsx`; archivos
   `drawer/Drawer.svelte`, `drawer/MaterialDrawerTab.svelte`, `drawer/Navigation.svelte`)
   barra de 40 px con pestañas ícono + texto, manija de redimensionar de 4 px arriba,
@@ -937,10 +969,14 @@ Reglas de F11 (además de AGENTS.md):
   `slide/Slide.svelte`) separación 8 px, miniatura con borde de 1 px y radio, activa
   con anillo `--secondary`, etiqueta de grupo como chip con su color, número en
   esquina. Probar en modo grilla, lista y "texto".
-- [ ] **F11.6 Panel derecho.** (referencia `RightPanel.tsx`, `ClearControls.tsx`;
-  archivos `output/preview/Preview.svelte`, `output/preview/ClearButtons.svelte`,
-  `show/ShowTools.svelte`) vista previa arriba con borde redondeado, secciones con
-  separadores de 1 px, fila de botones de limpiar como íconos ghost alineados.
+- [ ] **F11.6 Panel derecho al estilo ProPresenter.** (distribución en
+  `docs/design/pantallas-y-looks.md` → "Distribución general"; estilo de
+  `RightPanel.tsx`/`ClearControls.tsx`; archivos `output/preview/Preview.svelte`,
+  `output/preview/ClearButtons.svelte`, `show/ShowTools.svelte`) En este orden: vista
+  previa de Audiencia con el nombre del Look en vivo encima; fila **Limpiar**: botón
+  ancho "Limpiar todo" + un botón de ícono por capa (Slide, Media, Overlays, Audio);
+  debajo, los **Controles** en pestañas (Timers, Overlays/Mensajes, Stage, Acciones —
+  las herramientas que hoy muestra `ShowTools`). Sin quitar funciones.
 - [ ] **F11.7 Página de Settings.** (referencia `SettingsTabs.tsx`, `SettingsTools.tsx`;
   archivos `settings/SettingsTabs.svelte`, `settings/Settings.svelte`) **después de
   F10.8**: lista de pestañas como la izquierda de la referencia, contenido con ancho
