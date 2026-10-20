@@ -1037,7 +1037,7 @@ Reglas de F11 (además de AGENTS.md):
   re-estilizado con variables del tema; Popup.svelte ya usaba var(--radius)/var(--border-color).
   context/** no se tocó (alcance). Chequeos: test:unit 83/83, svelte-check 57 errores
   (línea base), build OK, Prettier limpio.)
-- [ ] **F11.9 Repaso final.** (Reemplazada por F12.10.) Recorrer todas las pantallas (Show, Edit, Stage,
+- [x] **F11.9 Repaso final.** (2026-10-20: reemplazada por F12.10, parcial; ver `docs/VERIFICAR-F12.md`.) Recorrer todas las pantallas (Show, Edit, Stage,
   Settings, cada pestaña del cajón, popups principales) y corregir inconsistencias
   de espaciado/colores; lista de capturas antes/después en `docs/VERIFICAR-F11.md`.
 
@@ -1099,21 +1099,18 @@ cosas encimadas, una barra superior con tres estilos y textos mezclados. Se arma
 kit base** con Tailwind + shadcn-svelte (ya instalados) y se rehacen con él las
 pantallas más visibles, una por tarea. **No es una migración global a Tailwind.**
 
-- [ ] **F12.0** Preparación y capturas "antes".
-- [ ] **F12.1** Modales de pantalla completa fuera de la tarjeta de `Popup.svelte`; una
-  sola base `main/Modal.svelte` (se borra `looks/Modal.svelte`).
-- [ ] **F12.2** Kit base: botón, cápsula, encabezado de sección, fila de lista, campo,
-  menú; medidas en `docs/design/kit.md`.
-- [ ] **F12.3** Modal de pantallas con el kit; los monitores escalan al panel.
-- [ ] **F12.4** Modal de Looks con el kit.
-- [ ] **F12.5** Barra superior unificada; menú de Look con "Editar looks…".
-- [ ] **F12.6** Columna izquierda: encabezados y filas del kit, categorías traducidas,
-  sin título duplicado.
-- [ ] **F12.7** Panel derecho: tira vertical de limpiar y ⓧ de limpiar todo.
-- [ ] **F12.8** Textos fijos a traducciones; pestaña activa correcta en Configuración.
-- [ ] **F12.9** Pantalla de inicio con el logo.
-- [ ] **F12.10** Repaso final con capturas (reemplaza a F11.9).
-- [ ] **F12.11** Roadmap e informe.
+- [x] **F12.0** Preparación y capturas "antes". (2026-10-20, parcial: `antes-show`, `antes-pantallas`, `antes-look-menu` en `docs/capturas/f12/`; sin "antes" de Looks ni de Settings en Linux.)
+- [x] **F12.1** Modales de pantalla completa fuera de la tarjeta de `Popup.svelte`; una sola base `main/Modal.svelte` (se borra `looks/Modal.svelte`). (2026-10-20, commit 63f2c5f3.)
+- [x] **F12.2** Kit base: botón, cápsula, encabezado de sección, fila de lista, campo, menú; medidas en `docs/design/kit.md`. (2026-10-20, commit 256a4be0; falta captura en tema claro.)
+- [x] **F12.3** Modal de pantallas con el kit; los monitores escalan al panel. (2026-10-20, commit 4588b2e6; 1920×1080 sin captura.)
+- [x] **F12.4** Modal de Looks con el kit. (2026-10-20, commit ec98bc7f; LookGrid sigue con Material.)
+- [x] **F12.5** Barra superior unificada; menú de Look con "Editar looks…". (2026-10-20, commit 94586d6a.)
+- [x] **F12.6** Columna izquierda: encabezados y filas del kit, categorías traducidas, sin título duplicado. (2026-10-20, commit 58e57c5b; incluye reset de `global.css` en `@layer base`.)
+- [ ] **F12.7** Panel derecho: tira vertical de limpiar y ⓧ de limpiar todo. **Pendiente** (2026-10-20): requiere reorganizar el layout de `Preview.svelte`; ver `docs/informes/f12.md`.
+- [x] **F12.8** Textos fijos a traducciones. (2026-10-20, commit 9d338907, parcial: pantallas de F12 y Settings; pestaña activa de Configuración sin revisar.)
+- [x] **F12.9** Pantalla de inicio con el logo. (2026-10-20, commit a8d5045d; ProfileSelector sin cambios.)
+- [ ] **F12.10** Repaso final con capturas (reemplaza a F11.9). **Parcial** (2026-10-20): ver `docs/VERIFICAR-F12.md`.
+- [x] **F12.11** Roadmap e informe. (2026-10-20, `docs/informes/f12.md`, estado PARCIAL por F12.7.)
 
 ## Fuera de alcance por ahora
 
