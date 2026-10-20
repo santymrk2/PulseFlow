@@ -29,10 +29,11 @@ import { hideDisplay, isOutputWindow, togglePanels, triggerFunction } from "./co
 import { getAccess } from "./profile"
 import { triggerPopupSubmit } from "./popup"
 import { send } from "./request"
-import { save } from "./save"
+import { initializeClosing, save } from "./save"
 import { isTypingTarget } from "./shortcutsHelper"
 import { listen } from "@tauri-apps/api/event"
 import { applyLook } from "../components/helpers/looks"
+import { openSettings } from "../components/settings/openSettings"
 import { getAllNormalOutputs, getAllStageOutputs } from "../components/helpers/output"
 import { invoke } from "@tauri-apps/api/core"
 import { activeLook, looks } from "../stores"
@@ -48,6 +49,7 @@ const ctrlKeys = {
     // give time for drawer to not toggle
     d: () => setTimeout(() => duplicate(get(selected))),
     x: () => cut(),
+    ",": () => openSettings(),
     e: () => activePopup.set("export"),
     i: (e: KeyboardEvent) => (e.altKey ? importFromClipboard() : activePopup.set("import")),
     n: () => createNew(),
@@ -101,6 +103,8 @@ const MENU_ACTIONS: Record<string, () => void> = {
         const ids = getAllStageOutputs().map((a) => a.id)
         if (ids.length) toggleOutputs(ids)
     },
+    "app.settings": () => openSettings(),
+    "app.quit": () => initializeClosing(),
     "screens.configure": () => activePopup.set("screen_config"),
     "screens.looks": () => activePopup.set("looks")
 }

@@ -1,9 +1,11 @@
 //! F10.7 — Menú nativo de la barra de menús de macOS.
 //!
 //! En macOS la app no muestra `MenuBar.svelte` (es sólo para Windows), así que
-//! las acciones de Pantallas (audiencia, stage, looks, configuración) viven
-//! acá. El menú se construye con textos en español literal: se arma desde
-//! Rust antes de que el frontend esté listo.
+//! las acciones de Pantallas (audiencia, stage, looks) viven acá, junto con el
+//! menú de la aplicación (F14.1b: Configuración…, Ocultar, Salir). El primer
+//! submenú es el de la app: macOS le pone el nombre de la app como título.
+//! El menú se construye con textos en español literal: se arma desde Rust antes
+//! de que el frontend esté listo.
 //!
 //! Los items "En vivo" (looks) se cargan después con [`update_live_menu`],
 //! que el frontend invoca cuando cambian `$looks` / `$activeLook`.
@@ -33,11 +35,44 @@ fn emit_action(app: &AppHandle<Wry>, id: &str) {
     let _ = app.emit("menu-action", id.to_string());
 }
 
+/// Menú de la aplicación (el primero de la barra en macOS).
+///
+/// "Configuración…" y "Salir" emiten `app.settings` / `app.quit`: Salir pasa por el
+/// flujo de cierre del frontend (guardado) en vez del `quit` predefinido.
+fn app_menu(app: &AppHandle<Wry>) -> tauri::Result<Submenu<Wry>> {
+    let menu = Submenu::with_id(app, "app", "PulseFlow", true)?;
+    menu.append(&PredefinedMenuItem::about(app, Some("Acerca de PulseFlow"), None)?)?;
+    menu.append(&PredefinedMenuItem::separator(app)?)?;
+    menu.append(&MenuItem::with_id(
+        app,
+        "app.settings",
+        "Configuración…",
+        true,
+        Some("CmdOrCtrl+,"),
+    )?)?;
+    menu.append(&PredefinedMenuItem::separator(app)?)?;
+    menu.append(&PredefinedMenuItem::services(app, None)?)?;
+    menu.append(&PredefinedMenuItem::separator(app)?)?;
+    menu.append(&PredefinedMenuItem::hide(app, None)?)?;
+    menu.append(&PredefinedMenuItem::hide_others(app, None)?)?;
+    menu.append(&PredefinedMenuItem::show_all(app, None)?)?;
+    menu.append(&PredefinedMenuItem::separator(app)?)?;
+    menu.append(&MenuItem::with_id(
+        app,
+        "app.quit",
+        "Salir de PulseFlow",
+        true,
+        Some("CmdOrCtrl+Q"),
+    )?)?;
+    Ok(menu)
+}
+
 /// Construye el menú nativo de macOS y lo instala en la app.
 ///
 /// Sólo se llama una vez, al arrancar (`lib.rs`, rama `cfg(target_os =
 /// "macos")`).
 pub fn install(app: &AppHandle<Wry>) -> tauri::Result<()> {
+    let app_submenu = app_menu(app)?;
     let screens = Submenu::with_id(app, "screens", "Pantallas", true)?;
     screens.append(&MenuItem::with_id(
         app,
@@ -72,7 +107,7 @@ pub fn install(app: &AppHandle<Wry>) -> tauri::Result<()> {
     let live = Submenu::with_id(app, "screens.live", "En vivo", true)?;
     screens.append(&live)?;
 
-    let menu = Menu::with_items(app, &[&screens])?;
+    let menu = Menu::with_items(app, &[&app_submenu, &screens])?;
     app.set_menu(menu)?;
     app.on_menu_event(|app_handle, event| {
         emit_action(app_handle, event.id().as_ref());

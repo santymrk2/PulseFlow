@@ -1244,7 +1244,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   56 errores (línea base), prettier. **No verificado en la app** (no se levantó):
   apertura, Esc, popups encima y cada pestaña quedan para probar en macOS.
 
-- [ ] **F14.1b Configuración al menú de la app; barra superior sin botones de más.**
+- [x] **F14.1b Configuración al menú de la app; barra superior sin botones de más.**
   *Archivos:* `src-tauri/src/menu.rs`, `components/main/MenuBar.svelte` (Windows),
   `utils/shortcuts.ts`, `components/main/Top.svelte`.
   *Pasos:* macOS: submenú de la app (`PulseFlow`) con "Configuración…" `CmdOrCtrl+,`
@@ -1258,6 +1258,17 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   *Aceptación:* en macOS, `⌘,` y el menú PulseFlow → Configuración… abren el modal; en
   Windows, `Ctrl+,` y el menú. La barra no muestra esos cinco botones. Test del struct del
   menú si viaja algo nuevo por IPC.
+  **Hecho** (2026-10-20). *Decisiones:* (1) hasta ahora el primer submenú de macOS era
+  "Pantallas" y macOS lo usaba como menú de la app; ahora el primero es `app`
+  ("PulseFlow": Acerca de, Configuración… `⌘,`, Servicios, Ocultar, Salir `⌘Q`) y
+  "Pantallas" es el segundo. (2) "Salir" es un ítem propio (`app.quit`) que pasa por
+  `initializeClosing()` (guardado), no el `quit` predefinido. (3) El permiso de perfil
+  vive en `openSettings()` (no hace nada si está bloqueado); el ítem de Windows sí se
+  deshabilita (`ContextItem`), el nativo de macOS no (haría falta un comando Rust sólo
+  para eso). (4) Windows: "Configuración" en el menú Archivo con `Ctrl+,`. (5) El botón
+  Dibujo sale de la barra; la función se borra en F14.1c. Verificado: `test:unit` 89/89,
+  `test:svelte` 56 errores (línea base), prettier. **No verificado:** `menu.rs` **no se
+  compiló** (`cargo check` pendiente) y nada se probó en la app.
 
 - [ ] **F14.1c Borrar la función Dibujo.**
   *Pasos:* quitar `components/draw/` (7 archivos), la página `draw` de `MainLayout`,

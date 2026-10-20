@@ -46,6 +46,7 @@
     import { translateText } from "../../utils/language"
     import { closeContextMenu } from "../../utils/shortcuts"
     import { keysToID } from "../helpers/array"
+    import { isSettingsDisabled } from "../settings/openSettings"
     import Icon from "../helpers/Icon.svelte"
     import { getExtension, getMediaType } from "../helpers/media"
     import { getLayoutRef, getSlideHighlightIndexes } from "../helpers/show"
@@ -67,6 +68,7 @@
     let customTitle: string = ""
 
     const conditions = {
+        settings: () => (disabled = isSettingsDisabled()),
         // slide views
         view_grid: () => ($slidesOptions.mode === "grid" ? (enabled = true) : ""),
         view_simple: () => ($slidesOptions.mode === "simple" ? (enabled = true) : ""),

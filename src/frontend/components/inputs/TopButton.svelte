@@ -6,7 +6,6 @@
     import Button from "../../lib/components/ui/button/button.svelte"
 
     export let id: TopViews
-    export let red = false
     export let disabled = false
     $: isActive = $activePage === id
 
@@ -41,7 +40,7 @@
 </script>
 
 <!-- F12.5b: mismo botón que el resto de la barra (kit). Activo = gris neutro, no azul -->
-<Button variant={red ? "destructive" : isActive ? "secondary" : "ghost"} size="sm" data-title={translateText(`menu._title_${id}${$special.numberKeys ? "" : ` [${keys[id]}]`}`, $dictionary)} aria-current={isActive ? "page" : undefined} {disabled} onclick={openPage}>
+<Button variant={isActive ? "secondary" : "ghost"} size="sm" data-title={translateText(`menu._title_${id}${$special.numberKeys ? "" : ` [${keys[id]}]`}`, $dictionary)} aria-current={isActive ? "page" : undefined} {disabled} onclick={openPage}>
     <Icon {id} size={1} white />
 </Button>
 

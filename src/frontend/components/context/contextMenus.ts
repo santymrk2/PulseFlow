@@ -38,7 +38,7 @@ export const contextMenuItems: { [key: string]: ContextMenuItem } = {
     zoomOut: { label: "actions.zoomOut", icon: "zoomOut" },
     // MAIN
     quit: { label: "main.quit", icon: "close", iconColor: "#ff5454" },
-    settings: { label: "menu.settings", icon: "settings", iconColor: "var(--secondary)" },
+    settings: { label: "menu.settings", icon: "settings", iconColor: "var(--secondary)", shortcuts: ["Ctrl+,"] },
     about: { label: "main.about", icon: "info" },
     shortcuts: { label: "popup.shortcuts", icon: "shortcut", shortcuts: ["Ctrl+?"] },
     rename: { label: "actions.rename", icon: "rename", iconColor: "#6effbe", shortcuts: ["F2"] },
@@ -237,7 +237,7 @@ export const contextMenuGroups = {
 
 export const contextMenuLayouts: { [key: string]: string[] } = {
     // MENU
-    file: ["save", "import_more", "export_more", "SEPARATOR", "quit"],
+    file: ["save", "import_more", "export_more", "SEPARATOR", "settings", "SEPARATOR", "quit"],
     edit: ["undo", "redo", "history", "SEPARATOR", "cut", "copy", "paste", "delete", "SEPARATOR", "selectAll"], // , "cut"
     view: ["focus_mode", "fullscreen"], // , "resetZoom", "zoomIn", "zoomOut"
     help: ["quick_search", "shortcuts", "docs", "quick_start_guide", "about"],

@@ -1,6 +1,5 @@
 <script lang="ts">
-    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, drawSettings, drawTool, editMode, outputDisplay, outputState, outputs, paintCache, profiles, quickSearchActive, saved, shows, activeDrawerTab, drawer, looks, activeLook, activePopup } from "../../stores"
-    import { openSettings } from "../settings/openSettings"
+    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, outputDisplay, outputState, outputs, profiles, quickSearchActive, saved, shows, activeDrawerTab, drawer, looks, activeLook, activePopup } from "../../stores"
     import { getCloudUsers } from "../../utils/cloudSync"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
@@ -28,14 +27,10 @@
     $: physicalOutputWindows = Object.values($outputs).filter((a) => a.enabled && !a.invisible)
 
     function openOutputSettings() {
-        openSettings("display_settings")
+        activePopup.set("screen_config")
     }
 
-    // disabled tabs
-
-    let settingsDisabled = false
     $: profile = $profiles[$activeProfile || ""]
-    $: settingsDisabled = Object.keys(profile?.access.settings || {}).length > 7
 
     $: lookOptions = Object.entries($looks || {}).map(([id, look]: any) => ({ id, label: look?.name || id, value: id }))
 
@@ -52,10 +47,6 @@
     }
 
     // --- F11.1 helpers ---
-
-    function toggleTextMode() {
-        editMode.set($editMode === "text_edit" ? "default" : "text_edit")
-    }
 
     function openTemplatesDrawer() {
         activeDrawerTab.set("templates")
@@ -79,10 +70,6 @@
             activeDrawerTab.set("media")
             if ($drawer.height < 300) drawer.set({ height: $drawer.stored || DEFAULT_DRAWER_HEIGHT, stored: null })
         }
-    }
-
-    function openLiveSettings() {
-        openSettings("display_settings")
     }
 
     function toggleAudience() {
@@ -129,16 +116,10 @@
         {/if}
     </span>
 
-    <!-- Izquierda 1: Buscar · Texto · Tema (F12.5: cápsula del kit, misma apariencia en todos los grupos) -->
+    <!-- Izquierda 1: Buscar (F12.5: cápsula del kit; F14.1b: Texto y Estilos salen, el modo texto sigue con Ctrl+Shift+T y los estilos están en el cajón) -->
     <Capsule>
         <Button variant="ghost" size="sm" data-title={translateText("menu.search")} onclick={() => quickSearchActive.set(true)}>
             <Icon id="search" size={1} white />
-        </Button>
-        <Button variant="ghost" size="sm" data-title={translateText("menu.text")} onclick={toggleTextMode}>
-            <Icon id="text" size={1} white />
-        </Button>
-        <Button variant="ghost" size="sm" data-title={translateText("menu.theme")} onclick={openTemplatesDrawer}>
-            <Icon id="theme" size={1} white />
         </Button>
     </Capsule>
 
@@ -163,7 +144,7 @@
 
     <span class="spacer" data-tauri-drag-region />
 
-    <!-- Derecha 1: Media · Look ▾ · Live -->
+    <!-- Derecha 1: Media · Look ▾ -->
     <Capsule>
         <Button variant="ghost" size="sm" data-title={translateText("menu.media")} onclick={toggleMediaDrawer}>
             <Icon id="media" size={1} white />
@@ -180,19 +161,6 @@
                 <MenuItem onclick={editLooks}>{translateText("looks.edit_looks")}</MenuItem>
             </Menu>
         </div>
-        <Button variant="ghost" size="sm" data-title={translateText("menu.live")} onclick={openLiveSettings}>
-            <Icon id="broadcast" size={1} white />
-        </Button>
-    </Capsule>
-
-    <!-- Derecha 3: Dibujo · Configuración (en la barra superior, junto a las pantallas) -->
-    <Capsule>
-        <TopButton id="draw" red={$drawTool === "fill" || ($drawTool === "zoom" && $drawSettings.zoom?.size !== 100) || !!($drawTool === "paint" && $paintCache?.length)} />
-        {#if !settingsDisabled}
-            <Button variant="ghost" size="sm" data-title={translateText("menu.settings")} onclick={() => openSettings()}>
-                <Icon id="settings" size={1} white />
-            </Button>
-        {/if}
     </Capsule>
 
     <!-- Derecha 2: Audiencia · Stage (rojo mientras están en vivo); clic derecho abre Configurar pantallas -->
