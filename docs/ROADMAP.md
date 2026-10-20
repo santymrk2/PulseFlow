@@ -926,6 +926,26 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   `grep` de cada componente para demostrar que nada más lo usa.
   *Aceptación:* `test:svelte` no sube; no quedan referencias a los componentes borrados.
 
+- [ ] **F10.8b Recuperar lo que se perdió al quitar Settings → Outputs (revisión 2026-10-20).**
+  F10.8 borró `settings/tabs/Outputs.svelte` (ver su versión en `git show 8f233a0^:src/frontend/components/settings/tabs/Outputs.svelte`)
+  pero `components/screens/ScreenDetail.svelte` no tiene todas sus opciones. Agregar al
+  modal de pantallas, copiando la lógica del archivo borrado:
+  1. **Pantalla:** `invisible` (salida sin ventana, p. ej. sólo NDI), `transparent`,
+     `forcedResolution`, `hideFromPreview`, `color` de la salida.
+  2. **Envío:** NDI `framerate` y `alphaKey`; OMT `quality`; Blackmagic `deviceId`,
+     `displayMode`, `pixelFormat` y `alphaKey` (con la lista de dispositivos de
+     `BLACKMAGIC_DEVICES`); RTMP `fps`, `bitrate`, `encoder`, `rateControl`; WebRTC
+     `fps` y `bitrate`.
+  3. **Espejo real** (pendiente de F10.5): en `helpers/sceneGraph.ts`
+     (`sendOutputScenes`), una pantalla con `screenType: "mirror"` recibe la escena de
+     `mirrorOf`. Test de vitest.
+  4. Reemplazar los 19 `<select>`/`<input>` HTML crudos de `ScreenDetail.svelte` por
+     los componentes del proyecto (`MaterialDropdown`, `MaterialTextInput`,
+     `MaterialNumberInput`, `MaterialToggleSwitch`) y los textos fijos en español por
+     claves de traducción (`screens.*` en `en.json` y `es.json`).
+  *Aceptación:* cada clave de la lista se puede editar desde el modal y se guarda;
+  marcar también F10.3 y F10.5.
+
 - [ ] **F10.9 Quitar el puente.**
   *Pasos:* helper `getOutputLook(outputId): LookScreen`; reemplazar los usos de
   `$styles[output.style]` / `getCurrentStyle(styles, output.style)` (≈44 archivos) **un
