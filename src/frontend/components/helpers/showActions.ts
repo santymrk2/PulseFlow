@@ -39,6 +39,7 @@ import {
     editingProjectTemplate,
     focusMode,
     interactions,
+    looks,
     media,
     outLocked,
     outputDisplay,
@@ -202,6 +203,14 @@ const triggerActionsBeforeOutput = {
         const layers = get(styles)[actionValue?.outputStyle]?.layers
         if (!Array.isArray(layers)) return false
         return !layers.includes("background")
+    },
+    // aplicar el look antes de renderizar si alguna salida queda sin la capa "background"
+    set_look: (actionValue: any) => {
+        const screens = get(looks)[actionValue?.lookId]?.screens || {}
+        return Object.values(screens).some((styleId) => {
+            const layers = get(styles)[styleId as string]?.layers
+            return Array.isArray(layers) && !layers.includes("background")
+        })
     },
     clear_background: () => true,
     clear_overlays: () => true

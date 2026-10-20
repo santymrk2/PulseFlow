@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { actionRevealUsed, actions, activePopup, ai, audioPlaylists, audioStreams, categories, effects, emitters, obsData, outputs, overlays, popupData, projects, scenes, shows, stageShows, styles, templates, timers, variables } from "../../stores"
+    import { actionRevealUsed, actions, activePopup, ai, audioPlaylists, audioStreams, categories, effects, emitters, looks, obsData, outputs, overlays, popupData, projects, scenes, shows, stageShows, styles, templates, timers, variables } from "../../stores"
     import { translateText } from "../../utils/language"
     import { formatSearch } from "../../utils/search"
     import Icon from "../helpers/Icon.svelte"
@@ -55,6 +55,7 @@
         "start_slide_timers",
         "stop_timers",
         "change_output_style",
+        "set_look",
         "change_stage_output_layout",
         "send_midi",
         "run_action"
@@ -231,6 +232,7 @@
         if (id.includes("name")) return actionValue.value || ""
         if (id === "change_stage_output_layout") return `${actionValue.outputId ? ($outputs[actionValue.outputId]?.name || "—") + ": " : ""}${$stageShows[actionValue.stageLayoutId]?.name || ""}`
         if (id === "change_output_style") return `${actionValue.outputId ? ($outputs[actionValue.outputId]?.name || "—") + ": " : ""}${actionValue.styleId ? $styles[actionValue.styleId]?.name || "" : translateText("main.none")}`
+        if (id === "set_look") return actionValue.lookId ? $looks[actionValue.lookId]?.name || "" : translateText("main.none")
         if (id === "set_next_slide_timer") return Number(actionValue.value) + "s"
         if (id === "disable_slide") {
             const showName = actionValue.showId ? $shows[actionValue.showId]?.name || "—" : ""

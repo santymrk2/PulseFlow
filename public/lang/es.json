@@ -889,6 +889,7 @@
         "start_slide_timers": "Iniciar temporizadores en la diapositiva activa",
         "id_select_output_style": "Seleccionar estilo de salida",
         "change_output_style": "Cambiar el estilo de salida",
+        "set_look": "Aplicar look",
         "change_stage_output_layout": "Cambiar diseño de salida de la pantalla de escenario",
         "change_transition": "Cambiar transición",
         "change_variable": "Cambiar variable",
@@ -1348,6 +1349,7 @@
     },
     "looks": {
         "looks": "Looks",
+        "change_look": "Cambiar look",
         "name": "Nombre del look",
         "new": "Nuevo look",
         "make_live": "Make Live",

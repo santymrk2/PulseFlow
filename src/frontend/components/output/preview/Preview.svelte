@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { actions, activePage, activePopup, activeShow, activeTimers, contextActive, groups, guideActive, outLocked, outputs, overlayTimers, playingAudio, playingMetronome, resized, slideTimers, special } from "../../../stores"
+    import { actions, activeLook, activePage, activePopup, activeShow, activeTimers, contextActive, groups, guideActive, looks, outLocked, outputs, overlayTimers, playingAudio, playingMetronome, resized, slideTimers, special } from "../../../stores"
     import { DEFAULT_WIDTH, isDarkTheme } from "../../../utils/common"
     import { formatSearch } from "../../../utils/search"
     import { getNormalizedKey, previewCtrlShortcuts, previewShortcuts } from "../../../utils/shortcuts"
@@ -10,11 +10,13 @@
     import T from "../../helpers/T.svelte"
     import { getActiveOutputs, getFirstOutputIdWithBackground, isOutCleared, outputSlideHasContent, setOutput } from "../../helpers/output"
     import { getLayoutRef } from "../../helpers/show"
+    import { applyLook } from "../../helpers/looks"
     import { getFewestOutputLines, getItemWithMostLines, playNextGroup, playPreviousGroup, updateOut } from "../../helpers/showActions"
     import { _show } from "../../helpers/shows"
     import { newSlideTimer } from "../../helpers/tick"
     import Button from "../../inputs/Button.svelte"
     import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import ShowActions from "../ShowActions.svelte"
     import Audio from "../tools/Audio.svelte"
     import MediaControls from "../tools/MediaControls.svelte"
@@ -246,6 +248,9 @@
     const light = !isDarkTheme()
     $: isOptimized = $special.optimizedMode
     $: isSplitted = $resized.rightPanel > DEFAULT_WIDTH * 1.8
+
+    // LOOKS (F5.4): selector de look en el panel de salida
+    $: lookOptions = Object.entries($looks).map(([id, look]) => ({ value: id, label: look.name }))
 </script>
 
 <svelte:window on:keydown={keydown} />
@@ -271,6 +276,12 @@
         <div class="section" style="margin-bottom: 2px;" class:float={!isSplitted && $activePage !== "show" && $activePage !== "settings"} class:light class:isOptimized>
             <ShowActions {currentOutput} {ref} {linesIndex} {maxLines} />
         </div>
+
+        {#if lookOptions.length > 1}
+            <div style="margin: 0 5px;">
+                <MaterialDropdown label="looks.looks" value={$activeLook} options={lookOptions} on:change={(e) => applyLook(e.detail)} />
+            </div>
+        {/if}
     {/if}
 
     {#if $activePage === "show"}

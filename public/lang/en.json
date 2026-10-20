@@ -890,6 +890,7 @@
         "start_slide_timers": "Start timers on active slide",
         "id_select_output_style": "Select output style",
         "change_output_style": "Change output style",
+        "set_look": "Set look",
         "change_stage_output_layout": "Change stage output layout",
         "change_transition": "Change transition",
         "change_variable": "Change variable",
@@ -1349,6 +1350,7 @@
     },
     "looks": {
         "looks": "Looks",
+        "change_look": "Change look",
         "name": "Look name",
         "new": "New look",
         "make_live": "Make Live",

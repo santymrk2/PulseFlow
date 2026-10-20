@@ -20,6 +20,7 @@ import {
     activeDrawerTab,
     activeEdit,
     activeFocus,
+    activeLook,
     activeMediaTagFilter,
     activePage,
     activePlayerTagFilter,
@@ -1413,6 +1414,11 @@ const clickActions = {
         // activeStyle.set(output.style)
         // settingsTab.set("styles")
         activePopup.set("select_style")
+    },
+    change_look: () => {
+        // el popup SelectLook aplica el look al elegirlo
+        popupData.set({ active: get(activeLook) })
+        activePopup.set("select_look")
     },
     edit_style: (obj: ObjData) => {
         const outputId = obj.contextElem?.id || ""

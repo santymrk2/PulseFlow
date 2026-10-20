@@ -6,7 +6,7 @@
     import { dbToGain, gainToDb, MIN_DB } from "../../audio/dBUtils"
     import { AudioRoutingManager } from "../../audio/routing/audioRoutingManager"
     import { cameraManager } from "../../media/cameraManager"
-    import { actions, activePopup, audioPlaylists, audioRouting, audioStreams, effects, effectsLibrary, groups, interactions, outputs, overlays, popupData, projects, scenes, shows, stageShows, styles, templates, timers, variables } from "../../stores"
+    import { actions, activePopup, audioPlaylists, audioRouting, audioStreams, effects, effectsLibrary, groups, interactions, looks, outputs, overlays, popupData, projects, scenes, shows, stageShows, styles, templates, timers, variables } from "../../stores"
     import { translateText } from "../../utils/language"
     import { obsGetScenes } from "../../utils/obsTalk"
     import MetronomeInputs from "../drawer/audio/MetronomeInputs.svelte"
@@ -125,6 +125,7 @@
         start_audio_effect: () => $effectsLibrary.map((a) => ({ value: a.path, label: a.name })),
         id_select_output_style: () => [{ value: null, label: "—" }, ...convertToOptions($styles)],
         change_output_style: () => convertToOptions($styles),
+        set_look: () => convertToOptions($looks),
         id_start_timer: () => convertToOptions($timers),
         variable: () => convertToOptions($variables), // .map((a) => ({...a, type: $variables[a.id]?.type}))
         // remove actions that is set to run this action to prevent loops
@@ -156,6 +157,8 @@
 {:else if inputId === "change_output_style"}
     <MaterialDropdown label="stage.output" options={getOptions.normal_outputs()} value={value?.outputId || ""} on:change={(e) => updateValue("outputId", e.detail)} />
     <MaterialDropdown label="edit.style" options={getOptions.change_output_style()} value={value?.styleId} on:change={(e) => updateValue("styleId", e.detail)} allowEmpty />
+{:else if inputId === "set_look"}
+    <MaterialDropdown label="looks.looks" options={getOptions.set_look()} value={value?.lookId} on:change={(e) => updateValue("lookId", e.detail)} allowEmpty />
 {:else if inputId === "stage_output_layout"}
     <MaterialDropdown label="stage.output" options={getOptions.stage_outputs()} value={value?.outputId || ""} on:change={(e) => updateValue("outputId", e.detail)} />
     <MaterialDropdown label="stage.stage_layout" options={getOptions.id_select_stage_layout()} value={value?.stageLayoutId} on:change={(e) => updateValue("stageLayoutId", e.detail)} />
