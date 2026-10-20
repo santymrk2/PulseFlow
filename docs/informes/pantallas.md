@@ -34,3 +34,6 @@ Inicio: $(date -u +%Y-%m-%dT%H:%M:%SZ)
 
 ### F10.4 (inicio)
 - Ampliando pestañas Recorte y Envío en ScreenDetail con lógica de outputs existente (cropping, aspect ratio placeholder, edge blend, NDI/OMT/Blackmagic/WebRTC/RTMP). Panel stage con layout dropdown + botón Editar layout.
+
+### F10.5
+- Soporte Tipo Única/Espejo/Edge blend en UI. Espejo guarda mirrorOf; envío de escena espejo se delegará a lógica existente (se documenta). Edge blend ya expuesto en Recorte.
