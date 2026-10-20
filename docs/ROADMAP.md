@@ -968,10 +968,10 @@ Reglas de F11 (además de AGENTS.md):
   pequeñas atenuados en `NavigationSections` y en los proyectos; menús contextuales sin
   cambios. Chequeos: test:unit 83/83, svelte-check 57 errores (línea base post-merge),
   build OK, Prettier limpio.)
-- [ ] **F11.4 Cabecera del show.** (referencia `Editor.tsx`; archivo
-  `show/ShowHeader.svelte`) 44 px: ícono, nombre del show, "· layout", cantidad de
-  slides a la derecha, botones "Añadir" (ghost) y "Proyectar" (secundario) usando las
-  acciones que ya existen.
+- [x] **F11.4 Cabecera del show.** (2026-10-20, carril D: `ShowHeader.svelte` a 44 px
+  con icono de layout, nombre, '· layout', contador de diapositivas y botones Añadir
+  (ghost) y Proyectar (secundario) usando las acciones ya existentes. Chequeos:
+  test:unit 83/83, svelte-check 57 errores (línea base), build OK, Prettier limpio.)
 - [ ] **F11.5 Grilla de slides y miniaturas.** (referencia `SlideGrid.tsx`,
   `SlideThumbnail.tsx` + captura; archivos `show/Slides.svelte` y el **marco** de
   `slide/Slide.svelte`) miniatura con **barra inferior** (número a la izquierda, grupo

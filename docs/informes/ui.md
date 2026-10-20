@@ -89,3 +89,19 @@ Commit `75a0943d`.
 ### Verificación visual
 
 Pendiente (misma nota que F11.2).
+
+## F11.4 — Cabecera del show (2026-10-20)
+
+Commit `f6f9b7bb`.
+
+### Qué se hizo
+
+- `ShowHeader.svelte` a 44 px: icono de layout, nombre del show, "· layout", contador de
+  diapositivas a la derecha, botón "Añadir" (ghost, `variant="text"`) que crea una
+  diapositiva (`history({ id: "SLIDES" })` + `activeEdit`/`activePage`) y "Proyectar"
+  (secundario, `variant="contained"` = `--secondary`) que proyecta la diapositiva
+  activa (o la primera si no estamos en edición) vía `setOutput("slide", …)`.
+
+### Chequeos
+
+- `test:unit` 83/83, `test:svelte` 57 errores (línea base), `build` OK, Prettier limpio.
