@@ -4,6 +4,7 @@
     import { activePopup, currentOutputSettings, outputs } from "../../stores"
     import { requestMain } from "../../IPC/main"
     import { send } from "../../utils/request"
+    import { translateText } from "../../utils/language"
     import { OUTPUT } from "../../../types/Channels"
     import { keysToID, sortByName, sortObject } from "../helpers/array"
     import Modal from "../main/Modal.svelte"
@@ -69,7 +70,7 @@
     }
 </script>
 
-<Modal title="Configuración de pantallas" width={960} height={620} on:close={() => activePopup.set(null)}>
+<Modal title={translateText("screen_config.title")} width={960} height={620} on:close={() => activePopup.set(null)}>
     <div class="container">
         <div class="left">
             <ScreenList
@@ -82,11 +83,11 @@
                 on:addStage={addStage}
             />
             <div class="system">
-                <div class="system-header">SISTEMA</div>
+                <div class="system-header">{translateText("screen_config.system")}</div>
                 <SystemDisplays {displays} on:refresh={loadDisplays} on:identify={identify} />
                 <div class="ndi-section">
                     <div class="ndi-title">NDI</div>
-                    <button class="ndi-btn" on:click={newNdi}>Nueva salida NDI ›</button>
+                    <button class="ndi-btn" on:click={newNdi}>{translateText("screen_config.new_ndi")} ›</button>
                 </div>
             </div>
         </div>
@@ -94,7 +95,7 @@
             {#if selectedOutputId && $outputs[selectedOutputId]}
                 <ScreenDetail outputId={selectedOutputId} {displays} on:refreshDisplays={loadDisplays} />
             {:else}
-                <div class="empty">Sin salidas</div>
+                <div class="empty">{translateText("screen_config.no_outputs")}</div>
             {/if}
         </div>
     </div>

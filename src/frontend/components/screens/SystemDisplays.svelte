@@ -1,6 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
     import DisplayLayout from "./DisplayLayout.svelte"
+    import { translateText } from "../../utils/language"
 
     export let displays: any[] = []
 
@@ -19,11 +20,11 @@
     {#if displays.length}
         <DisplayLayout {displays} width={220} height={130} selectable={false} />
     {:else}
-        <div class="empty">Sin monitores</div>
+        <div class="empty">{translateText("screen_config.no_monitors")}</div>
     {/if}
     <div class="row">
-        <button class="btn" on:click={refresh}>Actualizar</button>
-        <button class="btn" on:click={identify}>Identificar pantallas</button>
+        <button class="btn" on:click={refresh}>{translateText("screen_config.refresh")}</button>
+        <button class="btn" on:click={identify}>{translateText("screen_config.identify")}</button>
     </div>
 </div>
 

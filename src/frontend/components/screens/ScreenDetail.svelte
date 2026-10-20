@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
     import { OUTPUT } from "../../../types/Channels"
-    import { activePage, activePopup, activeStage, currentOutputSettings, outputs, stageShows } from "../../stores"
+    import { activePage, activePopup, activeStage, currentOutputSettings, dictionary, outputs, stageShows } from "../../stores"
     import { send } from "../../utils/request"
     import { translateText } from "../../utils/language"
     import { toggleOutputs } from "../helpers/output"
@@ -23,18 +23,18 @@
     $: currentOutput = $outputs[outputId] || {}
     $: isStage = !!currentOutput.stageOutput || currentOutput.kind === "stage"
     $: stageId = currentOutput.stageLayout || currentOutput.stageOutput || ""
-    const typeOptions = [
-        { value: "single", label: "Única" },
-        { value: "mirror", label: "Espejo" },
-        { value: "edge_blend", label: "Edge blend" }
+    $: typeOptions = [
+        { value: "single", label: translateText("screen_config.single", $dictionary) },
+        { value: "mirror", label: translateText("screen_config.mirror", $dictionary) },
+        { value: "edge_blend", label: translateText("screen_config.edge_blend", $dictionary) }
     ]
-    const targetOptions = [
-        { value: "full", label: "Completo" },
-        { value: "custom", label: "Personalizado" }
+    $: targetOptions = [
+        { value: "full", label: translateText("screen_config.full", $dictionary) },
+        { value: "custom", label: translateText("screen_config.custom", $dictionary) }
     ]
-    $: screenOptions = [{ value: "", label: "Ninguna" }, ...displays.map((d) => ({ value: d.id?.toString() || d.label, label: String(d.label || d.id) }))]
+    $: screenOptions = [{ value: "", label: translateText("screen_config.none", $dictionary) }, ...displays.map((d) => ({ value: d.id?.toString() || d.label, label: String(d.label || d.id) }))]
     $: mirrorOptions = [
-        { value: "", label: "Elegir" },
+        { value: "", label: translateText("screen_config.choose", $dictionary) },
         ...Object.entries($outputs)
             .filter(([id, o]) => id !== outputId && !(o.stageOutput || o.kind === "stage"))
             .map(([id, o]) => ({ value: id, label: o.name || id }))
@@ -142,8 +142,8 @@
     }
 
     // aspect ratio (stored on output as aspectRatio like spec)
-    const aspectOptions = [
-        { value: "", label: "Original" },
+    $: aspectOptions = [
+        { value: "", label: translateText("screen_config.original", $dictionary) },
         { value: "16:9", label: "16:9" },
         { value: "4:3", label: "4:3" },
         { value: "16:10", label: "16:10" },
@@ -180,11 +180,11 @@
 
 {#if !isStage}
     <div class="row">
-        <MaterialDropdown label="Tipo" value={currentOutput.screenType || "single"} options={typeOptions} on:change={(e) => setOutputValue("screenType", e.detail)} />
+        <MaterialDropdown label="screen_config.type" value={currentOutput.screenType || "single"} options={typeOptions} on:change={(e) => setOutputValue("screenType", e.detail)} />
     </div>
     {#if currentOutput.screenType === "mirror"}
         <div class="row">
-            <MaterialDropdown label="Espejar de" value={currentOutput.mirrorOf || ""} options={mirrorOptions} on:change={(e) => setOutputValue("mirrorOf", e.detail || undefined)} />
+            <MaterialDropdown label="screen_config.mirror_of" value={currentOutput.mirrorOf || ""} options={mirrorOptions} on:change={(e) => setOutputValue("mirrorOf", e.detail || undefined)} />
         </div>
     {/if}
 {:else}
@@ -197,7 +197,7 @@
 {/if}
 
 <div class="canvas">
-    <div class="canvas-title">Monitores</div>
+    <div class="canvas-title">{translateText("screen_config.monitors")}</div>
     <DisplayLayout {displays} width={620} height={320} assignedId={currentOutput.screen || currentOutput.display?.screen || null} selectable={true} on:select={setScreen} />
     <div class="canvas-info">
         {#if currentOutput.screen}
@@ -207,35 +207,35 @@
 </div>
 
 <div class="tabs">
-    <button class="tab" class:active={activeTab === "hardware"} on:click={() => (activeTab = "hardware")}>Hardware</button>
-    <button class="tab" class:active={activeTab === "cropping"} on:click={() => (activeTab = "cropping")}>Recorte</button>
-    <button class="tab" class:active={activeTab === "sending"} on:click={() => (activeTab = "sending")}>Envío</button>
+    <button class="tab" class:active={activeTab === "hardware"} on:click={() => (activeTab = "hardware")}>{translateText("screen_config.hardware")}</button>
+    <button class="tab" class:active={activeTab === "cropping"} on:click={() => (activeTab = "cropping")}>{translateText("screen_config.cropping")}</button>
+    <button class="tab" class:active={activeTab === "sending"} on:click={() => (activeTab = "sending")}>{translateText("screen_config.sending")}</button>
 </div>
 
 {#if activeTab === "hardware"}
     <div class="tab-panel">
         <div class="row">
-            <MaterialDropdown label="Salida" value={currentOutput.screen || currentOutput.display?.screen || ""} options={screenOptions} on:change={(e) => setOutputScreen(e.detail)} />
+            <MaterialDropdown label="screen_config.output" value={currentOutput.screen || currentOutput.display?.screen || ""} options={screenOptions} on:change={(e) => setOutputScreen(e.detail)} />
         </div>
         <div class="row">
-            <MaterialDropdown label="Destino" value={currentOutput.target || "full"} options={targetOptions} on:change={(e) => setOutputValue("target", e.detail)} />
+            <MaterialDropdown label="screen_config.target" value={currentOutput.target || "full"} options={targetOptions} on:change={(e) => setOutputValue("target", e.detail)} />
         </div>
         {#if currentOutput.target === "custom"}
             <div class="row">
                 <MaterialNumberInput label="X" value={currentOutput.bounds?.x || 0} min={null} on:change={(e) => setBounds("x", e.detail)} />
                 <MaterialNumberInput label="Y" value={currentOutput.bounds?.y || 0} min={null} on:change={(e) => setBounds("y", e.detail)} />
-                <MaterialNumberInput label="Ancho" value={currentOutput.bounds?.width || 0} on:change={(e) => setBounds("width", e.detail)} />
-                <MaterialNumberInput label="Alto" value={currentOutput.bounds?.height || 0} on:change={(e) => setBounds("height", e.detail)} />
+                <MaterialNumberInput label="screen.width" value={currentOutput.bounds?.width || 0} on:change={(e) => setBounds("width", e.detail)} />
+                <MaterialNumberInput label="screen.height" value={currentOutput.bounds?.height || 0} on:change={(e) => setBounds("height", e.detail)} />
             </div>
         {/if}
         <div class="info-box">
-            <div>Nombre: {currentOutput.name || outputId}</div>
-            <div>Tamaño: {currentOutput.bounds?.width || 0} × {currentOutput.bounds?.height || 0}</div>
-            <div>Relación: {((currentOutput.bounds?.width || 16) / (currentOutput.bounds?.height || 9)).toFixed(2)}{Math.abs((currentOutput.bounds?.width || 16) / (currentOutput.bounds?.height || 9) - 16 / 9) < 0.01 ? " (16:9)" : ""}</div>
+            <div>{translateText("screen_config.info_name")}: {currentOutput.name || outputId}</div>
+            <div>{translateText("screen_config.info_size")}: {currentOutput.bounds?.width || 0} × {currentOutput.bounds?.height || 0}</div>
+            <div>{translateText("screen_config.aspect_ratio")}: {((currentOutput.bounds?.width || 16) / (currentOutput.bounds?.height || 9)).toFixed(2)}{Math.abs((currentOutput.bounds?.width || 16) / (currentOutput.bounds?.height || 9) - 16 / 9) < 0.01 ? " (16:9)" : ""}</div>
         </div>
         <div class="actions">
-            <MaterialButton on:click={() => dispatch("refreshDisplays")}>Identificar pantallas</MaterialButton>
-            <MaterialButton on:click={toggleEnabled}>{currentOutput.enabled && currentOutput.active ? "Apagar" : "Encender"}</MaterialButton>
+            <MaterialButton on:click={() => dispatch("refreshDisplays")}>{translateText("screen_config.identify")}</MaterialButton>
+            <MaterialButton on:click={toggleEnabled}>{translateText(currentOutput.enabled && currentOutput.active ? "screen_config.turn_off" : "screen_config.turn_on")}</MaterialButton>
         </div>
         <MaterialToggleSwitch label="settings.invisible_window" checked={!!currentOutput.invisible} defaultValue={false} on:change={(e) => setOutputValue("invisible", e.detail)} />
         <MaterialToggleSwitch label="settings.transparent" checked={!!currentOutput.transparent} defaultValue={false} on:change={(e) => setOutputValue("transparent", e.detail)} />
@@ -249,26 +249,26 @@
     <div class="tab-panel">
         {#if !isStage}
             <div class="row">
-                <MaterialDropdown label="Relación" value={aspectValue} options={aspectOptions} on:change={(e) => setAspectRatio(e.detail)} />
+                <MaterialDropdown label="screen_config.aspect_ratio" value={aspectValue} options={aspectOptions} on:change={(e) => setAspectRatio(e.detail)} />
             </div>
         {/if}
         <div class="row">
-            <div class="label">Recorte</div>
+            <div class="label">{translateText("screen_config.cropping")}</div>
             <div style="flex:1; display:flex; gap:4px;">
-                <MaterialNumberInput label="Arriba" value={cropping.top || 0} on:change={(e) => updateCropping(e.detail, "top")} />
-                <MaterialNumberInput label="Derecha" value={cropping.right || 0} on:change={(e) => updateCropping(e.detail, "right")} />
-                <MaterialNumberInput label="Abajo" value={cropping.bottom || 0} on:change={(e) => updateCropping(e.detail, "bottom")} />
-                <MaterialNumberInput label="Izquierda" value={cropping.left || 0} on:change={(e) => updateCropping(e.detail, "left")} />
+                <MaterialNumberInput label="screen_config.top" value={cropping.top || 0} on:change={(e) => updateCropping(e.detail, "top")} />
+                <MaterialNumberInput label="screen_config.right" value={cropping.right || 0} on:change={(e) => updateCropping(e.detail, "right")} />
+                <MaterialNumberInput label="screen_config.bottom" value={cropping.bottom || 0} on:change={(e) => updateCropping(e.detail, "bottom")} />
+                <MaterialNumberInput label="screen_config.left" value={cropping.left || 0} on:change={(e) => updateCropping(e.detail, "left")} />
             </div>
         </div>
         {#if !isStage && currentOutput.screenType === "edge_blend"}
             <div class="row">
                 <div class="label">Edge blend</div>
                 <div style="flex:1; display:flex; gap:4px;">
-                    <MaterialNumberInput label="Izquierda" value={blending.left || 0} on:change={(e) => updateBlending(e.detail, "left")} />
-                    <MaterialNumberInput label="Derecha" value={blending.right || 0} on:change={(e) => updateBlending(e.detail, "right")} />
-                    <MaterialNumberInput label="Rotación" value={blending.rotate ?? 90} on:change={(e) => updateBlending(e.detail, "rotate")} />
-                    <MaterialNumberInput label="Opacidad" value={blending.opacity ?? 50} on:change={(e) => updateBlending(e.detail, "opacity")} />
+                    <MaterialNumberInput label="screen_config.left" value={blending.left || 0} on:change={(e) => updateBlending(e.detail, "left")} />
+                    <MaterialNumberInput label="screen_config.right" value={blending.right || 0} on:change={(e) => updateBlending(e.detail, "right")} />
+                    <MaterialNumberInput label="screen_config.rotation" value={blending.rotate ?? 90} on:change={(e) => updateBlending(e.detail, "rotate")} />
+                    <MaterialNumberInput label="screen_config.opacity" value={blending.opacity ?? 50} on:change={(e) => updateBlending(e.detail, "opacity")} />
                 </div>
             </div>
         {/if}

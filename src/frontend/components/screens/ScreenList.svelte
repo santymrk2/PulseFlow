@@ -1,6 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
     import { outputs } from "../../stores"
+    import { translateText } from "../../utils/language"
     import { keysToID, sortByName, sortObject } from "../helpers/array"
     import { toggleOutputs } from "../helpers/output"
 
@@ -25,7 +26,7 @@
 <div class="group">
     <div class="group-header">
         <button class="group-toggle" on:click={() => toggleGroup("audience")} title="audience">●</button>
-        <div class="group-title">Audiencia</div>
+        <div class="group-title">{translateText("screen_config.audience")}</div>
         <button class="add" on:click={() => dispatch("addAudience")} title="add">+</button>
     </div>
     {#each audience as out}
@@ -42,7 +43,7 @@
 <div class="group">
     <div class="group-header">
         <button class="group-toggle" on:click={() => toggleGroup("stage")} title="stage">●</button>
-        <div class="group-title">Stage</div>
+        <div class="group-title">{translateText("screen_config.stage")}</div>
         <button class="add" on:click={() => dispatch("addStage")} title="add">+</button>
     </div>
     {#each stage as out}
