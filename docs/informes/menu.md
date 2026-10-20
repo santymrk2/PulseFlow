@@ -51,6 +51,81 @@ Tareas asignadas: F10.0f → F10.7 → F11.1 (en ese orden).
 
 ---
 
-## F10.7 — (pendiente)
+## F10.7 — Menú "Pantallas", atajos y selector de look ✅
+
+**Qué hice**
+
+1. **Menú nativo macOS** (`src-tauri/src/menu.rs`, nuevo, `#![cfg(target_os =
+   "macos")]`): submenu "Pantallas" con
+
+   | Ítem | id del evento | Acelerador |
+   | --- | --- | --- |
+   | Mostrar pantallas de audiencia | `screens.toggle_audience` | ⌘1 |
+   | Mostrar pantallas de stage | `screens.toggle_stage` | ⌘2 |
+   | Configurar pantallas… | `screens.configure` | ⌘⇧1 |
+   | Gestionar looks… | `screens.looks` | ⌘⇧L |
+   | En vivo ▸ (looks) | `screens.look.<id>` | — |
+
+   El submenu "En vivo" se rellena a demanda con el comando `update_live_menu`
+   (`Vec<LiveMenuItem { id, name, active }>`, con tests de (de)serialización); el
+   frontend lo empuja cuando cambian `$looks` / `$activeLook`. Cada ítem emite
+   `menu-action` con su id al webview (`app.emit`). El menú se instala en `setup`
+   (`lib.rs`) sólo en macOS.
+
+2. **Frontend** (`utils/shortcuts.ts`): `initMenuActions()` (llamada desde
+   `main.ts`) escucha `menu-action` y despacha:
+
+   - `screens.toggle_audience` → `toggleOutputs(getAllNormalOutputs())`
+   - `screens.toggle_stage` → `toggleOutputs(getAllStageOutputs())`
+   - `screens.configure` → `activePopup.set("choose_screen")`
+   - `screens.looks` → `activePopup.set("looks")`
+   - `screens.look.<id>` → `applyLook(id)`
+
+   Redefiní "audiencia" y "stage" con los helpers `getAllNormalOutputs` /
+   `getAllStageOutputs` (filtrando por `stageOutput`) para no duplicar la lógica de
+   grupos que ya vive en `helpers/output.ts`.
+
+3. **Selector en la barra** (`Top.svelte`): dropdown compacto "Look: X" junto al
+   botón de salida (`MaterialDropdown` con `label="Look"`, `value={$activeLook}`,
+   opciones desde `$looks`, `on:change → applyLook`). Sólo aparece si hay looks.
+
+4. **Windows** (`MenuBar.svelte`): menú "Pantallas" en la barra de menú con los
+   mismos ítems (definidos localmente en el componente, porque
+   `components/context/contextMenus.ts` está fuera del alcance del carril), más el
+   submenu "En vivo" con los looks del store. Los atajos no se registran en Windows:
+   Ctrl+1/Ctrl+2 siguen cambiando de pestaña del drawer.
+
+5. **Clave nueva** `titlebar.screens` en `public/lang/en.json` (sección `menu`) y
+   `public/lang/es.json`.
+
+**Verificación**
+
+- `cargo check` limpio · `cargo test --lib`: 76/76.
+- `bun run test:unit`: 81/81 (tras mergear el carril B).
+- `bun run test:svelte`: 57 errores = baseline mejorada de la rama; **0 en mis
+  archivos** (sólo warnings de a11y heredados).
+- `bun run build`: OK.
+- **App real** (`bun run dev:tauri` dos veces, ~4 min c/u): compila y corre sin
+  errores ni panic; el menú se instala sin excepción (`install()` devuelve `Ok`).
+  *No se pudo capturar pantalla* de la barra de menú del sistema (la terminal no tiene
+  permiso de grabación de pantalla) ni consultarla por accesibilidad (System Events
+  pide permiso interactivo). Por eso la aceptación "el menú aparece en la barra" queda
+  verificada **indirectamente** (sin panic + API de Tauri `set_menu`), no visualmente.
+
+**Decisiones y notas**
+
+- **Conflicto ⌘1/⌘2 con el drawer:** en macOS el acelerador del menú nativo captura
+  la tecla antes de que llegue al webview, así que el bloque de `shortcuts.ts` que
+  cambia pestañas con Ctrl/Cmd+dígito no los ve. En Windows no hay aceleradores en
+  estos ítems, así que Ctrl+1/Ctrl+2 se mantienen como cambio de pestaña (documentado
+  en un comentario en `shortcuts.ts`). No dupliqué atajos.
+- **Archivos fuera de la lista del carril** (soporte, mínimos):
+  `src/frontend/main.ts` (una llamada a `initMenuActions()`),
+  `public/lang/en.json` / `es.json` (una clave dentro de `menu`, permitido por el
+  plan), y `src/types/Main.ts` (aunque al mergear el carril B ya había agregado
+  `looks`, no necesité tocar `Popups`). Sin cambios en `contextMenus.ts` ni en
+  `App.svelte`.
+- Un conflicto de merge en `src/types/Main.ts` (el carril B agregó `| "looks"`) se
+  resolvió conservando ambos; commit de merge `db562b3f`.
 
 ## F11.1 — (pendiente)

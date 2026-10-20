@@ -897,7 +897,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   inspeccionando `styles['__look__out1'].layers`; la verificación visual con
   `RENDER_SNAPSHOT` queda pendiente del usuario (ver `docs/informes/looks.md`).
 
-- [ ] **F10.7 Menú "Pantallas", atajos y selector en la barra superior.** (agente C)
+- [x] **F10.7 Menú "Pantallas", atajos y selector en la barra superior.** (agente C)
   *Archivos:* `src-tauri/src/lib.rs` (menú nativo macOS con `tauri::menu`),
   `components/main/MenuBar.svelte` (Windows), `components/main/Top.svelte`,
   `utils/shortcuts.ts`.
@@ -906,6 +906,18 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   Selector compacto "Look: X ▾" junto al botón de salida.
   *Aceptación:* en macOS el menú aparece en la barra del sistema; `⌘1` muestra/oculta
   audiencia y `⌘2` stage.
+  *Verificación (carril C):* `src-tauri/src/menu.rs` instala el menú nativo en `setup`
+  (sólo macOS) con el submenu "Pantallas" (audiencia `CmdOrCtrl+1`, stage
+  `CmdOrCtrl+2`, Configurar pantallas…, Gestionar looks…, submenu "En vivo" poblado
+  desde el frontend por `update_live_menu`). Los ítems emiten `menu-action` y
+  `utils/shortcuts.ts::initMenuActions()` los despacha a `toggleOutputs` por grupo,
+  `activePopup.set("choose_screen" | "looks")` y `applyLook`. `Top.svelte` agrega el
+  selector "Look: X" (`MaterialDropdown`); `MenuBar.svelte` (Windows) tiene el mismo
+  menú "Pantallas" con items locales. La app compila y corre 4 min sin errores ni
+  panic (menú instalado sin excepciones); no se pudo capturar pantalla del menú por
+  falta de permiso de grabación de pantalla. `⌘1`/`⌘2` los intercepta el menú nativo
+  en macOS; en Windows Ctrl+1/Ctrl+2 siguen cambiando de pestaña del drawer (los items
+  de "Pantallas" no registran aceleradores). Commits `831f2a93`, `f43d0cd2`.
 
 - [ ] **F10.8 Quitar la UI vieja.**
   *Pasos:* eliminar Settings → Outputs, Styles y Looks (y sus `*Tabs`/`*Buttons`), los
