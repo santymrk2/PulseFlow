@@ -1009,7 +1009,7 @@ Reglas de F11 (además de AGENTS.md):
   BIBLIOTECA (categorías de shows -> cajon), PLAYLIST (Projects sin cambios) y MEDIA.
   Chequeos: test:unit 83/83, svelte-check 56 errores (linea base), build OK,
   Prettier limpio.)
-- [ ] **F11.7 Página de Settings.** (referencia `SettingsTabs.tsx`, `SettingsTools.tsx`;
+- [x] **F11.7 Página de Settings.** (referencia `SettingsTabs.tsx`, `SettingsTools.tsx`;
   archivos `settings/SettingsTabs.svelte`, `settings/Settings.svelte`) **después de
   F10.8**: lista de pestañas como la izquierda de la referencia, contenido con ancho
   máximo 640 px, filas de inputs de 44 px con separador.
