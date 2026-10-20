@@ -1363,6 +1363,8 @@
         "create_stage_output": "Create stage output"
     },
     "looks": {
+        "look": "Look",
+        "edit_looks": "Edit looks…",
         "looks": "Looks",
         "change_look": "Change look",
         "audience": "Audience",

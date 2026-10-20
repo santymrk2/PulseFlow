@@ -1362,6 +1362,8 @@
         "create_stage_output": "Crear salida de pantalla de escenario"
     },
     "looks": {
+        "look": "Look",
+        "edit_looks": "Editar looks…",
         "looks": "Looks",
         "change_look": "Cambiar look",
         "audience": "Audiencia",

@@ -7,7 +7,11 @@
 
     import TopButton from "../inputs/TopButton.svelte"
     import { DEFAULT_DISPLAY_NAME } from "../../utils/SocketHelper"
-    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import Capsule from "../../lib/components/ui/capsule/capsule.svelte"
+    import Menu from "../../lib/components/ui/menu/menu.svelte"
+    import MenuItem from "../../lib/components/ui/menu/menu-item.svelte"
+    import MenuSeparator from "../../lib/components/ui/menu/menu-separator.svelte"
     import { applyLook } from "../helpers/looks"
     import { getAllNormalOutputs, getAllStageOutputs } from "../helpers/output"
     import { DEFAULT_DRAWER_HEIGHT } from "../../utils/common"
@@ -96,14 +100,20 @@
     $: audienceLive = ($outputState || []).some((s: any) => s.active === true && normalOutputIds.includes(s.id))
     $: stageLive = ($outputState || []).some((s: any) => s.active === true && stageOutputIds.includes(s.id))
 
-    // more menu
+    // menús desplegables de la barra (kit: menu)
     let moreOpen = false
-    function toggleMore() {
-        moreOpen = !moreOpen
-    }
+    let lookOpen = false
     function runMore(fn: () => void) {
         fn()
         moreOpen = false
+    }
+    function applyLookFromMenu(id: string) {
+        applyLook(id)
+        lookOpen = false
+    }
+    function editLooks() {
+        lookOpen = false
+        activePopup.set("looks")
     }
 
     // right-click on audience/stage -> configure screens
@@ -113,23 +123,6 @@
     }
 </script>
 
-{#if users.length}
-    <div class="users" style="{isWindows ? 'top: 25px;' : ''}width: calc(17px + ((22px - 5px) * {users.length}));" data-title={translateText("settings.connections")}>
-        {#each users as user, i}
-            {@const isSameArea = $activeShow && user.activeShow?.id === $activeShow?.id}
-            {@const name = user.displayName || DEFAULT_DISPLAY_NAME}
-
-            <div class="user" class:isSameArea data-title={name} style="background-color: {user.color};transform: translateX(-{5 * i}px);" role="none" on:click={() => goToUser(user)}>
-                {#if name === DEFAULT_DISPLAY_NAME}
-                    <Icon id="profiles" size={1.2} white />
-                {:else}
-                    {name.charAt(0)}
-                {/if}
-            </div>
-        {/each}
-    </div>
-{/if}
-
 <div class="top" data-tauri-drag-region>
     <span style="width: var(--navigation-width);" data-tauri-drag-region>
         {#if !isWindows}
@@ -137,77 +130,95 @@
         {/if}
     </span>
 
-    <!-- Izquierda 1: Buscar · Texto · Tema -->
-    <span class="capsule">
-        <button class="cap-btn" on:click={() => quickSearchActive.set(true)}>
-            <Icon id="search" size={1.2} />
+    <!-- Izquierda 1: Buscar · Texto · Tema (F12.5: cápsula del kit, misma apariencia en todos los grupos) -->
+    <Capsule>
+        <Button variant="ghost" size="sm" title={translateText("menu.search")} onclick={() => quickSearchActive.set(true)}>
+            <Icon id="search" size={1} />
             <span class="cap-label">{translateText("menu.search")}</span>
-        </button>
-        <button class="cap-btn" on:click={toggleTextMode}>
-            <Icon id="text" size={1.2} />
+        </Button>
+        <Button variant="ghost" size="sm" title={translateText("menu.text")} onclick={toggleTextMode}>
+            <Icon id="text" size={1} />
             <span class="cap-label">{translateText("menu.text")}</span>
-        </button>
-        <button class="cap-btn" on:click={openTemplatesDrawer}>
-            <Icon id="theme" size={1.2} />
+        </Button>
+        <Button variant="ghost" size="sm" title={translateText("menu.theme")} onclick={openTemplatesDrawer}>
+            <Icon id="theme" size={1} />
             <span class="cap-label">{translateText("menu.theme")}</span>
-        </button>
-    </span>
+        </Button>
+    </Capsule>
 
     <!-- Izquierda 2: Show · Edit · Biblia · ⋯ -->
-    <span class="capsule">
+    <Capsule>
         <TopButton id="show" />
         <TopButton id="edit" disabled={editDisabled} />
-        <button class="cap-btn" on:click={openScriptureDrawer}>
-            <Icon id="scripture" size={1.2} />
+        <Button variant="ghost" size="sm" title={translateText("menu.bible")} onclick={openScriptureDrawer}>
+            <Icon id="scripture" size={1} />
             <span class="cap-label">{translateText("menu.bible")}</span>
-        </button>
-        <div class="more-wrap">
-            <button class="cap-btn" on:click={toggleMore}>
-                <Icon id="more" size={1.2} />
-                <span class="cap-label">{translateText("menu.more")}</span>
-            </button>
-            {#if moreOpen}
-                <div class="more-menu">
-                    <button class="more-item" on:click={() => runMore(() => activePage.set("stage"))}>{translateText("menu.stage_editor")}</button>
-                    <button class="more-item" on:click={() => runMore(openTemplatesDrawer)}>{translateText("menu.theme_editor")}</button>
-                    <button class="more-item" on:click={() => runMore(openOverlaysDrawer)}>{translateText("menu.overlay_editor")}</button>
-                </div>
-            {/if}
+        </Button>
+        <div class="menu-anchor">
+            <Button variant="ghost" size="sm" title={translateText("menu.more")} onclick={() => (moreOpen = !moreOpen)}>
+                <Icon id="more" size={1} />
+            </Button>
+            <Menu open={moreOpen} onclose={() => (moreOpen = false)}>
+                <MenuItem onclick={() => runMore(() => activePage.set("stage"))}>{translateText("menu.stage_editor")}</MenuItem>
+                <MenuItem onclick={() => runMore(openTemplatesDrawer)}>{translateText("menu.theme_editor")}</MenuItem>
+                <MenuItem onclick={() => runMore(openOverlaysDrawer)}>{translateText("menu.overlay_editor")}</MenuItem>
+            </Menu>
         </div>
-    </span>
+    </Capsule>
 
     <span class="spacer" data-tauri-drag-region />
 
-    <!-- Derecha 1: Media · Look · Live -->
-    <span class="capsule">
-        <button class="cap-btn" on:click={toggleMediaDrawer}>
-            <Icon id="media" size={1.2} />
+    <!-- Derecha 1: Media · Look ▾ · Live -->
+    <Capsule>
+        <Button variant="ghost" size="sm" title={translateText("menu.media")} onclick={toggleMediaDrawer}>
+            <Icon id="media" size={1} />
             <span class="cap-label">{translateText("menu.media")}</span>
-        </button>
-        {#if lookOptions.length}
-            <MaterialDropdown label="Look" value={$activeLook} options={lookOptions} on:change={(e) => applyLook(e.detail.value)} onlyArrow={false} style="min-width: 90px; max-width: 160px;" />
-        {/if}
-        <button class="cap-btn" on:click={openLiveSettings}>
-            <Icon id="broadcast" size={1.2} />
+        </Button>
+        <div class="menu-anchor">
+            <Button variant="ghost" size="sm" class="look-button" title={translateText("looks.looks")} onclick={() => (lookOpen = !lookOpen)}>
+                <span class="look-label">{translateText("looks.look")}</span>
+                <span class="look-name">{$looks[$activeLook]?.name || "—"}</span>
+                <span class="look-caret">▾</span>
+            </Button>
+            <Menu open={lookOpen} class="min-w-52" onclose={() => (lookOpen = false)}>
+                {#each lookOptions as look}
+                    <MenuItem checked={look.id === $activeLook} onclick={() => applyLookFromMenu(look.id)}>{look.label}</MenuItem>
+                {/each}
+                {#if lookOptions.length}<MenuSeparator />{/if}
+                <MenuItem onclick={editLooks}>{translateText("looks.edit_looks")}</MenuItem>
+            </Menu>
+        </div>
+        <Button variant="ghost" size="sm" title={translateText("menu.live")} onclick={openLiveSettings}>
+            <Icon id="broadcast" size={1} />
             <span class="cap-label">{translateText("menu.live")}</span>
-        </button>
-    </span>
+        </Button>
+    </Capsule>
 
-    <!-- Derecha 2: Audiencia · Stage (round, red when live) -->
-    <span class="capsule round-capsule">
-        <div class="round-wrap">
-            <button class="round-btn" class:red={audienceLive} on:click={toggleAudience} on:contextmenu={onScreensContextMenu} title={translateText("menu.audience")}>
-                <Icon id="display" size={1.2} white />
-            </button>
-            <span class="round-label">{translateText("menu.audience")}</span>
-        </div>
-        <div class="round-wrap">
-            <button class="round-btn" class:red={stageLive} on:click={toggleStage} on:contextmenu={onScreensContextMenu} title={translateText("menu.stage")}>
-                <Icon id="stage" size={1.2} white />
-            </button>
-            <span class="round-label">{translateText("menu.stage")}</span>
-        </div>
-    </span>
+    <!-- Derecha 2: Audiencia · Stage (rojo mientras están en vivo); clic derecho abre Configurar pantallas -->
+    <Capsule>
+        <Button variant="live" size="sm" aria-pressed={audienceLive} title={translateText("menu.audience")} oncontextmenu={onScreensContextMenu} onclick={toggleAudience}>
+            <Icon id="display" size={1} white />
+            <span class="cap-label">{translateText("menu.audience")}</span>
+        </Button>
+        <Button variant="live" size="sm" aria-pressed={stageLive} title={translateText("menu.stage")} oncontextmenu={onScreensContextMenu} onclick={toggleStage}>
+            <Icon id="stage" size={1} white />
+            <span class="cap-label">{translateText("menu.stage")}</span>
+        </Button>
+        {#if users.length}
+            <div class="users" data-title={translateText("settings.connections")}>
+                {#each users as user}
+                    {@const name = user.displayName || DEFAULT_DISPLAY_NAME}
+                    <button class="user" class:isSameArea={$activeShow && user.activeShow?.id === $activeShow?.id} title={name} style="background-color: {user.color};" onclick={() => goToUser(user)}>
+                        {#if name === DEFAULT_DISPLAY_NAME}
+                            <Icon id="profiles" size={0.9} white />
+                        {:else}
+                            {name.charAt(0)}
+                        {/if}
+                    </button>
+                {/each}
+            </div>
+        {/if}
+    </Capsule>
 
     <span style="width: var(--navigation-width);justify-content: flex-end;" data-tauri-drag-region>
         <TopButton id="draw" red={$drawTool === "fill" || ($drawTool === "zoom" && $drawSettings.zoom?.size !== 100) || !!($drawTool === "paint" && $paintCache?.length)} hideLabel />
@@ -216,7 +227,7 @@
         {/if}
         <span class="unsaved-dot" class:hidden={$saved} data-title={translateText("menu.unsaved")} role="none" />
         {#if !$outputDisplay && !physicalOutputWindows.length}
-            <div data-title={translateText("No 'physical' outputs available!")} style="position: absolute;top: 0;inset-inline-end: 0;height: 100%;width: 60px;" role="none" on:click={openOutputSettings} />
+            <div data-title={translateText("No 'physical' outputs available!")} style="position: absolute;top: 0;inset-inline-end: 0;height: 100%;width: 60px;" role="none" onclick={openOutputSettings} />
         {/if}
     </span>
 </div>
@@ -234,7 +245,7 @@
 
         border-bottom: 1px solid var(--border-color, var(--primary-lighter));
     }
-    .top span {
+    .top > span {
         display: flex;
         align-items: center;
     }
@@ -243,115 +254,38 @@
         flex: 1;
     }
 
-    .capsule {
-        display: flex;
-        align-items: center;
-        gap: 2px;
-        padding: 2px 4px;
-        background-color: var(--primary-darker);
-        border: 1px solid var(--primary-lighter);
-        border-radius: 8px;
-        height: 40px;
-    }
-
-    .cap-btn {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 0;
-        min-width: 46px;
-        height: 34px;
-        padding: 2px 6px;
-        background: transparent;
-        border: none;
-        border-radius: 6px;
-        color: var(--text);
-        cursor: pointer;
-        font-size: 0.7rem;
-        line-height: 1;
-    }
-    .cap-btn:hover {
-        background-color: var(--hover);
-    }
     .cap-label {
-        margin-top: 2px;
-        font-size: 0.62rem;
-        opacity: 0.85;
+        white-space: nowrap;
     }
 
-    /* TopButton (show/edit/stage) is a MaterialButton; make it fit capsule */
-    .capsule :global(button) {
-        /* keep */
+    /* a 1280 px no entran las etiquetas: quedan sólo íconos con tooltip */
+    @media screen and (max-width: 1400px) {
+        .cap-label {
+            display: none;
+        }
     }
 
-    .round-capsule {
-        gap: 6px;
-    }
-    .round-wrap {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 0;
-    }
-    .round-btn {
-        width: 30px;
-        height: 30px;
-        border-radius: 50%;
-        border: 1px solid var(--primary-lighter);
-        background-color: var(--primary-darkest);
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        padding: 0;
-    }
-    .round-btn.red {
-        background-color: var(--red, #e53935);
-        border-color: var(--red, #e53935);
-        color: #fff;
-    }
-    .round-btn:hover {
-        filter: brightness(1.1);
-    }
-    .round-label {
-        font-size: 0.6rem;
-        margin-top: 1px;
-        opacity: 0.8;
-    }
-
-    .more-wrap {
+    .menu-anchor {
         position: relative;
-    }
-    .more-menu {
-        position: absolute;
-        top: 100%;
-        right: 0;
-        margin-top: 4px;
-        background-color: var(--primary-darker);
-        border: 1px solid var(--primary-lighter);
-        border-radius: 6px;
-        padding: 4px;
         display: flex;
-        flex-direction: column;
-        gap: 2px;
-        z-index: 100;
-        min-width: 160px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
-    .more-item {
-        background: transparent;
-        border: none;
-        color: var(--text);
-        padding: 6px 10px;
-        text-align: left;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.8rem;
+
+    .look-button {
+        max-width: 200px;
     }
-    .more-item:hover {
-        background-color: var(--hover);
+    .look-label {
+        opacity: 0.7;
+        font-size: 11px;
+    }
+    .look-name {
+        max-width: 140px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .look-caret {
+        font-size: 10px;
+        opacity: 0.8;
     }
 
     .macTitleSpace {
@@ -375,25 +309,12 @@
         min-width: 60px;
     }
 
-    /* USERS */
+    /* connected users: avatares dentro de la última cápsula */
     .users {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: calc(48px - 4px);
-
         display: flex;
         align-items: center;
-        margin: 2px 0;
-        padding: 0 5px;
-
-        background-color: var(--primary-darker);
-        border: 1px solid var(--primary-lighter);
-        border-left: none;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-
-        z-index: 31;
+        gap: 2px;
+        padding-inline: 2px;
     }
     .user {
         width: 22px;
@@ -411,6 +332,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
     }
     .user:hover {
         filter: brightness(0.9);
@@ -420,7 +342,7 @@
     }
 
     @media screen and (max-width: 580px) {
-        .top span:first-child {
+        .top > span:first-child {
             display: none;
         }
     }
