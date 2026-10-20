@@ -4,13 +4,14 @@
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let id: TopViews
     export let red = false
     export let disabled = false
     export let hideLabel: null | boolean = null
     $: label = hideLabel === null ? !$labelsDisabled : !hideLabel
+    $: isActive = $activePage === id
 
     const keys = { show: 1, edit: 2, stage: 3, draw: 4, settings: 5 }
 
@@ -42,17 +43,13 @@
     }
 </script>
 
-<!-- border-top-left-radius: 12px;border-top-right-radius: 12px; -->
-<MaterialButton style="border-radius: 0;border-bottom: 2px solid var(--primary);{label ? 'padding: 0.3em 1.2em;' : ''}" title={translateText(`menu._title_${id}${$special.numberKeys ? "" : ` [${keys[id]}]`}`, $dictionary)} isActive={$activePage === id} {disabled} on:click={openPage} {red}>
-    <Icon {id} size={1.5} white={$activePage === id} />
+<!-- F12.5b: mismo botón que el resto de la barra (kit). Activo = gris neutro, no azul -->
+<Button variant={red ? "destructive" : isActive ? "secondary" : "ghost"} size="sm" data-title={translateText(`menu._title_${id}${$special.numberKeys ? "" : ` [${keys[id]}]`}`, $dictionary)} aria-current={isActive ? "page" : undefined} {disabled} onclick={openPage}>
+    <Icon {id} size={1} white />
     {#if label}<span><T id="menu.{id}" /></span>{/if}
-</MaterialButton>
+</Button>
 
 <style>
-    /* span {
-        font-weight: 700;
-    } */
-
     @media screen and (max-width: 750px) {
         span {
             display: none;

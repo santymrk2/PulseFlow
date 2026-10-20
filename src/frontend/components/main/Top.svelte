@@ -132,16 +132,16 @@
 
     <!-- Izquierda 1: Buscar · Texto · Tema (F12.5: cápsula del kit, misma apariencia en todos los grupos) -->
     <Capsule>
-        <Button variant="ghost" size="sm" title={translateText("menu.search")} onclick={() => quickSearchActive.set(true)}>
-            <Icon id="search" size={1} />
+        <Button variant="ghost" size="sm" data-title={translateText("menu.search")} onclick={() => quickSearchActive.set(true)}>
+            <Icon id="search" size={1} white />
             <span class="cap-label">{translateText("menu.search")}</span>
         </Button>
-        <Button variant="ghost" size="sm" title={translateText("menu.text")} onclick={toggleTextMode}>
-            <Icon id="text" size={1} />
+        <Button variant="ghost" size="sm" data-title={translateText("menu.text")} onclick={toggleTextMode}>
+            <Icon id="text" size={1} white />
             <span class="cap-label">{translateText("menu.text")}</span>
         </Button>
-        <Button variant="ghost" size="sm" title={translateText("menu.theme")} onclick={openTemplatesDrawer}>
-            <Icon id="theme" size={1} />
+        <Button variant="ghost" size="sm" data-title={translateText("menu.theme")} onclick={openTemplatesDrawer}>
+            <Icon id="theme" size={1} white />
             <span class="cap-label">{translateText("menu.theme")}</span>
         </Button>
     </Capsule>
@@ -150,13 +150,13 @@
     <Capsule>
         <TopButton id="show" />
         <TopButton id="edit" disabled={editDisabled} />
-        <Button variant="ghost" size="sm" title={translateText("menu.bible")} onclick={openScriptureDrawer}>
-            <Icon id="scripture" size={1} />
+        <Button variant="ghost" size="sm" data-title={translateText("menu.bible")} onclick={openScriptureDrawer}>
+            <Icon id="scripture" size={1} white />
             <span class="cap-label">{translateText("menu.bible")}</span>
         </Button>
         <div class="menu-anchor">
-            <Button variant="ghost" size="sm" title={translateText("menu.more")} onclick={() => (moreOpen = !moreOpen)}>
-                <Icon id="more" size={1} />
+            <Button variant="ghost" size="sm" data-title={translateText("menu.more")} onclick={() => (moreOpen = !moreOpen)}>
+                <Icon id="more" size={1} white />
             </Button>
             <Menu open={moreOpen} onclose={() => (moreOpen = false)}>
                 <MenuItem onclick={() => runMore(() => activePage.set("stage"))}>{translateText("menu.stage_editor")}</MenuItem>
@@ -170,12 +170,12 @@
 
     <!-- Derecha 1: Media · Look ▾ · Live -->
     <Capsule>
-        <Button variant="ghost" size="sm" title={translateText("menu.media")} onclick={toggleMediaDrawer}>
-            <Icon id="media" size={1} />
+        <Button variant="ghost" size="sm" data-title={translateText("menu.media")} onclick={toggleMediaDrawer}>
+            <Icon id="media" size={1} white />
             <span class="cap-label">{translateText("menu.media")}</span>
         </Button>
         <div class="menu-anchor">
-            <Button variant="ghost" size="sm" class="look-button" title={translateText("looks.looks")} onclick={() => (lookOpen = !lookOpen)}>
+            <Button variant="ghost" size="sm" class="look-button" data-title={translateText("looks.looks")} onclick={() => (lookOpen = !lookOpen)}>
                 <span class="look-label">{translateText("looks.look")}</span>
                 <span class="look-name">{$looks[$activeLook]?.name || "—"}</span>
                 <span class="look-caret">▾</span>
@@ -188,24 +188,24 @@
                 <MenuItem onclick={editLooks}>{translateText("looks.edit_looks")}</MenuItem>
             </Menu>
         </div>
-        <Button variant="ghost" size="sm" title={translateText("menu.live")} onclick={openLiveSettings}>
-            <Icon id="broadcast" size={1} />
+        <Button variant="ghost" size="sm" data-title={translateText("menu.live")} onclick={openLiveSettings}>
+            <Icon id="broadcast" size={1} white />
             <span class="cap-label">{translateText("menu.live")}</span>
         </Button>
     </Capsule>
 
     <!-- Derecha 2: Audiencia · Stage (rojo mientras están en vivo); clic derecho abre Configurar pantallas -->
     <Capsule>
-        <Button variant="live" size="sm" aria-pressed={audienceLive} title={translateText("menu.audience")} oncontextmenu={onScreensContextMenu} onclick={toggleAudience}>
+        <Button variant="live" size="sm" aria-pressed={audienceLive} data-title={translateText("menu.audience")} oncontextmenu={onScreensContextMenu} onclick={toggleAudience}>
             <Icon id="display" size={1} white />
             <span class="cap-label">{translateText("menu.audience")}</span>
         </Button>
-        <Button variant="live" size="sm" aria-pressed={stageLive} title={translateText("menu.stage")} oncontextmenu={onScreensContextMenu} onclick={toggleStage}>
+        <Button variant="live" size="sm" aria-pressed={stageLive} data-title={translateText("menu.stage")} oncontextmenu={onScreensContextMenu} onclick={toggleStage}>
             <Icon id="stage" size={1} white />
             <span class="cap-label">{translateText("menu.stage")}</span>
         </Button>
         {#if users.length}
-            <div class="users" data-title={translateText("settings.connections")}>
+            <div class="users" data-data-title={translateText("settings.connections")}>
                 {#each users as user}
                     {@const name = user.displayName || DEFAULT_DISPLAY_NAME}
                     <button class="user" class:isSameArea={$activeShow && user.activeShow?.id === $activeShow?.id} title={name} style="background-color: {user.color};" onclick={() => goToUser(user)}>
@@ -225,9 +225,9 @@
         {#if !settingsDisabled}
             <TopButton id="settings" hideLabel />
         {/if}
-        <span class="unsaved-dot" class:hidden={$saved} data-title={translateText("menu.unsaved")} role="none" />
+        <span class="unsaved-dot" class:hidden={$saved} data-data-title={translateText("menu.unsaved")} role="none" />
         {#if !$outputDisplay && !physicalOutputWindows.length}
-            <div data-title={translateText("No 'physical' outputs available!")} style="position: absolute;top: 0;inset-inline-end: 0;height: 100%;width: 60px;" role="none" onclick={openOutputSettings} />
+            <div data-data-title={translateText("No 'physical' outputs available!")} style="position: absolute;top: 0;inset-inline-end: 0;height: 100%;width: 60px;" role="none" onclick={openOutputSettings} />
         {/if}
     </span>
 </div>
@@ -270,9 +270,6 @@
         display: flex;
     }
 
-    .look-button {
-        max-width: 200px;
-    }
     .look-label {
         opacity: 0.7;
         font-size: 11px;
