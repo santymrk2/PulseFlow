@@ -717,6 +717,78 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
 
 ---
 
+## F10.0 — Correcciones urgentes (antes de F10)
+
+Reportadas por el usuario en macOS el 2026-10-20. Un commit por tarea; todas se
+verifican en la app real (`bun run dev:tauri`).
+
+- [ ] **F10.0a Barra superior sin indicador rojo ni título.**
+  *Archivo:* `src/frontend/components/main/Top.svelte`.
+  *Causa:* el `<div class="unsaved">` (barra roja de "sin guardar") y el
+  `<h1>PulseFlow</h1>` ocupan la esquina izquierda, que en macOS es de los botones de
+  ventana (`titleBarStyle: "Overlay"` en `tauri.conf.json`).
+  *Pasos:* quitar ambos. En macOS (`$os.platform === "darwin"`) dejar ese espacio vacío
+  (≈ 80 px) para los botones rojo/amarillo/verde; en Windows el bloque izquierdo puede
+  quedar vacío o con el selector de look de F10.7. El estado "sin guardar" no se
+  muestra en la barra (si se quiere conservar, como un punto discreto junto al botón
+  de Settings, no en la esquina).
+  *Aceptación:* en macOS la esquina izquierda sólo tiene los botones del sistema y no
+  aparece nada al guardar o al tener cambios sin guardar.
+
+- [ ] **F10.0b Mover la ventana desde la barra superior.**
+  *Archivos:* `Top.svelte`, `src-tauri/capabilities/default.json` (ya tiene
+  `core:window:allow-start-dragging`).
+  *Causa:* la barra usa `-webkit-app-region: drag`, que es de Electron; Tauri lo ignora.
+  *Pasos:* agregar `data-tauri-drag-region` al contenedor `.top` y a sus zonas vacías
+  (los `span` de los costados), borrar las reglas `-webkit-app-region`. Los botones no
+  deben arrastrar. Doble clic en la barra = maximizar/restaurar (lo hace Tauri).
+  *Aceptación:* en macOS se arrastra la ventana desde cualquier parte vacía de la barra
+  y los botones siguen funcionando.
+
+- [ ] **F10.0c Monitores en coordenadas lógicas e identidad estable.**
+  *Archivos:* `src-tauri/src/commands/output.rs` (`GET_DISPLAYS`),
+  `src-tauri/src/render/screens.rs`, espejo TS en `src/types/`.
+  *Causa:* `GET_DISPLAYS` devuelve `position()`/`size()` **físicos**; en una Mac con
+  Retina (escala 2) la pantalla integrada mide el doble y las coordenadas de monitores
+  con distinta escala no son comparables. Además `id` es el índice, que cambia al
+  conectar/desconectar.
+  *Pasos:* devolver `bounds` en **lógicos** (`to_logical(scale_factor)`, como hacía
+  Electron), agregar `physicalSize`, `scaleFactor`, `primary` (monitor principal del
+  sistema) e `id` estable (nombre del monitor + índice como desempate). En
+  `screens.rs` comparar y posicionar con `LogicalPosition`/`LogicalSize`. Struct
+  serde + test con JSON de ejemplo (regla de AGENTS.md).
+  *Aceptación:* con la pantalla integrada (Retina) + un monitor 1080p, `GET_DISPLAYS`
+  devuelve rectángulos que no se superponen y coinciden con la disposición de
+  Ajustes del Sistema → Pantallas.
+
+- [ ] **F10.0d La salida cubre la pantalla asignada (como ProPresenter).**
+  *Archivo:* `src-tauri/src/render/screens.rs` (`place_window`, `target_monitor`).
+  *Causa:* la regla "si es el monitor de la ventana de control → ventana flotante 16:9"
+  (y, por la mezcla físico/lógico, el monitor externo se detecta como el de control).
+  *Pasos:* elegir el monitor por `output.screen` (id de F10.0c) primero y por el centro
+  de los `bounds` lógicos después. Si la salida tiene un monitor asignado: siempre sin
+  bordes, siempre arriba y pantalla completa en ese monitor (macOS:
+  `set_simple_fullscreen(true)` después de mover la ventana a ese monitor; Windows:
+  sin bordes del tamaño exacto del monitor), **aunque sea el mismo monitor de la app**.
+  Sólo si la salida no tiene monitor asignado se abre como ventana flotante de vista
+  previa. Actualizar los tests de selección de monitor.
+  *Aceptación:* con 2 monitores, al poner en vivo la salida asignada al externo, el
+  externo queda cubierto por completo (sin barra de menú ni Dock) y la app sigue
+  usable en la integrada.
+
+- [ ] **F10.0e Disposición de monitores que no se rompe.**
+  *Archivos:* nuevo `src/frontend/components/screens/displayLayout.ts` (función pura +
+  test de vitest) y `DisplayLayout.svelte`; usarlo en `settings/Screens.svelte` (el
+  popup actual) y después en la ventana de F10.3.
+  *Causa:* `Screens.svelte` dibuja con `zoom: 0.08` fijo y un `transform` calculado a
+  mano sobre coordenadas físicas.
+  *Pasos:* normalizar al mínimo x/y, escalar para que el conjunto entre en el
+  contenedor (`min(anchoDisponible/anchoTotal, altoDisponible/altoTotal)`), dibujar cada
+  monitor con su número, nombre y resolución, marcar el principal y el asignado. Debe
+  funcionar con monitores a la izquierda/arriba (coordenadas negativas) y apilados.
+  *Aceptación:* tests de la función con 3 casos (lado a lado, apilados, negativo); en
+  la app la disposición se ve igual que en Ajustes del Sistema → Pantallas.
+
 ## F10 — Pantallas y Looks como en ProPresenter (rediseño)
 
 Especificación completa, con bocetos: [`docs/design/pantallas-y-looks.md`](design/pantallas-y-looks.md).
@@ -727,7 +799,7 @@ la UI; lo que configuraba se reparte entre la Pantalla (hardware) y la celda
 Look × Pantalla (qué se ve y cómo). La configuración de pantallas y los Looks pasan a
 dos ventanas propias, no pestañas de Settings.
 
-Orden y paralelismo: F10.1 → F10.2 (un solo agente, son la base). Después pueden ir en
+Orden y paralelismo: **primero F10.0a–e** (correcciones urgentes). Después F10.1 → F10.2 (un solo agente, son la base). Después pueden ir en
 paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** = F10.6,
 **C** = F10.7. Al final, un agente: F10.8 → F10.9.
 
