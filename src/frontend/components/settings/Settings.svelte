@@ -123,6 +123,8 @@
         /* overflow-x: hidden; */
         height: 100%;
         padding: 20px var(--padding);
+        max-width: 640px;
+        margin-inline: auto;
     }
 
     .tabs {
