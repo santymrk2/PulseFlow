@@ -1868,5 +1868,8 @@
         "confidence_highest": "If confident",
         "confidence_high": "If high confidence",
         "confidence_medium": "If medium confidence"
+    },
+    "ui": {
+        "filter": "Filter"
     }
 }

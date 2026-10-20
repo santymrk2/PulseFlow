@@ -1,10 +1,12 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import type { DrawerTabIds } from "../../../types/Tabs"
-    import { activeDrawerTab, activeEdit, activePage, activePopup, activeProject, activeShow, activeTriggerFunction, dictionary, drawer, drawerOpenedInEdit, drawerTabsData, focusMode, labelsDisabled, mediaOptions, os, previousShow, projects, quickTextCache, scriptureSettings, selected, showsCache } from "../../stores"
+    import { Main } from "../../../types/IPC/Main"
+    import { activeDrawerTab, activeEdit, activePage, activePopup, activeProject, activeShow, activeTriggerFunction, audioFolders, audioPlaylists, categories, dictionary, drawer, drawerOpenedInEdit, drawerTabsData, focusMode, labelsDisabled, mediaFolders, mediaOptions, os, overlayCategories, previousShow, projects, quickTextCache, scriptureSettings, scriptures, selected, showsCache, templateCategories } from "../../stores"
     import { DEFAULT_DRAWER_HEIGHT, DEFAULT_WIDTH, MENU_BAR_HEIGHT } from "../../utils/common"
     import { startResizing, stopResizing } from "../../utils/cursor"
     import { translateText } from "../../utils/language"
+    import { sendMain } from "../../IPC/main"
     import { getAccess } from "../../utils/profile"
     import { getNormalizedKey, shouldOpenReplace } from "../../utils/shortcuts"
     import { isTypingTarget } from "../../utils/shortcutsHelper"
@@ -22,8 +24,10 @@
     import T from "../helpers/T.svelte"
     import Button from "../inputs/Button.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Slider from "../inputs/Slider.svelte"
     import Resizeable from "../system/Resizeable.svelte"
     import Info from "./info/Info.svelte"
+    import { getBreadcrumbs } from "./breadcrumb"
 
     const minHeight = 40
     const topHeight = 48 // Top.svelte
@@ -250,15 +254,57 @@
     }
 
     const hiddenInFocusMode = ["templates", "calendar"]
+
+    // F11.2 — migas de navegación ("Medios › Carpeta")
+    $: crumbs = getBreadcrumbs($activeDrawerTab, $drawerTabsData[$activeDrawerTab]?.activeSubTab || undefined, {
+        categories: $categories,
+        mediaFolders: $mediaFolders,
+        audioFolders: $audioFolders,
+        audioPlaylists: $audioPlaylists,
+        overlayCategories: $overlayCategories,
+        templateCategories: $templateCategories,
+        scriptures: $scriptures
+    })
+
+    // F11.2 — pie del cajón: agregar, vista grilla/lista y tamaño
+    const addCategoryTabs = ["overlays", "templates"]
+    $: showAddButton = ["shows", "media", "audio", "scripture", ...addCategoryTabs].includes($activeDrawerTab)
+    $: showViewToggle = $activeDrawerTab === "media"
+    $: showSizeSlider = ["media", "overlays", "templates"].includes($activeDrawerTab) || ($activeDrawerTab === "functions" && $drawerTabsData.functions?.activeSubTab === "scenes")
+
+    function addClick() {
+        switch ($activeDrawerTab) {
+            case "shows":
+                activePopup.set("show")
+                break
+            case "media":
+                sendMain(Main.OPEN_FOLDER, { channel: "MEDIA", title: translateText("new.folder") })
+                break
+            case "audio":
+                sendMain(Main.OPEN_FOLDER, { channel: "AUDIO", title: translateText("new.folder") })
+                break
+            case "scripture":
+                activePopup.set("import_scripture")
+                break
+            case "overlays":
+            case "templates":
+                history({ id: "UPDATE", location: { page: "drawer", id: "category_" + $activeDrawerTab } })
+                break
+        }
+    }
+
+    function toggleView() {
+        mediaOptions.update((a) => ({ ...a, mode: a.mode === "grid" ? "list" : "grid" }))
+    }
 </script>
 
 <svelte:window on:mouseup={mouseup} on:mousemove={mousemove} on:keydown={keydown} />
 
 <!-- <Resizeable id="drawer" side="bottom" minWidth={50}> -->
 <section class="drawer" style="height: {height}px">
+    <div class="handle" class:resizing={mouse} title={translateText("_ resizable")} on:mousedown={mousedown} />
     <div
         class="top context #drawer_top"
-        on:mousedown={mousedown}
         on:click={click}
         on:keydown={() => {
             // does not work and prevents search input keys
@@ -274,47 +320,22 @@
             {#each tabs as tab, i}
                 {#if $drawerTabsData[tab.id]?.enabled !== false && getAccess(tab.id).global !== "none" && (!$focusMode || !hiddenInFocusMode.includes(tab.id))}
                     <!-- overflow: unset; -->
-                    <MaterialButton id={tab.id} style="border-radius: 0;border-bottom: 2px solid var(--primary);padding: 0.2em 0.8em;" class="context #drawer_top" title="<b>{tab.name.split('.')[0]}.{tab.name.split('.')[1]}</b>{tab.title ? `\n${tab.title}` : ''} [Ctrl+{i + 1}]" isActive={activeTab === tab.id} on:click={() => openDrawerTab(tab)} on:dblclick={closeDrawer}>
-                        <Icon id={tab.icon} size={1.3} white={activeTab === tab.id} />
-                        {#if !$labelsDisabled && !$focusMode}
-                            <span><T id={tab.name} /></span>
-                        {/if}
+                    <MaterialButton id={tab.id} style="border-radius: var(--radius) var(--radius) 0 0;border-bottom: 2px solid var(--primary);padding: 0 0.75em;height: 100%;" class="context #drawer_top" title="<b>{tab.name.split('.')[0]}.{tab.name.split('.')[1]}</b>{tab.title ? `\n${tab.title}` : ''} [Ctrl+{i + 1}]" isActive={activeTab === tab.id} on:click={() => openDrawerTab(tab)} on:dblclick={closeDrawer}>
+                        <Icon id={tab.icon} size={1} white={activeTab === tab.id} />
                     </MaterialButton>
                 {/if}
             {/each}
         </span>
-
-        <input bind:this={searchElem} class:hidden={!searchActive && !searchValue.length} class="search edit drawer_search" type="text" placeholder={translateText("main.search...", $dictionary)} bind:value={searchValue} on:input={search} on:keydown={searchKeydown} use:selectTextOnFocus />
-        {#if !searchActive && !searchValue.length}
-            <Button class="search" style="border-bottom: 2px solid var(--secondary);" on:click={() => (searchActive = true)} title={translateText("tabs.search_tip [Ctrl+F]")} bold={false}>
-                <Icon id="search" size={1.4} white right={!$labelsDisabled && !$focusMode} />
-                {#if !$labelsDisabled && !$focusMode}<p style="opacity: 0.8;font-size: 1.1em;"><T id="main.search" /></p>{/if}
-            </Button>
-        {:else}
-            {#if $activeDrawerTab === "scripture"}
-                <div class="clearSearch autocomplete">
-                    <Icon id="autofill" white />
-                </div>
-                <div class="clearSearch options" on:mousedown|stopPropagation on:mouseup|stopPropagation>
-                    <Button style="height: 100%;" title={translateText("edit.options")} on:click={() => activePopup.set("drawer_search_options")}>
-                        <Icon id="options" white={!$scriptureSettings.enterSwapped} />
-                    </Button>
-                </div>
-            {/if}
-            <div class="clearSearch">
-                <Button
-                    style="height: 100%;"
-                    title={translateText("clear.search")}
-                    on:click={() => {
-                        searchValue = ""
-                        searchElem?.focus()
-                    }}
-                >
-                    <Icon id="clear" white />
-                </Button>
-            </div>
-        {/if}
     </div>
+
+    {#if crumbs.length}
+        <div class="breadcrumbs">
+            {#each crumbs as crumb, i}
+                {#if i}<span class="sep">›</span>{/if}
+                <span class="crumb" class:current={i === crumbs.length - 1}>{crumb.key ? translateText(crumb.key) : crumb.name || ""}</span>
+            {/each}
+        </div>
+    {/if}
 
     <div class="content">
         <Resizeable id="leftPanelDrawer">
@@ -326,6 +347,56 @@
                 <Info id={$activeDrawerTab} />
             </div>
         </Resizeable>
+    </div>
+
+    <div class="footer">
+        <MaterialButton disabled={!showAddButton} on:click={addClick} title="settings.add">
+            <Icon id="add" size={1.2} white />
+        </MaterialButton>
+
+        <div class="searchBox">
+            <input bind:this={searchElem} class:hidden={!searchActive && !searchValue.length} class="search edit drawer_search" type="text" placeholder={translateText("ui.filter", $dictionary)} bind:value={searchValue} on:input={search} on:keydown={searchKeydown} use:selectTextOnFocus />
+            {#if !searchActive && !searchValue.length}
+                <Button class="search" style="border-bottom: 2px solid var(--secondary);" on:click={() => (searchActive = true)} title={translateText("tabs.search_tip [Ctrl+F]")} bold={false}>
+                    <Icon id="search" size={1.4} white right={!$labelsDisabled && !$focusMode} />
+                    {#if !$labelsDisabled && !$focusMode}<p style="opacity: 0.8;font-size: 1.1em;"><T id="ui.filter" /></p>{/if}
+                </Button>
+            {:else}
+                {#if $activeDrawerTab === "scripture"}
+                    <div class="clearSearch autocomplete">
+                        <Icon id="autofill" white />
+                    </div>
+                    <div class="clearSearch options" on:mousedown|stopPropagation on:mouseup|stopPropagation>
+                        <Button style="height: 100%;" title={translateText("edit.options")} on:click={() => activePopup.set("drawer_search_options")}>
+                            <Icon id="options" white={!$scriptureSettings.enterSwapped} />
+                        </Button>
+                    </div>
+                {/if}
+                <div class="clearSearch">
+                    <Button
+                        style="height: 100%;"
+                        title={translateText("clear.search")}
+                        on:click={() => {
+                            searchValue = ""
+                            searchElem?.focus()
+                        }}
+                    >
+                        <Icon id="clear" white />
+                    </Button>
+                </div>
+            {/if}
+        </div>
+
+        <div class="footerRight">
+            {#if showViewToggle}
+                <MaterialButton on:click={toggleView} title="show.{$mediaOptions.mode}">
+                    <Icon size={1.2} id={$mediaOptions.mode} white />
+                </MaterialButton>
+            {/if}
+            {#if showSizeSlider}
+                <Slider style="width: 110px;" bind:value={$mediaOptions.columns} min={2} max={10} invert />
+            {/if}
+        </div>
     </div>
 </section>
 
@@ -342,24 +413,25 @@
         /* box-shadow: 0 -2px 14px rgb(0 0 0 / 0.12); */
     }
 
+    .handle {
+        height: 4px;
+        flex: none;
+        background-color: var(--border-color, var(--primary-lighter));
+        cursor: ns-resize;
+    }
+    .handle.resizing {
+        background-color: var(--secondary);
+    }
+
     .top {
         position: relative;
-        height: 40px;
+        height: 36px;
+        flex: none;
         display: flex;
         justify-content: space-between;
-        padding-top: 4px;
 
         box-shadow: 0 -1.8px 8px rgb(0 0 0 / 0.2);
         z-index: 1;
-    }
-    .top::after {
-        content: "";
-        background-color: var(--border-color, var(--primary-lighter));
-        position: absolute;
-        top: 0;
-        width: 100%;
-        height: 4px;
-        cursor: ns-resize;
     }
 
     .top .tabs {
@@ -368,19 +440,66 @@
         overflow-y: hidden;
     }
 
+    .breadcrumbs {
+        height: 32px;
+        flex: none;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 12px;
+
+        font-size: 0.85em;
+        white-space: nowrap;
+        overflow: hidden;
+
+        border-bottom: 1px solid var(--border-color);
+    }
+    .breadcrumbs .crumb {
+        opacity: 0.5;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .breadcrumbs .crumb.current {
+        opacity: 1;
+    }
+    .breadcrumbs .sep {
+        opacity: 0.3;
+    }
+
+    .footer {
+        height: 36px;
+        flex: none;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        padding: 0 8px;
+        gap: 8px;
+
+        border-top: 1px solid var(--border-color);
+    }
+    .footerRight {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+        gap: 4px;
+    }
+
+    .searchBox {
+        position: relative;
+        width: 256px;
+    }
+
     .search {
         background-color: rgb(0 0 0 / 0.2);
         color: var(--text);
         font-size: inherit;
         font-family: inherit;
-        width: var(--navigation-width);
-        min-width: var(--navigation-width);
-        /* width: 50%; */
+        width: 100%;
         padding: 0 8px;
         padding-right: 40px;
+        height: 28px;
         border: none;
         border-radius: var(--radius, 4px);
-        border-inline-start: 4px solid var(--primary-darker);
     }
     .search:active,
     .search:focus {
@@ -391,11 +510,18 @@
         color: inherit;
         opacity: 0.4;
     }
+    /* collapsed "Filter" button fills the same 256px box */
+    .searchBox :global(button.search) {
+        width: 100%;
+        height: 28px;
+        justify-content: start;
+    }
 
     .clearSearch {
         position: absolute;
         right: 0;
-        height: calc(100% - 4px);
+        top: 0;
+        height: 100%;
         z-index: 1;
     }
     .clearSearch.options {
@@ -415,7 +541,8 @@
 
     .content {
         display: flex;
-        height: calc(100% - 40px);
+        flex: 1;
+        min-height: 0;
         justify-content: space-between;
     }
 
@@ -434,9 +561,5 @@
         flex: 1;
     }
 
-    @media screen and (max-width: 750px) {
-        .tabs span {
-            display: none;
-        }
-    }
+    /* labels were removed in F11.2 — tabs are icon-only */
 </style>
