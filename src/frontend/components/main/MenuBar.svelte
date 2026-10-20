@@ -206,11 +206,11 @@
 
     /* close */
     .window :global(#close):hover {
-        background-color: rgb(255 0 0 / 0.35);
+        background-color: var(--red);
     }
     .window :global(#close):active,
     .window :global(#close):focus {
-        background-color: rgb(255 0 0 / 0.3);
+        background-color: var(--red);
     }
     .window :global(#close):hover :global(svg) {
         fill: white;

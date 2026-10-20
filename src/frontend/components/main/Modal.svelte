@@ -157,7 +157,7 @@
         cursor: pointer;
     }
     .modal-close:hover {
-        background-color: var(--primary-lightest, rgb(255 255 255 / 0.1));
+        background-color: var(--primary-lightest, var(--bg-selected));
     }
 
     /* el cuerpo ocupa el resto; cada modal decide qué parte scrollea */

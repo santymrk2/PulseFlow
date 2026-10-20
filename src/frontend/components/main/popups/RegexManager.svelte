@@ -243,7 +243,7 @@
         color: #4dd0e1;
     }
     .regex-highlight :global(.rx-literal) {
-        color: #fff;
+        color: var(--text);
     }
     .preview-text {
         font-family: monospace;
@@ -256,7 +256,7 @@
     }
     .preview-text :global(mark) {
         background: #f9a825;
-        color: #000;
+        color: var(--action-text);
         border-radius: 2px;
         padding: 0 1px;
     }

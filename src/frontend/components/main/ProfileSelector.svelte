@@ -52,7 +52,7 @@
 
     <div class="flex">
         {#each profilesList as profile}
-            <MaterialButton title="profile.set_active: <b>{profile.name}</b>" style="padding: 1.8em;border: 1px solid rgb(255 255 255 / 0.1);" on:click={() => selectProfile(profile.id)}>
+            <MaterialButton title="profile.set_active: <b>{profile.name}</b>" style="padding: 1.8em;border: 1px solid var(--border);" on:click={() => selectProfile(profile.id)}>
                 <div class="profile">
                     <Icon id="profiles" size={8} style="fill: {profile.color || 'white'};" white />
                     <p>{profile.name}</p>

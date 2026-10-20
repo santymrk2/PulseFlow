@@ -888,7 +888,7 @@
         width: 100%;
         min-height: 450px;
         border-radius: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border);
         overflow: auto;
         cursor: grab;
         will-change: scroll-position;
@@ -989,7 +989,7 @@
         align-items: center;
         justify-content: space-between;
         /* background: rgba(0, 0, 0, 0.3); */
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border);
         padding: 6px 12px;
         border-radius: 6px;
         backdrop-filter: blur(4px);
@@ -1018,7 +1018,7 @@
     }
 
     /* .node-card-group.has-subnodes {
-        background: rgba(255, 255, 255, 0.03);
+        background: var(--bg-hover);
         border-radius: 6px;
     } */
 
@@ -1031,10 +1031,10 @@
     }
     .sub-nodes-list.input {
         padding-left: 5px;
-        border-left: 2px solid rgba(255, 255, 255, 0.2);
+        border-left: 2px solid var(--border-strong);
     }
     .sub-nodes-list.output {
         padding-right: 5px;
-        border-right: 2px solid rgba(255, 255, 255, 0.2);
+        border-right: 2px solid var(--border-strong);
     }
 </style>

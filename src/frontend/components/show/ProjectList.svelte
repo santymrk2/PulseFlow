@@ -269,7 +269,7 @@
         border-left-color: var(--secondary) !important;
     }
     .projectItem :global(button.tab):not(:disabled):not(.isActive):hover {
-        background-color: var(--hover, rgb(255 255 255 / 0.06)) !important;
+        background-color: var(--hover, var(--bg-hover)) !important;
     }
 
     .count {

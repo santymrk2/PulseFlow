@@ -77,11 +77,11 @@
             opacity 0.15s ease;
     }
     .settings-tab:hover {
-        background-color: rgb(255 255 255 / 0.06);
+        background-color: var(--bg-hover);
         opacity: 1;
     }
     .settings-tab.active {
-        background-color: var(--primary-lighter, rgb(255 255 255 / 0.1));
+        background-color: var(--primary-lighter, var(--bg-selected));
         opacity: 1;
     }
 </style>

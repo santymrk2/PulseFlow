@@ -284,7 +284,7 @@
         width: 100%;
         box-sizing: border-box;
         background: var(--primary-darker, rgba(30, 30, 40, 0.9));
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid var(--border-strong);
         border-radius: 8px;
         padding: 10px 14px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -394,11 +394,11 @@
         left: -7px;
         top: calc(50% + 5px);
         border-radius: 4px;
-        background: #f59e0b;
+        background: var(--warning);
     }
 
     .port-sidechain:hover {
-        background: #fbbf24;
+        background: var(--warning);
     }
 
     .port-out {
