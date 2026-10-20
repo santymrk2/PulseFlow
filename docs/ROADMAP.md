@@ -891,6 +891,69 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
 
 ---
 
+## F11 — Interfaz según la referencia de diseño
+
+Objetivo: que la app se vea como `docs/design-reference/` (shadcn new-york, oscuro,
+Geist, Topbar con pestañas tipo "pill", panel derecho por secciones, cajón inferior con
+pestañas + buscador), **sin cambiar funcionalidad ni mover features de lugar**.
+
+Reglas de F11 (además de AGENTS.md):
+- Es un **re-estilizado**, no una reescritura: mismos componentes Svelte, mismos
+  stores, mismos handlers. Cambian markup de presentación y CSS.
+- Colores, radios y bordes **sólo** con variables del tema (`--primary*`, `--text`,
+  `--secondary`, `--border-color`, `--radius`). Nada de hex en componentes.
+- Medidas de la referencia: barra superior 48 px; cabeceras de panel 44 px; filas de
+  lista 32 px; pestañas del cajón 40 px; buscador 256 px; separadores de 1 px con
+  12 px de margen lateral; radios `--radius` (botones/inputs) y `calc(--radius - 2px)`
+  (chips); íconos 16 px en barras y 14 px en cabeceras.
+- No tocar el contenido de las slides (`slide/Textbox.svelte`, escalado de slides):
+  sólo el marco (borde, etiqueta, número).
+- Cada tarea: comparar con el `.tsx` de referencia que indica y dejar en el commit la
+  lista de diferencias que quedaron a propósito.
+- Íconos: se mantiene `Icon.svelte`. Sólo donde la tarea lo dice se puede usar
+  `@lucide/svelte` (ya está en devDependencies).
+
+- [ ] **F11.1 Barra superior.** (referencia `Topbar.tsx`; archivo `main/Top.svelte` y
+  `main/TopButton.svelte`) Pestañas Show/Edit/Stage como grupo "pill" centrado (fondo
+  `--primary-lighter`, activa con fondo `--primary` y sombra suave, ícono + texto);
+  a la derecha: selector de look (de F10.7), Settings (botón ghost de ícono) y botón de
+  salida (rojo cuando está en vivo; clic derecho abre Configuración de pantallas).
+  Izquierda: espacio de los botones de macOS (F10.0a) y zona de arrastre.
+- [ ] **F11.2 Cajón inferior (Drawer).** (referencia `Drawer.tsx`; archivos
+  `drawer/Drawer.svelte`, `drawer/MaterialDrawerTab.svelte`, `drawer/Navigation.svelte`)
+  barra de 40 px con pestañas ícono + texto, manija de redimensionar de 4 px arriba,
+  buscador de 256 px a la derecha con `Ctrl/⌘+F`, borde superior de 1 px.
+- [ ] **F11.3 Panel izquierdo (proyectos y navegación).** (referencia
+  `LibraryPanel.tsx`; archivos `show/Projects.svelte`, `show/ProjectList.svelte`,
+  `show/ProjectContentList.svelte`, `drawer/navigation/*`) filas de 32 px redondeadas,
+  hover `--hover`, activa `--primary-lighter`, títulos de sección pequeños en
+  mayúsculas con color atenuado, menús contextuales sin cambios.
+- [ ] **F11.4 Cabecera del show.** (referencia `Editor.tsx`; archivo
+  `show/ShowHeader.svelte`) 44 px: ícono, nombre del show, "· layout", cantidad de
+  slides a la derecha, botones "Añadir" (ghost) y "Proyectar" (secundario) usando las
+  acciones que ya existen.
+- [ ] **F11.5 Grilla de slides y miniaturas.** (referencia `SlideGrid.tsx`,
+  `SlideThumbnail.tsx`; archivos `show/Slides.svelte` y el **marco** de
+  `slide/Slide.svelte`) separación 8 px, miniatura con borde de 1 px y radio, activa
+  con anillo `--secondary`, etiqueta de grupo como chip con su color, número en
+  esquina. Probar en modo grilla, lista y "texto".
+- [ ] **F11.6 Panel derecho.** (referencia `RightPanel.tsx`, `ClearControls.tsx`;
+  archivos `output/preview/Preview.svelte`, `output/preview/ClearButtons.svelte`,
+  `show/ShowTools.svelte`) vista previa arriba con borde redondeado, secciones con
+  separadores de 1 px, fila de botones de limpiar como íconos ghost alineados.
+- [ ] **F11.7 Página de Settings.** (referencia `SettingsTabs.tsx`, `SettingsTools.tsx`;
+  archivos `settings/SettingsTabs.svelte`, `settings/Settings.svelte`) **después de
+  F10.8**: lista de pestañas como la izquierda de la referencia, contenido con ancho
+  máximo 640 px, filas de inputs de 44 px con separador.
+- [ ] **F11.8 Popups, menús contextuales y tooltips.** (archivos `main/Popup.svelte`,
+  `context/ContextMenu.svelte`, `context/ContextItem.svelte`, `main/Tooltip.svelte`)
+  fondo `--primary-darker`, borde 1 px, radio, sombra, padding y alto de ítem 32 px.
+- [ ] **F11.9 Repaso final.** Recorrer todas las pantallas (Show, Edit, Stage,
+  Settings, cada pestaña del cajón, popups principales) y corregir inconsistencias
+  de espaciado/colores; lista de capturas antes/después en `docs/VERIFICAR-F11.md`.
+
+---
+
 ## Fuera de alcance por ahora
 
 Renombrar masivamente archivos de FreeShow · crates o procesos nuevos · reescribir todo
