@@ -26,6 +26,7 @@ import { loadShows, setShow } from "../helpers/setShow"
 import { getLabelId, getLayoutRef } from "../helpers/show"
 import { playNextGroup, selectProjectShow, updateOut } from "../helpers/showActions"
 import { _show } from "../helpers/shows"
+import { renderPdfPages } from "../../converters/pdfToImages"
 import { VideoPlayer } from "../media/video/videoPlayer"
 import { clearBackground, clearSlide } from "../output/clear"
 import { getPlainEditorText } from "../show/getTextEditor"
@@ -1093,78 +1094,32 @@ export async function getPDFThumbnails({ path, data }: API_media) {
             .split(/[/\\]/)
             .pop()
             ?.replace(/\.pdf$/i, "") || "PDF"
-    const renderPhasePercent = 80
-    const totalPercent = 100
 
-    GlobalWorkerOptions.workerSrc = "./assets/pdf.worker.min.mjs"
-    const loadingTask = getDocument(encodeFilePath(path))
-    const pdfDoc = await loadingTask.promise
-    const pageCount = pdfDoc.numPages
+    // Resolución objetivo del lado mayor: width/height explícitos, o 2160 (4K).
+    const targetResolution = data?.width || data?.height || 2160
 
     pdfImports.update((imports) => {
         const updated = new Map(imports)
-        updated.set(path, { name, progress: 0, total: totalPercent, status: "importing" })
+        updated.set(path, { name, progress: 0, total: 100, status: "importing" })
         return updated
     })
 
-    const canvas = document.createElement("canvas")
-    const context = canvas.getContext("2d")
-    if (!context) return []
-
-    const pages: string[] = []
     try {
-        for (let i = 0; i < pageCount; i++) {
-            const page = await pdfDoc.getPage(i + 1)
-            const viewportAtScale1 = page.getViewport({ scale: 1 })
-
-            // Use provided width/height or target a high-quality default (e.g. 2160px for 4K-ready quality)
-            let scale
-            const maxDim = Math.max(viewportAtScale1.width, viewportAtScale1.height)
-            if (data?.width) {
-                scale = data.width / viewportAtScale1.width
-            } else if (data?.height) {
-                scale = data.height / viewportAtScale1.height
-            } else {
-                const targetRes = 2160
-                scale = targetRes / maxDim
-                // Clamp scale to reasonable bounds (1.0 = 72dpi, 4.5 = ~325dpi)
-                if (scale < 1.0) scale = 1.0
-                if (scale > 4.5) scale = 4.5
-            }
-
-            const viewport = page.getViewport({ scale })
-
-            canvas.height = viewport.height
-            canvas.width = viewport.width
-
-            await page.render({ canvas, canvasContext: context, viewport }).promise
-            const base64 = canvas.toDataURL("image/jpeg")
-            pages.push(base64)
-
-            const renderProgress = Math.round(((i + 1) / Math.max(1, pageCount)) * renderPhasePercent)
-            pdfImports.update((imports) => {
-                const updated = new Map(imports)
-                updated.set(path, { name, progress: renderProgress, total: totalPercent, status: "importing" })
-                return updated
-            })
-        }
-
+        const pages = await renderPdfPages(path, name, targetResolution)
         return { path, pages }
     } catch (error: any) {
         pdfImports.update((imports) => {
             const updated = new Map(imports)
             updated.set(path, {
                 name,
-                progress: Math.round((pages.length / Math.max(1, pageCount)) * renderPhasePercent),
-                total: totalPercent,
+                progress: 0,
+                total: 100,
                 status: "error",
                 message: `PDF processing failed: ${error?.message || "Unknown error"}`
             })
             return updated
         })
         throw error
-    } finally {
-        loadingTask.destroy()
     }
 }
 

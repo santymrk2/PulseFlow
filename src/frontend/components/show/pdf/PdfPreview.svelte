@@ -1,8 +1,7 @@
 <script lang="ts">
     import { getDocument, GlobalWorkerOptions, type PDFDocumentLoadingTask } from "pdfjs-dist"
     import { onDestroy, onMount } from "svelte"
-    import { Main } from "../../../../types/IPC/Main"
-    import { sendMain } from "../../../IPC/main"
+    import { pdfToImageShow } from "../../../converters/pdfToImages"
     import { activePopup, activeProject, focusMode, labelsDisabled, outLocked, outputs, popupData, projects, slidesOptions, styles } from "../../../stores"
     import { triggerClickOnEnterSpace } from "../../../utils/clickable"
     import { newToast, wait } from "../../../utils/common"
@@ -182,7 +181,7 @@
 
     function convertToImages() {
         newToast("actions.converting")
-        sendMain(Main.PDF_TO_IMAGE, { filePath: resolvedId || show.id })
+        pdfToImageShow(resolvedId || show.id)
     }
 
     $: timer = data?.timer || 0

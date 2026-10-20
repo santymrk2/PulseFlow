@@ -60,7 +60,7 @@ cargo test 59/59, svelte-check **58 errores** (nueva referencia), build OK.
 | --- | --- | --- |
 | F4.6 overlays | integrado | **Hecho** (2026-10-19): capa propia dibujada en el engine (fondo → medios slide → texto slide → medios overlay → texto overlay), fixture `audience-overlays.json`, golden `overlays.png`. |
 | F6.2–F6.5 diseño | integrado | **Hecho** (2026-10-19): checkboxes marcados. Queda sólo la verificación visual del usuario (capturas) según `docs/VERIFICAR-F6.md`. |
-| F7.4 canales Main | integrado | Completo salvo `PDF_TO_IMAGE` (no-op) → F7.5. |
+| F7.4 canales Main | integrado | **Completo** (2026-10-19): incluye `PDF_TO_IMAGE` real (F7.5, opción (a): pdf.js en el webview + guardado en Rust). |
 | `wip/f7` (`af2a2a8`) | rama `wip/f7` | **Descartar**: es `cargo fmt` sobre todo el crate, sin cambios funcionales. Sus notas ya están en `docs/VERIFICAR-F7.md`. |
 | `f6-pulseflow`, `feature/diseno`, `feature/ipc`, `wip/f4`, `wip/f7` | ramas remotas | Ya integradas o descartadas; se pueden borrar. `feature/ipc` trae un F4.6 duplicado (`d834310`) que **no** se integró: el bueno es `1f9f932`. |
 | F5 Looks | integrado (`3e5cc0c`) | **Completo** (2026-10-19): F5.2–F5.5 hechos (`75de6427`, `ed9fc8d5`, `25aae601`, commit de F5.5). |
@@ -640,12 +640,27 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   se elimina del frontend; `SEND_MIDI` se saltea — requiere crate MIDI.)
   Hecho: `IMPORT`/`IMPORT_FILES`, `URL`, `SAVE_IMAGE`, `IP`, `MAXIMIZED`
   (integrados 2026-10-19). `PDF_TO_IMAGE` quedó como **no-op** → ver F7.5.
-- [ ] **F7.5 `PDF_TO_IMAGE` real.** El comando devuelve `[]` y no emite nada, así que
-  convertir un PDF en slides (`PdfPreview.svelte:185`, `responsesMain.ts:556`) no hace
-  nada. Revisar qué esperaba el frontend en Electron (eventos `PDF_IMPORT_PROGRESS` /
-  `IMAGES_TO_SHOW` o rutas de imágenes) y elegir: (a) renderizar las páginas con
-  pdf.js en el webview y guardarlas con `SAVE_IMAGE`, o (b) hacerlo en Rust con
-  `pdfium-render` (dependencia pesada: preguntar antes). Recomendado: (a).
+- [x] **F7.5 `PDF_TO_IMAGE` real.** (hecho 2026-10-19, opción (a))
+  El comando era un no-op que devolvía `[]`, así que convertir un PDF en slides
+  (`PdfPreview.svelte` → "Convertir en imágenes", `responsesMain.ts` → import de un
+  `.pdf`) no hacía nada. Se implementó la opción (a): **el webview renderiza con
+  pdf.js y Rust sólo persiste los bytes**.
+  *Archivos:* `src-tauri/src/commands/files.rs` (`PDF_TO_IMAGE` real + tests),
+  `src/frontend/converters/pdfToImages.ts` (nuevo: `pdfToImageShow`/`renderPdfPages`),
+  `src/frontend/components/show/pdf/PdfPreview.svelte`, `src/frontend/IPC/responsesMain.ts`,
+  `src/frontend/components/actions/apiHelper.ts` (se eliminó la copia del loop de
+  renderizado: `getPDFThumbnails` ahora reusa `renderPdfPages`), `src/types/IPC/Main.ts`
+  (payload `images?`).
+  *Pasos:* `pdfToImageShow(path)` localiza el PDF → rasteriza cada página a JPEG
+  base64 (~2160px lado mayor) actualizando `pdfImports` (0–80 %) → `requestMain(Main.PDF_TO_IMAGE,
+  { filePath, images })` → Rust decodifica el base64 y escribe `Imports/PDF/<nombre>/N.jpg`
+  (1-based) devolviendo las rutas → `createImageShow({ images, name })` arma el show y el
+  estado queda en `complete`. Un base64 inválido falla sin dejar archivo (test). Sin
+  `pdfium-render` ni dependencias nuevas.
+  *Verificación:* `cargo test --lib` 64/64 (3 tests nuevos de `files`: nombre de carpeta,
+  decodificación de data URL y escritura en orden + error), `test:unit` 58/58,
+  `test:svelte` 58 errores (línea base), Prettier limpio. La prueba con un PDF real en
+  la app quedó a cargo del usuario en `docs/VERIFICAR.md` (sección "F7.5").
 
 ---
 

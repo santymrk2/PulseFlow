@@ -291,5 +291,23 @@ Terminado F5.2–F5.5 (2026-10-19). Queda **pendiente de verificación visual de
    "Audiencia" y "Stage"; "Crear pantalla de escenario" pide el layout de stage; cada
    salida muestra su monitor y si está abierta o cerrada.
 
+## F7.5 — Convertir un PDF en slides (`PDF_TO_IMAGE`)
+
+Terminado (2026-10-19). El comando antes devolvía `[]` y no hacía nada; ahora el webview
+rasteriza el PDF con pdf.js y Rust guarda las páginas en `Imports/PDF/<nombre>/`. Queda
+**pendiente de verificación con un PDF real** (no se probó en la app):
+
+1. **Desde la vista previa:** seleccionar un show PDF con varias páginas y pulsar
+   "Convertir en imágenes" (icono `image` en la barra flotante). Debe aparecer el panel de
+   progreso (0→100 %), y al terminar un show nuevo en `Converted` con una slide por página.
+2. **Desde Import (arrastrar/soltar o Import → archivo `.pdf`):** debe producir el mismo
+   resultado, con el nombre del PDF.
+3. **Archivos en disco:** en la carpeta de datos, `Imports/PDF/<nombre>/1.jpg`, `2.jpg`, …
+   (una por página, en orden). El `<nombre>` es el del PDF sin extensión.
+4. **PDF movido:** si el PDF se movió de carpeta antes de convertir, debe localizarse por
+   la carpeta de media y convertir igual.
+5. **Error legible:** un PDF dañado debe dejar el estado en `error` en el panel de progreso
+   (sin romper la app ni dejar archivos a medio escribir).
+
 ## Otras tareas posteriores
 Añadir aquí cualquier hallazgo de F6 en adelante, conforme aparezcan.

@@ -33,6 +33,7 @@ import { convertMediaShout } from "../converters/mediashout"
 import { convertOpenLP } from "../converters/openlp"
 import { convertOpenSong } from "../converters/opensong"
 import { convertPowerpoint } from "../converters/powerpoint/powerpointImporter"
+import { pdfToImageShow } from "../converters/pdfToImages"
 import { addToProject, importProject, updateRecentlyAddedFiles } from "../converters/project"
 import { convertProPresenter } from "../converters/propresenter"
 import { convertQuelea } from "../converters/quelea"
@@ -95,7 +96,6 @@ import { invalidateSearchIndex } from "../utils/searchFast"
 import { updateSettings, updateSyncedSettings, updateThemeValues } from "../utils/updateSettings"
 import type { MainReturnPayloads } from "./../../types/IPC/Main"
 import { Main } from "./../../types/IPC/Main"
-import { sendMain } from "./main"
 
 type MainHandler<ID extends Main | ToMain> = (data: ID extends keyof ToMainSendPayloads ? ToMainSendPayloads[ID] : ID extends keyof MainReturnPayloads ? Awaited<MainReturnPayloads[ID]> : undefined) => void
 export type MainResponses = {
@@ -553,7 +553,7 @@ export const mainResponses: MainResponses = {
             // Media
             pdf: () => {
                 const paths = mainData as string[]
-                paths.forEach((path) => sendMain(Main.PDF_TO_IMAGE, { filePath: path }))
+                paths.forEach((path) => pdfToImageShow(path))
 
                 // remove any PDFs with the same name from the Recommended project items list
                 const importedNames = paths.map((p) => removeExtension(getFileName(p)).toLowerCase())

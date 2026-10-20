@@ -932,14 +932,140 @@ pub fn SAVE_IMAGE(app: AppHandle, state: State<'_, AppState>, data: SaveImageDat
 #[derive(Deserialize, Default)]
 #[serde(rename_all = "camelCase")]
 pub struct PdfToImageData {
+    /// Ruta (o nombre) del PDF de origen; se usa sólo para nombrar la carpeta de
+    /// salida `Imports/PDF/<nombre>/`.
     #[serde(default)]
     pub file_path: String,
+    /// Páginas ya rasterizadas en el webview con pdf.js, como data URLs base64
+    /// (`data:image/jpeg;base64,...`). El engine no renderiza PDFs, así que la
+    /// conversión real ocurre en el frontend y acá sólo se persisten los bytes.
+    #[serde(default)]
+    pub images: Vec<String>,
 }
 
-/// `PDF_TO_IMAGE`: conversión de un PDF a imágenes.
-/// Sin dependencias de renderizado de PDF disponibles en este binario, se deja
-/// como no-op (no rompe la UI); el frontend sigue usando pdf.js en el webview.
+/// Decodifica una data URL (`data:image/jpeg;base64,XXXX`) o un base64 pelado.
+fn decode_data_url(input: &str) -> AppResult<Vec<u8>> {
+    let stripped = match input.find(',') {
+        Some(idx) => &input[idx + 1..],
+        None => input,
+    };
+    base64::Engine::decode(&base64::engine::general_purpose::STANDARD, stripped.trim())
+        .map_err(|e| AppError::new(format!("base64 inválido en PDF_TO_IMAGE: {e}")))
+}
+
+/// Nombre de carpeta seguro para el PDF (sin extensión ni separadores de ruta).
+fn pdf_output_folder_name(file_path: &str) -> String {
+    let file_name = file_path
+        .rsplit(['/', '\\'])
+        .next()
+        .unwrap_or(file_path)
+        .trim();
+    let without_ext = file_name.strip_suffix(".pdf").or_else(|| file_name.strip_suffix(".PDF")).unwrap_or(file_name);
+    let sanitized: String = without_ext
+        .chars()
+        .map(|c| if c.is_alphanumeric() || matches!(c, ' ' | '-' | '_' | '.') { c } else { '_' })
+        .collect();
+    let sanitized = sanitized.trim();
+    if sanitized.is_empty() { "PDF".to_string() } else { sanitized.to_string() }
+}
+
+/// `PDF_TO_IMAGE`: guarda las páginas de un PDF (ya rasterizadas con pdf.js en
+/// el webview) como `Imports/PDF/<nombre>/<n>.jpg` y devuelve las rutas escritas
+/// en orden. El frontend es quien renderiza el PDF: el engine nativo no tiene
+/// dependencias de renderizado de PDF (ver F7.5 del roadmap).
 #[tauri::command]
-pub fn PDF_TO_IMAGE(_data: PdfToImageData) -> AppResult<Vec<String>> {
-    Ok(Vec::new())
+pub fn PDF_TO_IMAGE(state: State<'_, AppState>, data: PdfToImageData) -> AppResult<Vec<String>> {
+    if data.images.is_empty() {
+        return Ok(Vec::new());
+    }
+
+    let folder = {
+        let stores = state.stores.lock().map_err(|_| AppError::new("lock poisoned"))?;
+        stores.get_data_folder_path(DataFolder::Imports, Some("PDF"))
+    };
+    if folder.is_empty() {
+        return Err(AppError::new("No se pudo resolver la carpeta Imports/PDF"));
+    }
+
+    let target_dir = Path::new(&folder).join(pdf_output_folder_name(&data.file_path));
+    std::fs::create_dir_all(&target_dir)?;
+
+    let mut paths = Vec::with_capacity(data.images.len());
+    for (index, image) in data.images.iter().enumerate() {
+        let bytes = decode_data_url(image)?;
+        let target = target_dir.join(format!("{}.jpg", index + 1));
+        std::fs::write(&target, &bytes)?;
+        paths.push(target.to_string_lossy().into_owned());
+    }
+
+    Ok(paths)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::domain::data::store::StoreManager;
+    use tauri::test::mock_app;
+
+    /// Config mínima con `dataPath` apuntando a un directorio temporal.
+    fn data_configured_state(root: &Path) -> AppState {
+        let config_dir = root.join("config");
+        std::fs::create_dir_all(&config_dir).unwrap();
+        std::fs::write(
+            config_dir.join("config.json"),
+            format!("{{\"dataPath\": {:?}}}", root.join("data").to_string_lossy()),
+        )
+        .unwrap();
+        AppState::new(StoreManager::new(config_dir))
+    }
+
+    #[test]
+    fn pdf_output_folder_name_strips_extension_and_path() {
+        assert_eq!(pdf_output_folder_name("/tmp/my deck.pdf"), "my deck");
+        assert_eq!(pdf_output_folder_name("C:\\Users\\x\\Song.PDF"), "Song");
+        assert_eq!(pdf_output_folder_name("weird/na:me.pdf"), "na_me");
+        assert_eq!(pdf_output_folder_name(""), "PDF");
+    }
+
+    #[test]
+    fn decode_data_url_accepts_prefix_and_bare_base64() {
+        // "hi" en base64 = "aGk="
+        assert_eq!(decode_data_url("data:image/jpeg;base64,aGk=").unwrap(), b"hi");
+        assert_eq!(decode_data_url("aGk=").unwrap(), b"hi");
+        assert!(decode_data_url("data:image/jpeg;base64,@@@").is_err());
+    }
+
+    #[test]
+    fn pdf_to_image_writes_pages_in_order_and_reports_error() {
+        let temp = std::env::temp_dir().join(format!("pf_pdf_{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&temp);
+        let app = mock_app();
+        app.manage(data_configured_state(&temp));
+        let state = app.state::<AppState>();
+
+        // Páginas de 1 byte cada una; se espera <data>/Imports/PDF/deck/1.jpg y 2.jpg
+        let data = PdfToImageData {
+            file_path: "/tmp/deck.pdf".to_string(),
+            images: vec!["data:image/jpeg;base64,YQ==".to_string(), "data:image/jpeg;base64,Yg==".to_string()],
+        };
+        let paths = PDF_TO_IMAGE(state, data).unwrap();
+        assert_eq!(paths.len(), 2);
+        assert!(paths[0].ends_with("Imports/PDF/deck/1.jpg"));
+        assert!(paths[1].ends_with("Imports/PDF/deck/2.jpg"));
+        assert_eq!(std::fs::read(&paths[0]).unwrap(), b"a");
+        assert_eq!(std::fs::read(&paths[1]).unwrap(), b"b");
+
+        // base64 inválido: falla y no deja el archivo a medio escribir.
+        let bad = PdfToImageData {
+            file_path: "/tmp/deck.pdf".to_string(),
+            images: vec!["not-base64@@@".to_string()],
+        };
+        assert!(PDF_TO_IMAGE(app.state::<AppState>(), bad).is_err());
+
+        // Sin imágenes: no es error, devuelve vacío.
+        let empty = PdfToImageData::default();
+        assert!(PDF_TO_IMAGE(app.state::<AppState>(), empty).unwrap().is_empty());
+
+        let _ = std::fs::remove_dir_all(&temp);
+    }
 }
