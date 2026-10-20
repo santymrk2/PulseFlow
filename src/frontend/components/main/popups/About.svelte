@@ -24,7 +24,7 @@
 
 <div style="text-align: center;">
     <div class="logo">
-        <img style="height: 35px;" src="./import-logos/freeshow.webp" alt="PulseFlow-logo" draggable={false} />
+        <img style="height: 35px;" src="./import-logos/pulse.svg" alt="PulseFlow-logo" draggable={false} />
         <h1 style="color: var(--text);font-size: 1.7em;">PulseFlow</h1>
     </div>
 
