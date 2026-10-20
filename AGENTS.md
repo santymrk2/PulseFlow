@@ -21,7 +21,7 @@ diferenciarse, usá `cfg(target_os = "macos")` / `cfg(target_os = "windows")`.
 | Frontend dev | `bun run dev` |
 | App completa | `bun run dev:tauri` (requiere `bun run setup:sidecars --only-host` una vez) |
 | Tests JS | `bun run test:unit` |
-| Tipos Svelte | `bun run test:svelte` (hay 58 errores heredados: **no aumentar**) |
+| Tipos Svelte | `bun run test:svelte` (hay 56 errores heredados: **no aumentar**) |
 | Formato | `bunx prettier --config config/formatting/.prettierrc.yaml --check <archivos tocados en src/>` |
 | Rust | `cd src-tauri && cargo check && cargo test --lib` |
 | Build | `bun run build` |

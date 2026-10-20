@@ -45,7 +45,7 @@
     {#if reference === "lessons"}
         <!-- nothing needed -->
     {:else}
-        <Tabs {tabs} bind:active />
+        <Tabs {tabs} bind:active labels={false} />
 
         {#if currentShow}
             {#if active === "groups"}

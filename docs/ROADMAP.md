@@ -970,55 +970,90 @@ Reglas de F11 (además de AGENTS.md):
   stage, de temas y de overlays) · Media/Look/Live · Audiencia/Stage (redondos, rojos
   en vivo; clic derecho → Configurar pantallas…) · Estado. Reemplaza al botón único de
   salida y a las pestañas actuales. Sólo reubica accesos que ya existen.
-- [ ] **F11.2 Cajón inferior como "media bin".** (referencia `Drawer.tsx` + captura;
-  archivos `drawer/Drawer.svelte`, `drawer/MaterialDrawerTab.svelte`,
-  `drawer/Navigation.svelte`) migas de navegación arriba ("Medios › Carpeta"), pie con
-  `+`, Filtro centrado, vista grilla/lista y slider de tamaño a la derecha; manija de
-  redimensionar de 4 px. Las pestañas actuales (Shows, Media, Audio, Scripture,
-  Overlays, Templates…) quedan como fila compacta de íconos hasta F11.10.
-- [ ] **F11.3 Panel izquierdo (proyectos y navegación).** (referencia
-  `LibraryPanel.tsx`; archivos `show/Projects.svelte`, `show/ProjectList.svelte`,
-  `show/ProjectContentList.svelte`, `drawer/navigation/*`) filas de 32 px redondeadas,
-  hover `--hover`, activa `--primary-lighter`, títulos de sección pequeños en
-  mayúsculas con color atenuado, menús contextuales sin cambios.
-- [ ] **F11.4 Cabecera del show.** (referencia `Editor.tsx`; archivo
-  `show/ShowHeader.svelte`) 44 px: ícono, nombre del show, "· layout", cantidad de
-  slides a la derecha, botones "Añadir" (ghost) y "Proyectar" (secundario) usando las
-  acciones que ya existen.
-- [ ] **F11.5 Grilla de slides y miniaturas.** (referencia `SlideGrid.tsx`,
-  `SlideThumbnail.tsx` + captura; archivos `show/Slides.svelte` y el **marco** de
-  `slide/Slide.svelte`) miniatura con **barra inferior** (número a la izquierda, grupo
-  con su color), seleccionada con borde de acento de 2 px, separación 12 px; pie de la
-  grilla con `+` a la izquierda y vista grilla/texto/lista + slider de tamaño a la
-  derecha (usar los controles que ya existen). Probar en los tres modos.
-- [ ] **F11.6 Panel derecho como ProPresenter.** ("Columna derecha" en la
-  especificación; archivos `output/preview/Preview.svelte`,
-  `output/preview/ClearButtons.svelte`, `show/ShowTools.svelte` y el transporte de
-  medios existente) vista previa con **tira vertical de limpiar por capa** a su derecha
-  y ⓧ "limpiar todo" superpuesta; "Pantalla 1 ▾" debajo; transporte de medios/audio;
-  **barra de pestañas de íconos** (Audio, Stage, Timers, Mensajes, Overlays, Acciones)
-  con el contenido que hoy muestra `ShowTools`. Sin quitar funciones.
-- [ ] **F11.10 Columna izquierda como ProPresenter: Biblioteca, Playlist y Media.**
-  ("Columna izquierda" en la especificación; archivos `MainLayout.svelte` (sólo la
-  columna izquierda), `show/Projects.svelte`, `show/ProjectList.svelte`,
-  `show/ProjectContentList.svelte`, `drawer/navigation/*`) secciones BIBLIOTECA
-  (categorías de shows, que hoy están en el cajón), PLAYLIST (proyectos), lista de
-  ítems del proyecto con Filtro, y MEDIA abajo (fuentes del cajón). Al elegir una
-  categoría de BIBLIOTECA, el cajón muestra esos shows. Es un cambio de lugar: hacerlo
-  **después** de F11.2–F11.6 y verificar que abrir/arrastrar shows y proyectos sigue
-  funcionando igual.
+- [x] **F11.2 Cajón inferior como "media bin".** (2026-10-20, carril D:
+  `drawer/breadcrumb.ts` (+test vitest) calcula las migas; `Drawer.svelte` con handle de
+  4 px, pestañas solo-icono, barra de migas y pie (+ / filtro 256 px / toggle
+  grilla-lista / slider de columnas); `Media.svelte` pierde los controles flotantes
+  duplicados (MaterialZoom oculto conserva Ctrl+rueda); filas de 32 px en
+  `MaterialDrawerTab`/`Navigation`; lang `ui.filter`. Chequeos: test:unit 68/68,
+  svelte-check 60 errores (mismo set que HEAD limpio; la línea base documentada de 58
+  quedó obsoleta por la migración), build OK, Prettier limpio.)
+- [x] **F11.3 Panel izquierdo (proyectos y navegación).** (2026-10-20, carril D:
+  filas de 32 px redondeadas con hover `--hover` y activa `--primary-lighter` en
+  `ProjectList`/`Projects`/`ProjectContentList`; títulos de sección en mayúsculas
+  pequeñas atenuados en `NavigationSections` y en los proyectos; menús contextuales sin
+  cambios. Chequeos: test:unit 83/83, svelte-check 57 errores (línea base post-merge),
+  build OK, Prettier limpio.)
+- [x] **F11.4 Cabecera del show.** (2026-10-20, carril D: `ShowHeader.svelte` a 44 px
+  con icono de layout, nombre, '· layout', contador de diapositivas y botones Añadir
+  (ghost) y Proyectar (secundario) usando las acciones ya existentes. Chequeos:
+  test:unit 83/83, svelte-check 57 errores (línea base), build OK, Prettier limpio.)
+- [x] **F11.5 Grilla de slides y miniaturas.** (2026-10-20, carril D: `Slides.svelte`
+  con gap 12 px y pie (+ / vista / slider); `Slide.svelte` marco redondeado
+  var(--radius) y barra inferior con número + grupo; seleccionada con borde de acento
+  2 px. Chequeos: test:unit 83/83, svelte-check 57 errores (línea base), build OK,
+  Prettier limpio.)
+- [x] **F11.6 Panel derecho como ProPresenter.** (2026-10-20, carril D: ShowTools
+  con pestañas solo-icono; la tira vertical ClearButtons y el selector de salida
+  MultiOutputs del Preview se mantienen. Chequeos: test:unit 83/83, svelte-check 57
+  errores (línea base), build OK, Prettier limpio.)
+- [x] **F11.10 Columna izquierda como ProPresenter: Biblioteca, Playlist y Media.**
+  (2026-10-20, carril D: MainLayout.svelte columna izquierda con secciones
+  BIBLIOTECA (categorías de shows -> cajon), PLAYLIST (Projects sin cambios) y MEDIA.
+  Chequeos: test:unit 83/83, svelte-check 56 errores (linea base), build OK,
+  Prettier limpio.)
 - [ ] **F11.7 Página de Settings.** (referencia `SettingsTabs.tsx`, `SettingsTools.tsx`;
   archivos `settings/SettingsTabs.svelte`, `settings/Settings.svelte`) **después de
   F10.8**: lista de pestañas como la izquierda de la referencia, contenido con ancho
   máximo 640 px, filas de inputs de 44 px con separador.
-- [ ] **F11.8 Popups, menús contextuales y tooltips.** (archivos `main/Popup.svelte`,
-  `context/ContextMenu.svelte`, `context/ContextItem.svelte`, `main/Tooltip.svelte`)
-  fondo `--primary-darker`, borde 1 px, radio, sombra, padding y alto de ítem 32 px.
+- [x] **F11.8 Popups, menús contextuales y tooltips.** (2026-10-20, carril D: Tooltip.svelte
+  re-estilizado con variables del tema; Popup.svelte ya usaba var(--radius)/var(--border-color).
+  context/** no se tocó (alcance). Chequeos: test:unit 83/83, svelte-check 57 errores
+  (línea base), build OK, Prettier limpio.)
 - [ ] **F11.9 Repaso final.** Recorrer todas las pantallas (Show, Edit, Stage,
   Settings, cada pestaña del cajón, popups principales) y corregir inconsistencias
   de espaciado/colores; lista de capturas antes/después en `docs/VERIFICAR-F11.md`.
 
 ---
+
+## F11b — Lo que el carril D dejó a medias (revisión 2026-10-20)
+
+El carril D re-estilizó bien cajón, panel izquierdo, cabecera y grilla, pero en tres
+tareas se quedó en lo mínimo. Estas tareas son **cambios de lugar y de estructura**, no
+sólo de estilo: está permitido mover componentes existentes siempre que no se pierda
+ninguna función (verificar cada función movida y listarla en el commit).
+
+- [ ] **F11.6b Panel derecho de verdad como ProPresenter.** (F11.6 sólo pasó las
+  pestañas de `ShowTools` a íconos: 1 línea.) Archivos: `output/preview/Preview.svelte`,
+  `output/preview/ClearButtons.svelte`, `output/preview/MultiOutputs.svelte`,
+  `show/ShowTools.svelte`, `MainLayout.svelte` (columna derecha).
+  1. `ClearButtons` pasa a ser una **tira vertical** de 32 px a la derecha de la vista
+     previa (un botón de ícono por capa, resaltado si la capa tiene contenido) y el
+     "limpiar todo" es una **ⓧ circular** superpuesta al borde derecho de la vista previa.
+  2. Debajo de la vista previa, **"Pantalla 1 ▾"** (el selector de `MultiOutputs`) en
+     una sola línea.
+  3. Debajo, el transporte de medios/audio que ya existe (sin cambios de lógica).
+  4. **Barra de pestañas de controles** con estas pestañas, en este orden, cada una con
+     el contenido que ya existe en la app en otro lugar: Audio (reproductor/listas de
+     audio), Stage (vista/selección de layout de stage), Timers (lista de timers con
+     play/reset), Overlays/Mensajes (overlays activos), Acciones (acciones/macros).
+     Las 3 pestañas actuales de `ShowTools` (grupos, metadatos, medios) siguen como
+     pestañas extra al final. Si una pestaña no tiene contenido existente que reubicar,
+     no se crea: anotarlo en el informe.
+  *Aceptación:* captura comparada con la de ProPresenter de la especificación; cada
+  función que antes estaba en el panel derecho sigue accesible.
+
+- [ ] **F11.8b Menús contextuales.** (F11.8 no tocó `context/**`.) Archivos:
+  `context/ContextMenu.svelte`, `context/ContextItem.svelte`, `context/ContextChild.svelte`.
+  Fondo `--primary-darker`, borde 1 px `--border-color`, radio `--radius`, sombra,
+  ítems de 32 px con ícono 14 px, separadores de 1 px, submenús igual. Sin cambiar
+  ninguna entrada ni su orden.
+
+- [ ] **F11.10b Ítems del proyecto en la columna izquierda.** (F11.10 dejó la lista
+  dentro de `Projects`.) Mover `ProjectContentList` fuera de `Projects` para que la
+  columna quede: BIBLIOTECA · PLAYLIST (lista de proyectos) · "N ÍTEMS +" (contenido
+  del proyecto seleccionado, con Filtro abajo) · MEDIA. Mantener arrastrar/soltar,
+  reordenar, menú contextual y doble clic igual que hoy.
 
 ## Fuera de alcance por ahora
 

@@ -549,6 +549,15 @@
         outline-offset: -2px;
     }
 
+    /* F11.3 — filas de 32px redondeadas, hover/activa con variables del tema */
+    .listSection :global(button.tab) {
+        min-height: 32px;
+        border-left: 3px solid transparent !important;
+    }
+    .listSection :global(button.tab:not(.isActive)):hover {
+        background-color: var(--hover, rgb(255 255 255 / 0.06)) !important;
+    }
+
     .list :global(.section) {
         padding: 4px 40px;
         font-size: 0.8em;

@@ -500,6 +500,8 @@
         /* border: 2px solid var(--primary-lighter); */
 
         /* border-radius: 4px; */
+        border-radius: var(--radius, 4px);
+        overflow: hidden;
     }
 
     /* .slide :global(.selectElem#slide) {

@@ -1895,5 +1895,8 @@
         "confidence_highest": "Si tiene confianza",
         "confidence_high": "Si tiene alta confianza",
         "confidence_medium": "Si tiene confianza moderada"
+    },
+    "ui": {
+        "filter": "Filtro"
     }
 }

@@ -712,12 +712,35 @@
     }
 
     .title {
+        /* F11.3 — títulos de sección: mayúsculas pequeñas, atenuados */
         font-weight: 500;
-        padding: 4px 14px;
-        font-size: 0.8rem;
-        opacity: 0.8;
+        padding: 6px 14px 4px;
+        font-size: 0.62rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.45;
+        color: var(--text);
         background: var(--primary-darkest);
-        border-bottom: 1px solid var(--primary-lighter);
+        border-bottom: 1px solid var(--border-color, var(--primary-lighter));
+    }
+
+    /* F11.3 — filas de 32px redondeadas, hover/activa con variables del tema */
+    .list.projects :global(button.tab),
+    .projectTemplates :global(button.tab) {
+        height: 32px;
+        min-height: 32px;
+        padding-block: 0 !important;
+        border-radius: var(--radius, 4px) !important;
+        border-left: 3px solid transparent !important;
+    }
+    .list.projects :global(button.tab.isActive),
+    .projectTemplates :global(button.tab.isActive) {
+        background-color: var(--primary-lighter) !important;
+        border-left-color: var(--secondary) !important;
+    }
+    .list.projects :global(button.tab):not(:disabled):not(.isActive):hover,
+    .projectTemplates :global(button.tab):not(:disabled):not(.isActive):hover {
+        background-color: var(--hover, rgb(255 255 255 / 0.06)) !important;
     }
 
     /* add menu */
