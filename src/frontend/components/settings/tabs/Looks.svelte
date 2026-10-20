@@ -1,19 +1,16 @@
 <script lang="ts">
-    import { uid } from "uid"
-    import { activeLook, looks, outputs, styles } from "../../../stores"
+    import type { LookScreen } from "../../../../types/Settings"
+    import { activeLook, looks, outputs, templates } from "../../../stores"
     import { translateText } from "../../../utils/language"
-    import { confirmCustom } from "../../../utils/popup"
-    import { clone, keysToID, sortByName } from "../../helpers/array"
-    import { history } from "../../helpers/history"
-    import { applyLook, createLook, deleteLook } from "../../helpers/looks"
-    import { defaultLayers } from "../../helpers/output"
-    import Icon from "../../helpers/Icon.svelte"
+    import { save } from "../../../utils/save"
+    import { keysToID, sortByName } from "../../helpers/array"
     import T from "../../helpers/T.svelte"
+    import { applyLook, createLook, deleteLook, isStageOutput } from "../../helpers/looks"
+    import Icon from "../../helpers/Icon.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import MaterialButton from "../../inputs/MaterialButton.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
-    import { save } from "../../../utils/save"
 
     // LOOK SELECTION
 
@@ -23,28 +20,45 @@
 
     $: lookOptions = Object.entries($looks).map(([id, look]) => ({ value: id, label: look.name }))
 
-    // SCREENS GRID (columnas = pantallas de audiencia, fila 1 = estilo, fila 2 = capas)
+    // SCREENS GRID: una columna por pantalla de audiencia (F10; las de stage no aparecen)
 
-    $: audienceScreens = sortByName(keysToID($outputs).filter((a) => !a.stageOutput))
+    $: audienceScreens = sortByName(keysToID($outputs).filter((a) => !isStageOutput(a)))
 
     const layerOptions = [
-        { label: "preview.background", icon: "image", value: "background" },
-        { label: "preview.slide", icon: "slide", value: "slide" },
-        { label: "preview.overlays", icon: "overlays", value: "overlays" }
+        { label: "looks.media", icon: "image", value: "media" },
+        { label: "looks.slide", icon: "slide", value: "slide" },
+        { label: "looks.overlays", icon: "overlays", value: "overlays" }
     ]
 
-    function getStyleId(outputId: string): string {
-        return currentLook?.screens?.[outputId] || $outputs[outputId]?.style || ""
+    const defaultCell = (): LookScreen => ({ layers: { media: true, slide: true, overlays: true } })
+
+    function getCell(outputId: string): LookScreen {
+        return currentLook?.screens?.[outputId] || defaultCell()
     }
 
-    function getStyleLayers(styleId: string): string[] {
-        const layers = $styles[styleId]?.layers
-        return Array.isArray(layers) ? layers : defaultLayers
+    // tema: ⊘ (sin override) o un template
+    $: themeOptions = [{ value: "", label: `⊘ ${translateText("main.none")}` }, ...sortByName(keysToID($templates)).map((a) => ({ value: a.id, label: a.name }))]
+
+    // LOOK EDITING (los cambios se aplican al tocar "Guardar" en la ventana de F10.6;
+    // en esta pestaña de Settings se guardan al instante, como antes)
+
+    function updateLookScreen(outputId: string, patch: Partial<LookScreen>) {
+        if (!selectedLook) return
+
+        looks.update((a) => {
+            if (!a[selectedLook]) return a
+            const cell = { ...(a[selectedLook].screens?.[outputId] || defaultCell()), ...patch }
+            a[selectedLook] = { ...a[selectedLook], screens: { ...(a[selectedLook].screens || {}), [outputId]: cell } }
+            return a
+        })
+        save()
     }
 
-    $: styleOptions = [{ value: "", label: translateText("main.none") }, ...sortByName(keysToID($styles)).map((a) => ({ value: a.id, label: a.name }))]
-
-    // LOOK EDITING
+    function toggleLayer(outputId: string, layer: "media" | "slide" | "overlays") {
+        const layers = { ...getCell(outputId).layers }
+        layers[layer] = !layers[layer]
+        updateLookScreen(outputId, { layers })
+    }
 
     function updateLookName(name: string) {
         if (!selectedLook) return
@@ -52,17 +66,6 @@
         looks.update((a) => {
             if (!a[selectedLook]) return a
             a[selectedLook] = { ...a[selectedLook], name }
-            return a
-        })
-        save()
-    }
-
-    function updateLookScreen(outputId: string, styleId: string) {
-        if (!selectedLook) return
-
-        looks.update((a) => {
-            if (!a[selectedLook]) return a
-            a[selectedLook] = { ...a[selectedLook], screens: { ...(a[selectedLook].screens || {}), [outputId]: styleId } }
             return a
         })
         save()
@@ -77,41 +80,6 @@
         applyLook(id)
     }
     let newLookName = ""
-
-    // LAYERS
-
-    function isStyleUsedByOtherLooks(styleId: string) {
-        return Object.entries($looks).some(([id, look]) => id !== selectedLook && Object.values(look.screens || {}).includes(styleId))
-    }
-
-    function duplicateStyle(styleId: string): string {
-        const sourceStyle = $styles[styleId]
-        if (!sourceStyle) return styleId
-
-        const lookName = currentLook?.name || ""
-        const newId = uid()
-        const newStyle = { ...clone(sourceStyle), name: sourceStyle.name ? `${sourceStyle.name} (${lookName})` : lookName }
-
-        history({ id: "UPDATE", newData: { data: newStyle }, oldData: { id: newId }, location: { page: "settings", id: "settings_style" } })
-        return newId
-    }
-
-    async function toggleLayer(outputId: string, styleId: string, layer: string, layers: string[]) {
-        // un estilo compartido con otros looks se duplica para este look en vez de cambiar para todos
-        if (styleId && isStyleUsedByOtherLooks(styleId)) {
-            const duplicate = await confirmCustom(translateText("looks.duplicate_style_message"))
-            if (!duplicate) return
-
-            styleId = duplicateStyle(styleId)
-            updateLookScreen(outputId, styleId)
-            layers = getStyleLayers(styleId)
-        }
-
-        if (!styleId || !$styles[styleId]) return
-
-        const newLayers = layers.includes(layer) ? layers.filter((a) => a !== layer) : [...layers, layer]
-        history({ id: "UPDATE", newData: { key: "layers", data: newLayers }, oldData: { id: styleId }, location: { page: "settings", id: "settings_style", override: "style_layers" } })
-    }
 </script>
 
 <div class="looks">
@@ -136,8 +104,7 @@
     {:else}
         <div class="grid">
             {#each audienceScreens as output (output.id)}
-                {@const styleId = getStyleId(output.id)}
-                {@const layers = getStyleLayers(styleId)}
+                {@const cell = getCell(output.id)}
 
                 <div class="screen">
                     <div class="screen-name">
@@ -145,12 +112,12 @@
                         <span>{output.name || translateText("settings.output_screen")}</span>
                     </div>
 
-                    <MaterialDropdown label="edit.style" value={styleId} options={styleOptions} on:change={(e) => updateLookScreen(output.id, e.detail)} allowEmpty />
+                    <MaterialDropdown label="looks.theme" value={cell.theme || ""} options={themeOptions} allowEmpty on:change={(e) => updateLookScreen(output.id, { theme: e.detail || undefined })} />
 
                     <div class="layers">
                         {#each layerOptions as layer}
-                            <MaterialButton icon={layer.icon} title={layer.label} disabled={!styleId} on:click={() => toggleLayer(output.id, styleId, layer.value, layers)}>
-                                <div class="highlight" class:active={layers.includes(layer.value)}></div>
+                            <MaterialButton icon={layer.icon} title={layer.label} on:click={() => toggleLayer(output.id, layer.value as "media" | "slide" | "overlays")}>
+                                <div class="highlight" class:active={!!cell.layers?.[layer.value as "media" | "slide" | "overlays"]}></div>
                             </MaterialButton>
                         {/each}
                     </div>
