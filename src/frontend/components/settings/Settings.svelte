@@ -1,8 +1,7 @@
 <script lang="ts">
     import { resetAudioRouting } from "../../audio/routing/audioRoutingInit"
-    import { dictionary, settingsTab } from "../../stores"
+    import { activePopup, dictionary, settingsTab } from "../../stores"
     import { translateText } from "../../utils/language"
-    import Icon from "../helpers/Icon.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
     import Tip from "../main/Tip.svelte"
     import AudioRouting from "./tabs/AudioRouting.svelte"
@@ -12,16 +11,9 @@
     import General from "./tabs/General.svelte"
     import Other from "./tabs/Other.svelte"
     import OtherButtons from "./tabs/OtherButtons.svelte"
-    import Outputs from "./tabs/Outputs.svelte"
-    import OutputsGeneral from "./tabs/OutputsGeneral.svelte"
-    import OutputsGroups from "./tabs/OutputsGroups.svelte"
     import Profiles from "./tabs/Profiles.svelte"
     import ProfilesButtons from "./tabs/ProfilesButtons.svelte"
     import ProfilesTabs from "./tabs/ProfilesTabs.svelte"
-    import Looks from "./tabs/Looks.svelte"
-    import Styles from "./tabs/Styles.svelte"
-    import StylesButtons from "./tabs/StylesButtons.svelte"
-    import StylesTabs from "./tabs/StylesTabs.svelte"
     import Theme from "./tabs/Theme.svelte"
     import ThemeButtons from "./tabs/ThemeButtons.svelte"
     import ThemeTabs from "./tabs/ThemeTabs.svelte"
@@ -35,14 +27,10 @@
     }
 
     const hints = {
-        display_settings: "settings.outputs_hint",
-        styles: "settings.styles_hint",
         audio: "settings.audio_hint",
         profiles: "profile.profiles_hint",
         ai: "ai.hint<br><br>ai.privacy_details"
     }
-
-    let showGlobalOutputOptions = false
 </script>
 
 <main>
@@ -54,18 +42,12 @@
                 <Tip type="info" value={translateText(hints[tabId])} style="opacity: 0.7;" hiddenText white />
             {/if}
 
-            {#if tabId === "styles"}
-                <StylesButtons />
-            {:else if tabId === "audio"}
+            {#if tabId === "audio"}
                 <MaterialButton title="actions.reset" icon="reset" on:click={resetAudioRouting} />
             {:else if tabId === "profiles"}
                 <ProfilesButtons />
             {:else if tabId === "theme"}
                 <ThemeButtons />
-            {:else if tabId === "display_settings"}
-                <MaterialButton title="create_show.more_options" on:click={() => (showGlobalOutputOptions = !showGlobalOutputOptions)}>
-                    <Icon id="options" white={!showGlobalOutputOptions} />
-                </MaterialButton>
             {/if}
         </div>
     </div>
@@ -73,16 +55,9 @@
     <div class="scroll" style={tabId === "audio" ? "--padding: 20px;" : ""} on:scroll={scroll}>
         {#if tabId === "general"}
             <General />
-        {:else if tabId === "display_settings"}
-            {#if showGlobalOutputOptions}
-                <OutputsGeneral />
-            {:else}
-                <Outputs />
-            {/if}
-        {:else if tabId === "styles"}
-            <Styles />
-        {:else if tabId === "looks"}
-            <Looks />
+            <div style="margin-top: 16px;">
+                <MaterialButton variant="contained" icon="screen" on:click={() => activePopup.set("screen_config")}>Configurar pantallas…</MaterialButton>
+            </div>
         {:else if tabId === "audio"}
             <AudioRouting />
         {:else if tabId === "connection"}
@@ -99,13 +74,7 @@
     </div>
 
     <div class="tabs">
-        {#if tabId === "display_settings"}
-            {#if !showGlobalOutputOptions}
-                <OutputsGroups />
-            {/if}
-        {:else if tabId === "styles"}
-            <StylesTabs />
-        {:else if tabId === "files"}
+        {#if tabId === "files"}
             <FilesButtons />
         {:else if tabId === "profiles"}
             <ProfilesTabs />

@@ -11,11 +11,11 @@ import AudioEffect from "../components/main/popups/AudioEffect.svelte"
 import AudioStream from "../components/main/popups/AudioStream.svelte"
 import CategoryAction from "../components/main/popups/CategoryAction.svelte"
 import ChangeIcon from "../components/main/popups/ChangeIcon.svelte"
-import ChangeOutputValues from "../components/main/popups/ChangeOutputValues.svelte"
+
 import ChooseChord from "../components/main/popups/ChooseChord.svelte"
 import ChooseMediaInput from "../components/main/popups/ChooseMediaInput.svelte"
 import ChooseOutput from "../components/main/popups/ChooseOutput.svelte"
-import ChooseScreen from "../components/main/popups/ChooseScreen.svelte"
+
 import ChooseStyle from "../components/main/popups/ChooseStyle.svelte"
 import ChurchAppsSyncCategories from "../components/main/popups/ChurchAppsSyncCategories.svelte"
 import CleaningUtility from "../components/main/popups/CleaningUtility.svelte"
@@ -144,11 +144,11 @@ export const popups: { [key in Popups]: ComponentType } = {
     create_collection: CreateCollection,
     edit_event: EditEvent,
     edit_chart: EditChart,
-    choose_screen: ChooseScreen,
+
     choose_output_input: ChooseOutput,
     choose_output_type: OutputSetup,
     choose_style: ChooseStyle,
-    change_output_values: ChangeOutputValues,
+
     output_selector: OutputSelector,
     set_time: SetTime,
     assign_shortcut: SlideShortcut,

@@ -86,7 +86,7 @@ export const contextMenuItems: { [key: string]: ContextMenuItem } = {
     // OUTPUTS
     force_output: { label: "context.force_outputs", icon: "outputs" },
     align_with_screen: { label: "context.align_with_screen", icon: "resize" },
-    choose_screen: { label: "popup.choose_screen", icon: "screen" },
+
     toggle_output: { label: "context.toggle_output", icon: "outputs" },
     move_to_front: { label: "context.move_to_front", icon: "toFront" },
     hide_from_preview: { label: "context.hide_from_preview", icon: "hide" },
@@ -253,7 +253,7 @@ export const contextMenuLayouts: { [key: string]: string[] } = {
     input: ["copy", "paste"],
 
     // TOP
-    output: ["force_output", "SEPARATOR", "align_with_screen", "choose_screen"], // , "SEPARATOR", "edit"
+    output: ["force_output", "SEPARATOR", "align_with_screen"], // , "SEPARATOR", "edit"
 
     // OUTPUTS
     output_preview: ["GROUP_edit", "change_style", "edit_style", "change_look", "SEPARATOR", "recording", "SEPARATOR", "live_prepare", "SEPARATOR", "test_pattern"],

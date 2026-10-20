@@ -165,7 +165,7 @@ export const mainResponses: MainResponses = {
             const outputIds = getActiveOutputs(get(outputs), false, true)
             currentOutputSettings.set(outputIds[0])
             popupData.set({ activateOutput: true })
-            activePopup.set("choose_screen")
+            activePopup.set("screen_config")
             return
         }
 
