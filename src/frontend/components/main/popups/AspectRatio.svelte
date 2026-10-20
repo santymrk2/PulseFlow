@@ -146,6 +146,6 @@
     .preview .box {
         /* always active */
         outline-offset: -2px;
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
     }
 </style>

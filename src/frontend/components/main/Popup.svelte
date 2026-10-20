@@ -61,7 +61,7 @@
                             <div class="headerMargin">
                                 {#key popupId}
                                     <!-- margin-top: -5px; -->
-                                    <h2 style="font-size: 1.3em;margin-top: -2px;">
+                                    <h2 style="font-size: 15px;font-weight: 600;">
                                         {#if $popupData?.popupTitle}
                                             {translateText($popupData.popupTitle)}
                                         {:else if popupId === "new_update"}
@@ -98,16 +98,16 @@
 
     .popup {
         position: absolute;
-        background-color: rgb(0 0 0 / 0.55);
+        background-color: var(--backdrop);
         /* pointer-events: none; */
         width: 100%;
         height: 100%;
         padding: 20px var(--navigation-width);
         z-index: 5000;
 
-        backdrop-filter: blur(4px);
+        backdrop-filter: blur(2px);
 
-        font-size: 1.2em;
+        font-size: 1em;
 
         display: flex;
         align-items: center;
@@ -130,12 +130,9 @@
 
     .card {
         position: relative;
-        background-color: var(--primary);
+        background-color: var(--bg-elevated);
 
-        /* background-color: rgba(41, 44, 54, 0.8);
-        backdrop-filter: blur(4px); */
-
-        border-radius: var(--radius, 10px);
+        border-radius: var(--radius-modal, 8px);
 
         /* overflow-y: auto; */
         /* overflow-x: hidden; */
@@ -145,8 +142,8 @@
         max-width: 100%;
         max-height: 100%;
 
-        border: 2px solid var(--border-color, var(--primary-lighter));
-        box-shadow: 0 0 5px 5px rgb(0 0 0 / 0.2);
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--shadow-float);
     }
 
     .headerContent {
@@ -157,10 +154,10 @@
 
         transition: 0.2s box-shadow ease;
 
-        min-height: 56px;
+        min-height: 44px;
     }
     .headerMargin {
-        margin: 10px 20px;
+        margin: 0 16px;
         position: relative;
         width: 100%;
 
@@ -178,7 +175,7 @@
     .body {
         display: flex;
         flex-direction: column;
-        margin: 20px;
+        margin: 16px;
         min-width: 38vw;
     }
 

@@ -97,13 +97,13 @@
     }
     button.active.border {
         outline-offset: -2px;
-        /* outline: 2px solid var(--secondary); */
+        /* outline: 2px solid var(--text-muted); */
         outline: 2px solid var(--primary-lighter);
     }
 
     button.outline {
         outline-offset: -2px;
-        outline: 2px solid var(--secondary) !important;
+        outline: 2px solid var(--text-muted) !important;
     }
 
     button :global(div) {

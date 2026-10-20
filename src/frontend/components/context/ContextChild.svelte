@@ -130,7 +130,7 @@
 
     .item.highlighted {
         background-color: rgb(0 0 0 / 0.2);
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: -2px;
     }
 

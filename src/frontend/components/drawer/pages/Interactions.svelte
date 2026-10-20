@@ -509,7 +509,7 @@
         font-weight: bold;
     }
     .interaction.active {
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: -2px;
     }
 
@@ -560,7 +560,7 @@
     }
 
     .input.active {
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: -2px;
     }
 

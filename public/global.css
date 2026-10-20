@@ -57,6 +57,7 @@
     --action-hover: #ffffff;
     --action-text: #0a0a0a;
     --danger: #e5484d;
+    --danger-border: rgb(229 72 77 / 0.5);
     --success: #46a758;
     --warning: #ffb224;
     --ring: rgb(255 255 255 / 0.4);
@@ -66,8 +67,8 @@
     /* Tokens heredados de FreeShow: mismos valores que defaultThemes.ts (el tema los vuelve a aplicar al arrancar) */
     --primary: #0a0a0a;
     --primary-lighter: #1f1f1f;
-    --primary-darker: #0f0f0f;
-    --primary-darkest: #0d0d0d;
+    --primary-darker: #0a0a0a;
+    --primary-darkest: #0a0a0a;
     --text: #ededed;
     --textInvert: #0a0a0a;
     --secondary: #ededed;
@@ -108,7 +109,7 @@
         user-select: none;
 
         outline-offset: -4px;
-        outline-color: var(--secondary);
+        outline-color: var(--ring);
     }
 }
 

@@ -27,8 +27,7 @@
         flex-direction: column;
         min-height: 0;
 
-        border-inline-end: 1px solid var(--border-color, var(--primary-lighter));
-        background-color: var(--primary-darker);
+        border-inline-end: 1px solid var(--border);
     }
 
     section {

@@ -106,8 +106,8 @@
         width: min(var(--modal-width), calc(100vw - 32px));
         height: min(var(--modal-height), calc(100vh - 32px));
 
-        background-color: var(--primary);
-        border: 1px solid var(--border-color, var(--primary-lighter));
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-strong);
         border-radius: var(--radius-modal, 8px);
         box-shadow: var(--shadow-float);
 
@@ -127,8 +127,7 @@
         gap: 8px;
 
         padding: 0 8px 0 16px;
-        border-bottom: 1px solid var(--border-color, var(--primary-lighter));
-        background-color: var(--primary-darker);
+        border-bottom: 1px solid var(--border);
     }
 
     .modal-title {
@@ -181,7 +180,6 @@
         gap: 8px;
 
         padding: 0 16px;
-        border-top: 1px solid var(--border-color, var(--primary-lighter));
-        background-color: var(--primary-darker);
+        border-top: 1px solid var(--border);
     }
 </style>

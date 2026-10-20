@@ -1351,6 +1351,22 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   label a la izquierda (`Field` del kit).
   *Aceptación:* en las capturas de Show y Configuración hay a lo sumo dos grises de fondo
   (app y elevado).
+  **Lote 1 hecho** (2026-10-20, a partir de las capturas `docs/capturas/f14/tokens-*.png`):
+  `--primary-darker` y `--primary-darkest` = `--bg` (un solo fondo); divisores de panel de
+  1 px (`Resizeable`, antes una barra gris de 4 px); `Modal` y la **tarjeta común de
+  `Popup.svelte` (la usan ~89 diálogos, entre ellos "New show")** pasan a superficie
+  elevada con borde de 1 px, `--radius-modal` y `--shadow-float`, cabecera de 44 px,
+  título de 15 px y texto base 1em (antes 1.2em, borde 2 px y sombra de 5 px); pista del
+  slider visible (`--border-strong`); botones `red` ("Clear all") pasan de relleno a
+  texto + borde rojos (`--danger-border`); contornos de foco → anillo de 1 px (`--ring`,
+  10 casos) y de activo/seleccionado → `--text-muted` en vez de blanco puro (17 casos).
+  **Pendiente del lote 2** (visto en las capturas): filas de Configuración como lista con
+  separadores y labels flotantes estilo Material → `Field` (Looks y Pantallas también);
+  el ✕ de los dropdowns de Looks se superpone al texto ("None"); en Pantallas la sección
+  "System" duplica la grilla de monitores y el texto se superpone al número; el modal de
+  Configuración queda justo de alto (el botón "Configure screens…" asoma cortado);
+  "Asignado:" sigue fijo en español (F12.8). El botón flotante `+`, el degradé de
+  "New show" y el menú "agregar ítems" de Edit son de **F14.5**.
 
 - [ ] **F14.5 Quitar decoración.**
   *Pasos:* borrar degradés (`rg -n 'gradient' src/frontend`), el `+` flotante de la

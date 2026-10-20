@@ -544,8 +544,8 @@
         z-index: 2;
     }
     .main.active {
-        /* outline: 3px solid var(--secondary); */
-        outline: 2px solid var(--secondary);
+        /* outline: 3px solid var(--text-muted); */
+        outline: 2px solid var(--text-muted);
         outline-offset: -1px;
         /* this z-index causes the button title to show behind! */
         /* z-index: 2; */

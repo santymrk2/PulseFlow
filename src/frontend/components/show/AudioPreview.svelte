@@ -306,7 +306,7 @@
         cursor: pointer;
     }
     span[role="button"]:focus {
-        outline: 2px solid var(--secondary);
+        outline: 1px solid var(--ring);
         outline-offset: 2px;
     }
 </style>

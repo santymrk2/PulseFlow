@@ -319,11 +319,11 @@
         outline-offset: 0;
     }
     .value:active {
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: 0;
     }
     .value:focus {
-        outline: 2px solid var(--secondary);
+        outline: 1px solid var(--ring);
         outline-offset: 0;
     }
 

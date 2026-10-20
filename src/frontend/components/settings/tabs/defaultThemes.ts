@@ -14,8 +14,8 @@ export const defaultThemes: { [key: string]: Themes } = {
             // monocromo (docs/design/kit.md); los mismos valores están en public/global.css
             primary: "#0a0a0a", // --bg
             "primary-lighter": "#1f1f1f", // gris 850
-            "primary-darker": "#0f0f0f", // pasa a --bg en F14.4
-            "primary-darkest": "#0d0d0d", // pasa a --bg en F14.4
+            "primary-darker": "#0a0a0a", // = --bg: las zonas se separan con bordes, no con fondos
+            "primary-darkest": "#0a0a0a", // = --bg
             text: "#ededed",
             textInvert: "#0a0a0a",
             "secondary-text": "#0a0a0a", // --action-text

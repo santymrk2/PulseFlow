@@ -193,16 +193,33 @@ aria-expanded={width > minWidth} -->
         /* box-shadow: 0 -2px 14px rgb(0 0 0 / 0.12); */
     }
 
+    /* divisor: la zona de agarre mide --handle-width, lo que se ve es una línea de 1 px */
     div::after {
         content: "";
-        background-color: var(--primary-lighter);
+        box-sizing: border-box;
+        background-color: transparent;
         position: absolute;
         width: 100%;
         height: 100%;
+        transition: border-color 0.12s ease-out;
+    }
+    div:global(.bar_left)::after {
+        border-inline-end: 1px solid var(--border);
+    }
+    div:global(.bar_right)::after {
+        border-inline-start: 1px solid var(--border);
+    }
+    div:global(.bar_top)::after {
+        border-bottom: 1px solid var(--border);
+    }
+    div:global(.bar_bottom)::after {
+        border-top: 1px solid var(--border);
+    }
+    div:hover::after {
+        border-color: var(--border-strong);
     }
     .zero::after {
-        /* background-color: var(--secondary); */
-        background-color: var(--primary-lighter);
+        background-color: var(--bg-hover);
     }
     .zero :global(svg) {
         pointer-events: none;

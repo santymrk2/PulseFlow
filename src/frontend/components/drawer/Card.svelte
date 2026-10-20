@@ -122,10 +122,10 @@
         z-index: 1;
     }
     .main.active {
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: -1px;
         z-index: 2;
-        /* outline: 3px solid var(--secondary);
+        /* outline: 3px solid var(--text-muted);
     outline-offset: -2px;
     outline-offset: -5px; */
     }

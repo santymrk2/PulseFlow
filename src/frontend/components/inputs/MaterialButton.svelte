@@ -253,7 +253,7 @@
     }
 
     button:focus-visible:not(:disabled) {
-        outline: 2px solid var(--secondary);
+        outline: 1px solid var(--ring);
         outline-offset: 2px;
     }
 
@@ -285,17 +285,16 @@
         font-weight: normal;
     }
 
-    /* red */
+    /* red: texto y borde rojos, sin relleno (docs/design/kit.md) */
 
     button.red:not(:disabled) {
-        background-color: var(--red) !important;
+        background-color: transparent !important;
+        color: var(--danger) !important;
+        outline: 1px solid var(--danger-border);
+        outline-offset: -1px;
     }
-    button.red:not(.contained):not(.isActive):not(:disabled):hover {
-        background: var(--red) !important;
-    }
-    button.red:not(.contained):not(.isActive):not(:disabled):active {
-        background: var(--red) !important;
-    }
+    button.red:not(.contained):not(.isActive):not(:disabled):hover,
+    button.red:not(.contained):not(.isActive):not(:disabled):active,
     button.red:not(.contained):not(.isActive):not(:disabled):active:hover {
         background: var(--red) !important;
     }
