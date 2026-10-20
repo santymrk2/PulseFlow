@@ -305,7 +305,8 @@
         "_title_settings": "Settings",
         "_title_display": "Present",
         "_title_display_stop": "Stop presentation",
-        "again_confirm": "Click again to confirm"
+        "again_confirm": "Click again to confirm",
+        "unsaved": "Unsaved changes"
     },
     "empty": {
         "general": "Nothing here",

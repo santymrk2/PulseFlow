@@ -305,7 +305,8 @@
         "_title_settings": "Ajustes",
         "_title_display": "Presentar",
         "_title_display_stop": "Detener presentación",
-        "again_confirm": "Hacer clic otra vez para confirmar"
+        "again_confirm": "Hacer clic otra vez para confirmar",
+        "unsaved": "Cambios sin guardar"
     },
     "empty": {
         "general": "Seleccionar un proyecto",

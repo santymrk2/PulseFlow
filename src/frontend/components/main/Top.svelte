@@ -1,6 +1,6 @@
 <script lang="ts">
     import { slide } from "svelte/transition"
-    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, dictionary, drawSettings, drawTool, os, outputDisplay, outputs, paintCache, profiles, saved, settingsTab, shows } from "../../stores"
+    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, dictionary, drawSettings, drawTool, outputDisplay, outputs, paintCache, profiles, saved, settingsTab, shows } from "../../stores"
     import { getCloudUsers } from "../../utils/cloudSync"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
@@ -96,15 +96,10 @@
     <div class="dragZone" />
     {/if} -->
     <span style="width: var(--navigation-width);">
-        {#if !$saved && $os.platform !== "win32"}
-            <div class="unsaved" />
+        {#if !isWindows}
+            <!-- macOS: espacio libre para los botones de ventana (titleBarStyle: Overlay) -->
+            <div class="macTitleSpace" />
         {/if}
-        <!-- logo -->
-        <h1 style="align-self: center;width: 100%;padding: 0px 10px;text-align: center;font-size: 1.8em;">PulseFlow</h1>
-        <!-- <div class="logo">
-            <img style="height: 35px;" src="./import-logos/freeshow.webp" alt="PulseFlow-logo" draggable={false} />
-            <h1 style="color: var(--text);font-size: 1.7em;">PulseFlow</h1>
-        </div> -->
     </span>
     <span>
         <TopButton id="show" />
@@ -116,6 +111,8 @@
         {#if !settingsDisabled}
             <TopButton id="settings" hideLabel />
         {/if}
+        <!-- estado "sin guardar" como punto discreto (F10.0a) -->
+        <span class="unsaved-dot" class:hidden={$saved} data-title={translateText("menu.unsaved")} role="none" />
 
         <!-- <MaterialButton id="output_window_button" class="context #output display {$outputDisplay ? 'on' : 'off'}" title="menu.{$outputDisplay ? (confirm ? 'again_confirm' : '_title_display_stop') : '_title_display'} [Ctrl+O]" style={$outputDisplay || disableClick ? "" : "border-bottom: 2px solid var(--secondary);"} on:click={toggleOutput} disabled={(!$outputDisplay && !physicalOutputWindows.length) || disableClick} red={$outputDisplay}>
             {#if $outputDisplay}
@@ -203,12 +200,22 @@
         min-width: 60px;
     }
 
-    .unsaved {
-        position: absolute;
-        left: 0;
-        height: 100%;
-        width: 5px;
+    /* Reserva para los botones de ventana en macOS; el estado "sin guardar" pasó a
+       un punto discreto junto a Settings (ver `.unsaved-dot`). */
+    .macTitleSpace {
+        width: 80px;
+        flex-shrink: 0;
+    }
+
+    .unsaved-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
         background-color: var(--red);
+    }
+
+    .unsaved-dot.hidden {
+        visibility: hidden;
     }
 
     /* .logo {
