@@ -789,7 +789,11 @@ verifican en la app real (`bun run dev:tauri`).
   *Aceptación:* tests de la función con 3 casos (lado a lado, apilados, negativo); en
   la app la disposición se ve igual que en Ajustes del Sistema → Pantallas.
 
-- [ ] **F10.0f IPC sin ruido: mensajes al remoto/stage web y avisos únicos.**
+- [x] **F10.0f IPC sin ruido: mensajes al remoto/stage web y avisos únicos.** ✅ 2026-10-14.
+  `REMOTE`/`STAGE`/`CONTROLLER`/`OUTPUT_STREAM` ahora van al comando Rust `SERVER_SEND`
+  (broadcast por sala websocket, con test unitario); avisos de comandos desconocidos
+  sólo con `localStorage.pulseflowIpcDebug = "1"`. Verificado con app corriendo 4 min
+  sin ninguna línea `[webview] WARN` (antes salía a los 3 s y en cada evento de idioma).
   *Archivos:* `src/frontend/IPC/tauri.ts` (+ `tauri.test.ts`), `src-tauri/src/commands/servers.rs`,
   `src-tauri/src/lib.rs`, `src/frontend/utils/updateSettings.ts`, `src/frontend/utils/language.ts`.
   *Causa:* `tauri.ts` convierte en `invoke()` todo lo que se manda por los canales

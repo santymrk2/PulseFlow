@@ -121,6 +121,7 @@ pub fn run() {
             commands::servers::SERVER_DATA,
             commands::servers::WEBSOCKET_START,
             commands::servers::WEBSOCKET_STOP,
+            commands::servers::SERVER_SEND,
             // BACKUP
             commands::backup::BACKUPS,
             commands::backup::DELETE_BACKUP,

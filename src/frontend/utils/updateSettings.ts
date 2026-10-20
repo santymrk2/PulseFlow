@@ -202,7 +202,8 @@ export function updateSettings(data: any) {
 
     loaded.set(true)
 
-    window.api.send("LOADED")
+    // F10.0f: el envío de "LOADED" se quitó: era el handshake de la ventana
+    // webview de Electron y en PulseFlow nada lo escuchaba ni lo comandaba.
 }
 
 // pre v1.6.1
