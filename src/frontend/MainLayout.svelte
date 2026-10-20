@@ -14,11 +14,26 @@
     import StageLayouts from "./components/stage/StageLayouts.svelte"
     import Resizeable from "./components/system/Resizeable.svelte"
     import Timeline from "./components/timeline/Timeline.svelte"
-    import { activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, ai, currentWindow, editMode, focusMode, loaded, os, projectView, resized, showChangeProfileMenu, showsCache, special } from "./stores"
     import { DEFAULT_WIDTH } from "./utils/common"
+    import { activeDrawerTab, activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, categories, currentWindow, drawer, drawerTabsData, editMode, focusMode, loaded, os, projectView, resized, showChangeProfileMenu, showsCache, special } from "./stores"
+    import { getAccess } from "./utils/profile"
+    import MaterialButton from "./components/inputs/MaterialButton.svelte"
+    import Icon from "./components/helpers/Icon.svelte"
 
     $: page = $activePage
     $: isWindows = !$currentWindow && $os.platform === "win32"
+
+    function openLibraryCategory(categoryId: string) {
+        activeDrawerTab.set("shows")
+        drawerTabsData.update((a) => {
+            if (!a.shows) a.shows = { activeSubTab: categoryId, enabled: true }
+            else a.shows.activeSubTab = categoryId
+            return a
+        })
+        if ($drawer.height <= 40) {
+            drawer.set({ height: $drawer.stored ?? 300, stored: null })
+        }
+    }
 
     let previousId = ""
     $: if ($activeShow?.id !== previousId) showOpened()
@@ -40,7 +55,35 @@
             <div class="left">
                 {#if page === "show"}
                     {#key $activeProfile}
+                        <div class="librarySection">
+                            <div class="sectionTitle">BIBLIOTECA</div>
+                            {#each Object.entries($categories || {}) as [id, cat]}
+                                {#if !cat?.isArchive && $activeProfile ? getAccess(id).global !== "none" : true}
+                                    <MaterialButton style="width: 100%;padding: 0.2em 0.6em;" on:click={() => openLibraryCategory(id)} tab>
+                                        <Icon id={cat?.icon || "folder"} white size={0.9} />
+                                        <span>{cat?.name || id}</span>
+                                    </MaterialButton>
+                                {/if}
+                            {/each}
+                        </div>
+
+                        <div class="sectionTitle">PLAYLIST</div>
                         <Projects />
+
+                        <div class="librarySection">
+                            <div class="sectionTitle">MEDIA</div>
+                            <MaterialButton
+                                style="width: 100%;padding: 0.2em 0.6em;"
+                                on:click={() => {
+                                    activeDrawerTab.set("media")
+                                    if ($drawer.height <= 40) drawer.set({ height: $drawer.stored ?? 300, stored: null })
+                                }}
+                                tab
+                            >
+                                <Icon id="media" white size={0.9} />
+                                <span>Media</span>
+                            </MaterialButton>
+                        </div>
                     {/key}
                 {:else if page === "edit"}
                     <Navigation />
@@ -182,5 +225,21 @@
     .right.row :global(.textfield .picker) {
         left: unset !important;
         right: 0;
+    }
+    /* F11.10 — secciones de la columna izquierda */
+    .librarySection {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        padding: 4px;
+    }
+    .sectionTitle {
+        padding: 6px 14px 4px;
+        font-size: 0.62rem;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.45;
+        color: var(--text);
+        font-weight: 500;
     }
 </style>
