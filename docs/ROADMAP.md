@@ -962,11 +962,12 @@ Reglas de F11 (además de AGENTS.md):
   `MaterialDrawerTab`/`Navigation`; lang `ui.filter`. Chequeos: test:unit 68/68,
   svelte-check 60 errores (mismo set que HEAD limpio; la línea base documentada de 58
   quedó obsoleta por la migración), build OK, Prettier limpio.)
-- [ ] **F11.3 Panel izquierdo (proyectos y navegación).** (referencia
-  `LibraryPanel.tsx`; archivos `show/Projects.svelte`, `show/ProjectList.svelte`,
-  `show/ProjectContentList.svelte`, `drawer/navigation/*`) filas de 32 px redondeadas,
-  hover `--hover`, activa `--primary-lighter`, títulos de sección pequeños en
-  mayúsculas con color atenuado, menús contextuales sin cambios.
+- [x] **F11.3 Panel izquierdo (proyectos y navegación).** (2026-10-20, carril D:
+  filas de 32 px redondeadas con hover `--hover` y activa `--primary-lighter` en
+  `ProjectList`/`Projects`/`ProjectContentList`; títulos de sección en mayúsculas
+  pequeñas atenuados en `NavigationSections` y en los proyectos; menús contextuales sin
+  cambios. Chequeos: test:unit 83/83, svelte-check 57 errores (línea base post-merge),
+  build OK, Prettier limpio.)
 - [ ] **F11.4 Cabecera del show.** (referencia `Editor.tsx`; archivo
   `show/ShowHeader.svelte`) 44 px: ícono, nombre del show, "· layout", cantidad de
   slides a la derecha, botones "Añadir" (ghost) y "Proyectar" (secundario) usando las

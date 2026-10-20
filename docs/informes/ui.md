@@ -63,3 +63,29 @@ resumen final si no se llegó.
 - El buscador del pie muestra el botón "Filtro" colapsado con etiqueta sólo si
   `$labelsDisabled` es falso (misma condición que antes); si el equipo preiere
   etiqueta siempre visible, es un cambio de una línea.
+
+## F11.3 — Panel izquierdo: proyectos y navegación (2026-10-20)
+
+Commit `75a0943d`.
+
+### Qué se hizo
+
+- **`ProjectList.svelte` / `Projects.svelte` / `ProjectContentList.svelte`**: filas de
+  32 px (`min-height`, `padding-block: 0 !important` para ganarle al padding inline de
+  los botones), redondeadas con `var(--radius)`, hover `--hover`, activa
+  `--primary-lighter` + barra de acento de 3 px `--secondary`. En ProjectContentList no
+  se fuerza altura fija (las filas de sección llevan notas/horarios) ni se toca el
+  radio derecho inline de la primera/última fila de cada cápsula.
+- **Títulos de sección** (`.title` en `NavigationSections`, `ProjectList`, `Projects`):
+  mayúsculas, `0.62rem`, `letter-spacing: 0.08em`, opacidad 0.45, separador
+  `--border-color`.
+- Menús contextuales: sin cambios (sólo CSS propio de cada componente).
+
+### Chequeos
+
+- `test:unit` 83/83 (subió con los tests del merge de Looks), `test:svelte` 57 errores
+  (igual que HEAD post-merge), `build` OK, Prettier limpio.
+
+### Verificación visual
+
+Pendiente (misma nota que F11.2).
