@@ -5,7 +5,6 @@
     import Icon from "../helpers/Icon.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
     import SelectElem from "../system/SelectElem.svelte"
-    import { themes } from "../../stores"
 
     export let id: SelectIds
     export let tabs: any[]
@@ -36,20 +35,6 @@
         if (id === "profile" && tab.id === "") return `${className}_admin`
         return className
     }
-
-    // custom tab styling
-    function getStyle(tabId: string) {
-        if (id === "theme") {
-            const theme = $themes[tabId]
-            const colors = theme.colors
-            if (!colors) return ""
-
-            // font-family: ${theme.font.family};
-            return `background-color: ${colors["primary-darker"]};color: ${colors.secondary};font-family: sans-serif;`
-        }
-
-        return ""
-    }
 </script>
 
 <div class="row">
@@ -57,10 +42,9 @@
         <div class="tabs" class:isScrollable bind:this={tabsElem}>
             {#each tabs as tab}
                 {@const active = value === tab.id}
-                {@const style = getStyle(tab.id)}
 
                 <SelectElem {id} data={{ id: tab.id }} fill>
-                    <button {style} class="tab {getTabClass(tab)}" class:active on:click={() => open(tab.id)}>
+                    <button class="tab {getTabClass(tab)}" class:active on:click={() => open(tab.id)}>
                         <slot {tab} />
                     </button>
                 </SelectElem>

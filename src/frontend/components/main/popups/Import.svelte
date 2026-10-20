@@ -20,12 +20,11 @@
         { name: "formats.template", title: "FreeShow Template File", icon: "templates", extensions: ["fstemplate", "fst", "template", "json", "zip"], id: "freeshow_template" },
         { name: "formats.overlay", title: "FreeShow Overlay File", icon: "overlays", extensions: ["fsoverlay", "fso", "overlay", "json", "zip"], id: "freeshow_overlay" },
         { name: "formats.action", title: "FreeShow Action File", icon: "actions", extensions: ["fsaction", "action", "json"], id: "freeshow_action" },
-        { name: "stage.stage_layout", title: "FreeShow Stage Layout File", icon: "stage", extensions: ["fsstage", "stage", "json"], id: "freeshow_stage" },
-        { name: "formats.theme", title: "FreeShow Theme File", icon: "theme", extensions: ["fstheme", "theme", "json"], id: "freeshow_theme" }
+        { name: "stage.stage_layout", title: "FreeShow Stage Layout File", icon: "stage", extensions: ["fsstage", "stage", "json"], id: "freeshow_stage" }
     ]
 
     const freeshow_primary_formats = freeshow_formats.filter((format) => ["freeshow", "freeshow_project"].includes(format.id))
-    const freeshow_more_formats = freeshow_formats.filter((format) => ["freeshow_template", "freeshow_overlay", "freeshow_action", "freeshow_stage", "freeshow_theme"].includes(format.id))
+    const freeshow_more_formats = freeshow_formats.filter((format) => ["freeshow_template", "freeshow_overlay", "freeshow_action", "freeshow_stage"].includes(format.id))
 
     const text_formats: { name: string; extensions: string[]; id: string; shortcut?: string; tutorial?: string }[] = [
         { name: "formats.text", extensions: ["txt"], id: "txt" },

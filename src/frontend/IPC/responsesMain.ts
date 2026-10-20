@@ -27,7 +27,7 @@ import { convertCSV } from "../converters/csv"
 import { convertEasyslides } from "../converters/easyslides"
 import { convertEasyWorship } from "../converters/easyworship"
 import { createImageShow } from "../converters/imageShow"
-import { createCategory, importAction, importOverlay, importShow, importSpecific, importStage, importTemplate, setTempShows } from "../converters/importHelpers"
+import { createCategory, importAction, importOverlay, importShow, importStage, importTemplate, setTempShows } from "../converters/importHelpers"
 import { convertLessonsPresentation } from "../converters/lessonsChurch"
 import { convertMediaShout } from "../converters/mediashout"
 import { convertOpenLP } from "../converters/openlp"
@@ -79,7 +79,6 @@ import {
     stageShows,
     templates,
     textCache,
-    theme,
     themes,
     timers,
     undoHistory,
@@ -93,7 +92,7 @@ import { translateText } from "../utils/language"
 import { confirmCustom } from "../utils/popup"
 import { initializeClosing, saveComplete } from "../utils/save"
 import { invalidateSearchIndex } from "../utils/searchFast"
-import { updateSettings, updateSyncedSettings, updateThemeValues } from "../utils/updateSettings"
+import { updateSettings, updateSyncedSettings } from "../utils/updateSettings"
 import type { MainReturnPayloads } from "./../../types/IPC/Main"
 import { Main } from "./../../types/IPC/Main"
 
@@ -138,10 +137,9 @@ export const mainResponses: MainResponses = {
     [Main.EVENTS]: (a) => events.set(a),
     [Main.MEDIA]: (a) => media.set(a),
     [Main.THEMES]: (a) => {
-        themes.set(Object.keys(a).length ? a : clone(defaultThemes))
-
-        // update if themes are loaded after settings
-        if (get(theme) !== "default") updateThemeValues(get(themes)[get(theme)])
+        // El tema es fijo (PulseFlow): siempre los valores de defaultThemes.default,
+        // aunque el archivo guardado tenga una versión vieja o otros temas.
+        themes.set({ ...a, default: clone(defaultThemes.default) })
     },
     [Main.DRIVE_API_KEY]: (a) => driveKeys.set(a),
     [Main.HISTORY]: (a) => {
@@ -580,7 +578,6 @@ export const mainResponses: MainResponses = {
             freeshow_project: () => importProject(data),
             freeshow_template: () => importTemplate(data),
             freeshow_overlay: () => importOverlay(data),
-            freeshow_theme: () => importSpecific(data, themes),
             freeshow_action: () => importAction(data),
             freeshow_stage: () => importStage(data),
             // Text

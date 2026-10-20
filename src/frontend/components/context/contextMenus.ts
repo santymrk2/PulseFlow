@@ -214,7 +214,6 @@ export const contextMenuItems: { [key: string]: ContextMenuItem } = {
     // STAGE
     move_connections: { label: "context.move_connections", icon: "up" },
     // SETTINGS
-    reset_theme: { label: "settings.reset_theme", icon: "reset", iconColor: "#ff6b54" },
     reset: { label: "actions.reset", icon: "reset", iconColor: "#ff6b54" }
 }
 
@@ -425,7 +424,6 @@ export const contextMenuLayouts: { [key: string]: string[] } = {
     event: ["GROUP_edit", "duplicate", "delete", "delete_all"],
 
     // SETTINGS
-    theme: ["GROUP_rename_only", "duplicate", "delete", "SEPARATOR", "export", "SEPARATOR", "reset_theme"], // "GROUP_rename"
     style: ["GROUP_rename_only", "duplicate", "delete", "SEPARATOR", "reset"], // "GROUP_rename"
     profile_tab: ["GROUP_rename_recolor", "duplicate", "delete", "SEPARATOR", "reset"], // "GROUP_rename_color"
     profile_tab_admin: [],

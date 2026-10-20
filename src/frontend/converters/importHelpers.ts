@@ -240,19 +240,6 @@ export function importFromClipboard() {
 
 // SPECIFIC FORMATS
 
-export function importSpecific(data: { content: string; name?: string; extension?: string }[], store: any) {
-    data.forEach(({ content }) => {
-        content = JSON.parse(content)
-
-        store.update((a) => {
-            a[uid()] = content
-            return a
-        })
-    })
-
-    newToast("main.finished")
-}
-
 export function fixShowIssues(show: Show) {
     if (!show) return null
 

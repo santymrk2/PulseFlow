@@ -91,7 +91,6 @@ import {
     stylesLegacyBackup,
     templateCategories,
     theme,
-    themes,
     timeFormat,
     timecode,
     timeline,
@@ -203,24 +202,9 @@ export function updateSettings(data: any) {
     const customPorts: { [key: string]: number } = data.ports || { remote: 5510, stage: 5511 }
     sendMain(Main.START, { ports: customPorts, max: data.maxConnections === undefined ? 10 : data.maxConnections, disabled, data: get(serverData) })
 
-    // theme
-    let currentTheme = get(themes)[data.theme]
-    if (currentTheme?.colors) {
-        // update colors (pre 0.9.2 or 1.4.9)
-        const pre092 = currentTheme.colors.secondary?.toLowerCase() === "#e6349c"
-        const pre149 = currentTheme.colors.primary?.toLowerCase() === "#292c36"
-        // pre-F6.2: el tema "default" guardado con los valores heredados de FreeShow
-        const preF62 = currentTheme.colors.primary?.toLowerCase() === "#18181b"
-        if (data.theme === "default" && (pre092 || pre149 || preF62)) {
-            themes.update((a) => {
-                a.default = clone(defaultThemes.default)
-                currentTheme = a.default
-                return a
-            })
-        }
-
-        updateThemeValues(currentTheme)
-    }
+    // tema fijo (PulseFlow): la pestaña "Tema" de Configuración se quitó
+    theme.set("default")
+    updateThemeValues(defaultThemes.default)
 
     // load all shows
     // loadShows(Object.keys(get(shows)))
@@ -433,7 +417,7 @@ const updateList: { [key in SaveListSettings | SaveListSyncedSettings]: any } = 
     interactions: (v: any) => interactions.set(v),
     audioStreams: (v: any) => audioStreams.set(v),
     audioPlaylists: (v: any) => audioPlaylists.set(v),
-    theme: (v: any) => theme.set(v),
+    theme: () => theme.set("default"),
     transitionData: (v: any) => transitionData.set(v),
     audioChannelsData: (v: any) => audioChannelsData.set(v),
     emitters: (v: any) => emitters.set(v),

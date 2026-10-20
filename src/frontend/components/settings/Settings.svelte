@@ -15,9 +15,6 @@
     import Profiles from "./tabs/Profiles.svelte"
     import ProfilesButtons from "./tabs/ProfilesButtons.svelte"
     import ProfilesTabs from "./tabs/ProfilesTabs.svelte"
-    import Theme from "./tabs/Theme.svelte"
-    import ThemeButtons from "./tabs/ThemeButtons.svelte"
-    import ThemeTabs from "./tabs/ThemeTabs.svelte"
 
     $: tabId = $settingsTab
 
@@ -47,8 +44,6 @@
                 <MaterialButton title="actions.reset" icon="reset" on:click={resetAudioRouting} />
             {:else if tabId === "profiles"}
                 <ProfilesButtons />
-            {:else if tabId === "theme"}
-                <ThemeButtons />
             {/if}
         </div>
     </div>
@@ -67,8 +62,6 @@
             <Files />
         {:else if tabId === "profiles"}
             <Profiles />
-        {:else if tabId === "theme"}
-            <Theme />
         {:else if tabId === "other"}
             <Other />
         {/if}
@@ -79,8 +72,6 @@
             <FilesButtons />
         {:else if tabId === "profiles"}
             <ProfilesTabs />
-        {:else if tabId === "theme"}
-            <ThemeTabs />
         {:else if tabId === "other"}
             <OtherButtons />
         {/if}

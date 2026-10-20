@@ -1111,6 +1111,11 @@ pantallas más visibles, una por tarea. **No es una migración global a Tailwind
 - [x] **F12.9** Pantalla de inicio con el logo. (2026-10-20, commit a8d5045d; ProfileSelector sin cambios.)
 - [ ] **F12.10** Repaso final con capturas (reemplaza a F11.9). **Parcial** (2026-10-20): ver `docs/VERIFICAR-F12.md`.
 - [x] **F12.11** Roadmap e informe. (2026-10-20, `docs/informes/f12.md`, estado PARCIAL por F12.7.)
+- [x] **F12.12** Tema fijo: se quita la pestaña "Tema" de Configuración (y el menú
+  contextual, duplicar/borrar/exportar/importar temas). Al arrancar siempre se aplica
+  `defaultThemes.default` (PulseFlow); los temas guardados del usuario no se borran del
+  archivo, sólo dejan de usarse. (2026-10-20)
+- [ ] **F12.13** Quitar la integración con Planning Center (PCO).
 
 ## Fuera de alcance por ahora
 

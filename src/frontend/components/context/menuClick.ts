@@ -85,7 +85,6 @@ import {
     styles,
     templateCategories,
     templates,
-    themes,
     timers,
     toggleOutputEnabled,
     variables
@@ -96,7 +95,6 @@ import { translateText } from "../../utils/language"
 import { confirmCustom } from "../../utils/popup"
 import { send } from "../../utils/request"
 import { initializeClosing, save } from "../../utils/save"
-import { updateThemeValues } from "../../utils/updateSettings"
 import { getActionTriggerId } from "../actions/actions"
 import { moveStageConnection } from "../actions/apiHelper"
 import { midiInListen } from "../actions/midi"
@@ -118,7 +116,6 @@ import { sendMidi } from "../helpers/showActions"
 import { _show } from "../helpers/shows"
 import { getMenuTagId, openTagManager, toggleSelectionTags, toggleTagFilter } from "../helpers/tags"
 import { clearSlide } from "../output/clear"
-import { defaultThemes } from "../settings/tabs/defaultThemes"
 import { activeProject } from "./../../stores"
 import type { ContextMenuItem } from "./contextMenus"
 
@@ -262,7 +259,7 @@ const clickActions = {
         if (!id) return
         const data = obj.sel?.data?.[0] || {}
 
-        const renameById = ["show_drawer", "project", "folder", "stage", "theme", "style", "output", "tag", "profile", "interaction"]
+        const renameById = ["show_drawer", "project", "folder", "stage", "style", "output", "tag", "profile", "interaction"]
         const renameByIdDirect = ["overlay", "template", "player", "layout", "effect", "scene"]
 
         if (renameById.includes(id)) activeRename.set(id + "_" + data.id)
@@ -1039,16 +1036,6 @@ const clickActions = {
                 files.push(path)
             }
 
-            return
-        }
-
-        if (obj.sel?.id === "theme") {
-            obj.sel.data.forEach(({ id }) => {
-                const theme = clone(get(themes)[id])
-                if (!theme) return
-
-                send(EXPORT, ["THEME"], { content: theme })
-            })
             return
         }
 
@@ -2111,16 +2098,6 @@ const clickActions = {
     trim: (obj: ObjData) => format("trim", obj),
 
     // settings
-    reset_theme: (obj: ObjData) => {
-        obj.sel?.data.forEach(({ id }) => {
-            const oldTheme = get(themes)[id]
-            const defaultTheme = defaultThemes[id] || defaultThemes.default
-            const data = { ...defaultTheme, default: oldTheme.default || false, name: oldTheme.name }
-
-            history({ id: "UPDATE", newData: { data }, oldData: { id }, location: { page: "settings", id: "settings_theme" } })
-            updateThemeValues(get(themes)[id])
-        })
-    },
     reset: (obj: ObjData) => {
         if (obj.sel?.id === "style") {
             const defaultStyle = { name: translateText("example.default") }
