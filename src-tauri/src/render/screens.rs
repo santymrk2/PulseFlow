@@ -185,16 +185,37 @@ struct ScreenHandle {
 }
 
 impl ScreenHandle {
-    fn stop(&mut self, app: &AppHandle) {
+    /// Detiene la pantalla **sin bloquear al llamador**: marca el bucle para que
+    /// termine y espera al hilo de render en un hilo aparte; recién después destruye
+    /// la ventana. Los comandos de Tauri corren en el hilo principal, y en macOS
+    /// cualquier llamada del hilo de render a la ventana pasa por ese hilo: esperar
+    /// (`join`) desde ahí colgaba la app al desactivar la audiencia.
+    fn stop(&mut self, app: &AppHandle, destroy_window: bool) {
         if let Some(path) = self.video.take() {
             let _ = video_hub_release(app, &path, &self.video_frame);
         }
         self.running.store(false, Ordering::SeqCst);
-        if let Some(handle) = self.thread.take() {
-            let _ = handle.join();
-        }
+        let thread = self.thread.take();
+        let app = app.clone();
+        let label = self.label.clone();
+        let _ = thread::Builder::new()
+            .name(format!("PulseFlow-Close-{label}"))
+            .spawn(move || {
+                if let Some(handle) = thread {
+                    let _ = handle.join();
+                }
+                if destroy_window {
+                    if let Some(window) = app.get_window(&label) {
+                        let _ = window.destroy();
+                    }
+                }
+            });
     }
 }
+
+/// Número de ventana para que reabrir una salida mientras la anterior se termina de
+/// cerrar no choque con la etiqueta todavía ocupada.
+static WINDOW_COUNTER: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 
 /// Suscriptor de un decodificador compartido: su slot de frames y el id de fondo
 /// con el que su bucle de render busca la textura.
@@ -411,7 +432,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
     // Cambió de tipo (audiencia <-> stage): cerrar y volver a abrir.
     close_screen(app, &config.id)?;
 
-    let label = screen_label(&config.id);
+    let label = format!("{}-{}", screen_label(&config.id), WINDOW_COUNTER.fetch_add(1, Ordering::Relaxed));
     let title = match kind {
         ScreenKind::Audience => format!(
             "PulseFlow — {}",
@@ -432,6 +453,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
         .skip_taskbar(true)
         .shadow(false)
         .always_on_top(config.always_on_top.unwrap_or(true))
+        .focused(false)
         .visible(true)
         .build()
         .map_err(|e| AppError::new(format!("Error al crear la ventana de salida: {e}")))?;
@@ -443,6 +465,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
     let video_frame: Arc<Mutex<Option<VideoFrame>>> = Arc::new(Mutex::new(None));
     let transition: Arc<Mutex<Option<TransitionRequest>>> = Arc::new(Mutex::new(None));
     let running = Arc::new(AtomicBool::new(true));
+    let surface_size = Arc::new(Mutex::new(window.inner_size().unwrap_or(PhysicalSize::new(1920, 1080))));
 
     let thread = match spawn_render_loop(
         Arc::clone(&window),
@@ -451,6 +474,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
         Arc::clone(&video_frame),
         Arc::clone(&running),
         Arc::clone(&transition),
+        Arc::clone(&surface_size),
     ) {
         Ok(thread) => thread,
         Err(err) => {
@@ -463,22 +487,35 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
     {
         let app_handle = app.clone();
         let id = config.id.clone();
-        window.on_window_event(move |event| {
-            if matches!(event, WindowEvent::Destroyed) {
-                let handle = manager(&app_handle)
-                    .ok()
-                    .and_then(|s| s.screens.lock_safe().remove(&id));
+        let label = label.clone();
+        let surface_size = Arc::clone(&surface_size);
+        window.on_window_event(move |event| match event {
+            // El bucle de render lee el tamaño de acá, nunca de la ventana.
+            WindowEvent::Resized(size) => *surface_size.lock_safe() = *size,
+            WindowEvent::ScaleFactorChanged { new_inner_size, .. } => *surface_size.lock_safe() = *new_inner_size,
+            WindowEvent::Destroyed => {
+                // Sólo si esta ventana sigue siendo la de la salida (no una anterior
+                // que terminó de cerrarse después de reabrir).
+                let handle = manager(&app_handle).ok().and_then(|s| {
+                    let mut screens = s.screens.lock_safe();
+                    if screens.get(&id).map(|h| h.label == label).unwrap_or(false) {
+                        screens.remove(&id)
+                    } else {
+                        None
+                    }
+                });
                 if let Some(mut handle) = handle {
-                    handle.stop(&app_handle);
+                    handle.stop(&app_handle, false);
+                    emit_output_state(&app_handle, &[(id.clone(), false)]);
                 }
-                emit_output_state(&app_handle, &[(id.clone(), false)]);
             }
+            _ => {}
         });
     }
 
     let mut handle = ScreenHandle {
         kind,
-        label,
+        label: label.clone(),
         running,
         thread: Some(thread),
         video_frame,
@@ -501,10 +538,7 @@ pub fn close_screen(app: &AppHandle, id: &str) -> AppResult<()> {
     let state = manager(app)?;
     let handle = state.screens.lock_safe().remove(id);
     if let Some(mut handle) = handle {
-        handle.stop(app);
-        if let Some(window) = app.get_window(&handle.label) {
-            let _ = window.destroy();
-        }
+        handle.stop(app, true);
     }
     Ok(())
 }
@@ -664,6 +698,7 @@ fn open_identify_window(app: &AppHandle, number: &str, monitor: &Monitor) -> App
         video_frame,
         Arc::clone(&running),
         Arc::new(Mutex::new(None)),
+        Arc::new(Mutex::new(window.inner_size().unwrap_or(PhysicalSize::new(rect.width as u32, rect.height as u32)))),
     ) {
         Ok(thread) => thread,
         Err(err) => {
@@ -966,6 +1001,7 @@ fn spawn_render_loop(
     video_frame: Arc<Mutex<Option<VideoFrame>>>,
     running: Arc<AtomicBool>,
     pending_transition: Arc<Mutex<Option<TransitionRequest>>>,
+    surface_size: Arc<Mutex<PhysicalSize<u32>>>,
 ) -> AppResult<JoinHandle<()>> {
     let instance = wgpu::Instance::default();
     let surface = instance
@@ -1011,7 +1047,8 @@ fn spawn_render_loop(
             while running.load(Ordering::Relaxed) {
                 let frame_start = Instant::now();
 
-                if let Ok(current) = window.inner_size() {
+                {
+                    let current = *surface_size.lock_safe();
                     if current.width > 0
                         && current.height > 0
                         && (current.width != config.width || current.height != config.height)

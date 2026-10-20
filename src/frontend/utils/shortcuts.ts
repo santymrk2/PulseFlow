@@ -12,7 +12,7 @@ import { keysToID, sortByName } from "../components/helpers/array"
 import { copy, cut, deleteAction, duplicate, paste, selectAll } from "../components/helpers/clipboard"
 import { history, redo, undo } from "../components/helpers/history"
 import { getExtension, getMedia, getMediaLayerType, getMediaStyle, getMediaType } from "../components/helpers/media"
-import { getFirstActiveOutput, refreshOut, setOutput, startFolderTimer, toggleOutputs } from "../components/helpers/output"
+import { getActiveOutputs, getFirstActiveOutput, refreshOut, setOutput, startFolderTimer, toggleOutputs } from "../components/helpers/output"
 import { OutputHelper } from "../components/helpers/OutputHelper"
 import { VideoPlayer } from "../components/media/video/videoPlayer"
 import { clearAll, clearBackground, clearSlide } from "../components/output/clear"
@@ -21,7 +21,7 @@ import { importFromClipboard } from "../converters/importHelpers"
 import { addSection } from "../converters/project"
 import { requestMain, sendMain } from "../IPC/main"
 import { changeSlidesView } from "../show/slides"
-import { activeDrawerTab, activeEdit, activeFocus, activePage, activePopup, activeProject, activeStage, alertMessage, audioChannelsData, contextActive, drawer, editMode, focusedArea, focusMode, guideActive, media, os, outLocked, outputs, playingVideoState, projects, quickSearchActive, refreshEditSlide, selected, showRecentlyUsedProjects, special, spellcheck, styles, timelineRecordingAction, topContextActive } from "../stores"
+import { activeDrawerTab, activeEdit, activeFocus, activePage, activePopup, activeProject, activeStage, alertMessage, audioChannelsData, contextActive, drawer, editMode, focusedArea, focusMode, guideActive, media, os, outLocked, outputDisplay, outputs, playingVideoState, projects, quickSearchActive, refreshEditSlide, selected, showRecentlyUsedProjects, special, spellcheck, styles, timelineRecordingAction, topContextActive } from "../stores"
 import { audioExtensions, imageExtensions, videoExtensions } from "../values/extensions"
 import { drawerTabs } from "../values/tabs"
 import { activeShow } from "./../stores"
@@ -369,10 +369,24 @@ export const previewCtrlShortcuts = {
     }
 }
 
+/** Hay algo proyectado (slide, fondo u overlays) en alguna salida activa. */
+function isAnythingDisplayed() {
+    const all = get(outputs)
+    return getActiveOutputs(all, true, true, true).some((id) => {
+        const out = all[id]?.out
+        return !!(out?.slide || out?.background?.path || out?.background?.id || out?.overlays?.length)
+    })
+}
+
 export const previewShortcuts = {
     // presenter controller keys
     Escape: () => {
-        // WIP if (allCleared) fullscreen = false
+        // Con las pantallas en vivo y nada proyectado, Esc las apaga. Si hay algo
+        // proyectado, el primer Esc limpia (como siempre) y el segundo las apaga.
+        if (get(outputDisplay) && !isAnythingDisplayed()) {
+            toggleOutputs(null, { state: false })
+            return true
+        }
 
         setTimeout(clearAll)
     },
