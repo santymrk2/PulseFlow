@@ -1106,10 +1106,10 @@ pantallas más visibles, una por tarea. **No es una migración global a Tailwind
 - [x] **F12.4** Modal de Looks con el kit. (2026-10-20, commit ec98bc7f; LookGrid sigue con Material.)
 - [x] **F12.5** Barra superior unificada; menú de Look con "Editar looks…". (2026-10-20, commit 94586d6a.)
 - [x] **F12.6** Columna izquierda: encabezados y filas del kit, categorías traducidas, sin título duplicado. (2026-10-20, commit 58e57c5b; incluye reset de `global.css` en `@layer base`.)
-- [ ] **F12.7** Panel derecho: tira vertical de limpiar y ⓧ de limpiar todo. **Pendiente** (2026-10-20): requiere reorganizar el layout de `Preview.svelte`; ver `docs/informes/f12.md`.
+- [ ] **F12.7** Panel derecho: tira vertical de limpiar y ⓧ de limpiar todo. **Movida a F14.9** (2026-10-20): requiere reorganizar el layout de `Preview.svelte`; ver `docs/informes/f12.md`.
 - [x] **F12.8** Textos fijos a traducciones. (2026-10-20, commit 9d338907, parcial: pantallas de F12 y Settings; pestaña activa de Configuración sin revisar.)
 - [x] **F12.9** Pantalla de inicio con el logo. (2026-10-20, commit a8d5045d; ProfileSelector sin cambios.)
-- [ ] **F12.10** Repaso final con capturas (reemplaza a F11.9). **Parcial** (2026-10-20): ver `docs/VERIFICAR-F12.md`.
+- [ ] **F12.10** Repaso final con capturas (reemplaza a F11.9). **Parcial** (2026-10-20): ver `docs/VERIFICAR-F12.md`. **Reemplazada por F14.10.**
 - [x] **F12.11** Roadmap e informe. (2026-10-20, `docs/informes/f12.md`, estado PARCIAL por F12.7.)
 - [x] **F12.12** Tema fijo: se quita la pestaña "Tema" de Configuración (y el menú
   contextual, duplicar/borrar/exportar/importar temas). Al arrancar siempre se aplica
@@ -1120,6 +1120,275 @@ pantallas más visibles, una por tarea. **No es una migración global a Tailwind
   selector de servicios, sincronizar carpetas, timers "PCO Live", sincronizar proyecto,
   desvincular ítems, canales IPC `PCO_*`/`PROVIDER_FETCH_FOLDERS` y la carpeta de datos
   "Planning Center". Shows y proyectos importados antes siguen abriendo igual. (2026-10-20)
+
+## Diagnóstico al 2026-10-20 (base de F13–F16)
+
+Relevamiento abstracto del proyecto (medido en el repo, commit `81c1f6eb`):
+
+| Área | Hallazgo |
+| --- | --- |
+| CI | `ci.yml` y `build.yml` sólo con `workflow_dispatch`: nada corre solo. Formato y svelte-check con `continue-on-error`. |
+| Verificación | F11/F12 se verificaron en Linux (Xvfb), plataforma que no se distribuye. F2.8 (2 monitores reales) y F8.3 (medición de video) siguen pendientes. |
+| Tests | 9 archivos de test JS para ~180k líneas de frontend; 76 `#[test]` en Rust; sin E2E. |
+| Tipos | 2535 `any` en `src/`; 56 errores heredados de svelte-check. |
+| Observabilidad | Sin log a archivo: 15 `println!`/`eprintln!` y 4 `log::` en todo el backend. |
+| Errores silenciosos | 96 `let _ =` en Rust, algunos sobre I/O de datos del usuario (ej. `commands/files.rs:840`, `tokio::fs::copy`). `requestMain` devuelve `undefined` tras 15 s sin avisar. |
+| Tamaño | `render/screens.rs` 1606 líneas; `menuClick.ts` 2492; `helpers/output.ts` 2117. |
+| UI | Acento azul `#1447e6` (248 usos de `var(--secondary)`); 240 archivos importan `Material*` y 12 usan el kit; 420 hex + 490 `rgb()` sueltos en `.svelte`; 46 `border-radius` distintos; degradés violetas y botón flotante. |
+| Distribución | Sin firma/notarización ni updater. |
+| Docs | Planes y verificaciones sueltos (`PLAN-HAIKU`, `PLAN-NOCHE`, 4 × `VERIFICAR*`), borrador en `docs/drafts/`. |
+
+---
+
+## F13 — Red de seguridad
+
+Primero se pone la red, después se hace el lavado de cara: si no, cada pantalla que se
+toque en F14 puede romper algo sin que nadie se entere.
+
+- [ ] **F13.1 CI automático.**
+  *Archivo:* `.github/workflows/ci.yml`.
+  *Pasos:* disparar en `pull_request` y en `push` a `main` y `feature/tauri-rust-migration`
+  (dejar `workflow_dispatch`). Prettier: chequear **sólo** los archivos de `src/` que
+  cambian respecto de la base (`git diff --name-only --diff-filter=ACMR <base>... -- src/`),
+  bloqueante. svelte-check sigue no bloqueante hasta F13.2.
+  *Aceptación:* un PR de prueba con un archivo mal formateado en `src/` falla el job; uno
+  limpio pasa. Los jobs de Rust corren en macOS y Windows.
+
+- [ ] **F13.2 Trinquete de calidad.**
+  *Archivos:* nuevo `scripts/quality-budget.ts`, nuevo `config/quality-budget.json`,
+  `package.json` (script `test:budget`), `ci.yml`.
+  *Pasos:* el script cuenta (1) errores de `svelte-check`, (2) `: any` / `as any` en `src/`,
+  (3) hex y `rgb()` en `.svelte` (excluyendo los que están en datos de ejemplo/plantillas
+  listadas en el json). Compara con el json: si algún número **sube**, falla; si baja,
+  imprime el valor nuevo para actualizar el json en el mismo commit. Reemplaza el
+  `continue-on-error` de svelte-check.
+  *Aceptación:* agregar un `as any` hace fallar `bun run test:budget`; borrarlo lo hace pasar.
+  Valores iniciales anotados en el json (56 / 2535 / 910 al 2026-10-20, re-medir).
+
+- [ ] **F13.3 Log a archivo.**
+  *Archivos:* `src-tauri/Cargo.toml` (`tauri-plugin-log`, oficial y liviano), `lib.rs`,
+  los archivos con `println!`/`eprintln!`, `src/frontend/IPC/tauri.ts`, pestaña "Otros" de
+  Configuración.
+  *Pasos:* registrar el plugin con salida a `app_log_dir` (rotación por tamaño, 5 archivos),
+  nivel `info` en release y `debug` en dev. Reemplazar `println!`/`eprintln!` por `log::`.
+  En el frontend, enviar `console.error` y los `unhandledrejection` al log. Botón
+  "Abrir carpeta de registros" en Configuración → Otros.
+  *Aceptación:* en macOS, abrir un medio inexistente deja una línea con fecha, nivel y
+  ruta en el archivo de log; el botón abre la carpeta. Sin `println!` fuera de tests.
+
+- [ ] **F13.4 Prueba en hardware real (usuario).** Ejecutar F2.8 y F8.3 en una Mac y en
+  una PC con Windows, con 2 monitores. Es requisito para dar por sólida la salida; los
+  resultados se anotan en `docs/VERIFICAR.md`.
+
+---
+
+## F14 — Lavado de cara: estilo herramienta de desarrollo
+
+**Dirección (decidida 2026-10-20):** diseño utilitario y elegante, inspirado en las
+herramientas para desarrolladores. Tipografía clara, escala de grises con contrastes
+definidos, espacios delimitados con **bordes finos** y no con fondos. **Monocromo puro**
+y **sólo tema oscuro**.
+
+Reglas que valen para todas las tareas de F14:
+
+- La acción principal es **blanco sobre negro** (`--text` como fondo, `--textInvert` como
+  texto). No hay color de marca.
+- El color es **sólo semántico**: rojo = EN VIVO / destructivo, verde = conectado,
+  ámbar = aviso. Nada más tiene color (el contenido del usuario, como colores de grupos o
+  de slides, sí).
+- Un solo fondo de aplicación. Las zonas se separan con bordes de 1 px. Hay superficie
+  elevada (otro gris + sombra) **sólo** en menús, popovers y modales.
+- Sin degradés, sin botones flotantes, sin cápsulas de radio completo. Radio de 6 px en
+  controles y de 8 px en modales.
+- Íconos en gris (`--text-muted`); el ícono activo o seleccionado va en `--text`.
+- Números, tiempos y timecodes en Geist Mono con `tabular-nums`.
+- Cada tarea: capturas antes/después **en macOS** a 1280 y 1920 en `docs/capturas/f14/`.
+
+- [ ] **F14.1 Especificación.**
+  *Archivos:* `docs/design/kit.md` (reescribir la sección de medidas).
+  *Pasos:* tabla de tokens con valores (gris 50→950, `--border` 8 % y `--border-strong`
+  16 % de blanco, `--text`, `--text-muted`, `--text-subtle`, semánticos), escala de texto
+  (11 / 12 / 13 / 15 / 20 px, base 13), espaciado (4 / 8 / 12 / 16 / 24), estados (hover,
+  activo, seleccionado, foco, deshabilitado) y la lista de reglas de arriba. Capturas
+  "antes" de Show, Edit, Configuración, Pantallas, Looks y el cajón inferior.
+  *Aceptación:* el documento alcanza para maquetar una pantalla nueva sin preguntar.
+  **Parcial** (2026-10-20): especificación en `docs/design/kit.md`; capturas "antes" de
+  Show, Edit, menú ⋯, cajón de plantillas y Configuración en `docs/capturas/f14/`. Faltan
+  `antes-pantallas.png` y `antes-looks.png`.
+
+Las tareas F14.1a–c (decididas 2026-10-20) cambian la estructura de la interfaz y van
+antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
+
+- [ ] **F14.1a Configuración como modal.**
+  *Archivos:* `components/settings/Settings.svelte`, `SettingsTools.svelte`,
+  `MainLayout.svelte`, `utils/popup.ts`, `components/main/Modal.svelte` (base de F12.1),
+  y los que hacen `activePage.set("settings")` (`quicksearch.ts`, `SceneTools.svelte`,
+  `menuClick.ts`, `responsesMain.ts`, `Top.svelte`).
+  *Pasos:* registrar el popup `settings`, igual que `screen_config` y `looks`: pestañas a
+  la izquierda, contenido a la derecha y los botones de `SettingsTools` ("Manage metadata",
+  fuentes, íconos, colores…) como sección del modal. `settingsTab` sigue eligiendo la
+  pestaña. Se quita la página `settings` de `MainLayout`, `TopViews` y los atajos de
+  página (`shortcuts.ts`, `menus`; `quicksearch.ts`, `top`). Las referencias a la pestaña
+  inexistente `display_settings` (`quicksearch.ts:341`, `:648`, `menuClick.ts:1342`,
+  `Top.svelte` `openOutputSettings`/`openLiveSettings`) pasan a abrir `screen_config`.
+  Que Esc cierre el modal sin limpiar la salida (regla de F12.1).
+  *Aceptación:* en macOS, Configuración se abre como modal sobre Show y sobre Edit, se
+  cierra con Esc y la página de atrás no cambia. Todas las pestañas muestran contenido.
+  `rg 'activePage.set\("settings"\)|display_settings' src/frontend` sólo deja el ícono.
+
+- [ ] **F14.1b Configuración al menú de la app; barra superior sin botones de más.**
+  *Archivos:* `src-tauri/src/menu.rs`, `components/main/MenuBar.svelte` (Windows),
+  `utils/shortcuts.ts`, `components/main/Top.svelte`.
+  *Pasos:* macOS: submenú de la app (`PulseFlow`) con "Configuración…" `CmdOrCtrl+,`
+  (más los ítems estándar Acerca de, Ocultar y Salir con `PredefinedMenuItem`), que emite
+  `app.settings`. Windows: el mismo ítem en `MenuBar.svelte` con `Ctrl+,`. En ambos casos
+  se respeta el permiso de perfil (`settingsDisabled` de `Top.svelte`): sin permiso, el
+  ítem queda deshabilitado. En la barra superior se quitan **Configuración**, **Dibujo**,
+  **Texto** (el modo sigue con `Ctrl+Shift+T` y la pestaña "Text edit" del editor),
+  **Estilos** (duplica la pestaña Plantillas del cajón) y **Live** (abría una pestaña que
+  no existe). Las cápsulas que queden vacías se borran.
+  *Aceptación:* en macOS, `⌘,` y el menú PulseFlow → Configuración… abren el modal; en
+  Windows, `Ctrl+,` y el menú. La barra no muestra esos cinco botones. Test del struct del
+  menú si viaja algo nuevo por IPC.
+
+- [ ] **F14.1c Borrar la función Dibujo.**
+  *Pasos:* quitar `components/draw/` (7 archivos), la página `draw` de `MainLayout`,
+  `TopViews`, `shortcuts.ts` y `quicksearch.ts`, el listener `DRAW` de `listeners.ts`, los
+  stores `drawTool`, `drawSettings`, `paintCache` y sus usos (12 archivos con `rg`), el
+  ícono de `TopButton`, las traducciones `menu.draw` y los tipos asociados. Si algún dato
+  de usuario guarda ajustes de dibujo, se deja de leer sin borrarlo del archivo (regla de
+  "no cambiar el formato sin migración").
+  *Aceptación:* `rg -n 'drawTool|drawSettings|paintCache|"draw"' src/` = 0; `bun run test:unit`,
+  `test:svelte` (sin errores nuevos) y `build` pasan; la app arranca y Show/Edit funcionan.
+
+- [ ] **F14.2 Tokens monocromo.**
+  *Archivos:* `src/frontend/components/settings/tabs/defaultThemes.ts` (tema `default`),
+  `public/global.css` (`:root`), `src/frontend/app.css` (mapeo `--shui-*` y `@theme`).
+  *Pasos:* `--secondary` pasa a ser la acción blanca y `--secondary-opacity` un gris de
+  selección (blanco 10–12 %); `--accent` (`#818cf8`) a gris; `--radius` a 6 px; agregar
+  `--text-muted`, `--text-subtle`, `--border-strong`, `--warning` y la escala de grises;
+  `--shui-ring` a blanco al 40 %. Geist Mono vía `@fontsource-variable/geist-mono` y
+  `--font-mono`. Como F12.12 aplica siempre el tema `default`, no hace falta migrar
+  temas del usuario.
+  *Aceptación:* `rg -i '1447e6|20, ?71, ?230|818cf8' src public` = 0. Las capturas de
+  Show y Configuración no muestran azul.
+
+- [ ] **F14.3 Colores sueltos a tokens.** En tres commits: (a) `components/main/`,
+  `show/`, `settings/`; (b) `drawer/`, `edit/`; (c) el resto.
+  *Pasos:* reemplazar hex/`rgb()` de interfaz por tokens. Quedan sólo los que son
+  **datos** (colores de grupos, presets de color, plantillas), cada uno con un comentario.
+  *Aceptación:* el contador de colores de F13.2 baja en cada commit; no hay regresión
+  visual en las capturas.
+
+- [ ] **F14.4 Bordes en lugar de fondos.**
+  *Archivos:* contenedores de layout (`components/main/`), filas de Configuración,
+  pestañas del cajón, panel derecho.
+  *Pasos:* un solo fondo de aplicación; los paneles se separan con `border` de 1 px (los
+  divisores redimensionables también). Las filas de Configuración pasan a ser una lista
+  con separadores finos, no tarjetas. Los labels flotantes estilo Material pasan a
+  label a la izquierda (`Field` del kit).
+  *Aceptación:* en las capturas de Show y Configuración hay a lo sumo dos grises de fondo
+  (app y elevado).
+
+- [ ] **F14.5 Quitar decoración.**
+  *Pasos:* borrar degradés (`rg -n 'gradient' src/frontend`), el `+` flotante de la
+  columna izquierda (su acción va al encabezado de sección, como en el kit), los radios
+  completos y las sombras fuera de flotantes. El reloj del cajón: Geist Mono, `--text`,
+  tamaño acotado, sin acento.
+  *Aceptación:* `rg -n 'linear-gradient|radial-gradient' src/frontend` sólo deja casos
+  justificados (vista previa de contenido) con un comentario.
+
+- [ ] **F14.6 Escala tipográfica.**
+  *Pasos:* exponer la escala de F14.1 como utilidades de Tailwind (`text-xs` … ) y como
+  variables; reemplazar los `font-size` en `em` de los componentes de layout por la
+  escala. Números en mono (`tabular-nums`): timers, timecodes, contadores, inputs
+  numéricos.
+  *Aceptación:* en las pantallas de F14.1 no quedan tamaños fuera de la escala.
+
+- [ ] **F14.7 Completar el kit.**
+  *Archivos:* `src/frontend/lib/components/ui/`, `KitDemo.svelte`, `docs/design/kit.md`.
+  *Pasos:* piezas equivalentes a los `Material*` más usados: number input, checkbox,
+  textarea, slider, color, dropdown con búsqueda, toggle group. Cada una en `KitDemo`,
+  con su API documentada y un uso desde un padre legacy (regla de runes de AGENTS.md).
+  *Aceptación:* cada `Material*` tiene un equivalente del kit o una nota de por qué no.
+
+- [ ] **F14.8 Migrar `Material*` por pantalla.** Un commit por pantalla: (a) Configuración,
+  (b) Looks (`LookGrid`, `LookAdvanced`), (c) Pantallas, (d) herramientas de Edit,
+  (e) cajón inferior.
+  *Pasos:* reemplazar por piezas del kit sin cambiar comportamiento. Cuando un
+  `Material*` se queda sin imports (`rg`), se borra.
+  *Aceptación:* captura después de cada pantalla; el número de archivos que importan
+  `Material*` (240 al 2026-10-20) baja en cada commit.
+
+- [ ] **F14.9 Panel derecho (antes F12.7).** Tira vertical de limpiar y ⓧ de limpiar
+  todo sobre la vista previa, con el estilo nuevo. Ver "Decisiones pendientes" en
+  `docs/informes/f12.md`.
+
+- [ ] **F14.10 Repaso final (reemplaza F12.10).** Capturas en macOS y Windows a 1280 y
+  1920 de todas las pantallas de F14.1. Checklist: sin azul, sin degradés, sin fondos para
+  delimitar, sin tamaños fuera de escala. Informe en `docs/informes/f14.md`.
+
+---
+
+## F15 — Robustez y orden
+
+- [ ] **F15.1 Errores silenciosos en Rust.**
+  *Pasos:* clasificar los 96 `let _ =`. Los que escriben, copian o borran datos del
+  usuario (ej. `commands/files.rs:840`) devuelven `AppResult` o, si es *best-effort*,
+  hacen `log::warn!` con la ruta. Las limpiezas de temporales quedan con un comentario.
+  *Aceptación:* ningún `let _ =` sobre I/O de datos del usuario sin log o propagación.
+
+- [ ] **F15.2 Contrato de IPC.**
+  *Archivos:* `src/frontend/IPC/main.ts`, nuevo test en `src/frontend/IPC/`.
+  *Pasos:* `requestMain` hace `log` (F13.3) con el nombre del canal cuando vence el
+  timeout. Test que compara los canales `Main.*` que usa el frontend con los comandos
+  registrados en `src-tauri/src/lib.rs` y falla si aparece un canal nuevo sin comando
+  (lista de excepciones explícita).
+  *Aceptación:* agregar un `requestMain` a un canal inexistente hace fallar el test.
+
+- [ ] **F15.3 Partir `render/screens.rs`.**
+  *Pasos:* separar por responsabilidad (ciclo de vida de ventanas, monitores y
+  coordenadas, loop de frames) en submódulos, sin cambiar comportamiento.
+  *Aceptación:* `cargo test --lib` (incluidos los golden) pasa igual; ningún archivo de
+  `render/` supera ~600 líneas.
+
+- [ ] **F15.4 Tests de dominio del frontend.** Cubrir con fixtures los conversores de
+  importación (`src/frontend/converters/`: datos del usuario) y los helpers de
+  `helpers/output.ts` y `showActions.ts` que usa la salida.
+  *Aceptación:* un test por conversor con un archivo real de ejemplo.
+
+- [ ] **F15.5 Ordenar la documentación.**
+  *Pasos:* mover a `docs/archivo/` los planes y verificaciones ya cerrados
+  (`PLAN-HAIKU`, `PLAN-NOCHE`, `VERIFICAR-F6`, `VERIFICAR-F7`); borrar
+  `docs/drafts/render_screens.rs` si `rg` no lo referencia; índice corto en
+  `docs/README.md`.
+  *Aceptación:* en `docs/` sólo queda lo vigente, y cada archivo aparece en el índice.
+
+---
+
+## F16 — Distribución
+
+- [ ] **F16.1 Firma.** macOS: Developer ID + notarización en `build.yml` (secretos en
+  GitHub). Windows: firma de código (certificado o Azure Trusted Signing). Requiere las
+  cuentas del usuario.
+  *Aceptación:* el `.dmg` abre sin aviso de Gatekeeper y el instalador NSIS sin
+  SmartScreen "editor desconocido".
+
+- [ ] **F16.2 Actualizaciones.** `tauri-plugin-updater` con manifiesto firmado en GitHub
+  Releases. Depende de F16.1.
+  *Aceptación:* una versión instalada detecta la siguiente y se actualiza en macOS y
+  Windows.
+
+---
+
+## Deuda registrada (sin tarea)
+
+- **Clientes web de `src/server/`** (remote, stage, controller, cam, output_stream;
+  ~21.7k líneas): no se compilan (no están en `vite.config.mjs` ni hay script) ni se
+  empaquetan (`tauri.conf.json` no declara `resources`). Los servidores Axum
+  (`src-tauri/src/server/`, puertos 5510–5513) levantan pero sirven carpetas vacías. Se
+  decidió (2026-10-20) dejarlos como están. Revivirlos requiere build propio, bundling,
+  tipar los mensajes del server (hoy `serde_json::Value`) y prueba desde un celular.
 
 ## Fuera de alcance por ahora
 
