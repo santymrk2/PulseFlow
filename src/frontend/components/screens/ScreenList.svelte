@@ -2,6 +2,9 @@
     import { createEventDispatcher } from "svelte"
     import { outputs } from "../../stores"
     import { translateText } from "../../utils/language"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import ListRow from "../../lib/components/ui/list-row/list-row.svelte"
+    import SectionHeader from "../../lib/components/ui/section-header/section-header.svelte"
     import { keysToID, sortByName, sortObject } from "../helpers/array"
     import { toggleOutputs } from "../helpers/output"
 
@@ -23,37 +26,42 @@
     }
 </script>
 
+<!-- F12.3: columna de pantallas con el kit (section-header + list-row, 240 px) -->
 <div class="group">
-    <div class="group-header">
-        <button class="group-toggle" on:click={() => toggleGroup("audience")} title="audience">●</button>
-        <div class="group-title">{translateText("screen_config.audience")}</div>
-        <button class="add" on:click={() => dispatch("addAudience")} title="add">+</button>
-    </div>
+    <SectionHeader>
+        {translateText("screen_config.audience")}
+        {#snippet actions()}
+            <Button variant="ghost" size="icon-sm" title="audience" onclick={() => toggleGroup("audience")}>●</Button>
+            <Button variant="ghost" size="icon-sm" title="add" onclick={() => dispatch("addAudience")}>+</Button>
+        {/snippet}
+    </SectionHeader>
     {#each audience as out}
-        <button class="item" class:selected={selectedOutputId === out.id} on:click={() => select(out.id)} on:contextmenu|preventDefault>
-            <div class="item-main">
-                <div class="item-name">{out.name || out.id}</div>
-                <div class="item-sub">{out.bounds?.width || 0} × {out.bounds?.height || 0}</div>
-            </div>
-            {#if out.enabled && out.active}<span class="dot"></span>{/if}
-        </button>
+        <ListRow active={selectedOutputId === out.id} onclick={() => select(out.id)}>
+            {out.name || out.id}
+            {#snippet trailing()}
+                <span class="res">{out.bounds?.width || 0}×{out.bounds?.height || 0}</span>
+                {#if out.enabled && out.active}<span class="dot"></span>{/if}
+            {/snippet}
+        </ListRow>
     {/each}
 </div>
 
 <div class="group">
-    <div class="group-header">
-        <button class="group-toggle" on:click={() => toggleGroup("stage")} title="stage">●</button>
-        <div class="group-title">{translateText("screen_config.stage")}</div>
-        <button class="add" on:click={() => dispatch("addStage")} title="add">+</button>
-    </div>
+    <SectionHeader>
+        {translateText("screen_config.stage")}
+        {#snippet actions()}
+            <Button variant="ghost" size="icon-sm" title="stage" onclick={() => toggleGroup("stage")}>●</Button>
+            <Button variant="ghost" size="icon-sm" title="add" onclick={() => dispatch("addStage")}>+</Button>
+        {/snippet}
+    </SectionHeader>
     {#each stage as out}
-        <button class="item" class:selected={selectedOutputId === out.id} on:click={() => select(out.id)} on:contextmenu|preventDefault>
-            <div class="item-main">
-                <div class="item-name">{out.name || out.id}</div>
-                <div class="item-sub">{out.bounds?.width || 0} × {out.bounds?.height || 0}</div>
-            </div>
-            {#if out.enabled && out.active}<span class="dot"></span>{/if}
-        </button>
+        <ListRow active={selectedOutputId === out.id} onclick={() => select(out.id)}>
+            {out.name || out.id}
+            {#snippet trailing()}
+                <span class="res">{out.bounds?.width || 0}×{out.bounds?.height || 0}</span>
+                {#if out.enabled && out.active}<span class="dot"></span>{/if}
+            {/snippet}
+        </ListRow>
     {/each}
 </div>
 
@@ -61,57 +69,9 @@
     .group {
         padding: 6px 0;
     }
-    .group-header {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 4px 10px;
-    }
-    .group-toggle {
-        background: transparent;
-        border: none;
-        color: var(--text);
-        cursor: pointer;
-    }
-    .group-title {
-        flex: 1;
-        font-size: 0.9em;
-    }
-    .add {
-        background: transparent;
-        border: none;
-        color: var(--text);
-        cursor: pointer;
-        font-size: 1.1em;
-    }
-    .item {
-        width: 100%;
-        text-align: left;
-        background: transparent;
-        border: none;
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        padding: 6px 12px 6px 22px;
-        cursor: pointer;
-        gap: 8px;
-    }
-    .item.selected {
-        background-color: var(--primary-lighter);
-    }
-    .item:hover {
-        background-color: var(--hover-bg, rgba(255, 255, 255, 0.04));
-    }
-    .item-main {
-        flex: 1;
-        min-width: 0;
-    }
-    .item-name {
-        font-size: 0.9em;
-    }
-    .item-sub {
-        font-size: 0.75em;
-        opacity: 0.6;
+    .res {
+        font-size: 11px;
+        opacity: 0.7;
     }
     .dot {
         width: 6px;

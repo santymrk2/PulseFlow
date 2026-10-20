@@ -119,6 +119,8 @@
     .right {
         flex: 1;
         min-width: 0;
+        min-height: 0;
+        overflow: hidden;
         padding: 12px;
         display: flex;
         flex-direction: column;

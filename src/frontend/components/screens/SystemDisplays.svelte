@@ -18,7 +18,7 @@
 
 <div class="wrap">
     {#if displays.length}
-        <DisplayLayout {displays} width={220} height={130} selectable={false} />
+        <DisplayLayout {displays} width={220} height={130} selectable={false} fill />
     {:else}
         <div class="empty">{translateText("screen_config.no_monitors")}</div>
     {/if}

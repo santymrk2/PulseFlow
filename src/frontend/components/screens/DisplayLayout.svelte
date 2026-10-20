@@ -20,10 +20,17 @@
     export let assignedId: string | null = null
     /** Si es `false`, los monitores no son clicables. */
     export let selectable = true
+    /** Si es `true`, el dibujo ocupa el ancho del contenedor (`width` deja de mandar) y no sale del panel. */
+    export let fill = false
+
+    let box = 0
 
     const dispatch = createEventDispatcher<{ select: LayoutDisplay }>()
 
-    $: layout = computeDisplayLayout(displays, { width, height })
+    // con `fill` se toma el ancho real del panel y el alto guarda la proporción de `width`×`height`
+    $: drawWidth = fill && box ? box : width
+    $: drawHeight = fill && box ? Math.round((box * height) / width) : height
+    $: layout = computeDisplayLayout(displays, { width: drawWidth, height: drawHeight })
 
     function resolution(display: LayoutDisplay) {
         const { width, height } = display.bounds
@@ -31,7 +38,7 @@
     }
 </script>
 
-<div class="displayLayout" style="width: {width}px;height: {height}px;">
+<div class="displayLayout" class:fill bind:clientWidth={box} style={fill ? `height: ${drawHeight}px;` : `width: ${drawWidth}px;height: ${drawHeight}px;`}>
     {#each layout.displays as item (item.display.id)}
         <div
             class="monitor"
@@ -66,6 +73,10 @@
     .displayLayout {
         position: relative;
         overflow: hidden;
+        max-width: 100%;
+    }
+    .displayLayout.fill {
+        width: 100%;
     }
     .monitor {
         position: absolute;

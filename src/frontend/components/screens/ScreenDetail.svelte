@@ -9,6 +9,7 @@
     import DisplayLayout from "./DisplayLayout.svelte"
     import ScreenOutputOptions from "./ScreenOutputOptions.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
     import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
@@ -198,7 +199,7 @@
 
 <div class="canvas">
     <div class="canvas-title">{translateText("screen_config.monitors")}</div>
-    <DisplayLayout {displays} width={620} height={320} assignedId={currentOutput.screen || currentOutput.display?.screen || null} selectable={true} on:select={setScreen} />
+    <DisplayLayout {displays} width={620} height={240} fill assignedId={currentOutput.screen || currentOutput.display?.screen || null} selectable={true} on:select={setScreen} />
     <div class="canvas-info">
         {#if currentOutput.screen}
             <span>Asignado: {currentOutput.screen}</span>
@@ -207,9 +208,9 @@
 </div>
 
 <div class="tabs">
-    <button class="tab" class:active={activeTab === "hardware"} on:click={() => (activeTab = "hardware")}>{translateText("screen_config.hardware")}</button>
-    <button class="tab" class:active={activeTab === "cropping"} on:click={() => (activeTab = "cropping")}>{translateText("screen_config.cropping")}</button>
-    <button class="tab" class:active={activeTab === "sending"} on:click={() => (activeTab = "sending")}>{translateText("screen_config.sending")}</button>
+    <Button variant={activeTab === "hardware" ? "default" : "ghost"} size="sm" onclick={() => (activeTab = "hardware")}>{translateText("screen_config.hardware")}</Button>
+    <Button variant={activeTab === "cropping" ? "default" : "ghost"} size="sm" onclick={() => (activeTab = "cropping")}>{translateText("screen_config.cropping")}</Button>
+    <Button variant={activeTab === "sending" ? "default" : "ghost"} size="sm" onclick={() => (activeTab = "sending")}>{translateText("screen_config.sending")}</Button>
 </div>
 
 {#if activeTab === "hardware"}
@@ -345,10 +346,13 @@
 {/if}
 
 <style>
+    /* cabecera en una sola línea: el nombre se achica, la resolución y el estado no se cortan */
     .header {
         display: flex;
         align-items: center;
         gap: 10px;
+        min-width: 0;
+        white-space: nowrap;
     }
     .name-input {
         background: transparent;
@@ -357,8 +361,10 @@
         padding: 4px 6px;
         border-radius: var(--radius, 4px);
         flex: 1;
+        min-width: 0;
     }
     .res {
+        flex-shrink: 0;
         opacity: 0.7;
         font-size: 0.9em;
     }
@@ -379,7 +385,7 @@
         display: flex;
         flex-direction: column;
         gap: 6px;
-        align-items: center;
+        min-width: 0;
     }
     .canvas-title {
         align-self: flex-start;
@@ -391,21 +397,12 @@
         opacity: 0.7;
         font-size: 0.8em;
     }
+    /* pestañas: si no entran en el ancho, la tira scrollea sin cortar letras */
     .tabs {
         display: flex;
         gap: 6px;
-    }
-    .tab {
-        background: transparent;
-        border: 1px solid var(--border-color, var(--primary-lighter));
-        color: var(--text);
-        padding: 4px 10px;
-        border-radius: var(--radius, 4px);
-        cursor: pointer;
-        font-size: 0.9em;
-    }
-    .tab.active {
-        background-color: var(--primary-lighter);
+        overflow-x: auto;
+        scrollbar-width: none;
     }
     .tab-panel {
         border: 1px solid var(--border-color, var(--primary-lighter));
@@ -416,6 +413,19 @@
         gap: 8px;
         flex: 1;
         min-height: 0;
+        /* único scroll del detalle: el contenido de la pestaña */
+        overflow-y: auto;
+    }
+    /* dos columnas de campos cuando hay ancho (>= ~640 px del modal); una si no */
+    .tab-panel:has(> .row) {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        align-content: start;
+    }
+    .tab-panel > .info-box,
+    .tab-panel > .actions,
+    .tab-panel > .section {
+        grid-column: 1 / -1;
     }
     .info-box {
         border: 1px solid var(--border-color, var(--primary-lighter));
