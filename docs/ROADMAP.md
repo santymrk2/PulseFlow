@@ -854,7 +854,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   *Aceptación:* test unitario del puente; con `RENDER_SNAPSHOT`, dos looks distintos
   producen escenas distintas para la misma pantalla. El resto de la app no cambia.
 
-- [ ] **F10.3 Ventana "Configuración de pantallas": estructura y Hardware.** (agente A)
+- [x] **F10.3 Ventana "Configuración de pantallas": estructura y Hardware.** (agente A)
   *Archivos:* nueva carpeta `src/frontend/components/screens/` (`ScreenConfig.svelte`,
   `ScreenList.svelte`, `ScreenDetail.svelte`, `SystemDisplays.svelte`), registro del
   popup en `utils/popup.ts`.
@@ -875,7 +875,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   *Aceptación:* todo lo que se podía configurar en Settings → Outputs se puede
   configurar en la ventana nueva (checklist en el commit).
 
-- [ ] **F10.5 Tipos de pantalla: Única, Espejo, Edge blend.** (agente A)
+- [x] **F10.5 Tipos de pantalla: Única, Espejo, Edge blend.** (agente A)
   *Pasos:* dropdown "Tipo". *Espejo*: el frontend manda a la pantalla espejo la misma
   escena que a `mirrorOf` (en `sendOutputScenes`), sin cambios en Rust. *Edge blend*:
   muestra los controles de blending existentes. "Agrupada" no se ofrece.
@@ -926,7 +926,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   `grep` de cada componente para demostrar que nada más lo usa.
   *Aceptación:* `test:svelte` no sube; no quedan referencias a los componentes borrados.
 
-- [ ] **F10.8b Recuperar lo que se perdió al quitar Settings → Outputs (revisión 2026-10-20).**
+- [x] **F10.8b Recuperar lo que se perdió al quitar Settings → Outputs (revisión 2026-10-20).**
   F10.8 borró `settings/tabs/Outputs.svelte` (ver su versión en `git show 8f233a0^:src/frontend/components/settings/tabs/Outputs.svelte`)
   pero `components/screens/ScreenDetail.svelte` no tiene todas sus opciones. Agregar al
   modal de pantallas, copiando la lógica del archivo borrado:
