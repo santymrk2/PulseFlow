@@ -23,13 +23,14 @@
     .tooltip {
         position: fixed;
 
-        background-color: var(--primary-darkest);
+        /* background-color: var(--primary-darkest); */
+        background-color: rgba(18, 18, 28, 0.85);
         backdrop-filter: blur(3px);
-        border: 1px solid var(--border-color, var(--primary-lighter));
+        border: 1px solid var(--primary-lighter);
 
         color: var(--text);
         padding: 6px 10px;
-        border-radius: var(--radius, 4px);
+        border-radius: 4px;
         font-size: 0.85em;
         z-index: 9999;
         pointer-events: none;
@@ -40,7 +41,6 @@
         word-wrap: break-word;
         overflow-wrap: break-word;
         white-space: normal;
-        opacity: 0.95;
     }
 
     .shortcut {

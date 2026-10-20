@@ -42,22 +42,8 @@ const listenerPromises: { [channel: string]: Promise<void> } = {}
 // Cualquier otro comando del canal `OUTPUT` se descarta antes de `invoke` para
 // no llenar la consola de errores "Command … not found" (p. ej. al cambiar de
 // slide, que dispara muchas señales heredadas). En desarrollo se avisa una sola
-// vez por nombre (ver `ipcDebugWarn`, F10.0f).
+// vez por nombre.
 const OUTPUT_COMMANDS = new Set(["TOGGLE_OUTPUTS", "RENDER_SCENE", "UPDATE_BOUNDS", "IDENTIFY_SCREENS"])
-
-// Canales de servidor (F10.0f): en Electron estos mensajes iban por websocket a
-// las apps web de control remoto/stage/controller/output-stream (el puente
-// `io.emit(id, msg)` de `src/electron/servers.ts`). En PulseFlow se reenvían al
-// servidor interno con el comando `SERVER_SEND`, que difunde el mensaje JSON a
-// la sala correspondiente. Nunca se invocan como comando
-// (`invoke("SCRIPTURE")` no existe y producía "Command not found" en cada
-// actualización).
-const SERVER_ROOMS: { [channel: string]: string } = {
-    REMOTE: "remote",
-    STAGE: "stage",
-    CONTROLLER: "controller",
-    OUTPUT_STREAM: "output_stream"
-}
 
 // Resultado de un `invoke` directo al backend (F7.3). `ok: false` significa que
 // el comando falló en Rust o que no había backend Tauri; el frontend decide qué
@@ -162,27 +148,9 @@ const POSTPONED_COMMANDS = new Set<Main>([
     Main.SET_RTMP_ENCODER
 ])
 
-// Comandos ya avisados en depuración de IPC, para no repetir el warning.
-const warnedIpcCommands = new Set<string>()
-
-// Aviso de depuración de IPC (F10.0f): una sola vez por nombre y sólo si el
-// usuario habilitó `localStorage.pulseflowIpcDebug = "1"`. Sin esa clave no se
-// imprime nada (ni en desarrollo), así la terminal queda limpia al usar la app.
-// Si la clave está activa, además se reenvía el warn a la terminal vía `LOG`
-// (`forwardConsoleToTerminal`).
-function ipcDebugWarn(label: string, name: string) {
-    const key = `${label}:${name}`
-    if (warnedIpcCommands.has(key)) return
-    warnedIpcCommands.add(key)
-
-    try {
-        if (typeof localStorage === "undefined" || localStorage.getItem("pulseflowIpcDebug") !== "1") return
-    } catch {
-        return
-    }
-
-    console.warn(`[tauri] ${label}: "${name}"`)
-}
+// Comandos ya avisados en desarrollo, para no repetir el warning en cada envío.
+const warnedOutputCommands = new Set<string>()
+const warnedPostponedCommands = new Set<string>()
 
 const isTauri = typeof window !== "undefined" && "__TAURI_INTERNALS__" in window
 
@@ -221,23 +189,15 @@ async function send(channel: string, data?: any, id?: string) {
     // Canal `OUTPUT`: sólo se invocan los comandos que existen en Rust; el resto
     // son señales heredadas de la ventana webview de Electron (F2.6).
     if (channel === OUTPUT && !OUTPUT_COMMANDS.has(command)) {
-        ipcDebugWarn("canal OUTPUT: comando descartado", command)
+        if (!warnedOutputCommands.has(command)) {
+            warnedOutputCommands.add(command)
+            if (import.meta.env.DEV) console.warn(`[tauri] canal OUTPUT: comando "${command}" descartado (no existe en el engine nativo)`)
+        }
         return
     }
 
     if (!isTauri) {
         console.warn(`[tauri] invoke("${command}") skipped: not running inside Tauri`)
-        return
-    }
-
-    // Canales de servidor (F10.0f): el mensaje completo (`{ id?, channel, data }`)
-    // se difunde a la sala vía `SERVER_SEND`; el `id` (si existe) apunta a un
-    // cliente concreto, como en el puente de Electron. No hay respuesta que
-    // despachar, así que no hace falta esperar a los listeners.
-    if (channel in SERVER_ROOMS) {
-        invoke("SERVER_SEND", { data: { channel: SERVER_ROOMS[channel], message: data } }).catch((error) => {
-            console.warn(`[tauri] SERVER_SEND(${channel}) failed:`, error)
-        })
         return
     }
 
@@ -251,7 +211,10 @@ async function send(channel: string, data?: any, id?: string) {
     // anterior porque `requestMain` registra su listener de forma síncrona
     // apenas retorna el control de este `send`.
     if (POSTPONED_COMMANDS.has(command as Main)) {
-        ipcDebugWarn("canal pospuesto", command)
+        if (!warnedPostponedCommands.has(command)) {
+            warnedPostponedCommands.add(command)
+            if (import.meta.env.DEV) console.warn(`[tauri] canal pospuesto: "${command}" → respuesta inmediata undefined`)
+        }
         dispatch(channel, { channel: command, data: undefined }, id)
         return
     }

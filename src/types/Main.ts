@@ -485,10 +485,12 @@ export type Popups =
     | "edit_event"
     | "edit_chart"
     | "choose_chord"
+    | "choose_screen"
     | "choose_media_input"
     | "choose_output_input"
     | "choose_output_type"
     | "choose_style"
+    | "change_output_values"
     | "output_selector"
     | "set_time"
     | "assign_shortcut"
@@ -527,8 +529,6 @@ export type Popups =
     | "pco_picker"
     | "sync_folders"
     | "node_options"
-    | "looks"
-    | "screen_config"
 
 export type DefaultProjectNames = "date" | "today" | "sunday" | "week" | "custom" | "blank"
 

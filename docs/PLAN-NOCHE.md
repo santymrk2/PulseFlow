@@ -84,8 +84,7 @@ imágenes, revisarlas; si no, describir qué se esperaba ver en el informe del c
    usuario, elegí la opción más conservadora, anotala como "Decisión pendiente" en tu
    informe y seguí.
 6. Al terminar todas las tareas del carril: escribir el resumen final en tu informe
-   (tareas, commits, decisiones pendientes, qué verificar a mano), agregar al final una
-   línea que diga exactamente `TERMINADO`, commitear, pushear y parar.
+   (tareas, commits, decisiones pendientes, qué verificar a mano) y parar.
 
 ## Antes de irte (vos, 5 minutos)
 
@@ -125,26 +124,6 @@ con sus reglas). Para usar la app, respetá el lock de "Compartir la app".
 - **B:** (agente principal, carpeta original) `Carril B — Looks. Tareas en orden: terminar F10.1 y F10.2, después F10.6. Rama feature/tauri-rust-migration. Informe: docs/informes/looks.md.`
 - **C:** `Carril C — Barra y menú. Tareas en orden: F10.0f, F10.7, F11.1. Rama feature/f10-menu. Informe: docs/informes/menu.md.`
 - **D:** `Carril D — Interfaz. Tareas en orden: F11.2, F11.3, F11.4, F11.5, F11.6, F11.8, F11.10. Rama feature/f11-ui. Informe: docs/informes/ui.md.`
-
-## Reintento automático (si se corta por el límite del modelo)
-
-opencode no reintenta solo cuando se agota la cuota de un modelo gratis: la sesión se
-corta. `scripts/carril.sh` corre el carril con `opencode run` (sin la interfaz) y, si se
-corta, espera 10 minutos y arranca **una sesión nueva** que retoma desde los commits, el
-ROADMAP y el informe, hasta que el informe termine con `TERMINADO` (máximo 60 intentos).
-
-Desde la carpeta original `FreeShow`, una terminal por carril:
-
-```bash
-scripts/carril.sh . docs/informes/looks.md "Carril B — Looks (agente principal). Tareas en orden: terminar F10.1 y F10.2 (migración idempotente + test, startLookBridge al arrancar, applyLook con transitionMs, arreglar settings/tabs/Looks.svelte; svelte-check vuelve a 58; marcar F10.0a-e, F10.1 y F10.2 y pushear porque el carril A lo espera), después F10.6. Rama feature/tauri-rust-migration. Informe: docs/informes/looks.md."
-scripts/carril.sh ../PulseFlow-pantallas docs/informes/pantallas.md "Carril A — Pantallas. Tareas en orden: F10.3, F10.4, F10.5. Rama feature/f10-pantallas. Cuando necesites los tipos de F10.1/F10.2, seguí la sección Esperar la base. Informe: docs/informes/pantallas.md."
-scripts/carril.sh ../PulseFlow-menu docs/informes/menu.md "Carril C — Barra y menú. Tareas en orden: F10.0f, F10.7, F11.1. Rama feature/f10-menu. Informe: docs/informes/menu.md."
-scripts/carril.sh ../PulseFlow-ui docs/informes/ui.md "Carril D — Interfaz. Tareas en orden: F11.2, F11.3, F11.4, F11.5, F11.6, F11.8, F11.10. Rama feature/f11-ui. Informe: docs/informes/ui.md."
-```
-
-Opciones: `MODELO=opencode/<otro> ESPERA=900 scripts/carril.sh …`. Con `--auto`, opencode
-aprueba solo los permisos que no estén denegados explícitamente. Para cortar un carril:
-`Ctrl+C` en su terminal (el trabajo commiteado queda).
 
 ## A la mañana
 

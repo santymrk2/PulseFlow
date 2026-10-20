@@ -158,16 +158,12 @@
     }
 
     .title {
-        /* F11.3 — títulos de sección: mayúsculas pequeñas, atenuados */
         font-weight: 500;
-        padding: 6px 14px 4px;
-        font-size: 0.62rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        opacity: 0.45;
-        color: var(--text);
+        padding: 4px 14px;
+        font-size: 0.8rem;
+        opacity: 0.8;
         background: var(--primary-darkest);
-        border-bottom: 1px solid var(--border-color, var(--primary-lighter));
+        border-bottom: 1px solid var(--primary-lighter);
     }
 
     hr {

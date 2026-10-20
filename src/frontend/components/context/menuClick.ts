@@ -870,7 +870,10 @@ const clickActions = {
     // output
     force_output: () => toggleOutputs(null, { force: true }),
     align_with_screen: () => send(OUTPUT, ["ALIGN_WITH_SCREEN"]),
-
+    choose_screen: () => {
+        popupData.set({ activateOutput: true })
+        activePopup.set("choose_screen")
+    },
     toggle_output: (obj: ObjData) => {
         const id = obj.contextElem?.id || ""
         toggleOutput(id)

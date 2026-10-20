@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { actions, activeLook, activePage, activePopup, activeShow, activeTimers, contextActive, groups, guideActive, looks, openToolsTab, outLocked, outputs, overlayTimers, playingAudio, playingMetronome, resized, slideTimers, special } from "../../../stores"
+    import { actions, activeLook, activePage, activePopup, activeShow, activeTimers, contextActive, groups, guideActive, looks, outLocked, outputs, overlayTimers, playingAudio, playingMetronome, resized, slideTimers, special } from "../../../stores"
     import { DEFAULT_WIDTH, isDarkTheme } from "../../../utils/common"
     import { formatSearch } from "../../../utils/search"
     import { getNormalizedKey, previewCtrlShortcuts, previewShortcuts } from "../../../utils/shortcuts"
@@ -18,8 +18,12 @@
     import MaterialButton from "../../inputs/MaterialButton.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import ShowActions from "../ShowActions.svelte"
+    import Audio from "../tools/Audio.svelte"
     import MediaControls from "../tools/MediaControls.svelte"
+    import NextTimer from "../tools/NextTimer.svelte"
+    import Overlay from "../tools/Overlay.svelte"
     import Show from "../tools/Show.svelte"
+    import TimerControls from "../tools/TimerControls.svelte"
     import ClearButtons from "./ClearButtons.svelte"
     import MultiOutputs from "./MultiOutputs.svelte"
     import SpotifyController from "./SpotifyController.svelte"
@@ -206,6 +210,9 @@
         return null
     }
 
+    // slide timer
+    let timer: any = {}
+    $: timer = outputId && $slideTimers[outputId] ? $slideTimers[outputId] : {}
     $: Object.entries($outputs).forEach(([id, output]) => {
         if ((Object.keys($outputs)?.length > 1 && !output.enabled) || output.stageOutput) return
         if (!output.out?.transition || $slideTimers[id]?.timer) return
@@ -279,21 +286,24 @@
 
     {#if $activePage === "show"}
         <div class="section" style="margin-top: 2px;">
-            <ClearButtons
-                bind:autoChange
-                activeClear={updatedActiveClear}
-                on:update={(e) => {
-                    activeClear = e.detail
-                    if (e.detail === "audio") openToolsTab.set("audio")
-                    else if (e.detail === "overlays") openToolsTab.set("overlays")
-                    else if (e.detail === "nextTimer") openToolsTab.set("timers")
-                }}
-            />
+            <ClearButtons bind:autoChange activeClear={updatedActiveClear} on:update={(e) => (activeClear = e.detail)} />
 
             {#if updatedActiveClear === "background"}
                 <MediaControls currentOutput={currentBgOutput} outputId={backgroundOutputId} />
             {:else if updatedActiveClear === "slide"}
                 <Show {currentOutput} {ref} {linesIndex} {maxLines} />
+            {:else if updatedActiveClear === "overlays"}
+                <Overlay {currentOutput} />
+            {:else if updatedActiveClear === "audio"}
+                <Audio />
+            {:else if updatedActiveClear === "nextTimer"}
+                {#if Object.keys($overlayTimers).length}
+                    <!-- WIP display overlay timer time -->
+                {:else if timer?.timer}
+                    <NextTimer {currentOutput} timer={timer?.timer ? timer : { time: 0, paused: true, timer: {} }} />
+                {:else if $activeTimers}
+                    <TimerControls />
+                {/if}
             {/if}
         </div>
 

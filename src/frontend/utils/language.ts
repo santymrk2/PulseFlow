@@ -1,10 +1,14 @@
 import { get } from "svelte/store"
+import { OUTPUT } from "../../types/Channels"
 import type { DropdownOptions } from "../../types/Input"
+import { Main } from "../../types/IPC/Main"
 import type { Dictionary } from "../../types/Settings"
 import { sortByName } from "../components/helpers/array"
+import { sendMain } from "../IPC/main"
 import { dictionary, language, localeDirection } from "../stores"
 import { isMainWindow } from "./common"
 import { languageFlags, languages, replace } from "./languageData"
+import { send } from "./request"
 
 // https://medium.com/i18n-and-l10n-resources-for-developers/a-step-by-step-guide-to-svelte-localization-with-svelte-i18n-v3-2c3ff0d645b8
 // https://github.com/kaisermann/svelte-i18n/blob/70725828bd3aa2ba77fe37dccb2890c57b27f6e4/src/cli/includes/deepSet.ts#L5
@@ -62,14 +66,15 @@ function setLanguage(locale = "", init = false) {
 
         language.set(locale)
 
-        // F10.0f: `LANGUAGE` se eliminó del frontend (inventario F7.1): su
-        // destinatario era el menú nativo de Electron (`setGlobalMenu`) y la
-        // webview de salida, ninguno de los dos existe en PulseFlow.
-        // El idioma para el control remoto lo difunde `remoteTalk.ts` (canal
-        // REMOTE → `SERVER_SEND`).
-        //
-        // "wait until loaded": el delay de 3 s que reenviaba el idioma a la
-        // webview de salida ya no hace falta.
+        const msg = { lang: locale, strings: messages }
+        sendMain(Main.LANGUAGE, msg)
+        // remoteTalk.ts sends this
+        // send(REMOTE, ["LANGUAGE"], msg)
+        // wait until loaded
+        setTimeout(() => {
+            if (loadingLocale !== locale) return
+            send(OUTPUT, ["LANGUAGE"], locale)
+        }, 3000)
     }
 }
 

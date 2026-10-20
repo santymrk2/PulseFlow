@@ -31,12 +31,6 @@ import { triggerPopupSubmit } from "./popup"
 import { send } from "./request"
 import { save } from "./save"
 import { isTypingTarget } from "./shortcutsHelper"
-import { listen } from "@tauri-apps/api/event"
-import { applyLook } from "../components/helpers/looks"
-import { getAllNormalOutputs, getAllStageOutputs } from "../components/helpers/output"
-import { invoke } from "@tauri-apps/api/core"
-import { activeLook, looks } from "../stores"
-import { derived } from "svelte/store"
 
 const menus: TopViews[] = ["show", "edit", "stage", "draw", "settings"]
 
@@ -90,19 +84,6 @@ const shiftCtrlKeys = {
 const altKeys = {
     // when the caret is inside a list view textbox, EditboxLines splits at the caret instead
     Enter: () => (get(activePage) === "show" && !document.activeElement?.closest(".quickEdit") ? menuClick("cut_in_half", true, null, null, null, get(selected)) : null)
-}
-
-const MENU_ACTIONS: Record<string, () => void> = {
-    "screens.toggle_audience": () => {
-        const ids = getAllNormalOutputs().map((a) => a.id)
-        if (ids.length) toggleOutputs(ids)
-    },
-    "screens.toggle_stage": () => {
-        const ids = getAllStageOutputs().map((a) => a.id)
-        if (ids.length) toggleOutputs(ids)
-    },
-    "screens.configure": () => activePopup.set("screen_config"),
-    "screens.looks": () => activePopup.set("looks")
 }
 
 export const disablePopupClose = ["initialize", "cloud_method"]
@@ -196,12 +177,6 @@ export function keydown(e: KeyboardEvent) {
     }
 
     if (e.ctrlKey || e.metaKey) {
-        // F10.7 — En macOS, ⌘1/⌘2 los captura el menú nativo (aceleradores de
-        // `src-tauri/src/menu.rs`) antes de llegar al webview, así que este
-        // bloque no los ve. En Windows los items de "Pantallas" no registran
-        // aceleradores (el menú se abre con el mouse), así que Ctrl+1/Ctrl+2
-        // siguen cambiando de pestaña del drawer como antes. Decisión: no se
-        // duplican atajos para no romper el cambio de pestaña en Windows.
         const drawerMenus = Object.keys(drawerTabs) as DrawerTabIds[]
         if (document.activeElement === document.body && Object.keys(drawerMenus).includes((Number(e.key) - 1).toString())) {
             const tabId = drawerMenus[Number(e.key) - 1]
@@ -503,38 +478,6 @@ function createNew() {
         console.info("CREATE NEW:", selectId)
         activePopup.set("show")
     }
-}
-
-export function initMenuActions() {
-    if (typeof window === "undefined") return
-    listen<string>("menu-action", (event) => {
-        const id = event.payload
-        if (typeof id !== "string") return
-        const action = MENU_ACTIONS[id]
-        if (action) {
-            action()
-            return
-        }
-        if (id.startsWith("screens.look.")) {
-            const lookId = id.slice("screens.look.".length)
-            applyLook(lookId)
-        }
-    }).catch((e) => console.warn("[menu-action] listen failed:", e))
-
-    // Actualizar submenu "En vivo" cuando cambian los looks o el look activo.
-    const liveMenuStore = derived([looks, activeLook], ([ls, al]) => {
-        const items = Object.entries(ls || {}).map(([id, look]: any) => ({
-            id,
-            name: look?.name || id,
-            active: al === id
-        }))
-        return items
-    })
-    liveMenuStore.subscribe((items) => {
-        invoke("update_live_menu", { items }).catch((e) => {
-            console.warn("[menu] update_live_menu failed:", e)
-        })
-    })
 }
 
 // this only works if opened in preview - if not api

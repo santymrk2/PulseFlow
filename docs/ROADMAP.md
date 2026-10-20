@@ -722,7 +722,7 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
 Reportadas por el usuario en macOS el 2026-10-20. Un commit por tarea; todas se
 verifican en la app real (`bun run dev:tauri`).
 
-- [x] **F10.0a Barra superior sin indicador rojo ni título.**
+- [ ] **F10.0a Barra superior sin indicador rojo ni título.**
   *Archivo:* `src/frontend/components/main/Top.svelte`.
   *Causa:* el `<div class="unsaved">` (barra roja de "sin guardar") y el
   `<h1>PulseFlow</h1>` ocupan la esquina izquierda, que en macOS es de los botones de
@@ -735,7 +735,7 @@ verifican en la app real (`bun run dev:tauri`).
   *Aceptación:* en macOS la esquina izquierda sólo tiene los botones del sistema y no
   aparece nada al guardar o al tener cambios sin guardar.
 
-- [x] **F10.0b Mover la ventana desde la barra superior.**
+- [ ] **F10.0b Mover la ventana desde la barra superior.**
   *Archivos:* `Top.svelte`, `src-tauri/capabilities/default.json` (ya tiene
   `core:window:allow-start-dragging`).
   *Causa:* la barra usa `-webkit-app-region: drag`, que es de Electron; Tauri lo ignora.
@@ -745,7 +745,7 @@ verifican en la app real (`bun run dev:tauri`).
   *Aceptación:* en macOS se arrastra la ventana desde cualquier parte vacía de la barra
   y los botones siguen funcionando.
 
-- [x] **F10.0c Monitores en coordenadas lógicas e identidad estable.**
+- [ ] **F10.0c Monitores en coordenadas lógicas e identidad estable.**
   *Archivos:* `src-tauri/src/commands/output.rs` (`GET_DISPLAYS`),
   `src-tauri/src/render/screens.rs`, espejo TS en `src/types/`.
   *Causa:* `GET_DISPLAYS` devuelve `position()`/`size()` **físicos**; en una Mac con
@@ -761,7 +761,7 @@ verifican en la app real (`bun run dev:tauri`).
   devuelve rectángulos que no se superponen y coinciden con la disposición de
   Ajustes del Sistema → Pantallas.
 
-- [x] **F10.0d La salida cubre la pantalla asignada (como ProPresenter).**
+- [ ] **F10.0d La salida cubre la pantalla asignada (como ProPresenter).**
   *Archivo:* `src-tauri/src/render/screens.rs` (`place_window`, `target_monitor`).
   *Causa:* la regla "si es el monitor de la ventana de control → ventana flotante 16:9"
   (y, por la mezcla físico/lógico, el monitor externo se detecta como el de control).
@@ -776,7 +776,7 @@ verifican en la app real (`bun run dev:tauri`).
   externo queda cubierto por completo (sin barra de menú ni Dock) y la app sigue
   usable en la integrada.
 
-- [x] **F10.0e Disposición de monitores que no se rompe.**
+- [ ] **F10.0e Disposición de monitores que no se rompe.**
   *Archivos:* nuevo `src/frontend/components/screens/displayLayout.ts` (función pura +
   test de vitest) y `DisplayLayout.svelte`; usarlo en `settings/Screens.svelte` (el
   popup actual) y después en la ventana de F10.3.
@@ -789,11 +789,7 @@ verifican en la app real (`bun run dev:tauri`).
   *Aceptación:* tests de la función con 3 casos (lado a lado, apilados, negativo); en
   la app la disposición se ve igual que en Ajustes del Sistema → Pantallas.
 
-- [x] **F10.0f IPC sin ruido: mensajes al remoto/stage web y avisos únicos.** ✅ 2026-10-14.
-  `REMOTE`/`STAGE`/`CONTROLLER`/`OUTPUT_STREAM` ahora van al comando Rust `SERVER_SEND`
-  (broadcast por sala websocket, con test unitario); avisos de comandos desconocidos
-  sólo con `localStorage.pulseflowIpcDebug = "1"`. Verificado con app corriendo 4 min
-  sin ninguna línea `[webview] WARN` (antes salía a los 3 s y en cada evento de idioma).
+- [ ] **F10.0f IPC sin ruido: mensajes al remoto/stage web y avisos únicos.**
   *Archivos:* `src/frontend/IPC/tauri.ts` (+ `tauri.test.ts`), `src-tauri/src/commands/servers.rs`,
   `src-tauri/src/lib.rs`, `src/frontend/utils/updateSettings.ts`, `src/frontend/utils/language.ts`.
   *Causa:* `tauri.ts` convierte en `invoke()` todo lo que se manda por los canales
@@ -835,7 +831,7 @@ Orden y paralelismo: **primero F10.0a–f** (correcciones urgentes). Después F1
 paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** = F10.6,
 **C** = F10.7. Al final, un agente: F10.8 → F10.9.
 
-- [x] **F10.1 Modelo de datos y migración.**
+- [ ] **F10.1 Modelo de datos y migración.**
   *Archivos:* `src/types/Output.ts`, `src/types/Settings.ts`, `utils/updateSettings.ts`,
   `helpers/looks.ts`, test nuevo `helpers/looks.migration.test.ts`.
   *Pasos:* tipos `Output` (`kind`, `stageLayout`, `screenType`, `mirrorOf`, `target`,
@@ -846,7 +842,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   salidas, 1 stage, 3 estilos y 2 looks) que verifica el resultado y que correr la
   migración dos veces da lo mismo.
 
-- [x] **F10.2 Puente Look → render.**
+- [ ] **F10.2 Puente Look → render.**
   *Archivos:* `helpers/looks.ts`, `stores.ts` (sólo lo necesario).
   *Pasos:* `lookScreenToStyle()`; al cambiar `looks` o `activeLook`, regenerar las
   entradas internas `__look__<outputId>` en `styles` y apuntar `output.style` a ellas.
@@ -868,7 +864,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   identifica y se la pone en vivo, sin tocar Settings. Pasos de prueba en
   `docs/VERIFICAR.md`.
 
-- [x] **F10.4 Pestañas Recorte y Envío; panel de Stage.** (agente A; completada en integración + F10.4b)
+- [ ] **F10.4 Pestañas Recorte y Envío; panel de Stage.** (agente A)
   *Pasos:* mover desde `settings/tabs/Outputs.svelte` (sin cambiar comportamiento) los
   bloques de recorte/relación de aspecto y de NDI/OMT/Blackmagic/RTMP/WebRTC a pestañas
   de `ScreenDetail`. Panel de stage con dropdown de layout + "Editar layout".
@@ -882,7 +878,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   *Aceptación:* una pantalla en espejo muestra lo mismo que su origen (golden o prueba
   manual anotada).
 
-- [x] **F10.6 Modal "Looks".** (agente B; mismo estilo y comportamiento que el modal de
+- [ ] **F10.6 Modal "Looks".** (agente B; mismo estilo y comportamiento que el modal de
   pantallas — ver "Modales" en la especificación; si `Modal.svelte` todavía no existe en
   tu rama, creá uno con la misma API en `components/looks/` y se unifica al integrar)
   *Archivos:* `src/frontend/components/looks/` (`LooksWindow.svelte`, `LookGrid.svelte`,
@@ -893,11 +889,8 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   de traducción (en `en.json` y `es.json`), botones con ícono.
   *Aceptación:* crear "Sólo letras" (Media apagado en Principal), ponerlo en vivo y
   volver a "Default"; con `RENDER_SNAPSHOT` se verifica que el fondo desaparece y vuelve.
-  *Estado:* hecho (`df01772a`). El cambio de capas del look en vivo se verificó
-  inspeccionando `styles['__look__out1'].layers`; la verificación visual con
-  `RENDER_SNAPSHOT` queda pendiente del usuario (ver `docs/informes/looks.md`).
 
-- [x] **F10.7 Menú "Pantallas", atajos y selector en la barra superior.** (agente C)
+- [ ] **F10.7 Menú "Pantallas", atajos y selector en la barra superior.** (agente C)
   *Archivos:* `src-tauri/src/lib.rs` (menú nativo macOS con `tauri::menu`),
   `components/main/MenuBar.svelte` (Windows), `components/main/Top.svelte`,
   `utils/shortcuts.ts`.
@@ -906,20 +899,8 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   Selector compacto "Look: X ▾" junto al botón de salida.
   *Aceptación:* en macOS el menú aparece en la barra del sistema; `⌘1` muestra/oculta
   audiencia y `⌘2` stage.
-  *Verificación (carril C):* `src-tauri/src/menu.rs` instala el menú nativo en `setup`
-  (sólo macOS) con el submenu "Pantallas" (audiencia `CmdOrCtrl+1`, stage
-  `CmdOrCtrl+2`, Configurar pantallas…, Gestionar looks…, submenu "En vivo" poblado
-  desde el frontend por `update_live_menu`). Los ítems emiten `menu-action` y
-  `utils/shortcuts.ts::initMenuActions()` los despacha a `toggleOutputs` por grupo,
-  `activePopup.set("choose_screen" | "looks")` y `applyLook`. `Top.svelte` agrega el
-  selector "Look: X" (`MaterialDropdown`); `MenuBar.svelte` (Windows) tiene el mismo
-  menú "Pantallas" con items locales. La app compila y corre 4 min sin errores ni
-  panic (menú instalado sin excepciones); no se pudo capturar pantalla del menú por
-  falta de permiso de grabación de pantalla. `⌘1`/`⌘2` los intercepta el menú nativo
-  en macOS; en Windows Ctrl+1/Ctrl+2 siguen cambiando de pestaña del drawer (los items
-  de "Pantallas" no registran aceleradores). Commits `831f2a93`, `f43d0cd2`.
 
-- [x] **F10.8 Quitar la UI vieja.**
+- [ ] **F10.8 Quitar la UI vieja.**
   *Pasos:* eliminar Settings → Outputs, Styles y Looks (y sus `*Tabs`/`*Buttons`), los
   popups "Elegir pantalla" y "Cambiar valores de salida", y las entradas en
   `values/tabs.ts`; en Settings dejar un botón "Configurar pantallas…". Antes de borrar,
@@ -963,113 +944,62 @@ Reglas de F11 (además de AGENTS.md):
 - Íconos: se mantiene `Icon.svelte`. Sólo donde la tarea lo dice se puede usar
   `@lucide/svelte` (ya está en devDependencies).
 
-- [x] **F11.1 Barra superior como ProPresenter.** (2026-10-20, carril C:
-  `main/Top.svelte` reorganizado en cápsulas Buscar/Texto/Tema · Show/Edit/Biblia/⋯ ·
-  Media/Look/Live · Audiencia/Stage (redondos, rojos en vivo) · Estado; botón único de
-  salida reemplazado por toggles por grupo; accesos reubicados (QuickSearch, formato de
-  texto, drawer templates/scripture/overlays/media, settings display). Checks: test:unit 86/86,
-  test:svelte 56 = baseline, build OK, app ~4 min sin errores. Clic derecho → Configurar
-  pantallas… abre `choose_screen` (popup legacy). Verificación visual del menú no posible
-  (sin permisos de captura).) (tabla "Barra superior" en
+- [ ] **F11.1 Barra superior como ProPresenter.** (tabla "Barra superior" en
   `docs/design/pantallas-y-looks.md` → "Distribución general"; archivos
   `main/Top.svelte`, `main/TopButton.svelte`) Botones con ícono + etiqueta debajo,
   agrupados en cápsulas: Buscar/Texto/Tema · Show/Edit/Biblia/⋯ (menú con Editor de
   stage, de temas y de overlays) · Media/Look/Live · Audiencia/Stage (redondos, rojos
   en vivo; clic derecho → Configurar pantallas…) · Estado. Reemplaza al botón único de
   salida y a las pestañas actuales. Sólo reubica accesos que ya existen.
-- [x] **F11.2 Cajón inferior como "media bin".** (2026-10-20, carril D:
-  `drawer/breadcrumb.ts` (+test vitest) calcula las migas; `Drawer.svelte` con handle de
-  4 px, pestañas solo-icono, barra de migas y pie (+ / filtro 256 px / toggle
-  grilla-lista / slider de columnas); `Media.svelte` pierde los controles flotantes
-  duplicados (MaterialZoom oculto conserva Ctrl+rueda); filas de 32 px en
-  `MaterialDrawerTab`/`Navigation`; lang `ui.filter`. Chequeos: test:unit 68/68,
-  svelte-check 60 errores (mismo set que HEAD limpio; la línea base documentada de 58
-  quedó obsoleta por la migración), build OK, Prettier limpio.)
-- [x] **F11.3 Panel izquierdo (proyectos y navegación).** (2026-10-20, carril D:
-  filas de 32 px redondeadas con hover `--hover` y activa `--primary-lighter` en
-  `ProjectList`/`Projects`/`ProjectContentList`; títulos de sección en mayúsculas
-  pequeñas atenuados en `NavigationSections` y en los proyectos; menús contextuales sin
-  cambios. Chequeos: test:unit 83/83, svelte-check 57 errores (línea base post-merge),
-  build OK, Prettier limpio.)
-- [x] **F11.4 Cabecera del show.** (2026-10-20, carril D: `ShowHeader.svelte` a 44 px
-  con icono de layout, nombre, '· layout', contador de diapositivas y botones Añadir
-  (ghost) y Proyectar (secundario) usando las acciones ya existentes. Chequeos:
-  test:unit 83/83, svelte-check 57 errores (línea base), build OK, Prettier limpio.)
-- [x] **F11.5 Grilla de slides y miniaturas.** (2026-10-20, carril D: `Slides.svelte`
-  con gap 12 px y pie (+ / vista / slider); `Slide.svelte` marco redondeado
-  var(--radius) y barra inferior con número + grupo; seleccionada con borde de acento
-  2 px. Chequeos: test:unit 83/83, svelte-check 57 errores (línea base), build OK,
-  Prettier limpio.)
-- [x] **F11.6 Panel derecho como ProPresenter.** (2026-10-20, carril D: ShowTools
-  con pestañas solo-icono; la tira vertical ClearButtons y el selector de salida
-  MultiOutputs del Preview se mantienen. Chequeos: test:unit 83/83, svelte-check 57
-  errores (línea base), build OK, Prettier limpio.)
-- [x] **F11.10 Columna izquierda como ProPresenter: Biblioteca, Playlist y Media.**
-  (2026-10-20, carril D: MainLayout.svelte columna izquierda con secciones
-  BIBLIOTECA (categorías de shows -> cajon), PLAYLIST (Projects sin cambios) y MEDIA.
-  Chequeos: test:unit 83/83, svelte-check 56 errores (linea base), build OK,
-  Prettier limpio.)
-- [x] **F11.7 Página de Settings.** (referencia `SettingsTabs.tsx`, `SettingsTools.tsx`;
+- [ ] **F11.2 Cajón inferior como "media bin".** (referencia `Drawer.tsx` + captura;
+  archivos `drawer/Drawer.svelte`, `drawer/MaterialDrawerTab.svelte`,
+  `drawer/Navigation.svelte`) migas de navegación arriba ("Medios › Carpeta"), pie con
+  `+`, Filtro centrado, vista grilla/lista y slider de tamaño a la derecha; manija de
+  redimensionar de 4 px. Las pestañas actuales (Shows, Media, Audio, Scripture,
+  Overlays, Templates…) quedan como fila compacta de íconos hasta F11.10.
+- [ ] **F11.3 Panel izquierdo (proyectos y navegación).** (referencia
+  `LibraryPanel.tsx`; archivos `show/Projects.svelte`, `show/ProjectList.svelte`,
+  `show/ProjectContentList.svelte`, `drawer/navigation/*`) filas de 32 px redondeadas,
+  hover `--hover`, activa `--primary-lighter`, títulos de sección pequeños en
+  mayúsculas con color atenuado, menús contextuales sin cambios.
+- [ ] **F11.4 Cabecera del show.** (referencia `Editor.tsx`; archivo
+  `show/ShowHeader.svelte`) 44 px: ícono, nombre del show, "· layout", cantidad de
+  slides a la derecha, botones "Añadir" (ghost) y "Proyectar" (secundario) usando las
+  acciones que ya existen.
+- [ ] **F11.5 Grilla de slides y miniaturas.** (referencia `SlideGrid.tsx`,
+  `SlideThumbnail.tsx` + captura; archivos `show/Slides.svelte` y el **marco** de
+  `slide/Slide.svelte`) miniatura con **barra inferior** (número a la izquierda, grupo
+  con su color), seleccionada con borde de acento de 2 px, separación 12 px; pie de la
+  grilla con `+` a la izquierda y vista grilla/texto/lista + slider de tamaño a la
+  derecha (usar los controles que ya existen). Probar en los tres modos.
+- [ ] **F11.6 Panel derecho como ProPresenter.** ("Columna derecha" en la
+  especificación; archivos `output/preview/Preview.svelte`,
+  `output/preview/ClearButtons.svelte`, `show/ShowTools.svelte` y el transporte de
+  medios existente) vista previa con **tira vertical de limpiar por capa** a su derecha
+  y ⓧ "limpiar todo" superpuesta; "Pantalla 1 ▾" debajo; transporte de medios/audio;
+  **barra de pestañas de íconos** (Audio, Stage, Timers, Mensajes, Overlays, Acciones)
+  con el contenido que hoy muestra `ShowTools`. Sin quitar funciones.
+- [ ] **F11.10 Columna izquierda como ProPresenter: Biblioteca, Playlist y Media.**
+  ("Columna izquierda" en la especificación; archivos `MainLayout.svelte` (sólo la
+  columna izquierda), `show/Projects.svelte`, `show/ProjectList.svelte`,
+  `show/ProjectContentList.svelte`, `drawer/navigation/*`) secciones BIBLIOTECA
+  (categorías de shows, que hoy están en el cajón), PLAYLIST (proyectos), lista de
+  ítems del proyecto con Filtro, y MEDIA abajo (fuentes del cajón). Al elegir una
+  categoría de BIBLIOTECA, el cajón muestra esos shows. Es un cambio de lugar: hacerlo
+  **después** de F11.2–F11.6 y verificar que abrir/arrastrar shows y proyectos sigue
+  funcionando igual.
+- [ ] **F11.7 Página de Settings.** (referencia `SettingsTabs.tsx`, `SettingsTools.tsx`;
   archivos `settings/SettingsTabs.svelte`, `settings/Settings.svelte`) **después de
   F10.8**: lista de pestañas como la izquierda de la referencia, contenido con ancho
   máximo 640 px, filas de inputs de 44 px con separador.
-- [x] **F11.8 Popups, menús contextuales y tooltips.** (2026-10-20, carril D: Tooltip.svelte
-  re-estilizado con variables del tema; Popup.svelte ya usaba var(--radius)/var(--border-color).
-  context/** no se tocó (alcance). Chequeos: test:unit 83/83, svelte-check 57 errores
-  (línea base), build OK, Prettier limpio.)
+- [ ] **F11.8 Popups, menús contextuales y tooltips.** (archivos `main/Popup.svelte`,
+  `context/ContextMenu.svelte`, `context/ContextItem.svelte`, `main/Tooltip.svelte`)
+  fondo `--primary-darker`, borde 1 px, radio, sombra, padding y alto de ítem 32 px.
 - [ ] **F11.9 Repaso final.** Recorrer todas las pantallas (Show, Edit, Stage,
   Settings, cada pestaña del cajón, popups principales) y corregir inconsistencias
   de espaciado/colores; lista de capturas antes/después en `docs/VERIFICAR-F11.md`.
 
 ---
-
-## F11b — Lo que el carril D dejó a medias (revisión 2026-10-20)
-
-El carril D re-estilizó bien cajón, panel izquierdo, cabecera y grilla, pero en tres
-tareas se quedó en lo mínimo. Estas tareas son **cambios de lugar y de estructura**, no
-sólo de estilo: está permitido mover componentes existentes siempre que no se pierda
-ninguna función (verificar cada función movida y listarla en el commit).
-
-- [x] **F11.6b Panel derecho de verdad como ProPresenter.** (2026-10-20, carril D:
-  movidos Audio/Overlay/Timers desde Preview.svelte a pestañas de ShowTools.svelte;
-  Preview conserva MediaControls y Show. Pestañas stage/acciones no creadas (sin
-  componente existente). Chequeos: test:unit 83/83, svelte-check 56 errores (linea base),
-  build OK, Prettier limpio.) (F11.6 sólo pasó las
-  pestañas de `ShowTools` a íconos: 1 línea.) Archivos: `output/preview/Preview.svelte`,
-  `output/preview/ClearButtons.svelte`, `output/preview/MultiOutputs.svelte`,
-  `show/ShowTools.svelte`, `MainLayout.svelte` (columna derecha).
-  1. `ClearButtons` pasa a ser una **tira vertical** de 32 px a la derecha de la vista
-     previa (un botón de ícono por capa, resaltado si la capa tiene contenido) y el
-     "limpiar todo" es una **ⓧ circular** superpuesta al borde derecho de la vista previa.
-  2. Debajo de la vista previa, **"Pantalla 1 ▾"** (el selector de `MultiOutputs`) en
-     una sola línea.
-  3. Debajo, el transporte de medios/audio que ya existe (sin cambios de lógica).
-  4. **Barra de pestañas de controles** con estas pestañas, en este orden, cada una con
-     el contenido que ya existe en la app en otro lugar: Audio (reproductor/listas de
-     audio), Stage (vista/selección de layout de stage), Timers (lista de timers con
-     play/reset), Overlays/Mensajes (overlays activos), Acciones (acciones/macros).
-     Las 3 pestañas actuales de `ShowTools` (grupos, metadatos, medios) siguen como
-     pestañas extra al final. Si una pestaña no tiene contenido existente que reubicar,
-     no se crea: anotarlo en el informe.
-  *Aceptación:* captura comparada con la de ProPresenter de la especificación; cada
-  función que antes estaba en el panel derecho sigue accesible.
-
-- [x] **F11.8b Menús contextuales.** (2026-10-20, carril D: ContextMenu/ContextItem/
-  ContextChild re-estilizados con variables del tema, ítems 32px, hover --hover.
-  Chequeos: test:unit 83/83, svelte-check 56 errores (linea base), build OK, Prettier limpio.) (F11.8 no tocó `context/**`.) Archivos:
-  `context/ContextMenu.svelte`, `context/ContextItem.svelte`, `context/ContextChild.svelte`.
-  Fondo `--primary-darker`, borde 1 px `--border-color`, radio `--radius`, sombra,
-  ítems de 32 px con ícono 14 px, separadores de 1 px, submenús igual. Sin cambiar
-  ninguna entrada ni su orden.
-
-- [x] **F11.10b Ítems del proyecto en la columna izquierda.** (2026-10-20, carril D:
-  ProjectContentList movido fuera de Projects.svelte a MainLayout.svelte (columna
-  izquierda): BIBLIOTECA · PLAYLIST · 'N ÍTEMS' · MEDIA. Chequeos: test:unit 83/83,
-  svelte-check 56 errores (linea base), build OK, Prettier limpio.) (F11.10 dejó la lista
-  dentro de `Projects`.) Mover `ProjectContentList` fuera de `Projects` para que la
-  columna quede: BIBLIOTECA · PLAYLIST (lista de proyectos) · "N ÍTEMS +" (contenido
-  del proyecto seleccionado, con Filtro abajo) · MEDIA. Mantener arrastrar/soltar,
-  reordenar, menú contextual y doble clic igual que hoy.
 
 ## Fuera de alcance por ahora
 

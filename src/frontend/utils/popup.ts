@@ -11,11 +11,11 @@ import AudioEffect from "../components/main/popups/AudioEffect.svelte"
 import AudioStream from "../components/main/popups/AudioStream.svelte"
 import CategoryAction from "../components/main/popups/CategoryAction.svelte"
 import ChangeIcon from "../components/main/popups/ChangeIcon.svelte"
-
+import ChangeOutputValues from "../components/main/popups/ChangeOutputValues.svelte"
 import ChooseChord from "../components/main/popups/ChooseChord.svelte"
 import ChooseMediaInput from "../components/main/popups/ChooseMediaInput.svelte"
 import ChooseOutput from "../components/main/popups/ChooseOutput.svelte"
-
+import ChooseScreen from "../components/main/popups/ChooseScreen.svelte"
 import ChooseStyle from "../components/main/popups/ChooseStyle.svelte"
 import ChurchAppsSyncCategories from "../components/main/popups/ChurchAppsSyncCategories.svelte"
 import CleaningUtility from "../components/main/popups/CleaningUtility.svelte"
@@ -57,8 +57,6 @@ import ManageGroups from "../components/main/popups/ManageGroups.svelte"
 import ManageIcons from "../components/main/popups/ManageIcons.svelte"
 import ManageMetadata from "../components/main/popups/ManageMetadata.svelte"
 import ManageTags from "../components/main/popups/ManageTags.svelte"
-import Loader from "../components/main/Loader.svelte"
-import LooksWindow from "../components/looks/LooksWindow.svelte"
 import MaxLines from "../components/main/popups/MaxLines.svelte"
 import MediaFit from "../components/main/popups/MediaFit.svelte"
 import MetadataDisplay from "../components/main/popups/MetadataDisplay.svelte"
@@ -93,7 +91,6 @@ import Transition from "../components/main/popups/Transition.svelte"
 import Unsaved from "../components/main/popups/Unsaved.svelte"
 import UpdateManager from "../components/main/popups/UpdateManager.svelte"
 import Variable from "../components/main/popups/Variable.svelte"
-import ScreenConfig from "../components/screens/ScreenConfig.svelte"
 import { activePopup, popupData } from "../stores"
 
 export const popups: { [key in Popups]: ComponentType } = {
@@ -144,11 +141,11 @@ export const popups: { [key in Popups]: ComponentType } = {
     create_collection: CreateCollection,
     edit_event: EditEvent,
     edit_chart: EditChart,
-
+    choose_screen: ChooseScreen,
     choose_output_input: ChooseOutput,
     choose_output_type: OutputSetup,
     choose_style: ChooseStyle,
-
+    change_output_values: ChangeOutputValues,
     output_selector: OutputSelector,
     set_time: SetTime,
     assign_shortcut: SlideShortcut,
@@ -186,9 +183,7 @@ export const popups: { [key in Popups]: ComponentType } = {
     cleaning_utility: CleaningUtility,
     pco_picker: PcoServicePicker,
     sync_folders: SyncFolders,
-    node_options: NodeOptions,
-    looks: LooksWindow,
-    screen_config: ScreenConfig
+    node_options: NodeOptions
 }
 
 export function waitForPopupData(popupId: Popups): Promise<any> {

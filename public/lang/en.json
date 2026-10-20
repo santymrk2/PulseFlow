@@ -35,8 +35,7 @@
         "file": "File",
         "edit": "Edit",
         "view": "View",
-        "help": "Help",
-        "screens": "Screens"
+        "help": "Help"
     },
     "screen": {
         "width": "Width",
@@ -307,18 +306,7 @@
         "_title_display": "Present",
         "_title_display_stop": "Stop presentation",
         "again_confirm": "Click again to confirm",
-        "unsaved": "Unsaved changes",
-        "search": "Search",
-        "text": "Text",
-        "theme": "Theme",
-        "bible": "Bible",
-        "more": "More",
-        "stage_editor": "Stage editor",
-        "theme_editor": "Theme editor",
-        "overlay_editor": "Overlay editor",
-        "media": "Media",
-        "live": "Live",
-        "audience": "Audience"
+        "unsaved": "Unsaved changes"
     },
     "empty": {
         "general": "Nothing here",
@@ -1373,23 +1361,7 @@
         "new": "New look",
         "make_live": "Make Live",
         "duplicate_style_message": "This style is shared with other looks. Duplicate it for this look?",
-        "no_screens": "Create an audience screen to configure looks.",
-        "window_title": "Looks",
-        "live": "Live",
-        "presets": "Presets",
-        "presentation": "Presentation",
-        "theme": "Theme",
-        "slide": "Slide",
-        "media": "Media",
-        "overlays": "Overlays",
-        "transition": "Transition",
-        "more_options": "More options",
-        "lines": "Lines",
-        "blur_amount": "Blur amount",
-        "blur_opacity": "Blur opacity",
-        "show_as_faded": "Show as faded",
-        "open_window": "Edit looks",
-        "open_window_hint": "Looks are edited in their own window."
+        "no_screens": "Create an audience screen to configure looks."
     },
     "settings": {
         "general": "General",
@@ -1896,8 +1868,5 @@
         "confidence_highest": "If confident",
         "confidence_high": "If high confidence",
         "confidence_medium": "If medium confidence"
-    },
-    "ui": {
-        "filter": "Filter"
     }
 }

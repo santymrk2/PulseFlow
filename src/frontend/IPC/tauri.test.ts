@@ -96,41 +96,6 @@ describe("send (F7.2)", () => {
     })
 })
 
-describe("canales de servidor (F10.0f)", () => {
-    it('send("REMOTE") llama a SERVER_SEND y no a invoke del mensaje', async () => {
-        api.send("REMOTE", { channel: "SCRIPTURE", data: { verses: [1] } })
-
-        await vi.waitFor(() =>
-            expect(invokeMock).toHaveBeenCalledWith("SERVER_SEND", {
-                data: { channel: "remote", message: { channel: "SCRIPTURE", data: { verses: [1] } } }
-            })
-        )
-        expect(commandCalls().some((call) => call[0] === "SCRIPTURE")).toBe(false)
-    })
-
-    it("conserva el id del mensaje (cliente concreto de la sala)", async () => {
-        api.send("STAGE", { id: "conn-1", channel: "TIMERS", data: {} })
-
-        await vi.waitFor(() =>
-            expect(invokeMock).toHaveBeenCalledWith("SERVER_SEND", {
-                data: { channel: "stage", message: { id: "conn-1", channel: "TIMERS", data: {} } }
-            })
-        )
-    })
-
-    it("cada canal de servidor va a su sala", async () => {
-        api.send("CONTROLLER", { channel: "BACKGROUND", data: { path: "" } })
-        api.send("OUTPUT_STREAM", { channel: "SETTINGS_UPDATE", data: {} })
-
-        await vi.waitFor(() => {
-            const rooms = commandCalls()
-                .filter((call) => call[0] === "SERVER_SEND")
-                .map((call) => call[1].data.channel)
-            expect(rooms).toEqual(["controller", "output_stream"])
-        })
-    })
-})
-
 describe("invokeCommand (F7.3)", () => {
     it("devuelve { ok: true, value } cuando el comando resuelve", async () => {
         const result = await invokeCommand(Main.SAVE, { any: "data" })

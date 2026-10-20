@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte"
-    import { activeEdit, activeFocus, activePage, activePopup, alertMessage, cachedShowsData, categories, focusMode, groups, labelsDisabled, lessonsLoaded, notFound, outLocked, outputs, outputSlideCache, showsCache, slidesOptions, special, templates } from "../../stores"
+    import { activeEdit, activeFocus, activePage, activePopup, alertMessage, cachedShowsData, categories, focusMode, groups, lessonsLoaded, notFound, outLocked, outputs, outputSlideCache, showsCache, slidesOptions, special, templates } from "../../stores"
     import { hasNewerUpdate, wait } from "../../utils/common"
     import { getAccess } from "../../utils/profile"
     import { videoExtensions } from "../../values/extensions"
@@ -12,11 +12,8 @@
     import { getCachedShow } from "../helpers/show"
     import { checkActionTrigger, getFewestOutputLines, getFewestOutputLinesReveal, getItemWithMostLines, updateOut } from "../helpers/showActions"
     import { _show } from "../helpers/shows"
-    import { changeSlidesView } from "../../show/slides"
     import T from "../helpers/T.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
-    import Slider from "../inputs/Slider.svelte"
-    import Icon from "../helpers/Icon.svelte"
     import Loader from "../main/Loader.svelte"
     import SkeletonSlide from "../slide/SkeletonSlide.svelte"
     import Slide from "../slide/Slide.svelte"
@@ -547,20 +544,6 @@
             </DropArea>
         </DropArea>
     </Autoscroll>
-
-    <!-- F11.5 — pie de la grilla: + a la izquierda, vista y slider a la derecha -->
-    <div class="gridFooter">
-        <MaterialButton disabled={isLocked} icon="add" title="new.slide" on:click={createSlide}>
-            {#if !$labelsDisabled}<T id="new.slide" />{/if}
-        </MaterialButton>
-
-        <div class="gridFooterRight">
-            <MaterialButton class="context #slideViews" title="show.change_view: show.{$slidesOptions.mode} [Ctrl+Shift+V]" on:click={changeSlidesView}>
-                <Icon size={1.3} id={$slidesOptions.mode} white={$slidesOptions.mode === "grid"} />
-            </MaterialButton>
-            <Slider style="width: 110px;" bind:value={$slidesOptions.columns} min={2} max={10} invert />
-        </div>
-    </div>
 </div>
 
 <style>
@@ -568,24 +551,5 @@
         display: flex;
         flex-wrap: wrap;
         padding: 5px;
-        gap: 12px;
-    }
-
-    .gridFooter {
-        position: sticky;
-        bottom: 0;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 8px;
-        padding: 6px 8px;
-
-        background-color: var(--primary-darkest);
-        border-top: 1px solid var(--border-color, var(--primary-lighter));
-    }
-    .gridFooterRight {
-        display: flex;
-        align-items: center;
-        gap: 8px;
     }
 </style>

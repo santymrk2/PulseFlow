@@ -100,63 +100,61 @@
 </script>
 
 <SelectElem style="width: 100%;" id={selectId} selectable={!noEdit} {draggable} borders="center" trigger="column" data={id}>
-    <div class="row">
-        <MaterialButton class={className} style="width: 100%;font-weight: normal;padding: 0 {boxedIcon ? 0.64 : 0.8}em;" {isActive} {showOutline} on:click={click} on:dblclick={dblclick} tab>
-            <div style="max-width: 85%;{boxedIcon ? 'gap: 9px;' : ''}" data-title={translateText(label)}>
-                <Icon id={icon} size={isSubmenu ? 0.85 : 1} color={isSubmenu ? category.color : boxedIcon ? customIconsColors[icon] || "" : ""} white custom={customIcon} boxed={isSubmenu || boxedIcon} />
+    <MaterialButton class={className} style="width: 100%;font-weight: normal;padding: 0.2em {boxedIcon ? 0.64 : 0.8}em;" {isActive} {showOutline} on:click={click} on:dblclick={dblclick} tab>
+        <div style="max-width: 85%;{boxedIcon ? 'gap: 9px;' : ''}" data-title={translateText(label)}>
+            <Icon id={icon} size={isSubmenu ? 0.85 : 1} color={isSubmenu ? category.color : boxedIcon ? customIconsColors[icon] || "" : ""} white custom={customIcon} boxed={isSubmenu || boxedIcon} />
 
-                {#if noEdit || isSubmenu}
-                    <p style="margin: {isSubmenu ? 3 : 5}px;">
-                        {#if label}
-                            {translateText(label)}
-                        {:else}
-                            <span style="opacity: 0.5;font-style: italic;pointer-events: none;">{translateText("main.unnamed")}</span>
-                        {/if}
-                    </p>
-                {:else}
-                    <HiddenInput value={translateText(label)} id="category_{drawerId}_{id}" on:edit={rename} />
-                {/if}
-            </div>
-
-            <div class="icons">
-                {#if option}
-                    <span style="padding: 0 2px;{option.style}" data-title={translateText(option.title)}>
-                        <Icon id={option.icon} size={0.8} white />
-                    </span>
-                {/if}
-                {#if metadata}
-                    <span style="padding: 0 2px;" data-title={translateText(`tools.metadata: <b>${metadataDisplayValues.find((a) => a.id === metadata)?.name}</b>`)}>
-                        <Icon id="info" size={0.8} white />
-                    </span>
-                {/if}
-                {#if template && $templates[template]}
-                    <span style="padding: 0 2px;" data-title={translateText(`info.template: <b>${$templates[template].name}</b>`)}>
-                        <Icon id="templates" size={0.8} white />
-                    </span>
-                {/if}
-                {#if action && $actions[action]}
-                    <span style="padding: 0 2px;" data-title={translateText(`popup.action: <b>${$actions[action].name}</b>`)}>
-                        <Icon id={getActionIcon(action)} size={0.8} white />
-                    </span>
-                {/if}
-
-                {#if count}
-                    <span class="count" style={translateText(label).length > 25 ? "min-width: 10px;" : ""}>{count}</span>
-                {/if}
-            </div>
-
-            <!-- SUB MENU -->
-            {#if !isSubmenu && submenu?.options?.length}
-                <MaterialButton on:click={openSubMenu} style="border-left: 1px solid var(--primary-lighter);padding: 0.8em;position: absolute;right: 0;">
-                    {#if submenuOpened}
-                        <Icon id="arrow_down" size={1.4} />
+            {#if noEdit || isSubmenu}
+                <p style="margin: {isSubmenu ? 3 : 5}px;">
+                    {#if label}
+                        {translateText(label)}
                     {:else}
-                        <Icon id="arrow_right" size={1.4} white />
+                        <span style="opacity: 0.5;font-style: italic;pointer-events: none;">{translateText("main.unnamed")}</span>
                     {/if}
-                </MaterialButton>
+                </p>
+            {:else}
+                <HiddenInput value={translateText(label)} id="category_{drawerId}_{id}" on:edit={rename} />
             {/if}
-        </MaterialButton>
-    </div>
+        </div>
+
+        <div class="icons">
+            {#if option}
+                <span style="padding: 0 2px;{option.style}" data-title={translateText(option.title)}>
+                    <Icon id={option.icon} size={0.8} white />
+                </span>
+            {/if}
+            {#if metadata}
+                <span style="padding: 0 2px;" data-title={translateText(`tools.metadata: <b>${metadataDisplayValues.find((a) => a.id === metadata)?.name}</b>`)}>
+                    <Icon id="info" size={0.8} white />
+                </span>
+            {/if}
+            {#if template && $templates[template]}
+                <span style="padding: 0 2px;" data-title={translateText(`info.template: <b>${$templates[template].name}</b>`)}>
+                    <Icon id="templates" size={0.8} white />
+                </span>
+            {/if}
+            {#if action && $actions[action]}
+                <span style="padding: 0 2px;" data-title={translateText(`popup.action: <b>${$actions[action].name}</b>`)}>
+                    <Icon id={getActionIcon(action)} size={0.8} white />
+                </span>
+            {/if}
+
+            {#if count}
+                <span class="count" style={translateText(label).length > 25 ? "min-width: 10px;" : ""}>{count}</span>
+            {/if}
+        </div>
+
+        <!-- SUB MENU -->
+        {#if !isSubmenu && submenu?.options?.length}
+            <MaterialButton on:click={openSubMenu} style="border-left: 1px solid var(--primary-lighter);padding: 0.8em;position: absolute;right: 0;">
+                {#if submenuOpened}
+                    <Icon id="arrow_down" size={1.4} />
+                {:else}
+                    <Icon id="arrow_right" size={1.4} white />
+                {/if}
+            </MaterialButton>
+        {/if}
+    </MaterialButton>
 </SelectElem>
 
 {#if !isSubmenu && submenuOpened && submenu?.options?.length}
@@ -174,21 +172,6 @@
         gap: 10px;
 
         width: 100%;
-    }
-
-    /* F11.2 — filas de 32px, redondeadas, hover/activa con variables del tema */
-    .row > :global(button.tab) {
-        height: 32px;
-        min-height: 32px;
-        border-radius: var(--radius, 4px) !important;
-        border-left: 3px solid transparent !important;
-    }
-    .row > :global(button.tab.isActive) {
-        background-color: var(--primary-lighter) !important;
-        border-left-color: var(--secondary) !important;
-    }
-    .row > :global(button.tab):not(:disabled):not(.isActive):hover {
-        background-color: var(--hover, rgb(255 255 255 / 0.06)) !important;
     }
 
     div :global(input) {

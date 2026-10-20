@@ -2,10 +2,8 @@
     import { fade } from "svelte/transition"
     import { Main } from "../../../types/IPC/Main"
     import { sendMain } from "../../IPC/main"
-    import { activeEdit, activePage, activePopup, autoOpenedTimeline, openToolsTab, outputs, outLocked, showNotesActive, shows, showsCache, special, styles, templates } from "../../stores"
+    import { activePopup, autoOpenedTimeline, openToolsTab, outputs, showNotesActive, shows, showsCache, special, styles, templates } from "../../stores"
     import { translateText } from "../../utils/language"
-    import { history } from "../helpers/history"
-    import { setOutput } from "../helpers/output"
     import Icon from "../helpers/Icon.svelte"
     import { allOutputsHasStyleTemplate, getFirstActiveOutput } from "../helpers/output"
     import { removeTemplatesFromShow } from "../helpers/show"
@@ -17,8 +15,6 @@
 
     $: currentShow = $showsCache[showId]
     $: layouts = currentShow?.layouts
-    $: activeLayout = currentShow?.settings?.activeLayout || ""
-    $: slideCount = currentShow?.layouts?.[activeLayout]?.slides?.length ?? 0
 
     let notes: { text: string; id: string; title: string; icon: string; tab: string } | null = null
     $: if (layouts || currentShow) updateNotes()
@@ -89,7 +85,6 @@
 
 <div class="header" class:shadow={listScrollY > 0}>
     <div class="name-notes" data-title={currentShow?.name}>
-        <Icon id="layout" size={0.9} white right />
         <div class="name">
             {#if currentShow?.name}
                 {currentShow.name}
@@ -97,10 +92,6 @@
                 <span style="opacity: 0.5;font-style: italic;"><T id="main.unnamed" /></span>
             {/if}
         </div>
-
-        {#if layouts && activeLayout}
-            <span class="layout">· {currentShow?.layouts?.[activeLayout]?.name || activeLayout}</span>
-        {/if}
 
         {#if notes}
             <span class="notes" role="none" data-title={translateText(notes.title)} on:click={(e) => openTab(e, notes?.tab || "")}>
@@ -111,42 +102,6 @@
     </div>
 
     <div class="right">
-        {#if currentShow}
-            <span class="count">{slideCount} {slideCount === 1 ? "diapositiva" : "diapositivas"}</span>
-
-            <MaterialButton
-                variant="text"
-                style="padding: 0.3em 0.6em;"
-                title="new.slide"
-                on:click={() => {
-                    if (currentShow?.locked) return
-                    history({ id: "SLIDES" })
-                    activeEdit.set({ type: "show", slide: 0, items: [] })
-                    activePage.set("edit")
-                }}
-                disabled={!!currentShow?.locked}
-            >
-                <Icon id="add" size={0.9} white right />
-                <T id="new.slide" />
-            </MaterialButton>
-
-            <MaterialButton
-                variant="contained"
-                style="padding: 0.3em 0.6em;"
-                title="preview._start"
-                disabled={$outLocked || !currentShow}
-                on:click={() => {
-                    if (!currentShow) return
-                    const layout = currentShow.settings?.activeLayout
-                    if ($activePage === "edit") setOutput("slide", { id: showId, layout, index: $activeEdit.slide })
-                    else setOutput("slide", { id: showId, layout, index: 0 })
-                }}
-            >
-                <Icon id="play" size={0.9} white right />
-                Proyectar
-            </MaterialButton>
-        {/if}
-
         <!-- template icon -->
         {#if enableStylePreview}
             <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;" title="formats.template: <b>{$templates[outputStyleTemplate]?.name || ''}</b>" on:click={() => activePopup.set("template_info")}>
@@ -226,14 +181,14 @@
         left: 0;
         width: 100%;
 
-        padding: 0.2em 0.8em;
+        padding: 0.2em;
+        padding-left: 0.8em;
         font-weight: 600;
 
-        height: 44px;
+        height: 30px;
 
         display: flex;
         align-items: center;
-        gap: 0.5em;
 
         backdrop-filter: blur(10px);
 
@@ -272,29 +227,11 @@
 
     .name-notes .name {
         flex-shrink: 0;
-        max-width: 60%;
+        max-width: 90%;
 
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-    }
-
-    .name-notes .layout {
-        flex-shrink: 0;
-        opacity: 0.5;
-        font-size: 0.85em;
-        font-weight: normal;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .right .count {
-        opacity: 0.5;
-        font-size: 0.8em;
-        font-weight: normal;
-        white-space: nowrap;
-        margin-right: 0.5em;
     }
 
     /* notes */
