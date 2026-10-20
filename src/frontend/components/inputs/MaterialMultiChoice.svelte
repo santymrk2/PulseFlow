@@ -75,7 +75,7 @@
     }
 
     .choice.highlightFirst :global(button.first) {
-        border-color: rgb(255 255 255 / 0.25) !important;
+        border-color: var(--border-strong) !important;
     }
 
     /* .choice :global(button.first) {

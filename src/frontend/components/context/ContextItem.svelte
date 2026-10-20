@@ -596,7 +596,7 @@
 
     .enabled {
         color: var(--secondary);
-        background-color: rgb(255 255 255 / 0.05);
+        background-color: var(--bg-hover);
     }
 
     .hide {

@@ -176,7 +176,7 @@
         border: 1px solid var(--border-1, #333);
         border-radius: 8px;
         padding: 9px 15px;
-        color: var(--text-1, #fff);
+        color: var(--text-1, var(--text));
         box-sizing: border-box;
         user-select: none;
         -webkit-user-drag: none;

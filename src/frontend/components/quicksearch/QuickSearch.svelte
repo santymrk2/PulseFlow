@@ -290,12 +290,12 @@
         font-size: 1.4em;
 
         border-radius: 8px;
-        background: rgba(255, 255, 255, 0.05);
+        background: var(--bg-hover);
         transition: background 0.2s ease;
     }
     .search :global(input):focus {
         outline: none;
-        background: rgba(255, 255, 255, 0.08);
+        background: var(--bg-selected);
     }
 
     .values {
@@ -369,7 +369,7 @@
         font-size: 0.9em;
         font-weight: 500;
 
-        background: rgb(255 255 255 / 0.1);
+        background: var(--bg-selected);
         border: 1px solid var(--focus);
         border-radius: 14px;
         padding: 4px 6px 4px 8px;
@@ -402,6 +402,6 @@
     }
     .tag-remove:hover {
         opacity: 1;
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--bg-selected);
     }
 </style>

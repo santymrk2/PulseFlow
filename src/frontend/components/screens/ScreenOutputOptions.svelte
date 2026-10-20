@@ -520,7 +520,7 @@
         background-color: #e0a800;
     }
     .dot.live {
-        background-color: #2ecc71;
+        background-color: var(--success);
     }
     .dot.error {
         background-color: #b60707;

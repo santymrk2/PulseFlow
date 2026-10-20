@@ -59,6 +59,6 @@
         font-size: 0.8em;
     }
     .btn:hover {
-        background-color: var(--hover-bg, rgba(255, 255, 255, 0.04));
+        background-color: var(--hover-bg, var(--bg-hover));
     }
 </style>

@@ -1013,7 +1013,7 @@
         overflow: hidden;
         position: relative;
         background: var(--primary-darker);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        border-right: 1px solid var(--border);
         z-index: 10;
     }
     .timeline-track-wrapper {
@@ -1045,11 +1045,11 @@
         position: absolute;
         top: 0;
         bottom: 0;
-        border-left: 1px solid rgba(255, 255, 255, 0.03);
+        border-left: 1px solid var(--border);
     }
 
     .grid-line.minor {
-        border-left: 1px solid rgba(255, 255, 255, 0.01);
+        border-left: 1px solid var(--border);
     }
 
     .ruler {
@@ -1068,7 +1068,7 @@
 
     .tick.minor {
         bottom: auto;
-        border-left: 1px solid rgba(255, 255, 255, 0.2);
+        border-left: 1px solid var(--border-strong);
     }
 
     .tick-label {
@@ -1098,8 +1098,8 @@
         align-items: center;
         padding-left: 10px;
         /* background: rgba(0, 0, 0, 0.6); */
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid var(--border);
+        border-top: 1px solid var(--border);
         pointer-events: auto; /* Allow interaction if needed */
 
         display: flex;
@@ -1262,7 +1262,7 @@
 
     .selection-box {
         position: absolute;
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: var(--bg-selected);
         border: 1px solid rgba(255, 255, 255, 0.4);
         pointer-events: none;
         z-index: 100;
@@ -1307,7 +1307,7 @@
         gap: 8px;
         padding: 8px;
         background-color: var(--primary-darker);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid var(--border);
     }
 
     /* .header .tag {

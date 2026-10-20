@@ -289,13 +289,13 @@
         justify-content: space-between;
 
         /* margin: 10px 8px;
-        border: 1px solid rgb(255 255 255 / 0.07);
+        border: 1px solid var(--border);
         border-radius: 4px; */
 
         padding: 8px 0;
         margin: 8px 0;
-        border-top: 1px solid rgb(255 255 255 / 0.07);
-        border-bottom: 1px solid rgb(255 255 255 / 0.07);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
     }
     .group.isFirst {
         margin-top: 0;
@@ -308,7 +308,7 @@
         border-bottom: none;
     }
     .group :global(div:not(:last-child)) {
-        border-right: 1px solid rgb(255 255 255 / 0.08);
+        border-right: 1px solid var(--border);
     }
 
     .search {

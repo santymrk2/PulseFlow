@@ -409,7 +409,7 @@
     }
 
     .main.played :global(button:not(.isActive)) {
-        border-left: 4px double rgb(255 255 255 / 0.2) !important;
+        border-left: 4px double var(--border-strong) !important;
     }
 
     .layout {
@@ -513,7 +513,7 @@
         display: block;
         width: 100%;
         height: 2px;
-        background: rgb(255 255 255 / 0.08);
+        background: var(--bg-selected);
         overflow: hidden;
     }
     .match-fill {

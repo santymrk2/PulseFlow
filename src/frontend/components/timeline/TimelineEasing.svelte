@@ -332,16 +332,16 @@
         display: flex;
         align-items: center;
         padding-left: 10px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid var(--border);
+        border-top: 1px solid var(--border);
         pointer-events: auto;
         gap: 6px;
     }
 
     .easing {
         background-color: var(--primary-darkest);
-        border-bottom: 2px solid rgba(255, 255, 255, 0.05);
-        border-top: 2px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 2px solid var(--border);
+        border-top: 2px solid var(--border);
         box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
         z-index: 198;
         overflow: visible;
@@ -452,7 +452,7 @@
     .preset-preview {
         flex-shrink: 0;
         opacity: 0.7;
-        border: 1px solid rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border);
         background-color: var(--primary-darkest);
         border-radius: 3px;
         padding: 2px;

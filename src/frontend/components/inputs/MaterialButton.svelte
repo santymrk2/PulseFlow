@@ -30,25 +30,7 @@
         children?: Snippet
     }
 
-    let {
-        variant = "text",
-        title = "",
-        info = "",
-        icon = "",
-        iconSize = 1,
-        children,
-        white = !children,
-        isActive = false,
-        showOutline = false,
-        disabled = false,
-        gradient = false,
-        small = false,
-        tab = false,
-        red = false,
-        class: className = "",
-        style = "",
-        ...restProps
-    }: Props = $props()
+    let { variant = "text", title = "", info = "", icon = "", iconSize = 1, children, white = !children, isActive = false, showOutline = false, disabled = false, gradient = false, small = false, tab = false, red = false, class: className = "", style = "", ...restProps }: Props = $props()
 
     let button = $state<HTMLButtonElement | null>(null)
     let ripples = $state<{ x: number; y: number; size: number; id: number }[]>([])
@@ -216,13 +198,13 @@
     }
 
     button:not(.contained):not(.isActive):not(:disabled):hover {
-        background: rgba(255, 255, 255, 0.01) !important;
+        background: var(--bg-hover) !important;
     }
     button:not(.contained):not(.isActive):not(:disabled):active {
-        background: rgba(255, 255, 255, 0.04) !important;
+        background: var(--bg-hover) !important;
     }
     button:not(.contained):not(.isActive):not(:disabled):active:hover {
-        background: rgba(255, 255, 255, 0.06) !important;
+        background: var(--bg-hover) !important;
     }
     button.contained:not(:disabled):hover {
         filter: brightness(1.05);
@@ -309,12 +291,12 @@
         background-color: var(--red) !important;
     }
     button.red:not(.contained):not(.isActive):not(:disabled):hover {
-        background: rgba(255, 0, 0, 0.2) !important;
+        background: var(--red) !important;
     }
     button.red:not(.contained):not(.isActive):not(:disabled):active {
-        background: rgba(255, 0, 0, 0.3) !important;
+        background: var(--red) !important;
     }
     button.red:not(.contained):not(.isActive):not(:disabled):active:hover {
-        background: rgba(255, 0, 0, 0.35) !important;
+        background: var(--red) !important;
     }
 </style>

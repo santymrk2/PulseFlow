@@ -59,14 +59,14 @@
 
     /* red */
     button.red:not(:disabled) {
-        background-color: rgb(255 0 0 / 0.25);
+        background-color: var(--red);
     }
     button.red:hover:not(:disabled):not(.active) {
-        background-color: rgb(255 0 0 / 0.35);
+        background-color: var(--red);
     }
     button.red:active:not(:disabled):not(.active),
     button.red:focus:not(:disabled):not(.active) {
-        background-color: rgb(255 0 0 / 0.3);
+        background-color: var(--red);
     }
 
     button:not(:disabled):not(.active) {
@@ -79,7 +79,7 @@
         background-color: rgb(255 255 255 / 0.3);
     }
     button:hover.redHover:not(:disabled):not(.active) {
-        background-color: rgb(255 0 0 / 0.3);
+        background-color: var(--red);
     }
     button:active:not(:disabled):not(.active),
     button:focus:not(.active) {
