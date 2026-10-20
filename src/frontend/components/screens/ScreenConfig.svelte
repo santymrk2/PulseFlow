@@ -58,6 +58,8 @@
         outputs.update((a) => {
             if (a[id]) {
                 a[id].ndi = true
+                a[id].invisible = true
+                a[id].transparent = true
                 a[id].name = a[id].name || "NDI"
             }
             return a
