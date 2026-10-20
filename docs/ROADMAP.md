@@ -1000,6 +1000,45 @@ Reglas de F11 (además de AGENTS.md):
 
 ---
 
+## F11b — Lo que el carril D dejó a medias (revisión 2026-10-20)
+
+El carril D re-estilizó bien cajón, panel izquierdo, cabecera y grilla, pero en tres
+tareas se quedó en lo mínimo. Estas tareas son **cambios de lugar y de estructura**, no
+sólo de estilo: está permitido mover componentes existentes siempre que no se pierda
+ninguna función (verificar cada función movida y listarla en el commit).
+
+- [ ] **F11.6b Panel derecho de verdad como ProPresenter.** (F11.6 sólo pasó las
+  pestañas de `ShowTools` a íconos: 1 línea.) Archivos: `output/preview/Preview.svelte`,
+  `output/preview/ClearButtons.svelte`, `output/preview/MultiOutputs.svelte`,
+  `show/ShowTools.svelte`, `MainLayout.svelte` (columna derecha).
+  1. `ClearButtons` pasa a ser una **tira vertical** de 32 px a la derecha de la vista
+     previa (un botón de ícono por capa, resaltado si la capa tiene contenido) y el
+     "limpiar todo" es una **ⓧ circular** superpuesta al borde derecho de la vista previa.
+  2. Debajo de la vista previa, **"Pantalla 1 ▾"** (el selector de `MultiOutputs`) en
+     una sola línea.
+  3. Debajo, el transporte de medios/audio que ya existe (sin cambios de lógica).
+  4. **Barra de pestañas de controles** con estas pestañas, en este orden, cada una con
+     el contenido que ya existe en la app en otro lugar: Audio (reproductor/listas de
+     audio), Stage (vista/selección de layout de stage), Timers (lista de timers con
+     play/reset), Overlays/Mensajes (overlays activos), Acciones (acciones/macros).
+     Las 3 pestañas actuales de `ShowTools` (grupos, metadatos, medios) siguen como
+     pestañas extra al final. Si una pestaña no tiene contenido existente que reubicar,
+     no se crea: anotarlo en el informe.
+  *Aceptación:* captura comparada con la de ProPresenter de la especificación; cada
+  función que antes estaba en el panel derecho sigue accesible.
+
+- [ ] **F11.8b Menús contextuales.** (F11.8 no tocó `context/**`.) Archivos:
+  `context/ContextMenu.svelte`, `context/ContextItem.svelte`, `context/ContextChild.svelte`.
+  Fondo `--primary-darker`, borde 1 px `--border-color`, radio `--radius`, sombra,
+  ítems de 32 px con ícono 14 px, separadores de 1 px, submenús igual. Sin cambiar
+  ninguna entrada ni su orden.
+
+- [ ] **F11.10b Ítems del proyecto en la columna izquierda.** (F11.10 dejó la lista
+  dentro de `Projects`.) Mover `ProjectContentList` fuera de `Projects` para que la
+  columna quede: BIBLIOTECA · PLAYLIST (lista de proyectos) · "N ÍTEMS +" (contenido
+  del proyecto seleccionado, con Filtro abajo) · MEDIA. Mantener arrastrar/soltar,
+  reordenar, menú contextual y doble clic igual que hoy.
+
 ## Fuera de alcance por ahora
 
 Renombrar masivamente archivos de FreeShow · crates o procesos nuevos · reescribir todo
