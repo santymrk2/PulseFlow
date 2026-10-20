@@ -1,6 +1,5 @@
 <script lang="ts">
     import { customActionActivation } from "./components/actions/actions"
-    import DrawTabs from "./components/draw/DrawTabs.svelte"
     import Navigation from "./components/edit/Navigation.svelte"
     import LazyLoad from "./components/helpers/LazyLoad.svelte"
     import ProfileChangerMenu from "./components/main/ProfileChangerMenu.svelte"
@@ -100,8 +99,6 @@
                     <Navigation />
                 {:else if page === "stage"}
                     <StageLayouts />
-                {:else if page === "draw"}
-                    <DrawTabs />
                 {/if}
             </div>
         </Resizeable>
@@ -115,8 +112,6 @@
                 {/if}
             {:else if page === "edit"}
                 <LazyLoad component={() => import("./components/edit/Editor.svelte")} show={page === "edit"} />
-            {:else if page === "draw"}
-                <LazyLoad component={() => import("./components/draw/Slide.svelte")} show={page === "draw"} />
             {:else if page === "stage"}
                 <LazyLoad component={() => import("./components/stage/StageLayout.svelte")} show={page === "stage"} />
             {/if}
@@ -145,8 +140,6 @@
                             <LazyLoad component={() => import("./components/edit/EditTools.svelte")} show={!$focusMode} />
                         {/if}
                     {/if}
-                {:else if page === "draw"}
-                    <LazyLoad component={() => import("./components/draw/DrawSettings.svelte")} show={page === "draw"} />
                 {:else if page === "stage" && $activeStage.id}
                     <LazyLoad component={() => import("./components/stage/StageTools.svelte")} show={page === "stage" && !!$activeStage.id} />
                 {/if}

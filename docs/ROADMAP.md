@@ -1270,7 +1270,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   `test:svelte` 56 errores (línea base), prettier. **No verificado:** `menu.rs` **no se
   compiló** (`cargo check` pendiente) y nada se probó en la app.
 
-- [ ] **F14.1c Borrar la función Dibujo.**
+- [x] **F14.1c Borrar la función Dibujo.**
   *Pasos:* quitar `components/draw/` (7 archivos), la página `draw` de `MainLayout`,
   `TopViews`, `shortcuts.ts` y `quicksearch.ts`, el listener `DRAW` de `listeners.ts`, los
   stores `drawTool`, `drawSettings`, `paintCache` y sus usos (12 archivos con `rg`), el
@@ -1279,6 +1279,19 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   "no cambiar el formato sin migración").
   *Aceptación:* `rg -n 'drawTool|drawSettings|paintCache|"draw"' src/` = 0; `bun run test:unit`,
   `test:svelte` (sin errores nuevos) y `build` pasan; la app arranca y Show/Edit funcionan.
+  **Hecho** (2026-10-20). Se borró `components/draw/` (7 archivos), `types/Draw.ts`, los
+  stores `drawTool`/`draw`/`paintCache`/`paintCacheSlide`/`drawSettings`, los 3 listeners
+  que mandaban `DRAW*` a las salidas, el zoom de dibujo de `Output`/`Zoomed`, el manejo de
+  `FOCUS`/`clear_painting` de `controllerTalk.ts` y los íconos `draw` y `pointer`.
+  *Cambios de contrato:* (1) salen de la API de acciones `clear_drawing` y
+  `change_draw_zoom` (y su entrada en `actionData`/`CustomInput`): una macro guardada con
+  esas acciones no hace nada (`API_ACTIONS[id]` desconocido se ignora, comprobado). (2)
+  `drawSettings` deja de guardarse en el archivo de ajustes: al próximo guardado la clave
+  desaparece; si llega en un archivo viejo se ignora (`console.info`, comprobado en
+  `updateSettings`). *Se dejó a propósito:* las traducciones `draw.*` (la clave `draw.glow`
+  la usa el editor de efectos) y los íconos `focus`/`zoom`/`fill`/`paint`/`particles`
+  (se usan en otros contextos). Verificado: `test:unit` 89/89, `test:svelte` 56 errores
+  (línea base), prettier. `build` y la app **no se corrieron**.
 
 - [ ] **F14.2 Tokens monocromo.**
   *Archivos:* `src/frontend/components/settings/tabs/defaultThemes.ts` (tema `default`),
@@ -1402,6 +1415,9 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
 
 ## Deuda registrada (sin tarea)
 
+- **Cliente `src/server/controller`** todavía tiene la interfaz de Dibujo (Focus, Zoom,
+  Paint…) y manda mensajes `FOCUS`/`clear_painting` que el frontend ya no atiende (F14.1c).
+  Como esos clientes no se compilan, no se tocó; se resuelve al decidir qué hacer con ellos.
 - **Clientes web de `src/server/`** (remote, stage, controller, cam, output_stream;
   ~21.7k líneas): no se compilan (no están en `vite.config.mjs` ni hay script) ni se
   empaquetan (`tauri.conf.json` no declara `resources`). Los servidores Axum

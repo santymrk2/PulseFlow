@@ -11,7 +11,6 @@ export type SaveList = SaveListSettings | SaveListSyncedSettings | "themes" | "e
 
 export type SaveListSyncedSettings =
     | "categories"
-    | "drawSettings"
     | "overlayCategories"
     | "templateCategories"
     | "styles"

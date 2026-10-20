@@ -24,7 +24,7 @@ import { OutputHelper } from "../helpers/OutputHelper"
 import { applyLook } from "../helpers/looks"
 import { changeOutputStyle, playSlideTimers, randomSlide, replaceDynamicValues, selectProjectShow, sendMidi, startShowSync } from "../helpers/showActions"
 import { startTimerById, startTimerByName, stopTimers } from "../helpers/timerTick"
-import { clearAll, clearBackground, clearDrawing, clearOverlay, clearOverlays, clearScene, clearSlide, clearTimers, restoreOutput } from "../output/clear"
+import { clearAll, clearBackground, clearOverlay, clearOverlays, clearScene, clearSlide, clearTimers, restoreOutput } from "../output/clear"
 import { fadePause, skipNext, skipPrev, spotifyPause, spotifyPlay } from "../output/preview/SpotifyManager"
 import { formatText } from "../show/formatTextEditor"
 import { getPlainEditorText } from "../show/getTextEditor"
@@ -35,7 +35,6 @@ import {
     addGroup,
     addToProject,
     audioSeekTo,
-    changeDrawZoom,
     changeShowLayout,
     changeVariable,
     createProject,
@@ -153,7 +152,6 @@ export type API_camera = { name?: string; id: string; groupId?: string }
 export type API_screen = { name?: string; id: string }
 export type API_microphone = { name?: string; id: string }
 export type API_dynamic_value = { value: string; ref?: any }
-export type API_draw_zoom = { size?: number; x?: number; y?: number }
 export type API_edit_timer = { id: string; key: string; value: any }
 export type API_transition = {
     id?: "text" | "media" // default: "text"
@@ -258,7 +256,6 @@ export const API_ACTIONS = {
     clear_audio: () => clearAudio("", { clearPlaylist: true, commonClear: true }), // BC
     clear_next_timer: () => clearTimers(), // BC
     clear_scene: (data: API_id) => clearScene(data?.id),
-    clear_drawing: () => clearDrawing(),
 
     // MEDIA (Backgrounds)
     start_camera: (data: API_camera) => startCamera(data),
@@ -345,7 +342,6 @@ export const API_ACTIONS = {
     change_variable: (data: API_variable) => changeVariable(data), // BC
 
     // DRAW
-    change_draw_zoom: (data: API_draw_zoom) => changeDrawZoom(data),
 
     // CONNECTION
     sync_content_provider: () => contentProviderSync(),

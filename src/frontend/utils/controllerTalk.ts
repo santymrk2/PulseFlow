@@ -2,8 +2,7 @@ import { get } from "svelte/store"
 import { getFirstActiveOutput, getFirstOutput, getOutputResolution } from "../components/helpers/output"
 import { OutputHelper } from "../components/helpers/OutputHelper"
 import { clearAll, clearSlide } from "../components/output/clear"
-import { outputs, paintCache, serverData } from "../stores"
-import { draw, drawSettings, drawTool } from "./../stores"
+import { outputs, serverData } from "../stores"
 
 let justCleared: NodeJS.Timeout | null = null
 export const receiveCONTROLLER = {
@@ -21,8 +20,7 @@ export const receiveCONTROLLER = {
 
                 clearSlide()
                 justCleared = setTimeout(() => (justCleared = null), 2000)
-            },
-            clear_painting: () => clearPainting()
+            }
         }
 
         if (actions[data.id]) actions[data.id]()
@@ -32,49 +30,9 @@ export const receiveCONTROLLER = {
             justCleared = null
         }
     },
-    FOCUS: ({ data }) => {
-        if (!data.offset) {
-            draw.set(null)
-            if (data.tool !== undefined) drawTool.set(data.tool || "focus")
-            return
-        }
-
-        const outputId = getFirstActiveOutput()?.id || ""
-        const resolution = getOutputResolution(outputId, get(outputs), true)
-        data.offset.x *= resolution.width
-        data.offset.y *= resolution.height
-
-        const tool = data.tool || "focus"
-        const settings = get(drawSettings)[tool]
-        if (settings) {
-            data.offset.x -= settings.size / 2
-            data.offset.y -= settings.size / 2
-        }
-
-        draw.set(data.offset)
-        drawTool.set(tool)
-
-        if (tool === "paint") paintCache.set([{ x: 0, y: 0, size: 0, color: "#ffffff" }])
-    },
     GET_OUTPUT_ID: () => {
         return { channel: "GET_OUTPUT_ID", data: get(serverData)?.output_stream?.outputId || getFirstOutput()?.id }
     }
-}
-
-function clearPainting() {
-    paintCache.set([])
-
-    drawSettings.update((a) => {
-        if (!a.paint) a.paint = { color: "#ffffff", size: 10, threed: false, dots: false, hold: true }
-        a.paint.clear = true
-        return a
-    })
-    setTimeout(() => {
-        drawSettings.update((a) => {
-            delete a.paint.clear
-            return a
-        })
-    }, 50)
 }
 
 // export async function sendBackgroundToController(outputId: string, updater = get(outputs)) {

@@ -18,7 +18,6 @@ import type { AiFeatureStatus } from "../types/ai/Ai"
 import type { AudioChannelData, AudioStream, MetronomeSettings, Playlist } from "../types/Audio"
 import type { AudioRoutingConfig } from "../types/AudioRouting"
 import type { Event } from "../types/Calendar"
-import type { Draw, DrawLine, DrawSettings, DrawTools } from "../types/Draw"
 import type { Effects } from "../types/Effects"
 import type { History, HistoryNew } from "../types/History"
 import type { ActiveEdit, Clipboard, Interaction, Media, MediaOptions, NumberObject, OS, Popups, Profiles, Selected, SlidesOptions, Variable } from "../types/Main"
@@ -138,12 +137,6 @@ export const visualizerData: Writable<any> = writable(null)
 export const channelSidechainMultipliers: Writable<{ [channelId: string]: number }> = writable({})
 export const isFadingOut: Writable<any> = writable(false)
 export const recordingChannels: Writable<{ [channelId: string]: boolean }> = writable({})
-
-// DRAW
-export const drawTool: Writable<DrawTools> = writable("focus")
-export const draw: Writable<null | Draw> = writable(null)
-export const paintCacheSlide: Writable<{ [key: string]: DrawLine[] }> = writable({})
-export const paintCache: Writable<DrawLine[]> = writable([])
 
 // OUTPUTS
 export const outputDisplay: Writable<boolean> = writable(false)
@@ -329,9 +322,6 @@ export const calendars: Writable<{ [key: string]: any }> = writable({}) // {}
 export const events: Writable<{ [key: string]: Event }> = writable({}) // {}
 export const calendarAddShow: Writable<string> = writable("") // ""
 
-// DRAW
-export const drawSettings: Writable<DrawSettings> = writable({}) // {}
-
 // STAGE
 export const stageShows: Writable<StageLayouts> = writable({}) // {default}
 
@@ -458,9 +448,6 @@ export const $ = {
     playingAudio,
     playingVideos,
     visualizerData,
-    drawTool,
-    draw,
-    paintCache,
     outputDisplay,
     currentOutputSettings,
     slideTimers,
@@ -497,7 +484,6 @@ export const $ = {
     templateCategories,
     templates,
     events,
-    drawSettings,
     stageShows,
     scriptures,
     scripturesCache,

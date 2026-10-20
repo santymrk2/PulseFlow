@@ -557,13 +557,12 @@ function enableConnection(id: string) {
 
 /// //
 
-const top = ["show", "edit", "stage", "draw"]
+const top = ["show", "edit", "stage"]
 const mainPages = [
     // top pages
     { id: "show", name: "menu.show", icon: "show", aliases: ["-Home"] },
     { id: "edit", name: "menu.edit", icon: "edit" },
     { id: "stage", name: "menu.stage", icon: "stage" },
-    { id: "draw", name: "menu.draw", icon: "draw" },
     { id: "settings", name: "menu.settings", icon: "settings" },
     // drawer tabs
     { id: "shows", name: "tabs.shows", icon: "shows", aliases: ["category.song", "category.presentation", "-Library", "-Preview"] },

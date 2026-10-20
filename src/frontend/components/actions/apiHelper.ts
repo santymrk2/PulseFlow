@@ -8,7 +8,7 @@ import { clearAudio } from "../../audio/audioFading"
 import { AudioPlayer } from "../../audio/audioPlayer"
 import { AudioPlaylist } from "../../audio/audioPlaylist"
 import { dbToGain } from "../../audio/dBUtils"
-import { activeDrawerTab, activeEdit, activePage, activeProject, activeRecording, activeShow, activeTimers, audioChannelsData, audioPlaylists, audioRouting, draw, drawSettings, drawTool, folders, groupNumbers, groups, media, openScripture, outLocked, outputs, overlays, pdfImports, playingAudio, playingMetronome, projects, refreshEditSlide, selected, shows, showsCache, sortedShowsList, special, styles, timers, variables } from "../../stores"
+import { activeDrawerTab, activeEdit, activePage, activeProject, activeRecording, activeShow, activeTimers, audioChannelsData, audioPlaylists, audioRouting, folders, groupNumbers, groups, media, openScripture, outLocked, outputs, overlays, pdfImports, playingAudio, playingMetronome, projects, refreshEditSlide, selected, shows, showsCache, sortedShowsList, special, styles, timers, variables } from "../../stores"
 import { newToast, triggerFunction } from "../../utils/common"
 import { send } from "../../utils/request"
 import { parseEngScriptureRefToNumbers, resolveScriptureReference } from "../drawer/bible/scripture"
@@ -31,7 +31,7 @@ import { VideoPlayer } from "../media/video/videoPlayer"
 import { clearBackground, clearSlide } from "../output/clear"
 import { getPlainEditorText } from "../show/getTextEditor"
 import { getSlideGroups } from "../show/tools/groups"
-import type { API_add_to_project, API_create_project, API_disable_slide, API_draw_zoom, API_edit_timer, API_group, API_id_index, API_id_value, API_layout, API_media, API_output_lock, API_rearrange, API_scripture, API_seek, API_slide_index, API_toggle_id, API_toggle_specific, API_variable, API_volume } from "./api"
+import type { API_add_to_project, API_create_project, API_disable_slide, API_edit_timer, API_group, API_id_index, API_id_value, API_layout, API_media, API_output_lock, API_rearrange, API_scripture, API_seek, API_slide_index, API_toggle_id, API_toggle_specific, API_variable, API_volume } from "./api"
 
 export function selectShowById(id: string) {
     if (typeof id !== "string" || !id) return
@@ -1121,27 +1121,6 @@ export async function getPDFThumbnails({ path, data }: API_media) {
         })
         throw error
     }
-}
-
-// DRAW
-
-export function changeDrawZoom(data: API_draw_zoom) {
-    const size = data.size || 100
-    drawSettings.update((a) => {
-        if (!a.zoom) a.zoom = {}
-        a.zoom.size = size
-        return a
-    })
-
-    if (size === 100) {
-        draw.set(null)
-        drawTool.set("focus")
-        return
-    }
-
-    // 0-100 %
-    draw.set({ x: 1920 * ((data.x ?? 50) / 100), y: 1080 * ((data.y ?? 50) / 100) })
-    drawTool.set("zoom")
 }
 
 // ADD

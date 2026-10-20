@@ -221,10 +221,6 @@
             <T id="popup.select_show" />
         {/if}
     </MaterialButton>
-{:else if inputId === "draw_zoom"}
-    <MaterialNumberInput label="edit.size" value={value?.size || 100} min={1} max={2000} step={10} defaultValue={100} on:change={(e) => updateValue("size", e)} />
-    <MaterialNumberInput label="edit.x (%)" value={value?.x ?? 50} max={100} defaultValue={50} on:change={(e) => updateValue("x", e)} />
-    <MaterialNumberInput label="edit.y (%)" value={value?.y ?? 50} max={100} defaultValue={50} on:change={(e) => updateValue("y", e)} />
 {:else if inputId === "audio_effects"}
     <MaterialDropdown label="actions.start_audio_effect" options={getOptions.start_audio_effect()} value={value?.path} on:change={(e) => updateValue("path", e.detail)} />
 {:else if inputId === "number"}

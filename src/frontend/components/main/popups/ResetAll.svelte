@@ -2,7 +2,7 @@
     import { Main } from "../../../../types/IPC/Main"
     import type { SaveData } from "../../../../types/Save"
     import { sendMain } from "../../../IPC/main"
-    import { activeEdit, activePage, activePopup, activeShow, deletedShows, drawSettings, renamedShows, scripturesCache } from "../../../stores"
+    import { activeEdit, activePage, activePopup, activeShow, deletedShows, renamedShows, scripturesCache } from "../../../stores"
     import { save } from "../../../utils/save"
     import T from "../../helpers/T.svelte"
     import MaterialButton from "../../inputs/MaterialButton.svelte"
@@ -43,7 +43,6 @@
         // media cache is not deleted
 
         clearAll()
-        drawSettings.set({})
 
         // showsCache.set({})
         scripturesCache.set({})
