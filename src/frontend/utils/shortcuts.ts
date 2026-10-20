@@ -101,7 +101,7 @@ const MENU_ACTIONS: Record<string, () => void> = {
         const ids = getAllStageOutputs().map((a) => a.id)
         if (ids.length) toggleOutputs(ids)
     },
-    "screens.configure": () => activePopup.set("choose_screen"),
+    "screens.configure": () => activePopup.set("screen_config"),
     "screens.looks": () => activePopup.set("looks")
 }
 

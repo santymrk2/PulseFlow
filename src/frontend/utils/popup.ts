@@ -93,6 +93,7 @@ import Transition from "../components/main/popups/Transition.svelte"
 import Unsaved from "../components/main/popups/Unsaved.svelte"
 import UpdateManager from "../components/main/popups/UpdateManager.svelte"
 import Variable from "../components/main/popups/Variable.svelte"
+import ScreenConfig from "../components/screens/ScreenConfig.svelte"
 import { activePopup, popupData } from "../stores"
 
 export const popups: { [key in Popups]: ComponentType } = {
@@ -186,7 +187,8 @@ export const popups: { [key in Popups]: ComponentType } = {
     pco_picker: PcoServicePicker,
     sync_folders: SyncFolders,
     node_options: NodeOptions,
-    looks: LooksWindow
+    looks: LooksWindow,
+    screen_config: ScreenConfig
 }
 
 export function waitForPopupData(popupId: Popups): Promise<any> {

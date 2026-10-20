@@ -530,6 +530,7 @@ export type Popups =
     | "sync_folders"
     | "node_options"
     | "looks"
+    | "screen_config"
 
 export type DefaultProjectNames = "date" | "today" | "sunday" | "week" | "custom" | "blank"
 

@@ -109,7 +109,7 @@
     // right-click on audience/stage -> configure screens
     function onScreensContextMenu(e: MouseEvent) {
         e.preventDefault()
-        activePopup.set("choose_screen")
+        activePopup.set("screen_config")
     }
 </script>
 

@@ -111,7 +111,7 @@
                 id="screens_config"
                 menu={screensMenuItems.screens_config}
                 on:click={() => {
-                    activePopup.set("choose_screen")
+                    activePopup.set("screen_config")
                     closeTopMenu()
                 }}
             />
