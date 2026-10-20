@@ -283,7 +283,7 @@
     }
     .actions.grid :global(.action:hover) {
         background-color: rgb(0 0 20 / 0.14);
-        border-color: rgb(255 255 255 / 0.2);
+        border-color: var(--border-strong);
     }
     .actions.grid :global(.selectElem button) {
         background: transparent;
@@ -299,7 +299,7 @@
         cursor: pointer;
     }
     .actions.grid :global(.selectElem button:hover) {
-        background-color: rgb(255 255 255 / 0.03);
+        background-color: var(--bg-hover);
     }
 
     /* tags */

@@ -24,7 +24,7 @@
         position: relative;
         width: 100%;
         height: 3px;
-        background-color: rgba(255, 255, 255, 0.06);
+        background-color: var(--bg-hover);
         border-radius: 2px;
         overflow: hidden;
 
@@ -49,7 +49,7 @@
         right: 0;
         top: 0;
         bottom: 0;
-        background-color: #f59e0b;
+        background-color: var(--warning);
         border-radius: 2px;
         transition: width 0.08s ease-out;
     }

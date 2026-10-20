@@ -214,7 +214,7 @@
         background: rgba(0, 0, 0, 0.15);
         backdrop-filter: blur(15px);
         border-radius: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        border: 1px solid var(--border);
         padding: 6px;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
 
@@ -269,11 +269,11 @@
     /* remove blur from individual buttons to avoid double blur */
     .addMenu :global(.add-item-button .surface) {
         backdrop-filter: none !important;
-        background: rgba(255, 255, 255, 0.03) !important;
+        background: var(--bg-hover) !important;
     }
 
     .addMenu :global(.add-item-button:hover) {
-        background: rgba(255, 255, 255, 0.1) !important;
+        background: var(--bg-selected) !important;
     }
 
     .submenu {

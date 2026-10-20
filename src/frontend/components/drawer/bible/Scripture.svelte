@@ -1390,7 +1390,7 @@
     font-style: italic;
   } */
     .main :global(.wj) {
-        color: #ff5050;
+        color: var(--danger);
     }
     .main :global(.xt) {
         position: absolute;

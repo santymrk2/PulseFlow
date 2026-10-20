@@ -242,7 +242,7 @@
                     <p style="font-size: 0.8em;opacity: 0.7;margin-bottom: 8px;">{new Date(entry.time).toLocaleString()}</p>
 
                     {#if entry.leaderboard?.length}
-                        <div style="margin-bottom: 12px; padding: 8px; background-color: rgba(255, 255, 255, 0.05); border-radius: 4px;">
+                        <div style="margin-bottom: 12px; padding: 8px; background-color: var(--bg-hover); border-radius: 4px;">
                             <p style="font-weight: bold; font-size: 0.9em; margin-bottom: 6px; opacity: 0.9;">Leaderboard:</p>
                             <ol style="margin: 0; padding-left: 20px;">
                                 {#each entry.leaderboard as player}

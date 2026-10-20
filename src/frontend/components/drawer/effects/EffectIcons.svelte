@@ -82,6 +82,6 @@
     }
 
     .button:not(.white) :global(svg) {
-        fill: #ff5050;
+        fill: var(--danger);
     }
 </style>

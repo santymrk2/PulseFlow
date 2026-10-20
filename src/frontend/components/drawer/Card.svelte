@@ -78,7 +78,7 @@
     .hover.overlay {
         opacity: 0;
         /* transition: 0.1s opacity; */
-        background-color: rgb(255 255 255 / 0.05);
+        background-color: var(--bg-hover);
         position: absolute;
         top: 0;
         left: 0;

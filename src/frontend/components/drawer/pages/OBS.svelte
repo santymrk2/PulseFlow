@@ -379,7 +379,7 @@
         </Link>
 
         {#if errorMsg}
-            <div style="margin-top: 20px;color: #ef4444;background: rgba(239, 68, 68, 0.1);border: 1px solid rgba(239, 68, 68, 0.2);padding: 0.75em 1.25em;border-radius: 6px;font-size: 0.9em;font-weight: 500;max-width: 340px;">
+            <div style="margin-top: 20px;color: var(--danger);background: rgba(239, 68, 68, 0.1);border: 1px solid rgba(239, 68, 68, 0.2);padding: 0.75em 1.25em;border-radius: 6px;font-size: 0.9em;font-weight: 500;max-width: 340px;">
                 {errorMsg}
             </div>
         {/if}
@@ -509,12 +509,12 @@
         border-color: #3b82f6 !important;
     }
     /* :global(.obs-btn-success) {
-        background: #22c55e !important;
+        background: var(--success) !important;
         border-color: #16a34a !important;
     } */
     :global(.obs-btn-danger) {
-        background: #ef4444 !important;
-        border-color: #dc2626 !important;
+        background: var(--danger) !important;
+        border-color: var(--danger) !important;
     }
     :global(.obs-btn:not(.active-scene):hover) {
         background-color: #3d4454 !important;
@@ -523,10 +523,10 @@
     }
     /* :global(.obs-btn-success:hover) {
         background-color: #34d399 !important;
-        border-color: #10b981 !important;
+        border-color: var(--success) !important;
     } */
     :global(.obs-btn-danger:hover) {
         background-color: #f87171 !important;
-        border-color: #ef4444 !important;
+        border-color: var(--danger) !important;
     }
 </style>
