@@ -186,3 +186,75 @@ Commit `9d03c638`.
   `Projects`/`ProjectContentList`, no se duplicó en la columna. Si se quiere la lista
   de ítems del proyecto directamente en la columna izquierda, hay que mover
   `ProjectContentList` fuera de `Projects`.
+
+---
+
+## Resumen final (carril D)
+
+### Tareas completadas
+
+- F11.2 — Cajón inferior como media bin (commit `0a075dcd` + merge).
+- F11.3 — Panel izquierdo: proyectos y navegación (`75a0943d`).
+- F11.4 — Cabecera del show (`f6f9b7bb`).
+- F11.5 — Grilla de slides y miniaturas (`a46de5f5`).
+- F11.6 — Panel derecho como ProPresenter (`26ba7424`).
+- F11.8 — Popups y tooltips (`dd002771`).
+- F11.10 — Columna izquierda como ProPresenter (`9d03c638`).
+
+Cada tarea tiene su commit en español con el id, checkbox marcado en
+`docs/ROADMAP.md` y entrada en este informe.
+
+### Chequeos finales (post-merge de `origin/feature/tauri-rust-migration`)
+
+- `bun run test:unit`: 83/83.
+- `bun run test:svelte`: 56 errores (línea base post-merge; sin errores nuevos
+  aportados por este carril; se limpió un `ai` sin usar en MainLayout).
+- `bun run build`: OK (warnings de tamaño de chunks heredados).
+- Prettier limpio en todos los archivos tocados de `src/`.
+- `cargo` no se corrió (no se tocó Rust).
+
+### Decisiones pendientes (para revisión humana)
+
+1. F11.2: buscador del pie muestra la etiqueta "Filtro" sólo si `$labelsDisabled`
+   es falso; si se quiere siempre visible, es un cambio de una línea.
+2. F11.6: la especificación menciona 6 pestañas (Audio, Stage, Timers, Mensajes,
+   Overlays, Acciones); la app tiene 3 (grupos, metadatos, medios). Se mantuvieron
+   las 3 existentes para no inventar pestañas vacías.
+3. F11.8: `context/**` y `public/global.css` no se re-estilizaron en esta pasada
+   (alcance amplio); sólo `Tooltip.svelte` y `Popup.svelte` (este último ya usaba
+   las variables del tema).
+4. F11.10: la lista de ítems del proyecto con Filtro sigue viviendo dentro de
+   `Projects`/`ProjectContentList`; no se duplicó en la columna izquierda.
+5. La línea base documentada de `svelte-check` (58 errores) quedó obsoleta por la
+   migración Tauri/Rust: HEAD limpio tiene 60; el set de errores antes/después de
+   este carril es idéntico (verificado con worktree temporal), así que el criterio
+   aplicado fue "no empeorar el set de HEAD limpio".
+
+### Verificación visual
+
+Se levantó `bun run dev` (Vite, puerto 1420) y se capturó
+`/tmp/d-f11-final.png`. La app completa (Tauri) no se levantó en esta pasada por
+el tiempo disponible; las tareas que pedían "probar en la app" (F11.5 "probar en
+los tres modos") quedan pendientes de verificación manual en la app Tauri.
+
+### Archivos tocados (lane D)
+
+- `src/frontend/components/drawer/Drawer.svelte`
+- `src/frontend/components/drawer/MaterialDrawerTab.svelte`
+- `src/frontend/components/drawer/Navigation.svelte`
+- `src/frontend/components/drawer/breadcrumb.ts` (+ `breadcrumb.test.ts`)
+- `src/frontend/components/drawer/media/Media.svelte`
+- `src/frontend/components/drawer/navigation/NavigationSections.svelte`
+- `src/frontend/components/show/ProjectList.svelte`
+- `src/frontend/components/show/Projects.svelte`
+- `src/frontend/components/show/ProjectContentList.svelte`
+- `src/frontend/components/show/ShowHeader.svelte`
+- `src/frontend/components/show/Slides.svelte`
+- `src/frontend/components/slide/Slide.svelte` (sólo marco)
+- `src/frontend/components/output/preview/...` (sin cambios estructurales)
+- `src/frontend/components/show/ShowTools.svelte`
+- `src/frontend/components/main/Tooltip.svelte`
+- `src/frontend/MainLayout.svelte` (sólo columna izquierda)
+- `public/lang/en.json`, `public/lang/es.json` (sección `ui.filter`)
+- `docs/ROADMAP.md` (sólo checkboxes propios)
+- `docs/informes/ui.md`
