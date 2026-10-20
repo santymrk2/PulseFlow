@@ -17,7 +17,6 @@
 //! monitor es el de la ventana de control, se abre en modo ventana (para no tapar
 //! la UI); en cualquier otro monitor cubre la pantalla completa.
 
-use super::media::{BackgroundPipeline, MediaPool};
 use super::sync::{MutexExt, RwLockExt};
 use super::text::TextEngine;
 use super::types::{BackgroundMedia, MediaItem, OverlayItem, StageData, TextBlock};

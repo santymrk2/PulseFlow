@@ -12,6 +12,10 @@ use crate::error::{AppError, AppResult};
 use super::sync::MutexExt;
 use std::sync::{Arc, Mutex, OnceLock};
 
+/// Cuántos `Device` se abrieron en el proceso (sólo tests: debe quedar en 1).
+#[cfg(test)]
+pub(crate) static DEVICES_CREATED: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
 pub struct GpuContext {
     pub instance: wgpu::Instance,
     pub adapter: wgpu::Adapter,
@@ -40,6 +44,9 @@ impl GpuContext {
             ..Default::default()
         }))
         .map_err(|e| AppError::new(format!("Error inicializando el dispositivo WGPU: {e}")))?;
+
+        #[cfg(test)]
+        DEVICES_CREATED.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
 
         Ok(Arc::new(Self { instance, adapter, device, queue }))
     }
@@ -75,6 +82,7 @@ pub fn shared() -> AppResult<Arc<GpuContext>> {
     Ok(Arc::clone(SHARED.get_or_init(|| ctx)))
 }
 
+#[cfg(test)]
 mod tests {
     use super::*;
 
@@ -99,5 +107,15 @@ mod tests {
             view_formats: &[],
         });
         assert_eq!(texture.width(), 4);
+    }
+
+    #[test]
+    fn concurrent_screens_open_a_single_device() {
+        let handles: Vec<_> = (0..8)
+            .map(|_| std::thread::spawn(|| shared().expect("GPU disponible")))
+            .collect();
+        let contexts: Vec<_> = handles.into_iter().map(|h| h.join().expect("hilo")).collect();
+        assert!(contexts.windows(2).all(|w| Arc::ptr_eq(&w[0], &w[1])));
+        assert_eq!(DEVICES_CREATED.load(std::sync::atomic::Ordering::SeqCst), 1);
     }
 }

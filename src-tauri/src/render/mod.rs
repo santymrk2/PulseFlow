@@ -79,30 +79,18 @@ mod tests {
     }
 
     #[test]
-    fn test_media_pool_and_background_pipeline() {
-        let gpu = gpu::shared().unwrap();
-        let (device, queue) = (&gpu.device, &gpu.queue);
-
-        let pipeline = media::BackgroundPipeline::new(device, wgpu::TextureFormat::Bgra8UnormSrgb);
-        let mut pool = media::MediaPool::new();
+    fn test_media_store_reuses_video_texture() {
+        let store = media::MediaStore::new(gpu::shared().unwrap());
 
         // Crear una textura sintética de prueba 64x64 RGBA en VRAM
         let width = 64;
         let height = 64;
         let rgba_data = vec![255u8; (width * height * 4) as usize];
 
-        let tex1 = pool.update_video_frame(
-            &device,
-            &queue,
-            &pipeline,
-            "test_video_bg",
-            width,
-            height,
-            &rgba_data,
-        ).unwrap();
+        let tex1 = store.update_video_frame("test_video_bg", width, height, &rgba_data).unwrap();
 
         // Verificar que una segunda consulta reutilice el mismo Arc en VRAM sin duplicar
-        let tex2 = pool.get("test_video_bg").unwrap();
+        let tex2 = store.get("test_video_bg").unwrap();
         assert_eq!(Arc::as_ptr(&tex1), Arc::as_ptr(&tex2), "Ambas referencias deben apuntar al mismo recurso VRAM");
     }
 

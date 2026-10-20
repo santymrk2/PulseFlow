@@ -392,6 +392,26 @@ fn golden_item_imagen() {
     assert_golden("item-imagen", &rgba, WIDTH, HEIGHT);
 }
 
+/// Fondo y item de medio en la misma escena: cada capa conserva sus propios uniforms
+/// (el fondo cubre toda la salida aunque el item tenga otra caja).
+#[test]
+fn golden_fondo_e_item_conservan_sus_uniforms() {
+    let image = reference_background();
+    let mut scene_value = serde_json::to_value(fondo_imagen(&image)).expect("escena a JSON");
+    scene_value["items"] = item_imagen(&image)
+        .items
+        .iter()
+        .map(|i| serde_json::to_value(i).expect("item a JSON"))
+        .collect::<Vec<_>>()
+        .into();
+    let scene = scene(scene_value);
+    let rgba = render_snapshot_rgba(&scene, WIDTH, HEIGHT).expect("render del snapshot");
+
+    assert_color_near(pixel_at(&rgba, WIDTH, 20, 20), [255, 0, 0], "fondo arriba-izquierda");
+    assert_color_near(pixel_at(&rgba, WIDTH, 620, 20), [0, 255, 0], "fondo arriba-derecha");
+    assert_color_near(pixel_at(&rgba, WIDTH, 620, 340), [255, 255, 255], "fondo abajo-derecha");
+}
+
 /// F4.6: los overlays (imagen y texto) se dibujan encima de la slide.
 #[test]
 fn golden_overlays() {

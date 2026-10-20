@@ -5,7 +5,7 @@
 //! - Windows: D3D11VA (`-hwaccel d3d11va`)
 //!
 //! Transfiere los fotogramas decodificados en tiempo real directamente
-//! a texturas en VRAM mediante `MediaPool::update_video_frame`, permitiendo que
+//! a texturas en VRAM mediante `MediaStore::update_video_frame`, permitiendo que
 //! múltiples salidas compartan la misma decodificación con cero consumo adicional de CPU.
 //!
 //! Ciclo de vida (F8.1):

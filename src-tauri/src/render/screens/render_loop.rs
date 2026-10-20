@@ -1,6 +1,7 @@
 //! Bucle de render por pantalla (un hilo WGPU por ventana).
 
 use super::*;
+use crate::render::{gpu, media};
 
 // ---------------------------------------------------------------------------
 // Bucle de render (uno por pantalla; audiencia y stage son layouts, no ciclos)
@@ -15,28 +16,20 @@ pub(super) fn spawn_render_loop(
     pending_transition: Arc<Mutex<Option<TransitionRequest>>>,
     surface_size: Arc<Mutex<PhysicalSize<u32>>>,
 ) -> AppResult<JoinHandle<()>> {
-    let instance = wgpu::Instance::default();
-    let surface = instance
+    let gpu = gpu::shared()?;
+    let store = media::shared_store()?;
+    let surface = gpu
+        .instance
         .create_surface(Arc::clone(&window))
         .map_err(|e| AppError::new(format!("Error creando la superficie WGPU: {e}")))?;
-
-    let adapter = pollster::block_on(instance.request_adapter(&wgpu::RequestAdapterOptions {
-        power_preference: wgpu::PowerPreference::HighPerformance,
-        compatible_surface: Some(&surface),
-        force_fallback_adapter: false,
-        ..Default::default()
-    }))
-    .map_err(|e| AppError::new(format!("No se encontró una GPU compatible: {e}")))?;
-
-    let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
-        label: Some("PulseFlow Screen Device"),
-        ..Default::default()
-    }))
-    .map_err(|e| AppError::new(format!("Error inicializando el dispositivo WGPU: {e}")))?;
+    if !gpu.supports_surface(&surface) {
+        return Err(AppError::new("La GPU compartida no puede presentar en esta pantalla"));
+    }
+    let (device, queue) = (gpu.device.clone(), gpu.queue.clone());
 
     let size = window.inner_size().unwrap_or(PhysicalSize::new(1920, 1080));
     let mut config = surface
-        .get_default_config(&adapter, size.width.max(1), size.height.max(1))
+        .get_default_config(&gpu.adapter, size.width.max(1), size.height.max(1))
         .ok_or_else(|| AppError::new("La superficie no es compatible con la GPU"))?;
     config.present_mode = wgpu::PresentMode::Fifo; // VSync
     surface.configure(&device, &config);
@@ -44,9 +37,9 @@ pub(super) fn spawn_render_loop(
     thread::Builder::new()
         .name(format!("PulseFlow-Screen-{}", window.label()))
         .spawn(move || {
-            let background_pipeline = BackgroundPipeline::new(&device, config.format);
+            let background_pipeline = store.pipeline(config.format);
+            let mut arena = store.new_arena();
             let mut text_engine = TextEngine::new(&device, &queue, config.format);
-            let mut media_pool = MediaPool::new();
             // F4.4: doble buffer offscreen donde se compone la escena + la transición.
             let mut transition_engine = crate::render::transition::TransitionEngine::new(
                 &device,
@@ -58,6 +51,7 @@ pub(super) fn spawn_render_loop(
 
             while running.load(Ordering::Relaxed) {
                 let frame_start = Instant::now();
+                arena.begin_frame();
 
                 {
                     let current = *surface_size.lock_safe();
@@ -73,15 +67,7 @@ pub(super) fn spawn_render_loop(
                 }
 
                 if let Some((id, w, h, bytes)) = video_frame.lock_safe().take() {
-                    let _ = media_pool.update_video_frame(
-                        &device,
-                        &queue,
-                        &background_pipeline,
-                        &id,
-                        w,
-                        h,
-                        &bytes,
-                    );
+                    let _ = store.update_video_frame(&id, w, h, &bytes);
                 }
 
                 let frame = match surface.get_current_texture() {
@@ -155,25 +141,21 @@ pub(super) fn spawn_render_loop(
                     let blocks = match kind {
                         ScreenKind::Audience => {
                             if let Some(bg) = current.background {
-                                if media_pool.get(&bg.id).is_none()
+                                if store.get(&bg.id).is_none()
                                     && !is_video(&bg)
                                     && !failed_images.contains(&bg.id)
                                 {
                                     if let Some(path) = bg.path.as_deref() {
-                                        if let Err(err) = media_pool.load_image(
-                                            &device,
-                                            &queue,
-                                            &background_pipeline,
-                                            path,
-                                        ) {
+                                        if let Err(err) = store.load_image(path) {
                                             eprintln!("[screens] {err}");
                                             failed_images.insert(bg.id.clone());
                                         }
                                     }
                                 }
-                                if let Some(texture) = media_pool.get(&bg.id) {
+                                if let Some(texture) = store.get(&bg.id) {
                                     background_pipeline.render(
                                         &queue,
+                                        &mut arena,
                                         &mut pass,
                                         &texture,
                                         w,
@@ -190,20 +172,15 @@ pub(super) fn spawn_render_loop(
                                 if item.media_type != "image" || item.path.is_empty() {
                                     continue;
                                 }
-                                if media_pool.get(&item.id).is_none()
+                                if store.get(&item.id).is_none()
                                     && !failed_images.contains(&item.id)
                                 {
-                                    if let Err(err) = media_pool.load_image(
-                                        &device,
-                                        &queue,
-                                        &background_pipeline,
-                                        &item.path,
-                                    ) {
+                                    if let Err(err) = store.load_image(&item.path) {
                                         eprintln!("[screens] {err}");
                                         failed_images.insert(item.id.clone());
                                     }
                                 }
-                                if let Some(texture) = media_pool.get(&item.id) {
+                                if let Some(texture) = store.get(&item.id) {
                                     // La caja viene en la resolución lógica de la escena.
                                     let scale = match item.design_width {
                                         Some(dw) if dw > 0.0 => w as f32 / dw,
@@ -211,6 +188,7 @@ pub(super) fn spawn_render_loop(
                                     };
                                     background_pipeline.render_rect(
                                         &queue,
+                                        &mut arena,
                                         &mut pass,
                                         &texture,
                                         w,
@@ -246,27 +224,23 @@ pub(super) fn spawn_render_loop(
                             if item.media_type != "image" || item.path.is_empty() {
                                 continue;
                             }
-                            if media_pool.get(&item.id).is_none()
+                            if store.get(&item.id).is_none()
                                 && !failed_images.contains(&item.id)
                             {
-                                if let Err(err) = media_pool.load_image(
-                                    &device,
-                                    &queue,
-                                    &background_pipeline,
-                                    &item.path,
-                                ) {
+                                if let Err(err) = store.load_image(&item.path) {
                                     eprintln!("[screens] {err}");
                                     failed_images.insert(item.id.clone());
                                 }
                             }
-                            if let Some(texture) = media_pool.get(&item.id) {
+                            if let Some(texture) = store.get(&item.id) {
                                 let scale = match item.design_width {
                                     Some(dw) if dw > 0.0 => w as f32 / dw,
                                     _ => 1.0,
                                 };
                                 background_pipeline.render_rect(
-                                    &queue,
-                                    &mut pass,
+                                        &queue,
+                                        &mut arena,
+                                        &mut pass,
                                     &texture,
                                     w,
                                     h,

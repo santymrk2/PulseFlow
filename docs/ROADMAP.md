@@ -1653,6 +1653,17 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
 
 ---
 
+## F17 — GPU compartida
+
+Plan: `docs/superpowers/plans/2026-10-20-gpu-compartida-zero-copy-workers.md`.
+
+- [x] **F17.1 `GpuContext`.** Un solo Instance/Adapter/Device/Queue (`render/gpu.rs`), Metal en macOS y DX12 en Windows. (2026-10-20, commit d625c64e.)
+- [x] **F17.2 `MediaStore` compartido.** Texturas y pipelines por formato compartidos entre pantallas; los uniforms pasan a una `LayerArena` por pantalla con offset dinámico. **Corrige un bug latente:** con fondo + item en la misma slide todas las capas usaban los uniforms de la última (test `golden_fondo_e_item_conservan_sus_uniforms`).
+- [x] **F17.3 Pantallas sobre el Device compartido.** `spawn_render_loop` ya no pide adaptador ni device propios. Hecha junto con F17.2 (no compilan por separado). **Sin verificar en la app real** (dos pantallas abiertas con crossfade): queda para F13.4.
+- [ ] **F17.4 Una subida de video por archivo.** El hub sube el frame una vez a la textura compartida (hoy copia `bytes.to_vec()` por suscriptor).
+
+---
+
 ## Deuda registrada (sin tarea)
 
 - **Cliente `src/server/controller`** todavía tiene la interfaz de Dibujo (Focus, Zoom,

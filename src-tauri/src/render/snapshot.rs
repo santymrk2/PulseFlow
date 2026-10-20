@@ -6,10 +6,11 @@
 //! el motor sin hardware de presentación.
 
 use std::path::{Path, PathBuf};
+use std::sync::Arc;
 
 use crate::error::{AppError, AppResult};
 
-use super::media::{self, MediaPool};
+use super::media::MediaStore;
 use super::scene::ScenePayload;
 use super::text::TextEngine;
 
@@ -129,15 +130,18 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
             .unwrap_or(false);
 
         if has_background_image || !media_items.is_empty() || !overlay_media_items.is_empty() {
-            let pipeline = media::BackgroundPipeline::new(&device, SNAPSHOT_FORMAT);
-            let mut pool = MediaPool::new();
+            // Almacén propio de la captura: no arrastra imágenes cacheadas de las pantallas.
+            let store = MediaStore::new(Arc::clone(&gpu));
+            let pipeline = store.pipeline(SNAPSHOT_FORMAT);
+            let mut arena = store.new_arena();
 
             // Capa 1: fondo de imagen a pantalla completa.
             if let Some(bg) = background.as_ref().filter(|b| b.media_type == "image") {
                 if let Some(path_str) = bg.path.as_deref() {
-                    let texture = pool.load_image(&device, &queue, &pipeline, path_str)?;
+                    let texture = store.load_image(path_str)?;
                     pipeline.render(
-                        &queue,
+                        queue,
+                        &mut arena,
                         &mut render_pass,
                         &texture,
                         width,
@@ -153,13 +157,14 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
                 if item.media_type != "image" || item.path.is_empty() {
                     continue;
                 }
-                let texture = pool.load_image(&device, &queue, &pipeline, &item.path)?;
+                let texture = store.load_image(&item.path)?;
                 let scale = match item.design_width {
                     Some(dw) if dw > 0.0 => width as f32 / dw,
                     _ => 1.0,
                 };
                 pipeline.render_rect(
-                    &queue,
+                    queue,
+                    &mut arena,
                     &mut render_pass,
                     &texture,
                     width,
@@ -180,13 +185,14 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
                 if item.media_type != "image" || item.path.is_empty() {
                     continue;
                 }
-                let texture = pool.load_image(&device, &queue, &pipeline, &item.path)?;
+                let texture = store.load_image(&item.path)?;
                 let scale = match item.design_width {
                     Some(dw) if dw > 0.0 => width as f32 / dw,
                     _ => 1.0,
                 };
                 pipeline.render_rect(
-                    &queue,
+                    queue,
+                    &mut arena,
                     &mut render_pass,
                     &texture,
                     width,

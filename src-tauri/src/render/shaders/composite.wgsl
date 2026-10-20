@@ -21,10 +21,10 @@ struct LayerUniforms {
 @group(0) @binding(0)
 var<uniform> layer_uniforms: LayerUniforms;
 
-@group(0) @binding(1)
+@group(1) @binding(0)
 var media_texture: texture_2d<f32>;
 
-@group(0) @binding(2)
+@group(1) @binding(1)
 var media_sampler: sampler;
 
 // Quad generado por índice de vértice sin vertex buffer (0, 1, 2, 3, 4, 5).
