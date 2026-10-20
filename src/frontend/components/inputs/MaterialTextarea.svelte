@@ -45,12 +45,13 @@
         width: 100%;
         color: var(--text);
 
-        border-bottom: 1.2px solid var(--primary-lighter);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
 
         display: flex;
 
         /* transition: 0.22s height ease; */
-        /* height: 50px; */
+        /* height: 38px; */
     }
 
     .textfield.centered {
@@ -74,7 +75,7 @@
         outline: none;
         background: transparent;
         font-size: inherit; /* 1rem; */
-        padding: 1.25rem 0.75rem 0.5rem;
+        padding: 16px 12px 2px;
         color: var(--text);
         font-family: inherit;
         /* line-height: 1.4; */
@@ -116,12 +117,12 @@
 
     label {
         position: absolute;
-        left: 0.75rem;
-        top: 0.75rem;
-        font-size: 1.1rem;
-        color: var(--text);
-        opacity: 0.8;
-        transition: all 0.2s ease;
+        left: 12px;
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
         pointer-events: none;
         z-index: 1;
     }
@@ -136,7 +137,7 @@
         border-radius: var(--radius, 4px);
         /* width: calc(100% - 20px); */
 
-        font-size: 0.75rem;
+        font-size: var(--text-xs);
         color: var(--secondary);
         font-weight: 500;
         opacity: 1;
@@ -170,5 +171,14 @@
 
     .textfield:not(:has(.input:focus)) .input:not(:disabled):hover {
         background-color: var(--hover);
+    }
+
+    /* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+    .background,
+    .underline {
+        display: none;
+    }
+    .textfield:focus-within {
+        border-color: var(--border-strong);
     }
 </style>

@@ -116,9 +116,10 @@
         color: var(--text);
         user-select: none;
 
-        border-bottom: 1.2px solid var(--primary-lighter);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
 
-        height: 50px;
+        height: 38px;
     }
 
     .background {
@@ -142,8 +143,8 @@
         position: relative;
         z-index: 1;
         width: 100%;
-        padding: 1.25rem 0.75rem 0.5rem;
-        font-size: 1rem;
+        padding: 16px 12px 2px;
+        font-size: var(--text-sm);
         color: var(--text);
         display: flex;
         align-items: center;
@@ -188,19 +189,19 @@
 
     label {
         position: absolute;
-        left: 0.75rem;
-        top: 0.75rem;
-        font-size: 1.1rem;
-        color: var(--text);
-        opacity: 0.8;
-        transition: all 0.2s ease;
+        left: 12px;
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
         pointer-events: none;
         z-index: 1;
     }
     label.selected {
-        top: 0.25rem;
-        font-size: 0.75rem;
-        color: var(--secondary);
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
         font-weight: 500;
         opacity: 1;
     }
@@ -224,9 +225,9 @@
         transform: scaleX(1);
     }
     .textfield:focus-within label {
-        top: 0.25rem;
-        font-size: 0.75rem;
-        color: var(--secondary);
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
         font-weight: 500;
         opacity: 1;
     }
@@ -241,5 +242,18 @@
         height: 40px;
         border-radius: var(--radius, 4px);
         object-fit: cover;
+    }
+
+    /* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+    .background,
+    .underline {
+        display: none;
+    }
+    .textfield:focus-within {
+        border-color: var(--border-strong);
+    }
+
+    .textfield:has(.remove :global(button)) .selected-text {
+        margin-inline-end: 36px;
     }
 </style>

@@ -69,14 +69,14 @@
         position: relative;
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        padding: 0.75rem;
+        gap: 12px;
+        padding: 0 12px;
         color: var(--text);
         cursor: pointer;
         outline: none;
-        border-bottom: 1.2px solid var(--primary-lighter);
-        min-height: 45px;
-        height: 50px;
+        border-bottom: 1px solid var(--border);
+        min-height: 36px;
+        height: 36px;
         overflow: hidden;
     }
     .checkboxfield.centered {
@@ -90,13 +90,9 @@
         padding: 4px;
     }
 
-    .background {
-        position: absolute;
-        inset: 0;
-        background-color: var(--primary-darkest);
-        border-start-start-radius: var(--radius, 4px);
-        border-start-end-radius: var(--radius, 4px);
-        z-index: 0;
+    .background,
+    .underline {
+        display: none;
     }
 
     .hidden-input {
@@ -105,14 +101,13 @@
 
     .checkbox-label {
         position: relative;
-        font-size: 1rem;
+        font-size: var(--text-sm);
         color: var(--text);
-        opacity: 0.9;
         z-index: 1;
         user-select: none;
         display: flex;
         align-items: center;
-        gap: 0.75rem;
+        gap: 8px;
         pointer-events: none; /* prevents clicks on label text directly */
 
         flex: 1 1 auto;
@@ -126,9 +121,9 @@
 
     .custom-checkbox {
         position: relative;
-        width: 20px;
-        height: 20px;
-        border: 2px solid var(--border-color, var(--primary-lighter));
+        width: 16px;
+        height: 16px;
+        border: 1px solid var(--border-strong);
         border-radius: var(--radius, 4px);
         background-color: transparent;
         transition:
@@ -137,8 +132,8 @@
         flex-shrink: 0;
     }
     .small .custom-checkbox {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
     }
 
     .checkboxfield:has(.hidden-input:checked) .custom-checkbox {
@@ -161,28 +156,16 @@
         transform: scale(1.1);
     }
 
-    .underline {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 1.2px;
-        width: 100%;
-        background-color: var(--secondary);
-        transform: scaleX(0);
-        transition: transform 0.2s ease;
-        transform-origin: left;
-        z-index: 2;
-    }
-    .checkboxfield:not(.disabled):focus-visible .underline {
-        transform: scaleX(1);
-    }
-
     .hover {
         position: absolute;
         top: 0;
         left: 0;
         width: 100%;
         height: 100%;
+    }
+    .checkboxfield:not(.disabled):focus-visible {
+        outline: 1px solid var(--ring);
+        outline-offset: -1px;
     }
     .checkboxfield:not(.disabled):hover .hover {
         background-color: var(--hover);

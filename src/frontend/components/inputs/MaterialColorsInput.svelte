@@ -101,7 +101,7 @@
 
             {#if colors.length < maxColors}
                 <MaterialButton variant="outlined" icon="add" style="width: 100%; border-radius: 0; padding: 8px; justify-content: center; background-color: var(--primary-darkest);" title="actions.add" on:click={addColor}>
-                    <span style="font-size: 0.8rem;">{translateText("actions.add_color")}</span>
+                    <span style="font-size: var(--text-xs);">{translateText("actions.add_color")}</span>
                 </MaterialButton>
             {/if}
         </svelte:fragment>
@@ -134,7 +134,7 @@
 
     .label {
         font-weight: 500;
-        font-size: 0.9rem;
+        font-size: var(--text-sm);
         opacity: 0.7;
         color: var(--text);
         white-space: nowrap;

@@ -1909,6 +1909,7 @@
         "filter": "Filter"
     },
     "screen_config": {
+        "assigned": "Assigned",
         "configure": "Configure screens…",
         "manage_looks": "Manage looks…",
         "show_audience": "Show audience screens",

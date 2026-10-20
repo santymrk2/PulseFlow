@@ -212,9 +212,10 @@
         position: relative;
         width: 100%;
         color: var(--text);
-        border-bottom: 1.2px solid var(--primary-lighter);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
 
-        height: 50px;
+        height: 38px;
     }
 
     .textfield.centered {
@@ -253,8 +254,8 @@
         border: none;
         outline: none;
         background: transparent;
-        font-size: 1rem;
-        padding: 1.25rem 2.2rem 0.5rem 0.75rem; /* space for buttons */
+        font-size: var(--text-sm);
+        padding: 16px 35px 2px 12px; /* space for buttons */
         color: var(--text);
         font-family: inherit;
     }
@@ -325,12 +326,12 @@
 
     label {
         position: absolute;
-        left: 0.75rem;
-        top: 0.75rem;
-        font-size: 1.1rem;
-        color: var(--text);
-        opacity: 0.8;
-        transition: all 0.2s ease;
+        left: 12px;
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
         pointer-events: none;
         z-index: 1;
     }
@@ -338,9 +339,9 @@
     /* Float label if focused or has content */
     .textfield:has(input:focus) label,
     label.value-filled {
-        top: 0.25rem;
-        font-size: 0.75rem;
-        color: var(--secondary);
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
         font-weight: 500;
         opacity: 1;
     }
@@ -467,5 +468,18 @@
     .slider:disabled {
         opacity: 0.4;
         cursor: not-allowed;
+    }
+
+    /* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+    .background,
+    .underline {
+        display: none;
+    }
+    .textfield:focus-within {
+        border-color: var(--border-strong);
+    }
+
+    .textfield:has(.remove :global(button)) .input {
+        padding-inline-end: 56px;
     }
 </style>

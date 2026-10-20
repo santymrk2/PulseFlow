@@ -52,7 +52,7 @@
         position: absolute;
         left: 0.75rem;
         top: 0.75rem;
-        font-size: 1.1rem;
+        font-size: var(--text-sm);
         color: var(--text);
         opacity: 0.8;
         transition: all 0.2s ease;

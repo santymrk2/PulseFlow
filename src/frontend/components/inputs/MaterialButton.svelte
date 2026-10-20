@@ -87,9 +87,9 @@
     class:red
     {disabled}
     style="
-    background: {variant === 'contained' ? 'var(--secondary)' : variant === 'outlined' ? 'var(--primary-darkest)' : 'transparent'};
+    background: {variant === 'contained' ? 'var(--secondary)' : 'transparent'};
     color: {variant === 'contained' ? 'var(--secondary-text)' : white ? 'var(--text)' : 'var(--text)'};
-    border-color: {white ? 'rgb(255 255 255 / 0.08)' : variant === 'outlined' ? 'var(--primary-lighter)' : 'transparent'};
+    border-color: {white ? 'var(--border)' : variant === 'outlined' ? 'var(--border-strong)' : 'transparent'};
     {style}
   "
     onkeydown={handleKey}
@@ -113,9 +113,8 @@
         overflow: hidden;
         outline: none;
         border: none;
-        padding: 0.75rem 1.25rem;
-        /* font-size: 1.05rem; */
-        font-size: 0.9em;
+        padding: 0 12px;
+        font-size: var(--text-sm);
         font-weight: 500;
         font-family: inherit;
         border-radius: var(--radius, 6px);
@@ -134,26 +133,26 @@
         gap: 8px;
         white-space: nowrap;
 
-        min-height: 25px;
+        min-height: 28px;
     }
     button.small {
-        padding: 0.25rem 1.25rem;
-        font-size: 0.9em;
+        padding: 0 10px;
+        min-height: 24px;
+        font-size: var(--text-xs);
     }
 
     button.isActive {
-        background-color: var(--primary-darkest) !important;
-        /* background-color: var(--primary-lighter) !important; */
-        border-bottom: 2px solid var(--secondary) !important;
+        background-color: var(--bg-active) !important;
+        border-bottom: 2px solid var(--text) !important;
         cursor: default;
     }
 
     button.tab.isActive {
         border: none !important;
-        border-left: 4px solid var(--secondary) !important;
+        border-left: 2px solid var(--text) !important;
     }
     button.tab:not(.outlined) {
-        border-left: 4px solid var(--primary-darker);
+        border-left: 2px solid transparent;
         border-radius: 0;
 
         justify-content: space-between;
@@ -191,7 +190,7 @@
 
     button.outlined {
         background: transparent;
-        border: 1px solid currentColor;
+        border: 1px solid var(--border-strong);
     }
 
     button.text {
@@ -214,9 +213,6 @@
     }
     button:not(.white).outlined:disabled :global(svg) {
         fill: var(--text) !important;
-    }
-
-    button:hover:not(:disabled) {
     }
 
     button:focus-visible:not(:disabled) {

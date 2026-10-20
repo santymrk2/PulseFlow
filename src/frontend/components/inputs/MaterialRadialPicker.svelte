@@ -200,8 +200,9 @@
         position: relative;
         width: 100%;
         color: var(--text);
-        border-bottom: 1.2px solid var(--primary-lighter);
-        height: 50px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        height: 38px;
     }
     .background {
         position: absolute;
@@ -233,8 +234,8 @@
         border: none;
         outline: none;
         background: transparent;
-        font-size: 1rem;
-        padding: 1.25rem 2.2rem 0.5rem 0.75rem;
+        font-size: var(--text-sm);
+        padding: 16px 35px 2px 12px;
         color: var(--text);
     }
 
@@ -306,20 +307,20 @@
 
     label {
         position: absolute;
-        left: 0.75rem;
-        top: 0.75rem;
-        font-size: 1.1rem;
-        color: var(--text);
-        opacity: 0.8;
-        transition: all 0.2s ease;
+        left: 12px;
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
         pointer-events: none;
         z-index: 1;
     }
     .textfield:has(input:focus) label,
     label.value-filled {
-        top: 0.25rem;
-        font-size: 0.75rem;
-        color: var(--secondary);
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
         font-weight: 500;
         opacity: 1;
     }
@@ -369,4 +370,13 @@
     /* .popup-value {
         font-weight: bold;
     } */
+
+    /* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+    .background,
+    .underline {
+        display: none;
+    }
+    .textfield:focus-within {
+        border-color: var(--border-strong);
+    }
 </style>

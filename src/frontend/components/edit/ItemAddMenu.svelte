@@ -256,7 +256,7 @@
     }
 
     .item-preview {
-        font-size: 0.75rem;
+        font-size: var(--text-xs);
         opacity: 0.5;
         max-width: 70px;
         white-space: nowrap;

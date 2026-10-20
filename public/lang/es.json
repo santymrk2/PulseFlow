@@ -1908,6 +1908,7 @@
         "filter": "Filtro"
     },
     "screen_config": {
+        "assigned": "Asignado",
         "configure": "Configurar pantallas…",
         "manage_looks": "Gestionar looks…",
         "show_audience": "Mostrar pantallas de audiencia",

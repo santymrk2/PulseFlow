@@ -66,15 +66,15 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 0.75rem;
-        padding: 0.75rem;
+        gap: 12px;
+        padding: 0 12px;
         color: var(--text);
         cursor: pointer;
         outline: none; /* remove default focus outline */
 
-        border-bottom: 1.2px solid var(--primary-lighter);
+        border-bottom: 1px solid var(--border);
 
-        height: 50px;
+        height: 36px;
     }
     .togglefield.centered {
         justify-content: center;
@@ -89,16 +89,9 @@
         height: auto;
     }
 
-    .background {
-        position: absolute;
-        inset: 0;
-        background-color: var(--primary-darkest);
-        border-start-start-radius: var(--radius, 4px);
-        border-start-end-radius: var(--radius, 4px);
-        z-index: 0;
-    }
-    .togglefield.small .background {
-        background-color: transparent;
+    .background,
+    .underline {
+        display: none;
     }
 
     .hidden-input {
@@ -107,9 +100,8 @@
 
     .toggle-label {
         position: relative;
-        font-size: 1.1rem;
+        font-size: var(--text-sm);
         color: var(--text);
-        opacity: 0.9;
         z-index: 1;
         user-select: none;
         pointer-events: none;
@@ -128,10 +120,10 @@
 
     .switch {
         position: relative;
-        width: 40px;
-        height: 22px;
-        background-color: var(--primary-lighter);
-        border-radius: 22px;
+        width: 32px;
+        height: 18px;
+        background-color: var(--border-strong);
+        border-radius: 18px;
         transition:
             background-color 0.2s ease,
             opacity 0.2s ease;
@@ -146,8 +138,8 @@
         position: absolute;
         top: 2px;
         left: 2px;
-        width: 18px;
-        height: 18px;
+        width: 14px;
+        height: 14px;
         background-color: var(--text);
         border-radius: 50%;
         transition:
@@ -168,28 +160,16 @@
         opacity: 1;
     }
     .togglefield:has(.hidden-input:checked) .switch .thumb {
-        transform: translateX(18px);
-        background-color: var(--primary-darker);
+        transform: translateX(14px);
+        background-color: var(--action-text);
     }
     .togglefield.small:has(.hidden-input:checked) .switch .thumb {
         transform: translateX(14px);
     }
 
-    .underline {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        height: 1.2px;
-        width: 100%;
-        background-color: var(--secondary);
-        transform: scaleX(0);
-        transition: transform 0.2s ease;
-        transform-origin: left;
-        z-index: 2;
-    }
-    /* .togglefield:not(.disabled):active .underline, */
-    .togglefield:not(.disabled):focus-visible .underline {
-        transform: scaleX(1);
+    .togglefield:not(.disabled):focus-visible {
+        outline: 1px solid var(--ring);
+        outline-offset: -1px;
     }
 
     .togglefield .hover {

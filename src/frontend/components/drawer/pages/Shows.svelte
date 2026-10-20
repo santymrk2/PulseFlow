@@ -360,7 +360,7 @@
     }
 
     .sort-indicator {
-        font-size: 0.85rem;
+        font-size: var(--text-xs);
         line-height: 1;
         position: absolute;
         top: 0;

@@ -161,7 +161,7 @@
         /* F11.3 — títulos de sección: mayúsculas pequeñas, atenuados */
         font-weight: 500;
         padding: 6px 14px 4px;
-        font-size: 0.62rem;
+        font-size: var(--text-2xs);
         letter-spacing: 0.08em;
         text-transform: uppercase;
         opacity: 0.45;
@@ -183,7 +183,7 @@
         align-items: center;
     }
     .sepLabel {
-        font-size: 0.6rem;
+        font-size: var(--text-2xs);
         color: var(--text);
         opacity: 0.5;
         padding: 6px 14px;

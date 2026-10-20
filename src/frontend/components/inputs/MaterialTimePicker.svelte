@@ -91,8 +91,9 @@
         position: relative;
         width: 100%;
         color: var(--text);
-        border-bottom: 1.2px solid var(--primary-lighter);
-        height: 50px;
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        height: 38px;
     }
 
     .background {
@@ -111,8 +112,8 @@
         border: none;
         outline: none;
         background: transparent;
-        font-size: 1rem;
-        padding: 1.25rem 0.75rem 0.5rem;
+        font-size: var(--text-sm);
+        padding: 16px 12px 2px;
         color: var(--text);
         font-family: inherit;
     }
@@ -156,12 +157,12 @@
     /* Label base */
     label {
         position: absolute;
-        left: 0.75rem;
-        top: 0.75rem;
-        font-size: 1.1rem;
-        color: var(--text);
-        opacity: 0.8;
-        transition: all 0.2s ease;
+        left: 12px;
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
         pointer-events: none;
         z-index: 1;
     }
@@ -169,9 +170,9 @@
     /* Float label if focused OR when wrapper has 'filled' */
     .input:focus + label,
     .textfield.filled label {
-        top: 0.25rem;
-        font-size: 0.75rem;
-        color: var(--secondary);
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
         font-weight: 500;
         opacity: 1;
     }
@@ -220,5 +221,18 @@
     /* Safari/iOS date input fixes (keeps text visible and avoids cramped UI) */
     .input::-webkit-date-and-time-value {
         text-align: left;
+    }
+
+    /* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+    .background,
+    .underline {
+        display: none;
+    }
+    .textfield:focus-within {
+        border-color: var(--border-strong);
+    }
+
+    .textfield:has(.remove :global(button)) .input {
+        padding-inline-end: 56px;
     }
 </style>

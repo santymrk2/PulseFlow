@@ -325,12 +325,13 @@
     .textfield {
         position: relative;
         width: 100%;
-        border-bottom: 1.2px solid var(--primary-lighter);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
 
         cursor: pointer;
 
         --margin: 6px;
-        min-height: 50px;
+        min-height: 38px;
         height: 50px;
     }
     .textfield.disabled {
@@ -376,7 +377,7 @@
         transform: translateY(-50%);
         left: 0.75rem;
 
-        font-size: 1.1rem;
+        font-size: var(--text-sm);
         opacity: 0.8;
 
         transition: all 0.2s ease;
@@ -570,5 +571,14 @@
     }
     .pickColor:hover .hover {
         display: flex;
+    }
+
+    /* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+    .background,
+    .underline {
+        display: none;
+    }
+    .textfield:focus-within {
+        border-color: var(--border-strong);
     }
 </style>

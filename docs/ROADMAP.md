@@ -1342,7 +1342,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   (línea base), `test:unit` 89/89, prettier (`MaterialButton.svelte` ya venía mal
   formateado y se dejó limpio). No verificado visualmente.
 
-- [ ] **F14.4 Bordes en lugar de fondos.**
+- [x] **F14.4 Bordes en lugar de fondos.**
   *Archivos:* contenedores de layout (`components/main/`), filas de Configuración,
   pestañas del cajón, panel derecho.
   *Pasos:* un solo fondo de aplicación; los paneles se separan con `border` de 1 px (los
@@ -1360,13 +1360,25 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   slider visible (`--border-strong`); botones `red` ("Clear all") pasan de relleno a
   texto + borde rojos (`--danger-border`); contornos de foco → anillo de 1 px (`--ring`,
   10 casos) y de activo/seleccionado → `--text-muted` en vez de blanco puro (17 casos).
-  **Pendiente del lote 2** (visto en las capturas): filas de Configuración como lista con
-  separadores y labels flotantes estilo Material → `Field` (Looks y Pantallas también);
-  el ✕ de los dropdowns de Looks se superpone al texto ("None"); en Pantallas la sección
-  "System" duplica la grilla de monitores y el texto se superpone al número; el modal de
-  Configuración queda justo de alto (el botón "Configure screens…" asoma cortado);
-  "Asignado:" sigue fijo en español (F12.8). El botón flotante `+`, el degradé de
-  "New show" y el menú "agregar ítems" de Edit son de **F14.5**.
+  **Lote 2 hecho** (2026-10-20; causa de "algunas cosas no se achicaron": los `Material*`
+  fijaban `1rem`/`1.1rem`/`0.75rem`, y `rem` cuelga de la raíz de 16 px, no del
+  `--font-size` de 13 px). Los 10 campos `Material*` (texto, número, área de texto,
+  desplegable, botón de popup, archivo, carpeta, hora, selector radial y color) comparten
+  ahora un solo aspecto: **borde de 1 px, 38 px de alto, etiqueta siempre arriba, chica y
+  gris** (11 px, `--text-subtle`; se acabó el salto de tamaño estilo Material), sin fondo
+  propio ni subrayado animado, foco = borde `--border-strong`. Interruptor y checkbox
+  pasan a **filas de 36 px con separador de 1 px** (interruptor de 32×18, checkbox de
+  16 px con borde de 1 px). `MaterialButton`: 28 px de alto (24 en `small`), 13 px, borde
+  `--border-strong` en `outlined`, sin fondo propio, pestaña activa con barra de 2 px.
+  Título de página de Configuración 20 px/600. Los 19 `font-size` en `rem` restantes (fuera
+  de `slide/` y `export/`) pasaron a la escala. *Defectos de las capturas:* el ✕ que se
+  pisaba con "None" (reserva de ancho del botón de borrar en Dropdown, PopupButton,
+  FilePicker, TextInput, NumberInput y TimePicker); en Pantallas se quitó el mapa
+  duplicado de "System" (quedan Refresh/Identify) y con él el texto superpuesto, y
+  "Asignado:" ahora es la clave `screen_config.assigned` (`en`/`es`); `DisplayLayout` pierde
+  la prop `selectable` (ya nadie la usaba en falso). *Lección:* Svelte **elimina** los
+  selectores que no puede ver en el marcado del componente (por ejemplo `:has(.remove
+  button)` cuando el botón lo pinta un hijo): hay que escribirlos con `:global(button)`.
 
 - [x] **F14.5 Quitar decoración.**
   *Pasos:* borrar degradés (`rg -n 'gradient' src/frontend`), el `+` flotante de la

@@ -199,10 +199,10 @@
 
 <div class="canvas">
     <div class="canvas-title">{translateText("screen_config.monitors")}</div>
-    <DisplayLayout {displays} width={620} height={240} fill assignedId={currentOutput.screen || currentOutput.display?.screen || null} selectable={true} on:select={setScreen} />
+    <DisplayLayout {displays} width={620} height={240} fill assignedId={currentOutput.screen || currentOutput.display?.screen || null} on:select={setScreen} />
     <div class="canvas-info">
         {#if currentOutput.screen}
-            <span>Asignado: {currentOutput.screen}</span>
+            <span>{translateText("screen_config.assigned")}: {currentOutput.screen}</span>
         {/if}
     </div>
 </div>

@@ -94,14 +94,15 @@
         align-items: center;
         justify-content: space-between;
 
-        padding: 15px var(--padding);
-        border-bottom: 1px solid var(--primary-lighter);
+        padding: 12px var(--padding);
+        border-bottom: 1px solid var(--border);
 
         transition: 0.2s box-shadow ease;
     }
 
     h2 {
-        font-size: 1.6em;
+        font-size: var(--text-lg);
+        font-weight: 600;
         color: var(--text);
 
         overflow: visible;

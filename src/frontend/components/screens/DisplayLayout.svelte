@@ -18,8 +18,6 @@
     export let height = 320
     /** Id del monitor asignado a la salida actual (se resalta). */
     export let assignedId: string | null = null
-    /** Si es `false`, los monitores no son clicables. */
-    export let selectable = true
     /** Si es `true`, el dibujo ocupa el ancho del contenedor (`width` deja de mandar) y no sale del panel. */
     export let fill = false
 
@@ -40,18 +38,7 @@
 
 <div class="displayLayout" class:fill bind:clientWidth={box} style={fill ? `height: ${drawHeight}px;` : `width: ${drawWidth}px;height: ${drawHeight}px;`}>
     {#each layout.displays as item (item.display.id)}
-        <div
-            class="monitor"
-            class:primary={item.display.primary}
-            class:assigned={assignedId === item.display.id}
-            class:selectable
-            style="left: {item.x}px;top: {item.y}px;width: {item.width}px;height: {item.height}px;"
-            role={selectable ? "button" : "none"}
-            tabindex={selectable ? 0 : -1}
-            data-title={item.display.label || `Display ${item.number}`}
-            on:click={() => selectable && dispatch("select", item.display)}
-            on:keydown={(e) => (selectable && (e.key === "Enter" || e.key === " ") ? dispatch("select", item.display) : null)}
-        >
+        <div class="monitor" class:primary={item.display.primary} class:assigned={assignedId === item.display.id} style="left: {item.x}px;top: {item.y}px;width: {item.width}px;height: {item.height}px;" role="button" tabindex={0} data-title={item.display.label || `Display ${item.number}`} on:click={() => dispatch("select", item.display)} on:keydown={(e) => (e.key === "Enter" || e.key === " " ? dispatch("select", item.display) : null)}>
             <span class="number">{item.number}</span>
             {#if item.display.primary}
                 <span class="badge primary" data-title="primary"><Icon id="star" size={0.8} /></span>
@@ -81,27 +68,25 @@
     .monitor {
         position: absolute;
         box-sizing: border-box;
-        border: 2px solid var(--primary-lighter, var(--border-color));
-        border-radius: 6px;
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
         background-color: var(--primary-darker);
         color: var(--text);
         display: flex;
         align-items: center;
         justify-content: center;
         overflow: hidden;
-    }
-    .monitor.selectable {
         cursor: pointer;
     }
-    .monitor.selectable:hover {
-        border-color: var(--primary);
+    .monitor:hover {
+        border-color: var(--border-strong);
     }
     .monitor.primary {
         border-style: dashed;
     }
     .monitor.assigned {
-        border-color: var(--secondary, var(--primary));
-        box-shadow: 0 0 0 2px var(--secondary, var(--primary));
+        border-width: 2px;
+        border-color: var(--text);
     }
     .number {
         font-size: 1.6em;

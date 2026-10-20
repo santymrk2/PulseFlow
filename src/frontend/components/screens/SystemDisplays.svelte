@@ -1,6 +1,5 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import DisplayLayout from "./DisplayLayout.svelte"
     import { translateText } from "../../utils/language"
 
     export let displays: any[] = []
@@ -17,9 +16,7 @@
 </script>
 
 <div class="wrap">
-    {#if displays.length}
-        <DisplayLayout {displays} width={220} height={130} selectable={false} fill />
-    {:else}
+    {#if !displays.length}
         <div class="empty">{translateText("screen_config.no_monitors")}</div>
     {/if}
     <div class="row">
@@ -36,12 +33,12 @@
         gap: 6px;
     }
     .empty {
-        height: 90px;
+        height: 40px;
         display: flex;
         align-items: center;
         justify-content: center;
-        opacity: 0.6;
-        font-size: 0.8em;
+        color: var(--text-subtle);
+        font-size: var(--text-xs);
     }
     .row {
         display: flex;
@@ -50,13 +47,14 @@
     }
     .btn {
         background: transparent;
-        border: 1px solid var(--border-color, var(--primary-lighter));
+        border: 1px solid var(--border);
         color: var(--text);
-        padding: 4px 6px;
-        border-radius: var(--radius, 4px);
+        padding: 0 8px;
+        height: 28px;
+        border-radius: var(--radius);
         text-align: left;
         cursor: pointer;
-        font-size: 0.8em;
+        font-size: var(--text-sm);
     }
     .btn:hover {
         background-color: var(--hover-bg, var(--bg-hover));
