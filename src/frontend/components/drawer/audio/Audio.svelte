@@ -583,5 +583,7 @@
         font-size: 0.9em;
         padding: 0 10px;
         opacity: 0.8;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
 </style>

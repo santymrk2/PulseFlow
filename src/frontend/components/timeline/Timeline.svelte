@@ -980,11 +980,12 @@
         outline: none;
         background: inherit;
 
-        font-family: monospace;
         font-size: 1.25em;
         font-weight: bold;
         color: var(--text);
         text-align: center;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
     .time-display:focus {
         border-color: var(--focus);

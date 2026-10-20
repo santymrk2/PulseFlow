@@ -180,5 +180,7 @@
         opacity: 0.5;
         font-size: 0.8em;
         font-style: italic;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
 </style>

@@ -107,6 +107,8 @@
         font-size: 1.6em;
         font-weight: bold;
         opacity: 0.85;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
     .badge {
         position: absolute;

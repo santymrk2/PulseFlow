@@ -1395,12 +1395,26 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   El reloj del cajón en mono va con F14.6. Verificado: `test:svelte` 56 (línea base),
   `test:unit` 89/89, prettier. **No verificado visualmente.**
 
-- [ ] **F14.6 Escala tipográfica.**
+- [x] **F14.6 Escala tipográfica.**
   *Pasos:* exponer la escala de F14.1 como utilidades de Tailwind (`text-xs` … ) y como
   variables; reemplazar los `font-size` en `em` de los componentes de layout por la
   escala. Números en mono (`tabular-nums`): timers, timecodes, contadores, inputs
   numéricos.
   *Aceptación:* en las pantallas de F14.1 no quedan tamaños fuera de la escala.
+  **Hecho, con alcance recortado** (2026-10-20). *Se hizo:* tamaño base 16 → **13 px**
+  (`--font-size` en `global.css` y en `defaultThemes.ts`; todo lo escrito en `em` escala solo,
+  unos 366 casos), escala `--text-2xs/xs/sm/md/lg` (11/12/13/15/20 px) como variables y como
+  utilidades de Tailwind, y **Geist Mono con `tabular-nums`** en 12 reglas de números de
+  interfaz (contadores de categorías y proyectos, duración y número de `ShowButton`, tiempo
+  de la línea de tiempo, del audio, del calendario y de los historiales, número de monitor).
+  *No se hizo a propósito:* reemplazar los 366 `font-size` en `em` por valores absolutos:
+  los `em` se componen al anidarse y pasarlos a px fijos agranda a los hijos y puede romper
+  layouts sin poder verlo; por eso **el criterio "ningún tamaño fuera de la escala" no se
+  cumple**. Los 53 `rem` quedan en 16 px de base (0.75rem = 12 px, coincide con la escala).
+  El reloj del cajón (`Clock.svelte`) **no** pasó a mono: el mismo componente dibuja el
+  reloj de los slides, que es contenido. Verificado: `test:svelte` 56 (línea base),
+  `test:unit` 89/89, prettier. **No verificado visualmente: el cambio de base afecta a toda
+  la app y es lo primero que hay que mirar.**
 
 - [ ] **F14.7 Completar el kit.**
   *Archivos:* `src/frontend/lib/components/ui/`, `KitDemo.svelte`, `docs/design/kit.md`.

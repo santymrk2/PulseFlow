@@ -396,6 +396,8 @@
         text-align: center;
 
         min-width: var(--number-width);
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
 
     .cell .date {
@@ -450,7 +452,6 @@
         left: 50%;
         transform: translateX(-50%);
 
-        font-family: monospace;
         font-size: 0.85em;
 
         padding: 0px 5px;
@@ -458,6 +459,8 @@
 
         background-color: rgb(0 0 0 / 0.5);
         color: white;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
 
     .arrow {

@@ -115,8 +115,8 @@ progreso), pasa a `--text-muted`.
 
 ### Tipografía
 
-Familias: `--font-sans` Geist Variable (ya cargada) y `--font-mono` Geist Mono Variable
-(`@fontsource-variable/geist-mono`, se agrega en F14.2). Pesos: 400 normal, 500 énfasis y
+Familias: `--font-family` Geist Variable y `--font-mono` Geist Mono Variable
+(`@fontsource-variable/geist-mono`, cargada en `main.ts`). Tamaño base de la app: 13 px. Pesos: 400 normal, 500 énfasis y
 controles, 600 títulos. Nunca 700 o más.
 
 | Token | Tamaño / interlineado | Uso |

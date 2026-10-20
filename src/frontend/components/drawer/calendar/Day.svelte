@@ -155,5 +155,7 @@
         color: var(--text);
         opacity: 0.9;
         white-space: nowrap;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
 </style>

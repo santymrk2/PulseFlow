@@ -294,6 +294,8 @@
         font-weight: normal;
         white-space: nowrap;
         margin-right: 0.5em;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
 
     /* notes */

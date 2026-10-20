@@ -8,7 +8,7 @@ export const defaultThemes: { [key: string]: Themes } = {
         default: true,
         font: {
             family: '"Geist Variable", system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
-            size: "1em"
+            size: "13px"
         },
         colors: {
             // monocromo (docs/design/kit.md); los mismos valores están en public/global.css

@@ -78,5 +78,7 @@
         opacity: 0.5;
         font-size: 0.7em;
         padding-left: 5px;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
 </style>
