@@ -59,6 +59,7 @@ import ManageMetadata from "../components/main/popups/ManageMetadata.svelte"
 import ManageTags from "../components/main/popups/ManageTags.svelte"
 import Loader from "../components/main/Loader.svelte"
 import LooksWindow from "../components/looks/LooksWindow.svelte"
+import KitDemo from "../components/main/popups/KitDemo.svelte"
 import MaxLines from "../components/main/popups/MaxLines.svelte"
 import MediaFit from "../components/main/popups/MediaFit.svelte"
 import MetadataDisplay from "../components/main/popups/MetadataDisplay.svelte"
@@ -188,7 +189,8 @@ export const popups: { [key in Popups]: ComponentType } = {
     sync_folders: SyncFolders,
     node_options: NodeOptions,
     looks: LooksWindow,
-    screen_config: ScreenConfig
+    screen_config: ScreenConfig,
+    kit_demo: KitDemo
 }
 
 export function waitForPopupData(popupId: Popups): Promise<any> {

@@ -529,6 +529,7 @@ export type Popups =
     | "node_options"
     | "looks"
     | "screen_config"
+    | "kit_demo"
 
 export type DefaultProjectNames = "date" | "today" | "sunday" | "week" | "custom" | "blank"
 

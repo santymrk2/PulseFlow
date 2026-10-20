@@ -491,6 +491,7 @@
         "outro": "Outro"
     },
     "popup": {
+        "kit_demo": "Component kit",
         "show": "New show",
         "select_show": "Select show",
         "select_template": "Select template",

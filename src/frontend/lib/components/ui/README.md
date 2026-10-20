@@ -6,8 +6,11 @@ reemplazan a los componentes legacy de `src/frontend/components/`.
 
 ## Regla de uso
 
-- **Usar estos componentes sólo en pantallas nuevas** (por ejemplo, el editor de
-  Looks de F5.3) o en widgets nuevos que no existan aún.
+- **Toda interfaz nueva o rehecha usa el kit** (F12): `button`, `capsule`,
+  `section-header`, `list-row`, `field`, `menu`, además de `select`, `tabs`, `switch`…
+  Ver `docs/design/kit.md` con las medidas y ejemplos.
+- Los componentes legacy se reemplazan **pantalla por pantalla** dentro de las tareas
+  de F12, nunca en masa.
 - **No migrar en masa** componentes existentes (`Button.svelte`,
   `MaterialInput`, `CombinedInput`, etc.): los componentes legacy reciben
   `on:*` de sus padres y migrarlos a runes los rompe (ver `AGENTS.md`). Esa
@@ -19,7 +22,8 @@ reemplazan a los componentes legacy de `src/frontend/components/`.
 ## Componentes disponibles
 
 `button`, `input`, `label`, `select`, `separator`, `skeleton`, `switch`, `tabs`,
-`scroll-area` (ver sus `*.svelte` y `index.ts` en cada carpeta).
+`scroll-area`, y del kit F12: `section-header`, `list-row`, `capsule`, `field`, `menu`
+(ver sus `*.svelte` y `index.ts` en cada carpeta).
 
 ## Cómo agregar otro
 

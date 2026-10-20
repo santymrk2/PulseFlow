@@ -491,6 +491,7 @@
         "outro": "Cierre"
     },
     "popup": {
+        "kit_demo": "Kit de componentes",
         "show": "Nueva presentación",
         "select_show": "Seleccionar presentación",
         "select_template": "Seleccionar plantilla",
