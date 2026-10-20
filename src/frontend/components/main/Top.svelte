@@ -9,6 +9,9 @@
     import Button from "../inputs/Button.svelte"
     import TopButton from "../inputs/TopButton.svelte"
     import { DEFAULT_DISPLAY_NAME } from "../../utils/SocketHelper"
+    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
+    import { applyLook } from "../helpers/looks"
+    import { activeLook, looks } from "../../stores"
 
     export let isWindows = false
 
@@ -60,6 +63,8 @@
     $: settingsDisabled = Object.keys(profile?.access.settings || {}).length > 7
 
     $: noPhysicalOutputWindows = (!$outputDisplay && !physicalOutputWindows.length) || disableClick
+
+    $: lookOptions = Object.entries($looks || {}).map(([id, look]: any) => ({ id, label: look?.name || id, value: id }))
 
     $: users = getCloudUsers($cloudUsers)
     function goToUser(user: { [key: string]: any }) {
@@ -148,6 +153,9 @@
                 </div>
             {/if}
         </Button>
+        {#if lookOptions.length}
+            <MaterialDropdown label="Look" value={$activeLook} options={lookOptions} on:change={(e) => applyLook(e.detail.value)} onlyArrow={false} style="min-width: 90px; max-width: 160px; margin-left: 4px;" />
+        {/if}
         {#if !$outputDisplay && !physicalOutputWindows.length}
             <div data-title={translateText("No 'physical' outputs available!")} style="position: absolute;top: 0;inset-inline-end: 0;height: 100%;width: 60px;" role="none" on:click={openOutputSettings} />
         {/if}

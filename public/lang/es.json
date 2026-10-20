@@ -35,7 +35,8 @@
         "file": "Carpeta",
         "edit": "Editar",
         "view": "Vista",
-        "help": "Ayuda"
+        "help": "Ayuda",
+        "screens": "Pantallas"
     },
     "screen": {
         "width": "Ancho",

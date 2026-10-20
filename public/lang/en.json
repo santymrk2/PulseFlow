@@ -35,7 +35,8 @@
         "file": "File",
         "edit": "Edit",
         "view": "View",
-        "help": "Help"
+        "help": "Help",
+        "screens": "Screens"
     },
     "screen": {
         "width": "Width",

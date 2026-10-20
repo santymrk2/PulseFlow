@@ -10,24 +10,52 @@
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
     import Button from "../inputs/Button.svelte"
+    import { activeLook, looks, activePopup } from "../../stores"
+    import { getAllNormalOutputs, getAllStageOutputs, toggleOutputs } from "../../components/helpers/output"
+    import { applyLook } from "../../components/helpers/looks"
+    import type { ContextMenuItem } from "../context/contextMenus"
 
-    const menus: string[] = ["file", "edit", "view", "help"]
+    const menus: string[] = ["file", "edit", "view", "help", "screens"]
 
     let activeID: null | string = null
+    let menuElem: HTMLDivElement | null = null
     let activeMenu: string[] = []
     let x = 0
     let y = 25
 
     $: maximized = !!$windowState.maximized
 
+    const screensMenu = ["screens_toggle_audience", "screens_toggle_stage", "SEPARATOR", "screens_config", "screens_looks", "SEPARATOR", "screens_live"]
+
+    // F10.7 — items del menú "Pantallas" definidos acá porque viven fuera de
+    // `contextMenus.ts` (herramienta de escritorio, no de la lista de contextos).
+    const screensMenuItems: { [key: string]: ContextMenuItem } = {
+        screens_toggle_audience: { label: "Mostrar pantallas de audiencia", translate: false, shortcuts: ["Ctrl+1"], icon: "outputs" },
+        screens_toggle_stage: { label: "Mostrar pantallas de stage", translate: false, shortcuts: ["Ctrl+2"], icon: "stage" },
+        screens_config: { label: "Configurar pantallas…", translate: false, icon: "settings" },
+        screens_looks: { label: "Gestionar looks…", translate: false, icon: "styles" },
+        screens_live: { label: "En vivo", translate: false, icon: "live" }
+    }
+
     function menu(e: any) {
-        let id: string = e.target.id
+        const id: string = e.target.id
         topContextActive.set(activeID !== id)
         activeID = activeID === id ? null : id
 
         if (activeID === null) return
         x = e.target.offsetLeft
-        activeMenu = contextMenuLayouts[id] || []
+        activeMenu = id === "screens" ? screensMenu : contextMenuLayouts[id] || []
+    }
+
+    function closeTopMenu() {
+        topContextActive.set(false)
+        activeID = null
+    }
+
+    function toggleScreens(type: "audience" | "stage") {
+        const ids = (type === "stage" ? getAllStageOutputs() : getAllNormalOutputs()).map((a) => a.id)
+        if (ids.length) toggleOutputs(ids)
+        closeTopMenu()
     }
 
     const click = (e: MouseEvent) => {
@@ -48,8 +76,8 @@
 <svelte:window on:click={click} on:contextmenu={click} />
 
 <main bind:clientHeight={y}>
-    {#if $topContextActive}
-        <div class="contextMenu menu" style="inset-inline-start: {x}px; top: {y}px;" transition:fade={{ duration: 50 }}>
+    {#if $topContextActive && activeID !== "screens"}
+        <div bind:this={menuElem} class="contextMenu menu" style="inset-inline-start: {x}px; top: {y}px;" transition:fade={{ duration: 50 }}>
             {#key activeMenu}
                 {#each activeMenu as id}
                     {#if id === "SEPARATOR"}
@@ -71,6 +99,58 @@
             </Button>
         {/each}
     </div>
+
+    {#if activeID === "screens"}
+        <div bind:this={menuElem} class="contextMenu menu" style="inset-inline-start: {x}px; top: {y}px;" transition:fade={{ duration: 50 }}>
+            <ContextItem contextElem={menuElem} topBar id="screens_toggle_audience" menu={screensMenuItems.screens_toggle_audience} on:click={() => toggleScreens("audience")} />
+            <ContextItem contextElem={menuElem} topBar id="screens_toggle_stage" menu={screensMenuItems.screens_toggle_stage} on:click={() => toggleScreens("stage")} />
+            <hr />
+            <ContextItem
+                contextElem={menuElem}
+                topBar
+                id="screens_config"
+                menu={screensMenuItems.screens_config}
+                on:click={() => {
+                    activePopup.set("screens_config")
+                    closeTopMenu()
+                }}
+            />
+            <ContextItem
+                contextElem={menuElem}
+                topBar
+                id="screens_looks"
+                menu={screensMenuItems.screens_looks}
+                on:click={() => {
+                    activePopup.set("manage_looks")
+                    closeTopMenu()
+                }}
+            />
+            <hr />
+            <!-- "En vivo": submenu propio (los looks se cargan del store, no de contextMenus.ts) -->
+            <div class="liveGroup">
+                <ContextItem contextElem={menuElem} topBar id="screens_live" menu={screensMenuItems.screens_live} />
+                <div class="liveItems">
+                    {#if Object.keys($looks || {}).length}
+                        {#each Object.entries($looks || {}) as [lookId, look]: any}
+                            <button
+                                class="liveLook"
+                                class:active={$activeLook === lookId}
+                                on:click={() => {
+                                    applyLook(lookId)
+                                    closeTopMenu()
+                                }}
+                            >
+                                <span>{look?.name || lookId}</span>
+                                {#if $activeLook === lookId}<span class="check">✓</span>{/if}
+                            </button>
+                        {/each}
+                    {:else}
+                        <span class="empty">(sin looks todavía)</span>
+                    {/if}
+                </div>
+            </div>
+        </div>
+    {/if}
 
     {#if $activeProfile && Object.keys($profiles).filter((a) => a !== "admin").length > 1}
         <div class="info">
@@ -154,6 +234,50 @@
         height: 1px;
         border: none;
         background-color: var(--primary);
+    }
+
+    .check {
+        opacity: 0.9;
+    }
+
+    /* "En vivo" (F10.7): submenu de looks cargado del store */
+    .liveGroup {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .liveItems {
+        display: flex;
+        flex-direction: column;
+        padding-inline-start: 22px;
+    }
+
+    .liveLook {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 6px 16px;
+        border: none;
+        background: none;
+        color: var(--text);
+        font: inherit;
+        cursor: pointer;
+        text-align: start;
+    }
+
+    .liveLook:hover {
+        background-color: rgb(0 0 0 / 0.2);
+    }
+
+    .liveLook.active {
+        color: var(--secondary);
+    }
+
+    .empty {
+        padding: 6px 16px;
+        opacity: 0.5;
+        font-style: italic;
     }
 
     /* info */
