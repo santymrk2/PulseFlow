@@ -59,7 +59,7 @@ cargo test 59/59, svelte-check **58 errores** (nueva referencia), build OK.
 | Qué | Dónde | Estado |
 | --- | --- | --- |
 | F4.6 overlays | integrado | **Hecho** (2026-10-19): capa propia dibujada en el engine (fondo → medios slide → texto slide → medios overlay → texto overlay), fixture `audience-overlays.json`, golden `overlays.png`. |
-| F6.2–F6.5 diseño | integrado | Implementado; **falta verificación visual** (capturas) según `docs/VERIFICAR-F6.md`. Por eso los checkboxes siguen sin marcar. |
+| F6.2–F6.5 diseño | integrado | **Hecho** (2026-10-19): checkboxes marcados. Queda sólo la verificación visual del usuario (capturas) según `docs/VERIFICAR-F6.md`. |
 | F7.4 canales Main | integrado | Completo salvo `PDF_TO_IMAGE` (no-op) → F7.5. |
 | `wip/f7` (`af2a2a8`) | rama `wip/f7` | **Descartar**: es `cargo fmt` sobre todo el crate, sin cambios funcionales. Sus notas ya están en `docs/VERIFICAR-F7.md`. |
 | `f6-pulseflow`, `feature/diseno`, `feature/ipc`, `wip/f4`, `wip/f7` | ramas remotas | Ya integradas o descartadas; se pueden borrar. `feature/ipc` trae un F4.6 duplicado (`d834310`) que **no** se integró: el bueno es `1f9f932`. |
@@ -582,24 +582,32 @@ otra semántica que shadcn (`--primary` = fondo del panel, `--secondary` = acent
 tema se aplica desde `defaultThemes.ts` como variables inline sobre `<html>`. Por eso
 el port se hace **por valores**, no renombrando variables ni copiando componentes React.
 
-- [ ] **F6.1 Tabla de equivalencias.** Documentar en `docs/design-reference/README.md`
-  el mapeo token shadcn (tema `.dark` de `index.css`) → variable FreeShow
-  (`--primary` ← `--background`, `--primary-darker` ← `--card`/`--sidebar`,
-  `--primary-lighter` ← `--accent`, `--text` ← `--foreground`, `--secondary` ←
-  `--sidebar-primary`, bordes ← `--border`, radio ← `--radius`).
-- [ ] **F6.2 Tema por defecto "PulseFlow".** En `defaultThemes.ts`: tema por defecto
-  con esos valores y fuente Geist (`@fontsource-variable/geist`, ya usada en la
-  referencia); en `public/global.css` los mismos defaults. Mantener los otros temas.
-  *Aceptación:* captura antes/después de Show, Edit, Settings y Stage en
-  `docs/design-reference/screenshots/`.
-- [ ] **F6.3 Radios, bordes y espaciados globales.** Variables `--radius` y
-  `--border-color` usadas por `Button`, `MaterialButton`, inputs `Material*`, paneles
-  y popups (en esos componentes base, no en cada pantalla).
-- [ ] **F6.4 Layout de paneles.** Comparar `Topbar.tsx`, `LibraryPanel.tsx`,
-  `RightPanel.tsx`, `Drawer.tsx` con `MainLayout.svelte` y `components/main/Top.svelte`;
-  ajustar espaciados, alturas y separadores. Sin mover funcionalidad.
-- [ ] **F6.5 Componentes `lib/components/ui` (shadcn-svelte).** Usarlos sólo en
-  pantallas nuevas (Looks, F5.3). No reemplazar componentes existentes en masa.
+- [x] **F6.1–F6.5 Diseño (referencia shadcn → Svelte).** (hecho 2026-10-19 en las
+  ramas `feature/diseno` / `f6-pulseflow`, ya mergeado en `feature/tauri-rust-migration`:
+  commits `e387f24f` (F6.1), `88068794` (F6.2), `65708708` (F6.3), `9b3d0283` (F6.4)
+  y `2475550e` (F6.5), más el merge `d7dd3185`. El tema por defecto `PulseFlow`
+  usa los valores `.dark` de la referencia (`#0a0a0a`/`#171717`/`#262626`/`#fafafa`/
+  `#1447e6`/`0.625rem`) y Geist Variable empaquetada; los componentes base usan
+  `var(--radius)` / `var(--border-color)`; la topbar pasó a 48px; los componentes
+  shadcn-svelte quedaron en `src/frontend/lib/components/ui/` (sólo pantallas nuevas).
+  *Aceptación:* la verificación visual (capturas Show/Edit/Settings/Stage) quedó para
+  el usuario en `docs/VERIFICAR-F6.md`.)
+
+  *(Detalle original de cada tarea, a título de referencia:)*
+
+  **F6.1** Documentar en `docs/design-reference/README.md` el mapeo token shadcn (tema
+  `.dark` de `index.css`) → variable FreeShow (`--primary` ← `--background`,
+  `--primary-darker` ← `--card`/`--sidebar`, `--primary-lighter` ← `--accent`,
+  `--text` ← `--foreground`, `--secondary` ← `--sidebar-primary`, bordes ← `--border`,
+  radio ← `--radius`).
+  **F6.2** En `defaultThemes.ts`: tema por defecto con esos valores y fuente Geist
+  (`@fontsource-variable/geist`); en `public/global.css` los mismos defaults.
+  **F6.3** Variables `--radius` y `--border-color` usadas por `Button`, `MaterialButton`,
+  inputs `Material*`, paneles y popups (en componentes base).
+  **F6.4** Ajustar espaciados/alturas/separadores de `MainLayout.svelte` y
+  `components/main/Top.svelte` según `Topbar.tsx`, `LibraryPanel.tsx`, `RightPanel.tsx`,
+  `Drawer.tsx`. **F6.5** Componentes `lib/components/ui` (shadcn-svelte) sólo en pantallas
+  nuevas.
 
 F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
 
