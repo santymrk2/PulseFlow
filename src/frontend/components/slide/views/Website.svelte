@@ -38,7 +38,6 @@
             use:attachPersistentWebview={{
                 src: parsedSrc,
                 zoom,
-                isOutput: false,
                 outputId
             }}
         />
