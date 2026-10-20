@@ -61,6 +61,7 @@ cargo test 59/59, svelte-check **58 errores** (nueva referencia), build OK.
 | F4.6 overlays | integrado | **Hecho** (2026-10-19): capa propia dibujada en el engine (fondo → medios slide → texto slide → medios overlay → texto overlay), fixture `audience-overlays.json`, golden `overlays.png`. |
 | F6.2–F6.5 diseño | integrado | **Hecho** (2026-10-19): checkboxes marcados. Queda sólo la verificación visual del usuario (capturas) según `docs/VERIFICAR-F6.md`. |
 | F7.4 canales Main | integrado | **Completo** (2026-10-19): incluye `PDF_TO_IMAGE` real (F7.5, opción (a): pdf.js en el webview + guardado en Rust). |
+| F8.1–F8.2 video | integrado (2026-10-19) | **Hecho**: ciclo de vida de ffmpeg (stop/EOF/error/fallback HW→SW) y un decodificador por archivo compartido entre pantallas (`video_hub`). Traído de `feature/video`; su F7.5 propio (`294a2594`, vía `SAVE_IMAGE`) se descartó a favor del de esta rama (`fab5d003`). |
 | `wip/f7` (`af2a2a8`) | rama `wip/f7` | **Descartar**: es `cargo fmt` sobre todo el crate, sin cambios funcionales. Sus notas ya están en `docs/VERIFICAR-F7.md`. |
 | `f6-pulseflow`, `feature/diseno`, `feature/ipc`, `wip/f4`, `wip/f7` | ramas remotas | Ya integradas o descartadas; se pueden borrar. `feature/ipc` trae un F4.6 duplicado (`d834310`) que **no** se integró: el bueno es `1f9f932`. |
 | F5 Looks | integrado (`3e5cc0c`) | **Completo** (2026-10-19): F5.2–F5.5 hechos (`75de6427`, `ed9fc8d5`, `25aae601`, commit de F5.5). |
@@ -639,7 +640,7 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   `PDF_TO_IMAGE` → `IP` → `MAXIMIZED`. (`BACKUP` ya estaba hecho; `LANGUAGE`
   se elimina del frontend; `SEND_MIDI` se saltea — requiere crate MIDI.)
   Hecho: `IMPORT`/`IMPORT_FILES`, `URL`, `SAVE_IMAGE`, `IP`, `MAXIMIZED`
-  (integrados 2026-10-19). `PDF_TO_IMAGE` quedó como **no-op** → ver F7.5.
+  (integrados 2026-10-19). `PDF_TO_IMAGE` se hizo real en F7.5.
 - [x] **F7.5 `PDF_TO_IMAGE` real.** (hecho 2026-10-19, opción (a))
   El comando era un no-op que devolvía `[]`, así que convertir un PDF en slides
   (`PdfPreview.svelte` → "Convertir en imágenes", `responsesMain.ts` → import de un
@@ -666,11 +667,15 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
 
 ## F8 — Video y medios
 
-- [ ] **F8.1 Ciclo de vida de ffmpeg.** Detener mata el proceso y une el hilo; EOF o
-  error de lectura se reporta; si falla la decodificación por hardware a mitad de
-  camino, reintentar en software.
-- [ ] **F8.2 Una decodificación por archivo.** Si dos pantallas muestran el mismo
-  video, compartir el decodificador (hoy sería uno por pantalla).
+- [x] **F8.1 Ciclo de vida de ffmpeg.** Hecho en `render/video.rs`: `stop()` mata el
+  proceso ffmpeg (cierra el pipe y desbloquea el `read_exact`) y une el hilo; EOF o
+  error de lectura se reportan por stderr; si el stream HW muere a mitad de camino
+  (con `running` todavía en true) se reintenta en software.
+- [x] **F8.2 Una decodificación por archivo.** Hecho con un hub en `ScreenManager`
+  (`video_hub`): cada archivo tiene un único proceso ffmpeg cuyos fotogramas se
+  difunden a los slots de todas las pantallas suscritas; al cerrar/ cambiar de fondo,
+  `video_hub_release` quita al suscriptor y sólo detiene el proceso si queda sin
+  suscriptores.
 - [ ] **F8.3 Medir.** CPU/RAM/GPU con un video 1080p en loop durante 30 min en macOS y
   Windows; anotar en `PLAN.md`. Decidir recién entonces si hace falta otra estrategia.
 - [ ] **F8.4 NDI.** Conectar la captura de framebuffer al bucle de una pantalla

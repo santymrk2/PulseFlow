@@ -179,7 +179,8 @@
         }
     }
 
-    function convertToImages() {
+    async function convertToImages() {
+        if (!pageCount || !canvases.filter(Boolean).length) return
         newToast("actions.converting")
         pdfToImageShow(resolvedId || show.id)
     }
