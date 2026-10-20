@@ -1,12 +1,13 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
     import { NDI, OMT, OUTPUT } from "../../../types/Channels"
-    import { outputs } from "../../stores"
+    import { activePage, activePopup, activeStage, outputs, stageShows } from "../../stores"
     import { send } from "../../utils/request"
     import { addRtmpDestination, removeRtmpDestination, startRtmpStreaming, startStreaming, stopRtmpStreaming, stopStreaming, toggleOutputs, updateOutputRtmpData, updateOutputWebrtcData } from "../helpers/output"
     import { clone } from "../helpers/array"
     import DisplayLayout from "./DisplayLayout.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
+    import MaterialPopupButton from "../inputs/MaterialPopupButton.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
     import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
 
@@ -17,6 +18,22 @@
 
     $: currentOutput = $outputs[outputId] || {}
     $: isStage = !!currentOutput.stageOutput || currentOutput.kind === "stage"
+    $: stageId = currentOutput.stageLayout || currentOutput.stageOutput || ""
+
+    function setStageLayout(id: string) {
+        outputs.update((a) => {
+            if (a[outputId]) {
+                a[outputId].stageLayout = id
+                a[outputId].stageOutput = id
+            }
+            return a
+        })
+    }
+    function editStage() {
+        activeStage.set({ id: stageId, items: [] })
+        activePage.set("stage")
+        activePopup.set(null)
+    }
 
     let activeTab = "hardware"
 
@@ -172,26 +189,10 @@
     {/if}
 {:else}
     <div class="row">
-        <div class="label">Layout</div>
-        <select
-            class="select"
-            value={currentOutput.stageLayout || currentOutput.stageOutput || ""}
-            on:change={(e) =>
-                outputs.update((a) => {
-                    if (a[outputId]) {
-                        a[outputId].stageLayout = (e.target as HTMLSelectElement).value
-                        a[outputId].stageOutput = a[outputId].stageLayout
-                    }
-                    return a
-                })}
-        >
-            <option value="">Elegir</option>
-        </select>
-        <MaterialButton
-            on:click={() => {
-                /* TODO: abrir editor stage */
-            }}>Editar layout</MaterialButton
-        >
+        <MaterialPopupButton label="stage.stage_layout" value={stageId} name={$stageShows[stageId]?.name} icon="stage" popupId="select_stage_layout" on:change={(e) => setStageLayout(e.detail)} />
+        {#if $stageShows[stageId]}
+            <MaterialButton title="titlebar.edit" icon="edit" on:click={editStage} />
+        {/if}
     </div>
 {/if}
 
