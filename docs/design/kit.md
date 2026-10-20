@@ -161,6 +161,26 @@ inactivas, `--text-muted` sin indicador. Los toggles (switch) prendidos van en
 `--action` con el círculo en `--action-text`, y apagados en borde `--border-strong` con
 el círculo en `--text-muted`.
 
+### Campos de formulario (`Material*`)
+
+Las 21 piezas `Material*` (`components/inputs/`) son la **capa de campos** de la app y
+**no se migran al kit** (decisión de F14.8, 2026-10-20): traen lo que las primitivas del
+kit no tienen (`defaultValue` con su botón de restablecer, `flags` del idioma, etiqueta
+integrada, punto de "cambiado", `allowEmpty`). Siguen las mismas reglas que el kit y se
+re-estilaron en su lugar, con las mismas props y eventos:
+
+| Pieza | Medidas |
+| --- | --- |
+| Campo (texto, número, área de texto, desplegable, botón de popup, archivo, carpeta, hora, selector radial) | 38 px de alto, borde de 1 px `--border`, radio `--radius`; foco = `--border-strong`. Etiqueta **fija** arriba a la izquierda (11 px, `--text-subtle`, peso 500); el valor debajo (13 px). Sin fondo propio ni subrayado animado |
+| Interruptor y checkbox | Fila de 36 px, padding horizontal de 12 px, separador inferior de 1 px `--border`. Interruptor de 32×18 (perilla de 14); checkbox de 16 px con borde de 1 px. Foco = anillo de 1 px `--ring` |
+| `MaterialButton` | 28 px de alto (24 en `small`), padding horizontal de 12 px, 13 px (12 en `small`). `outlined` = borde `--border-strong` sin fondo; `contained` = `--action`; `red` = texto y borde `--danger`, sin relleno; pestaña activa = barra de 2 px `--text`. Sin ripple |
+
+Regla de implementación: Svelte **elimina** los selectores que no ve en el marcado del
+componente. Para apuntar a algo que pinta un hijo (por ejemplo el botón de borrar de
+`MaterialButton`) hay que escribir `.campo:has(.remove :global(button))`. El botón de
+borrar/restablecer va absoluto sobre el campo: reservar su ancho (`margin-inline-end` del
+texto o `padding-inline-end` del input) para que no pise el valor.
+
 ### Movimiento
 
 Sólo transiciones de color, fondo y borde: 120 ms `ease-out`. Los flotantes aparecen
