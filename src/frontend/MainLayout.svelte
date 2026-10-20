@@ -9,18 +9,21 @@
     import Preview from "./components/output/preview/Preview.svelte"
     import SettingsTabs from "./components/settings/SettingsTabs.svelte"
     import Projects from "./components/show/Projects.svelte"
+    import ProjectContentList from "./components/show/ProjectContentList.svelte"
     import Show from "./components/show/Show.svelte"
     import ShowTools from "./components/show/ShowTools.svelte"
     import StageLayouts from "./components/stage/StageLayouts.svelte"
     import Resizeable from "./components/system/Resizeable.svelte"
     import Timeline from "./components/timeline/Timeline.svelte"
     import { DEFAULT_WIDTH } from "./utils/common"
-    import { activeDrawerTab, activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, categories, currentWindow, drawer, drawerTabsData, editMode, focusMode, loaded, os, projectView, resized, showChangeProfileMenu, showsCache, special } from "./stores"
+    import { activeDrawerTab, activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, categories, currentWindow, drawer, drawerTabsData, editMode, focusMode, loaded, os, projectView, projects, resized, showChangeProfileMenu, showsCache, special } from "./stores"
     import { getAccess } from "./utils/profile"
     import MaterialButton from "./components/inputs/MaterialButton.svelte"
     import Icon from "./components/helpers/Icon.svelte"
 
     $: page = $activePage
+    $: projectActive = !$projectView && $activeProject !== null
+    $: itemCount = projectActive && $activeProject ? ($projects[$activeProject]?.shows?.length ?? 0) : 0
     $: isWindows = !$currentWindow && $os.platform === "win32"
 
     function openLibraryCategory(categoryId: string) {
@@ -69,6 +72,11 @@
 
                         <div class="sectionTitle">PLAYLIST</div>
                         <Projects />
+
+                        {#if projectActive}
+                            <div class="sectionTitle">{itemCount} ÍTEMS</div>
+                            <ProjectContentList tree={[]} recentlyUsedList={[]} />
+                        {/if}
 
                         <div class="librarySection">
                             <div class="sectionTitle">MEDIA</div>
