@@ -8,8 +8,10 @@
     import { history } from "../helpers/history"
     import { applyLook, createLook, isStageOutput } from "../helpers/looks"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
     import MaterialSlider from "../inputs/Slider.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import ListRow from "../../lib/components/ui/list-row/list-row.svelte"
+    import SectionHeader from "../../lib/components/ui/section-header/section-header.svelte"
     import LookGrid from "./LookGrid.svelte"
     import Modal from "../main/Modal.svelte"
 
@@ -105,79 +107,71 @@
 
 <Modal title="looks.window_title" width={760} height={520}>
     <div class="looks-window">
-        <!-- Columna izquierda: en vivo + presets -->
+        <!-- Columna izquierda (F12.4): en vivo + lista de looks + "Nuevo look" abajo -->
         <div class="sidebar">
             <div class="live">
                 <Icon id="play" size={0.9} white />
                 <span>{t("looks.live")}: <strong>{$looks[$activeLook]?.name || "—"}</strong></span>
             </div>
 
-            <div class="presets-header">
-                <span>{t("looks.presets")}</span>
-                <MaterialButton icon="add" title="looks.new" small on:click={createPreset} />
-            </div>
+            <SectionHeader>{t("looks.presets")}</SectionHeader>
 
             <div class="presets">
                 {#each presetIds as id (id)}
                     {@const look = $looks[id]}
-                    <!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
-                    <div
-                        class="preset"
-                        class:selected={id === selectedLook}
-                        role="button"
-                        tabindex="0"
-                        on:click={() => (selectedLook = id)}
-                        on:keydown={(e) => e.key === "Enter" && (selectedLook = id)}
-                        on:contextmenu={(e) => {
+                    <ListRow
+                        active={id === selectedLook}
+                        onclick={() => (selectedLook = id)}
+                        oncontextmenu={(e) => {
                             e.preventDefault()
                             renamePreset(id)
                         }}
                     >
-                        {#if id === $activeLook}
-                            <span class="dot" />
-                        {/if}
-                        <span class="name">{look.name}</span>
-                    </div>
+                        {look.name}
+                        {#snippet trailing()}
+                            {#if id === $activeLook}<span class="dot"></span>{/if}
+                        {/snippet}
+                    </ListRow>
                 {/each}
             </div>
 
-            <div class="preset-actions">
-                <MaterialButton icon="rename" title="actions.rename" small disabled={!selectedLook} on:click={() => renamePreset(selectedLook)} />
-                <MaterialButton icon="duplicate" title="actions.duplicate" small disabled={!selectedLook} on:click={() => duplicatePreset(selectedLook)} />
-                <MaterialButton icon="delete" title="actions.delete" small red disabled={!selectedLook || presetIds.length <= 1} on:click={() => removePreset(selectedLook)} />
+            <div class="sidebar-footer">
+                <Button variant="outline" size="sm" class="w-full" onclick={createPreset}>+ {t("looks.new")}</Button>
             </div>
         </div>
 
-        <!-- Detalle del preset -->
+        <!-- Detalle del look: grilla pantalla × capa -->
         <div class="detail">
             {#if !audienceScreens.length}
                 <p class="hint">{t("looks.no_screens")}</p>
             {:else if draft}
                 <div class="detail-header">
                     <input class="name-input" type="text" value={draft.name} on:input={(e) => updateDraft({ name: e.currentTarget.value })} />
-                    <MaterialButton variant={isDirty ? "contained" : "text"} icon="save" title="actions.save" disabled={!isDirty} on:click={saveDraft} />
+                    <Button variant={isDirty ? "default" : "ghost"} size="sm" disabled={!isDirty} onclick={saveDraft}>{t("actions.save")}</Button>
                 </div>
 
                 <div class="scroll">
                     <LookGrid screens={audienceScreens} {draft} on:cell={(e) => updateCell(e.detail.outputId, e.detail.patch)} />
-                </div>
-
-                <div class="detail-footer">
-                    <div class="transition">
-                        <span class="label">{t("looks.transition")}</span>
-                        <MaterialSlider value={draft.transitionMs ?? 1000} min={0} max={5000} step={100} style="flex: 1;" on:change={onTransitionChange} />
-                        <span class="value">{((draft.transitionMs ?? 1000) / 1000).toFixed(1)} s</span>
-                    </div>
-
-                    <MaterialButton variant="contained" icon="play" on:click={makeLive}>
-                        {t("looks.make_live")}
-                    </MaterialButton>
                 </div>
             {:else}
                 <p class="hint">{t("looks.no_screens")}</p>
             {/if}
         </div>
     </div>
+
+    <svelte:fragment slot="footer">
+        {#if draft}
+            <div class="transition">
+                <span class="label">{t("looks.transition")}</span>
+                <MaterialSlider value={draft.transitionMs ?? 1000} min={0} max={5000} step={100} style="flex: 1;" on:change={onTransitionChange} />
+                <span class="value">{((draft.transitionMs ?? 1000) / 1000).toFixed(1)} s</span>
+            </div>
+        {/if}
+        <Button variant="ghost" size="sm" disabled={!selectedLook} onclick={() => renamePreset(selectedLook)}>{t("actions.rename")}</Button>
+        <Button variant="ghost" size="sm" disabled={!selectedLook} onclick={() => duplicatePreset(selectedLook)}>{t("actions.duplicate")}</Button>
+        <Button variant="ghost" size="sm" disabled={!selectedLook || presetIds.length <= 1} onclick={() => removePreset(selectedLook)}>{t("actions.delete")}</Button>
+        <Button variant="default" size="sm" disabled={!draft} onclick={makeLive}>{t("looks.make_live")}</Button>
+    </svelte:fragment>
 </Modal>
 
 <style>
@@ -188,14 +182,12 @@
         width: 100%;
     }
 
-    /* Columna izquierda */
-
     .sidebar {
         display: flex;
         flex-direction: column;
-        flex: 0 0 200px;
-        width: 200px;
-
+        flex: 0 0 240px;
+        width: 240px;
+        min-height: 0;
         background-color: var(--primary-darker);
         border-inline-end: 1px solid var(--border-color, var(--primary-lighter));
     }
@@ -204,134 +196,90 @@
         display: flex;
         align-items: center;
         gap: 6px;
-        padding: 10px 12px;
-        font-size: 0.85em;
+        padding: 8px 12px;
+        font-size: 12px;
         border-bottom: 1px solid var(--border-color, var(--primary-lighter));
+        min-width: 0;
     }
-
-    .presets-header {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 8px 12px 4px;
-        font-size: 0.75em;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        opacity: 0.6;
-    }
-
-    .presets {
-        flex: 1;
-        overflow-y: auto;
-        padding: 2px 6px;
-    }
-
-    .preset {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-
-        padding: 7px 8px;
-        border-radius: var(--radius, 6px);
-        cursor: pointer;
-        font-size: 0.9em;
-    }
-    .preset:hover {
-        background-color: var(--primary-lightest, rgb(255 255 255 / 0.06));
-    }
-    .preset.selected {
-        background-color: var(--secondary);
-    }
-    .preset .name {
+    .live span {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
     }
 
-    .dot {
-        flex: 0 0 auto;
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background-color: #4caf50;
-    }
-    .preset.selected .dot {
-        background-color: #fff;
+    .presets {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
+        padding: 4px 0;
     }
 
-    .preset-actions {
-        display: flex;
-        gap: 4px;
+    .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: #2ecc71;
+    }
+
+    .sidebar-footer {
         padding: 8px;
         border-top: 1px solid var(--border-color, var(--primary-lighter));
     }
 
-    /* Detalle */
-
     .detail {
-        display: flex;
-        flex-direction: column;
         flex: 1;
         min-width: 0;
-        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
     }
 
     .detail-header {
         display: flex;
         align-items: center;
         gap: 8px;
-        padding: 10px 14px;
-        border-bottom: 1px solid var(--border-color, var(--primary-lighter));
     }
 
     .name-input {
         flex: 1;
-        padding: 6px 8px;
-        font-size: 0.95em;
+        min-width: 0;
+        height: 32px;
+        padding: 0 8px;
+        background-color: var(--primary-darker);
         color: var(--text);
-        background-color: var(--primary-darkest);
         border: 1px solid var(--border-color, var(--primary-lighter));
-        border-radius: var(--radius, 6px);
+        border-radius: var(--radius, 4px);
     }
 
     .scroll {
         flex: 1;
         min-height: 0;
         overflow: auto;
-        padding: 12px 14px;
     }
 
-    .detail-footer {
-        display: flex;
-        align-items: center;
-        gap: 16px;
-        padding: 10px 14px;
-        border-top: 1px solid var(--border-color, var(--primary-lighter));
+    .hint {
+        opacity: 0.6;
+        font-size: 13px;
     }
 
     .transition {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 8px;
         flex: 1;
         min-width: 0;
-        font-size: 0.85em;
+        font-size: 12px;
     }
-
     .transition .label {
-        opacity: 0.7;
-        white-space: nowrap;
+        flex-shrink: 0;
+        color: var(--text);
+        opacity: 0.8;
     }
-
     .transition .value {
-        min-width: 44px;
+        flex-shrink: 0;
+        width: 44px;
         text-align: end;
-        opacity: 0.85;
-    }
-
-    .hint {
-        padding: 20px;
-        font-size: 0.85em;
-        opacity: 0.5;
+        opacity: 0.8;
     }
 </style>
