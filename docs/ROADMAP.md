@@ -1618,7 +1618,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   (lista de excepciones explícita).
   *Aceptación:* agregar un `requestMain` a un canal inexistente hace fallar el test.
 
-- [ ] **F15.3 Partir `render/screens.rs`.**
+- [x] **F15.3 Partir `render/screens.rs`.** (2026-10-20: `screens/` con `mod`, `monitors`, `lifecycle`, `identify`, `scene_state`, `video_hub`, `render_loop` y `tests`; 76/76 tests, mayor archivo 369 líneas.)
   *Pasos:* separar por responsabilidad (ciclo de vida de ventanas, monitores y
   coordenadas, loop de frames) en submódulos, sin cambiar comportamiento.
   *Aceptación:* `cargo test --lib` (incluidos los golden) pasa igual; ningún archivo de
