@@ -972,12 +972,11 @@ Reglas de F11 (además de AGENTS.md):
   con icono de layout, nombre, '· layout', contador de diapositivas y botones Añadir
   (ghost) y Proyectar (secundario) usando las acciones ya existentes. Chequeos:
   test:unit 83/83, svelte-check 57 errores (línea base), build OK, Prettier limpio.)
-- [ ] **F11.5 Grilla de slides y miniaturas.** (referencia `SlideGrid.tsx`,
-  `SlideThumbnail.tsx` + captura; archivos `show/Slides.svelte` y el **marco** de
-  `slide/Slide.svelte`) miniatura con **barra inferior** (número a la izquierda, grupo
-  con su color), seleccionada con borde de acento de 2 px, separación 12 px; pie de la
-  grilla con `+` a la izquierda y vista grilla/texto/lista + slider de tamaño a la
-  derecha (usar los controles que ya existen). Probar en los tres modos.
+- [x] **F11.5 Grilla de slides y miniaturas.** (2026-10-20, carril D: `Slides.svelte`
+  con gap 12 px y pie (+ / vista / slider); `Slide.svelte` marco redondeado
+  var(--radius) y barra inferior con número + grupo; seleccionada con borde de acento
+  2 px. Chequeos: test:unit 83/83, svelte-check 57 errores (línea base), build OK,
+  Prettier limpio.)
 - [ ] **F11.6 Panel derecho como ProPresenter.** ("Columna derecha" en la
   especificación; archivos `output/preview/Preview.svelte`,
   `output/preview/ClearButtons.svelte`, `show/ShowTools.svelte` y el transporte de

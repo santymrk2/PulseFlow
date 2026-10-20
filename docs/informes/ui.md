@@ -105,3 +105,20 @@ Commit `f6f9b7bb`.
 ### Chequeos
 
 - `test:unit` 83/83, `test:svelte` 57 errores (línea base), `build` OK, Prettier limpio.
+
+## F11.5 — Grilla de slides y miniaturas (2026-10-20)
+
+Commit `a46de5f5`.
+
+### Qué se hizo
+
+- `Slides.svelte`: grilla con `gap: 12px`; pie de grilla con `+` (crear diapositiva) a la
+  izquierda y toggle de vista + slider de columnas a la derecha, reutilizando los
+  controles existentes.
+- `Slide.svelte` (marco): `border-radius: var(--radius)` con `overflow: hidden`; la barra
+  inferior conserva el número a la izquierda y el grupo con su color; seleccionada con
+  borde de acento de 2 px (`var(--secondary)`).
+
+### Chequeos
+
+- `test:unit` 83/83, `test:svelte` 57 errores (línea base), `build` OK, Prettier limpio.
