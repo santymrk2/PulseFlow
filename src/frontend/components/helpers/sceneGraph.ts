@@ -22,6 +22,7 @@ import { send } from "../../utils/request"
 import { getItemText } from "../edit/scripts/textStyle"
 import { shouldItemBeShown } from "../edit/scripts/itemHelpers"
 import { clone } from "./array"
+import { getSceneSourceId } from "./sceneMirror"
 import { getExtension, getMediaStyle, getMediaType } from "./media"
 import { joinTimeBig } from "./time"
 import { getCurrentTimerValue } from "../drawer/timers/timers"
@@ -506,8 +507,10 @@ export function sendOutputScenes(outputsData: { [id: string]: Output } = get(out
 
     ids.forEach((id) => {
         try {
-            const scene = outputsData[id].stageOutput ? buildStageScene(id, outputsData[id], outputsData) : buildSceneGraph(id, outputsData[id])
-            send(OUTPUT, ["RENDER_SCENE"], scene)
+            const sourceId = getSceneSourceId(id, outputsData)
+            const source = outputsData[sourceId]
+            const scene = source.stageOutput ? buildStageScene(sourceId, source, outputsData) : buildSceneGraph(sourceId, source)
+            send(OUTPUT, ["RENDER_SCENE"], { ...scene, outputId: id })
         } catch (err) {
             console.error("[sceneGraph] could not build scene for output", id, err)
         }
