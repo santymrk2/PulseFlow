@@ -4,7 +4,7 @@
     import { dbToGain, gainToDb, MIN_DB } from "../../../audio/dBUtils"
     import { audioChannelsData, audioRouting, popupData, special } from "../../../stores"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
@@ -88,7 +88,7 @@
     <!-- this is the same options we find in the audio drawer -->
     <InputRow>
         <MaterialNumberInput label="media.volume (dB)" value={Number(dbValue.toFixed(1))} min={MIN_DB} max={6} step={0.5} defaultValue={0} on:change={(e) => updateChannelData("volume", dbToGain(e.detail))} showSlider />
-        <MaterialButton variant="outlined" icon={muted ? "muted" : "volume"} title="actions.{muted ? 'unmute' : 'mute'}" on:click={() => updateChannelData("isMuted", !muted)} red={muted} />
+        <Button variant="outline" icon={muted ? "muted" : "volume"} title="actions.{muted ? 'unmute' : 'mute'}" on:click={() => updateChannelData("isMuted", !muted)} red={muted} />
     </InputRow>
 
     <MaterialNumberInput label="audio.volume_fade_duration (ms)" value={fadeDuration} min={0} max={5000} step={50} defaultValue={250} on:change={(e) => updateChannelData("fadeDuration", e.detail)} showSlider />

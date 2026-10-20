@@ -12,7 +12,7 @@
     import MetronomeInputs from "../drawer/audio/MetronomeInputs.svelte"
     import T from "../helpers/T.svelte"
     import { keysToID, sortByName } from "../helpers/array"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
     import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
     import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
@@ -214,13 +214,13 @@
 {:else if inputId === "emitter"}
     <ChooseEmitter value={value || {}} on:change={(e) => updateValue("", e)} />
 {:else if inputId === "start_show"}
-    <MaterialButton variant="outlined" style="width: 100%;" on:click={openSelectShow}>
+    <Button variant="outline" style="width: 100%;" on:click={openSelectShow}>
         {#if value?.id}
             {$shows[value.id]?.name || "—"}
         {:else}
             <T id="popup.select_show" />
         {/if}
-    </MaterialButton>
+    </Button>
 {:else if inputId === "audio_effects"}
     <MaterialDropdown label="actions.start_audio_effect" options={getOptions.start_audio_effect()} value={value?.path} on:change={(e) => updateValue("path", e.detail)} />
 {:else if inputId === "number"}

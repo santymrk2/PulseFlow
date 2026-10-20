@@ -1,7 +1,7 @@
 <script lang="ts">
     import { popupData } from "../../../stores"
     import { translateText } from "../../../utils/language"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
@@ -41,9 +41,9 @@
     </div>
 </div>
 
-<MaterialButton variant="contained" disabled={!localType && !networkType} style="margin-top: 20px;width: 100%;" on:click={confirm}>
+<Button variant="default" disabled={!localType && !networkType} style="margin-top: 20px;width: 100%;" on:click={confirm}>
     {translateText("popup.confirm")}
-</MaterialButton>
+</Button>
 
 <style>
     .types {

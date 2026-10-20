@@ -10,8 +10,7 @@
     import { _show } from "../../helpers/shows"
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import Center from "../../system/Center.svelte"
     import Clock from "../../system/Clock.svelte"
@@ -96,7 +95,7 @@
 </script>
 
 {#if $activeTagFilter?.length && !optionsOpen}
-    <Button style="width: 100%;" on:click={() => activeTagFilter.set([])} center dark>
+    <Button style="width: 100%;" on:click={() => activeTagFilter.set([])}>
         <Icon id="close" right />
         <T id="meta.clear_tag_filter" />
     </Button>
@@ -112,14 +111,14 @@
             <MaterialToggleSwitch label="settings.log_song_usage" checked={$special.logSongUsage || false} defaultValue={false} on:change={(e) => updateSpecial(e.detail, "logSongUsage")} />
             {#if $special.logSongUsage && $usageLog.all?.length}
                 <InputRow>
-                    <MaterialButton disabled={exportingUsageLog} style="width: 100%;" icon={usageLogExported ? "reset" : "export"} on:click={() => (usageLogExported ? resetUsageLog() : exportUsageLog())}>
+                    <Button disabled={exportingUsageLog} style="width: 100%;" icon={usageLogExported ? "reset" : "export"} on:click={() => (usageLogExported ? resetUsageLog() : exportUsageLog())}>
                         <T id="actions.{usageLogExported ? 'reset' : 'export'}_usage_log" />
-                    </MaterialButton>
+                    </Button>
                 </InputRow>
             {/if}
 
-            <MaterialButton
-                variant="outlined"
+            <Button
+                variant="outline"
                 title="popup.cleaning_utility"
                 style="margin-top: 5px;width: 100%;"
                 on:click={() => {
@@ -129,7 +128,7 @@
             >
                 <Icon id="autofill" />
                 <T id="popup.cleaning_utility" />
-            </MaterialButton>
+            </Button>
         </main>
     {:else if $activeShow !== null && ($activeShow.type || "show") === "show"}
         <InfoMetadata title={show?.name} {info} />

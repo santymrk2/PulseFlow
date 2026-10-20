@@ -7,7 +7,7 @@
     import { clone, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
@@ -79,10 +79,10 @@
     $: showMore = $groupsMoreOptionsEnabled
 </script>
 
-<MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => groupsMoreOptionsEnabled.set(!showMore)} white />
+<Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => groupsMoreOptionsEnabled.set(!showMore)} white />
 
 {#if showMore}
-    <MaterialButton class="popup-reset" icon="reset" iconSize={1.1} title="actions.reset" on:click={reset} white />
+    <Button class="popup-reset" icon="reset" iconSize={1.1} title="actions.reset" on:click={reset} white />
 {/if}
 
 <div style="min-width: calc(100vw - var(--navigation-width) * 2 - 51px);">
@@ -130,7 +130,7 @@
                     />
                 {/if}
 
-                <MaterialButton
+                <Button
                     style="flex: 0;"
                     icon="delete"
                     title="actions.delete"
@@ -147,7 +147,7 @@
         </div>
     {/if}
 
-    <MaterialButton variant="outlined" style="width: 100%;" icon="add" on:click={addGroup}>
+    <Button variant="outline" style="width: 100%;" icon="add" on:click={addGroup}>
         <T id="settings.add" />
-    </MaterialButton>
+    </Button>
 </div>

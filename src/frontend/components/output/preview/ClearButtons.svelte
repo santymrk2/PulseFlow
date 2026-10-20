@@ -8,7 +8,7 @@
     import { getMediaLayerType } from "../../helpers/media"
     import { getActiveOutputs, getOutputContent, isOutCleared } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { clearAll, clearBackground, clearOverlays, clearScene, clearSlide, clearTimers, restoreOutput } from "../clear"
 
     export let autoChange: any
@@ -115,99 +115,99 @@
     {#if !sceneCleared}
         <span class="group" style="border-bottom: 1px solid var(--primary-darker);">
             <div class="combinedButton">
-                <MaterialButton style="padding: 0.3em 0.8em;" disabled={$outLocked} title={$outLocked ? "" : "clear.scene"} on:click={() => clear("scene")} red>
+                <Button style="padding: 0.3em 0.8em;" disabled={$outLocked} title={$outLocked ? "" : "clear.scene"} on:click={() => clear("scene")} red>
                     <Icon id="scene" size={1.1} white />
                     <T id="clear.scene" />
-                </MaterialButton>
+                </Button>
             </div>
         </span>
     {/if}
 
     <span>
         {#if allCleared && $outputCache && $outputCache?.slide?.type !== "ppt"}
-            <MaterialButton style="padding: 0.42em 0.8em;" class="clearAll" disabled={$outLocked || !enableRestore} title="preview.restore_output" on:click={restoreOutput}>
+            <Button style="padding: 0.42em 0.8em;" class="clearAll" disabled={$outLocked || !enableRestore} title="preview.restore_output" on:click={restoreOutput}>
                 <Icon id="reset" size={1.2} white />
                 {#if !$labelsDisabled}<T id="preview.restore_output" />{/if}
-            </MaterialButton>
+            </Button>
         {:else}
-            <MaterialButton style="padding: 0.42em 0.8em;" class="clearAll" disabled={$outLocked || allCleared} title="clear.all [esc]" on:click={() => clearAll(true)} red>
+            <Button style="padding: 0.42em 0.8em;" class="clearAll" disabled={$outLocked || allCleared} title="clear.all [esc]" on:click={() => clearAll(true)} red>
                 {#if $isTimelinePlaying}<span class="faded" data-title={translateText("popup.timeline")}><Icon id="timeline" white /></span>{/if}
                 <Icon id="clear" size={1.2} white />
                 {#if !$labelsDisabled}<T id="clear.all" />{/if}
-            </MaterialButton>
+            </Button>
         {/if}
     </span>
 
     <span class="group">
         {#if outputContent?.type !== "pdf" && outputContent?.type !== "ppt"}
             <div class="combinedButton">
-                <MaterialButton style="padding: 0.3em 0.6em;{styleBackground ? 'opacity: 0.5;cursor: default;' : ''}" disabled={($outLocked || backgroundCleared) && !styleBackground} title={$outLocked || backgroundCleared ? "" : "clear.background [F1]"} on:click={() => clear("background")} red>
+                <Button style="padding: 0.3em 0.6em;{styleBackground ? 'opacity: 0.5;cursor: default;' : ''}" disabled={($outLocked || backgroundCleared) && !styleBackground} title={$outLocked || backgroundCleared ? "" : "clear.background [F1]"} on:click={() => clear("background")} red>
                     <Icon id="image" size={1.2} white />
-                </MaterialButton>
+                </Button>
                 {#if !allCleared}
-                    <MaterialButton style="padding: {activeClear === 'background' ? 0 : 2}px !important;min-height: 15px;border-left: 0 !important;" isActive={activeClear === "background"} disabled={backgroundCleared} on:click={() => openPreview("background")} title="preview.background">
+                    <Button style="padding: {activeClear === 'background' ? 0 : 2}px !important;min-height: 15px;border-left: 0 !important;" isActive={activeClear === "background"} disabled={backgroundCleared} on:click={() => openPreview("background")} title="preview.background">
                         {#if activeClear === "background"}
                             <Icon style="opacity: 0.8;" id="expand" size={0.7} white />
                         {/if}
-                    </MaterialButton>
+                    </Button>
                 {/if}
             </div>
         {/if}
 
         {#if getMediaLayerType(outBackground.path || "", backgroundData) !== "foreground" || !slideCleared}
             <div class="combinedButton">
-                <MaterialButton style="padding: 0.3em 0.6em;" disabled={$outLocked || slideCleared} title="clear.slide  [F2]" on:click={() => clear("slide")} red>
+                <Button style="padding: 0.3em 0.6em;" disabled={$outLocked || slideCleared} title="clear.slide  [F2]" on:click={() => clear("slide")} red>
                     <!-- PDFs are visually the background layer as it is toggled by the style "Background" layer, but it behaves as a slide in the code -->
                     <!-- display recording icon here if a slide recoring is playing -->
                     <Icon id={isScripture ? "scripture" : outputContent?.type === "pdf" ? "image" : "slide"} size={1.2} white />
-                </MaterialButton>
+                </Button>
                 {#if !allCleared}
-                    <MaterialButton style="padding: {activeClear === 'slide' ? 0 : 2}px !important;min-height: 15px;" isActive={activeClear === "slide"} disabled={slideCleared} on:click={() => openPreview("slide")} title="preview.slide">
+                    <Button style="padding: {activeClear === 'slide' ? 0 : 2}px !important;min-height: 15px;" isActive={activeClear === "slide"} disabled={slideCleared} on:click={() => openPreview("slide")} title="preview.slide">
                         {#if activeClear === "slide"}
                             <Icon style="opacity: 0.8;" id="expand" size={0.7} white />
                         {/if}
-                    </MaterialButton>
+                    </Button>
                 {/if}
             </div>
         {/if}
 
         <div class="combinedButton">
-            <MaterialButton style="padding: 0.3em 0.6em;{lockedOverlay ? 'opacity: 0.5;cursor: default;' : ''}" disabled={$outLocked || (overlayCleared && effectsCleared)} title={lockedOverlay ? "" : "clear.overlays [F3]"} on:click={() => clear("overlays")} red>
+            <Button style="padding: 0.3em 0.6em;{lockedOverlay ? 'opacity: 0.5;cursor: default;' : ''}" disabled={$outLocked || (overlayCleared && effectsCleared)} title={lockedOverlay ? "" : "clear.overlays [F3]"} on:click={() => clear("overlays")} red>
                 <Icon id="overlays" size={1.2} white />
-            </MaterialButton>
+            </Button>
             {#if !allCleared}
-                <MaterialButton style="padding: {activeClear === 'overlays' ? 0 : 2}px !important;min-height: 15px;" isActive={activeClear === "overlays"} disabled={overlayCleared} on:click={() => openPreview("overlays")} title="preview.overlays">
+                <Button style="padding: {activeClear === 'overlays' ? 0 : 2}px !important;min-height: 15px;" isActive={activeClear === "overlays"} disabled={overlayCleared} on:click={() => openPreview("overlays")} title="preview.overlays">
                     {#if activeClear === "overlays"}
                         <Icon style="opacity: 0.8;" id="expand" size={0.7} white />
                     {/if}
-                </MaterialButton>
+                </Button>
             {/if}
         </div>
 
         <div class="combinedButton">
-            <MaterialButton style="padding: 0.3em 0.6em;" disabled={$outLocked || audioCleared} title="clear.audio [F4]" on:click={() => clear("audio")} red>
+            <Button style="padding: 0.3em 0.6em;" disabled={$outLocked || audioCleared} title="clear.audio [F4]" on:click={() => clear("audio")} red>
                 <Icon id={audioIcon} size={1.2} white />
-            </MaterialButton>
+            </Button>
             {#if !allCleared}
-                <MaterialButton style="padding: {activeClear === 'audio' ? 0 : 2}px !important;min-height: 15px;" isActive={activeClear === "audio"} disabled={audioCleared} on:click={() => openPreview("audio")} title="preview.audio">
+                <Button style="padding: {activeClear === 'audio' ? 0 : 2}px !important;min-height: 15px;" isActive={activeClear === "audio"} disabled={audioCleared} on:click={() => openPreview("audio")} title="preview.audio">
                     {#if activeClear === "audio"}
                         <Icon style="opacity: 0.8;" id="expand" size={0.7} white />
                     {/if}
-                </MaterialButton>
+                </Button>
             {/if}
         </div>
 
         {#if outputContent?.type !== "pdf"}
             <div class="combinedButton">
-                <MaterialButton style="padding: 0.3em 0.6em;{isTimer ? 'opacity: 0.9;' : ''}" disabled={$outLocked || (slideTimerCleared && activeClear !== "nextTimer")} title="{isTimer ? 'actions.stop_timers' : `clear.${Object.keys($overlayTimers).length ? 'timer' : 'nextTimer'}`}{presentationControllersKeysDisabled() ? ' [F5]' : ''}" on:click={() => (isTimer ? activeTimers.set([]) : clear("nextTimer"))} red>
+                <Button style="padding: 0.3em 0.6em;{isTimer ? 'opacity: 0.9;' : ''}" disabled={$outLocked || (slideTimerCleared && activeClear !== "nextTimer")} title="{isTimer ? 'actions.stop_timers' : `clear.${Object.keys($overlayTimers).length ? 'timer' : 'nextTimer'}`}{presentationControllersKeysDisabled() ? ' [F5]' : ''}" on:click={() => (isTimer ? activeTimers.set([]) : clear("nextTimer"))} red>
                     <Icon id={isTimer ? "timer" : "clock"} size={1.2} white />
-                </MaterialButton>
+                </Button>
                 {#if !allCleared}
-                    <MaterialButton style="padding: 2px !important;min-height: 15px;border-right: 0 !important;" isActive={activeClear === "nextTimer"} disabled={slideTimerCleared && activeClear !== "nextTimer"} on:click={() => openPreview("nextTimer")} title="preview.nextTimer">
+                    <Button style="padding: 2px !important;min-height: 15px;border-right: 0 !important;" isActive={activeClear === "nextTimer"} disabled={slideTimerCleared && activeClear !== "nextTimer"} on:click={() => openPreview("nextTimer")} title="preview.nextTimer">
                         {#if activeClear === "nextTimer"}
                             <Icon style="opacity: 0.8;" id="expand" size={0.7} white />
                         {/if}
-                    </MaterialButton>
+                    </Button>
                 {/if}
             </div>
         {/if}

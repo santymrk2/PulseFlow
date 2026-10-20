@@ -4,7 +4,7 @@
     import { uid } from "uid"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let columns: number
     export let defaultValue = 4
@@ -79,24 +79,24 @@
 <svelte:window on:mousedown={mousedown} on:wheel={wheel} />
 
 <div id={currentId} class="zoom_container" class:hidden>
-    <MaterialButton style="width: 100%;height: 100%;" on:click={() => (zoomOpened = !zoomOpened)} title="actions.zoom">
+    <Button style="width: 100%;height: 100%;" on:click={() => (zoomOpened = !zoomOpened)} title="actions.zoom">
         <Icon size={1.3} id="zoomIn" white={!zoomOpened} />
-    </MaterialButton>
+    </Button>
 
     {#if zoomOpened}
         <div class="overflow zoom_popup" transition:slide={{ duration: 150 }}>
-            <MaterialButton style="padding: 0 !important;" on:click={reset} bold={false} center>
+            <Button style="padding: 0 !important;" on:click={reset} bold={false}>
                 <p class="text" data-title={translateText("actions.resetZoom")}>{(addValue < 0 ? columns * 100 : 100 / columns).toFixed()}%</p>
-            </MaterialButton>
+            </Button>
 
             <div class="divider"></div>
 
-            <MaterialButton disabled={addValue < 0 ? columns >= max : columns <= min} on:click={decrease} title="actions.zoomIn" center>
+            <Button disabled={addValue < 0 ? columns >= max : columns <= min} on:click={decrease} title="actions.zoomIn">
                 <Icon size={1.3} id="add" white />
-            </MaterialButton>
-            <MaterialButton disabled={addValue < 0 ? columns <= min : columns >= max} on:click={increase} title="actions.zoomOut" center>
+            </Button>
+            <Button disabled={addValue < 0 ? columns <= min : columns >= max} on:click={increase} title="actions.zoomOut">
                 <Icon size={1.3} id="remove" white />
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
 </div>

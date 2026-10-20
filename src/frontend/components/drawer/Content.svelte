@@ -1,7 +1,7 @@
 <script lang="ts">
     import { drawerTabsData } from "../../stores"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Audio from "./audio/Audio.svelte"
     import Scripture from "./bible/Scripture.svelte"
     import Calendar from "./calendar/Calendar.svelte"
@@ -45,9 +45,9 @@
     {#if searchValue && active !== "all" && searchTab !== id + active && id !== "scripture"}
         <div class="warning">
             <p style="padding: 6px 8px;"><T id="main.search_active" />: <span style="color: var(--secondary);font-weight: bold;">{searchValue}</span></p>
-            <MaterialButton icon="close" style="padding: 6px 16px;" on:click={() => (searchValue = "")}>
+            <Button icon="close" style="padding: 6px 16px;" on:click={() => (searchValue = "")}>
                 <p><T id="clear.search" /></p>
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
 

@@ -6,7 +6,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { MILLISECONDS_IN_A_DAY, copyDate, getDaysInMonth, getWeekNumber, isBetween, isSameDay } from "./calendar"
     import { isCalendarHidden } from "./calendars"
 
@@ -253,18 +253,18 @@
 </div>
 
 <FloatingInputs style="margin-left: 25px;" side="left">
-    <MaterialButton title="media.previous" on:click={() => previousMonth()}>
+    <Button title="media.previous" on:click={() => previousMonth()}>
         <Icon id="previous" size={1.1} />
-    </MaterialButton>
-    <MaterialButton title="media.next" on:click={() => nextMonth()}>
+    </Button>
+    <Button title="media.next" on:click={() => nextMonth()}>
         <Icon id="next" size={1.1} />
-    </MaterialButton>
+    </Button>
 
     <div class="divider"></div>
 
-    <MaterialButton title="calendar.today" isActive={isPresentDay} on:click={setToPresentDay}>
+    <Button title="calendar.today" isActive={isPresentDay} on:click={setToPresentDay}>
         <Icon id="home" white={!isPresentDay} size={1.1} />
-    </MaterialButton>
+    </Button>
 
     <div class="divider"></div>
 
@@ -275,7 +275,7 @@
 </FloatingInputs>
 
 <FloatingInputs onlyOne>
-    <MaterialButton
+    <Button
         on:click={() => {
             eventEdit.set(null)
             popupData.set({})
@@ -284,7 +284,7 @@
     >
         <Icon id="add" right={!$labelsDisabled} />
         {#if !$labelsDisabled}<T id="new.{active === 'action' ? 'event_action' : 'event'}" />{/if}
-    </MaterialButton>
+    </Button>
 </FloatingInputs>
 
 <style>

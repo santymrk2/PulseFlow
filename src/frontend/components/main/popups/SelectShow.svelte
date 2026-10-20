@@ -5,7 +5,7 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
     import Center from "../../system/Center.svelte"
 
@@ -65,10 +65,10 @@
             <Center size={1.2} faded><T id="empty.search" /></Center>
         {:else}
             <VirtualList items={searchedShows} let:item={show}>
-                <MaterialButton showOutline={active === show.id} style="width: 100%;font-weight: normal;justify-content: start;padding: 4px 12px;" on:click={() => selectShow(show)}>
+                <Button showOutline={active === show.id} style="width: 100%;font-weight: normal;justify-content: start;padding: 4px 12px;" on:click={() => selectShow(show)}>
                     {#if show.private}<Icon id="locked" right />{/if}
                     {show.name}
-                </MaterialButton>
+                </Button>
             </VirtualList>
         {/if}
     {:else}

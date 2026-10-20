@@ -6,7 +6,7 @@
     import { getDynamicIds, replaceDynamicValues } from "../helpers/showActions"
     import T from "../helpers/T.svelte"
     import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import { addStageItem } from "../stage/stage"
     import { addItem } from "./scripts/itemHelpers"
     import { slideItems, stageItems } from "./values/items"
@@ -159,10 +159,10 @@
                                 }, 150)
                             }}
                         >
-                            <MaterialButton class="add-item-button" variant={item.children ? "text" : "outlined"} on:click={() => (item.children ? null : handleAdd(item.id))} title={item.title || item.label} white={!isFirst}>
+                            <Button class="add-item-button" variant={item.children ? "ghost" : "outline"} on:click={() => (item.children ? null : handleAdd(item.id))} title={item.title || item.label} white={!isFirst}>
                                 <Icon id={item.icon} size={1.2} white={!isFirst} />
                                 <T id={item.label} />{item.suffix || ""}
-                            </MaterialButton>
+                            </Button>
                         </div>
                     {/each}
                 {/each}
@@ -180,13 +180,13 @@
                     }}
                 >
                     {#each hoveredSubmenu as subItem}
-                        <MaterialButton class="add-item-button" variant="outlined" on:click={() => handleAdd(subItem.id)} title={subItem.title || subItem.label} white>
+                        <Button class="add-item-button" variant="outline" on:click={() => handleAdd(subItem.id)} title={subItem.title || subItem.label} white>
                             {#if subItem.icon}<Icon id={subItem.icon} size={1.2} white />{/if}
                             <span class="item-name">
                                 {translateText(subItem.label)}{subItem.suffix || ""}
                             </span>
                             {#if subItem.data}<span class="item-preview">{subItem.data}</span>{/if}
-                        </MaterialButton>
+                        </Button>
                     {/each}
                 </div>
             {/if}
@@ -194,9 +194,9 @@
     {/if}
 
     <FloatingInputs>
-        <MaterialButton class="addButton" title={isOpen ? "actions.close" : "edit.add_items"} on:click={() => (isOpen = !isOpen)} on:dblclick={handleDoubleClick}>
+        <Button class="addButton" title={isOpen ? "actions.close" : "edit.add_items"} on:click={() => (isOpen = !isOpen)} on:dblclick={handleDoubleClick}>
             <Icon id="add" size={1} style={isOpen ? "transform: rotate(135deg);" : ""} white />
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}
 

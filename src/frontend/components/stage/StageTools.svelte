@@ -9,7 +9,7 @@
     import { getStageOutputId, getStageResolution } from "../helpers/output"
     import { getStyles } from "../helpers/style"
     import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Tabs from "../main/Tabs.svelte"
     import BoxStyle from "./tools/BoxStyle.svelte"
     import ItemStyle from "./tools/ItemStyle.svelte"
@@ -202,7 +202,7 @@
 
         {#if activeItemId || active === "slide"}
             <FloatingInputs>
-                <MaterialButton icon="reset" title="actions.reset" on:click={resetStageStyle} />
+                <Button icon="reset" title="actions.reset" on:click={resetStageStyle} />
             </FloatingInputs>
         {/if}
     {/if}

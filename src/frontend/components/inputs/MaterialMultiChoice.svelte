@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let options: { id: string; name: string; title?: string; icon: string; tip?: string; disabled?: boolean; colored?: boolean }[] = []
     export let value: string = ""
@@ -20,7 +20,7 @@
 
 <div class="choice" class:highlightFirst>
     {#each options as option, i}
-        <MaterialButton title={option.title || option.name} disabled={option.disabled} class={i === 0 ? "first" : i === options.length - 1 ? "last" : ""} variant="outlined" isActive={option.id === value} on:click={() => click(option.id)} white>
+        <Button title={option.title || option.name} disabled={option.disabled} class={i === 0 ? "first" : i === options.length - 1 ? "last" : ""} variant="outline" isActive={option.id === value} on:click={() => click(option.id)} white>
             <div class="list">
                 {#if option.icon.includes(".webp")}
                     <img src={option.icon} alt="{option.id}-logo" draggable={false} />
@@ -32,7 +32,7 @@
                     {#if option.tip}<p class="tip">{option.tip}</p>{/if}
                 </div>
             </div>
-        </MaterialButton>
+        </Button>
     {/each}
 </div>
 

@@ -2,7 +2,7 @@
     import { addCanvaPresentationAsShow } from "../../../converters/canvaPresentation"
     import { activeCanvaPresentation } from "../../../stores"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import InfoMetadata from "./InfoMetadata.svelte"
 
     $: selectedPresentation = $activeCanvaPresentation
@@ -28,9 +28,9 @@
             <InfoMetadata title={selectedPresentation.presentationName} info={presentationInfo} />
 
             <div class="actions">
-                <MaterialButton variant="outlined" icon="slide" title="new.show_convert" on:click={convertPresentation}>
+                <Button variant="outline" icon="slide" title="new.show_convert" on:click={convertPresentation}>
                     <T id="new.show_convert" />
-                </MaterialButton>
+                </Button>
             </div>
         </div>
     {:else}

@@ -7,7 +7,7 @@
     import { defaultColors, defaultGradients, getContrast, hexToRgb, rgbToHex, splitRgb } from "../helpers/color"
     import Icon from "../helpers/Icon.svelte"
     import Tabs from "../main/Tabs.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialNumberInput from "./MaterialNumberInput.svelte"
 
     export let value = "#000000"
@@ -243,7 +243,7 @@
                         </div>
                     {/if}
 
-                    <MaterialButton
+                    <Button
                         style="width: 100%;margin-top: 5px;background: {hexValue} !important;"
                         on:click={() => {
                             popupData.set({
@@ -258,7 +258,7 @@
                         center
                     >
                         <p style="color: var(--outline-color);max-width: 150px;">{translateText("actions." + (editMode ? "add_color" : "choose_custom"))}</p>
-                    </MaterialButton>
+                    </Button>
                 {:else}
                     {#if allowEmpty}
                         <div
@@ -309,13 +309,13 @@
     {#if defaultValue}
         <div class="remove">
             {#if hexValue !== defaultValue}
-                <MaterialButton on:click={reset} title="actions.reset" white>
+                <Button on:click={reset} title="actions.reset" white>
                     <Icon id="reset" white />
-                </MaterialButton>
+                </Button>
             {:else if resetFromValue}
-                <MaterialButton on:click={undoReset} title="actions.undo" white>
+                <Button on:click={undoReset} title="actions.undo" white>
                     <Icon id="undo" white />
-                </MaterialButton>
+                </Button>
             {/if}
         </div>
     {/if}

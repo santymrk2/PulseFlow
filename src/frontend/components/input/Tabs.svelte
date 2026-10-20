@@ -3,7 +3,7 @@
     import type { ClickEvent, SelectIds } from "../../../types/Main"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import SelectElem from "../system/SelectElem.svelte"
 
     export let id: SelectIds
@@ -52,10 +52,10 @@
         </div>
     {/if}
 
-    <MaterialButton title={newLabel} class={tabs.length > 1 ? "small_add" : ""} style={tabs.length > 1 ? "" : "flex: 1;"} on:click={create}>
+    <Button title={newLabel} class={tabs.length > 1 ? "small_add" : ""} style={tabs.length > 1 ? "" : "flex: 1;"} on:click={create}>
         <Icon id="add" size={1.2} white={tabs.length > 1} />
         {#if tabs.length <= 1}{translateText(newLabel)}{/if}
-    </MaterialButton>
+    </Button>
 </div>
 
 <style>

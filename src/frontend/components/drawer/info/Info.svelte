@@ -2,7 +2,7 @@
     import { activeShow, focusMode, forceClock } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import Clock from "../../system/Clock.svelte"
     import Date from "../../system/Date.svelte"
@@ -47,9 +47,9 @@
 
     {#if !$forceClock && hasOptions.includes(id) && !$focusMode}
         <FloatingInputs round>
-            <MaterialButton isActive={optionsOpen} title="edit.options" on:click={() => (optionsOpen = !optionsOpen)}>
+            <Button isActive={optionsOpen} title="edit.options" on:click={() => (optionsOpen = !optionsOpen)}>
                 <Icon size={1.1} id="options" white={!optionsOpen} />
-            </MaterialButton>
+            </Button>
         </FloatingInputs>
     {/if}
 </div>

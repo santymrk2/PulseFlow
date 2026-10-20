@@ -4,7 +4,7 @@
     import T from "../../helpers/T.svelte"
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
 
@@ -63,10 +63,10 @@
 {#each customMetadataValues as name}
     <InputRow>
         <MaterialTextInput label="inputs.name" value={name} on:change={(e) => updateCustom(name, e)} autofocus={!name} />
-        <MaterialButton icon="delete" on:click={() => removeCustom(name)} white />
+        <Button icon="delete" on:click={() => removeCustom(name)} white />
     </InputRow>
 {/each}
 
-<MaterialButton icon="add" variant="outlined" style="width: 100%;" disabled={emptyEntry} on:click={addCustom}>
+<Button icon="add" variant="outline" style="width: 100%;" disabled={emptyEntry} on:click={addCustom}>
     <T id="settings.add" />
-</MaterialButton>
+</Button>

@@ -11,7 +11,7 @@
     import { getActiveOutputs, setOutput, startFolderTimer } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialZoom from "../../inputs/MaterialZoom.svelte"
     import Loader from "../../main/Loader.svelte"
     import { clearBackground } from "../../output/clear"
@@ -225,13 +225,13 @@
 </FloatingInputs> -->
 
     <FloatingInputs>
-        <MaterialButton icon="image" on:click={convertToImages} style="white-space: nowrap;">
+        <Button icon="image" on:click={convertToImages} style="white-space: nowrap;">
             {#if !$labelsDisabled}<T id="actions.convert_to_images" />{/if}
-        </MaterialButton>
+        </Button>
 
         <div class="divider"></div>
 
-        <MaterialButton
+        <Button
             disabled={pageCount < 2}
             on:click={() => {
                 popupData.set({ type: "pdf", value: timer, totalTime, count: pageCount })
@@ -241,7 +241,7 @@
         >
             <Icon size={1.1} id="clock" white={totalTime === 0} />
             <!-- {joinTime(secondsToTime(totalTime))} -->
-        </MaterialButton>
+        </Button>
 
         <div class="divider"></div>
 

@@ -8,7 +8,7 @@
     import Windows from "../../drawer/live/Windows.svelte"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     let activeType = "cameras"
 
@@ -41,26 +41,26 @@
 
 <div class="choose-input-wrapper">
     <div class="tabs">
-        <MaterialButton style="flex: 1;" isActive={activeType === "cameras"} on:click={() => (activeType = "cameras")}>
+        <Button style="flex: 1;" isActive={activeType === "cameras"} on:click={() => (activeType = "cameras")}>
             <Icon size={1.2} id="camera" white />
             <p><T id="live.cameras" /></p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={activeType === "screens"} on:click={() => (activeType = "screens")}>
+        </Button>
+        <Button style="flex: 1;" isActive={activeType === "screens"} on:click={() => (activeType = "screens")}>
             <Icon size={1.2} id="screen" white />
             <p><T id="live.screens" /></p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={activeType === "ndi"} on:click={() => (activeType = "ndi")}>
+        </Button>
+        <Button style="flex: 1;" isActive={activeType === "ndi"} on:click={() => (activeType = "ndi")}>
             <Icon size={1.1} id="ndi" white />
             <p>NDI</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={activeType === "omt"} on:click={() => (activeType = "omt")}>
+        </Button>
+        <Button style="flex: 1;" isActive={activeType === "omt"} on:click={() => (activeType = "omt")}>
             <Icon size={1.2} id="omt" white />
             <p>OMT</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={activeType === "blackmagic"} on:click={() => (activeType = "blackmagic")}>
+        </Button>
+        <Button style="flex: 1;" isActive={activeType === "blackmagic"} on:click={() => (activeType = "blackmagic")}>
             <Icon size={1.2} id="blackmagic" white />
             <p>Blackmagic</p>
-        </MaterialButton>
+        </Button>
     </div>
 
     <div class="devices">

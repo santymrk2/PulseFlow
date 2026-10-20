@@ -6,7 +6,7 @@
     import { clone } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import Icon from "../../helpers/Icon.svelte"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     export let columns: number
     export let overlayId = ""
@@ -57,7 +57,7 @@
             {@const customName = getActionName(actionId, actionValue) || (action.name !== translateText(customData.name) ? action.name : "")}
 
             <div class="button {customData.red ? '' : 'white'}">
-                <Button style="padding: 3px;" redHover title="{translateText('actions.remove')}: <b>{translateText(customData.name)}</b>{action.name && action.name !== translateText(customData.name) ? `\n${action.name}` : ''}" {zoom} on:click={(e) => setTimeout(() => removeAction(e, action.id || actionId))}>
+                <Button align="start" style="padding: 3px;" redHover title="{translateText('actions.remove')}: <b>{translateText(customData.name)}</b>{action.name && action.name !== translateText(customData.name) ? `\n${action.name}` : ''}" on:click={(e) => setTimeout(() => removeAction(e, action.id || actionId))}>
                     {#if customName}<p>{customName}</p>{/if}
                     <Icon id={customData.icon || "actions"} size={0.9} white />
                 </Button>
@@ -69,7 +69,7 @@
         {#if overlay[action.id]}
             <div>
                 <div class="button white">
-                    <Button style="padding: 3px;" redHover title="{translateText('actions.remove')}: {action.title}" {zoom} on:click={() => changeAction(action.id)}>
+                    <Button align="start" style="padding: 3px;" redHover title="{translateText('actions.remove')}: {action.title}" on:click={() => changeAction(action.id)}>
                         <Icon id={action.icon} size={0.9} white />
                     </Button>
                 </div>

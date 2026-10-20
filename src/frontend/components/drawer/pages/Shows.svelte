@@ -15,7 +15,7 @@
     import { updateShowsList } from "../../helpers/show"
     import { dateToString } from "../../helpers/time"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import ShowButton from "../../inputs/ShowButton.svelte"
     import Autoscroll from "../../system/Autoscroll.svelte"
     import Center from "../../system/Center.svelte"
@@ -256,14 +256,14 @@
                     {@const direction = sortType === header.asc ? "asc" : sortType === header.desc ? "desc" : ""}
                     {@const isActive = direction !== ""}
 
-                    <MaterialButton style="{header.style}justify-content: {header.id === 'name' ? 'flex-start' : 'center'};" {isActive} on:click={() => toggleSort(header.id)} title={header.label}>
+                    <Button style="{header.style}justify-content: {header.id === 'name' ? 'flex-start' : 'center'};" {isActive} on:click={() => toggleSort(header.id)} title={header.label}>
                         <p>{header.label}</p>
                         {#if direction}
                             <span class="sort-indicator">
                                 <Icon id={direction === "asc" ? "arrow_down" : "arrow_up"} size={1.3} white />
                             </span>
                         {/if}
-                    </MaterialButton>
+                    </Button>
                 {/each}
             </div>
 
@@ -287,25 +287,25 @@
 
 {#if showWithNonExistentCategory}
     <FloatingInputs side="left" onlyOne>
-        <MaterialButton on:click={createNonExistentCategories}>
+        <Button on:click={createNonExistentCategories}>
             <Icon id="autofill" />
             <T id="category.create_nonexistent" />
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {:else if active === "all" && !searchValue && filteredShows.length < 20}
     <FloatingInputs side="left" onlyOne>
-        <MaterialButton variant="outlined" title="actions.import [Ctrl+I]" on:click={() => activePopup.set("import")}>
+        <Button variant="outline" title="actions.import [Ctrl+I]" on:click={() => activePopup.set("import")}>
             <Icon id="import" />
             <T id="actions.import" />
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}
 
 <FloatingInputs onlyOne>
     <div role="none" class="overflow-interact" on:click={(e) => createShow(e, true)}>
-        <MaterialButton icon="add" class="context #drawer_new_show" title="tooltip.show [Ctrl+N]" disabled={readOnly} on:click={createShow} white>
+        <Button icon="add" class="context #drawer_new_show" title="tooltip.show [Ctrl+N]" disabled={readOnly} on:click={createShow} white>
             {#if !$labelsDisabled}<T id="new.show" />{/if}
-        </MaterialButton>
+        </Button>
     </div>
 </FloatingInputs>
 

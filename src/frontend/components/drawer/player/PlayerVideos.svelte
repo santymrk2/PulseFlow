@@ -6,7 +6,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { findMatchingOut, setOutput } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { clearBackground, clearSlide } from "../../output/clear"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
@@ -109,7 +109,7 @@
                 {#if tags.length}
                     <div style="max-width: 100%;">
                         <div class="button">
-                            <Button style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("tags", video.rid)}>
+                            <Button align="start" style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("tags", video.rid)}>
                                 <Icon id="tag" size={0.9} white />
                             </Button>
                         </div>

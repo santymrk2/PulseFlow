@@ -9,7 +9,7 @@
     import { getFileName, removeExtension } from "../../helpers/media"
     import { getActiveOutputs, getOutputContent, setOutput } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Dropdown from "../../inputs/Dropdown.svelte"
     import { clearBackground, clearSlide } from "../../output/clear"
     import Center from "../../system/Center.svelte"
@@ -96,7 +96,7 @@
 
     {#if $presentationData?.id === show.id && $presentationData?.stat?.slides}
         <div class="info">
-            <Button on:click={restartPresentation} title={translateText("presentation_control.restart")}>
+            <Button align="start" on:click={restartPresentation} title={translateText("presentation_control.restart")}>
                 <Icon id="refresh" />
             </Button>
             <p style="white-space: normal;overflow: auto;padding: 3px 8px;">
@@ -111,7 +111,7 @@
         {#if retry}
             <br />
             <T id="presentation_control.retry" />
-            <Button on:click={newPresentation} style="margin-top: 8px;"><T id="presentation_control.try_again" /></Button>
+            <Button align="start" on:click={newPresentation} style="margin-top: 8px;"><T id="presentation_control.try_again" /></Button>
         {/if}
     </Center>
 {:else}
@@ -128,7 +128,7 @@
         />
 
         <div class="fill">
-            <Button on:click={newPresentation} style="font-size: 4em;width: 100%;" center>
+            <Button on:click={newPresentation} style="font-size: 4em;width: 100%;">
                 <Icon id="play" size={6} right />
                 <T id="presentation_control.start" />
             </Button>

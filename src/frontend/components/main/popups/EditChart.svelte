@@ -2,7 +2,7 @@
     import { popupData } from "../../../stores"
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
 
@@ -99,11 +99,11 @@
                 noLabel
             />
 
-            <MaterialButton variant="outlined" icon="delete" disabled={grid.length <= 1} on:click={() => removeRow(rowIdx)} red />
+            <Button variant="outline" icon="delete" disabled={grid.length <= 1} on:click={() => removeRow(rowIdx)} red />
         </InputRow>
     {/each}
 
-    <MaterialButton variant="outlined" icon="add" on:click={addRow}>
+    <Button variant="outline" icon="add" on:click={addRow}>
         <T id="settings.add" />
-    </MaterialButton>
+    </Button>
 </div>

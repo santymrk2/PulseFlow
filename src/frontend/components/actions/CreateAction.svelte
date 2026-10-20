@@ -9,10 +9,9 @@
     import { _show } from "../helpers/shows"
     import HRule from "../input/HRule.svelte"
     import InputRow from "../input/InputRow.svelte"
-    import Button from "../inputs/Button.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import CombinedInput from "../inputs/CombinedInput.svelte"
     import Dropdown from "../inputs/Dropdown.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
     import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
     import { spotifyState } from "../output/preview/SpotifyManager"
@@ -251,7 +250,7 @@
 {#if list}
     {#if actionId && !pickAction && !full}
         <CombinedInput textWidth={38}>
-            <Button on:click={() => (pickAction = true)} style="width: 100%;" center dark>
+            <Button on:click={() => (pickAction = true)} style="width: 100%;">
                 <Icon id={actionData[actionId]?.icon || "actions"} right />
                 <p style="display: contents;">{findName(actionId)}</p>
             </Button>
@@ -260,7 +259,7 @@
         <MaterialTextInput label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
 
         {#if mode !== "slide"}
-            <MaterialButton
+            <Button
                 class="popup-options {!commonOnly ? 'active' : ''}"
                 icon={!commonOnly ? "eye" : "hide"}
                 iconSize={1.3}
@@ -285,10 +284,10 @@
 
                     <!-- disabled={$popupData.existing.includes(action.id)} -->
                     <!-- bold={action.common} -->
-                    <MaterialButton style="width: 100%;font-weight: normal;justify-content: start;padding: 5px 20px;gap: 12px;{searchValue.length && i === 0 ? 'background-color: var(--primary-lighter);' : ''}" showOutline={getActionTriggerId(actionId) === action.id} isActive={(existingActionsFiltered || $popupData.existing || []).map(getActionTriggerId).includes(action.id)} on:click={() => changeAction({ ...action, index: full ? undefined : 0 })}>
+                    <Button style="width: 100%;font-weight: normal;justify-content: start;padding: 5px 20px;gap: 12px;{searchValue.length && i === 0 ? 'background-color: var(--primary-lighter);' : ''}" showOutline={getActionTriggerId(actionId) === action.id} isActive={(existingActionsFiltered || $popupData.existing || []).map(getActionTriggerId).includes(action.id)} on:click={() => changeAction({ ...action, index: full ? undefined : 0 })}>
                         <Icon id={action.icon} />
                         <p>{action.name}</p>
-                    </MaterialButton>
+                    </Button>
                 {/each}
             </div>
         {:else}
@@ -310,11 +309,11 @@
             <div style="display: flex;align-items: center;gap: 3px;">
                 {#if actionId && existingActions.length > 1}
                     {#if actionNameIndex > 1}
-                        <MaterialButton style="padding: 8px;" icon="up" on:click={() => changeAction({ id: "move_up", index: actionNameIndex - 1 })} />
+                        <Button style="padding: 8px;" icon="up" on:click={() => changeAction({ id: "move_up", index: actionNameIndex - 1 })} />
                     {/if}
-                    <MaterialButton style="padding: 6.5px;" title="actions.remove" on:click={() => changeAction({ id: "remove", index: actionNameIndex - 1 })}>
+                    <Button style="padding: 6.5px;" title="actions.remove" on:click={() => changeAction({ id: "remove", index: actionNameIndex - 1 })}>
                         <Icon id="close" size={1.2} white />
-                    </MaterialButton>
+                    </Button>
                 {/if}
             </div>
         </div>
@@ -324,7 +323,7 @@
                 <Dropdown activeId={actionId} value={findName(actionId) || "—"} options={[...(actionNameIndex ? [{ id: "remove", name: "—" }] : []), ...ACTIONS]} on:click={(e) => changeAction(e.detail)} />
                 <!-- <MaterialDropdown value={actionId} options={[...(actionNameIndex ? [{ value: "remove", label: "—" }] : []), ...ACTIONS]} on:change={(e) => changeAction(e.detail)} /> -->
             {:else}
-                <MaterialButton style="flex: 1;justify-content: start;{actionId ? 'font-weight: normal;' : ''}" title="actions.choose_action" on:click={() => dispatch("choose")}>
+                <Button style="flex: 1;justify-content: start;{actionId ? 'font-weight: normal;' : ''}" title="actions.choose_action" on:click={() => dispatch("choose")}>
                     <Icon id={findIcon(actionId)} style="margin-inline-start: 0.5em;" />
                     <p>
                         {#if actionId}
@@ -339,7 +338,7 @@
                             {getActionInfo(actionId)}
                         </span>
                     {/if}
-                </MaterialButton>
+                </Button>
             {/if}
         </InputRow>
     </div>

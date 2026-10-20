@@ -7,7 +7,7 @@
     import { getExtension, getFileName, getMediaInfo, removeExtension } from "../../helpers/media"
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import Center from "../../system/Center.svelte"
     import Clock from "../../system/Clock.svelte"
@@ -85,16 +85,16 @@
                 <!-- BUNDLE MEDIA FILES MANUALLY OR AUTOMATICALLY -->
                 {#if !$cloudSyncData.enabled && !$special.cloudSyncMediaFolder}
                     <InputRow>
-                        <MaterialButton title="media.bundle_media_files_tip" style="width: 100%;margin-top: 10px;" icon="image" on:click={bundleMediaFiles}>
+                        <Button title="media.bundle_media_files_tip" style="width: 100%;margin-top: 10px;" icon="image" on:click={bundleMediaFiles}>
                             <T id="media.bundle_media_files" />
-                        </MaterialButton>
+                        </Button>
                     </InputRow>
                 {/if}
 
                 <InputRow>
-                    <MaterialButton icon="launch" style="width: 100%;margin-top: 10px;" on:click={() => sendMain(Main.OPEN_CACHE)} white>
+                    <Button icon="launch" style="width: 100%;margin-top: 10px;" on:click={() => sendMain(Main.OPEN_CACHE)} white>
                         <T id="actions.open_cache_folder" />
-                    </MaterialButton>
+                    </Button>
                 </InputRow>
             </main>
         {:else if $activeShow?.type === "video" || $activeShow?.type === "image"}

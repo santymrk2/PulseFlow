@@ -4,7 +4,7 @@
     import { translateText } from "../../../utils/language"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Tip from "../Tip.svelte"
 
     let showMore = true
@@ -42,22 +42,22 @@
 <Tip type="info" value="cloud.choose_method_tip" bottom={20} />
 
 <!-- {#if !multipleTeams}
-    <MaterialButton class="popup-options {showMore ? 'active' : ''}" style="inset-inline-end: 0;" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
+    <Button class="popup-options {showMore ? 'active' : ''}" style="inset-inline-end: 0;" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 {/if} -->
 
 <div style="display: flex;flex-direction: column;gap: 5px;">
     {#each options as option, i}
-        <MaterialButton variant="outlined" style="{i === 2 ? 'margin-top: 5px;' : ''}justify-content: start;flex: 1;min-height: 50px;font-weight: normal;" on:click={option.click}>
+        <Button variant="outline" style="{i === 2 ? 'margin-top: 5px;' : ''}justify-content: start;flex: 1;min-height: 50px;font-weight: normal;" on:click={option.click}>
             <Icon id={option.icon} size={2.4} white={i > 0} />
 
             <div style="display: flex;flex-direction: column;align-items: start;gap: 5px;margin-left: 10px;">
                 <p style="font-size: 1.1em;">{translateText(option.name)}</p>
                 <span style="opacity: 0.5;">{translateText(option.description)}</span>
             </div>
-        </MaterialButton>
+        </Button>
     {/each}
 </div>
 
-<MaterialButton variant="outlined" style="margin-top: 20px;" icon="close" on:click={cancel}>
+<Button variant="outline" style="margin-top: 20px;" icon="close" on:click={cancel}>
     <T id="popup.cancel" />
-</MaterialButton>
+</Button>

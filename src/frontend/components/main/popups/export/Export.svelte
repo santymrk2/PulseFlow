@@ -14,7 +14,7 @@
     import { loadShows } from "../../../helpers/setShow"
     import T from "../../../helpers/T.svelte"
     import HRule from "../../../input/HRule.svelte"
-    import MaterialButton from "../../../inputs/MaterialButton.svelte"
+    import Button from "../../../../lib/components/ui/button/button.svelte"
     import MaterialMultiChoice from "../../../inputs/MaterialMultiChoice.svelte"
     import MaterialToggleSwitch from "../../../inputs/MaterialToggleSwitch.svelte"
     import Center from "../../../system/Center.svelte"
@@ -173,13 +173,13 @@
 
     <MaterialMultiChoice options={exportTypesList} on:click={(e) => (exportType = e.detail)} />
 {:else if !exportFormat}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (exportType = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (exportType = "")} />
 
     <p style="margin-bottom: 10px;"><T id="export.option_format" /></p>
 
     <MaterialMultiChoice options={filterFormats(exportFormats)} on:click={(e) => (exportFormat = e.detail)} />
 {:else}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (exportFormat = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (exportFormat = "")} />
 
     <!-- margin-bottom: 10px; -->
     <div style="display: flex;">
@@ -202,7 +202,7 @@
         </Center>
     {/if}
 
-    <MaterialButton variant="contained" style="margin-top: 20px;" icon="export" info={showIds.length > 1 && exportFormat !== "project" && !(exportType === "project" && exportFormat === "pdf") ? showIds.length.toString() : ""} disabled={exportType === "project" ? !$projects[$activeProject || ""]?.shows?.length : !showIds.length && exportType !== "all_shows"} on:click={exportClick}>
+    <Button variant="default" style="margin-top: 20px;" icon="export" info={showIds.length > 1 && exportFormat !== "project" && !(exportType === "project" && exportFormat === "pdf") ? showIds.length.toString() : ""} disabled={exportType === "project" ? !$projects[$activeProject || ""]?.shows?.length : !showIds.length && exportType !== "all_shows"} on:click={exportClick}>
         <T id="export.export" />
-    </MaterialButton>
+    </Button>
 {/if}

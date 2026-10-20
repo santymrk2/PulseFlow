@@ -4,7 +4,7 @@
     import T from "../../helpers/T.svelte"
     import { Main } from "../../../../types/IPC/Main"
     import { sendMain } from "../../../IPC/main"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { destroySpotifyManager, fadePause, initSpotifyManager, seekTo, skipNext, skipPrev, spotifyIsFading, spotifyState, togglePlay } from "./SpotifyManager"
 
     let isHovering = false
@@ -132,15 +132,15 @@
         </div>
 
         <div class="controls">
-            <MaterialButton on:click={skipPrev} title="media.previous" disabled={$spotifyIsFading}>
+            <Button on:click={skipPrev} title="media.previous" disabled={$spotifyIsFading}>
                 <Icon id="previousFull" white />
-            </MaterialButton>
-            <MaterialButton on:click={togglePlay} title={$spotifyState.isPlaying ? "media.pause" : "media.play"} class="play-btn" disabled={$spotifyIsFading}>
+            </Button>
+            <Button on:click={togglePlay} title={$spotifyState.isPlaying ? "media.pause" : "media.play"} class="play-btn" disabled={$spotifyIsFading}>
                 <Icon id={$spotifyState.isPlaying ? "pause" : "play"} white />
-            </MaterialButton>
-            <MaterialButton on:click={skipNext} title="media.next" disabled={$spotifyIsFading}>
+            </Button>
+            <Button on:click={skipNext} title="media.next" disabled={$spotifyIsFading}>
                 <Icon id="nextFull" white />
-            </MaterialButton>
+            </Button>
         </div>
 
         <div class="progress" class:disabled={$spotifyIsFading}>
@@ -154,11 +154,11 @@
 
         {#if $spotifyState.isPlaying}
             <div class="fade-btn-wrap" class:show-fade={isHovering || $spotifyIsFading}>
-                <MaterialButton variant="outlined" on:click={fadePause} style="padding: 4px 8px;margin-top: 5px;background: none;" title="media.fade_out" disabled={$spotifyIsFading}>
+                <Button variant="outline" on:click={fadePause} style="padding: 4px 8px;margin-top: 5px;background: none;" title="media.fade_out" disabled={$spotifyIsFading}>
                     <!-- <Icon id="volume_down" white /> -->
                     <Icon id="clear" white />
                     <p><T id="media.fade_out" /></p>
-                </MaterialButton>
+                </Button>
             </div>
         {/if}
     </div>

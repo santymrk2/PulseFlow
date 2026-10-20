@@ -12,7 +12,7 @@
     // activePopup.set("kit_demo") desde la consola.
 
     const variants = ["default", "secondary", "ghost", "outline", "destructive", "live"] as const
-    const sizes = ["sm", "default", "icon", "icon-sm"] as const
+    const sizes = ["xs", "sm", "md", "icon", "icon-sm"] as const
 
     let menuOpen = false
     let liveOn = false

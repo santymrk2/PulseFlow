@@ -7,7 +7,7 @@
     import { keysToID, sortByName } from "../../helpers/array"
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
     import Center from "../../system/Center.svelte"
@@ -77,7 +77,7 @@
                 <InputRow>
                     <MaterialTextInput label="inputs.name" value={tag.name} on:change={(e) => updateKey(e.detail, tag.id, "name")} autofocus={!tag.name} />
                     <MaterialColorInput label="edit.color" value={tag.color} style="min-width: 200px;max-width: 200px;" on:change={(e) => updateKey(e.detail, tag.id, "color")} noLabel />
-                    <MaterialButton icon="delete" title="actions.delete" on:click={() => deleteTag(tag.id)} white />
+                    <Button icon="delete" title="actions.delete" on:click={() => deleteTag(tag.id)} white />
                 </InputRow>
             {/each}
         {/key}
@@ -87,9 +87,9 @@
         </Center>
     {/if}
 
-    <MaterialButton variant="outlined" icon="add" style="margin-top: 20px;width: 100%;" disabled={emptyTag} on:click={createTag}>
+    <Button variant="outline" icon="add" style="margin-top: 20px;width: 100%;" disabled={emptyTag} on:click={createTag}>
         <T id="meta.new_tag" />
-    </MaterialButton>
+    </Button>
 </div>
 
 <style>

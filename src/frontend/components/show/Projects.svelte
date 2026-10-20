@@ -17,7 +17,7 @@
     import T from "../helpers/T.svelte"
     import FloatingInputs from "../input/FloatingInputs.svelte"
     import HiddenInput from "../inputs/HiddenInput.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
     import Autoscroll from "../system/Autoscroll.svelte"
@@ -347,7 +347,7 @@
             {#if !$focusMode}
                 <div class="header {recentlyUsedList.length ? '' : 'context #projectTab'}" class:shadow={listScrollY > 0} class:isScrollbarVisible class:passThrough={isDragging} data-title={translateText("remote.project: ", $dictionary) + `<b>${currentProject?.name || ""}</b>`}>
                     <div class="left context">
-                        <MaterialButton style="width: 42px;height: 100%;padding: 0.3em 0.5em;" icon="back" iconSize={1.1} title="remote.projects" on:click={back} />
+                        <Button style="width: 42px;height: 100%;padding: 0.3em 0.5em;" icon="back" iconSize={1.1} title="remote.projects" on:click={back} />
                     </div>
                     <!-- {recentlyUsedList.length ? '' : 'border-bottom: 1px solid var(--secondary);'} -->
 
@@ -364,62 +364,62 @@
                         </p>
 
                         <div class="right context">
-                            <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;border-bottom-right-radius: 10px;{showProjectDropdown ? '' : 'opacity: 0.8;'}" title="create_show.more_options" icon="more" on:click={() => (showProjectDropdown = !showProjectDropdown)} white={!showProjectDropdown}>
+                            <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;border-bottom-right-radius: 10px;{showProjectDropdown ? '' : 'opacity: 0.8;'}" title="create_show.more_options" icon="more" on:click={() => (showProjectDropdown = !showProjectDropdown)} white={!showProjectDropdown}>
                                 <!-- prevent force "white" -->
                                 <span style="display: none;"></span>
-                            </MaterialButton>
+                            </Button>
 
                             {#if showProjectDropdown && currentProject}
                                 <!-- WIP use context menu style -->
                                 <div class="projectDropdown" transition:fade={{ duration: 100 }} role="none" on:click={() => (showProjectDropdown = false)}>
                                     {#if currentProjectIsOnStage && $activeProject}
-                                        <MaterialButton title="Sync with OnStage" icon="refresh" on:click={() => refreshOnStageProject($activeProject)} white>
+                                        <Button title="Sync with OnStage" icon="refresh" on:click={() => refreshOnStageProject($activeProject)} white>
                                             <T id="cloud.sync" />
-                                        </MaterialButton>
+                                        </Button>
 
                                         <div class="DIVIDER"></div>
                                     {/if}
 
                                     {#if currentProject.sourcePath}
-                                        <MaterialButton title="actions.save_to_file" icon="save" on:click={() => exportProject(currentProject, $activeProject || "", currentProject.sourcePath)} white>
+                                        <Button title="actions.save_to_file" icon="save" on:click={() => exportProject(currentProject, $activeProject || "", currentProject.sourcePath)} white>
                                             <T id="actions.save_to_file" />
-                                        </MaterialButton>
+                                        </Button>
                                     {/if}
 
                                     <!-- export -->
                                     <!-- WIP set sourcePath to export path -->
-                                    <MaterialButton title="actions.export" icon="export" on:click={() => exportProject(currentProject, $activeProject || "")} white>
+                                    <Button title="actions.export" icon="export" on:click={() => exportProject(currentProject, $activeProject || "")} white>
                                         <T id="actions.export" />
-                                    </MaterialButton>
+                                    </Button>
 
-                                    <MaterialButton title="export.data_link" icon="bind" on:click={() => shareProjectLink(currentProject, $activeProject || "")} white>
+                                    <Button title="export.data_link" icon="bind" on:click={() => shareProjectLink(currentProject, $activeProject || "")} white>
                                         <T id="export.data_link" />
-                                    </MaterialButton>
+                                    </Button>
 
                                     <div class="DIVIDER"></div>
 
-                                    <MaterialButton title="timeline.toggle_timeline" on:click={() => special.update((a) => ({ ...a, projectTimelineActive: !a.projectTimelineActive }))}>
+                                    <Button title="timeline.toggle_timeline" on:click={() => special.update((a) => ({ ...a, projectTimelineActive: !a.projectTimelineActive }))}>
                                         <Icon id="timeline" white={!$special.projectTimelineActive} />
 
                                         {#if $special.projectTimelineActive}<Icon id="check" size={0.7} white />{/if}
 
                                         <p><T id="timeline.toggle_timeline" /></p>
-                                    </MaterialButton>
+                                    </Button>
 
                                     {#if currentProject.shows?.some((a) => a.type === "section")}
                                         <div class="DIVIDER"></div>
 
-                                        <MaterialButton title="actions.collapsed" icon="collapse" on:click={() => toggleSectionsCollapsed()} white={!currentProject.sectionsCollapsed}>
+                                        <Button title="actions.collapsed" icon="collapse" on:click={() => toggleSectionsCollapsed()} white={!currentProject.sectionsCollapsed}>
                                             {#if currentProject.sectionsCollapsed}<Icon id="check" size={0.7} white />{/if}
 
                                             <T id="actions.collapsed" />
-                                        </MaterialButton>
+                                        </Button>
 
-                                        <MaterialButton title="actions.lock_sections" icon="lock" on:click={() => lockSections()} white={!currentProject.sectionsLocked}>
+                                        <Button title="actions.lock_sections" icon="lock" on:click={() => lockSections()} white={!currentProject.sectionsLocked}>
                                             {#if currentProject.sectionsLocked}<Icon id="check" size={0.7} white />{/if}
 
                                             <T id="actions.lock_sections" />
-                                        </MaterialButton>
+                                        </Button>
                                     {/if}
                                 </div>
                             {/if}
@@ -430,7 +430,7 @@
         {:else if $editingProjectTemplate}
             <div class="header {recentlyUsedList.length ? '' : 'context #projectTab'}" class:shadow={listScrollY > 0} class:isScrollbarVisible class:passThrough={isDragging} data-title={translateText("remote.project: ") + `<b>${currentProject?.name || ""}</b>`}>
                 <div class="left context">
-                    <MaterialButton style="width: 42px;height: 100%;padding: 0.3em 0.5em;" icon="back" iconSize={1.1} title="remote.projects" on:click={back} />
+                    <Button style="width: 42px;height: 100%;padding: 0.3em 0.5em;" icon="back" iconSize={1.1} title="remote.projects" on:click={back} />
                 </div>
 
                 <p style="max-width: 80%;">{$projectTemplates[$editingProjectTemplate]?.name || ""}</p>
@@ -443,7 +443,7 @@
             <div class="header context #projects" class:shadow={listScrollY > 0} class:isScrollbarVisible class:passThrough={isDragging} data-title={translateText("<b>remote.projects</b><br>guide_description.project_manage<br>guide_description.project_create")}>
                 {#if showProjectsOptions}
                     <div class="left context">
-                        <MaterialButton style="width: 42px;height: 100%;padding: 0.3em 0.5em;" icon="back" iconSize={1.1} title="actions.back" on:click={() => (showProjectsOptions = false)} />
+                        <Button style="width: 42px;height: 100%;padding: 0.3em 0.5em;" icon="back" iconSize={1.1} title="actions.back" on:click={() => (showProjectsOptions = false)} />
                     </div>
                 {/if}
 
@@ -455,15 +455,15 @@
 
                 {#if !showProjectsOptions}
                     <div class="right">
-                        <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;border-bottom-right-radius: 10px;{showProjectDropdown ? '' : 'opacity: 0.8;'}" title="create_show.more_options" icon="more" on:click={() => (showProjectDropdown = !showProjectDropdown)} white={!showProjectDropdown}>
+                        <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;border-bottom-right-radius: 10px;{showProjectDropdown ? '' : 'opacity: 0.8;'}" title="create_show.more_options" icon="more" on:click={() => (showProjectDropdown = !showProjectDropdown)} white={!showProjectDropdown}>
                             <span style="display: none;"></span>
-                        </MaterialButton>
+                        </Button>
 
                         {#if showProjectDropdown}
                             <div class="projectDropdown" transition:fade={{ duration: 100 }} role="none" on:click={() => (showProjectDropdown = false)}>
-                                <MaterialButton title="edit.options" icon="options" on:click={() => (showProjectsOptions = !showProjectsOptions)} white>
+                                <Button title="edit.options" icon="options" on:click={() => (showProjectsOptions = !showProjectsOptions)} white>
                                     <T id="edit.options" />
-                                </MaterialButton>
+                                </Button>
                             </div>
                         {/if}
                     </div>
@@ -479,10 +479,10 @@
                 {@const isVisible = profile[rootParentId] !== "none"}
 
                 {#if isVisible}
-                    <MaterialButton style="width: 100%;padding: 0.08rem 0.65rem;font-weight: normal;" title="actions.id_select_project: <b>{project.name}</b>" on:click={(e) => openRecentlyUsed(e, project.id)} isActive={$activeProject === project.id} tab>
+                    <Button style="width: 100%;padding: 0.08rem 0.65rem;font-weight: normal;" title="actions.id_select_project: <b>{project.name}</b>" on:click={(e) => openRecentlyUsed(e, project.id)} isActive={$activeProject === project.id} tab>
                         <Icon id={isProjectLinked($projects[project.id], project.id) ? "cloud" : "project"} white={$projects[project.id]?.archived} />
                         <HiddenInput value={project.name} id={"project_" + project.id} allowEdit={false} />
-                    </MaterialButton>
+                    </Button>
                 {/if}
             {/each}
         </div>
@@ -502,45 +502,45 @@
             </Autoscroll>
 
             <!-- <FloatingInputs>
-                <MaterialButton icon="folder" title="new.folder" on:click={() => createProject(true)} white />
+                <Button icon="folder" title="new.folder" on:click={() => createProject(true)} white />
                 <div class="divider"></div>
-                <MaterialButton icon="add" title="<b>new.project</b><br>tooltip.project" on:click={() => createProject()}>
+                <Button icon="add" title="<b>new.project</b><br>tooltip.project" on:click={() => createProject()}>
                     {#if !$labelsDisabled}<T id="new.project" />{/if}
-                </MaterialButton>
+                </Button>
             </FloatingInputs> -->
 
             {#if addMenuOpen}
                 <div class="addMenu" transition:fade={{ duration: 80 }} role="none" on:click={() => (addMenuOpen = false)}>
-                    <MaterialButton variant="outlined" icon="project" title="<b>new.project</b><br>tooltip.project" on:click={() => createProject()}>
+                    <Button variant="outline" icon="project" title="<b>new.project</b><br>tooltip.project" on:click={() => createProject()}>
                         <T id="formats.project" />
-                    </MaterialButton>
+                    </Button>
 
-                    <MaterialButton variant="outlined" icon="folder" title="new.folder" on:click={() => createProject(true)} white>
+                    <Button variant="outline" icon="folder" title="new.folder" on:click={() => createProject(true)} white>
                         <T id="media.folder_type" />
-                    </MaterialButton>
+                    </Button>
 
                     <div class="group-spacer" />
 
-                    <MaterialButton variant="outlined" icon="templates" title="actions.project_template" on:click={createProjectTemplate} white>
+                    <Button variant="outline" icon="templates" title="actions.project_template" on:click={createProjectTemplate} white>
                         <T id="actions.project_template" />
-                    </MaterialButton>
+                    </Button>
 
                     <div class="group-spacer" />
 
-                    <MaterialButton variant="outlined" icon="import" title="actions.import: formats.project" on:click={importProject} white>
+                    <Button variant="outline" icon="import" title="actions.import: formats.project" on:click={importProject} white>
                         <T id="actions.import" />
 
                         <div class="actionType">
                             <Icon id="folder" size={0.7} white />
                         </div>
-                    </MaterialButton>
+                    </Button>
                 </div>
             {/if}
 
             <FloatingInputs>
-                <MaterialButton class="addButton" title={addMenuOpen ? "actions.close" : "context.addToProject"} on:click={() => (addMenuOpen = !addMenuOpen)} on:dblclick={() => (addMenuOpen ? null : createProject())}>
+                <Button class="addButton" title={addMenuOpen ? "actions.close" : "context.addToProject"} on:click={() => (addMenuOpen = !addMenuOpen)} on:dblclick={() => (addMenuOpen ? null : createProject())}>
                     <Icon id="add" size={1} style={addMenuOpen ? "transform: rotate(135deg);" : ""} white />
-                </MaterialButton>
+                </Button>
             </FloatingInputs>
         </div>
 
@@ -549,10 +549,10 @@
                 <div class="title">{translateText("tabs.templates", $dictionary)}</div>
                 <div class="scroll">
                     {#each templates as project}
-                        <MaterialButton id={project.id} style="width: 100%;padding: 0.1rem 0.65rem;font-weight: normal;" on:click={(e) => createFromTemplate(e, project.id)} class="context #project_template{readOnly ? '_readonly' : ''}" isActive={$activeProject === project.id} tab>
+                        <Button id={project.id} style="width: 100%;padding: 0.1rem 0.65rem;font-weight: normal;" on:click={(e) => createFromTemplate(e, project.id)} class="context #project_template{readOnly ? '_readonly' : ''}" isActive={$activeProject === project.id} tab>
                             <Icon id="templates" white={$projects[project.id]?.archived} />
                             <HiddenInput value={project.name} id={"project_" + project.id} on:edit={(e) => rename(e.detail.value, project.id)} bind:edit={editActive} />
-                        </MaterialButton>
+                        </Button>
                     {/each}
                 </div>
             </div>

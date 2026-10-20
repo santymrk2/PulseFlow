@@ -14,7 +14,7 @@
     import { getTimeFromInterval, joinTimeBig } from "../../helpers/time"
     import InputRow from "../../input/InputRow.svelte"
     import Title from "../../input/Title.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialMediaPicker from "../../inputs/MaterialFilePicker.svelte"
     import MaterialFolderPicker from "../../inputs/MaterialFolderPicker.svelte"
@@ -283,19 +283,19 @@
 
 {#if !$providerConnections.churchApps || (!$special.churchAppsCloudOnly && !$cloudSyncData.enabled)}
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("churchApps")} style="flex: 1;" icon="login">
+        <Button on:click={() => contentProviderConnect("churchApps")} style="flex: 1;" icon="login">
             <T id="settings.connect_to" replace={["ChurchApps"]} />
-        </MaterialButton>
+        </Button>
     </InputRow>
 {:else}
     <InputRow>
-        <MaterialButton disabled={disconnecting} on:click={() => contentProviderConnect("churchApps")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
+        <Button disabled={disconnecting} on:click={() => contentProviderConnect("churchApps")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
             <T id="settings.disconnect_from" replace={["ChurchApps"]} />
-        </MaterialButton>
+        </Button>
         {#if $cloudSyncData.enabled}
-            <MaterialButton icon="cloud_sync" disabled={$statusIndicator === "syncing"} on:click={syncNow}>
+            <Button icon="cloud_sync" disabled={$statusIndicator === "syncing"} on:click={syncNow}>
                 <T id="cloud.sync" />
-            </MaterialButton>
+            </Button>
         {/if}
     </InputRow>
 
@@ -306,7 +306,7 @@
             {/key}
 
             {#if $cloudSyncData.enabled && ($cloudSyncData.team?.count || 0) > 1}
-                <MaterialButton variant="outlined" icon="people" on:click={changeTeam}><T id="cloud.change_team" /></MaterialButton>
+                <Button variant="outline" icon="people" on:click={changeTeam}><T id="cloud.change_team" /></Button>
             {/if}
         </InputRow>
 
@@ -326,11 +326,11 @@
                 <MaterialFolderPicker label="media.media_sync_folder" value={mediaFolderPath} on:change={updateMediaFolderPath} allowEmpty={!mediaFolderPath.endsWith("Documents\\PulseFlow\\Media") && !mediaFolderPath.endsWith("Documents/PulseFlow/Media")} />
             {/if}
 
-            <!-- <MaterialButton variant="outlined" icon="delete" on:click={deleteCloudData} red white>Delete cloud data</MaterialButton> -->
+            <!-- <Button variant="outline" icon="delete" on:click={deleteCloudData} red white>Delete cloud data</Button> -->
 
-            <MaterialButton variant="outlined" icon="import" disabled={$statusIndicator === "syncing"} on:click={restoreCloudBackupState}>
+            <Button variant="outline" icon="import" disabled={$statusIndicator === "syncing"} on:click={restoreCloudBackupState}>
                 <p><T id="cloud.restore_weekly_backup" /></p>
-            </MaterialButton>
+            </Button>
         </svelte:fragment>
     </InputRow>
 {/if}

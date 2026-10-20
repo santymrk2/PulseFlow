@@ -3,7 +3,7 @@
     import { activePopup, popupData } from "../../../stores"
     import { history } from "../../helpers/history"
     import { getLayoutRef } from "../../helpers/show"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Tip from "../Tip.svelte"
 
     let index = $popupData.index
@@ -57,7 +57,7 @@
 <svelte:window on:keydown={keydown} />
 
 {#if revert}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => activePopup.set(revert)} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => activePopup.set(revert)} />
 {/if}
 
 {#if existing}

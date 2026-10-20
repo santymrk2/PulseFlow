@@ -4,7 +4,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialFolderPicker from "../../inputs/MaterialFolderPicker.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
@@ -57,10 +57,10 @@
 
         <MaterialFolderPicker label="settings.recordings_path" value={recordingsPath} allowEmpty={!!$special?.audioRecordingsPath} on:change={(e) => updateRecordingsPath(e.detail)} />
 
-        <MaterialButton variant="outlined" style="width: 100%;margin-top: 10px;" on:click={() => activePopup.set("now_playing")}>
+        <Button variant="outline" style="width: 100%;margin-top: 10px;" on:click={() => activePopup.set("now_playing")}>
             <Icon id="document" />
             <T id="popup.now_playing" />
-        </MaterialButton>
+        </Button>
     </main>
 {:else if $activeAudioEffects}
     <AudioEffects />
@@ -70,8 +70,8 @@
 
 {#if !$activeAudioEffects}
     <FloatingInputs round>
-        <MaterialButton isActive={settingsOpened} title="audio.settings" on:click={() => (settingsOpened = !settingsOpened)}>
+        <Button isActive={settingsOpened} title="audio.settings" on:click={() => (settingsOpened = !settingsOpened)}>
             <Icon size={1.1} id="options" white={!settingsOpened} />
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}

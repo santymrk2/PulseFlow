@@ -5,7 +5,7 @@
     import { keysToID, sortByName } from "../../helpers/array"
     import T from "../../helpers/T.svelte"
     import HRule from "../../input/HRule.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
@@ -75,10 +75,10 @@
     {/each}
 </div>
 
-<MaterialButton variant="contained" disabled={selectedScriptures.length < 2} on:click={create}>
+<Button variant="default" disabled={selectedScriptures.length < 2} on:click={create}>
     <T id="timer.create" />
     {#if selectedScriptures.length < 2}<span style="opacity: 0.5;font-size: 0.8em;">{selectedScriptures.length}/2</span>{/if}
-</MaterialButton>
+</Button>
 
 <style>
     .list {

@@ -10,7 +10,7 @@
     import { contextMenuItems, contextMenuLayouts } from "../context/contextMenus"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import Button from "../inputs/Button.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import { activeLook, looks, activePopup } from "../../stores"
     import { getAllNormalOutputs, getAllStageOutputs, toggleOutputs } from "../../components/helpers/output"
     import { applyLook } from "../../components/helpers/looks"
@@ -95,7 +95,7 @@
 
     <div class="nocontext menus" on:mousemove={move} on:click={menu} on:contextmenu={menu}>
         {#each menus as menu}
-            <Button id={menu} active={activeID === menu} red={menu === "file" && !$saved}>
+            <Button align="start" id={menu} isActive={activeID === menu} red={menu === "file" && !$saved}>
                 <T id="titlebar.{menu}" />
             </Button>
         {/each}
@@ -160,13 +160,13 @@
     {/if}
 
     <div class="window">
-        <Button on:click={() => sendMain(Main.MINIMIZE)} center>
+        <Button on:click={() => sendMain(Main.MINIMIZE)}>
             <Icon id="remove" size={1.2} white />
         </Button>
-        <Button on:click={() => sendMain(Main.MAXIMIZE)} style="transform: rotate(180deg);" center>
+        <Button on:click={() => sendMain(Main.MAXIMIZE)} style="transform: rotate(180deg);">
             <Icon id={maximized ? "maximized" : "unmaximized"} size={maximized ? 0.8 : 0.9} white />
         </Button>
-        <Button id="close" on:click={() => initializeClosing()} center>
+        <Button id="close" on:click={() => initializeClosing()}>
             <Icon id="close" size={1.2} white />
         </Button>
     </div>

@@ -9,7 +9,7 @@
     import { history } from "../../helpers/history"
     import { getStyles } from "../../helpers/style"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialZoom from "../../inputs/MaterialZoom.svelte"
     import Center from "../../system/Center.svelte"
     import DropArea from "../../system/DropArea.svelte"
@@ -102,7 +102,7 @@
         {#if styleOverrides > 0}
             <div class="divider"></div>
 
-            <MaterialButton
+            <Button
                 icon="text"
                 on:click={() => {
                     popupData.set({ templateId: currentId })
@@ -111,7 +111,7 @@
             >
                 {translateText("popup.template_style_overrides")}
                 <span style="font-size: 0.8em;opacity: 0.5;">{styleOverrides}</span>
-            </MaterialButton>
+            </Button>
         {/if}
     </FloatingInputs>
 </div>

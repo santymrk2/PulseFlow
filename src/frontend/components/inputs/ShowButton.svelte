@@ -17,7 +17,7 @@
     import { clearSlide } from "../output/clear"
     import { getTextSnippet, highlightText } from "../quicksearch/searchHighlight"
     import HiddenInput from "./HiddenInput.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let id: string
     export let show: any // ShowList | ShowRef
@@ -264,7 +264,7 @@
 </script>
 
 <div id="show_{id}" class="main" class:isProject class:played={show.played}>
-    <MaterialButton on:click={click} on:dblclick={doubleClick} {isActive} showOutline={outline} class="context {$$props.class}{readOnly ? '_readonly' : ''}" style="font-weight: normal;--outline-color: {activeOutput || 'var(--secondary)'};{$notFound.show?.includes(id) ? 'background-color: rgb(255 0 0 / 0.2);' : ''}{$$props.style || ''}" tab>
+    <Button on:click={click} on:dblclick={doubleClick} {isActive} showOutline={outline} class="context {$$props.class}{readOnly ? '_readonly' : ''}" style="font-weight: normal;--outline-color: {activeOutput || 'var(--secondary)'};{$notFound.show?.includes(id) ? 'background-color: rgb(255 0 0 / 0.2);' : ''}{$$props.style || ''}" tab>
         <div class="row" style={type === "show_placeholder" ? "font-style: italic;" : ""}>
             <span class="cell" style={isProject ? `width: 100%;max-width: ${show.layoutInfo?.name || show.scheduleLength ? 92 : 100}%;` : `width: 75%;min-width: 120px;max-width: calc(100% ${showNumber ? "- var(--number-width)" : ""} - var(--modified-width, 0px));`}>
                 <div class="icon" class:isMedia style="position: relative;">
@@ -336,7 +336,7 @@
         {#if snippet}
             <p class="snippet">{@html highlightText(snippet, searchValue)}</p>
         {/if}
-    </MaterialButton>
+    </Button>
 
     {#if match !== null}
         <span class="match-indicator" data-title="{match}%">

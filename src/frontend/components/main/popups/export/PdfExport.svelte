@@ -3,7 +3,7 @@
     import { translateText } from "../../../../utils/language"
     import Pdf from "../../../export/Pdf.svelte"
     import T from "../../../helpers/T.svelte"
-    import MaterialButton from "../../../inputs/MaterialButton.svelte"
+    import Button from "../../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../../inputs/MaterialCheckbox.svelte"
     import MaterialColorInput from "../../../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
@@ -119,8 +119,8 @@
         </div>
         <div style="display: flex;flex-direction: column;height: 100%;background-color: var(--primary-darkest);">
             <!-- aspect-ratio: 1/1.4142; -->
-            <MaterialButton style="flex: 1;" icon="up" on:click={() => paper.scrollBy(0, -paper.offsetHeight + 9.6)} />
-            <MaterialButton style="flex: 1;" icon="down" on:click={() => paper.scrollBy(0, paper.offsetHeight - 7.001)} />
+            <Button style="flex: 1;" icon="up" on:click={() => paper.scrollBy(0, -paper.offsetHeight + 9.6)} />
+            <Button style="flex: 1;" icon="down" on:click={() => paper.scrollBy(0, paper.offsetHeight - 7.001)} />
         </div>
     </div>
 </div>

@@ -3,7 +3,7 @@
     import { AudioPlayer } from "../../../audio/audioPlayer"
     import { dbToGain, gainToDb, gainToSlider, MAX_DB, MIN_DB, sliderToGain } from "../../../audio/dBUtils"
     import { activeAudioEffects, audioChannelsData, recordingChannels } from "../../../stores"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import NumberInput from "../../inputs/NumberInput.svelte"
     import Slider from "../../inputs/Slider.svelte"
     import AudioMeter from "./AudioMeter.svelte"
@@ -64,11 +64,11 @@
             <span style="position: absolute;right: 0;bottom: 5px;transform: translateX(-5px);pointer-events: none;color: var(--color);font-weight: bold;font-size: 0.7em;">dB</span>
         </div>
 
-        <MaterialButton variant="outlined" style="padding: 8px;" icon={muted ? "muted" : "volume"} title="actions.{muted ? 'unmute' : 'mute'}" red={muted} on:click={() => updateData("isMuted", !muted)} />
+        <Button variant="outline" style="padding: 8px;" icon={muted ? "muted" : "volume"} title="actions.{muted ? 'unmute' : 'mute'}" red={muted} on:click={() => updateData("isMuted", !muted)} />
 
-        <MaterialButton variant="outlined" style="padding: 8px;" icon={isRecording ? "stop" : "record"} title="actions.{isRecording ? 'stop_recording' : 'start_recording'}" red={isRecording} on:click={() => toggleChannelRecording(channelId, label)} />
+        <Button variant="outline" style="padding: 8px;" icon={isRecording ? "stop" : "record"} title="actions.{isRecording ? 'stop_recording' : 'start_recording'}" red={isRecording} on:click={() => toggleChannelRecording(channelId, label)} />
 
-        <MaterialButton variant="outlined" style="padding: 8px;" icon="equalizer" title="tabs.effects" on:click={() => activeAudioEffects.set(channelId)} />
+        <Button variant="outline" style="padding: 8px;" icon="equalizer" title="tabs.effects" on:click={() => activeAudioEffects.set(channelId)} />
     </div>
 
     <!-- <p style="font-size: 1em;margin: 10px;{volumeValue === 1 || volumeValue === 0 ? 'color: var(--secondary);' : ''}">{(volumeValue * 100).toFixed()}<span style="color: var(--text);">%</span></p> -->

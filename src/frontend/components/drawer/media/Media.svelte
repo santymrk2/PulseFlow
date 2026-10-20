@@ -13,7 +13,7 @@
     import { countFolderMediaItems, getExtension, getFileName, getMediaLayerType, getMediaStyle, getMediaType, isMediaExtension, removeExtension } from "../../helpers/media"
     import { getFirstActiveOutput, setOutput } from "../../helpers/output"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialZoom from "../../inputs/MaterialZoom.svelte"
     import { clearBackground, clearSlide } from "../../output/clear"
     import Center from "../../system/Center.svelte"
@@ -507,58 +507,58 @@
 
 {#if active === "inputs"}
     <div class="tabs">
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "cameras"} on:click={() => setSubSubTab("cameras")}>
+        <Button style="flex: 1;" isActive={inputsTab === "cameras"} on:click={() => setSubSubTab("cameras")}>
             <Icon size={1.2} id="camera" white />
             <p><T id="live.cameras" /></p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "screens"} on:click={() => setSubSubTab("screens")}>
+        </Button>
+        <Button style="flex: 1;" isActive={inputsTab === "screens"} on:click={() => setSubSubTab("screens")}>
             <Icon size={1.2} id="screen" white />
             <p><T id="live.screens" /></p>
-        </MaterialButton>
-        <!-- <MaterialButton style="flex: 1;" isActive={inputsTab === "windows"} on:click={() => setSubSubTab("windows")}>
+        </Button>
+        <!-- <Button style="flex: 1;" isActive={inputsTab === "windows"} on:click={() => setSubSubTab("windows")}>
             <Icon size={1.2} id="window" white />
             <p><T id="live.windows" /></p>
-        </MaterialButton> -->
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "ndi"} on:click={() => setSubSubTab("ndi")}>
+        </Button> -->
+        <Button style="flex: 1;" isActive={inputsTab === "ndi"} on:click={() => setSubSubTab("ndi")}>
             <Icon size={1.1} id="ndi" white />
             <p>NDI</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "omt"} on:click={() => setSubSubTab("omt")}>
+        </Button>
+        <Button style="flex: 1;" isActive={inputsTab === "omt"} on:click={() => setSubSubTab("omt")}>
             <Icon size={1.2} id="omt" white />
             <p>OMT</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "blackmagic"} on:click={() => setSubSubTab("blackmagic")}>
+        </Button>
+        <Button style="flex: 1;" isActive={inputsTab === "blackmagic"} on:click={() => setSubSubTab("blackmagic")}>
             <Icon size={1.2} id="blackmagic" white />
             <p>Blackmagic</p>
-        </MaterialButton>
+        </Button>
     </div>
 {:else if active === "online"}
     <div class="tabs">
-        <MaterialButton style="flex: 1;" isActive={onlineTab === "youtube"} on:click={() => setSubSubTab("youtube")}>
+        <Button style="flex: 1;" isActive={onlineTab === "youtube"} on:click={() => setSubSubTab("youtube")}>
             <Icon style={onlineTab === "youtube" ? "fill: #ff0000" : ""} size={1.2} id="youtube" white />
             <p>YouTube</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={onlineTab === "vimeo"} on:click={() => setSubSubTab("vimeo")}>
+        </Button>
+        <Button style="flex: 1;" isActive={onlineTab === "vimeo"} on:click={() => setSubSubTab("vimeo")}>
             <Icon style={onlineTab === "vimeo" ? "fill: #17d5ff" : ""} size={1.2} id="vimeo" white />
             <p>Vimeo</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={onlineTab === "pixabay"} on:click={() => setSubSubTab("pixabay")}>
+        </Button>
+        <Button style="flex: 1;" isActive={onlineTab === "pixabay"} on:click={() => setSubSubTab("pixabay")}>
             <Icon style={onlineTab === "pixabay" ? "fill: #00ab6b" : ""} size={1.2} id="pixabay" box={48} white />
             <p>Pixabay</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={onlineTab === "unsplash"} on:click={() => setSubSubTab("unsplash")}>
+        </Button>
+        <Button style="flex: 1;" isActive={onlineTab === "unsplash"} on:click={() => setSubSubTab("unsplash")}>
             <!-- #111111 -->
             <Icon style={onlineTab === "unsplash" ? "fill: #bbbbbb" : ""} size={1.2} id="unsplash" white />
             <p>Unsplash</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={onlineTab === "canva"} on:click={() => setSubSubTab("canva")}>
+        </Button>
+        <Button style="flex: 1;" isActive={onlineTab === "canva"} on:click={() => setSubSubTab("canva")}>
             {#if onlineTab === "canva"}
                 <CLogo />
             {:else}
                 <Icon size={1.2} id="canva" white />
             {/if}
             <p>Canva</p>
-        </MaterialButton>
+        </Button>
     </div>
 {/if}
 
@@ -639,7 +639,7 @@
 {:else if active === "online"}
     {#if onlineTab === "youtube" || onlineTab === "vimeo"}
         <FloatingInputs onlyOne>
-            <MaterialButton
+            <Button
                 title="groups.toggle_global_group"
                 on:click={() => {
                     popupData.set({ active: onlineTab })
@@ -648,17 +648,17 @@
             >
                 <Icon id="add" />
                 {#if !$labelsDisabled}<T id="settings.add" />{/if}
-            </MaterialButton>
+            </Button>
         </FloatingInputs>
     {:else if onlineTab !== "canva" || $providerConnections.canva}
         <FloatingInputs>
             {#if onlineTab === "pixabay"}
-                <MaterialButton title="media.image" on:click={() => setView("image")}>
+                <Button title="media.image" on:click={() => setView("image")}>
                     <Icon size={1.2} id="image" white={activeView === "video"} />
-                </MaterialButton>
-                <MaterialButton title="media.video" on:click={() => setView("video")}>
+                </Button>
+                <Button title="media.video" on:click={() => setView("video")}>
                     <Icon size={1.2} id="video" white={activeView !== "video"} />
-                </MaterialButton>
+                </Button>
             {/if}
         </FloatingInputs>
     {/if}
@@ -672,9 +672,9 @@
     {#if active !== "all" && active !== "favourites"}
         {#if rootPath !== path}
             <FloatingInputs side="left">
-                <MaterialButton disabled={rootPath === path} title="actions.back" on:click={goBack}>
+                <Button disabled={rootPath === path} title="actions.back" on:click={goBack}>
                     <Icon id="back" white />
-                </MaterialButton>
+                </Button>
 
                 <div class="divider"></div>
 
@@ -689,13 +689,13 @@
             </FloatingInputs>
         {:else if hasAudio.count}
             <FloatingInputs side="left" onlyOne>
-                <MaterialButton on:click={hasAudio.exists ? openAudioFolder : createAudioFolder}>
+                <Button on:click={hasAudio.exists ? openAudioFolder : createAudioFolder}>
                     <Icon id="autofill" />
                     <p>
                         <T id="audio.{hasAudio.exists ? 'open_audio_folder' : 'create_audio_folder'}" />
                         <span style="opacity: 0.5;font-size: 0.8em;margin-left: 5px;">{hasAudio.count}</span>
                     </p>
-                </MaterialButton>
+                </Button>
             </FloatingInputs>
         {/if}
     {/if}

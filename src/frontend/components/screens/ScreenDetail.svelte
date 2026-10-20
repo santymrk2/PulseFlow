@@ -8,7 +8,6 @@
     import { clone } from "../helpers/array"
     import DisplayLayout from "./DisplayLayout.svelte"
     import ScreenOutputOptions from "./ScreenOutputOptions.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
@@ -192,7 +191,7 @@
     <div class="row">
         <MaterialPopupButton label="stage.stage_layout" value={stageId} name={$stageShows[stageId]?.name} icon="stage" popupId="select_stage_layout" on:change={(e) => setStageLayout(e.detail)} />
         {#if $stageShows[stageId]}
-            <MaterialButton title="titlebar.edit" icon="edit" on:click={editStage} />
+            <Button title="titlebar.edit" icon="edit" on:click={editStage} />
         {/if}
     </div>
 {/if}
@@ -235,8 +234,8 @@
             <div>{translateText("screen_config.aspect_ratio")}: {((currentOutput.bounds?.width || 16) / (currentOutput.bounds?.height || 9)).toFixed(2)}{Math.abs((currentOutput.bounds?.width || 16) / (currentOutput.bounds?.height || 9) - 16 / 9) < 0.01 ? " (16:9)" : ""}</div>
         </div>
         <div class="actions">
-            <MaterialButton on:click={() => dispatch("refreshDisplays")}>{translateText("screen_config.identify")}</MaterialButton>
-            <MaterialButton on:click={toggleEnabled}>{translateText(currentOutput.enabled && currentOutput.active ? "screen_config.turn_off" : "screen_config.turn_on")}</MaterialButton>
+            <Button on:click={() => dispatch("refreshDisplays")}>{translateText("screen_config.identify")}</Button>
+            <Button on:click={toggleEnabled}>{translateText(currentOutput.enabled && currentOutput.active ? "screen_config.turn_off" : "screen_config.turn_on")}</Button>
         </div>
         <MaterialToggleSwitch label="settings.invisible_window" checked={!!currentOutput.invisible} defaultValue={false} on:change={(e) => setOutputValue("invisible", e.detail)} />
         <MaterialToggleSwitch label="settings.transparent" checked={!!currentOutput.transparent} defaultValue={false} on:change={(e) => setOutputValue("transparent", e.detail)} />

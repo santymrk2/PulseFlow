@@ -4,7 +4,7 @@
     import { clone } from "../helpers/array"
     import { removeStore, updateStore } from "../helpers/update"
     import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import EditValues from "./tools/EditValues.svelte"
     import { setBoxInputValue } from "./values/boxes"
     import { audioSections } from "./values/media"
@@ -74,7 +74,7 @@
     </div>
 
     <FloatingInputs>
-        <MaterialButton icon="reset" title="actions.reset" on:click={reset} />
+        <Button icon="reset" title="actions.reset" on:click={reset} />
     </FloatingInputs>
 </div>
 

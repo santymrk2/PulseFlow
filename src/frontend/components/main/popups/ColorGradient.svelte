@@ -5,7 +5,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
@@ -83,18 +83,18 @@
             <MaterialColorInput style="min-width: 50%;" label="edit.color" value={colorPart.color} on:input={(e) => (colorPart.color = e.detail)} allowOpacity />
             <MaterialNumberInput label="settings.position" value={pos} min={prevPos} max={nextPos} on:change={(e) => (colorPart.pos = e.detail)} currentProgress={pos} showSlider />
             {#if i > 0}
-                <MaterialButton icon="up" on:click={() => moveUp(i)} />
+                <Button icon="up" on:click={() => moveUp(i)} />
             {/if}
             {#if parsedValue.colors.length > 2}
-                <MaterialButton title={translateText("actions.delete")} on:click={() => deleteColor(i)}>
+                <Button title={translateText("actions.delete")} on:click={() => deleteColor(i)}>
                     <Icon id="delete" white />
-                </MaterialButton>
+                </Button>
             {/if}
         </InputRow>
     {/each}
 
-    <MaterialButton
-        variant="outlined"
+    <Button
+        variant="outline"
         icon="add"
         style="width: 100%;"
         on:click={() => {
@@ -104,12 +104,12 @@
         white
     >
         <T id="settings.add" />
-    </MaterialButton>
+    </Button>
 </div>
 
-<MaterialButton variant="contained" icon="save" on:click={change} style="width: 100%;margin-top: 20px;">
+<Button variant="default" icon="save" on:click={change} style="width: 100%;margin-top: 20px;">
     <T id="actions.save" />
-</MaterialButton>
+</Button>
 
 <style>
     .preview {

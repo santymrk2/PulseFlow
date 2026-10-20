@@ -14,7 +14,7 @@
     import { _show } from "../helpers/shows"
     import { changeSlidesView } from "../../show/slides"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Slider from "../inputs/Slider.svelte"
     import Icon from "../helpers/Icon.svelte"
     import Loader from "../main/Loader.svelte"
@@ -537,9 +537,9 @@
                             <Center absolute>
                                 <span style="opacity: 0.5;font-size: 2em;margin-bottom: 10px;"><T id="empty.slides" /></span>
 
-                                <MaterialButton variant="outlined" disabled={isLocked} icon="add" title="tooltip.project" style="justify-content: start;padding: 8px 14px;" on:click={createSlide}>
+                                <Button variant="outline" disabled={isLocked} icon="add" title="tooltip.project" style="justify-content: start;padding: 8px 14px;" on:click={createSlide}>
                                     <T id="new.slide" />
-                                </MaterialButton>
+                                </Button>
                             </Center>
                         {/if}
                     </div>
@@ -550,14 +550,14 @@
 
     <!-- F11.5 — pie de la grilla: + a la izquierda, vista y slider a la derecha -->
     <div class="gridFooter">
-        <MaterialButton disabled={isLocked} icon="add" title="new.slide" on:click={createSlide}>
+        <Button disabled={isLocked} icon="add" title="new.slide" on:click={createSlide}>
             {#if !$labelsDisabled}<T id="new.slide" />{/if}
-        </MaterialButton>
+        </Button>
 
         <div class="gridFooterRight">
-            <MaterialButton class="context #slideViews" title="show.change_view: show.{$slidesOptions.mode} [Ctrl+Shift+V]" on:click={changeSlidesView}>
+            <Button class="context #slideViews" title="show.change_view: show.{$slidesOptions.mode} [Ctrl+Shift+V]" on:click={changeSlidesView}>
                 <Icon size={1.3} id={$slidesOptions.mode} white={$slidesOptions.mode === "grid"} />
-            </MaterialButton>
+            </Button>
             <Slider style="width: 110px;" bind:value={$slidesOptions.columns} min={2} max={10} invert />
         </div>
     </div>

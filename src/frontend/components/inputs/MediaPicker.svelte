@@ -3,7 +3,7 @@
     import { Main } from "../../../types/IPC/Main"
     import { ToMain } from "../../../types/IPC/ToMain"
     import { destroyMain, receiveToMain, sendMain } from "../../IPC/main"
-    import Button from "./Button.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let id: string
     export let filter: any
@@ -11,7 +11,6 @@
     export let multiple = false
     export let clearOnClick = false
     export let center = true
-    export let dark = true
 
     function pick() {
         if (clearOnClick) {
@@ -32,6 +31,6 @@
     onDestroy(() => destroyMain(listenerId))
 </script>
 
-<Button {title} style={$$props.style || null} on:click={pick} {center} {dark} bold={!title}>
+<Button align={center ? "center" : "start"} {title} style={$$props.style || null} on:click={pick} bold={!title}>
     <slot />
 </Button>

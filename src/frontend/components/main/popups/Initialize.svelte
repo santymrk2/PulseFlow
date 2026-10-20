@@ -9,7 +9,7 @@
     import T from "../../helpers/T.svelte"
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialFolderPicker from "../../inputs/MaterialFolderPicker.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
@@ -50,7 +50,7 @@
     }
 </script>
 
-<MaterialButton style="inset-inline-end: 0;" class="popup-options" icon="import" iconSize={1.3} title="setup.restore_data" on:click={restore} white />
+<Button style="inset-inline-end: 0;" class="popup-options" icon="import" iconSize={1.3} title="setup.restore_data" on:click={restore} white />
 
 <div class="main">
     <p><T id="setup.good_luck" /></p>
@@ -67,17 +67,17 @@
 
     <MaterialFolderPicker PICK_ID="DATA_SHOWS" label={translateText("settings.data_location", $dictionary)} value={$dataPath} on:change={updateDataPath} openButton={false} />
 
-    <MaterialButton variant="outlined" class="start" style="font-size: 1.8em;padding: 15px;margin-top: 20px;" on:click={create} white>
+    <Button variant="outline" class="start" style="font-size: 1.8em;padding: 15px;margin-top: 20px;" on:click={create} white>
         <Icon id="check" size={2.5} />
         <T id="setup.get_started" />
-    </MaterialButton>
+    </Button>
 
     <!-- <HRule title="setup.or" />
 
-    <MaterialButton variant="outlined" style="padding: 8px;" on:click={restore} white>
+    <Button variant="outline" style="padding: 8px;" on:click={restore} white>
         <Icon id="import" style="margin-inline-start: 0.5em;" size={1.2} white />
         <T id="setup.restore_data" />
-    </MaterialButton> -->
+    </Button> -->
 </div>
 
 <style>

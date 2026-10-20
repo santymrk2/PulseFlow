@@ -6,7 +6,7 @@
     import { translateText } from "../../../../utils/language"
     import { clone, keysToID } from "../../../helpers/array"
     import InputRow from "../../../input/InputRow.svelte"
-    import MaterialButton from "../../../inputs/MaterialButton.svelte"
+    import Button from "../../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
     import MaterialTextInput from "../../../inputs/MaterialTextInput.svelte"
 
@@ -182,8 +182,8 @@
 
     {#if selectedPreset === "custom"}
         <MaterialTextInput label="inputs.name" value={customName} on:change={(e) => (customName = e.detail)} />
-        <MaterialButton icon="save" title="actions.save" on:click={saveCustomPreset} />
+        <Button icon="save" title="actions.save" on:click={saveCustomPreset} />
     {:else if selectedPreset !== "default"}
-        <MaterialButton icon="delete" title="actions.delete" on:click={deletePreset} white />
+        <Button icon="delete" title="actions.delete" on:click={deletePreset} white />
     {/if}
 </InputRow>

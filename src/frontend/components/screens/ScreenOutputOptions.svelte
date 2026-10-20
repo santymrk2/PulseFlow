@@ -16,7 +16,7 @@
     import { hasStreamableDestination } from "../helpers/rtmpDestinations"
     import InputRow from "../input/InputRow.svelte"
     import Title from "../input/Title.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../inputs/MaterialCheckbox.svelte"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
     import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
@@ -411,9 +411,9 @@
 
     {#if currentOutput?.enabled && currentOutput?.webrtcData?.url}
         <div style="padding-bottom: 10px;">
-            <MaterialButton variant="outlined" icon={currentOutput.webrtcData?.streaming ? "stop" : "record"} style="width: 100%; justify-content: center; {currentOutput.webrtcData?.streaming ? 'background: #b60707 !important;' : ''}" on:click={() => (currentOutput?.webrtcData?.streaming ? stopStreaming(currentOutput.id, true) : startStreaming(currentOutput?.id))} white>
+            <Button variant="outline" icon={currentOutput.webrtcData?.streaming ? "stop" : "record"} style="width: 100%; justify-content: center; {currentOutput.webrtcData?.streaming ? 'background: #b60707 !important;' : ''}" on:click={() => (currentOutput?.webrtcData?.streaming ? stopStreaming(currentOutput.id, true) : startStreaming(currentOutput?.id))} white>
                 {translateText(currentOutput.webrtcData?.streaming ? "output.stop_streaming" : "output.start_streaming")}
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
 {/if}
@@ -432,7 +432,7 @@
 
     <InputRow style="margin-bottom: 10px;">
         <MaterialDropdown label="settings.video_encoder" value={currentOutput.rtmpData?.encoder || "auto"} defaultValue="auto" options={encoderOptions} on:change={(e) => updateRtmpData(e.detail, "encoder")} />
-        <!-- <MaterialButton variant="outlined" icon="refresh" title="Re-detect encoders" disabled={detectingEncoders} on:click={() => loadEncoders(true)} /> -->
+        <!-- <Button variant="outline" icon="refresh" title="Re-detect encoders" disabled={detectingEncoders} on:click={() => loadEncoders(true)} /> -->
     </InputRow>
 
     <div class="destinations">
@@ -449,7 +449,7 @@
                     <InputRow>
                         <MaterialCheckbox label="settings.enabled" checked={destination.enabled} defaultValue={true} style="flex: 1;" on:change={(e) => updateDestination(destination.id, "enabled", e.detail)} />
                         {#if !destination.enabled || !destination.url}
-                            <MaterialButton variant="outlined" icon="delete" title="settings.remove" on:click={() => removeDestination(destination.id)} red />
+                            <Button variant="outline" icon="delete" title="settings.remove" on:click={() => removeDestination(destination.id)} red />
                         {/if}
                     </InputRow>
                 {/if}
@@ -470,16 +470,16 @@
             </div>
         {/each}
 
-        <MaterialButton variant="outlined" icon="add" disabled={(currentOutput.rtmpData?.destinations || []).some((a) => !a.url)} on:click={() => addDestination()}>
+        <Button variant="outline" icon="add" disabled={(currentOutput.rtmpData?.destinations || []).some((a) => !a.url)} on:click={() => addDestination()}>
             {translateText("settings.add_destination")}
-        </MaterialButton>
+        </Button>
     </div>
 
     {#if currentOutput?.enabled && hasStreamableDestination(currentOutput.rtmpData)}
         <div style="padding: 10px 0;">
-            <MaterialButton variant="outlined" icon={currentOutput.rtmpData?.streaming ? "stop" : "record"} style="width: 100%; justify-content: center; {currentOutput.rtmpData?.streaming ? 'background: #b60707 !important;' : ''}" on:click={() => (currentOutput?.rtmpData?.streaming ? stopRtmpStreaming(currentOutput.id, true) : startRtmpStreaming(currentOutput?.id))} white>
+            <Button variant="outline" icon={currentOutput.rtmpData?.streaming ? "stop" : "record"} style="width: 100%; justify-content: center; {currentOutput.rtmpData?.streaming ? 'background: #b60707 !important;' : ''}" on:click={() => (currentOutput?.rtmpData?.streaming ? stopRtmpStreaming(currentOutput.id, true) : startRtmpStreaming(currentOutput?.id))} white>
                 {translateText(currentOutput.rtmpData?.streaming ? "output.stop_streaming" : "output.start_streaming")}
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
 {/if}

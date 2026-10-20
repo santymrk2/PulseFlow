@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import { dictionary } from "../../stores"
     import { pasteText } from "../helpers/caretHelper"
 
@@ -91,25 +91,25 @@
 
     <div class="remove">
         {#if autofill}
-            <MaterialButton on:click={() => updateValue(autofill)} title="meta.autofill" white>
+            <Button on:click={() => updateValue(autofill)} title="meta.autofill" white>
                 <Icon id="autofill" white />
-            </MaterialButton>
+            </Button>
         {/if}
 
         {#if defaultValue !== null}
             {#if value !== defaultValue}
-                <MaterialButton on:click={reset} title="actions.reset" white>
+                <Button on:click={reset} title="actions.reset" white>
                     <Icon id="reset" white />
-                </MaterialButton>
+                </Button>
             {:else if resetFromValue !== null}
-                <MaterialButton on:click={undoReset} title="actions.undo" white>
+                <Button on:click={undoReset} title="actions.undo" white>
                     <Icon id="undo" white />
-                </MaterialButton>
+                </Button>
             {/if}
         {/if}
 
         {#if type === "password" && (!pasteBtn || value)}
-            <MaterialButton
+            <Button
                 on:click={(e) => {
                     showText = !showText
                     const input = e.detail.target?.closest(".textfield")?.querySelector("input")
@@ -119,9 +119,9 @@
                 white
             >
                 <Icon id={showText ? "eye" : "hide"} white />
-            </MaterialButton>
+            </Button>
         {:else if pasteBtn && !value && !disabled}
-            <MaterialButton
+            <Button
                 on:click={(e) => {
                     const textInput = e.detail.target?.closest(".textfield")?.querySelector("input")
                     pasteText(textInput)
@@ -131,7 +131,7 @@
                 white
             >
                 <Icon id="paste" white />
-            </MaterialButton>
+            </Button>
         {/if}
     </div>
 </div>

@@ -11,7 +11,7 @@
     import { getFilters, getStyles } from "../../helpers/style"
     import Input from "../../input/Input.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
     import MaterialFontDropdown from "../../inputs/MaterialFontDropdown.svelte"
     import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
@@ -351,7 +351,7 @@
         <div class="section" style={expanded ? "margin-bottom: 3px;" : ""}>
             {#if id !== "default"}
                 <div class="title">
-                    <MaterialButton style="width: 100%;{hasChanged ? 'padding: 4px 12px;' : 'padding: 8px 12px;'}" disabled={hasChanged || section.alwaysOpen} on:click={() => toggleSection(id)}>
+                    <Button style="width: 100%;{hasChanged ? 'padding: 4px 12px;' : 'padding: 8px 12px;'}" disabled={hasChanged || section.alwaysOpen} on:click={() => toggleSection(id)}>
                         <span style="display: flex;gap: 8px;align-items: center;">
                             {#if id === "CSS"}
                                 <Icon id="code" white />
@@ -363,14 +363,14 @@
                         </span>
 
                         {#if hasChanged}
-                            <MaterialButton title="actions.reset" style="pointer-events: all;padding: 4px;" on:click={() => resetSection(id)}>
+                            <Button title="actions.reset" style="pointer-events: all;padding: 4px;" on:click={() => resetSection(id)}>
                                 <Icon id="reset" size={0.8} white />
-                            </MaterialButton>
+                            </Button>
                         {:else if !section.alwaysOpen}
                             <!-- paste / edit -->
                             <Icon id={section.expandAutoValue && !expanded ? "add" : "arrow_back_modern"} class="arrow {expanded ? 'open' : ''}" size={section.expandAutoValue && !expanded ? 0.9 : 0.6} style="opacity: 0.5;" white />
                         {/if}
-                    </MaterialButton>
+                    </Button>
                 </div>
             {/if}
 
@@ -386,15 +386,15 @@
                                 {#if input.type === "fontDropdown"}
                                     <MaterialFontDropdown label={values.label} {value} style={values.style} fontStyleValue={input.styleValue} {customLocalFonts} on:change={(e) => changed(e, input)} on:fontStyle={(e) => changed(e, { ...input, key: "font" })} enableFontStyles />
                                 {:else if input.type === "toggle"}
-                                    <MaterialButton style="min-width: 50px;flex: 1;" title={values.label} on:click={() => toggle(input)}>
+                                    <Button style="min-width: 50px;flex: 1;" title={values.label} on:click={() => toggle(input)}>
                                         <Icon id={values.icon} size={1.2} white />
                                         <div class="highlight" class:active={value.includes(input.value)}></div>
-                                    </MaterialButton>
+                                    </Button>
                                 {:else if input.type === "radio"}
-                                    <MaterialButton style="min-width: 50px;flex: 1;" title={values.label} on:click={() => radio(input)}>
+                                    <Button style="min-width: 50px;flex: 1;" title={values.label} on:click={() => radio(input)}>
                                         <Icon id={values.icon} size={1.2} white />
                                         <div class="highlight radio" class:active={value === input.value}></div>
-                                    </MaterialButton>
+                                    </Button>
                                 {:else if input.type === "textarea"}
                                     <MaterialTextarea label={values.label} {value} on:change={(e) => changed(e, input, id)} />
                                 {:else if input.type === "media"}

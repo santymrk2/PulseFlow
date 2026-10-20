@@ -6,7 +6,7 @@
     import { mediaOptions, openedMediaFolders } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import Media from "./MediaCard.svelte"
 
@@ -150,9 +150,9 @@
 <div class="content-library">
     {#if showBackButton}
         <FloatingInputs side="left">
-            <MaterialButton title="actions.back" on:click={navigateBack}>
+            <Button title="actions.back" on:click={navigateBack}>
                 <Icon id="back" white />
-            </MaterialButton>
+            </Button>
 
             <div class="divider"></div>
 

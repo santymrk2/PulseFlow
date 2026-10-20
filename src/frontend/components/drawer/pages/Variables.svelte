@@ -8,8 +8,7 @@
     import { getSetChars, setRandomValue } from "../../helpers/randomValue"
     import T from "../../helpers/T.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import NumberInput from "../../inputs/NumberInput.svelte"
     import TextInput from "../../inputs/TextInput.svelte"
@@ -74,7 +73,7 @@
                 <SelectElem style="width: calc(25% - 5px);" id="variable" data={variable} draggable>
                     <div class="variable numberBox context #variable{isReadOnly ? '_readonly' : ''}">
                         <div class="reset">
-                            <Button title={translateText("actions.reset")} on:click={() => updateVariable(defaultValue, variable.id, "number")}>
+                            <Button align="start" title={translateText("actions.reset")} on:click={() => updateVariable(defaultValue, variable.id, "number")}>
                                 <Icon id="reset" white />
                             </Button>
                         </div>
@@ -95,10 +94,10 @@
                         </span>
 
                         <div class="buttons">
-                            <Button id="decrement" title={translateText("actions.decrement")} on:click={() => updateVariable(Math.max(min, number - 1 * stepSize), variable.id, "number")} center style="flex: 1;" disabled={number <= min} dark>
+                            <Button id="decrement" title={translateText("actions.decrement")} on:click={() => updateVariable(Math.max(min, number - 1 * stepSize), variable.id, "number")} style="flex: 1;" disabled={number <= min}>
                                 <Icon id="remove" size={2.8} white />
                             </Button>
-                            <Button id="increment" title={translateText("actions.increment")} on:click={() => updateVariable(Math.min(max, number + 1 * stepSize), variable.id, "number")} center style="flex: 1;" disabled={number >= max} dark>
+                            <Button id="increment" title={translateText("actions.increment")} on:click={() => updateVariable(Math.min(max, number + 1 * stepSize), variable.id, "number")} style="flex: 1;" disabled={number >= max}>
                                 <Icon id="add" size={2.8} white />
                             </Button>
                         </div>
@@ -134,7 +133,7 @@
                 <SelectElem style="min-width: calc(25% - 5px);" id="variable" data={variable} draggable>
                     <div class="variable numberBox context #variable{readOnly ? '_readonly' : ''}">
                         <div class="reset">
-                            <Button disabled={!variable.setLog?.length || $randomNumberVariable[variable.id]} title={translateText("actions.reset")} on:click={() => resetVariable(variable.id)}>
+                            <Button align="start" disabled={!variable.setLog?.length || $randomNumberVariable[variable.id]} title={translateText("actions.reset")} on:click={() => resetVariable(variable.id)}>
                                 <Icon id="reset" white />
                             </Button>
                         </div>
@@ -161,7 +160,7 @@
                         </span>
 
                         <div class="buttons">
-                            <Button disabled={$randomNumberVariable[variable.id]} id="randomize" title={translateText("variables.randomize")} on:click={() => setRandomValue(variable.id)} center style="flex: 1;" dark>
+                            <Button disabled={$randomNumberVariable[variable.id]} id="randomize" title={translateText("variables.randomize")} on:click={() => setRandomValue(variable.id)} style="flex: 1;">
                                 <Icon id="shuffle_play" size={2.8} white />
                             </Button>
                         </div>
@@ -237,11 +236,11 @@
                                 <span style="font-size: 0.8em;opacity: 0.5;">/{variable.textSets?.length || 1}</span>
                             </p>
 
-                            <Button disabled={activeSet === 0} on:click={() => updateVariable(Math.max(activeSet - 1, 0), variable.id, "activeTextSet")}>
+                            <Button align="start" disabled={activeSet === 0} on:click={() => updateVariable(Math.max(activeSet - 1, 0), variable.id, "activeTextSet")}>
                                 <Icon id="back" right />
                                 <T id="media.previous" />
                             </Button>
-                            <Button disabled={activeSet === (variable.textSets?.length ?? 1) - 1} on:click={() => updateVariable(Math.min(activeSet + 1, (variable.textSets?.length ?? 1) - 1), variable.id, "activeTextSet")}>
+                            <Button align="start" disabled={activeSet === (variable.textSets?.length ?? 1) - 1} on:click={() => updateVariable(Math.min(activeSet + 1, (variable.textSets?.length ?? 1) - 1), variable.id, "activeTextSet")}>
                                 <Icon id="arrow_forward" right />
                                 <T id="media.next" />
                             </Button>
@@ -258,7 +257,7 @@
 </div>
 
 <FloatingInputs onlyOne>
-    <MaterialButton
+    <Button
         disabled={readOnly}
         icon="add"
         title="new.variable"
@@ -268,7 +267,7 @@
         }}
     >
         {#if !$labelsDisabled}<T id="new.variable" />{/if}
-    </MaterialButton>
+    </Button>
 </FloatingInputs>
 
 <style>

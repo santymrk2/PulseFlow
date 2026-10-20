@@ -22,8 +22,7 @@
     import { getLayoutRef } from "../helpers/show"
     import { updateOut } from "../helpers/showActions"
     import T from "../helpers/T.svelte"
-    import Button from "../inputs/Button.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Slider from "../inputs/Slider.svelte"
     import Resizeable from "../system/Resizeable.svelte"
     import Info from "./info/Info.svelte"
@@ -320,9 +319,9 @@
             {#each tabs as tab, i}
                 {#if $drawerTabsData[tab.id]?.enabled !== false && getAccess(tab.id).global !== "none" && (!$focusMode || !hiddenInFocusMode.includes(tab.id))}
                     <!-- overflow: unset; -->
-                    <MaterialButton id={tab.id} style="border-radius: var(--radius) var(--radius) 0 0;border-bottom: 2px solid var(--primary);padding: 0 0.75em;height: 100%;" class="context #drawer_top" title="<b>{tab.name.split('.')[0]}.{tab.name.split('.')[1]}</b>{tab.title ? `\n${tab.title}` : ''} [Ctrl+{i + 1}]" isActive={activeTab === tab.id} on:click={() => openDrawerTab(tab)} on:dblclick={closeDrawer}>
+                    <Button id={tab.id} style="border-radius: var(--radius) var(--radius) 0 0;border-bottom: 2px solid var(--primary);padding: 0 0.75em;height: 100%;" class="context #drawer_top" title="<b>{tab.name.split('.')[0]}.{tab.name.split('.')[1]}</b>{tab.title ? `\n${tab.title}` : ''} [Ctrl+{i + 1}]" isActive={activeTab === tab.id} on:click={() => openDrawerTab(tab)} on:dblclick={closeDrawer}>
                         <Icon id={tab.icon} size={1} white={activeTab === tab.id} />
-                    </MaterialButton>
+                    </Button>
                 {/if}
             {/each}
         </span>
@@ -350,14 +349,14 @@
     </div>
 
     <div class="footer">
-        <MaterialButton disabled={!showAddButton} on:click={addClick} title="settings.add">
+        <Button disabled={!showAddButton} on:click={addClick} title="settings.add">
             <Icon id="add" size={1.2} white />
-        </MaterialButton>
+        </Button>
 
         <div class="searchBox">
             <input bind:this={searchElem} class:hidden={!searchActive && !searchValue.length} class="search edit drawer_search" type="text" placeholder={translateText("ui.filter", $dictionary)} bind:value={searchValue} on:input={search} on:keydown={searchKeydown} use:selectTextOnFocus />
             {#if !searchActive && !searchValue.length}
-                <Button class="search" style="border-bottom: 2px solid var(--secondary);" on:click={() => (searchActive = true)} title={translateText("tabs.search_tip [Ctrl+F]")} bold={false}>
+                <Button align="start" class="search" style="border-bottom: 2px solid var(--secondary);" on:click={() => (searchActive = true)} title={translateText("tabs.search_tip [Ctrl+F]")} bold={false}>
                     <Icon id="search" size={1.4} white right={!$labelsDisabled && !$focusMode} />
                     {#if !$labelsDisabled && !$focusMode}<p style="opacity: 0.8;font-size: 1.1em;"><T id="ui.filter" /></p>{/if}
                 </Button>
@@ -367,13 +366,14 @@
                         <Icon id="autofill" white />
                     </div>
                     <div class="clearSearch options" on:mousedown|stopPropagation on:mouseup|stopPropagation>
-                        <Button style="height: 100%;" title={translateText("edit.options")} on:click={() => activePopup.set("drawer_search_options")}>
+                        <Button align="start" style="height: 100%;" title={translateText("edit.options")} on:click={() => activePopup.set("drawer_search_options")}>
                             <Icon id="options" white={!$scriptureSettings.enterSwapped} />
                         </Button>
                     </div>
                 {/if}
                 <div class="clearSearch">
                     <Button
+                        align="start"
                         style="height: 100%;"
                         title={translateText("clear.search")}
                         on:click={() => {
@@ -389,9 +389,9 @@
 
         <div class="footerRight">
             {#if showViewToggle}
-                <MaterialButton on:click={toggleView} title="show.{$mediaOptions.mode}">
+                <Button on:click={toggleView} title="show.{$mediaOptions.mode}">
                     <Icon size={1.2} id={$mediaOptions.mode} white />
-                </MaterialButton>
+                </Button>
             {/if}
             {#if showSizeSlider}
                 <Slider style="width: 110px;" bind:value={$mediaOptions.columns} min={2} max={10} invert />

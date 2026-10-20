@@ -3,7 +3,7 @@
     import { registerPopupSubmit } from "../../../utils/popup"
     import { history } from "../../helpers/history"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     registerPopupSubmit(deleteSelected)
 
@@ -25,6 +25,6 @@
     {/each}
 </ul>
 
-<MaterialButton variant="contained" icon="delete" info={showsToDelete.length.toString()} on:click={deleteSelected} white>
+<Button variant="default" icon="delete" info={showsToDelete.length.toString()} on:click={deleteSelected} white>
     <T id="actions.delete" />
-</MaterialButton>
+</Button>

@@ -2,7 +2,7 @@
     import { createEventDispatcher, onMount } from "svelte"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let value = 0
     export let defaultValue: number | null = null
@@ -184,25 +184,25 @@
     {#if defaultValue !== null}
         <div class="remove">
             {#if value !== defaultValue}
-                <MaterialButton {disabled} on:click={reset} title="actions.reset" white>
+                <Button {disabled} on:click={reset} title="actions.reset" white>
                     <Icon id="reset" white />
-                </MaterialButton>
+                </Button>
             {:else if resetFromValue !== null}
-                <MaterialButton {disabled} on:click={undoReset} title="actions.undo" white>
+                <Button {disabled} on:click={undoReset} title="actions.undo" white>
                     <Icon id="undo" white />
-                </MaterialButton>
+                </Button>
             {/if}
         </div>
     {/if}
 
     {#if enableKeyframe}
         <div class="remove">
-            <MaterialButton style="width: 20px;height: 20px;padding: 0;" on:click={addKeyframe} title="timeline.add_keyframe">
+            <Button style="width: 20px;height: 20px;padding: 0;" on:click={addKeyframe} title="timeline.add_keyframe">
                 <!-- diamond -->
                 <svg width="10" height="10" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 2L22 12L12 22L2 12L12 2Z" fill={keyframeActive ? "var(--secondary)" : "currentColor"} />
                 </svg>
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
 </div>

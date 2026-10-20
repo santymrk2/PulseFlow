@@ -12,7 +12,7 @@
     import { getStyles } from "../helpers/style"
     import T from "../helpers/T.svelte"
     import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialZoom from "../inputs/MaterialZoom.svelte"
     import { getStyleResolution } from "../slide/getStyleResolution"
     import Zoomed from "../slide/Zoomed.svelte"
@@ -181,10 +181,10 @@
     {#if edit && stageLayoutId}
         <FloatingInputs side="left" onlyOne>
             {#if !hasStageOutput}
-                <MaterialButton title="stage.create_stage_output" on:click={createStageOutput}>
+                <Button title="stage.create_stage_output" on:click={createStageOutput}>
                     <Icon id="autofill" />
                     <T id="stage.create_stage_output" />
-                </MaterialButton>
+                </Button>
             {/if}
 
             <MaterialZoom hidden={!hasStageOutput} columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />

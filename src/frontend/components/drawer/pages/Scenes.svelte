@@ -8,7 +8,7 @@
     import { findMatchingOut, getResolution, startScene } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import DropArea from "../../system/DropArea.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
@@ -128,9 +128,9 @@
 </div>
 
 <FloatingInputs onlyOne>
-    <MaterialButton disabled={readOnly} icon="add" title="new.scene" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "scene" } })}>
+    <Button disabled={readOnly} icon="add" title="new.scene" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "scene" } })}>
         {#if !$labelsDisabled}<T id="new.scene" />{/if}
-    </MaterialButton>
+    </Button>
 </FloatingInputs>
 
 <style>

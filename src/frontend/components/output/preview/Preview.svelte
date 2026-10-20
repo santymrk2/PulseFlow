@@ -14,8 +14,7 @@
     import { getFewestOutputLines, getItemWithMostLines, playNextGroup, playPreviousGroup, updateOut } from "../../helpers/showActions"
     import { _show } from "../../helpers/shows"
     import { newSlideTimer } from "../../helpers/tick"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import ShowActions from "../ShowActions.svelte"
     import MediaControls from "../tools/MediaControls.svelte"
@@ -247,7 +246,7 @@
 <div id="previewArea" class="main">
     {#if enablePreview}
         <div class="top">
-            <MaterialButton class="hide" icon="hide" style="z-index: 2;" title="preview._hide_preview" on:click={() => (enablePreview = false)} />
+            <Button class="hide" icon="hide" style="z-index: 2;" title="preview._hide_preview" on:click={() => (enablePreview = false)} />
             <!-- disable before hiding: disableTransitions={!enablePreview} -->
             <MultiOutputs />
             <div class="preview-meter">
@@ -255,7 +254,7 @@
             </div>
         </div>
     {:else}
-        <Button on:click={() => (enablePreview = true)} style="width: 100%;" center dark>
+        <Button on:click={() => (enablePreview = true)} style="width: 100%;">
             <Icon id="eye" right />
             <T id="preview.show_preview" />
         </Button>

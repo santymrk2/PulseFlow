@@ -7,7 +7,7 @@
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
     import { getFileName } from "../helpers/media"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let label: string
     export let value: string | undefined
@@ -102,9 +102,9 @@
 
     {#if allowEmpty && value}
         <div class="remove" style={showThumbnail && value ? "right: 56px;" : ""}>
-            <MaterialButton on:click={() => dispatch("change", "")} title="clear.general" white>
+            <Button on:click={() => dispatch("change", "")} title="clear.general" white>
                 <Icon id="close" white />
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
 </div>

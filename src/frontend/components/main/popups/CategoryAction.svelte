@@ -3,7 +3,7 @@
     import { actions, activePopup, categories, popupData } from "../../../stores"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import Tip from "../Tip.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import InputRow from "../../input/InputRow.svelte"
 
     let selectedCategory = $popupData?.id
@@ -39,6 +39,6 @@
 <InputRow>
     <MaterialDropdown label="midi.start_action" options={actionOptions.map((a) => ({ label: a.name, value: a.id }))} value={currentAction} allowEmpty on:change={(e) => updateValue(e.detail)} />
     {#if currentAction && $actions[currentAction]}
-        <MaterialButton title="titlebar.edit" icon="edit" on:click={editAction} />
+        <Button title="titlebar.edit" icon="edit" on:click={editAction} />
     {/if}
 </InputRow>

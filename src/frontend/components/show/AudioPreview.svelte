@@ -7,7 +7,7 @@
     import { triggerClickOnEnterSpace } from "../../utils/clickable"
     import Icon from "../helpers/Icon.svelte"
     import { joinTime, secondsToTime } from "../helpers/time"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Slider from "../inputs/Slider.svelte"
 
     export let active: any
@@ -168,7 +168,7 @@
 
 <div id={path} class="main media context #audio_preview" bind:this={mediaElem}>
     <div class="buttons">
-        <MaterialButton
+        <Button
             disabled={$outLocked || isMic}
             title={paused ? "media.play" : "media.pause"}
             on:click={() => {
@@ -177,8 +177,8 @@
             }}
         >
             <Icon id={paused ? "play" : "pause"} white={paused} size={1.2} />
-        </MaterialButton>
-        <MaterialButton
+        </Button>
+        <Button
             disabled={!playing.audio}
             title="media.stop"
             on:click={() => {
@@ -187,7 +187,7 @@
             }}
         >
             <Icon id={"stop"} white={paused} size={1.2} />
-        </MaterialButton>
+        </Button>
 
         <div style="display: flex;align-items: center;gap: 10px;flex: 1;margin: 0 10px;font-size: 1.1em;">
             {#if sliderValue !== null}
@@ -211,25 +211,25 @@
             </span>
         </div>
 
-        <MaterialButton
+        <Button
             title="media.back10"
             on:click={() => {
                 setTime(null, Math.max(currentTime - 10, 0.01))
             }}
         >
             <Icon id="back_10" white size={1.3} />
-        </MaterialButton>
-        <MaterialButton
+        </Button>
+        <Button
             title="media.forward10"
             on:click={() => {
                 setTime(null, Math.min(currentTime + 10, duration - 0.1))
             }}
         >
             <Icon id="forward_10" white size={1.3} />
-        </MaterialButton>
+        </Button>
 
         {#if !isMic}
-            <MaterialButton
+            <Button
                 title={"media._loop" + ($media[path]?.loop ? ": settings.enabled" : "")}
                 on:click={() => {
                     let loop = !$media[path]?.loop
@@ -242,7 +242,7 @@
                 }}
             >
                 <Icon id="loop" white={!$media[path]?.loop} size={1.2} />
-            </MaterialButton>
+            </Button>
         {/if}
 
         {#if $media[path]?.volume !== undefined && $media[path]?.volume < 1}

@@ -4,7 +4,7 @@
     import { translateText } from "../../../utils/language"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { fetchAndImportIcs, getIcsCalendars, isCalendarHidden, toggleCalendarHidden, type IcsCalendar } from "./calendars"
 
     let syncingCalendars: Record<string, boolean> = {}
@@ -52,14 +52,14 @@
 
                     <div class="calendar-actions">
                         {#if cal.url}
-                            <MaterialButton title="cloud.sync" disabled={syncingCalendars[cal.id]} style="padding: 10px;" on:click={() => syncCalendar(cal)}>
+                            <Button title="cloud.sync" disabled={syncingCalendars[cal.id]} style="padding: 10px;" on:click={() => syncCalendar(cal)}>
                                 <Icon id="refresh" class={syncingCalendars[cal.id] ? "spinning" : ""} white />
-                            </MaterialButton>
+                            </Button>
                         {/if}
 
-                        <MaterialButton title={isHidden ? "profile.show" : "profile.hide"} style="padding: 10px;" on:click={() => toggleCalendarHidden(cal.id)}>
+                        <Button title={isHidden ? "profile.show" : "profile.hide"} style="padding: 10px;" on:click={() => toggleCalendarHidden(cal.id)}>
                             <Icon id={isHidden ? "hide" : "eye"} white={isHidden} />
-                        </MaterialButton>
+                        </Button>
                     </div>
                 </div>
             {/each}

@@ -5,7 +5,7 @@
     import { activePlaylist, activeShow, media, outLocked, playingAudio } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
     import { joinTime, secondsToTime } from "../../helpers/time"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     import SelectElem from "../../system/SelectElem.svelte"
 
@@ -22,21 +22,21 @@
 
 <SelectElem id="audio" data={{ path, name, index }} {fileOver} borders={playlist ? "edges" : "all"} trigger={playlist ? "column" : null} draggable>
     <Button
+        align="start"
         class="context #audio_button{playlist ? '_playlist' : ''}"
-        {outline}
-        active={$activeShow?.id === path}
-        border
+        showOutline={outline}
+        isActive={$activeShow?.id === path}
         style="width: 100%;"
         title={path}
         bold={false}
         on:click={(e) => {
-            if ($outLocked || e.ctrlKey || e.metaKey || e.shiftKey) return
+            if ($outLocked || e.detail.ctrl || e.detail.shift) return
 
             if (playlist) AudioPlaylist.start(active || "", path, index, { pauseIfPlaying: true })
-            else AudioPlayer.start(path, { name }, { playMultiple: e.altKey })
+            else AudioPlayer.start(path, { name }, { playMultiple: e.detail.alt })
         }}
         on:dblclick={(e) => {
-            if (e.ctrlKey || e.metaKey || e.shiftKey) return
+            if (e.detail.ctrl || e.detail.shift) return
             addProjectItem({ id: path, name, type: "audio" })
         }}
     >

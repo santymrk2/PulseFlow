@@ -4,7 +4,7 @@
     import { translateText } from "../../../utils/language"
     import AudioMeter from "../../drawer/audio/AudioMeter.svelte"
     import Icon from "../../helpers/Icon.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
     export let id: string
@@ -159,7 +159,7 @@
 
     <div class="card-content">
         {#if hasSubNodes && type !== "output_window" && type !== "network"}
-            <MaterialButton variant="outlined" icon={isExpanded ? "expand" : "next"} style="padding: 5px;" on:click={onToggleExpand} />
+            <Button variant="outline" icon={isExpanded ? "expand" : "next"} style="padding: 5px;" on:click={onToggleExpand} />
         {/if}
 
         {#if isChannel}
@@ -220,8 +220,8 @@
         {/if}
 
         {#if type === "icecast" || isChannel || (type === "mic" && isSubNode)}
-            <MaterialButton
-                variant="outlined"
+            <Button
+                variant="outline"
                 icon="options"
                 style="padding: 5px;"
                 title="popup.node_options"

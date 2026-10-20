@@ -8,7 +8,7 @@
     import { newDropdown } from "../edit/scripts/edit"
     import Icon from "../helpers/Icon.svelte"
     import InputRow from "../input/InputRow.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialTextInput from "./MaterialTextInput.svelte"
 
     export let label: string
@@ -317,21 +317,21 @@
 
     {#if allowEmpty && hasValue}
         <div class="remove">
-            <MaterialButton on:click={() => selectOption(null, "")} title="clear.general" white>
+            <Button on:click={() => selectOption(null, "")} title="clear.general" white>
                 <Icon id="close" white />
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
     {#if defaultValue !== null}
         <div class="remove">
             {#if value !== defaultValue}
-                <MaterialButton on:click={reset} title="actions.reset" white>
+                <Button on:click={reset} title="actions.reset" white>
                     <Icon id="reset" white />
-                </MaterialButton>
+                </Button>
             {:else if resetFromValue}
-                <MaterialButton on:click={undoReset} title="actions.undo" white>
+                <Button on:click={undoReset} title="actions.undo" white>
                     <Icon id="undo" white />
-                </MaterialButton>
+                </Button>
             {/if}
         </div>
     {/if}
@@ -351,7 +351,7 @@
                         {/if}
 
                         {#if allowDeleting && option.value !== value}
-                            <MaterialButton
+                            <Button
                                 label="actions.delete"
                                 class="delete-button"
                                 style="position: absolute;right: 2px;width: 40px;"
@@ -394,7 +394,7 @@
                         {/if}
 
                         {#if allowDeleting && option.value !== value}
-                            <MaterialButton
+                            <Button
                                 label="actions.delete"
                                 class="delete-button"
                                 style="position: absolute;right: 2px;width: 40px;"
@@ -426,9 +426,9 @@
         <div class="dropdown">
             <InputRow>
                 <MaterialTextInput label="inputs.name" value={newValue} autofocus on:input={(e) => (newValue = e.detail)} on:keydown={keydown} />
-                <MaterialButton disabled={!newValue.length} title={addNew} on:click={createNewEvent}>
+                <Button disabled={!newValue.length} title={addNew} on:click={createNewEvent}>
                     <Icon id="check" size={1.2} white />
-                </MaterialButton>
+                </Button>
             </InputRow>
         </div>
     {/if}

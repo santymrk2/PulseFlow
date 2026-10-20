@@ -12,7 +12,7 @@
     import Icon from "../helpers/Icon.svelte"
     import { getFirstActiveOutput } from "../helpers/output"
     import { getLayoutRef } from "../helpers/show"
-    import Button from "../inputs/Button.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let slide: Slide | null = null
     export let columns: number
@@ -150,11 +150,11 @@
     {#if shortcut}
         <div class="button white" style="border: 1px solid var(--secondary);">
             {#if shortcut.type === "slide"}
-                <Button style="padding: 3px;" title={translateText("actions.remove: actions.play_with_shortcut")} {zoom} on:click={() => changeAction("slide_shortcut")} redHover>
+                <Button align="start" style="padding: 3px;" title={translateText("actions.remove: actions.play_with_shortcut")} on:click={() => changeAction("slide_shortcut")} redHover>
                     <p style="font-weight: bold;text-transform: capitalize;padding: 0 4px;font-size: 1.2em;">{shortcut.value}</p>
                 </Button>
             {:else}
-                <Button style="padding: 1px;" {zoom}>
+                <Button align="start" style="padding: 1px;">
                     <p style="font-weight: bold;text-transform: capitalize;padding: 0 3px;font-size: 0.8em;">{shortcut.value}</p>
                 </Button>
             {/if}
@@ -164,7 +164,7 @@
     {#each actionsList as action}
         {#if actions[action.id]}
             <div class="button white">
-                <Button style="padding: 3px;" redHover title={translateText(`actions.remove: ${action.title}`)} {zoom} on:click={() => changeAction(action.id)}>
+                <Button align="start" style="padding: 3px;" redHover title={translateText(`actions.remove: ${action.title}`)} on:click={() => changeAction(action.id)}>
                     <Icon id={action.icon} size={0.9} white />
                 </Button>
             </div>
@@ -182,7 +182,7 @@
             {@const customName = getActionName(actionId, actionValue) || (action.name !== translateText(customData.name) ? action.name : "")}
 
             <div class="button {customData.red ? '' : 'white'}">
-                <Button style="padding: 3px;{getCustomStyle(specialData)}" redHover title="{translateText('actions.remove')}: <b>{translateText(customData.name)}</b>{action.name && action.name !== translateText(customData.name) ? `\n${action.name}` : ''}" {zoom} on:click={(e) => deleteSlideAction(e, action.id || actionId)}>
+                <Button align="start" style="padding: 3px;{getCustomStyle(specialData)}" redHover title="{translateText('actions.remove')}: <b>{translateText(customData.name)}</b>{action.name && action.name !== translateText(customData.name) ? `\n${action.name}` : ''}" on:click={(e) => deleteSlideAction(e, action.id || actionId)}>
                     {#if customName}<p>{customName}</p>{/if}
                     <Icon id={customData.icon || "actions"} size={0.9} white />
                 </Button>

@@ -1,3 +1,7 @@
+/* Orden de capas, declarado acá por ser la primera hoja que carga: así no depende del orden en que se empaquetan
+   los CSS de los componentes (que usan `@layer components`). Mismo orden que src/frontend/app.css. */
+@layer theme, base, components, utilities;
+
 /* custom CMG Sans */
 @font-face {
     font-family: "CMGSans";

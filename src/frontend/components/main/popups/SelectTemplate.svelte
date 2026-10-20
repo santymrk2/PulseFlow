@@ -8,7 +8,7 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { getResolution } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
     import Center from "../../system/Center.svelte"
@@ -114,10 +114,13 @@
             loaded = true
         } else {
             if (timeout) clearTimeout(timeout)
-            timeout = setTimeout(() => {
-                const batch = lazyLoader === 0 ? 4 : Math.min(32, lazyLoader * 2)
-                lazyLoader += batch
-            }, lazyLoader === 0 ? 60 : 30)
+            timeout = setTimeout(
+                () => {
+                    const batch = lazyLoader === 0 ? 4 : Math.min(32, lazyLoader * 2)
+                    lazyLoader += batch
+                },
+                lazyLoader === 0 ? 60 : 30
+            )
         }
     }
 
@@ -147,7 +150,7 @@
 </script>
 
 {#if revert}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => activePopup.set(revert)} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => activePopup.set(revert)} />
 {/if}
 
 <MaterialTextInput label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />

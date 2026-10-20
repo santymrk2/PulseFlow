@@ -1,6 +1,6 @@
 <script lang="ts">
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let arrow = false
 
@@ -11,13 +11,13 @@
     <slot />
 
     {#if arrow}
-        <MaterialButton style="padding: 0.75rem;min-width: 50px;" title={open ? "actions.close" : "main.open"} on:click={() => (open = !open)}>
+        <Button style="padding: 0.75rem;min-width: 50px;" title={open ? "actions.close" : "main.open"} on:click={() => (open = !open)}>
             {#if open}
                 <Icon class="submenu_open" id="arrow_down" size={1.4} />
             {:else}
                 <Icon class="submenu_open" id="arrow_right" size={1.4} white />
             {/if}
-        </MaterialButton>
+        </Button>
     {/if}
 </div>
 

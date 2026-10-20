@@ -7,7 +7,7 @@
     import { getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
     import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
@@ -86,7 +86,7 @@
                 allowEmpty
             />
             {#if bgImage}
-                <MaterialButton title="titlebar.edit" icon="edit" on:click={editBackgroundImage} />
+                <Button title="titlebar.edit" icon="edit" on:click={editBackgroundImage} />
             {/if}
         </InputRow>
 
@@ -107,7 +107,7 @@
                 allowEmpty
             />
             {#if settings.template && $templates[settings.template]}
-                <MaterialButton title="titlebar.edit" icon="edit" on:click={() => editTemplate(settings.template || "")} />
+                <Button title="titlebar.edit" icon="edit" on:click={() => editTemplate(settings.template || "")} />
             {/if}
         </InputRow>
     </div>

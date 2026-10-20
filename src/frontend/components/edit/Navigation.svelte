@@ -10,8 +10,7 @@
     import { getLayoutRef } from "../helpers/show"
     import { _show } from "../helpers/shows"
     import FloatingInputs from "../input/FloatingInputs.svelte"
-    import Button from "../inputs/Button.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Center from "../system/Center.svelte"
     import Slides from "./Slides.svelte"
 
@@ -130,7 +129,7 @@
 <svelte:window on:keydown={handleKeyDown} />
 
 {#if $focusMode}
-    <Button on:click={() => activePage.set("show")} center dark>
+    <Button on:click={() => activePage.set("show")}>
         <Icon id="back" right />
         <T id="actions.back" />
     </Button>
@@ -145,10 +144,10 @@
     {#if $editHistory.length}
         <div class="edited">
             {#each clonedHistory as edited}
-                <MaterialButton style="width: 100%;padding: 0.15rem 0.65rem;font-weight: normal;justify-content: left;" on:click={() => openRecent(edited)} isActive={$activeEdit.id ? $activeEdit.id === edited.id : currentShowId === edited.id} tab>
+                <Button style="width: 100%;padding: 0.15rem 0.65rem;font-weight: normal;justify-content: left;" on:click={() => openRecent(edited)} isActive={$activeEdit.id ? $activeEdit.id === edited.id : currentShowId === edited.id} tab>
                     <Icon id={edited.icon} />
                     <p style="margin: 3px 5px;">{edited.name || "—"}</p>
-                </MaterialButton>
+                </Button>
             {/each}
         </div>
     {:else}
@@ -164,9 +163,9 @@
     <Slides />
 
     <FloatingInputs onlyOne>
-        <MaterialButton disabled={isLocked} icon="add" title="new.slide" on:click={addSlide}>
+        <Button disabled={isLocked} icon="add" title="new.slide" on:click={addSlide}>
             {#if !$labelsDisabled}<T id="new.slide" />{/if}
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {:else}
     <Center faded>

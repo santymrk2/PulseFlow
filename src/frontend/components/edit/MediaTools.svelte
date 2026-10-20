@@ -6,7 +6,7 @@
     import { getFirstActiveOutput, setOutput } from "../helpers/output"
     import { removeStore, updateStore } from "../helpers/update"
     import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Tabs from "../main/Tabs.svelte"
     import { VideoPlayer } from "../media/video/videoPlayer"
     import { addFilterString } from "./scripts/textStyle"
@@ -119,7 +119,7 @@
     </div>
 
     <FloatingInputs>
-        <MaterialButton icon="reset" title="actions.reset" on:click={reset} />
+        <Button icon="reset" title="actions.reset" on:click={reset} />
     </FloatingInputs>
 </div>
 

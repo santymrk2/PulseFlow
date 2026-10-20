@@ -3,7 +3,7 @@
     import { redo, undo } from "../../helpers/history"
     import T from "../../helpers/T.svelte"
     import { getDateAndTimeString, timeAgo } from "../../helpers/time"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
 
     const INITIAL: any = { id: "initial", time: 0 }
@@ -108,32 +108,32 @@
     }
 </script>
 
-<MaterialButton class="popup-options" icon="delete" title="actions.clear_history" disabled={!rHistory.length && uHistory.length < 2} on:click={clearHistory} white />
+<Button class="popup-options" icon="delete" title="actions.clear_history" disabled={!rHistory.length && uHistory.length < 2} on:click={clearHistory} white />
 
 <main class="history">
     {#if rHistory.length || uHistory.length}
         <div class="list">
             {#each rHistory as item, i}
                 {@const itemId = getItemId(item)}
-                <MaterialButton style="opacity: 0.5;padding: 10px 20px;" on:click={() => callRedo(i)}>
+                <Button style="opacity: 0.5;padding: 10px 20px;" on:click={() => callRedo(i)}>
                     <p>
                         <span style={historyIdToString[itemId] ? "" : "opacity: 0.3;font-style: italic;"}>
                             {historyIdToString[itemId] || itemId}
                         </span>
                         <span class="time" data-title={getDateAndTimeString(item.time || 0)}>{timeAgo(item.time || 0)}</span>
                     </p>
-                </MaterialButton>
+                </Button>
             {/each}
             {#each uHistory as item, i}
                 {@const itemId = getItemId(item)}
-                <MaterialButton style="padding: 10px 20px;" on:click={() => callUndo(i - 1)} showOutline={i === 0}>
+                <Button style="padding: 10px 20px;" on:click={() => callUndo(i - 1)} showOutline={i === 0}>
                     <p>
                         <span style={item.version || historyIdToString[itemId] ? "" : "opacity: 0.3;font-style: italic;"}>
                             {historyIdToString[itemId] || itemId}
                         </span>
                         <span class="time" data-title={getDateAndTimeString(item.time || 0)}>{timeAgo(item.time || 0)}</span>
                     </p>
-                </MaterialButton>
+                </Button>
             {/each}
         </div>
     {:else}

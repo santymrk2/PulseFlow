@@ -1,7 +1,7 @@
 <script lang="ts">
     import { activePopup, globalRegexes, popupData } from "../../../stores"
     import HRule from "../../input/HRule.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
 
     const regexId = $popupData.id
@@ -150,7 +150,7 @@
     }
 </script>
 
-<MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={goBack} />
+<Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={goBack} />
 
 <!-- inputs.name -->
 <MaterialTextInput label="midi.description" value={label} on:change={(e) => update("label", e.detail)} />

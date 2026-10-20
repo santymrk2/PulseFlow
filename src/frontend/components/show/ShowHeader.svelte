@@ -10,7 +10,7 @@
     import { allOutputsHasStyleTemplate, getFirstActiveOutput } from "../helpers/output"
     import { removeTemplatesFromShow } from "../helpers/show"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let showId: string
     export let hideOptions = false
@@ -114,8 +114,8 @@
         {#if currentShow}
             <span class="count">{slideCount} {slideCount === 1 ? "diapositiva" : "diapositivas"}</span>
 
-            <MaterialButton
-                variant="text"
+            <Button
+                variant="ghost"
                 style="padding: 0.3em 0.6em;"
                 title="new.slide"
                 on:click={() => {
@@ -128,10 +128,10 @@
             >
                 <Icon id="add" size={0.9} white right />
                 <T id="new.slide" />
-            </MaterialButton>
+            </Button>
 
-            <MaterialButton
-                variant="contained"
+            <Button
+                variant="default"
                 style="padding: 0.3em 0.6em;"
                 title="preview._start"
                 disabled={$outLocked || !currentShow}
@@ -144,36 +144,36 @@
             >
                 <Icon id="play" size={0.9} white right />
                 Proyectar
-            </MaterialButton>
+            </Button>
         {/if}
 
         <!-- template icon -->
         {#if enableStylePreview}
-            <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;" title="formats.template: <b>{$templates[outputStyleTemplate]?.name || ''}</b>" on:click={() => activePopup.set("template_info")}>
+            <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;" title="formats.template: <b>{$templates[outputStyleTemplate]?.name || ''}</b>" on:click={() => activePopup.set("template_info")}>
                 <Icon size={0.8} id="styles" white />
-            </MaterialButton>
+            </Button>
         {:else if enableShowTemplate}
-            <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;" class="context #show_template" title="formats.template: <b>{$templates[showTemplateId]?.name || 'info.template'}</b>" on:click={() => activePopup.set("template_info")}>
+            <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;" class="context #show_template" title="formats.template: <b>{$templates[showTemplateId]?.name || 'info.template'}</b>" on:click={() => activePopup.set("template_info")}>
                 <Icon size={0.8} id="templates" white />
-            </MaterialButton>
+            </Button>
         {/if}
 
         <!-- zoom icon ? -->
-        <!-- <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;" title="actions.zoom" on:click={() => }>
+        <!-- <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;" title="actions.zoom" on:click={() => }>
             <Icon size={0.9} id="zoomIn" white />
-        </MaterialButton> -->
+        </Button> -->
 
         {#if !hideOptions}
             <!-- show more -->
-            <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;border-bottom-right-radius: 10px;{showDropdown ? '' : 'opacity: 0.8;'}" title="create_show.more_options" icon="more" on:click={() => (showDropdown = !showDropdown)} white={!showDropdown}>
+            <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;border-bottom-right-radius: 10px;{showDropdown ? '' : 'opacity: 0.8;'}" title="create_show.more_options" icon="more" on:click={() => (showDropdown = !showDropdown)} white={!showDropdown}>
                 <!-- prevent force "white" -->
                 <span style="display: none;"></span>
-            </MaterialButton>
+            </Button>
         {/if}
 
         {#if showDropdown && currentShow}
             <div class="showDropdown" transition:fade={{ duration: 100 }} role="none" on:click={() => (showDropdown = false)}>
-                <MaterialButton title="tooltip.notes" on:click={() => showNotesActive.set(!$showNotesActive)}>
+                <Button title="tooltip.notes" on:click={() => showNotesActive.set(!$showNotesActive)}>
                     <Icon id="notes" white={!$showNotesActive} />
 
                     {#if $showNotesActive}
@@ -181,11 +181,11 @@
                     {/if}
 
                     <p><T id="tools.notes" /></p>
-                </MaterialButton>
+                </Button>
 
                 <div class="DIVIDER"></div>
 
-                <MaterialButton
+                <Button
                     title="timeline.toggle_timeline"
                     on:click={() => {
                         special.update((a) => ({ ...a, timelineActive: !a.timelineActive }))
@@ -199,11 +199,11 @@
                     {/if}
 
                     <p><T id="timeline.toggle_timeline" /></p>
-                </MaterialButton>
+                </Button>
 
                 <div class="DIVIDER"></div>
 
-                <MaterialButton title="context.lockForChanges" on:click={toggleShowLock}>
+                <Button title="context.lockForChanges" on:click={toggleShowLock}>
                     <Icon id="lock" white={!currentShow.locked} />
 
                     {#if currentShow.locked}
@@ -211,7 +211,7 @@
                     {/if}
 
                     <p><T id="context.lockForChanges" /></p>
-                </MaterialButton>
+                </Button>
             </div>
         {/if}
     </div>

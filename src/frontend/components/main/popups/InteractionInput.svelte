@@ -4,7 +4,7 @@
     import { clone } from "../../helpers/array"
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
@@ -94,7 +94,7 @@
         }}
     />
 {:else if !existing && !chosenInputType}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />
 
     <MaterialMultiChoice
         options={inputTypes[currentInput.type]}
@@ -105,7 +105,7 @@
     />
 {:else}
     {#if !existing}
-        <MaterialButton
+        <Button
             class="popup-back"
             icon="back"
             iconSize={1.3}
@@ -123,7 +123,7 @@
         <div class="options">
             {#each currentInput.options || [] as option, i}
                 <InputRow>
-                    <MaterialButton
+                    <Button
                         title={option?.isAnswer ? "interaction.mark_as_incorrect" : "interaction.mark_as_correct"}
                         icon={option?.isAnswer ? "check" : "close"}
                         iconSize={1.2}
@@ -160,7 +160,7 @@
                         }}
                         autofocus={!!currentInput.question && !option?.value}
                     />
-                    <MaterialButton
+                    <Button
                         icon="delete"
                         title="actions.remove"
                         on:click={() => {
@@ -174,8 +174,8 @@
                 </InputRow>
             {/each}
 
-            <MaterialButton
-                variant="outlined"
+            <Button
+                variant="outline"
                 icon="add"
                 disabled={currentInput.options && currentInput.options.length > 0 && currentInput.options.some((a) => !a.value)}
                 on:click={() => {
@@ -187,7 +187,7 @@
                 }}
             >
                 <T id="interaction.add_option" />
-            </MaterialButton>
+            </Button>
 
             {#if currentInput.options && currentInput.options.length > 1}
                 <MaterialToggleSwitch label="variables.randomize" style="margin-top: 10px;" checked={currentInput.randomize} defaultValue={false} on:change={(e) => updateValue(e.detail, "randomize")} />

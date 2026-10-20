@@ -8,7 +8,7 @@
     import T from "../../helpers/T.svelte"
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
     import Center from "../../system/Center.svelte"
@@ -132,9 +132,9 @@
                     <p style={font.style}>{font.label}</p>
                 </div>
 
-                <MaterialButton title={isHidden ? "profile.show" : "profile.hide"} style="padding: 0.75rem;min-width: 50px;" on:click={() => toggleHiddenSystemFont(font.label)}>
+                <Button title={isHidden ? "profile.show" : "profile.hide"} style="padding: 0.75rem;min-width: 50px;" on:click={() => toggleHiddenSystemFont(font.label)}>
                     <Icon id={isHidden ? "hide" : "eye"} white={isHidden} />
-                </MaterialButton>
+                </Button>
             </InputRow>
         {/each}
     </svelte:fragment>
@@ -151,7 +151,7 @@
                 <p style="font-size: 0.7em;opacity: 0.7;max-width: 65%;">{font.path || "Google Fonts"}</p>
             </div>
 
-            <MaterialButton icon="delete" title="actions.delete" disabled={addingFont} style="padding: 0.75rem;min-width: 50px;" on:click={() => removeFont(index)} />
+            <Button icon="delete" title="actions.delete" disabled={addingFont} style="padding: 0.75rem;min-width: 50px;" on:click={() => removeFont(index)} />
         </InputRow>
     {/each}
 {:else if !newFontInput}
@@ -168,13 +168,13 @@
     <InputRow>
         <MaterialFilePicker label="scripture.local (.woff/.ttf/.otf)" title="actions.import" value="" icon="text" filter={{ name: "Font File", extensions: ["woff", "woff2", "ttf", "otf"] }} disabled={!isValidFamily || addingFont} style="width: initial;flex: 1;" on:change={(e) => addLocalFont(e.detail)} />
 
-        <MaterialButton icon="web" title="Import from Google Fonts" disabled={!isValidFamily || addingFont} on:click={addGoogleFont}>Google Fonts</MaterialButton>
+        <Button icon="web" title="Import from Google Fonts" disabled={!isValidFamily || addingFont} on:click={addGoogleFont}>Google Fonts</Button>
     </InputRow>
 {/if}
 
-<MaterialButton variant="outlined" style="width: 100%;margin-top: 10px;" icon="add" disabled={newFontInput} on:click={() => (newFontInput = true)}>
+<Button variant="outline" style="width: 100%;margin-top: 10px;" icon="add" disabled={newFontInput} on:click={() => (newFontInput = true)}>
     <T id="settings.add" />
-</MaterialButton>
+</Button>
 
 <style>
     .name {

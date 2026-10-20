@@ -3,7 +3,7 @@
     import { activePopup, guideActive, isDev, special } from "../../stores"
     import Icon from "../helpers/Icon.svelte"
     import Link from "../inputs/Link.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import { Main } from "../../../types/IPC/Main"
     import { sendMain } from "../../IPC/main"
 
@@ -63,15 +63,15 @@
             {message}
 
             {#if activeMessage === "donate"}
-                <MaterialButton variant="outlined" style="margin-left: 10px;padding: 2px 10px;" on:click={donate}>
+                <Button variant="outline" style="margin-left: 10px;padding: 2px 10px;" on:click={donate}>
                     <span style="font-weight: 600;">Donate</span>
                     <Icon id="launch" white />
-                </MaterialButton>
+                </Button>
             {/if}
         </div>
 
         <div class="close">
-            <MaterialButton style="padding: 6px;" title="actions.close" icon="close" on:click={close} />
+            <Button style="padding: 6px;" title="actions.close" icon="close" on:click={close} />
         </div>
     </section>
 {/if}

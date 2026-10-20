@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher, onDestroy } from "svelte"
     import Icon from "../helpers/Icon.svelte"
-    import Button from "./Button.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import TextInput from "./TextInput.svelte"
 
     export let value: number
@@ -96,7 +96,7 @@
 
 <span class="numberInput" {style} on:mousedown={mousedown} on:wheel={wheel} class:disabled class:outline>
     {#if buttons}
-        <Button id="decrement" on:click={(e) => decrement(e.ctrlKey || e.metaKey ? step * 10 : step)} center style={"flex: 1;"} disabled={disabled || Number(value) <= min}>
+        <Button id="decrement" on:click={(e) => decrement(e.detail.ctrl ? step * 10 : step)} style={"flex: 1;"} disabled={disabled || Number(value) <= min}>
             <Icon id="remove" size={1.2} white />
         </Button>
     {/if}
@@ -112,7 +112,7 @@
     </span>
 
     {#if buttons}
-        <Button id="increment" on:click={(e) => increment(e.ctrlKey || e.metaKey ? step * 10 : step)} center style={"flex: 1;"} disabled={disabled || Number(value) >= max}>
+        <Button id="increment" on:click={(e) => increment(e.detail.ctrl ? step * 10 : step)} style={"flex: 1;"} disabled={disabled || Number(value) >= max}>
             <Icon id="add" size={1.2} white />
         </Button>
     {/if}

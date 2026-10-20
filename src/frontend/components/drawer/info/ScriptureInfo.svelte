@@ -14,7 +14,7 @@
     import { getAllNormalOutputs, getFirstActiveOutput } from "../../helpers/output"
     import InputRow from "../../input/InputRow.svelte"
     import Link from "../../inputs/Link.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
@@ -256,7 +256,7 @@
             <InputRow style={templateBackground ? "" : "margin-bottom: 10px;"}>
                 <MaterialPopupButton id="scripture_drawer" label="info.template" disabled={!!styleScriptureTemplate} value={templateId} name={template?.name} popupId="select_template" icon="templates" on:change={(e) => update("template", e.detail)} allowEmpty={!isDefault} />
                 {#if (templateId && template) || styleScriptureTemplate}
-                    <MaterialButton title="titlebar.edit" icon="edit" on:click={editTemplate} />
+                    <Button title="titlebar.edit" icon="edit" on:click={editTemplate} />
                 {/if}
             </InputRow>
 
@@ -273,19 +273,19 @@
                 </p>
             {/if}
             {#if useOldSystem}
-                <MaterialButton variant="outlined" style="margin-bottom: 10px;" on:click={convertToNew}>
+                <Button variant="outline" style="margin-bottom: 10px;" on:click={convertToNew}>
                     {#if usingDefault}
                         Convert template to new system
                     {:else}
                         Use default template
                     {/if}
-                </MaterialButton>
+                </Button>
             {/if}
 
             <!-- info={selectedVerses[0]?.length > 1 ? `${Math.ceil(selectedVerses[0].length / $scriptureSettings.versesPerSlide)}` : ""} -->
-            <MaterialButton variant="outlined" icon="slide" title="new.show_convert [Ctrl+N]" on:click={createScriptureShow}>
+            <Button variant="outline" icon="slide" title="new.show_convert [Ctrl+N]" on:click={createScriptureShow}>
                 <T id="new.show_convert" />
-            </MaterialButton>
+            </Button>
         {/if}
     </div>
 </div>

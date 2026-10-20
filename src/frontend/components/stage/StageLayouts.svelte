@@ -6,7 +6,7 @@
     import { history } from "../helpers/history"
     import T from "../helpers/T.svelte"
     import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Autoscroll from "../system/Autoscroll.svelte"
     import Center from "../system/Center.svelte"
     import SkeletonStageSlide from "./SkeletonStageSlide.svelte"
@@ -35,10 +35,13 @@
             loaded = true
         } else {
             if (timeout) clearTimeout(timeout)
-            timeout = setTimeout(() => {
-                const batch = lazyLoader === 0 ? 2 : Math.min(16, lazyLoader * 2)
-                lazyLoader += batch
-            }, lazyLoader === 0 ? 80 : 40)
+            timeout = setTimeout(
+                () => {
+                    const batch = lazyLoader === 0 ? 2 : Math.min(16, lazyLoader * 2)
+                    lazyLoader += batch
+                },
+                lazyLoader === 0 ? 80 : 40
+            )
         }
     }
 
@@ -128,9 +131,9 @@
     {/if}
 
     <FloatingInputs onlyOne>
-        <MaterialButton disabled={readOnly} icon="add" title="show.new_layout" on:click={addSlide}>
+        <Button disabled={readOnly} icon="add" title="show.new_layout" on:click={addSlide}>
             {#if !$labelsDisabled}<T id="show.new_layout" />{/if}
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 </div>
 

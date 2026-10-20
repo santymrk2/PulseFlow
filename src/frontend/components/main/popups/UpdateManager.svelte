@@ -6,7 +6,7 @@
     import { getUpdateData } from "../../../utils/checkForUpdates"
     import Loader from "../Loader.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
@@ -84,9 +84,9 @@
 {/if}
 
 {#if hasUpdate}
-    <MaterialButton variant="contained" style="margin-top: 10px;" icon="download" on:click={downloadLatest}>
+    <Button variant="default" style="margin-top: 10px;" icon="download" on:click={downloadLatest}>
         <T id="about.download_latest" />
-    </MaterialButton>
+    </Button>
 {:else if !loading && !hasError}
     <div class="versions">
         <span class="label" style="color: var(--secondary);font-weight: bold;">✓</span>

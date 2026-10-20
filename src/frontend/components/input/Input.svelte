@@ -4,7 +4,7 @@
     import { activeEdit, activePage, activePopup, special } from "../../stores"
     import { translateText } from "../../utils/language"
     import { select } from "../helpers/select"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../inputs/MaterialCheckbox.svelte"
     import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
@@ -29,7 +29,7 @@
 
     <!-- custom edit -->
     {#if input.label === "items.timer" && input.value}
-        <MaterialButton
+        <Button
             icon="edit"
             on:click={() => {
                 select("timer", { id: input.value })

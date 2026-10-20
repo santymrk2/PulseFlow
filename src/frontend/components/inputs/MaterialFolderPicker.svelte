@@ -7,7 +7,7 @@
     import { activePopup, alertMessage, os } from "../../stores"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let label: string
     export let value: string | undefined
@@ -76,16 +76,16 @@
 
     {#if openButton && value}
         <div class="button">
-            <MaterialButton on:click={() => sendMain(Main.OPEN_FOLDER_PATH, value)} title="main.system_open" white>
+            <Button on:click={() => sendMain(Main.OPEN_FOLDER_PATH, value)} title="main.system_open" white>
                 <Icon id="launch" white />
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
     {#if allowEmpty && value}
         <div class="button remove">
-            <MaterialButton on:click={() => dispatch("change", "")} title="clear.general" white>
+            <Button on:click={() => dispatch("change", "")} title="clear.general" white>
                 <Icon id="close" white />
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
 </div>

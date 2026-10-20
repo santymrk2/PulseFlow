@@ -13,7 +13,7 @@
     import { history } from "../../helpers/history"
     import { changeTime } from "../../helpers/time"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialDatePicker from "../../inputs/MaterialDatePicker.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
@@ -331,14 +331,14 @@
         <MaterialTextInput label="calendar.notes" value={editEvent.notes || ""} on:input={(e) => (editEvent.notes = e.detail)} />
     {/if}
 
-    <MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
+    <Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 
     {#if showMore}
         <MaterialToggleSwitch label="calendar.time" style="margin-top: 10px;" checked={editEvent.time} defaultValue={true} on:change={(e) => (editEvent.time = e.detail)} />
     {/if}
 {:else if selectedType === "action"}
     {#if actionSelector !== null}
-        <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (actionSelector = null)} />
+        <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (actionSelector = null)} />
 
         <CreateAction
             actionId={actionData?.id || ""}
@@ -402,7 +402,7 @@
     {/if}
 
     <InputRow style="margin-top: 20px;">
-        <MaterialButton variant="contained" style="flex: 1;{cantSave ? '' : 'background-color: var(--secondary) !important;'}" disabled={cantSave} on:click={save}>
+        <Button variant="default" style="flex: 1;{cantSave ? '' : 'background-color: var(--secondary) !important;'}" disabled={cantSave} on:click={save}>
             {#if $eventEdit}
                 <Icon id="save" white />
                 <T id="actions.save" />
@@ -410,12 +410,12 @@
                 <Icon id="add" white />
                 <T id="timer.create" />
             {/if}
-        </MaterialButton>
+        </Button>
         {#if editEvent.group}
-            <MaterialButton variant="contained" style="flex: 2;margin-left: 5px;{cantSave ? '' : 'background-color: var(--secondary) !important;'}" disabled={cantSave} on:click={saveAll}>
+            <Button variant="default" style="flex: 2;margin-left: 5px;{cantSave ? '' : 'background-color: var(--secondary) !important;'}" disabled={cantSave} on:click={saveAll}>
                 <Icon id="save" white />
                 <T id="calendar.save_all" />
-            </MaterialButton>
+            </Button>
         {/if}
     </InputRow>
 {/if}

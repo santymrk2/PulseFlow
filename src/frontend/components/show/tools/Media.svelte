@@ -17,7 +17,7 @@
     import { encodeFilePath, getExtension, getMedia, getMediaStyle, getMediaType, isMediaExtension, mediaSize } from "../../helpers/media"
     import { findMatchingOut, getActiveOutputs, getCurrentStyle, getResolution, setOutput } from "../../helpers/output"
     import { _show } from "../../helpers/shows"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import HoverButton from "../../inputs/HoverButton.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
@@ -227,10 +227,10 @@
                         {/if}
 
                         {#if background.type === "video"}
-                            <Button style="flex: 0;padding: 14px 5px;" center title={translateText("media._loop" + (background.loop !== false ? ": settings.enabled" : ""))} on:click={() => setBG(background.id || "", "loop", background.loop === false)} dark>
+                            <Button style="flex: 0;padding: 14px 5px;" title={translateText("media._loop" + (background.loop !== false ? ": settings.enabled" : ""))} on:click={() => setBG(background.id || "", "loop", background.loop === false)}>
                                 <Icon id="loop" white={background.loop === false} size={1.2} />
                             </Button>
-                            <Button style="flex: 0;padding: 14px 5px;" center title={translateText(background.muted !== false ? "actions.unmute" : "actions.mute")} on:click={() => setBG(background.id || "", "muted", background.muted === false)} dark>
+                            <Button style="flex: 0;padding: 14px 5px;" title={translateText(background.muted !== false ? "actions.unmute" : "actions.mute")} on:click={() => setBG(background.id || "", "muted", background.muted === false)}>
                                 <Icon id={background.muted !== false ? "muted" : "volume"} white={background.muted !== false} size={1.2} />
                             </Button>
                         {/if}
@@ -307,12 +307,13 @@
                 {@const outline = !!$playingAudio[file.path || ""]}
                 <SelectElem id="audio" data={{ path: file.path, name: file.name }} draggable>
                     <Button
+                        align="start"
                         class="context #show_audio"
                         on:click={() => {
                             if ($outLocked) return
                             AudioPlayer.start(file.path || "", { name: file.name || "" })
                         }}
-                        {outline}
+                        showOutline={outline}
                         style="padding: 8px;width: 100%;"
                         title={file.path}
                         bold={false}
@@ -334,7 +335,7 @@
                 {@const muted = !$playingAudio[mic.id]}
 
                 <SelectElem id="microphone" data={{ id: mic.id, type: "microphone", name: mic.name }} draggable>
-                    <Button style="padding: 8px;width: 100%;" bold={false} on:click={() => AudioMicrophone.start(mic.id, { name: mic.name }, { pauseIfPlaying: true })}>
+                    <Button align="start" style="padding: 8px;width: 100%;" bold={false} on:click={() => AudioMicrophone.start(mic.id, { name: mic.name }, { pauseIfPlaying: true })}>
                         <Icon id="microphone" white={muted} right />
                         <p style="width: 100%;text-align: start;">{mic.name}</p>
 
@@ -356,7 +357,7 @@
 
                 <SelectElem id="action" data={action} draggable>
                     <!-- class="context #action" -->
-                    <Button on:click={() => runAction(action, { source: "click" })} style="padding: 8px;width: 100%;" title={action.name} bold={false}>
+                    <Button align="start" on:click={() => runAction(action, { source: "click" })} style="padding: 8px;width: 100%;" title={action.name} bold={false}>
                         <Icon id={customData.icon || "actions"} size={1.1} style="margin-inline-start: 0.5em;" right />
                         {#key customData.name}
                             <p>

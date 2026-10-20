@@ -4,7 +4,7 @@
     import { translateText } from "../../../utils/language"
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
@@ -55,16 +55,16 @@
     let showMore = false
 </script>
 
-<MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
+<Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 
 <div class="grid">
     {#each ratios as [width, height]}
         {@const isActive = !active.outputResolutionAsRatio && active.width === width && active.height === height}
-        <MaterialButton disabled={active.outputResolutionAsRatio} showOutline={isActive} {isActive} on:click={() => setAspectRatio({ ...active, width, height })}>
+        <Button disabled={active.outputResolutionAsRatio} showOutline={isActive} {isActive} on:click={() => setAspectRatio({ ...active, width, height })}>
             <div class="box" style="padding: 0;aspect-ratio: {width}/{height};">
                 <p>{width}:{height}</p>
             </div>
-        </MaterialButton>
+        </Button>
     {/each}
 </div>
 

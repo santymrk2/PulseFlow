@@ -7,7 +7,7 @@
     import T from "../../helpers/T.svelte"
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
@@ -258,7 +258,7 @@
     />
 {:else}
     {#if !existing}
-        <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />
+        <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />
     {/if}
 
     <MaterialTextInput label="inputs.name" style="margin-bottom: 10px;" disabled={!created && !!currentVariable.name} value={currentVariable.name} on:change={(e) => updateValue(e.detail, "name")} autofocus={!currentVariable.name} on:keydown={nameKeydown} />
@@ -272,7 +272,7 @@
 
         <!-- WIP custom step sizes "1,8:2,10:2" ?? -->
     {:else if currentVariable.type === "random_number"}
-        <MaterialButton class="popup-options {showMoreRN ? 'active' : ''}" icon="options" iconSize={1.3} title={showMoreRN ? "actions.close" : "create_show.more_options"} on:click={() => (showMoreRN = !showMoreRN)} white />
+        <Button class="popup-options {showMoreRN ? 'active' : ''}" icon="options" iconSize={1.3} title={showMoreRN ? "actions.close" : "create_show.more_options"} on:click={() => (showMoreRN = !showMoreRN)} white />
 
         {#if showMoreRN}
             <MaterialToggleSwitch label="edit.each_number_once" checked={currentVariable.eachNumberOnce} defaultValue={false} on:change={(e) => updateValue(e.detail, "eachNumberOnce")} />
@@ -304,15 +304,15 @@
                 <MaterialNumberInput label="variables.maximum" style="flex: 1;" value={set.maxValue ?? DEFAULT_SET.maxValue} step={1} min={0} max={maxAbsolute} on:change={(e) => updateSet(i, e.detail, "maxValue")} />
                 <!-- {#if i > 0 && i === (currentVariable.sets?.length || 0) - 1} -->
                 {#if (currentVariable.sets?.length || 1) > 1}
-                    <MaterialButton icon="duplicate" title="actions.duplicate" on:click={() => duplicateSet(i)} />
-                    <MaterialButton icon="delete" title="actions.delete" on:click={() => removeSet(i)} red />
+                    <Button icon="duplicate" title="actions.duplicate" on:click={() => duplicateSet(i)} />
+                    <Button icon="delete" title="actions.delete" on:click={() => removeSet(i)} red />
                 {/if}
             </InputRow>
         {/each}
 
         <!-- {#if (currentVariable.sets?.length || 0) < 2 || currentVariable.sets?.[currentVariable.sets?.length - 1]?.name} -->
-        <MaterialButton
-            variant="outlined"
+        <Button
+            variant="outline"
             icon="add"
             on:click={() => {
                 if (!currentVariable.sets) updateSet(0, DEFAULT_SET.minValue, "minValue")
@@ -320,7 +320,7 @@
             }}
         >
             <T id="variables.add_set" />
-        </MaterialButton>
+        </Button>
         <!-- {/if} -->
 
         {#if currentVariable.setLog?.length}
@@ -336,7 +336,7 @@
             </div>
         {/if}
     {:else if currentVariable.type === "text_set"}
-        <MaterialButton class="popup-options" icon="reset" iconSize={1.1} title="actions.reset" on:click={resetTextSetValues} white />
+        <Button class="popup-options" icon="reset" iconSize={1.1} title="actions.reset" on:click={resetTextSetValues} white />
 
         {#each currentVariable.textSets?.length ? currentVariable.textSets : [{}] as textSet, i}
             <div class="text_set" style={i === 0 ? "" : "margin-top: 10px;"} class:active={(currentVariable.textSets?.length ?? 1) > 1 && (currentVariable.activeTextSet ?? 0) === i}>
@@ -354,32 +354,32 @@
 
                         {#if (currentVariable.textSetKeys?.length ?? 1) > 1 && i === 0}
                             {#if keyIndex > 0}
-                                <MaterialButton icon="up" on:click={() => moveKeyUp(keyIndex)} />
+                                <Button icon="up" on:click={() => moveKeyUp(keyIndex)} />
                             {/if}
-                            <MaterialButton icon="delete" title="actions.delete" on:click={() => removeTextSetVariable(keyIndex)} />
+                            <Button icon="delete" title="actions.delete" on:click={() => removeTextSetVariable(keyIndex)} />
                         {/if}
                     </InputRow>
                 {/each}
 
                 {#if i === 0}
-                    <MaterialButton style="width: 100%;" icon="add" disabled={!currentVariable.textSetKeys?.length || currentVariable.textSetKeys.find((a) => !a) === ""} on:click={addTextSetVariable}>
+                    <Button style="width: 100%;" icon="add" disabled={!currentVariable.textSetKeys?.length || currentVariable.textSetKeys.find((a) => !a) === ""} on:click={addTextSetVariable}>
                         <T id="new.variable" />
-                    </MaterialButton>
+                    </Button>
                 {/if}
                 <!-- removed to clear up confusion in regards to the main variables being editable here -->
                 <!-- || (currentVariable.textSets?.length || 1) > 1 -->
                 {#if i > 0}
                     <div class="delete">
-                        <MaterialButton style="padding: 8px;" icon="up" on:click={() => moveTextSetUp(i)} />
-                        <MaterialButton style="padding: 8px;" icon="delete" title="actions.delete" on:click={() => removeTextSet(i)} />
+                        <Button style="padding: 8px;" icon="up" on:click={() => moveTextSetUp(i)} />
+                        <Button style="padding: 8px;" icon="delete" title="actions.delete" on:click={() => removeTextSet(i)} />
                     </div>
                 {/if}
             </div>
         {/each}
 
-        <MaterialButton variant="outlined" style="margin-top: 10px;width: 100%;" icon="add" disabled={!currentVariable.textSets?.length} on:click={addTextSet}>
+        <Button variant="outline" style="margin-top: 10px;width: 100%;" icon="add" disabled={!currentVariable.textSets?.length} on:click={addTextSet}>
             <T id="variables.add_set" />
-        </MaterialButton>
+        </Button>
     {/if}
 {/if}
 

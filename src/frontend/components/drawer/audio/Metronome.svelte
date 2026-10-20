@@ -7,8 +7,7 @@
     import { clone } from "../../helpers/array"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
@@ -70,7 +69,7 @@
 {:else}
     <div class="settings" style="display: flex;gap: 10px;">
         <SelectElem id="metronome" data={{ tempo: values.tempo || 120, beats: values.beats || 4 }} draggable>
-            <Button style="width: 100%;height: 100%;justify-content: center;border-radius: 6px;" disabled={$outLocked} center title={translateText("audio.toggle_metronome")} on:click={playPause}>
+            <Button style="width: 100%;height: 100%;justify-content: center;border-radius: 6px;" disabled={$outLocked} title={translateText("audio.toggle_metronome")} on:click={playPause}>
                 <Icon id={paused ? "play" : "stop"} white={paused} size={5} />
             </Button>
         </SelectElem>
@@ -92,9 +91,9 @@
 {/if}
 
 <FloatingInputs round>
-    <MaterialButton isActive={options} title="edit.options" on:click={() => (options = !options)}>
+    <Button isActive={options} title="edit.options" on:click={() => (options = !options)}>
         <Icon size={1.1} id="options" white={!options} />
-    </MaterialButton>
+    </Button>
 </FloatingInputs>
 
 <style>

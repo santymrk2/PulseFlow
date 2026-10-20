@@ -1451,9 +1451,32 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   5. **Seguridad:** cada paso se verifica con `svelte-check` (línea base 56 errores),
      `test:unit` y prettier; un paso = un commit; el usuario prueba en la app entre pasos.
   *Pasos:*
-  - [ ] **F14.8a Botón único.** Reemplaza `MaterialButton`, `Button` legacy, `HoverButton` y
-    el `button` del kit (y adapta `Button`/`TopButton`/`Splash`/`KitDemo` y
-    `svelte5-smoke.test.ts`).
+  - [x] **F14.8a Botón único.** Reemplaza `MaterialButton`, `Button` legacy y el `button`
+    del kit (adapta `KitDemo` y reescribe `svelte5-smoke.test.ts`). `HoverButton` **no es un
+    botón** (es una capa de "play" sobre miniaturas): pasa a F14.8e.
+    **Hecho** (2026-10-20): `lib/components/ui/button/button.svelte`, 229 archivos
+    migrados con script (637 etiquetas `MaterialButton`, 104 del `Button` legacy, 37 del kit),
+    `MaterialButton.svelte` y `Button.svelte` borrados. *Contrato:* variante `ghost` y tamaño
+    `sm` (28 px) **por defecto** (de 638 usos, ~437 no declaraban variante: no hubo que
+    tocarlos); variantes `default/secondary/outline/ghost/destructive/link/live`; tamaños
+    `xs/sm/md/icon/icon-sm`; banderas `isActive`, `showOutline`, `tab`, `red`, `redHover`,
+    `bold`, `align="start"`, `icon`/`iconSize`/`info`/`title`; `on:click`/`on:dblclick` con
+    `detail {ctrl, shift, alt, doubleClick, target}` **y** `onclick` nativo. El CSS va en
+    `@layer components` (las utilidades de Tailwind y los CSS de los padres le ganan) y el
+    orden de capas se declara en la primera línea de `public/global.css`. *Migración:*
+    `contained→default`, `outlined→outline`, `text→ghost`, `small→size="xs"`; en el legacy,
+    `active→isActive`, `outline→showOutline`, `center` pasa a ser el comportamiento por
+    defecto y su ausencia a `align="start"`, `dark`/`border` se quitaron. *Rotura de
+    contrato atrapada:* el `Button` legacy reenviaba el evento DOM y el nuevo entrega
+    `detail`; una auditoría del código original encontró **6 manejadores** que leían
+    `e.ctrlKey`/`shiftKey`/`altKey` (AudioEffect, AudioFile ×2, Mic, Actions, NumberInput ×2)
+    y se pasaron a `e.detail.ctrl/shift/alt`; también se quitaron atributos huérfanos
+    (`{zoom}` en 5 archivos, `center` en `MaterialZoom`). *Verificado:* `svelte-check`
+    **45 errores (base 56), 0 nuevos** (comparado contra la lista de errores de `HEAD` en
+    un worktree temporal), `test:unit` 93/93 (el smoke test se reescribió para el contrato
+    nuevo), prettier. `src/server/remote/` conserva su propio `MaterialButton`: es un cliente
+    web aparte. **No verificado a ojo:** revisar tarjetas de audio (AudioEffect, AudioStreams,
+    Mic), que usaban estilos que el `Button` legacy imponía a sus `div` hijos.
   - [ ] **F14.8b Texto y número.** `MaterialTextInput`, `MaterialNumberInput`,
     `MaterialTextarea` y los legacy `TextInput`/`NumberInput`.
   - [ ] **F14.8c Listas y pickers.** `MaterialDropdown`, `MaterialPopupButton`,

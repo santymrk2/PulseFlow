@@ -6,7 +6,7 @@
     import { checkPassword } from "../../../utils/profile"
     import { runActionId } from "../../actions/actions"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     $: profileId = $selectedProfile || ""
 
@@ -39,7 +39,7 @@
 </script>
 
 {#if $activeProfile !== profileId && profilesList.length}
-    <MaterialButton variant="outlined" style="padding: 6px 10px;font-size: 0.85em;" icon="check" on:click={setCurrentAsActive} white>
+    <Button variant="outline" style="padding: 6px 10px;font-size: 0.85em;" icon="check" on:click={setCurrentAsActive} white>
         <T id="profile.set_active" />
-    </MaterialButton>
+    </Button>
 {/if}

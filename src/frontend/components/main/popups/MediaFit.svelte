@@ -2,7 +2,7 @@
     import { activePopup, popupData, styles } from "../../../stores"
     import { mediaFitOptions } from "../../edit/values/boxes"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
 
     let currentValue = $popupData.active || "contain"
@@ -44,18 +44,18 @@
 </script>
 
 {#if currentValue === "blur" && styleId}
-    <MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
+    <Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 {/if}
 
 <div class="types">
     {#each mediaFitOptions as fit}
         {@const isActive = fit.value === currentValue}
-        <MaterialButton showOutline={isActive} {isActive} on:click={() => changeFit(fit.value)}>
+        <Button showOutline={isActive} {isActive} on:click={() => changeFit(fit.value)}>
             <svg viewBox="0 0 100 100" width="{iconSize}pt" height="{iconSize}pt">
                 {@html icons[fit.value]}
             </svg>
             <T id={fit.label} />
-        </MaterialButton>
+        </Button>
     {/each}
 </div>
 

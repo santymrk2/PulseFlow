@@ -9,8 +9,7 @@
     import T from "../../helpers/T.svelte"
     import { keysToID, sortByName } from "../../helpers/array"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
 
@@ -85,9 +84,10 @@
                 <div class="action context #action{isReadOnly ? '_readonly' : ''}{showGrid ? ' grid-item' : ''}">
                     <SelectElem id="action" data={action} style={showGrid ? "display: block; width: 100%; height: 100%;" : "display: flex; flex: 1;"} draggable>
                         <Button
+                            align="start"
                             title="{translateText('media.play')}: <b>{action.name}</b>"
                             on:click={(e) => {
-                                if (e.ctrlKey || e.metaKey) return
+                                if (e.detail.ctrl) return
                                 if (action.shows?.length) {
                                     receivedMidi({ id: action.id, bypass: true })
                                     return
@@ -96,9 +96,8 @@
                                 runAction(action, { source: "click" })
                                 timelineRecordingAction.set({ id: "run_action", data: { id: action.id } })
                             }}
-                            outline={$runningActions.includes(action.id)}
+                            showOutline={$runningActions.includes(action.id)}
                             bold={false}
-                            dark
                             style={showGrid ? "width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 4px 4px;" : ""}
                         >
                             <span style={showGrid ? "display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; gap: 6px;" : "display: flex;align-items: center;justify-content: space-between;width: 100%;"}>
@@ -187,16 +186,16 @@
 
 {#if $activeActionTagFilter.length === 1}
     <FloatingInputs side="left">
-        <MaterialButton on:click={toggleShowGrid} title="show.{showGrid ? 'grid' : 'list'}">
+        <Button on:click={toggleShowGrid} title="show.{showGrid ? 'grid' : 'list'}">
             <Icon size={1.3} id={showGrid ? "grid" : "list"} white />
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}
 
 <FloatingInputs onlyOne>
-    <MaterialButton disabled={readOnly} icon="add" title="new.action" on:click={newAction}>
+    <Button disabled={readOnly} icon="add" title="new.action" on:click={newAction}>
         {#if !$labelsDisabled}<T id="new.action" />{/if}
-    </MaterialButton>
+    </Button>
 </FloatingInputs>
 
 <style>

@@ -4,7 +4,7 @@
     import { special } from "../../../stores"
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialTextarea from "../../inputs/MaterialTextarea.svelte"
 
     function openFile() {
@@ -70,7 +70,7 @@
     }
 </script>
 
-<MaterialButton class="popup-options" icon="launch" iconSize={1.1} title="main.system_open" on:click={openFile} white />
+<Button class="popup-options" icon="launch" iconSize={1.1} title="main.system_open" on:click={openFile} white />
 
 <InputRow arrow open={true}>
     <div class="title">

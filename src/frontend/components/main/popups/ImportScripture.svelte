@@ -11,7 +11,7 @@
     import T from "../../helpers/T.svelte"
     import HRule from "../../input/HRule.svelte"
     import Link from "../../inputs/Link.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
     import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
@@ -113,7 +113,7 @@
 </script>
 
 {#if importType}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (importType = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (importType = "")} />
 {/if}
 
 {#if importType === "api"}
@@ -158,9 +158,9 @@
     {#if localBibles.length}
         <div class="existingBiblesList">
             {#each localBibles as localBible}
-                <MaterialButton variant="outlined" icon="import" style="justify-content: left;" on:click={() => importBible(localBible.path)} white>
+                <Button variant="outline" icon="import" style="justify-content: left;" on:click={() => importBible(localBible.path)} white>
                     {localBible.name}
-                </MaterialButton>
+                </Button>
             {/each}
         </div>
 
@@ -181,9 +181,9 @@
 
     <p style="margin: 20px 0;opacity: 0.9;">Find some available <Link url="https://freeshow.app/resources#scriptures">Bible versions</Link>.</p>
 
-    <MaterialButton variant="outlined" icon="import" on:click={() => sendMain(Main.IMPORT, { channel: "BIBLE", format: { name: "Bible", extensions: ["xml", "xmm", "json", "fsb"] } })}>
+    <Button variant="outline" icon="import" on:click={() => sendMain(Main.IMPORT, { channel: "BIBLE", format: { name: "Bible", extensions: ["xml", "xmm", "json", "fsb"] } })}>
         <T id="scripture.local" />
-    </MaterialButton>
+    </Button>
 {:else}
     <MaterialMultiChoice options={importTypes} on:click={(e) => (importType = e.detail)} />
 {/if}

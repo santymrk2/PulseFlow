@@ -18,7 +18,7 @@
     import { getLayoutRef, updateCachedShows } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
     import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
@@ -396,14 +396,14 @@
         <CreateAction mainId={id} actionId={action.triggers?.[0] || ""} existingActions={action.triggers || []} actionValue={action.actionValues?.[action.triggers?.[0] || ""] || {}} customData={action.customData?.[action.triggers?.[0] || ""] || {}} {mode} on:change={changeAction} list />
     {:else}
         {#if actionActivationSelector}
-            <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (actionActivationSelector = false)} />
+            <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (actionActivationSelector = false)} />
 
-            <MaterialButton class="popup-options {showCommonActivate ? 'active' : ''}" icon={showCommonActivate ? "eye" : "hide"} iconSize={1.3} title={showCommonActivate ? "actions.close" : "create_show.more_options"} on:click={() => (showCommonActivate = !showCommonActivate)} white />
+            <Button class="popup-options {showCommonActivate ? 'active' : ''}" icon={showCommonActivate ? "eye" : "hide"} iconSize={1.3} title={showCommonActivate ? "actions.close" : "create_show.more_options"} on:click={() => (showCommonActivate = !showCommonActivate)} white />
 
             <div class="buttons">
                 {#each customActionActivations as activation}
                     {#if activation.common || showCommonActivate}
-                        <MaterialButton
+                        <Button
                             style="width: 100%;font-weight: normal;justify-content: start;padding: 5px 20px;gap: 12px;"
                             showOutline={customActivation === activation.id}
                             isActive={customActivation === activation.id}
@@ -414,13 +414,13 @@
                         >
                             <Icon id={activation.icon} white />
                             <p>{translateText(activation.name)}</p>
-                        </MaterialButton>
+                        </Button>
                     {/if}
                 {/each}
             </div>
             <!-- <Dropdown options={customActivations} value={customActivations.find((a) => a.id === customActivation)?.name || "—"} on:click={(e) => updateValue("customActivation", e.detail.id)} /> -->
         {:else if actionSelector !== null}
-            <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (actionSelector = null)} />
+            <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (actionSelector = null)} />
 
             <CreateAction
                 mainId={id}
@@ -448,7 +448,7 @@
         {/if}
 
         {#if !mode && !actionSelector && !actionActivationSelector}
-            <MaterialButton
+            <Button
                 class="popup-options {showMore ? 'active' : ''}"
                 icon="options"
                 iconSize={1.3}
@@ -535,8 +535,8 @@
                 {#if !action.triggers?.length || addTrigger}
                     <CreateAction actionId="" existingActions={action.triggers || []} on:change={changeAction} on:choose={() => (actionSelector = { id: "" })} {mode} choosePopup />
                 {:else}
-                    <MaterialButton
-                        variant="outlined"
+                    <Button
+                        variant="outline"
                         style="margin-top: 10px;width: 100%;"
                         icon="add"
                         on:click={() => {
@@ -545,7 +545,7 @@
                         }}
                     >
                         <T id="settings.add" />
-                    </MaterialButton>
+                    </Button>
                 {/if}
             </div>
         {/if}

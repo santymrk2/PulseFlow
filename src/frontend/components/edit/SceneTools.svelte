@@ -9,7 +9,7 @@
     import Icon from "../helpers/Icon.svelte"
     import { updateActiveSceneOutputs } from "../helpers/output"
     import InputRow from "../input/InputRow.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialPopupButton from "../inputs/MaterialPopupButton.svelte"
     import Tabs from "../main/Tabs.svelte"
 
@@ -129,7 +129,7 @@
             <!-- <MaterialPopupButton label="actions.id_select_output_style" value={styleId || "empty"} name={styleId ? $styles[styleId]?.name || "" : "main.empty"} icon="styles" popupId="select_style" on:change={(e) => updateContent("style", e.detail || "")} allowEmpty={!!styleId} /> -->
             <MaterialPopupButton label="actions.id_select_output_style" value={styleId} name={$styles[styleId]?.name || ""} icon="styles" popupId="select_style" on:change={(e) => updateContent("style", e.detail || "")} allowEmpty />
             {#if $styles[styleId]}
-                <MaterialButton title="titlebar.edit" icon="edit" on:click={editStyle} />
+                <Button title="titlebar.edit" icon="edit" on:click={editStyle} />
             {/if}
         </InputRow>
 
@@ -167,18 +167,18 @@
                         </div>
 
                         {#if index < overlaysList.length - 1}
-                            <MaterialButton class="down" icon="down" on:click={() => moveOverlay(index, 1)} />
+                            <Button class="down" icon="down" on:click={() => moveOverlay(index, 1)} />
                         {/if}
                         {#if index > 0}
-                            <MaterialButton class="up" icon="up" on:click={() => moveOverlay(index, -1)} />
+                            <Button class="up" icon="up" on:click={() => moveOverlay(index, -1)} />
                         {/if}
                     </div>
                 {/each}
             </div>
 
-            <MaterialButton variant="outlined" icon="add" style="width: 100%;" on:click={openAddOverlay}>
+            <Button variant="outline" icon="add" style="width: 100%;" on:click={openAddOverlay}>
                 {translateText("edit.overlay_content")}
-            </MaterialButton>
+            </Button>
         </div>
     </div>
 </div>

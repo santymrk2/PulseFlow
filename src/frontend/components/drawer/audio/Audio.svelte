@@ -15,7 +15,7 @@
     import { getExtension, getFileName, getMediaType } from "../../helpers/media"
     import { joinTime, secondsToTime } from "../../helpers/time"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
     import Center from "../../system/Center.svelte"
     import DropArea from "../../system/DropArea.svelte"
@@ -318,14 +318,14 @@
 
 {#if active === "inputs"}
     <div class="tabs">
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "microphones"} on:click={() => setSubSubTab("microphones")}>
+        <Button style="flex: 1;" isActive={inputsTab === "microphones"} on:click={() => setSubSubTab("microphones")}>
             <Icon size={1.2} id="microphone" white />
             <p><T id="live.microphones" /></p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "audio_streams"} on:click={() => setSubSubTab("audio_streams")}>
+        </Button>
+        <Button style="flex: 1;" isActive={inputsTab === "audio_streams"} on:click={() => setSubSubTab("audio_streams")}>
             <Icon size={1.2} id="audio_stream" white />
             <p><T id="live.audio_streams" /></p>
-        </MaterialButton>
+        </Button>
     </div>
 {/if}
 
@@ -395,14 +395,14 @@
 {:else if active === "inputs"}
     {#if inputsTab === "audio_streams"}
         <FloatingInputs onlyOne>
-            <MaterialButton icon="add" style="flex: 1;" on:click={() => activePopup.set("audio_stream")} center title="new.audio_stream">
+            <Button icon="add" style="flex: 1;" on:click={() => activePopup.set("audio_stream")} center title="new.audio_stream">
                 {#if !$labelsDisabled}<T id="new.audio_stream" />{/if}
-            </MaterialButton>
+            </Button>
         </FloatingInputs>
     {/if}
 {:else if playlist}
     <FloatingInputs side="left">
-        <MaterialButton
+        <Button
             disabled={$outLocked}
             title={$activePlaylist?.id === active ? "media.stop" : "media.play"}
             on:click={() => {
@@ -411,11 +411,11 @@
             }}
         >
             <Icon size={1.3} id={$activePlaylist?.id === active ? "stop" : "play"} white={$activePlaylist?.id !== active} />
-        </MaterialButton>
+        </Button>
 
         <div class="divider" />
 
-        <MaterialButton
+        <Button
             title="media.toggle_shuffle"
             on:click={() => {
                 if (!active) return
@@ -424,8 +424,8 @@
             }}
         >
             <Icon size={1.1} id="shuffle_play" white={$audioPlaylists[active || ""]?.mode !== "shuffle"} />
-        </MaterialButton>
-        <MaterialButton
+        </Button>
+        <Button
             title={`media._loop${$audioPlaylists[active || ""]?.loop !== false ? ": settings.enabled" : ""}`}
             on:click={() => {
                 if (!active) return
@@ -433,10 +433,10 @@
             }}
         >
             <Icon size={1.1} id="loop" white={$audioPlaylists[active || ""]?.loop === false} />
-        </MaterialButton>
+        </Button>
 
         <!-- auto play next song in playlist -->
-        <MaterialButton
+        <Button
             title={`media.auto_next${$audioPlaylists[active || ""]?.autoNext !== false ? ": settings.enabled" : ""}`}
             on:click={() => {
                 if (!active) return
@@ -444,7 +444,7 @@
             }}
         >
             <Icon size={1.1} id="auto" white={$audioPlaylists[active || ""]?.autoNext === false} />
-        </MaterialButton>
+        </Button>
 
         <div class="divider" />
 
@@ -463,9 +463,9 @@
     </FloatingInputs>
 
     <FloatingInputs round>
-        <MaterialButton isActive={playlistSettings} title="audio.playlist_settings" on:click={() => (playlistSettings = !playlistSettings)}>
+        <Button isActive={playlistSettings} title="audio.playlist_settings" on:click={() => (playlistSettings = !playlistSettings)}>
             <Icon size={1.1} id="options" white={!playlistSettings} />
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {:else if active === "all" || active === "favourites"}
     <!-- nothing -->
@@ -473,9 +473,9 @@
     <!--  -->
     {#if rootPath !== path}
         <FloatingInputs side="left">
-            <MaterialButton disabled={rootPath === path} title="actions.back" on:click={goBack}>
+            <Button disabled={rootPath === path} title="actions.back" on:click={goBack}>
                 <Icon id="back" white />
-            </MaterialButton>
+            </Button>
 
             <div class="divider"></div>
 
@@ -494,10 +494,10 @@
     <!-- only show if audio content -->
     {#if filteredFiles.filter((a) => !a.isFolder)?.length}
         <FloatingInputs onlyOne on:mousedown={storeSelected}>
-            <MaterialButton title="new.playlist" on:click={createPlaylist}>
+            <Button title="new.playlist" on:click={createPlaylist}>
                 <Icon size={1.2} id="playlist_create" />
                 {#if !$labelsDisabled}<p><T id="new.playlist" /></p>{/if}
-            </MaterialButton>
+            </Button>
         </FloatingInputs>
     {/if}
 {/if}

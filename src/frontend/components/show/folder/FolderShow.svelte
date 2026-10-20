@@ -17,7 +17,7 @@
     import T from "../../helpers/T.svelte"
     import { joinTime, secondsToTime } from "../../helpers/time"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { clearBackground, clearSlide } from "../../output/clear"
     import Center from "../../system/Center.svelte"
 
@@ -123,13 +123,13 @@
 
 {#if !$focusMode}
     <FloatingInputs side="left" onlyOne>
-        <MaterialButton icon="folder" on:click={() => sendMain(Main.OPEN_FOLDER_PATH, path)}>
+        <Button icon="folder" on:click={() => sendMain(Main.OPEN_FOLDER_PATH, path)}>
             <T id="main.open" />
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 
     <FloatingInputs onlyOne>
-        <MaterialButton
+        <Button
             disabled={!folderFiles.length}
             on:click={() => {
                 popupData.set({ type: "folder", value: timer, totalTime, count: folderFiles.filter((a) => a.type === "image").length })
@@ -139,7 +139,7 @@
         >
             <Icon size={1.1} id="clock" white={totalTime === 0} />
             {joinTime(secondsToTime(totalTime))}
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}
 

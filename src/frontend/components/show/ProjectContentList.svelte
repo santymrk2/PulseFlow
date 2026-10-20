@@ -18,7 +18,7 @@
     import T from "../helpers/T.svelte"
     import { joinTimeBig } from "../helpers/time"
     import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import ShowButton from "../inputs/ShowButton.svelte"
     import Autoscroll from "../system/Autoscroll.svelte"
     import Center from "../system/Center.svelte"
@@ -289,7 +289,7 @@
                             {:else}
                                 <SelectElem id="show" dropAbove={isFirst} triggerOnHover data={{ ...show, name: show.name || removeExtension(getFileName(show.id)), index }} {fileOver} borders={show.type === "show_placeholder" ? "all" : "edges"} trigger="column" draggable={!isLocked} selectable={!isLocked}>
                                     {#if show.type === "section"}
-                                        <MaterialButton
+                                        <Button
                                             {isActive}
                                             class="section {projectReadOnly || isLocked ? '' : `context #project_section ${show.color ? 'color-border' : ''}`}"
                                             style="{borderRadiusStyle}justify-content: left;background-color: var(--primary-darkest);border-top: 1px solid var(--primary-lighter);padding: 0.1em 1em;{$fullColors ? `background-color: ${show.color || 'var(--primary-darker)'} !important;color: ${getContrast(show.color || '')};` : `background-color: ${fadeColor(show.color || '', 0.2)} !important;color: ${show.color ? brightenDarkColor(show.color) : ''};`}"
@@ -337,7 +337,7 @@
                                                     <Icon id="add" size={0.8} white />
                                                 </span>
                                             {/if}
-                                        </MaterialButton>
+                                        </Button>
                                     {:else}
                                         <ShowButton id={show.id} {show} {index} class={projectReadOnly ? "" : `context #project_${getContextMenuId(show.type)}`} style={borderRadiusStyle} icon isProject />
                                     {/if}
@@ -352,7 +352,7 @@
                     <div class="section" style="margin-top: 80px;border-top: 1px solid var(--primary-lighter);background-color: var(--primary-darkest);padding: 2px 18px;display: flex;justify-content: space-between;align-items: center;">
                         <T id="media.recommended" />
 
-                        <MaterialButton
+                        <Button
                             class="show"
                             style="padding: 0.2em;border-radius: 2px;border-left: none;min-height: unset;"
                             on:click={() => {
@@ -366,7 +366,7 @@
                             tab
                         >
                             <Icon id="clear" size={0.9} white />
-                        </MaterialButton>
+                        </Button>
                     </div>
 
                     <div class="recommended">
@@ -379,7 +379,7 @@
                                 {@const borderRadiusStyle = `${isFirst ? "border-top-right-radius: 10px;" : ""}${isLast ? "border-bottom-right-radius: 10px;" : ""}`}
                                 {@const icon = type === "audio" ? "music" : type}
 
-                                <MaterialButton
+                                <Button
                                     class="show context #recent_file__project"
                                     style="justify-content: space-between;padding: 0.35em 0.8em;font-weight: normal;{borderRadiusStyle}"
                                     on:click={() => {
@@ -395,7 +395,7 @@
                                         <p style="min-height: 10px;">{removeExtension(name)}</p>
                                     </span>
                                     <Icon id="add" size={0.9} white right />
-                                </MaterialButton>
+                                </Button>
                             {/each}
                         </div>
                     </div>
@@ -406,10 +406,10 @@
 
                     {#if shouldPasteText}
                         <span style="padding-top: 20px" class="buttons">
-                            <MaterialButton variant="outlined" title="actions.import: formats.clipboard" on:click={clipboardToProject}>
+                            <Button variant="outline" title="actions.import: formats.clipboard" on:click={clipboardToProject}>
                                 <Icon id="paste" white />
                                 <T id="formats.clipboard" />
-                            </MaterialButton>
+                            </Button>
                         </span>
                     {/if}
                 </Center>
@@ -430,7 +430,7 @@
         <!-- new show, new media, new PDF/PPT?, new scripture, new section -->
         <div class="addMenu" transition:fade={{ duration: 80 }} role="none" on:click={() => (addMenuOpen = false)}>
             <!-- createShow -->
-            <MaterialButton variant="outlined" icon="slide" title="tooltip.show" on:click={() => openSearch("shows")}>
+            <Button variant="outline" icon="slide" title="tooltip.show" on:click={() => openSearch("shows")}>
                 <div class="label">
                     <p><T id="formats.show" /></p>
                     <!-- <p class="description" data-title={translateText("tabs.shows_info")}><T id="tabs.shows_info" /></p> -->
@@ -439,18 +439,18 @@
                 <div class="actionType">
                     <Icon id="search" size={0.7} white />
                 </div>
-            </MaterialButton>
+            </Button>
 
             {#if isTemplate}
-                <MaterialButton variant="outlined" icon="slide" title="new.placeholder" on:click={addShowPlaceholder} white>
+                <Button variant="outline" icon="slide" title="new.placeholder" on:click={addShowPlaceholder} white>
                     <div class="label">
                         <p><T id="new.placeholder" /></p>
                     </div>
-                </MaterialButton>
+                </Button>
             {/if}
 
             {#if $drawerTabsData.scripture?.enabled !== false}
-                <MaterialButton variant="outlined" icon="scripture" title="new.scripture" on:click={() => openSearch("scripture")} white>
+                <Button variant="outline" icon="scripture" title="new.scripture" on:click={() => openSearch("scripture")} white>
                     <div class="label">
                         <p><T id="tabs.scripture" /></p>
                     </div>
@@ -458,12 +458,12 @@
                     <div class="actionType">
                         <Icon id="search" size={0.7} white />
                     </div>
-                </MaterialButton>
+                </Button>
             {/if}
 
             <!-- WIP popup -->
             <!-- images/videos, (audio), YouTube, webpages? -->
-            <MaterialButton variant="outlined" icon="image" title="guide_description.media" on:click={() => openSearch("media")} white>
+            <Button variant="outline" icon="image" title="guide_description.media" on:click={() => openSearch("media")} white>
                 <div class="label">
                     <p><T id="items.media" /></p>
                 </div>
@@ -471,12 +471,12 @@
                 <div class="actionType">
                     <Icon id="search" size={0.7} white />
                 </div>
-            </MaterialButton>
+            </Button>
 
             <div class="group-spacer" />
 
-            <MaterialButton
-                variant="outlined"
+            <Button
+                variant="outline"
                 icon="import"
                 title="popup.import"
                 on:click={() => {
@@ -488,24 +488,24 @@
                 <div class="label">
                     <p><T id="popup.import" /></p>
                 </div>
-            </MaterialButton>
+            </Button>
 
             <div class="group-spacer" />
 
-            <MaterialButton variant="outlined" icon="section" title="new.section" disabled={currentProject?.sectionsLocked} on:click={addSection} white={lessVisibleSection}>
+            <Button variant="outline" icon="section" title="new.section" disabled={currentProject?.sectionsLocked} on:click={addSection} white={lessVisibleSection}>
                 <div class="label">
                     <p><T id="new.section" /></p>
                     <!-- <p class="description" data-title={translateText("tabs.sections_info")}><T id="tabs.sections_info" /></p> -->
                 </div>
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
 
     <FloatingInputs>
         <!-- {addMenuOpen ? 'border-color: white;' : ''} -->
-        <MaterialButton class="addButton" title={addMenuOpen ? "actions.close" : "context.addToProject"} on:click={() => (addMenuOpen = !addMenuOpen)} on:dblclick={() => (addMenuOpen ? null : addSection())}>
+        <Button class="addButton" title={addMenuOpen ? "actions.close" : "context.addToProject"} on:click={() => (addMenuOpen = !addMenuOpen)} on:dblclick={() => (addMenuOpen ? null : addSection())}>
             <Icon id="add" size={1} style={addMenuOpen ? "transform: rotate(135deg);" : ""} white />
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}
 

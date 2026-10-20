@@ -3,7 +3,7 @@
     import { translateText } from "../../../utils/language"
     import { history } from "../../helpers/history"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import { createSlides } from "./calendar"
 
@@ -44,9 +44,9 @@
                 </ul>
             {/each}
 
-            <MaterialButton variant="outlined" icon="slide" style="margin-top: 10px;" info={currentEvents.length > 1 ? `${currentEvents.length}` : ""} on:click={createShow}>
+            <Button variant="outline" icon="slide" style="margin-top: 10px;" info={currentEvents.length > 1 ? `${currentEvents.length}` : ""} on:click={createShow}>
                 <T id="new.show_convert" />
-            </MaterialButton>
+            </Button>
         {:else}
             <Center faded>
                 <T id="empty.events" />

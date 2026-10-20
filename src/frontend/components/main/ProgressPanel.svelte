@@ -1,7 +1,7 @@
 <script lang="ts">
     import { fade, slide } from "svelte/transition"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import { mediaDownloads, pdfImports } from "../../stores"
     import { translateText } from "../../utils/language"
     import T from "../helpers/T.svelte"
@@ -72,7 +72,7 @@
             <div class="header">
                 <Icon id="download" size={0.9} white />
                 <span><T id="media.downloading" /></span>
-                <MaterialButton style="padding: 5px;" icon="close" on:click={dismiss} title="actions.close" white />
+                <Button style="padding: 5px;" icon="close" on:click={dismiss} title="actions.close" white />
             </div>
 
             {#each mediaEntries as [url, data] (url)}

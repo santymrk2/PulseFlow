@@ -11,7 +11,7 @@
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Title from "../../input/Title.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
@@ -225,7 +225,7 @@
     {@const connections = Object.keys(connectionsData[server.id.toUpperCase()] || {})?.length || 0}
 
     <InputRow>
-        <MaterialButton
+        <Button
             style="flex: 1;justify-content: space-between;"
             {disabled}
             on:click={() => {
@@ -251,7 +251,7 @@
                     <Icon id="volume" />
                 </span>
             {/if}
-        </MaterialButton>
+        </Button>
 
         {#if server.id === "companion"}
             <MaterialToggleSwitch label="" checked={$serverData?.companion?.enabled === true} on:change={toggleCompanion} />
@@ -262,7 +262,7 @@
 {/each}
 
 <InputRow>
-    <MaterialButton
+    <Button
         style="flex: 1;justify-content: space-between;"
         disabled={!$special.remoteController}
         on:click={() => {
@@ -275,7 +275,7 @@
 
             Remote Clicker
         </span>
-    </MaterialButton>
+    </Button>
 
     <MaterialToggleSwitch label="" checked={$special.remoteController} on:change={(e) => toggleRemoteController(e.detail)} />
 </InputRow>
@@ -285,37 +285,37 @@
     <Title label="settings.content_provider" icon="list" />
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("churchApps")} style="flex: 1;" icon="login">
+        <Button on:click={() => contentProviderConnect("churchApps")} style="flex: 1;" icon="login">
             <T id="settings.connect_to" replace={["ChurchApps"]} />
-        </MaterialButton>
+        </Button>
     </InputRow>
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("amazinglife")} style="flex: 1;" icon="login">
+        <Button on:click={() => contentProviderConnect("amazinglife")} style="flex: 1;" icon="login">
             <T id="settings.connect_to" replace={["APlay"]} />
-        </MaterialButton>
+        </Button>
     </InputRow>
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("onstage")} style="flex: 1;" icon="login">
+        <Button on:click={() => contentProviderConnect("onstage")} style="flex: 1;" icon="login">
             <T id="settings.connect_to" replace={["OnStage"]} />
-        </MaterialButton>
+        </Button>
     </InputRow>
 {:else if $providerConnections.churchApps && !cloudOnly.churchApps}
     <!-- ChurchApps connected -->
     <Title label="Content Provider: ChurchApps" icon="list" />
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("churchApps")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
+        <Button on:click={() => contentProviderConnect("churchApps")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
             <T id="settings.disconnect_from" replace={["ChurchApps"]} />
-        </MaterialButton>
-        <MaterialButton icon="cloud_sync" on:click={syncContentProvider}>
+        </Button>
+        <Button icon="cloud_sync" on:click={syncContentProvider}>
             <T id="cloud.sync" />
-        </MaterialButton>
-        <MaterialButton title="<b>popup.sync_categories:</b> settings.sync_categories_tip" icon="options" on:click={() => activePopup.set("sync_categories")} />
-        <MaterialButton on:click={() => sendMain(Main.URL, "https://b1.church")} title="B1.Church" white>
+        </Button>
+        <Button title="<b>popup.sync_categories:</b> settings.sync_categories_tip" icon="options" on:click={() => activePopup.set("sync_categories")} />
+        <Button on:click={() => sendMain(Main.URL, "https://b1.church")} title="B1.Church" white>
             <Icon id="launch" white />
-        </MaterialButton>
+        </Button>
     </InputRow>
 
     <MaterialDropdown label="Song origin" options={providerOriginOptions} value={$contentProviderData.churchApps?.songOrigin || ""} on:change={(e) => updateProvider("churchApps", "songOrigin", e.detail)} />
@@ -328,28 +328,28 @@
     <Title label="Content Provider: APlay" icon="list" />
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("amazinglife")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
+        <Button on:click={() => contentProviderConnect("amazinglife")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
             <T id="settings.disconnect_from" replace={["APlay"]} />
-        </MaterialButton>
+        </Button>
         <!-- Nothing to sync yet -->
-        <!-- <MaterialButton icon="cloud_sync" on:click={syncContentProvider}>
+        <!-- <Button icon="cloud_sync" on:click={syncContentProvider}>
             <T id="cloud.sync" />
-        </MaterialButton> -->
+        </Button> -->
     </InputRow>
 {:else if $providerConnections.onstage}
     <!-- OnStage connected -->
     <Title label="Content Provider: OnStage" icon="list" />
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("onstage")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
+        <Button on:click={() => contentProviderConnect("onstage")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
             <T id="settings.disconnect_from" replace={["OnStage"]} />
-        </MaterialButton>
-        <MaterialButton icon="cloud_sync" on:click={syncContentProvider}>
+        </Button>
+        <Button icon="cloud_sync" on:click={syncContentProvider}>
             <T id="cloud.sync" />
-        </MaterialButton>
-        <MaterialButton on:click={() => sendMain(Main.URL, "https://getonstage.app")} title="OnStage" white>
+        </Button>
+        <Button on:click={() => sendMain(Main.URL, "https://getonstage.app")} title="OnStage" white>
             <Icon id="launch" white />
-        </MaterialButton>
+        </Button>
     </InputRow>
 
     <MaterialToggleSwitch label="settings.auto_sync_startup" checked={$contentProviderData.onstage?.autoSync !== false} on:change={(e) => updateProvider("onstage", "autoSync", e.detail)} />

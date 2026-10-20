@@ -3,7 +3,7 @@
     import { effects, outLocked, overlays } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
     import { setOutput } from "../../helpers/output"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     export let currentOutput: Output
 
@@ -46,7 +46,7 @@
     <span class="name" style="justify-content: space-between;">
         {#each activeEffects as effect}
             <div class="overlay">
-                <Button style="flex: 1;" disabled={$outLocked} on:click={() => removeEffect(effect.id)} center red>
+                <Button style="flex: 1;" disabled={$outLocked} on:click={() => removeEffect(effect.id)} red>
                     <Icon id="effects" right white />
                     <p>{effect.name || "—"}</p>
                 </Button>
@@ -56,10 +56,10 @@
             <!-- {@const locked = $overlays[overlay.id]?.locked} -->
             <div class="overlay">
                 <!-- disabled={locked} red={!locked} -->
-                <Button style="flex: 1;" disabled={$outLocked} on:click={() => removeOverlay(overlay.id)} center red>
+                <Button style="flex: 1;" disabled={$outLocked} on:click={() => removeOverlay(overlay.id)} red>
                     <p>{overlay.name || "—"}</p>
                 </Button>
-                <!-- <Button on:click={() => setLocked(overlay.id, !locked)} title={locked ? $dictionary.preview?.unlock : $dictionary.preview?.lock} red={locked}>
+                <!-- <Button align="start" on:click={() => setLocked(overlay.id, !locked)} title={locked ? $dictionary.preview?.unlock : $dictionary.preview?.lock} red={locked}>
                     <Icon id={locked ? "locked" : "unlocked"} />
                 </Button> -->
             </div>

@@ -4,7 +4,7 @@
     import { translateText } from "../../../utils/language"
     import Icon from "../../helpers/Icon.svelte"
     import { getAllActiveOutputIds } from "../../helpers/output"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Slider from "../../inputs/Slider.svelte"
 
     export let currentOutput: Output
@@ -73,7 +73,7 @@
 {#if timer.timer && timer.max}
     <span class="group">
         <!-- padding: 0.3em; -->
-        <Button style="flex: 0;" center title={translateText(timer.paused ? "media.play" : "media.pause")} on:click={() => playPause(timer.paused)}>
+        <Button style="flex: 0;" title={translateText(timer.paused ? "media.play" : "media.pause")} on:click={() => playPause(timer.paused)}>
             <Icon id={timer.paused ? "play" : "pause"} size={1.2} white={timer.paused} />
         </Button>
         <span style="color: var(--secondary);padding: 0 10px;">{round(timer.time)}</span>

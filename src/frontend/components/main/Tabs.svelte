@@ -4,7 +4,7 @@
     import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../stores"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let tabs: TabsObj
     export let active: string
@@ -41,7 +41,7 @@
 <div class="tabs" style={$$props.style || null}>
     {#each Object.entries(tabs) as [id, tab]}
         {#if tab.remove !== true && (!tab.overflow || !overflowHidden)}
-            <MaterialButton
+            <Button
                 style="border-bottom: 2px solid var(--primary-darker);{$$props.style || ''}"
                 on:click={() => {
                     active = id
@@ -63,12 +63,12 @@
                         </span>
                     {/key}
                 {/if}
-            </MaterialButton>
+            </Button>
         {/if}
     {/each}
 
     {#if firstOverflowIndex > -1 && overflowHidden}
-        <MaterialButton
+        <Button
             on:click={() => {
                 active = Object.keys(tabs)[firstOverflowIndex]
                 setTimeout(() => (overflowHidden = false))
@@ -77,7 +77,7 @@
             style="flex: 0;padding: 0 1em;"
         >
             <Icon id="arrow_right" style="opacity: 0.8;" size={1.2} white />
-        </MaterialButton>
+        </Button>
     {/if}
 </div>
 

@@ -7,7 +7,7 @@
     import { history } from "../../helpers/history"
     import Icon from "../../helpers/Icon.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
@@ -79,7 +79,7 @@
 
         <InputRow>
             <MaterialFilePicker label="edit.background_media" value={settings.backgroundPath} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => setValue(e, "backgroundPath")} allowEmpty />
-            <!-- {#if settings.backgroundPath}<MaterialButton title="titlebar.edit" icon="edit" on:click={editBackgroundImage} />{/if} -->
+            <!-- {#if settings.backgroundPath}<Button title="titlebar.edit" icon="edit" on:click={editBackgroundImage} />{/if} -->
         </InputRow>
     </div>
 
@@ -122,7 +122,7 @@
                 allowEmpty
             />
             <!-- {#if settings.firstSlideTemplate && $templates[settings.firstSlideTemplate]}
-                    <MaterialButton title="titlebar.edit" icon="edit" on:click={() => editTemplate(settings.firstSlideTemplate || "")} />
+                    <Button title="titlebar.edit" icon="edit" on:click={() => editTemplate(settings.firstSlideTemplate || "")} />
                 {/if} -->
         </InputRow>
 
@@ -145,8 +145,8 @@
             />
         </InputRow> -->
 
-        <MaterialButton
-            variant="outlined"
+        <Button
+            variant="outline"
             icon="text"
             style="width: 100%;"
             on:click={() => {
@@ -155,7 +155,7 @@
             }}
         >
             {translateText("popup.template_style_overrides")}
-        </MaterialButton>
+        </Button>
     </div>
 
     <ItemsList bind:allSlideItems />

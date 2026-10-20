@@ -1,7 +1,7 @@
 <script lang="ts">
     import { special } from "../../stores"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let side: "right" | "left" | "center" = "right"
     export let onlyOne = false
@@ -17,9 +17,9 @@
 <!-- in:fade={{ duration: 80 }} -->
 <div class="row {side}" class:isOptimized class:onlyOne class:round style="bottom: {bottom}px;{$$props.style || ''}" on:mousedown>
     {#if arrow}
-        <MaterialButton style={open ? "" : "opacity: 0.6;"} class="expand" title={open ? "actions.close" : "create_show.more_options"} isActive={open} on:click={() => (open = !open)}>
+        <Button style={open ? "" : "opacity: 0.6;"} class="expand" title={open ? "actions.close" : "create_show.more_options"} isActive={open} on:click={() => (open = !open)}>
             <Icon class="submenu_{open ? 'close' : 'open'}" id="arrow_back_modern" size={0.9} white={!open} />
-        </MaterialButton>
+        </Button>
 
         <div class="divider"></div>
 

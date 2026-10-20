@@ -12,7 +12,7 @@
     import HRule from "../../input/HRule.svelte"
     import { getValues } from "../../input/inputs"
     import Inputs from "../../input/Inputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
     import Tip from "../Tip.svelte"
@@ -166,7 +166,7 @@
 </script>
 
 {#if backData}
-    <MaterialButton
+    <Button
         class="popup-back"
         icon="back"
         iconSize={1.3}
@@ -179,7 +179,7 @@
 {/if}
 
 {#if editTemplate && template}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (editTemplate = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (editTemplate = "")} />
 
     <MaterialTextInput label="midi.name" value={template.name} on:change={(e) => updateTemplate("name", e)} autofocus={!template.name} />
     <MaterialTextInput label="midi.description" value={template.description || ""} on:change={(e) => updateTemplate("description", e)} />
@@ -204,7 +204,7 @@
     {/if}
 {:else if editEmitter && emitter}
     {#if !backData}
-        <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (editEmitter = "")} />
+        <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (editEmitter = "")} />
     {/if}
 
     <MaterialTextInput label="midi.name" value={emitter.name} on:change={(e) => updateValue("name", e.detail)} autofocus={!emitter.name} />

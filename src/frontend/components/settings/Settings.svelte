@@ -3,7 +3,6 @@
     import { activePopup, dictionary, settingsTab } from "../../stores"
     import Button from "../../lib/components/ui/button/button.svelte"
     import { translateText } from "../../utils/language"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
     import Tip from "../main/Tip.svelte"
     import AudioRouting from "./tabs/AudioRouting.svelte"
     import Connection from "./tabs/Connection.svelte"
@@ -41,7 +40,7 @@
             {/if}
 
             {#if tabId === "audio"}
-                <MaterialButton title="actions.reset" icon="reset" on:click={resetAudioRouting} />
+                <Button title="actions.reset" icon="reset" on:click={resetAudioRouting} />
             {:else if tabId === "profiles"}
                 <ProfilesButtons />
             {/if}

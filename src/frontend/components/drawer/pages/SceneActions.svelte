@@ -4,7 +4,7 @@
     import { getAccess } from "../../../utils/profile"
     import { history } from "../../helpers/history"
     import Icon from "../../helpers/Icon.svelte"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     export let columns: number
     export let sceneId = ""
@@ -40,7 +40,7 @@
     {#if scene?.action && $actions[scene.action]}
         {@const act = $actions[scene.action]}
         <div class="button white">
-            <Button style="padding: 3px;" redHover title="{translateText('actions.remove')}: <b>{act.name}</b>" {zoom} on:click={(e) => setTimeout(() => removeCustomAction(e))}>
+            <Button align="start" style="padding: 3px;" redHover title="{translateText('actions.remove')}: <b>{act.name}</b>" on:click={(e) => setTimeout(() => removeCustomAction(e))}>
                 <Icon id="actions" size={0.9} white />
                 <p>{act.name}</p>
             </Button>
@@ -51,7 +51,7 @@
     {#if scene?.bindings?.length}
         <div>
             <div class="button white">
-                <Button style="padding: 3px;" redHover title={translateText("actions.remove_binding")} {zoom} on:click={(e) => setTimeout(() => removeBindings(e))}>
+                <Button align="start" style="padding: 3px;" redHover title={translateText("actions.remove_binding")} on:click={(e) => setTimeout(() => removeBindings(e))}>
                     <Icon id="bind" size={0.9} white />
                 </Button>
             </div>

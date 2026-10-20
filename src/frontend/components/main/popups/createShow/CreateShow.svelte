@@ -12,7 +12,7 @@
     import { checkName } from "../../../helpers/show"
     import T from "../../../helpers/T.svelte"
     import List from "../../../input/List.svelte"
-    import MaterialButton from "../../../inputs/MaterialButton.svelte"
+    import Button from "../../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
     import MaterialMultiChoice from "../../../inputs/MaterialMultiChoice.svelte"
     import MaterialNumberInput from "../../../inputs/MaterialNumberInput.svelte"
@@ -218,13 +218,13 @@
 
     <MaterialMultiChoice options={resolvedCreateOptions} on:click={(e) => selectOption(e.detail)} />
 {:else}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (selectedOption = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (selectedOption = "")} />
 {/if}
 
 {#if selectedOption === "text"}
-    <MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white>
+    <Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white>
         {#if Number($splitLines)}<span class="state">{$splitLines}</span>{/if}
-    </MaterialButton>
+    </Button>
 
     <MaterialTextarea label="create_show.quick_lyrics" placeholder={getQuickExample()} value={values.text} autofocus={!values.text} rows={showMore ? 6 : Math.max(6, Math.min(12, values.text.split("\n").length))} on:input={(e) => changeValue(e)} />
     <!-- WIP buttons for paste / format(remove chords, remove empty lines), etc. -->
@@ -237,9 +237,9 @@
         </List>
     {/if}
 
-    <MaterialButton on:click={textToShow} variant="contained" title="timer.create [Ctrl+Enter]" disabled={values.text.trim().length === 0} info={getName(values) || translateText("main.unnamed")} style="width: 100%;margin-top: 20px;" icon="add" data-testid="create.show.popup.new.show">
+    <Button on:click={textToShow} variant="default" title="timer.create [Ctrl+Enter]" disabled={values.text.trim().length === 0} info={getName(values) || translateText("main.unnamed")} style="width: 100%;margin-top: 20px;" icon="add" data-testid="create.show.popup.new.show">
         <T id="timer.create" />
-    </MaterialButton>
+    </Button>
 {:else if selectedOption === "web"}
     <WebSearch query={values.name} on:update={updateLyrics} />
 {/if}

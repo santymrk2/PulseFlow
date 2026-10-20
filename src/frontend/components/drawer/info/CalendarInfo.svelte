@@ -4,7 +4,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import { joinTimeBig } from "../../helpers/time"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
     import CalendarsManagement from "../calendar/CalendarsManagement.svelte"
@@ -62,7 +62,7 @@
     <Day {type} />
 
     {#if $nextActionEventStart.timeLeft}
-        <Button on:click={() => nextActionEventPaused.set(!$nextActionEventPaused)} title={translateText($nextActionEventPaused ? "actions.start_timer" : "media.pause")} dark>
+        <Button align="start" on:click={() => nextActionEventPaused.set(!$nextActionEventPaused)} title={translateText($nextActionEventPaused ? "actions.start_timer" : "media.pause")}>
             <Icon id={$nextActionEventPaused ? "play" : "pause"} white={$nextActionEventPaused} right />
             {#if $nextActionEventPaused}
                 <T id="actions.start_timer" />

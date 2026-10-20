@@ -6,7 +6,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { metadataDisplayValues } from "../../helpers/show"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
     import Tip from "../Tip.svelte"
@@ -121,7 +121,7 @@
 <div class="types">
     {#each displayValues as data}
         {@const isActive = data.id === display}
-        <MaterialButton style="background-color: var(--primary-darker);" showOutline={isActive} {isActive} on:click={() => changeMetadata("display", data.id)}>
+        <Button style="background-color: var(--primary-darker);" showOutline={isActive} {isActive} on:click={() => changeMetadata("display", data.id)}>
             {#if data.id === "default"}
                 <Icon id="shows" style="height: {iconSize}pt;opacity: 0.8;" size={2} white />
             {:else}
@@ -131,21 +131,21 @@
             {/if}
 
             <p style="font-size: 0.75em;opacity: 0.9;">{translateText(data.name)}</p>
-        </MaterialButton>
+        </Button>
     {/each}
 </div>
 
 {#if display === "default"}
     <Tip value="tips.display_metadata" top={20} />
 {:else if display !== "never"}
-    <MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
+    <Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 
     <div style="margin-top: 20px;">
         {#if display === "always"}
             <InputRow>
                 <MaterialPopupButton label="meta.meta_template" value={templateAll} defaultValue="metadata" name={$templates[templateAll]?.name} popupId="select_template" icon="templates" data={{ revert: "metadata_display" }} on:change={(e) => changeMetadata("templateAll", e.detail)} />
                 {#if templateAll && $templates[templateAll]}
-                    <MaterialButton title="titlebar.edit" icon="edit" on:click={() => editTemplate(templateAll)} />
+                    <Button title="titlebar.edit" icon="edit" on:click={() => editTemplate(templateAll)} />
                 {/if}
             </InputRow>
         {/if}
@@ -154,7 +154,7 @@
             <InputRow>
                 <MaterialPopupButton label="meta.meta_template (show_at.first)" value={templateFirst} defaultValue={display === "always" ? templateAll : template} name={$templates[templateFirst]?.name} popupId="select_template" icon="templates" data={{ revert: "metadata_display" }} on:change={(e) => changeMetadata("templateFirst", e.detail)} />
                 {#if templateFirst && $templates[templateFirst]}
-                    <MaterialButton title="titlebar.edit" icon="edit" on:click={() => editTemplate(templateFirst)} />
+                    <Button title="titlebar.edit" icon="edit" on:click={() => editTemplate(templateFirst)} />
                 {/if}
             </InputRow>
         {/if}
@@ -162,7 +162,7 @@
         <InputRow>
             <MaterialPopupButton label="meta.meta_template{display === 'first_last' || display === 'always' ? ' (show_at.last)' : ''}" value={template} defaultValue={display === "always" ? templateAll : "metadata"} name={$templates[template]?.name} popupId="select_template" icon="templates" data={{ revert: "metadata_display" }} on:change={(e) => changeMetadata("template", e.detail)} />
             {#if template && $templates[template]}
-                <MaterialButton title="titlebar.edit" icon="edit" on:click={() => editTemplate(template)} />
+                <Button title="titlebar.edit" icon="edit" on:click={() => editTemplate(template)} />
             {/if}
         </InputRow>
 

@@ -3,7 +3,7 @@
     import { addEffectToStack, EFFECTS_LIST, type EffectType } from "../../../audio/effects/audioEffectsHelpers"
     import { activeAudioEffects, activePopup, popupData } from "../../../stores"
     import { translateText } from "../../../utils/language"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     let channelId = $popupData?.channelId || get(activeAudioEffects) || "main"
 
@@ -16,8 +16,8 @@
 
 <div style="display: flex;flex-direction: column;gap: 2px;">
     {#each EFFECTS_LIST as eff}
-        <MaterialButton variant="outlined" style="border-left: 4px solid {eff.color};padding: 8px 12px;font-weight: normal;font-size: 0.75em;justify-content: left;" title={eff.description} on:click={() => selectEffect(eff.id)}>
+        <Button variant="outline" style="border-left: 4px solid {eff.color};padding: 8px 12px;font-weight: normal;font-size: 0.75em;justify-content: left;" title={eff.description} on:click={() => selectEffect(eff.id)}>
             {translateText(eff.label)}
-        </MaterialButton>
+        </Button>
     {/each}
 </div>

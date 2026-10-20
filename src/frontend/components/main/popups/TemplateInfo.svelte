@@ -7,7 +7,7 @@
     import { getLayoutRef, removeTemplatesFromShow } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import HRule from "../../input/HRule.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     const showId = $activeShow?.id || ""
     const currentShow = $showsCache[showId]
@@ -71,15 +71,15 @@
     <p><b>{translateText("edit.style")}:</b> {translateText(`settings.override${isScripture ? "_scripture" : ""}_with_template`)}</p>
 
     <div class="flex">
-        <MaterialButton style="flex: 1;" variant="outlined" title="menu.edit: {$templates[outputStyleTemplate]?.name || ''}" on:click={() => editTemplate(outputStyleTemplate)}>
+        <Button style="flex: 1;" variant="outline" title="menu.edit: {$templates[outputStyleTemplate]?.name || ''}" on:click={() => editTemplate(outputStyleTemplate)}>
             <Icon size={1.1} id="edit" />
             <p>{translateText("menu.edit")}: <b>{$templates[outputStyleTemplate]?.name || ""}</b></p>
-        </MaterialButton>
+        </Button>
 
-        <MaterialButton style="flex: 1;" variant="outlined" title="edit.style: {$styles[outputStyleId]?.name || ''}" on:click={openStylePage}>
+        <Button style="flex: 1;" variant="outline" title="edit.style: {$styles[outputStyleId]?.name || ''}" on:click={openStylePage}>
             <Icon size={1.1} id="styles" />
             <p>{translateText("edit.style")}: <b>{$styles[outputStyleId]?.name || ""}</b></p>
-        </MaterialButton>
+        </Button>
     </div>
 {/if}
 
@@ -92,10 +92,10 @@
         <p><b>{translateText("tools.slide")}:</b><!-- {translateText("formats.template")} --></p>
 
         <div class="flex">
-            <MaterialButton style="flex: 1;" variant="outlined" title="menu.edit: {$templates[slideTemplate]?.name || ''}" on:click={() => editTemplate(slideTemplate)}>
+            <Button style="flex: 1;" variant="outline" title="menu.edit: {$templates[slideTemplate]?.name || ''}" on:click={() => editTemplate(slideTemplate)}>
                 <Icon size={1.1} id="edit" />
                 <p>{translateText("menu.edit")}: <b>{$templates[slideTemplate]?.name || ""}</b></p>
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
 
@@ -103,15 +103,15 @@
         <p style={slideTemplate ? "margin-top: 10px;" : ""}><b>{translateText("inputs.group")}:</b><!-- {translateText("formats.template")} --></p>
 
         <div class="flex">
-            <MaterialButton style="flex: 1;" variant="outlined" title="menu.edit: {$templates[groupTemplate]?.name || ''}" on:click={() => editTemplate(groupTemplate)}>
+            <Button style="flex: 1;" variant="outline" title="menu.edit: {$templates[groupTemplate]?.name || ''}" on:click={() => editTemplate(groupTemplate)}>
                 <Icon size={1.1} id="edit" />
                 <p>{translateText("menu.edit")}: <b>{$templates[groupTemplate]?.name || ""}</b></p>
-            </MaterialButton>
+            </Button>
 
-            <MaterialButton style="flex: 1;" variant="outlined" title="popup.manage_groups" on:click={() => activePopup.set("manage_groups")}>
+            <Button style="flex: 1;" variant="outline" title="popup.manage_groups" on:click={() => activePopup.set("manage_groups")}>
                 <Icon size={1.1} id="groups" />
                 <p>{translateText("popup.manage_groups")}</p>
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
 
@@ -127,15 +127,15 @@
     <p><b>{translateText("formats.show")}:</b><!-- {translateText("formats.template")} --></p>
 
     <div class="flex">
-        <MaterialButton style="flex: 1;" variant="outlined" title="menu.edit: <b>{$templates[showTemplateId]?.name || 'info.template'}</b>" on:click={() => editTemplate(showTemplateId)}>
+        <Button style="flex: 1;" variant="outline" title="menu.edit: <b>{$templates[showTemplateId]?.name || 'info.template'}</b>" on:click={() => editTemplate(showTemplateId)}>
             <Icon size={1.1} id="edit" />
             <p>{translateText("menu.edit")}: <b>{$templates[showTemplateId]?.name || "info.template"}</b></p>
-        </MaterialButton>
+        </Button>
 
-        <MaterialButton style="flex: 1;" variant="outlined" title="actions.remove_template_from_show" on:click={removeShowTemplate}>
+        <Button style="flex: 1;" variant="outline" title="actions.remove_template_from_show" on:click={removeShowTemplate}>
             <Icon size={1.1} id="remove_circle" />
             <p>{translateText("actions.remove_template_from_show")}</p>
-        </MaterialButton>
+        </Button>
     </div>
 {/if}
 

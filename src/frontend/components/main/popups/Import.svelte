@@ -8,7 +8,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Tip from "../Tip.svelte"
 
     let mode = $popupData.mode
@@ -113,29 +113,29 @@
 </script>
 
 {#if openedPage === "powerpoint"}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (openedPage = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (openedPage = "")} />
 
     <div style="display: flex;flex-direction: column;gap: 5px;">
         {#each powerpoint_options as option}
-            <MaterialButton variant="outlined" style="justify-content: start;flex: 1;min-height: 50px;font-weight: normal;" on:click={() => option.click()}>
+            <Button variant="outline" style="justify-content: start;flex: 1;min-height: 50px;font-weight: normal;" on:click={() => option.click()}>
                 <img style="height: 60px;width: 70px;" src="./import-logos/{option.icon}.webp" alt="{option.name}-logo" draggable={false} />
 
                 <div style="display: flex;flex-direction: column;align-items: start;gap: 5px;">
                     <p style="font-size: 1.1em;">{translateText(option.name)}</p>
                     <span style="opacity: 0.5;">{translateText(option.description)}</span>
                 </div>
-            </MaterialButton>
+            </Button>
         {/each}
     </div>
 
     <Tip value="The best option would generally be to get a hold of the presentation as PDF format in the first place." top={20} />
 {:else if openedPage === "freeshow_more"}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (openedPage = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (openedPage = "")} />
 
     <div style="display: flex;gap: 5px;">
         {#each freeshow_more_formats as format}
-            <MaterialButton
-                variant="outlined"
+            <Button
+                variant="outline"
                 title={format.title}
                 style="flex: 1;min-height: 50px;min-width: 280px;padding: 10px;gap: 15px;"
                 on:click={() => {
@@ -148,27 +148,27 @@
                 <div class="freeshow">
                     <img style="height: 18px;padding: 0;" src="./import-logos/freeshow.webp" alt="FreeShow-logo" draggable={false} />
                 </div>
-            </MaterialButton>
+            </Button>
         {/each}
     </div>
 
     <!-- <div style="display: flex;gap: 5px;margin-top: 10px;">
-        <MaterialButton variant="outlined" style="flex: 1;min-height: 50px;padding: 10px;gap: 15px;" on:click={openCalendar}>
+        <Button variant="outline" style="flex: 1;min-height: 50px;padding: 10px;gap: 15px;" on:click={openCalendar}>
             <Icon style="height: 60px;" id="calendar" size={2.5} white />
             <p>{translateText("tabs.calendar")}</p>
-        </MaterialButton>
+        </Button>
 
-        <MaterialButton variant="outlined" style="flex: 1;min-height: 50px;padding: 10px;gap: 15px;" on:click={openScripture}>
+        <Button variant="outline" style="flex: 1;min-height: 50px;padding: 10px;gap: 15px;" on:click={openScripture}>
             <Icon style="height: 60px;" id="scripture" size={2.5} white />
             <p>{translateText("tabs.scripture")}</p>
-        </MaterialButton>
+        </Button>
     </div> -->
 {:else if mode === "project"}
     <div style="display: flex;gap: 5px;">
         {#each media_formats.filter((a) => ["pdf", "powerpoint"].includes(a.id)) as format}
             <InputRow style="flex: 1;">
-                <MaterialButton
-                    variant="outlined"
+                <Button
+                    variant="outline"
                     style="justify-content: start;flex: 1;min-height: 50px;font-weight: normal;"
                     on:click={() => {
                         if (format.id === "powerpoint") {
@@ -182,7 +182,7 @@
                 >
                     <img style="height: 60px;width: 70px;" src="./import-logos/{format.id}.webp" alt="{format.id}-logo" draggable={false} />
                     <p>{format.name}</p>
-                </MaterialButton>
+                </Button>
             </InputRow>
         {/each}
     </div>
@@ -191,8 +191,8 @@
 
     <div style="display: flex;gap: 5px;">
         {#each text_formats.filter((a) => ["txt", "chordpro"].includes(a.id)) as format}
-            <MaterialButton
-                variant="outlined"
+            <Button
+                variant="outline"
                 style="justify-content: start;flex: 1;min-height: 50px;font-weight: normal;"
                 on:click={() => {
                     let name = translateText(format.name)
@@ -203,13 +203,13 @@
             >
                 <img style="height: 60px;width: 70px;" src="./import-logos/{format.id}.webp" alt="{format.id}-logo" draggable={false} />
                 <p>{translateText(format.name)}</p>
-            </MaterialButton>
+            </Button>
         {/each}
     </div>
 
-    <MaterialButton
+    <Button
         style="margin-top: 5px;"
-        variant="outlined"
+        variant="outline"
         on:click={() => {
             importFromClipboard()
             activePopup.set(null)
@@ -218,12 +218,12 @@
     >
         <Icon id="paste" size={1.2} white />
         {translateText("formats.clipboard")}
-    </MaterialButton>
+    </Button>
 {:else}
     <div style="display: flex;gap: 5px;">
         {#each freeshow_primary_formats as format}
-            <MaterialButton
-                variant="outlined"
+            <Button
+                variant="outline"
                 title={format.title}
                 style="flex: 1;min-height: 50px;padding: 10px;gap: 15px;"
                 on:click={() => {
@@ -236,18 +236,18 @@
                 <div class="freeshow">
                     <img style="height: 18px;padding: 0;" src="./import-logos/freeshow.webp" alt="FreeShow-logo" draggable={false} />
                 </div>
-            </MaterialButton>
+            </Button>
         {/each}
 
-        <MaterialButton variant="outlined" style="flex: 1;min-height: 50px;padding: 10px;gap: 5px;" on:click={() => (openedPage = "freeshow_more")}>
+        <Button variant="outline" style="flex: 1;min-height: 50px;padding: 10px;gap: 5px;" on:click={() => (openedPage = "freeshow_more")}>
             <p style="opacity: 0.9;">{translateText("create_show.more_options")}</p>
             <Icon style="opacity: 0.8;height: 60px;margin-right: -15px;" id="next" size={2} white />
-        </MaterialButton>
+        </Button>
     </div>
 
-    <MaterialButton
+    <Button
         style="margin-top: 5px;"
-        variant="outlined"
+        variant="outline"
         on:click={() => {
             importFromClipboard()
             activePopup.set(null)
@@ -256,15 +256,15 @@
     >
         <Icon id="paste" size={1.2} white />
         {translateText("formats.clipboard")}
-    </MaterialButton>
+    </Button>
 
     <HRule title="settings.media_import" />
 
     <div style="display: flex;gap: 5px;">
         {#each media_formats as format}
             <InputRow style="flex: 1;">
-                <MaterialButton
-                    variant="outlined"
+                <Button
+                    variant="outline"
                     title={format.title}
                     style="justify-content: start;flex: 1;min-height: 50px;font-weight: normal;"
                     on:click={() => {
@@ -280,11 +280,11 @@
                 >
                     <img style="height: 60px;width: 70px;" src="./import-logos/{format.id}.webp" alt="{format.id}-logo" draggable={false} />
                     <p>{format.name}</p>
-                </MaterialButton>
+                </Button>
 
                 {#if format.id === "powerpoint"}
-                    <MaterialButton
-                        variant="outlined"
+                    <Button
+                        variant="outline"
                         style="padding: 6px;"
                         on:click={() => {
                             openedPage = "powerpoint"
@@ -292,7 +292,7 @@
                         title="create_show.more_options"
                     >
                         <Icon id="next" style="opacity: 0.6;" size={1.8} white />
-                    </MaterialButton>
+                    </Button>
                 {/if}
             </InputRow>
         {/each}
@@ -302,8 +302,8 @@
 
     <div style="display: flex;gap: 5px;">
         {#each text_formats as format}
-            <MaterialButton
-                variant="outlined"
+            <Button
+                variant="outline"
                 style="justify-content: start;width: calc((100% / 3) - (5px * 2 / 3));min-height: 50px;font-weight: normal;border: 1px solid var(--primary-lighter);"
                 on:click={() => {
                     let name = translateText(format.name)
@@ -314,7 +314,7 @@
             >
                 <img style="height: 60px;width: 70px;" src="./import-logos/{format.id}.webp" alt="{format.id}-logo" draggable={false} />
                 <p>{translateText(format.name)}</p>
-            </MaterialButton>
+            </Button>
         {/each}
     </div>
 {/if}

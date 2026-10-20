@@ -9,7 +9,7 @@
     import { history } from "../../helpers/history"
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
     import Center from "../../system/Center.svelte"
@@ -128,16 +128,16 @@
             <InputRow>
                 <MaterialTextInput label="edit.style_override_pattern" style="flex: 4;" disabled={!!override.globalRegex} value={pattern} on:change={(e) => updateOverride(override.id, "pattern", e.detail)} autofocus={!pattern} />
                 {#if override.globalRegex}
-                    <MaterialButton title="titlebar.edit" icon="edit" on:click={() => editRegexes(override.id, override.globalRegex)} />
+                    <Button title="titlebar.edit" icon="edit" on:click={() => editRegexes(override.id, override.globalRegex)} />
                 {/if}
                 <MaterialDropdown label="/regex/" options={regexes} value={override.globalRegex || ""} on:change={(e) => setRegex(override.id, e.detail)} on:new={(e) => editRegexes(override.id, "", e.detail)} addNew="Create Regex" on:delete={(e) => deleteRegex(e.detail)} allowDeleting onlyArrow />
 
                 <MaterialDropdown label="formats.template" style="flex: 2;border-left: 3px solid var(--primary-lighter) !important;" options={templatesList} value={override.templateId || ""} on:change={(e) => updateOverride(override.id, "templateId", e.detail)} on:new={(e) => updateOverride(override.id, "templateId", createTemplate(e))} addNew="new.template" on:delete={(e) => deleteTemplate(e.detail)} allowDeleting />
                 {#if override.templateId && $templates[override.templateId]}
-                    <MaterialButton title="titlebar.edit" icon="edit" on:click={() => editTemplate(override.templateId)} white />
+                    <Button title="titlebar.edit" icon="edit" on:click={() => editTemplate(override.templateId)} white />
                 {/if}
 
-                <MaterialButton icon="delete" title="actions.delete" style="border-left: 3px solid var(--primary-lighter) !important;" on:click={() => removeOverride(override.id)} white />
+                <Button icon="delete" title="actions.delete" style="border-left: 3px solid var(--primary-lighter) !important;" on:click={() => removeOverride(override.id)} white />
             </InputRow>
         {/each}
     {:else}
@@ -146,7 +146,7 @@
         </Center>
     {/if}
 
-    <MaterialButton variant="outlined" icon="add" style="width: 100%;margin-top: 10px;" on:click={addOverride}>
+    <Button variant="outline" icon="add" style="width: 100%;margin-top: 10px;" on:click={addOverride}>
         <T id="settings.add" />
-    </MaterialButton>
+    </Button>
 </section>

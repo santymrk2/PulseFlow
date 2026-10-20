@@ -7,7 +7,7 @@
     import { addToPos } from "../helpers/mover"
     import T from "../helpers/T.svelte"
     import InputRow from "../input/InputRow.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../inputs/MaterialColorInput.svelte"
     import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
     import Tabs from "../main/Tabs.svelte"
@@ -95,10 +95,10 @@
                                     </div>
 
                                     {#if displayIndex < invertedItems.length - 1}
-                                        <MaterialButton class="down" icon="down" on:click={() => move(index, index - 1)} />
+                                        <Button class="down" icon="down" on:click={() => move(index, index - 1)} />
                                     {/if}
                                     {#if displayIndex > 0}
-                                        <MaterialButton class="up" icon="up" on:click={() => move(index, index + 1)} />
+                                        <Button class="up" icon="up" on:click={() => move(index, index + 1)} />
                                     {/if}
 
                                     <svelte:fragment slot="menu">

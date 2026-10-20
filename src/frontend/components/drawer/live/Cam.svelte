@@ -8,7 +8,7 @@
     import { getCropState } from "../../helpers/cropping"
     import { getMediaStyle } from "../../helpers/media"
     import { findMatchingOut } from "../../helpers/output"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import Card from "../Card.svelte"
 
@@ -133,7 +133,7 @@
             </video>
         {/if}
         <div class="mediaContainer" style={cropState.mediaContainerStyle}>
-            <video style={style} bind:this={videoElem}>
+            <video {style} bind:this={videoElem}>
                 <track kind="captions" />
             </video>
         </div>
@@ -164,7 +164,7 @@
                 {#if startupCameras.includes(cam.id)}
                     <div style="max-width: 100%;">
                         <div class="button">
-                            <Button style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeFromStartup(cam.id)}>
+                            <Button align="start" style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeFromStartup(cam.id)}>
                                 <Icon id="startup" size={0.9} white />
                             </Button>
                         </div>
@@ -174,7 +174,7 @@
                 {#if !!mediaStyle.filter?.length || $media[cam.id]?.fit || mediaStyle.flipped || mediaStyle.flippedY || Object.keys(mediaStyle.cropping || {}).length}
                     <div style="max-width: 100%;">
                         <div class="button">
-                            <Button style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("filters")}>
+                            <Button align="start" style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("filters")}>
                                 <Icon id="filter" size={0.9} white />
                             </Button>
                         </div>

@@ -7,7 +7,7 @@
     import { history } from "../../helpers/history"
     import { getResolution } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
@@ -76,7 +76,7 @@
     }
 </script>
 
-<MaterialButton class="popup-options" icon="add" iconSize={1.3} title="new.overlay" on:click={createNew} white />
+<Button class="popup-options" icon="add" iconSize={1.3} title="new.overlay" on:click={createNew} white />
 
 {#if allOverlays.length > 8}
     <div style="margin-bottom: 10px;">

@@ -9,7 +9,7 @@
     import { history } from "../../helpers/history"
     import Icon from "../../helpers/Icon.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialMultiButtons from "../../inputs/MaterialMultiButtons.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
@@ -243,7 +243,7 @@
     <InputRow style="margin-top: 20px;">
         <MaterialDropdown label="midi.start_action" options={actionOptions.map((a) => ({ label: a.name, value: a.id }))} value={currentAction} on:change={(e) => updateProfile("action", e.detail)} allowEmpty />
         {#if currentAction && $actions[currentAction]}
-            <MaterialButton title="titlebar.edit" icon="edit" on:click={editAction} />
+            <Button title="titlebar.edit" icon="edit" on:click={editAction} />
         {/if}
     </InputRow>
 {/if}

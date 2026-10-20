@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte"
     import { translateText } from "../../utils/language"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Center from "../system/Center.svelte"
     import InputRow from "./InputRow.svelte"
 
@@ -33,14 +33,14 @@
     {#each items as item}
         <InputRow>
             {#if allowOpen}
-                <MaterialButton style="width: 100%;font-weight: normal;" title={translateText("titlebar.edit")} on:click={() => openItem(item.id)}>
+                <Button style="width: 100%;font-weight: normal;" title={translateText("titlebar.edit")} on:click={() => openItem(item.id)}>
                     <slot {item} />
-                </MaterialButton>
+                </Button>
             {:else}
                 <slot {item} />
             {/if}
 
-            <MaterialButton icon="delete" style="width: 40px;" title={translateText("actions.delete")} on:click={() => deleteItem(item.id)} white />
+            <Button icon="delete" style="width: 40px;" title={translateText("actions.delete")} on:click={() => deleteItem(item.id)} white />
         </InputRow>
     {/each}
 {:else if nothingText}
@@ -51,6 +51,6 @@
     <br />
 {/if}
 
-<MaterialButton variant="outlined" style="width: 100%;" icon="add" disabled={addDisabled} on:click={addItem}>
+<Button variant="outline" style="width: 100%;" icon="add" disabled={addDisabled} on:click={addItem}>
     <T id="settings.add" />
-</MaterialButton>
+</Button>

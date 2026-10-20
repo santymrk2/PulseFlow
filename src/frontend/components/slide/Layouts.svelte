@@ -15,7 +15,7 @@
     import { joinTime, secondsToTime } from "../helpers/time"
     import FloatingInputs from "../input/FloatingInputs.svelte"
     import HiddenInput from "../inputs/HiddenInput.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialZoom from "../inputs/MaterialZoom.svelte"
     import SelectElem from "../system/SelectElem.svelte"
     import Reference from "./Reference.svelte"
@@ -137,29 +137,29 @@
     <FloatingInputs arrow={!isLocked} let:open>
         <div slot="menu">
             {#if Object.keys($actions).length && !reference && (!isLocked || customAction)}
-                <MaterialButton title="show.custom_action_tip" on:click={() => runCustomAction(true)}>
+                <Button title="show.custom_action_tip" on:click={() => runCustomAction(true)}>
                     <Icon size={1.1} id="actions" white={!customAction} />
-                </MaterialButton>
+                </Button>
 
                 <div class="divider" />
             {/if}
 
-            <MaterialButton on:click={() => activePopup.set("translate")} title="popup.translate">
+            <Button on:click={() => activePopup.set("translate")} title="popup.translate">
                 <Icon size={1.1} id="translate" white={!isTranslated} />
-            </MaterialButton>
+            </Button>
         </div>
 
         {#if !open && customAction}
-            <MaterialButton style="aspect-ratio: unset;" class="context #edit_custom_action" title="actions.run_action: {$actions[customAction].name}" on:click={() => runCustomAction()}>
+            <Button style="aspect-ratio: unset;" class="context #edit_custom_action" title="actions.run_action: {$actions[customAction].name}" on:click={() => runCustomAction()}>
                 <Icon size={1.1} id={getActionIcon(customAction)} />
                 <p>{$actions[customAction].name}</p>
-            </MaterialButton>
+            </Button>
 
             <div class="divider" />
         {/if}
 
         {#if isLocked}
-            <MaterialButton
+            <Button
                 title="show.locked"
                 on:click={() => {
                     alertMessage.set(`${translateText(currentShow?.locked ? "show.locked" : "profile.locked")}<br><br>Unlock it by clicking the three dots in the top right corner.`)
@@ -167,18 +167,18 @@
                 }}
             >
                 <Icon size={1.1} id="locked" />
-            </MaterialButton>
+            </Button>
         {:else}
             {#if !open && (isTranslated || referenceType === "scripture")}
-                <MaterialButton on:click={() => activePopup.set("translate")} title="popup.translate">
+                <Button on:click={() => activePopup.set("translate")} title="popup.translate">
                     <Icon size={1.1} id="translate" white={!isTranslated} />
-                </MaterialButton>
+                </Button>
             {/if}
 
             {#if open || totalTime !== "0s" || referenceType !== "scripture"}
-                <MaterialButton title="popup.next_timer{totalTime !== '0s' ? ': ' + totalTime : ''} [Ctrl+Shift+D]" on:click={() => activePopup.set("next_timer")}>
+                <Button title="popup.next_timer{totalTime !== '0s' ? ': ' + totalTime : ''} [Ctrl+Shift+D]" on:click={() => activePopup.set("next_timer")}>
                     <Icon size={1.1} id="clock" white={totalTime === "0s"} />
-                </MaterialButton>
+                </Button>
             {/if}
         {/if}
 
@@ -188,9 +188,9 @@
 
         <MaterialZoom hidden={!open} columns={$slidesOptions.columns} on:change={(e) => slidesOptions.set({ ...$slidesOptions, columns: e.detail })} />
 
-        <MaterialButton class="context #slideViews" title="show.change_view: show.{$slidesOptions.mode} [Ctrl+Shift+V]" on:click={changeSlidesView}>
+        <Button class="context #slideViews" title="show.change_view: show.{$slidesOptions.mode} [Ctrl+Shift+V]" on:click={changeSlidesView}>
             <Icon size={1.3} id={$slidesOptions.mode} white={$slidesOptions.mode === "grid"} />
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}
 
@@ -203,7 +203,7 @@
                 <span class="layouts">
                     {#each sortedLayouts as layout}
                         <SelectElem id="layout" data={layout.id} fill={!edit || edit === layout.id}>
-                            <MaterialButton
+                            <Button
                                 class={isLocked ? "" : "context #layout"}
                                 on:click={() => {
                                     if (!edit) setLayout(layout.id, { name: layout.name })
@@ -211,16 +211,16 @@
                                 isActive={activeLayout === layout.id}
                             >
                                 <HiddenInput value={layout.name} id={"layout_" + layout.id} on:edit={changeName} bind:edit allowEdit={!isLocked} />
-                            </MaterialButton>
+                            </Button>
                         </SelectElem>
                     {/each}
                 </span>
             {/if}
 
-            <MaterialButton disabled={!layoutSlides.length || isLocked || !layoutSlides?.some((a) => a && currentShow?.slides?.[a.id]?.group && currentShow?.slides?.[a.id]?.group !== ".")} on:click={addLayout} style="white-space: nowrap;" title="show.new_arrangement" center>
+            <Button disabled={!layoutSlides.length || isLocked || !layoutSlides?.some((a) => a && currentShow?.slides?.[a.id]?.group && currentShow?.slides?.[a.id]?.group !== ".")} on:click={addLayout} style="white-space: nowrap;" title="show.new_arrangement" center>
                 <Icon id="add" size={1.1} white={multipleLayouts} />
                 {#if !multipleLayouts && !$labelsDisabled}<T id="show.new_arrangement" />{/if}
-            </MaterialButton>
+            </Button>
         {/if}
     </FloatingInputs>
 {/if}

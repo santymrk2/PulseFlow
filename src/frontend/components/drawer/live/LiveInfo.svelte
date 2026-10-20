@@ -2,7 +2,7 @@
     import { activeRecording, currentRecordingStream, drawerTabsData, special } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
     import { mediaRecorderIsPaused, stopMediaRecorder, toggleMediaRecorder } from "./recorder"
 
@@ -38,7 +38,7 @@
             <track kind="captions" />
         </video>
 
-        <Button style="flex: 0" center on:click={() => (paused = toggleMediaRecorder())} dark>
+        <Button style="flex: 0" on:click={() => (paused = toggleMediaRecorder())}>
             <Icon id={paused ? "play" : "pause"} white={paused} size={1.2} right />
             <T id={paused ? "popup.continue" : "media.pause"} />
         </Button>
@@ -54,7 +54,7 @@
             {/if}
         </FolderPicker> -->
 
-        <Button on:click={stopMediaRecorder} center dark>
+        <Button on:click={stopMediaRecorder}>
             <Icon id="export" size={1.2} right />
             <T id="actions.export_recording" />
         </Button>

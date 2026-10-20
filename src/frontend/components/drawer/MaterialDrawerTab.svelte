@@ -10,7 +10,7 @@
     import { getFirstActiveOutput } from "../helpers/output"
     import { metadataDisplayValues } from "../helpers/show"
     import HiddenInput from "../inputs/HiddenInput.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import SelectElem from "../system/SelectElem.svelte"
 
     export let category: any
@@ -101,7 +101,7 @@
 
 <SelectElem style="width: 100%;" id={selectId} selectable={!noEdit} {draggable} borders="center" trigger="column" data={id}>
     <div class="row">
-        <MaterialButton class={className} style="width: 100%;font-weight: normal;padding: 0 {boxedIcon ? 0.64 : 0.8}em;" {isActive} {showOutline} on:click={click} on:dblclick={dblclick} tab>
+        <Button class={className} style="width: 100%;font-weight: normal;padding: 0 {boxedIcon ? 0.64 : 0.8}em;" {isActive} {showOutline} on:click={click} on:dblclick={dblclick} tab>
             <div style="max-width: 85%;{boxedIcon ? 'gap: 9px;' : ''}" data-title={translateText(label)}>
                 <Icon id={icon} size={isSubmenu ? 0.85 : 1} color={isSubmenu ? category.color : boxedIcon ? customIconsColors[icon] || "" : ""} white custom={customIcon} boxed={isSubmenu || boxedIcon} />
 
@@ -147,15 +147,15 @@
 
             <!-- SUB MENU -->
             {#if !isSubmenu && submenu?.options?.length}
-                <MaterialButton on:click={openSubMenu} style="border-left: 1px solid var(--primary-lighter);padding: 0.8em;position: absolute;right: 0;">
+                <Button on:click={openSubMenu} style="border-left: 1px solid var(--primary-lighter);padding: 0.8em;position: absolute;right: 0;">
                     {#if submenuOpened}
                         <Icon id="arrow_down" size={1.4} />
                     {:else}
                         <Icon id="arrow_right" size={1.4} white />
                     {/if}
-                </MaterialButton>
+                </Button>
             {/if}
-        </MaterialButton>
+        </Button>
     </div>
 </SelectElem>
 

@@ -3,7 +3,7 @@
     import { translateText } from "../../utils/language"
     import { removeDuplicates } from "../helpers/array"
     import InputRow from "../input/InputRow.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let label: string
     export let value: string[]
@@ -23,11 +23,11 @@
 
     <InputRow>
         {#each options as option}
-            <MaterialButton icon={option.icon} on:click={() => toggleOption(option.value)}>
+            <Button icon={option.icon} on:click={() => toggleOption(option.value)}>
                 {translateText(option.label)}
 
                 <div class="highlight" class:active={value.includes(option.value)}></div>
-            </MaterialButton>
+            </Button>
         {/each}
     </InputRow>
 </div>

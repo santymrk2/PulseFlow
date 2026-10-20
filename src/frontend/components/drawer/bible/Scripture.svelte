@@ -16,7 +16,7 @@
     import T from "../../helpers/T.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
     import TextInput from "../../inputs/TextInput.svelte"
@@ -1226,10 +1226,10 @@
                 {#if isCollection && $scriptureSettings.showAllVersions}
                     <!--  -->
                 {:else if isCollection}
-                    <MaterialButton icon="refresh" on:click={() => swapPreviewBible(activeScriptureId)} title={$scriptures[activeScriptures[(previewBibleIndex + 1) % activeScriptures.length]]?.name || ""} style="padding-right: 0.2em;font-weight: normal;">
+                    <Button icon="refresh" on:click={() => swapPreviewBible(activeScriptureId)} title={$scriptures[activeScriptures[(previewBibleIndex + 1) % activeScriptures.length]]?.name || ""} style="padding-right: 0.2em;font-weight: normal;">
                         {#if isApi}<Icon id="web" style="margin: 0 5px;" size={0.8} white />{/if}
                         {previewBibleData.name}:
-                    </MaterialButton>
+                    </Button>
                 {:else}
                     {#if isApi}<Icon id="web" style="margin-right: 5px;" white />{/if}
                     <span style="opacity: 0.8;">{previewBibleData.name}:</span>
@@ -1269,36 +1269,36 @@
 {:else if $scriptureMode !== "grid" || $resized.rightPanelDrawer > 5}
     <FloatingInputs>
         {#if isActiveInOutput}
-            <MaterialButton disabled={activeReference.book?.toString() === "1" && !!activeReference.chapters?.find((a) => a.toString() === "1") && !!activeReference.verses[0]?.find((a) => a.toString() === "1")} title="{translateText('preview._previous_slide')} [Ctrl+Arrow Left]" on:click={() => _moveSelection(true)}>
+            <Button disabled={activeReference.book?.toString() === "1" && !!activeReference.chapters?.find((a) => a.toString() === "1") && !!activeReference.verses[0]?.find((a) => a.toString() === "1")} title="{translateText('preview._previous_slide')} [Ctrl+Arrow Left]" on:click={() => _moveSelection(true)}>
                 <Icon size={1.3} id="previous" />
-            </MaterialButton>
-            <MaterialButton disabled={activeReference.book?.toString() === books?.length.toString() && activeReference.chapters?.includes(chapters ? chapters.length : 1) && activeReference.verses[0]?.includes(verses ? verses.length : 1)} title="{translateText('preview._next_slide')} [Ctrl+Arrow Right]" on:click={() => _moveSelection(false)}>
+            </Button>
+            <Button disabled={activeReference.book?.toString() === books?.length.toString() && activeReference.chapters?.includes(chapters ? chapters.length : 1) && activeReference.verses[0]?.includes(verses ? verses.length : 1)} title="{translateText('preview._next_slide')} [Ctrl+Arrow Right]" on:click={() => _moveSelection(false)}>
                 <Icon size={1.3} id="next" />
-            </MaterialButton>
+            </Button>
         {/if}
 
-        <MaterialButton disabled={$outLocked} title={isActiveInOutput ? "preview._update [Ctrl+R]" : "menu._title_display"} on:click={playScripture}>
+        <Button disabled={$outLocked} title={isActiveInOutput ? "preview._update [Ctrl+R]" : "menu._title_display"} on:click={playScripture}>
             <Icon size={isActiveInOutput ? 1.1 : 1.3} id={isActiveInOutput ? "refresh" : "play"} white={!isActiveInOutput} />
-        </MaterialButton>
+        </Button>
 
         <div class="divider" />
 
-        <MaterialButton disabled={historyOpened} on:click={() => scriptureMode.set($scriptureMode === "list" ? "grid" : "list")} title="show.{[$scriptureMode === 'grid' ? 'grid' : 'list']}">
+        <Button disabled={historyOpened} on:click={() => scriptureMode.set($scriptureMode === "list" ? "grid" : "list")} title="show.{[$scriptureMode === 'grid' ? 'grid' : 'list']}">
             <Icon size={1.3} id={$scriptureMode === "grid" ? "grid" : "list"} white />
-        </MaterialButton>
+        </Button>
 
         {#if currentHistory.length}
             <div class="divider" />
 
-            <MaterialButton disabled={!currentHistory.length && !historyOpened} isActive={historyOpened} on:click={() => (historyOpened = !historyOpened)} title="popup.history [Ctrl+H]">
+            <Button disabled={!currentHistory.length && !historyOpened} isActive={historyOpened} on:click={() => (historyOpened = !historyOpened)} title="popup.history [Ctrl+H]">
                 <Icon size={1.2} id="history" white />
-            </MaterialButton>
+            </Button>
         {/if}
 
         <!-- content search is not supported for YouVersion Bibles (at the moment)-->
-        <MaterialButton title="scripture.search [Ctrl+B]" disabled={typeof $scriptures[activeScriptureId]?.id === "string" ? $scriptures[activeScriptureId].id.includes("YOUVERSION") : false} on:click={() => (contentSearchFieldActive = true)}>
+        <Button title="scripture.search [Ctrl+B]" disabled={typeof $scriptures[activeScriptureId]?.id === "string" ? $scriptures[activeScriptureId].id.includes("YOUVERSION") : false} on:click={() => (contentSearchFieldActive = true)}>
             <Icon size={1.1} id="search" white />
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}
 

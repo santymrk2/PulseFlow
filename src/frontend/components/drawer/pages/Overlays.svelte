@@ -12,7 +12,7 @@
     import { findMatchingOut, getResolution, setOutput } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
     import Center from "../../system/Center.svelte"
@@ -195,24 +195,24 @@
 
 {#if overlayWithNonExistentCategory}
     <FloatingInputs side="left" onlyOne>
-        <MaterialButton on:click={createNonExistentCategories}>
+        <Button on:click={createNonExistentCategories}>
             <Icon id="autofill" />
             <T id="category.create_nonexistent" />
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}
 
 {#if active === "effects"}
     <FloatingInputs onlyOne>
-        <MaterialButton disabled={readOnly} icon="add" title="new.effect" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "effect" } })}>
+        <Button disabled={readOnly} icon="add" title="new.effect" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "effect" } })}>
             {#if !$labelsDisabled}<T id="new.effect" />{/if}
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {:else}
     <FloatingInputs onlyOne>
-        <MaterialButton disabled={readOnly} icon="add" title="new.overlay" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "overlay" } })}>
+        <Button disabled={readOnly} icon="add" title="new.overlay" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "overlay" } })}>
             {#if !$labelsDisabled}<T id="new.overlay" />{/if}
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}
 

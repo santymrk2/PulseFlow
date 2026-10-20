@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import { dictionary } from "../../stores"
 
     export let label: string
@@ -74,13 +74,13 @@
     {#if defaultValue !== null}
         <div class="remove">
             {#if value !== defaultValue}
-                <MaterialButton on:click={reset} title="actions.reset" white>
+                <Button on:click={reset} title="actions.reset" white>
                     <Icon id="reset" white />
-                </MaterialButton>
+                </Button>
             {:else if resetFromValue !== null}
-                <MaterialButton on:click={undoReset} title="actions.undo" white>
+                <Button on:click={undoReset} title="actions.undo" white>
                     <Icon id="undo" white />
-                </MaterialButton>
+                </Button>
             {/if}
         </div>
     {/if}

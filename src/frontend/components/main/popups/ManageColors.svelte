@@ -3,7 +3,7 @@
     import { special } from "../../../stores"
     import { defaultColors, defaultGradients } from "../../helpers/color"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
     import Tip from "../Tip.svelte"
 
@@ -68,7 +68,7 @@
 
 <span style="font-size: 0;position: absolute;">{console.log(clipboardColors)}</span>
 {#if clipboardColors.length}
-    <MaterialButton variant="outlined" icon="paste" style="margin-top: 10px;" on:click={addClipboardColors}>
+    <Button variant="outline" icon="paste" style="margin-top: 10px;" on:click={addClipboardColors}>
         <T id="actions.paste" />
-    </MaterialButton>
+    </Button>
 {/if}

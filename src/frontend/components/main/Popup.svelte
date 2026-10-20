@@ -8,7 +8,7 @@
     import { clearPopupSubmit, popups } from "../../utils/popup"
     import { disablePopupClose } from "../../utils/shortcuts"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     function mousedown(e: any) {
         // same logic for Escape in shortcuts.ts
@@ -75,7 +75,7 @@
                                 {/key}
 
                                 {#if !disablePopupClose.includes(popupId)}
-                                    <MaterialButton class="popup-close" icon="close" iconSize={1.3} title="actions.close [esc]" on:click={() => activePopup.set(null)} />
+                                    <Button class="popup-close" icon="close" iconSize={1.3} title="actions.close [esc]" on:click={() => activePopup.set(null)} />
                                 {/if}
                             </div>
                         </div>

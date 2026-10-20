@@ -1,6 +1,6 @@
 <script lang="ts">
     import { activeDrawerTab, os, scriptureSettings } from "../../../stores"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     $: drawerTab = $activeDrawerTab
 
@@ -24,7 +24,7 @@
         <li>Press <key class:swapped={enterSwapped}>{playShortcut}</key> to play</li>
     </ul>
 
-    <MaterialButton variant="outlined" icon="swap" on:click={swapEnterBehavior}>Swap</MaterialButton>
+    <Button variant="outline" icon="swap" on:click={swapEnterBehavior}>Swap</Button>
 {/if}
 
 <style>

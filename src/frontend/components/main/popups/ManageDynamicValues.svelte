@@ -5,7 +5,7 @@
     import T from "../../helpers/T.svelte"
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
@@ -198,7 +198,7 @@
     <InputRow arrow>
         <MaterialTextInput label="inputs.name" value={rss.name} disabled={!!(rss.name && rss.url)} on:change={(e) => setValue(e, i, "name")} />
 
-        <MaterialButton icon="delete" title="actions.delete" on:click={() => deleteItem(i)} white />
+        <Button icon="delete" title="actions.delete" on:click={() => deleteItem(i)} white />
 
         <div slot="menu">
             <InputRow>
@@ -214,9 +214,9 @@
     </InputRow>
 {/each}
 
-<MaterialButton variant="outlined" icon="add" on:click={addRSS}>
+<Button variant="outline" icon="add" on:click={addRSS}>
     <T id="settings.add" />
-</MaterialButton>
+</Button>
 
 <HRule title="settings.txt" />
 
@@ -224,7 +224,7 @@
     <InputRow arrow>
         <MaterialTextInput label="inputs.name" value={txt.name} disabled={!!(txt.name && txt.url)} on:change={(e) => setTxtValue(e, i, "name")} />
 
-        <MaterialButton icon="delete" title="actions.delete" on:click={() => deleteTxtItem(i)} white />
+        <Button icon="delete" title="actions.delete" on:click={() => deleteTxtItem(i)} white />
 
         <div slot="menu">
             <InputRow>
@@ -240,6 +240,6 @@
     </InputRow>
 {/each}
 
-<MaterialButton variant="outlined" icon="add" on:click={addTXT}>
+<Button variant="outline" icon="add" on:click={addTXT}>
     <T id="settings.add" />
-</MaterialButton>
+</Button>

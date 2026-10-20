@@ -5,7 +5,7 @@
     import T from "../helpers/T.svelte"
     import { keysToID, sortByName, sortObject } from "../helpers/array"
     import { history } from "../helpers/history"
-    import Button from "../inputs/Button.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Center from "../system/Center.svelte"
     import Tag from "./Tag.svelte"
     import { _show } from "../helpers/shows"
@@ -46,7 +46,7 @@
 </div>
 
 {#if !list}
-    <Button on:click={createNewTag} style="width: 100%;" dark center>
+    <Button on:click={createNewTag} style="width: 100%;">
         <Icon id="tag" right />
         <T id="meta.new_tag" />
     </Button>

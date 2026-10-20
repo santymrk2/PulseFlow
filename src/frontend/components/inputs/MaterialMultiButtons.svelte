@@ -2,7 +2,7 @@
     import { createEventDispatcher } from "svelte"
     import { translateText } from "../../utils/language"
     import InputRow from "../input/InputRow.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Icon from "../helpers/Icon.svelte"
 
     export let label: string
@@ -26,11 +26,11 @@
 
     <InputRow>
         {#each options as option}
-            <MaterialButton style="min-width: 50px;" title={option.label} icon={option.icon} disabled={!!option.disabled} on:click={() => click(option.value)} white={noLabels}>
+            <Button style="min-width: 50px;" title={option.label} icon={option.icon} disabled={!!option.disabled} on:click={() => click(option.value)} white={noLabels}>
                 {#if !noLabels}{translateText(option.label)}{/if}
 
                 <div class="highlight" class:active={value.includes(option.value)}></div>
-            </MaterialButton>
+            </Button>
         {/each}
     </InputRow>
 </div>

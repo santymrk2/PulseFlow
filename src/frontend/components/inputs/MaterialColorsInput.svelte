@@ -4,7 +4,7 @@
     import { hexToHSL, hslToHex } from "../helpers/color"
     import Icon from "../helpers/Icon.svelte"
     import InputRow from "../input/InputRow.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialColorInput from "./MaterialColorInput.svelte"
 
     export let value: string[] = []
@@ -92,17 +92,17 @@
                 <InputRow>
                     <MaterialColorInput label="{translateText('edit.color')} {i + 1}" value={color} on:input={(e) => updateColor(i, e.detail)} on:change={(e) => updateColor(i, e.detail)} allowOpacity />
                     {#if colors.length > minColors}
-                        <MaterialButton title="actions.delete" on:click={() => removeColor(i)}>
+                        <Button title="actions.delete" on:click={() => removeColor(i)}>
                             <Icon id="delete" white />
-                        </MaterialButton>
+                        </Button>
                     {/if}
                 </InputRow>
             {/each}
 
             {#if colors.length < maxColors}
-                <MaterialButton variant="outlined" icon="add" style="width: 100%; border-radius: 0; padding: 8px; justify-content: center; background-color: var(--primary-darkest);" title="actions.add" on:click={addColor}>
+                <Button variant="outline" icon="add" style="width: 100%; border-radius: 0; padding: 8px; justify-content: center; background-color: var(--primary-darkest);" title="actions.add" on:click={addColor}>
                     <span style="font-size: var(--text-xs);">{translateText("actions.add_color")}</span>
-                </MaterialButton>
+                </Button>
             {/if}
         </svelte:fragment>
     </InputRow>

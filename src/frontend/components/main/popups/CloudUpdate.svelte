@@ -1,7 +1,7 @@
 <script lang="ts">
     import { activePopup, popupData } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import Loader from "../Loader.svelte"
 
@@ -26,7 +26,7 @@
         {/each}
     </div>
 
-    <MaterialButton variant="outlined" icon="check" on:click={() => activePopup.set(null)} />
+    <Button variant="outline" icon="check" on:click={() => activePopup.set(null)} />
 {:else}
     <div class="loading">
         <Center>

@@ -8,7 +8,7 @@
     import T from "../helpers/T.svelte"
     import DynamicList from "../input/DynamicList.svelte"
     import InputRow from "../input/InputRow.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
     import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
     import type { API_emitter } from "./api"
@@ -126,7 +126,7 @@
         addNew="timer.create"
     />
     {#if value.emitter}
-        <MaterialButton title="titlebar.edit" icon="edit" on:click={editEmitter} />
+        <Button title="titlebar.edit" icon="edit" on:click={editEmitter} />
     {/if}
 </InputRow>
 

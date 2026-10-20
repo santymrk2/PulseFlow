@@ -13,7 +13,7 @@
     import { _show } from "../../helpers/shows"
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
     import Tabs from "../Tabs.svelte"
@@ -283,10 +283,10 @@
     let showMore = false
 </script>
 
-<MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
+<Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 
 {#if showMore}
-    <MaterialButton class="popup-reset" icon="reset" iconSize={1.1} title="actions.reset" on:click={reset} white />
+    <Button class="popup-reset" icon="reset" iconSize={1.1} title="actions.reset" on:click={reset} white />
 {/if}
 
 <!-- ITEM (TEXT) / MEDIA -->
@@ -299,9 +299,9 @@
 {#if enableSpecific}
     <Tabs tabs={selectedType === "media" ? specificTabsMedia : specificTabs} bind:active={selectedSpecific} style="font-weight: normal;" />
 {:else if showMore}
-    <MaterialButton variant="outlined" style="font-weight: normal;" on:click={() => (enableSpecific = true)}>
+    <Button variant="outline" style="font-weight: normal;" on:click={() => (enableSpecific = true)}>
         <T id="transition.specific" />
-    </MaterialButton>
+    </Button>
 {/if}
 
 <!-- TYPE -->
@@ -309,12 +309,12 @@
 <div class="types">
     {#each transitionTypes as type}
         {@const isActive = type.id === currentTransition.type}
-        <MaterialButton showOutline={isActive} {isActive} style={type.id === "none" ? "font-style: italic;" : ""} on:click={() => changeTransition(selectedType, "type", type.id)}>
+        <Button showOutline={isActive} {isActive} style={type.id === "none" ? "font-style: italic;" : ""} on:click={() => changeTransition(selectedType, "type", type.id)}>
             <svg viewBox="0 0 100 100" width="{iconSize}pt" height="{iconSize}pt">
                 {@html icons[type.id]}
             </svg>
             <T id={type.name} />
-        </MaterialButton>
+        </Button>
     {/each}
 </div>
 

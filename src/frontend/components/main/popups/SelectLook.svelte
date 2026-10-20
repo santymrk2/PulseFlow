@@ -3,7 +3,7 @@
     import { applyLook } from "../../helpers/looks"
     import Icon from "../../helpers/Icon.svelte"
     import CombinedInput from "../../inputs/CombinedInput.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
 
     let active: string = $popupData.active || $activeLook || ""
@@ -29,13 +29,13 @@
 {#if Object.keys($looks).length}
     {#each Object.entries($looks) as [id, look]}
         <CombinedInput>
-            <MaterialButton style={id === active ? "background-color: var(--secondary);" : ""} on:click={() => select(id)}>
+            <Button style={id === active ? "background-color: var(--secondary);" : ""} on:click={() => select(id)}>
                 {look.name}
 
                 {#if id === $activeLook}
                     <Icon id="check" size={1} white />
                 {/if}
-            </MaterialButton>
+            </Button>
         </CombinedInput>
     {/each}
 {:else}

@@ -15,7 +15,7 @@
     import { getActiveOutputs, getStageResolution, percentageStylePos } from "../helpers/output"
     import { createCSSVariables, replaceDynamicValues } from "../helpers/showActions"
     import { getStyles } from "../helpers/style"
-    import Button from "../inputs/Button.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Media from "../output/layers/Media.svelte"
     import Output from "../output/Output.svelte"
     import SlideItems from "../slide/SlideItems.svelte"
@@ -402,7 +402,7 @@
             <!-- conditions -->
             {#if Object.values(item.conditions || {}).length}
                 <div data-title={translateText("actions.conditions")} class="actionButton" style="zoom: {1 / ratio};left: 0;inset-inline-end: unset;background-color: var(--{showItemState ? '' : 'dis'}connected);">
-                    <Button on:click={removeConditions} redHover>
+                    <Button align="start" on:click={removeConditions} redHover>
                         <Icon id="light" white />
                     </Button>
                 </div>

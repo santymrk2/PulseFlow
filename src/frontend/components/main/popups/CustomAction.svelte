@@ -2,7 +2,7 @@
     import { actions, activePopup, activeShow, popupData, scenes, showsCache } from "../../../stores"
     import { _show } from "../../helpers/shows"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
     import Tip from "../Tip.svelte"
 
@@ -47,6 +47,6 @@
 <InputRow>
     <MaterialDropdown label="midi.start_action" options={actionOptions.map((a) => ({ label: a.name, value: a.id }))} value={currentAction} allowEmpty on:change={(e) => updateValue(e.detail)} />
     {#if currentAction && $actions[currentAction]}
-        <MaterialButton title="titlebar.edit" icon="edit" on:click={editAction} />
+        <Button title="titlebar.edit" icon="edit" on:click={editAction} />
     {/if}
 </InputRow>

@@ -8,8 +8,7 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { joinTime, secondsToTime } from "../../helpers/time"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Slider from "../../inputs/Slider.svelte"
     import Timer from "../../slide/views/Timer.svelte"
     import Center from "../../system/Center.svelte"
@@ -122,7 +121,7 @@
             <SelectElem id="global_timer" data={timer} draggable={!onlyPlaying} selectable={!onlyPlaying}>
                 <div class:outline={!onlyPlaying && isActive} class:project={list.includes(timer.id)} class={onlyPlaying ? "" : `context #global_timer${isReadOnly ? "_readonly" : ""}`} style="display: flex;justify-content: space-between;padding: 3px;">
                     <div style="display: flex;{onlyPlaying ? '' : 'width: 50%;'}">
-                        <Button disabled={isReadOnly || timer.type !== "counter"} on:click={() => playPauseGlobal(timer.id, timer)} title={translateText(isPlaying ? "media.pause" : "media.play")}>
+                        <Button align="start" disabled={isReadOnly || timer.type !== "counter"} on:click={() => playPauseGlobal(timer.id, timer)} title={translateText(isPlaying ? "media.pause" : "media.play")}>
                             <Icon id={isPlaying ? "pause" : "play"} white={!isPlaying} />
                         </Button>
                         {#if !onlyPlaying}
@@ -161,11 +160,11 @@
                             {@const delta = currentVal < 60 ? 10 : 60}
 
                             {#if !onlyPlaying}
-                                <Button disabled={isReadOnly || currentVal >= maxVal} on:click={() => adjustTimer(delta, { id: timer.id }, minVal, maxVal)} title={delta === 10 ? "-10 sec" : "-1 min"}>{delta === 10 ? "-10s" : "-1m"}</Button>
-                                <Button disabled={isReadOnly || currentVal <= minVal} on:click={() => adjustTimer(-delta, { id: timer.id }, minVal, maxVal)} title={delta === 10 ? "+10 sec" : "+1 min"}>{delta === 10 ? "+10s" : "+1m"}</Button>
+                                <Button align="start" disabled={isReadOnly || currentVal >= maxVal} on:click={() => adjustTimer(delta, { id: timer.id }, minVal, maxVal)} title={delta === 10 ? "-10 sec" : "-1 min"}>{delta === 10 ? "-10s" : "-1m"}</Button>
+                                <Button align="start" disabled={isReadOnly || currentVal <= minVal} on:click={() => adjustTimer(-delta, { id: timer.id }, minVal, maxVal)} title={delta === 10 ? "+10 sec" : "+1 min"}>{delta === 10 ? "+10s" : "+1m"}</Button>
                             {/if}
 
-                            <Button on:click={() => resetTimer(timer.id)} title={translateText("media.stop")} disabled={isReadOnly || !isActive}>
+                            <Button align="start" on:click={() => resetTimer(timer.id)} title={translateText("media.stop")} disabled={isReadOnly || !isActive}>
                                 <Icon id="stop" white={!isPlaying} />
                             </Button>
                         {/if}
@@ -182,9 +181,9 @@
 
 {#if !onlyPlaying}
     <FloatingInputs onlyOne>
-        <MaterialButton disabled={readOnly} icon="add" title="new.timer" on:click={() => activePopup.set("timer")}>
+        <Button disabled={readOnly} icon="add" title="new.timer" on:click={() => activePopup.set("timer")}>
             {#if !$labelsDisabled}<T id="new.timer" />{/if}
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}
 

@@ -14,7 +14,7 @@
     import { createCSSVariables } from "../../helpers/showActions"
     import { getItemStyle, getStyles } from "../../helpers/style"
     import { getShapeGuideStyle } from "../scripts/shapeOutside"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import SlideItems from "../../slide/SlideItems.svelte"
     import EditboxCropping from "./EditboxCropping.svelte"
     import EditboxLines from "./EditboxLines.svelte"
@@ -55,18 +55,37 @@
         const isSelected = $activeEdit.items.includes(index)
 
         if (rightClick) {
-            if (!isSelected) activeEdit.update((ae) => { ae.items = [index]; return ae })
+            if (!isSelected)
+                activeEdit.update((ae) => {
+                    ae.items = [index]
+                    return ae
+                })
         } else if (e.shiftKey) {
-            if (!isSelected) activeEdit.update((ae) => { ae.items.push(index); return ae })
+            if (!isSelected)
+                activeEdit.update((ae) => {
+                    ae.items.push(index)
+                    return ae
+                })
         } else if (!isSelected) {
-            activeEdit.update((ae) => { ae.items = [index]; return ae })
+            activeEdit.update((ae) => {
+                ae.items = [index]
+                return ae
+            })
         } else if ($activeEdit.items.length > 1) {
-            const startX = e.clientX, startY = e.clientY
-            window.addEventListener("mouseup", (upEvent) => {
-                if (Math.hypot(upEvent.clientX - startX, upEvent.clientY - startY) < 4) {
-                    activeEdit.update((ae) => { ae.items = [index]; return ae })
-                }
-            }, { once: true })
+            const startX = e.clientX,
+                startY = e.clientY
+            window.addEventListener(
+                "mouseup",
+                (upEvent) => {
+                    if (Math.hypot(upEvent.clientX - startX, upEvent.clientY - startY) < 4) {
+                        activeEdit.update((ae) => {
+                            ae.items = [index]
+                            return ae
+                        })
+                    }
+                },
+                { once: true }
+            )
         }
 
         // deselect selected text
@@ -278,7 +297,7 @@
     {#if mediaShouldBeBackground}
         <div class="tip">
             {translateText("edit.media_item_tip")}
-            <MaterialButton style="color: var(--secondary);" on:click={convertToBackground}>{translateText("edit.convert_to_background")}</MaterialButton>
+            <Button style="color: var(--secondary);" on:click={convertToBackground}>{translateText("edit.convert_to_background")}</Button>
         </div>
     {/if}
 </div>

@@ -8,7 +8,7 @@
     import { hexToRgb } from "../helpers/color"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import TextInput from "../inputs/TextInput.svelte"
     import Center from "../system/Center.svelte"
     import { quicksearch, quickSearchCategoryNames, selectQuicksearchValue, type SearchCategory } from "./quicksearch"
@@ -198,7 +198,7 @@
                             {/if}
 
                             <div id="qs-item-{i}">
-                                <MaterialButton style="color: {value.color || 'unset'};" icon={value.icon || value.type} title={value.name} isActive={i === selectedIndex} on:click={(e) => selectQuicksearchValue(value, e.detail.ctrl)} white>
+                                <Button style="color: {value.color || 'unset'};" icon={value.icon || value.type} title={value.name} isActive={i === selectedIndex} on:click={(e) => selectQuicksearchValue(value, e.detail.ctrl)} white>
                                     <div class="item-text">
                                         <p>
                                             {value.name}
@@ -215,7 +215,7 @@
                                             <p class="description">{@html highlightText(value.description, actualSearchText || searchValue)}</p>
                                         {/if}
                                     </div>
-                                </MaterialButton>
+                                </Button>
                             </div>
                         {/each}
                     </div>

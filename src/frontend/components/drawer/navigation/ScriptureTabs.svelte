@@ -4,7 +4,7 @@
     import { keysToID } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import NavigationSections from "./NavigationSections.svelte"
 
     const profile = getAccess("scripture")
@@ -57,31 +57,31 @@
 <NavigationSections {sections} active={activeSubTab} on:rename={updateName}>
     <div slot="section_0" style={favoritesList.length ? "" : "padding: 8px;{collections.length ? 'padding-top: 12px;' : ''}"}>
         {#if !favoritesList.length}
-            <MaterialButton disabled={readOnly || (!apiBibles.length && !localBibles.length)} style="width: 100%;" title="popup.import_scripture" variant="outlined" on:click={createCollection} small>
+            <Button disabled={readOnly || (!apiBibles.length && !localBibles.length)} style="width: 100%;" title="popup.import_scripture" variant="outline" on:click={createCollection} size="xs">
                 <Icon id="add" size={$labelsDisabled ? 0.9 : 1} white={$labelsDisabled} />
                 {#if !$labelsDisabled}<T id="new.collection" />{/if}
-            </MaterialButton>
+            </Button>
         {/if}
     </div>
     <div slot="section_1" style="padding: 8px;{apiBibles.length || localBibles.length ? 'padding-top: 12px;' : ''}">
         {#if favoritesList.length}
-            <MaterialButton disabled={readOnly || (!apiBibles.length && !localBibles.length)} style="width: 100%;" title="popup.import_scripture" variant="outlined" on:click={createCollection} small>
+            <Button disabled={readOnly || (!apiBibles.length && !localBibles.length)} style="width: 100%;" title="popup.import_scripture" variant="outline" on:click={createCollection} size="xs">
                 <Icon id="add" size={$labelsDisabled ? 0.9 : 1} white={$labelsDisabled} />
                 {#if !$labelsDisabled}<T id="new.collection" />{/if}
-            </MaterialButton>
+            </Button>
         {:else}
-            <MaterialButton style="width: 100%;" title="popup.import_scripture" variant="outlined" disabled={readOnly} on:click={newScripture} small>
+            <Button style="width: 100%;" title="popup.import_scripture" variant="outline" disabled={readOnly} on:click={newScripture} size="xs">
                 <Icon id="add" size={$labelsDisabled ? 0.9 : 1} white={$labelsDisabled} />
                 {#if !$labelsDisabled}<T id="new.scripture" />{/if}
-            </MaterialButton>
+            </Button>
         {/if}
     </div>
     <div slot="section_2" style="padding: 8px;{apiBibles.length || localBibles.length ? 'padding-top: 12px;' : ''}">
         {#if favoritesList.length}
-            <MaterialButton style="width: 100%;" title="popup.import_scripture" variant="outlined" disabled={readOnly} on:click={newScripture} small>
+            <Button style="width: 100%;" title="popup.import_scripture" variant="outline" disabled={readOnly} on:click={newScripture} size="xs">
                 <Icon id="add" size={$labelsDisabled ? 0.9 : 1} white={$labelsDisabled} />
                 {#if !$labelsDisabled}<T id="new.scripture" />{/if}
-            </MaterialButton>
+            </Button>
         {/if}
     </div>
 </NavigationSections>

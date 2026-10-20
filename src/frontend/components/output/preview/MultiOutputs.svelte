@@ -12,7 +12,7 @@
     import { getUnhealthyDestinations, hasStreamableDestination } from "../../helpers/rtmpDestinations"
     import { bindSlidesToOutput, getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import OutputPreviewLabel from "./OutputPreviewLabel.svelte"
     import PreviewOutput from "./PreviewOutput.svelte"
 
@@ -162,9 +162,9 @@ tabindex="0"
 aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"} -->
 <div on:click={toggleFullscreen} on:wheel={handleWheel} class="multipleOutputs" class:multiple={outs.length > 1} class:fullscreen style={fullscreen ? "width: 100%;height: 100%;" : "width: calc(100% - 4px);"} role="none">
     {#if fullscreen}
-        <MaterialButton class="hide" style="z-index: 2;opacity: 1;inset-inline-end: 10px;" title="actions.close" on:click={() => (fullscreen = false)}>
+        <Button class="hide" style="z-index: 2;opacity: 1;inset-inline-end: 10px;" title="actions.close" on:click={() => (fullscreen = false)}>
             <Icon id="close" size={1.2} white />
-        </MaterialButton>
+        </Button>
 
         <span class="resolution">
             <p><b><T id="screen.width" />:</b> {resolution?.width || 0} <T id="screen.pixels" /></p>
@@ -207,27 +207,27 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
                             {@const unhealthy = isRtmp && isStreaming ? getUnhealthyDestinations(output.rtmpData, $rtmpStatus[output.id]) : []}
 
                             <div class="badge live" style="background-color: {isStreaming ? (unhealthy.length ? '#ab8000' : '#b60707') : 'var(--primary-darker)'};">
-                                <MaterialButton style="padding: 2px 3px;min-height: 0;" on:click={() => (isRtmp ? (output.rtmpData?.streaming ? stopRtmpStreaming(output.id, true) : startRtmpStreaming(output.id)) : output.webrtcData?.streaming ? stopStreaming(output.id, true) : startStreaming(output.id))} title={unhealthy.length ? `${unhealthy.join(", ")} not live` : isStreaming ? "output.stop_streaming" : "output.start_streaming"}>
+                                <Button style="padding: 2px 3px;min-height: 0;" on:click={() => (isRtmp ? (output.rtmpData?.streaming ? stopRtmpStreaming(output.id, true) : startRtmpStreaming(output.id)) : output.webrtcData?.streaming ? stopStreaming(output.id, true) : startStreaming(output.id))} title={unhealthy.length ? `${unhealthy.join(", ")} not live` : isStreaming ? "output.stop_streaming" : "output.start_streaming"}>
                                     {translateText(isStreaming ? "output.is_live" : "output.go_live", $dictionary)}
-                                </MaterialButton>
+                                </Button>
                             </div>
                         {/if}
 
                         {#if $activeRecording?.outputId === output.id || ($activeRecording?.isOutput && !$activeRecording.outputId && outs[0]?.id === output.id)}
                             <div class="badge rec" style="background-color: #b60707;">
-                                <MaterialButton style="padding: 2px 4px;min-height: 0;gap: 4px;" on:click={() => stopMediaRecorder()} title="actions.stop_recording">
+                                <Button style="padding: 2px 4px;min-height: 0;gap: 4px;" on:click={() => stopMediaRecorder()} title="actions.stop_recording">
                                     <Icon id="record" size={0.7} white />
                                     REC
-                                </MaterialButton>
+                                </Button>
                             </div>
                         {/if}
 
                         {#if output.out?.scene?.name}
                             <div class="badge scene" style="background-color: var(--primary-darker);">
-                                <MaterialButton style="padding: 2px 4px;min-height: 0;gap: 3px;max-width: 100%;" on:click={() => openDrawer("scenes")} title={output.out.scene.name}>
+                                <Button style="padding: 2px 4px;min-height: 0;gap: 3px;max-width: 100%;" on:click={() => openDrawer("scenes")} title={output.out.scene.name}>
                                     <Icon id="scene" size={0.7} white />
                                     <p>{output.out.scene.name}</p>
-                                </MaterialButton>
+                                </Button>
                             </div>
                         {/if}
                     </div>

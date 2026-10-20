@@ -7,7 +7,7 @@
     import FloatingInputs from "../input/FloatingInputs.svelte"
     import InputRow from "../input/InputRow.svelte"
     import Title from "../input/Title.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
     import MaterialTimePicker from "../inputs/MaterialTimePicker.svelte"
     import TextInput from "../inputs/TextInput.svelte"
@@ -120,17 +120,17 @@
 
 {#if currentAction && !settingsOpened}
     <FloatingInputs side="left" onlyOne>
-        <MaterialButton title="actions.run_action" on:click={() => runAction(currentAction, { source: "section" })}>
+        <Button title="actions.run_action" on:click={() => runAction(currentAction, { source: "section" })}>
             <Icon id={getActionIcon(currentActionId)} />
             {currentAction.name}
-        </MaterialButton>
+        </Button>
     </FloatingInputs>
 {/if}
 
 <FloatingInputs round>
-    <MaterialButton isActive={settingsOpened} title="menu.settings" on:click={() => (settingsOpened = !settingsOpened)}>
+    <Button isActive={settingsOpened} title="menu.settings" on:click={() => (settingsOpened = !settingsOpened)}>
         <Icon size={1.1} id="options" white={!settingsOpened} />
-    </MaterialButton>
+    </Button>
 </FloatingInputs>
 
 <style>

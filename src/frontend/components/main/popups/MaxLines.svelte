@@ -2,7 +2,7 @@
     import { activePopup, popupData, styles } from "../../../stores"
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
     import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
 
@@ -37,12 +37,12 @@
     let showMore = !!style?.showAsFaded || !!style?.skipVirtualBreaks || active > 4
 </script>
 
-<MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
+<Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 
 <div class="grid">
     {#each lines as line}
         {@const isActive = line === Number(active)}
-        <MaterialButton showOutline={isActive} {isActive} on:click={() => setValue(line)}>
+        <Button showOutline={isActive} {isActive} on:click={() => setValue(line)}>
             <div class="lines">
                 {#each { length: line ? line : 5 } as _}
                     <span class="line" style={line ? "" : "opacity: 0.6;"}></span>
@@ -56,7 +56,7 @@
                     {line}
                 {/if}
             </p>
-        </MaterialButton>
+        </Button>
     {/each}
 </div>
 

@@ -7,7 +7,7 @@
     import { history } from "../../helpers/history"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import NavigationSections from "./NavigationSections.svelte"
 
     $: profile = $activeProfile ? getAccess("shows") : {}
@@ -71,9 +71,9 @@
 
 <NavigationSections {sections} active={activeSubTab} on:rename={updateName}>
     <div slot="section_1" style="padding: 8px;{categoriesList.length ? 'padding-top: 12px;' : ''}">
-        <MaterialButton style="width: 100%;" title="new.category" variant="outlined" disabled={readOnly} on:click={newCategory} small>
+        <Button style="width: 100%;" title="new.category" variant="outline" disabled={readOnly} on:click={newCategory} size="xs">
             <Icon id="add" size={$labelsDisabled ? 0.9 : 1} white={$labelsDisabled} />
             {#if !$labelsDisabled}<T id="new.category" />{/if}
-        </MaterialButton>
+        </Button>
     </div>
 </NavigationSections>

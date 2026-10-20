@@ -4,7 +4,7 @@
     import { activePopup, popupData } from "../../stores"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "./MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let id = ""
     export let label: string
@@ -112,21 +112,21 @@
 
     {#if allowEmpty && value && !disabled}
         <div class="remove">
-            <MaterialButton {disabled} on:click={() => dispatch("change", null)} title="clear.general" white>
+            <Button {disabled} on:click={() => dispatch("change", null)} title="clear.general" white>
                 <Icon id="close" white />
-            </MaterialButton>
+            </Button>
         </div>
     {/if}
     {#if defaultValue}
         <div class="remove">
             {#if JSON.stringify(value) !== JSON.stringify(defaultValue)}
-                <MaterialButton {disabled} on:click={reset} title="actions.reset" white>
+                <Button {disabled} on:click={reset} title="actions.reset" white>
                     <Icon id="reset" white />
-                </MaterialButton>
+                </Button>
             {:else if resetFromValue}
-                <MaterialButton on:click={undoReset} title="actions.undo" white>
+                <Button on:click={undoReset} title="actions.undo" white>
                     <Icon id="undo" white />
-                </MaterialButton>
+                </Button>
             {/if}
         </div>
     {/if}

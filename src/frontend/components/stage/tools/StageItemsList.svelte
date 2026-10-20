@@ -9,7 +9,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { clone } from "../../helpers/array"
     import { getFileName } from "../../helpers/media"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { getCustomStageLabel } from "../stage"
 
     $: stageId = $activeStage.id || ""
@@ -60,9 +60,9 @@
                 {@const id = currentItem.id}
                 {@const type = currentItem.type || "text"}
 
-                <MaterialButton
+                <Button
                     id="#{id}"
-                    variant="outlined"
+                    variant="outline"
                     class="item_button"
                     style="width: 100%;justify-content: space-between;padding: 2px 8px;"
                     isActive={$activeStage.items.includes(id)}
@@ -86,10 +86,10 @@
                         {#if getIdentifier[type]}<p style="margin-inline-start: 10px;max-width: 120px;opacity: 0.5;font-size: 0.8em;max-width: 40%;">{getIdentifier[type](currentItem)}</p>{/if}
                     </span>
                     <span>
-                        <MaterialButton disabled={i === allItems.length - 1} icon="down" title="actions.backward" style="padding: 8px;" on:click={() => rearrangeStageItems("backward", id)} />
-                        <MaterialButton disabled={i === 0} icon="up" title="actions.forward" style="padding: 8px;" on:click={() => rearrangeStageItems("forward", id)} />
+                        <Button disabled={i === allItems.length - 1} icon="down" title="actions.backward" style="padding: 8px;" on:click={() => rearrangeStageItems("backward", id)} />
+                        <Button disabled={i === 0} icon="up" title="actions.forward" style="padding: 8px;" on:click={() => rearrangeStageItems("forward", id)} />
                     </span>
-                </MaterialButton>
+                </Button>
             {/each}
         </div>
     </div>

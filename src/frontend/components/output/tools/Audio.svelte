@@ -8,7 +8,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { getFileName, removeExtension } from "../../helpers/media"
     import { joinTime, secondsToTime } from "../../helpers/time"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Slider from "../../inputs/Slider.svelte"
 
     function getName(id: string) {
@@ -87,7 +87,7 @@
     <span class="name" style="justify-content: space-between;">
         {#each Object.entries($playingAudio) as [id, audio]}
             {@const name = audio.name || getName(id)}
-            <Button title={name} on:click={() => openAudio(id, audio)} active={$activeShow?.id === id} style="z-index: 2;" bold={false} center>
+            <Button title={name} on:click={() => openAudio(id, audio)} isActive={$activeShow?.id === id} style="z-index: 2;" bold={false}>
                 {#if audio.isMic}<Icon id="microphone" size={1.2} right />{/if}
                 <p>{name}</p>
             </Button>
@@ -96,7 +96,7 @@
 {:else if key}
     {@const name = playing.name || getName(key)}
 
-    <Button title={name} on:click={() => openAudio(key, playing)} active={$activeShow?.id === key || $activeShow?.id === path} style="padding: 5px 10px;opacity: 0.8;width: 100%;z-index: 2;" bold={false} center>
+    <Button title={name} on:click={() => openAudio(key, playing)} isActive={$activeShow?.id === key || $activeShow?.id === path} style="padding: 5px 10px;opacity: 0.8;width: 100%;z-index: 2;" bold={false}>
         {#if playing.isMic}<Icon id="microphone" size={1.2} right />{/if}
         <p style="font-size: 0.9em;">{$activePlaylist?.activeKey === key || $activePlaylist?.active === path ? `${$audioPlaylists[$activePlaylist.id]?.name}: ` : ""}{name}</p>
     </Button>
@@ -107,7 +107,6 @@
             <Button
                 style="flex: 0"
                 disabled={$outLocked}
-                center
                 title={translateText(paused ? "media.play" : "media.pause")}
                 on:click={() => {
                     if ($outLocked) return
@@ -138,7 +137,7 @@
             </span>
 
             {#if $activePlaylist?.activeKey === key || $activePlaylist?.active === path}
-                <Button style="flex: 0" disabled={$outLocked} center title={translateText("media.next")} on:click={() => AudioPlaylist.next()}>
+                <Button style="flex: 0" disabled={$outLocked} title={translateText("media.next")} on:click={() => AudioPlaylist.next()}>
                     <Icon id="audio_forward" size={1.2} />
                 </Button>
             {/if}

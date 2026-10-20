@@ -5,7 +5,7 @@
     import { getExtension, getMedia, getMediaStyle, getMediaType } from "../../helpers/media"
     import { getCurrentStyle, getFirstActiveOutput, getResolution } from "../../helpers/output"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { VideoPlayer } from "../../media/video/videoPlayer"
     import Media from "../../output/layers/Media.svelte"
     import VideoSlider from "../../output/VideoSlider.svelte"
@@ -64,9 +64,9 @@
 
     {#if type === "video"}
         <FloatingInputs side="center" style="width: 60%;">
-            <MaterialButton title={videoData.paused ? "media.play" : "media.pause"} on:click={() => (videoData.paused = !videoData.paused)}>
+            <Button title={videoData.paused ? "media.play" : "media.pause"} on:click={() => (videoData.paused = !videoData.paused)}>
                 <Icon id={videoData.paused ? "play" : "pause"} white={videoData.paused} size={1.3} />
-            </MaterialButton>
+            </Button>
 
             <div class="divider" />
 
@@ -74,9 +74,9 @@
 
             <div class="divider" />
 
-            <MaterialButton title="media._loop" disabled>
+            <Button title="media._loop" disabled>
                 <Icon id="loop" size={1.2} />
-            </MaterialButton>
+            </Button>
         </FloatingInputs>
     {/if}
 </div>

@@ -10,7 +10,7 @@
     import { clone, keysToID } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { translateText } from "../../../utils/language"
     import PreviewOutput from "../../output/preview/PreviewOutput.svelte"
 
@@ -111,9 +111,9 @@
 </div>
 
 <div class="bottom">
-    <MaterialButton variant="outlined" on:click={identifyScreens} title="settings.identify_screens" style="padding: 12px;">
+    <Button variant="outline" on:click={identifyScreens} title="settings.identify_screens" style="padding: 12px;">
         <Icon id="search" size={1.4} white />
-    </MaterialButton>
+    </Button>
 </div>
 
 <style>
