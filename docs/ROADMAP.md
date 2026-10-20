@@ -868,7 +868,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   identifica y se la pone en vivo, sin tocar Settings. Pasos de prueba en
   `docs/VERIFICAR.md`.
 
-- [ ] **F10.4 Pestañas Recorte y Envío; panel de Stage.** (agente A)
+- [x] **F10.4 Pestañas Recorte y Envío; panel de Stage.** (agente A; completada en integración + F10.4b)
   *Pasos:* mover desde `settings/tabs/Outputs.svelte` (sin cambiar comportamiento) los
   bloques de recorte/relación de aspecto y de NDI/OMT/Blackmagic/RTMP/WebRTC a pestañas
   de `ScreenDetail`. Panel de stage con dropdown de layout + "Editar layout".
