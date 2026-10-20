@@ -307,7 +307,18 @@
         "_title_display": "Presentar",
         "_title_display_stop": "Detener presentación",
         "again_confirm": "Hacer clic otra vez para confirmar",
-        "unsaved": "Cambios sin guardar"
+        "unsaved": "Cambios sin guardar",
+        "search": "Buscar",
+        "text": "Texto",
+        "theme": "Tema",
+        "bible": "Biblia",
+        "more": "Más",
+        "stage_editor": "Editor de stage",
+        "theme_editor": "Editor de temas",
+        "overlay_editor": "Editor de overlays",
+        "media": "Media",
+        "live": "En vivo",
+        "audience": "Audiencia"
     },
     "empty": {
         "general": "Seleccionar un proyecto",

@@ -307,7 +307,18 @@
         "_title_display": "Present",
         "_title_display_stop": "Stop presentation",
         "again_confirm": "Click again to confirm",
-        "unsaved": "Unsaved changes"
+        "unsaved": "Unsaved changes",
+        "search": "Search",
+        "text": "Text",
+        "theme": "Theme",
+        "bible": "Bible",
+        "more": "More",
+        "stage_editor": "Stage editor",
+        "theme_editor": "Theme editor",
+        "overlay_editor": "Overlay editor",
+        "media": "Media",
+        "live": "Live",
+        "audience": "Audience"
     },
     "empty": {
         "general": "Nothing here",

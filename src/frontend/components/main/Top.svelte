@@ -1,17 +1,16 @@
 <script lang="ts">
-    import { slide } from "svelte/transition"
-    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, dictionary, drawSettings, drawTool, outputDisplay, outputs, paintCache, profiles, saved, settingsTab, shows } from "../../stores"
+    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, drawSettings, drawTool, editMode, outputDisplay, outputState, outputs, paintCache, profiles, quickSearchActive, saved, settingsTab, shows, activeDrawerTab, drawer, looks, activeLook, activePopup } from "../../stores"
     import { getCloudUsers } from "../../utils/cloudSync"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
     import { toggleOutputs } from "../helpers/output"
-    import T from "../helpers/T.svelte"
-    import Button from "../inputs/Button.svelte"
+
     import TopButton from "../inputs/TopButton.svelte"
     import { DEFAULT_DISPLAY_NAME } from "../../utils/SocketHelper"
     import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
     import { applyLook } from "../helpers/looks"
-    import { activeLook, looks } from "../../stores"
+    import { getAllNormalOutputs, getAllStageOutputs } from "../helpers/output"
+    import { DEFAULT_DRAWER_HEIGHT } from "../../utils/common"
 
     export let isWindows = false
 
@@ -23,34 +22,6 @@
     $: editDisabled = $activeEdit.id && ($activeEdit.type || "show") !== "show" ? false : $activeShow && ($activeShow?.type || "show") === "show" ? isLocked : $activeShow?.type === "pdf" || !$activeShow?.id
     $: physicalOutputWindows = Object.values($outputs).filter((a) => a.enabled && !a.invisible)
 
-    let confirm = false
-    let disableClick = false
-    let cancelConfirmTimeout: NodeJS.Timeout | null = null
-    function toggleOutput(e: any) {
-        if (cancelConfirmTimeout) clearTimeout(cancelConfirmTimeout)
-
-        const forceKey = e.ctrlKey || e.metaKey
-
-        if (!$outputDisplay || confirm) {
-            if (confirm) {
-                // prevent displaying just after close
-                disableClick = true
-                setTimeout(() => (disableClick = false), 800)
-            }
-
-            confirm = false
-            toggleOutputs(null, { force: forceKey })
-            return
-        }
-
-        if (forceKey) return
-
-        confirm = true
-        cancelConfirmTimeout = setTimeout(() => {
-            confirm = false
-        }, 1800)
-    }
-
     function openOutputSettings() {
         settingsTab.set("display_settings")
         activePage.set("settings")
@@ -61,8 +32,6 @@
     let settingsDisabled = false
     $: profile = $profiles[$activeProfile || ""]
     $: settingsDisabled = Object.keys(profile?.access.settings || {}).length > 7
-
-    $: noPhysicalOutputWindows = (!$outputDisplay && !physicalOutputWindows.length) || disableClick
 
     $: lookOptions = Object.entries($looks || {}).map(([id, look]: any) => ({ id, label: look?.name || id, value: id }))
 
@@ -76,6 +45,71 @@
             if (user.activeShow.type === "image" || user.activeShow.type === "video") activeEdit.set({ id: user.activeShow.id, type: "media", items: [] })
             else activeEdit.set({ type: "show", slide: 0, items: [], showId: user.activeShow.id })
         }
+    }
+
+    // --- F11.1 helpers ---
+
+    function toggleTextMode() {
+        editMode.set($editMode === "text_edit" ? "default" : "text_edit")
+    }
+
+    function openTemplatesDrawer() {
+        activeDrawerTab.set("templates")
+        if ($drawer.height < 300) drawer.set({ height: $drawer.stored || DEFAULT_DRAWER_HEIGHT, stored: null })
+    }
+
+    function openScriptureDrawer() {
+        activeDrawerTab.set("scripture")
+        if ($drawer.height < 300) drawer.set({ height: $drawer.stored || DEFAULT_DRAWER_HEIGHT, stored: null })
+    }
+
+    function openOverlaysDrawer() {
+        activeDrawerTab.set("overlays")
+        if ($drawer.height < 300) drawer.set({ height: $drawer.stored || DEFAULT_DRAWER_HEIGHT, stored: null })
+    }
+
+    function toggleMediaDrawer() {
+        if ($activeDrawerTab === "media" && $drawer.height > 40) {
+            drawer.set({ height: 40, stored: $drawer.height, autoclosed: true })
+        } else {
+            activeDrawerTab.set("media")
+            if ($drawer.height < 300) drawer.set({ height: $drawer.stored || DEFAULT_DRAWER_HEIGHT, stored: null })
+        }
+    }
+
+    function openLiveSettings() {
+        settingsTab.set("display_settings")
+        activePage.set("settings")
+    }
+
+    function toggleAudience() {
+        toggleOutputs(getAllNormalOutputs().map((a: any) => a.id))
+    }
+
+    function toggleStage() {
+        toggleOutputs(getAllStageOutputs().map((a: any) => a.id))
+    }
+
+    // live status per group
+    $: normalOutputIds = getAllNormalOutputs().map((o: any) => o.id)
+    $: stageOutputIds = getAllStageOutputs().map((o: any) => o.id)
+    $: audienceLive = ($outputState || []).some((s: any) => s.active === true && normalOutputIds.includes(s.id))
+    $: stageLive = ($outputState || []).some((s: any) => s.active === true && stageOutputIds.includes(s.id))
+
+    // more menu
+    let moreOpen = false
+    function toggleMore() {
+        moreOpen = !moreOpen
+    }
+    function runMore(fn: () => void) {
+        fn()
+        moreOpen = false
+    }
+
+    // right-click on audience/stage -> configure screens
+    function onScreensContextMenu(e: MouseEvent) {
+        e.preventDefault()
+        activePopup.set("choose_screen")
     }
 </script>
 
@@ -97,65 +131,90 @@
 {/if}
 
 <div class="top" data-tauri-drag-region>
-    <!-- {#if !isWindows}
-    <div class="dragZone" />
-    {/if} -->
     <span style="width: var(--navigation-width);" data-tauri-drag-region>
         {#if !isWindows}
-            <!-- macOS: espacio libre para los botones de ventana (titleBarStyle: Overlay) -->
             <div class="macTitleSpace" data-tauri-drag-region />
         {/if}
     </span>
-    <span>
+
+    <!-- Izquierda 1: Buscar · Texto · Tema -->
+    <span class="capsule">
+        <button class="cap-btn" on:click={() => quickSearchActive.set(true)}>
+            <Icon id="search" size={1.2} />
+            <span class="cap-label">{translateText("menu.search")}</span>
+        </button>
+        <button class="cap-btn" on:click={toggleTextMode}>
+            <Icon id="text" size={1.2} />
+            <span class="cap-label">{translateText("menu.text")}</span>
+        </button>
+        <button class="cap-btn" on:click={openTemplatesDrawer}>
+            <Icon id="theme" size={1.2} />
+            <span class="cap-label">{translateText("menu.theme")}</span>
+        </button>
+    </span>
+
+    <!-- Izquierda 2: Show · Edit · Biblia · ⋯ -->
+    <span class="capsule">
         <TopButton id="show" />
         <TopButton id="edit" disabled={editDisabled} />
-        <TopButton id="stage" />
+        <button class="cap-btn" on:click={openScriptureDrawer}>
+            <Icon id="scripture" size={1.2} />
+            <span class="cap-label">{translateText("menu.bible")}</span>
+        </button>
+        <div class="more-wrap">
+            <button class="cap-btn" on:click={toggleMore}>
+                <Icon id="more" size={1.2} />
+                <span class="cap-label">{translateText("menu.more")}</span>
+            </button>
+            {#if moreOpen}
+                <div class="more-menu">
+                    <button class="more-item" on:click={() => runMore(() => activePage.set("stage"))}>{translateText("menu.stage_editor")}</button>
+                    <button class="more-item" on:click={() => runMore(openTemplatesDrawer)}>{translateText("menu.theme_editor")}</button>
+                    <button class="more-item" on:click={() => runMore(openOverlaysDrawer)}>{translateText("menu.overlay_editor")}</button>
+                </div>
+            {/if}
+        </div>
     </span>
+
+    <span class="spacer" data-tauri-drag-region />
+
+    <!-- Derecha 1: Media · Look · Live -->
+    <span class="capsule">
+        <button class="cap-btn" on:click={toggleMediaDrawer}>
+            <Icon id="media" size={1.2} />
+            <span class="cap-label">{translateText("menu.media")}</span>
+        </button>
+        {#if lookOptions.length}
+            <MaterialDropdown label="Look" value={$activeLook} options={lookOptions} on:change={(e) => applyLook(e.detail.value)} onlyArrow={false} style="min-width: 90px; max-width: 160px;" />
+        {/if}
+        <button class="cap-btn" on:click={openLiveSettings}>
+            <Icon id="broadcast" size={1.2} />
+            <span class="cap-label">{translateText("menu.live")}</span>
+        </button>
+    </span>
+
+    <!-- Derecha 2: Audiencia · Stage (round, red when live) -->
+    <span class="capsule round-capsule">
+        <div class="round-wrap">
+            <button class="round-btn" class:red={audienceLive} on:click={toggleAudience} on:contextmenu={onScreensContextMenu} title={translateText("menu.audience")}>
+                <Icon id="display" size={1.2} white />
+            </button>
+            <span class="round-label">{translateText("menu.audience")}</span>
+        </div>
+        <div class="round-wrap">
+            <button class="round-btn" class:red={stageLive} on:click={toggleStage} on:contextmenu={onScreensContextMenu} title={translateText("menu.stage")}>
+                <Icon id="stage" size={1.2} white />
+            </button>
+            <span class="round-label">{translateText("menu.stage")}</span>
+        </div>
+    </span>
+
     <span style="width: var(--navigation-width);justify-content: flex-end;" data-tauri-drag-region>
         <TopButton id="draw" red={$drawTool === "fill" || ($drawTool === "zoom" && $drawSettings.zoom?.size !== 100) || !!($drawTool === "paint" && $paintCache?.length)} hideLabel />
         {#if !settingsDisabled}
             <TopButton id="settings" hideLabel />
         {/if}
-        <!-- estado "sin guardar" como punto discreto (F10.0a) -->
         <span class="unsaved-dot" class:hidden={$saved} data-title={translateText("menu.unsaved")} role="none" />
-
-        <!-- <MaterialButton id="output_window_button" class="context #output display {$outputDisplay ? 'on' : 'off'}" title="menu.{$outputDisplay ? (confirm ? 'again_confirm' : '_title_display_stop') : '_title_display'} [Ctrl+O]" style={$outputDisplay || disableClick ? "" : "border-bottom: 2px solid var(--secondary);"} on:click={toggleOutput} disabled={(!$outputDisplay && !physicalOutputWindows.length) || disableClick} red={$outputDisplay}>
-            {#if $outputDisplay}
-                {#if confirm}
-                    <Icon id="close" size={1.6} white />
-                {:else}
-                    <Icon id="cancelDisplay" size={1.6} white />
-                {/if}
-            {:else}
-                <Icon id="outputs" size={1.6} white />
-            {/if}
-
-            {#if $outputDisplay && confirm}
-                <div class="click_again" transition:slide>
-                    <T id="menu.again_confirm" />
-                </div>
-            {/if}
-        </MaterialButton> -->
-        <Button id="output_window_button" title={translateText(`menu.${$outputDisplay ? (confirm ? "again_confirm" : "_title_display_stop") : "_title_display"} [Ctrl+O]`, $dictionary)} style={$outputDisplay || disableClick ? "" : "border-bottom: 2px solid var(--secondary);"} on:click={toggleOutput} class="context #output display {$outputDisplay ? 'on' : 'off'}" red={$outputDisplay} disabled={noPhysicalOutputWindows}>
-            {#if $outputDisplay}
-                {#if confirm}
-                    <Icon id="close" size={1.6} white />
-                {:else}
-                    <Icon id="cancelDisplay" size={1.6} white />
-                {/if}
-            {:else}
-                <Icon id="outputs" size={1.6} white />
-            {/if}
-
-            {#if $outputDisplay && confirm}
-                <div class="click_again" transition:slide>
-                    <T id="menu.again_confirm" />
-                </div>
-            {/if}
-        </Button>
-        {#if lookOptions.length}
-            <MaterialDropdown label="Look" value={$activeLook} options={lookOptions} on:change={(e) => applyLook(e.detail.value)} onlyArrow={false} style="min-width: 90px; max-width: 160px; margin-left: 4px;" />
-        {/if}
         {#if !$outputDisplay && !physicalOutputWindows.length}
             <div data-title={translateText("No 'physical' outputs available!")} style="position: absolute;top: 0;inset-inline-end: 0;height: 100%;width: 60px;" role="none" on:click={openOutputSettings} />
         {/if}
@@ -166,42 +225,135 @@
     .top {
         position: relative;
         display: flex;
+        align-items: center;
         justify-content: space-between;
+        gap: 6px;
         z-index: 30;
         min-height: 48px;
         height: 48px;
 
-        /* separador inferior (referencia: Topbar.tsx "border-b") */
         border-bottom: 1px solid var(--border-color, var(--primary-lighter));
-
-        /* El arrastre de la ventana lo maneja Tauri con `data-tauri-drag-region`
-           en el contenedor y sus zonas vacías (F10.0b). */
     }
     .top span {
         display: flex;
+        align-items: center;
     }
 
-    /* .dragZone {
-        position: absolute;
+    .spacer {
+        flex: 1;
+    }
 
+    .capsule {
         display: flex;
-        justify-content: space-between;
+        align-items: center;
+        gap: 2px;
+        padding: 2px 4px;
         background-color: var(--primary-darker);
-        width: 100%;
-        height: 3px;
-
-        z-index: 2;
-        -webkit-app-region: drag;
-    } */
-
-    div :global(button.display) {
-        display: flex;
-        justify-content: center;
-        min-width: 60px;
+        border: 1px solid var(--primary-lighter);
+        border-radius: 8px;
+        height: 40px;
     }
 
-    /* Reserva para los botones de ventana en macOS; el estado "sin guardar" pasó a
-       un punto discreto junto a Settings (ver `.unsaved-dot`). */
+    .cap-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 0;
+        min-width: 46px;
+        height: 34px;
+        padding: 2px 6px;
+        background: transparent;
+        border: none;
+        border-radius: 6px;
+        color: var(--text);
+        cursor: pointer;
+        font-size: 0.7rem;
+        line-height: 1;
+    }
+    .cap-btn:hover {
+        background-color: var(--hover);
+    }
+    .cap-label {
+        margin-top: 2px;
+        font-size: 0.62rem;
+        opacity: 0.85;
+    }
+
+    /* TopButton (show/edit/stage) is a MaterialButton; make it fit capsule */
+    .capsule :global(button) {
+        /* keep */
+    }
+
+    .round-capsule {
+        gap: 6px;
+    }
+    .round-wrap {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0;
+    }
+    .round-btn {
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        border: 1px solid var(--primary-lighter);
+        background-color: var(--primary-darkest);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        padding: 0;
+    }
+    .round-btn.red {
+        background-color: var(--red, #e53935);
+        border-color: var(--red, #e53935);
+        color: #fff;
+    }
+    .round-btn:hover {
+        filter: brightness(1.1);
+    }
+    .round-label {
+        font-size: 0.6rem;
+        margin-top: 1px;
+        opacity: 0.8;
+    }
+
+    .more-wrap {
+        position: relative;
+    }
+    .more-menu {
+        position: absolute;
+        top: 100%;
+        right: 0;
+        margin-top: 4px;
+        background-color: var(--primary-darker);
+        border: 1px solid var(--primary-lighter);
+        border-radius: 6px;
+        padding: 4px;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        z-index: 100;
+        min-width: 160px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .more-item {
+        background: transparent;
+        border: none;
+        color: var(--text);
+        padding: 6px 10px;
+        text-align: left;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.8rem;
+    }
+    .more-item:hover {
+        background-color: var(--hover);
+    }
+
     .macTitleSpace {
         width: 80px;
         flex-shrink: 0;
@@ -213,45 +365,17 @@
         border-radius: 50%;
         background-color: var(--red);
     }
-
     .unsaved-dot.hidden {
         visibility: hidden;
     }
 
-    /* .logo {
+    div :global(button.display) {
         display: flex;
-        align-items: center;
         justify-content: center;
-        padding: 0px 10px;
-        width: 100%;
-        gap: 10px;
-    } */
-
-    @media screen and (max-width: 580px) {
-        .top span:first-child {
-            display: none;
-        }
-    }
-
-    .click_again {
-        position: absolute;
-        bottom: 0;
-        inset-inline-end: 0;
-        transform: translateY(100%);
-
-        font-size: 1.1em;
-        padding: 4px 10px;
-        font-weight: normal;
-        background-color: var(--primary-darker);
-        color: var(--text);
-
-        border: 2px solid var(--secondary);
-        border-top: none;
-        border-inline-end: none;
+        min-width: 60px;
     }
 
     /* USERS */
-
     .users {
         position: absolute;
         top: 0;
@@ -260,7 +384,6 @@
 
         display: flex;
         align-items: center;
-        /* gap: 2px; */
         margin: 2px 0;
         padding: 0 5px;
 
@@ -272,7 +395,6 @@
 
         z-index: 31;
     }
-
     .user {
         width: 22px;
         min-width: 22px;
@@ -295,5 +417,11 @@
     }
     .user.isSameArea {
         box-shadow: 0 0 0 2px var(--secondary);
+    }
+
+    @media screen and (max-width: 580px) {
+        .top span:first-child {
+            display: none;
+        }
     }
 </style>
