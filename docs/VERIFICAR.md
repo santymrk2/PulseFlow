@@ -399,5 +399,23 @@ Requisito: **2 monitores** (uno de ellos con escala HiDPI ayuda a ver el bug).
 4. **Identificar pantallas (F2.5):** el comando `IDENTIFY_SCREENS` sigue mostrando el número
    correcto en cada monitor (el payload ahora lleva `id` string + bounds lógicos).
 
+## F10.0d — La salida cubre la pantalla asignada
+
+Requisito: **2 monitores**. Con `bun run dev:tauri`:
+
+1. **Asignar y poner en vivo:** en Settings → Outputs (o "Elegir pantalla"), asignar a una
+   salida el monitor **externo** y ponerla en vivo. El externo debe quedar **cubierto por
+   completo** (sin bordes, sin barra de menú ni Dock), y la ventana de control sigue usable
+   en el monitor integrado.
+2. **Asignar el mismo monitor de la app:** asignar la salida al monitor **de la ventana de
+   control** y ponerla en vivo. Antes se abría una ventana flotante 16:9; ahora debe cubrir
+   ese monitor a pantalla completa (como ProPresenter).
+3. **Sin monitor asignado:** una salida con `screen: null` debe abrirse como ventana
+   flotante 16:9 (vista previa), sin tapar la UI de control.
+4. **Bounds personalizados:** una salida con bounds más chicos que el monitor asignado debe
+   respetarlos (no forzar pantalla completa).
+5. **Windows:** repetir 1–4 (en Windows no hay `set_simple_fullscreen`; la ventana se
+   posiciona y redimensiona al tamaño exacto del monitor).
+
 ## Otras tareas posteriores
 Añadir aquí cualquier hallazgo de F6 en adelante, conforme aparezcan.

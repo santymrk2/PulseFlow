@@ -34,8 +34,6 @@ use tauri::{AppHandle, Emitter, LogicalPosition, LogicalSize, Manager, PhysicalS
 
 /// Prefijo de las etiquetas de ventana de las pantallas.
 const SCREEN_LABEL_PREFIX: &str = "screen-";
-/// Etiqueta de la ventana de control (webview principal).
-const MAIN_WINDOW_LABEL: &str = "main";
 
 /// Tipo de pantalla.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -132,6 +130,16 @@ impl ScreenConfig {
         match &self.screen {
             Some(serde_json::Value::String(s)) if s.parse::<usize>().is_err() => Some(s),
             _ => None,
+        }
+    }
+
+    /// ¿La salida tiene un monitor asignado? (F10.0d). Un `screen` vacío, `null`
+    /// o ausente significa "sin asignar" → ventana flotante de vista previa.
+    fn has_assigned_monitor(&self) -> bool {
+        match &self.screen {
+            Some(serde_json::Value::String(s)) => !s.trim().is_empty(),
+            Some(serde_json::Value::Number(_)) => true,
+            _ => false,
         }
     }
 }
@@ -318,25 +326,30 @@ fn target_monitor(monitors: &[Monitor], config: &ScreenConfig) -> Option<Monitor
         .and_then(|i| monitors.get(i).cloned())
 }
 
-fn main_monitor(app: &AppHandle) -> Option<Monitor> {
-    app.get_webview_window(MAIN_WINDOW_LABEL)
-        .and_then(|w| w.current_monitor().ok().flatten())
+/// Rectángulo 16:9 de la ventana flotante de vista previa (mismo monitor que la
+/// app de control). Puro y testeable. `kind` sólo cambia el tamaño y el offset.
+fn floating_preview_rect(monitor: ScreenRect, kind: ScreenKind) -> (f64, f64, f64, f64) {
+    let scale = if kind == ScreenKind::Stage { 0.4 } else { 0.45 };
+    let width = ((monitor.width as f64) * scale).max(480.0);
+    let height = width * 9.0 / 16.0;
+    let offset = if kind == ScreenKind::Stage { 40.0 } else { 0.0 };
+    let x = monitor.x as f64 + monitor.width as f64 - width - 40.0 - offset;
+    let y = monitor.y as f64 + monitor.height as f64 - height - 80.0 - offset;
+    (x, y, width, height)
 }
 
-fn same_monitor(a: &Monitor, b: &Monitor) -> bool {
-    ScreenRect::of_monitor(a) == ScreenRect::of_monitor(b)
-}
-
-/// Coloca la ventana: pantalla completa en un monitor externo, o ventana
-/// redimensionable si el monitor es el de la ventana de control.
+/// Coloca la ventana de una salida (F10.0d):
+/// - **Con monitor asignado** (`output.screen`): siempre sin bordes y a pantalla
+///   completa en ese monitor, **aunque sea el mismo monitor de la app** (como
+///   ProPresenter). Con `bounds` más chicos que el monitor, se respetan.
+/// - **Sin monitor asignado**: ventana flotante 16:9 de vista previa, para no
+///   tapar la UI de control.
 fn place_window(app: &AppHandle, window: &Window, config: &ScreenConfig, kind: ScreenKind) {
     let monitors = app.available_monitors().unwrap_or_default();
     let Some(monitor) = target_monitor(&monitors, config) else { return };
     let monitor_rect = ScreenRect::of_monitor(&monitor);
 
-    let on_control_monitor = main_monitor(app)
-        .map(|m| same_monitor(&m, &monitor))
-        .unwrap_or(false);
+    let assigned = config.has_assigned_monitor();
     let bounds = config.bounds.filter(|b| b.width > 0 && b.height > 0);
     let covers_monitor = bounds
         .map(|b| b.width >= monitor_rect.width && b.height >= monitor_rect.height)
@@ -344,20 +357,17 @@ fn place_window(app: &AppHandle, window: &Window, config: &ScreenConfig, kind: S
 
     let _ = window.set_simple_fullscreen(false);
 
-    if on_control_monitor && covers_monitor {
-        // Mismo monitor que la UI de control: ventana flotante 16:9 para no taparla.
-        let scale = if kind == ScreenKind::Stage { 0.4 } else { 0.45 };
-        let width = ((monitor_rect.width as f64) * scale).max(480.0);
-        let height = width * 9.0 / 16.0;
-        let offset = if kind == ScreenKind::Stage { 40 } else { 0 };
-        let x = monitor_rect.x as f64 + monitor_rect.width as f64 - width - 40.0 - offset as f64;
-        let y = monitor_rect.y as f64 + monitor_rect.height as f64 - height - 80.0 - offset as f64;
+    if !assigned {
+        // Sin monitor asignado: vista previa flotante 16:9 (no tapa el control).
+        let (x, y, width, height) = floating_preview_rect(monitor_rect, kind);
         let _ = window.set_decorations(true);
         let _ = window.set_size(LogicalSize::new(width, height));
         let _ = window.set_position(LogicalPosition::new(x, y));
         return;
     }
 
+    // Monitor asignado: sin bordes y a pantalla completa en ese monitor.
+    // (`always_on_top` lo aplica `open_screen` según `config.always_on_top`.)
     let _ = window.set_decorations(false);
     match bounds {
         // Bounds personalizados (más chicos que el monitor): respetarlos tal cual.
@@ -366,6 +376,8 @@ fn place_window(app: &AppHandle, window: &Window, config: &ScreenConfig, kind: S
             let _ = window.set_position(LogicalPosition::new(b.x as f64, b.y as f64));
         }
         _ => {
+            // Mover primero al monitor elegido y recién después pantalla completa:
+            // si no, macOS ocupa el monitor donde estaba la ventana.
             let _ = window.set_position(LogicalPosition::new(monitor_rect.x as f64, monitor_rect.y as f64));
             let _ = window.set_size(LogicalSize::new(monitor_rect.width as f64, monitor_rect.height as f64));
             let _ = window.set_simple_fullscreen(true);
@@ -1380,6 +1392,51 @@ mod tests {
         let rect = ScreenRect { x: 0, y: 0, width: 960, height: 540 };
         assert_eq!(rect.width, 960);
         assert_eq!(rect.center(), (480, 270));
+    }
+
+    #[test]
+    fn has_assigned_monitor_distingue_asignado_de_vacio() {
+        // F10.0d: sólo con monitor asignado la salida va a pantalla completa.
+        let none: ScreenConfig = serde_json::from_value(json!({ "id": "a" })).expect("config");
+        assert!(!none.has_assigned_monitor());
+
+        let null: ScreenConfig =
+            serde_json::from_value(json!({ "id": "a", "screen": null })).expect("config");
+        assert!(!null.has_assigned_monitor());
+
+        let empty: ScreenConfig =
+            serde_json::from_value(json!({ "id": "a", "screen": "" })).expect("config");
+        assert!(!empty.has_assigned_monitor());
+
+        // Id estable (F10.0c) e índice viejo cuentan como asignados.
+        let by_id: ScreenConfig =
+            serde_json::from_value(json!({ "id": "a", "screen": "SB220Q#1" })).expect("config");
+        assert!(by_id.has_assigned_monitor());
+        assert_eq!(by_id.screen_id(), Some("SB220Q#1"));
+
+        let by_index: ScreenConfig =
+            serde_json::from_value(json!({ "id": "a", "screen": "0" })).expect("config");
+        assert!(by_index.has_assigned_monitor());
+        assert_eq!(by_index.screen_id(), None);
+        assert_eq!(by_index.screen_index(), Some(0));
+    }
+
+    #[test]
+    fn floating_preview_rect_es_16_9_y_entra_en_el_monitor() {
+        let monitor = ScreenRect { x: 0, y: 0, width: 1920, height: 1080 };
+        let (x, y, w, h) = floating_preview_rect(monitor, ScreenKind::Audience);
+
+        // 16:9, dentro del monitor, y no tapa la esquina superior izquierda.
+        assert!((w / h - 16.0 / 9.0).abs() < 1e-6, "debe ser 16:9");
+        assert!(x >= 0.0 && y >= 0.0);
+        assert!(x + w <= monitor.width as f64);
+        assert!(y + h <= monitor.height as f64);
+
+        // El stage es más chico.
+        let (sx, sy, sw, sh) = floating_preview_rect(monitor, ScreenKind::Stage);
+        assert!(sw < w);
+        assert!(sx >= 0.0 && sy >= 0.0);
+        assert!(sx + sw <= monitor.width as f64 && sy + sh <= monitor.height as f64);
     }
 
     #[test]
