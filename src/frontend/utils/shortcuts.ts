@@ -101,8 +101,8 @@ const MENU_ACTIONS: Record<string, () => void> = {
         const ids = getAllStageOutputs().map((a) => a.id)
         if (ids.length) toggleOutputs(ids)
     },
-    "screens.configure": () => activePopup.set("screens_config"),
-    "screens.looks": () => activePopup.set("manage_looks")
+    "screens.configure": () => activePopup.set("choose_screen"),
+    "screens.looks": () => activePopup.set("looks")
 }
 
 export const disablePopupClose = ["initialize", "cloud_method"]

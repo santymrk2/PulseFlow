@@ -111,7 +111,7 @@
                 id="screens_config"
                 menu={screensMenuItems.screens_config}
                 on:click={() => {
-                    activePopup.set("screens_config")
+                    activePopup.set("choose_screen")
                     closeTopMenu()
                 }}
             />
@@ -121,7 +121,7 @@
                 id="screens_looks"
                 menu={screensMenuItems.screens_looks}
                 on:click={() => {
-                    activePopup.set("manage_looks")
+                    activePopup.set("looks")
                     closeTopMenu()
                 }}
             />
