@@ -1347,12 +1347,21 @@
         "label_color": "Label color",
         "create_stage_output": "Create stage output"
     },
+    "looks": {
+        "looks": "Looks",
+        "name": "Look name",
+        "new": "New look",
+        "make_live": "Make Live",
+        "duplicate_style_message": "This style is shared with other looks. Duplicate it for this look?",
+        "no_screens": "Create an audience screen to configure looks."
+    },
     "settings": {
         "general": "General",
         "files": "Files",
         "theme": "Theme",
         "groups": "Groups",
         "styles": "Styles",
+        "looks": "Looks",
         "profiles": "Profiles",
         "display_settings": "Outputs",
         "audio": "Audio",

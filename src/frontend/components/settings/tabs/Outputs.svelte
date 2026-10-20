@@ -377,7 +377,7 @@
         {/if}
     </InputRow>
     <InputRow>
-        <label>Looks</label>
+        <label>{translateText("looks.looks")}</label>
         <select value={$activeLook} on:change={(e) => applyLook((e.target as HTMLSelectElement).value)}>
             {#each Object.entries($looks) as [id, look]}
                 <option value={id}>{look.name}</option>

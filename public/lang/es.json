@@ -1346,12 +1346,21 @@
         "label_color": "Color de etiqueta",
         "create_stage_output": "Crear salida de pantalla de escenario"
     },
+    "looks": {
+        "looks": "Looks",
+        "name": "Nombre del look",
+        "new": "Nuevo look",
+        "make_live": "Make Live",
+        "duplicate_style_message": "Este estilo se usa en otros looks. ¿Duplicarlo para este look?",
+        "no_screens": "Cree una pantalla de audiencia para configurar los looks."
+    },
     "settings": {
         "general": "General",
         "files": "Archivos",
         "theme": "Tema",
         "groups": "Grupos",
         "styles": "Estilos",
+        "looks": "Looks",
         "profiles": "Perfiles",
         "display_settings": "Salidas",
         "audio": "Audio",
