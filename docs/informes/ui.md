@@ -323,3 +323,5 @@ no cambió; sólo se movió su punto de montaje).
 ### Chequeos
 
 - `test:unit` 83/83, `test:svelte` 56 errores (línea base), `build` OK, Prettier limpio.
+
+TERMINADO
