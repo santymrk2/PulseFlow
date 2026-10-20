@@ -717,6 +717,108 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
 
 ---
 
+## F10 — Pantallas y Looks como en ProPresenter (rediseño)
+
+Especificación completa, con bocetos: [`docs/design/pantallas-y-looks.md`](design/pantallas-y-looks.md).
+**Leerla entera antes de empezar cualquier tarea de F10.**
+
+Decisión central: **el Look reemplaza al Estilo.** El concepto "Estilo" desaparece de
+la UI; lo que configuraba se reparte entre la Pantalla (hardware) y la celda
+Look × Pantalla (qué se ve y cómo). La configuración de pantallas y los Looks pasan a
+dos ventanas propias, no pestañas de Settings.
+
+Orden y paralelismo: F10.1 → F10.2 (un solo agente, son la base). Después pueden ir en
+paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** = F10.6,
+**C** = F10.7. Al final, un agente: F10.8 → F10.9.
+
+- [ ] **F10.1 Modelo de datos y migración.**
+  *Archivos:* `src/types/Output.ts`, `src/types/Settings.ts`, `utils/updateSettings.ts`,
+  `helpers/looks.ts`, test nuevo `helpers/looks.migration.test.ts`.
+  *Pasos:* tipos `Output` (`kind`, `stageLayout`, `screenType`, `mirrorOf`, `target`,
+  `aspectRatio`, `cropping`), `Look` (`transitionMs`, `screens: {[id]: LookScreen}`) y
+  `LookScreen` como en la especificación; migración idempotente descrita en
+  "Migración" (incluye `stylesLegacyBackup`). Sin cambios de UI.
+  *Aceptación:* test con un `settings.json` real de FreeShow como fixture (con 2
+  salidas, 1 stage, 3 estilos y 2 looks) que verifica el resultado y que correr la
+  migración dos veces da lo mismo.
+
+- [ ] **F10.2 Puente Look → render.**
+  *Archivos:* `helpers/looks.ts`, `stores.ts` (sólo lo necesario).
+  *Pasos:* `lookScreenToStyle()`; al cambiar `looks` o `activeLook`, regenerar las
+  entradas internas `__look__<outputId>` en `styles` y apuntar `output.style` a ellas.
+  `applyLook` usa `transitionMs` (pasa la transición al Scene Graph).
+  *Aceptación:* test unitario del puente; con `RENDER_SNAPSHOT`, dos looks distintos
+  producen escenas distintas para la misma pantalla. El resto de la app no cambia.
+
+- [ ] **F10.3 Ventana "Configuración de pantallas": estructura y Hardware.** (agente A)
+  *Archivos:* nueva carpeta `src/frontend/components/screens/` (`ScreenConfig.svelte`,
+  `ScreenList.svelte`, `ScreenDetail.svelte`, `SystemDisplays.svelte`), registro del
+  popup en `utils/popup.ts`.
+  *Pasos:* popup grande con columna izquierda (Audiencia/Stage con interruptor, `+`,
+  lista, punto "en vivo"; Sistema con monitores detectados y NDI) y panel derecho con
+  nombre, resolución, lienzo clicable y pestaña **Hardware** (Salida, Destino, ficha).
+  Reutilizar la lógica de `Screens.svelte` (detección, posiciones, identificar) en vez
+  de reescribirla. Usar componentes de `lib/components/ui` (F6.5) y tokens del tema.
+  *Aceptación:* desde la ventana se crea una pantalla, se le asigna un monitor, se
+  identifica y se la pone en vivo, sin tocar Settings. Pasos de prueba en
+  `docs/VERIFICAR.md`.
+
+- [ ] **F10.4 Pestañas Recorte y Envío; panel de Stage.** (agente A)
+  *Pasos:* mover desde `settings/tabs/Outputs.svelte` (sin cambiar comportamiento) los
+  bloques de recorte/relación de aspecto y de NDI/OMT/Blackmagic/RTMP/WebRTC a pestañas
+  de `ScreenDetail`. Panel de stage con dropdown de layout + "Editar layout".
+  *Aceptación:* todo lo que se podía configurar en Settings → Outputs se puede
+  configurar en la ventana nueva (checklist en el commit).
+
+- [ ] **F10.5 Tipos de pantalla: Única, Espejo, Edge blend.** (agente A)
+  *Pasos:* dropdown "Tipo". *Espejo*: el frontend manda a la pantalla espejo la misma
+  escena que a `mirrorOf` (en `sendOutputScenes`), sin cambios en Rust. *Edge blend*:
+  muestra los controles de blending existentes. "Agrupada" no se ofrece.
+  *Aceptación:* una pantalla en espejo muestra lo mismo que su origen (golden o prueba
+  manual anotada).
+
+- [ ] **F10.6 Ventana "Looks".** (agente B)
+  *Archivos:* `src/frontend/components/looks/` (`LooksWindow.svelte`, `LookGrid.svelte`,
+  `LookAdvanced.svelte`), reemplaza a `settings/tabs/Looks.svelte`.
+  *Pasos:* lista de presets con "En vivo", grilla pantallas × (Presentación/tema, Slide,
+  Media, Overlays), "Más opciones" colapsable con el resto de `LookScreen`, Guardar,
+  slider de transición y "Poner en vivo"; deshacer en el historial. Textos con claves
+  de traducción (en `en.json` y `es.json`), botones con ícono.
+  *Aceptación:* crear "Sólo letras" (Media apagado en Principal), ponerlo en vivo y
+  volver a "Default"; con `RENDER_SNAPSHOT` se verifica que el fondo desaparece y vuelve.
+
+- [ ] **F10.7 Menú "Pantallas", atajos y selector en la barra superior.** (agente C)
+  *Archivos:* `src-tauri/src/lib.rs` (menú nativo macOS con `tauri::menu`),
+  `components/main/MenuBar.svelte` (Windows), `components/main/Top.svelte`,
+  `utils/shortcuts.ts`.
+  *Pasos:* menú como en la tabla "Dónde se accede"; los ítems emiten eventos que el
+  frontend ya sabe manejar (abrir popups, `toggleOutputs` por grupo, `applyLook`).
+  Selector compacto "Look: X ▾" junto al botón de salida.
+  *Aceptación:* en macOS el menú aparece en la barra del sistema; `⌘1` muestra/oculta
+  audiencia y `⌘2` stage.
+
+- [ ] **F10.8 Quitar la UI vieja.**
+  *Pasos:* eliminar Settings → Outputs, Styles y Looks (y sus `*Tabs`/`*Buttons`), los
+  popups "Elegir pantalla" y "Cambiar valores de salida", y las entradas en
+  `values/tabs.ts`; en Settings dejar un botón "Configurar pantallas…". Antes de borrar,
+  `grep` de cada componente para demostrar que nada más lo usa.
+  *Aceptación:* `test:svelte` no sube; no quedan referencias a los componentes borrados.
+
+- [ ] **F10.9 Quitar el puente.**
+  *Pasos:* helper `getOutputLook(outputId): LookScreen`; reemplazar los usos de
+  `$styles[output.style]` / `getCurrentStyle(styles, output.style)` (≈44 archivos) **un
+  commit por carpeta** (`output/`, `slide/`, `show/`, `edit/`, `helpers/`, …); al final
+  eliminar `__look__*`, `output.style` y el store `styles` (queda sólo el backup).
+  *Aceptación:* `grep -rn "\$styles\|get(styles)" src/frontend` sin resultados fuera de la
+  migración; todos los chequeos y goldens en verde.
+
+- [ ] **F10.10 Prueba manual (usuario).** Sección nueva en `docs/VERIFICAR.md`: crear 2
+  pantallas de audiencia + 1 stage desde la ventana, 3 looks, cambiar en vivo desde el
+  menú, la barra, el panel de salida y una acción de slide; espejo; cerrar y reabrir
+  la app y comprobar que todo persiste.
+
+---
+
 ## Fuera de alcance por ahora
 
 Renombrar masivamente archivos de FreeShow · crates o procesos nuevos · reescribir todo
