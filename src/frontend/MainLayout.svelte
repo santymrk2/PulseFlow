@@ -18,8 +18,10 @@
     import { DEFAULT_WIDTH } from "./utils/common"
     import { activeDrawerTab, activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, categories, currentWindow, drawer, drawerTabsData, editMode, focusMode, loaded, os, projectView, projects, resized, showChangeProfileMenu, showsCache, special } from "./stores"
     import { getAccess } from "./utils/profile"
-    import MaterialButton from "./components/inputs/MaterialButton.svelte"
     import Icon from "./components/helpers/Icon.svelte"
+    import ListRow from "./lib/components/ui/list-row/list-row.svelte"
+    import SectionHeader from "./lib/components/ui/section-header/section-header.svelte"
+    import { translateText } from "./utils/language"
 
     $: page = $activePage
     $: projectActive = !$projectView && $activeProject !== null
@@ -59,38 +61,40 @@
                 {#if page === "show"}
                     {#key $activeProfile}
                         <div class="librarySection">
-                            <div class="sectionTitle">BIBLIOTECA</div>
+                            <SectionHeader>{translateText("ui.library")}</SectionHeader>
                             {#each Object.entries($categories || {}) as [id, cat]}
                                 {#if !cat?.isArchive && $activeProfile ? getAccess(id).global !== "none" : true}
-                                    <MaterialButton style="width: 100%;padding: 0.2em 0.6em;" on:click={() => openLibraryCategory(id)} tab>
-                                        <Icon id={cat?.icon || "folder"} white size={0.9} />
-                                        <span>{cat?.name || id}</span>
-                                    </MaterialButton>
+                                    <ListRow onclick={() => openLibraryCategory(id)}>
+                                        {#snippet icon()}
+                                            <Icon id={cat?.icon || "folder"} white size={0.9} />
+                                        {/snippet}
+                                        {cat?.name?.includes(".") ? translateText(cat.name) : cat?.name || id}
+                                    </ListRow>
                                 {/if}
                             {/each}
                         </div>
 
-                        <div class="sectionTitle">PLAYLIST</div>
+                        <SectionHeader>{translateText("ui.playlist")}</SectionHeader>
                         <Projects />
 
                         {#if projectActive}
-                            <div class="sectionTitle">{itemCount} ÍTEMS</div>
+                            <SectionHeader>{translateText("ui.items", null, [String(itemCount)])}</SectionHeader>
                             <ProjectContentList tree={[]} recentlyUsedList={[]} />
                         {/if}
 
                         <div class="librarySection">
-                            <div class="sectionTitle">MEDIA</div>
-                            <MaterialButton
-                                style="width: 100%;padding: 0.2em 0.6em;"
-                                on:click={() => {
+                            <SectionHeader>{translateText("ui.media")}</SectionHeader>
+                            <ListRow
+                                onclick={() => {
                                     activeDrawerTab.set("media")
                                     if ($drawer.height <= 40) drawer.set({ height: $drawer.stored ?? 300, stored: null })
                                 }}
-                                tab
                             >
-                                <Icon id="media" white size={0.9} />
-                                <span>Media</span>
-                            </MaterialButton>
+                                {#snippet icon()}
+                                    <Icon id="media" white size={0.9} />
+                                {/snippet}
+                                {translateText("ui.media")}
+                            </ListRow>
                         </div>
                     {/key}
                 {:else if page === "edit"}
@@ -240,14 +244,5 @@
         flex-direction: column;
         gap: 2px;
         padding: 4px;
-    }
-    .sectionTitle {
-        padding: 6px 14px 4px;
-        font-size: 0.62rem;
-        letter-spacing: 0.08em;
-        text-transform: uppercase;
-        opacity: 0.45;
-        color: var(--text);
-        font-weight: 500;
     }
 </style>

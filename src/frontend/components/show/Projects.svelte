@@ -468,7 +468,10 @@
                 {/if}
 
                 <!-- <Icon id="folder" white right /> -->
-                <p style="font-size: 1.08em;{showProjectsOptions ? 'margin-left: 20px;' : 'margin-right: 20px;'}"><T id="remote.projects" /></p>
+                <!-- F12.6: el título "Projects" lo pone PLAYLIST (MainLayout); acá sólo queda el título en Opciones -->
+                {#if showProjectsOptions}
+                    <p style="font-size: 1.08em;margin-left: 20px;"><T id="remote.projects" /></p>
+                {/if}
 
                 {#if !showProjectsOptions}
                     <div class="right">

@@ -1900,6 +1900,10 @@
         "confidence_medium": "Si tiene confianza moderada"
     },
     "ui": {
+        "library": "Biblioteca",
+        "playlist": "Playlist",
+        "items": "$1 ítems",
+        "media": "Media",
         "filter": "Filtro"
     },
     "screen_config": {

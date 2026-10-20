@@ -60,14 +60,18 @@
     --navigation-width: 290px;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    user-select: none;
+/* reset en la capa base (app.css): sin capa, pisaba el padding y margin de los
+   utilitarios del kit (capa utilities de Tailwind) */
+@layer base {
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        user-select: none;
 
-    outline-offset: -4px;
-    outline-color: var(--secondary);
+        outline-offset: -4px;
+        outline-color: var(--secondary);
+    }
 }
 
 html,
