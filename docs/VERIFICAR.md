@@ -417,5 +417,19 @@ Requisito: **2 monitores**. Con `bun run dev:tauri`:
 5. **Windows:** repetir 1–4 (en Windows no hay `set_simple_fullscreen`; la ventana se
    posiciona y redimensiona al tamaño exacto del monitor).
 
+## F10.0e — Disposición de monitores que no se rompe
+
+En Settings → Outputs (popup "Elegir pantalla"), con 1, 2 o más monitores:
+
+1. **Lado a lado:** dos monitores horizontales aparecen correctamente alineados y a la
+   misma altura, sin solaparse.
+2. **Apilados:** monitores uno encima del otro se muestran apilados.
+3. **Coordenadas negativas:** si hay un monitor a la izquierda o arriba del principal, la
+   disposición se normaliza correctamente (aparece donde corresponde, no fuera de vista).
+4. **Resolución y nombre:** cada monitor muestra su número, nombre y resolución. El
+   monitor principal se marca con una estrella y el asignado a la salida actual se resalta.
+5. **Selección:** al hacer clic en un monitor se asigna a la salida seleccionada (igual que
+   antes). El botón "Identificar pantallas" sigue funcionando.
+
 ## Otras tareas posteriores
 Añadir aquí cualquier hallazgo de F6 en adelante, conforme aparezcan.

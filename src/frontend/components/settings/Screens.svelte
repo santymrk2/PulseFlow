@@ -1,10 +1,8 @@
 <script lang="ts">
-    import { onMount } from "svelte"
     import { OUTPUT } from "../../../types/Channels"
     import { Main } from "../../../types/IPC/Main"
     import { requestMain } from "../../IPC/main"
     import { activePopup, alertMessage, currentOutputSettings, outputs, styles } from "../../stores"
-    import { triggerClickOnEnterSpace } from "../../utils/clickable"
     import { send } from "../../utils/request"
     import { clone, keysToID, sortByName } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
@@ -16,6 +14,7 @@
     import MaterialRadialPicker from "../inputs/MaterialRadialPicker.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
     import Tip from "../main/Tip.svelte"
+    import DisplayLayout from "../screens/DisplayLayout.svelte"
 
     export let activateOutput = false
 
@@ -41,43 +40,15 @@
         }
     }
 
-    let minPosX: number | null = null
-    let minPosY: number | null = null
-    let totalScreensWidth = 0
-    let totalScreensHeight = 0
+    $: if (!screens.length) {
+        loadDisplays()
+    }
 
-    onMount(async () => {
+    async function loadDisplays() {
         const displays = (await requestMain(Main.GET_DISPLAYS)) || []
         let sortedScreens = displays.sort(sortScreensByPosition)
         screens = sortedScreens.sort(internalFirst)
-
-        // get min/max bounds
-        minPosX = null
-        minPosY = null
-        let maxPosX: null | number = null
-        let maxPosY: null | number = null
-        clone(screens).forEach(({ bounds }) => {
-            if (minPosX === null || bounds.x < minPosX) minPosX = bounds.x
-            if (minPosY === null || bounds.y < minPosY) minPosY = bounds.y
-            if (maxPosX === null || bounds.x + bounds.width > maxPosX) maxPosX = bounds.x + bounds.width
-            if (maxPosY === null || bounds.y + bounds.height > maxPosY) maxPosY = bounds.y + bounds.height
-        })
-
-        totalScreensWidth = maxPosX !== null && minPosX !== null ? (maxPosX - minPosX) / 2 : 0
-        totalScreensHeight = maxPosY !== null && minPosY !== null ? (maxPosY - minPosY) / 2 : 0
-
-        // don't overlap buttons (& allow scroll bars to work)
-        totalScreensWidth = Math.min(totalScreensWidth, 4800)
-        totalScreensHeight = Math.min(totalScreensHeight, 1000)
-
-        // make all values start at 0
-        screens.forEach((a, i) => {
-            screens[i].previewBounds = {
-                x: a.bounds.x - (minPosX || 0),
-                y: a.bounds.y - (minPosY || 0)
-            }
-        })
-    })
+    }
 
     // const fakeScreen0 = {
     //     bounds: { x: -864 - 1536, y: -452, width: 1536, height: 1536 },
@@ -276,43 +247,28 @@
 
     <div class="content">
         {#if screens.length}
-            <!-- + (!activateOutput && showMore ? -50 : 80) -->
-            <div class="screens" style="transform: translate(-{totalScreensWidth}px, -{totalScreensHeight}px)">
-                <!-- {#if !currentScreen.screen || !screens.find((a) => a.id.toString() === currentScreen.screen)} -->
-                <div style="position: absolute;width: {currentScreen.bounds?.width}px;height: {currentScreen.bounds?.height}px;inset-inline-start: {currentScreen.bounds?.x - (minPosX ? minPosX : 0)}px;top: {currentScreen.bounds?.y - (minPosY ? minPosY : 0)}px;">
+            <DisplayLayout
+                displays={screens}
+                width={580}
+                height={340}
+                assignedId={currentScreen.screen || null}
+                selectable={!currentScreen.boundsLocked && !currentScreen.forcedResolution}
+                on:select={(e) => {
+                    if (currentScreen.boundsLocked || currentScreen.forcedResolution) return
+                    changeOutputScreen({ detail: { id: e.detail.id, bounds: e.detail.bounds } })
+                }}
+            />
+            {#if !activateOutput}
+                <div class="currentOverlay">
                     {#if currentScreen.screen}
-                        <span style="z-index: 2;position: absolute;top: 50%;left: 50%;transform: translate(-50%, -50%);">{screens.findIndex((a) => JSON.stringify(currentScreen.bounds) === JSON.stringify(a.bounds)) + 1 || ""}</span>
+                        <span>{screens.findIndex((a) => a.id.toString() === currentScreen.screen) + 1 || ""}</span>
                     {/if}
-                    <!-- Current screen position -->
-                    <div class="screen noClick" style="width: 100%;height: 100%;{currentScreen.screen && screens.find((a) => a.id.toString() === currentScreen.screen) ? 'opacity: 1;' : ''}"></div>
-                    {#if !activateOutput}
-                        <MaterialButton class="lock" on:click={lockScreen} title="preview.{currentScreen.boundsLocked ? '_unlock' : '_lock'}" red={currentScreen.boundsLocked}>
-                            <Icon id={currentScreen.boundsLocked ? "locked" : "unlocked"} size={1.1} white={currentScreen.boundsLocked} />
-                        </MaterialButton>
-                    {/if}
+                    <div class="screen noClick" style="width: {currentScreen.bounds?.width * 0.08}px;height: {currentScreen.bounds?.height * 0.08}px;{currentScreen.screen && screens.find((a) => a.id.toString() === currentScreen.screen) ? 'opacity: 1;' : ''}"></div>
+                    <MaterialButton class="lock" on:click={lockScreen} title="preview.{currentScreen.boundsLocked ? '_unlock' : '_lock'}" red={currentScreen.boundsLocked}>
+                        <Icon id={currentScreen.boundsLocked ? "locked" : "unlocked"} size={1.1} white={currentScreen.boundsLocked} />
+                    </MaterialButton>
                 </div>
-                <!-- {/if} -->
-
-                {#each screens as screen, i}
-                    <!-- class:active={$outputs[screenId || ""]?.screen === screen.id.toString()} -->
-                    <div
-                        class="screen"
-                        class:disabled={currentScreen?.forcedResolution || currentScreen.boundsLocked}
-                        style="width: {screen.bounds.width}px;height: {screen.bounds.height}px;inset-inline-start: {screen.previewBounds.x}px;top: {screen.previewBounds.y}px;"
-                        role="button"
-                        tabindex="0"
-                        on:click={() => {
-                            if (currentScreen?.forcedResolution || currentScreen.boundsLocked) return
-
-                            // WIP this will not always change correct output if multiple & "activateOutput"
-                            changeOutputScreen({ detail: { id: screen.id, bounds: screen.bounds } })
-                        }}
-                        on:keydown={triggerClickOnEnterSpace}
-                    >
-                        {i + 1}
-                    </div>
-                {/each}
-            </div>
+            {/if}
         {:else}
             <T id="remote.loading" />
         {/if}
@@ -331,38 +287,23 @@
     .content {
         width: 100%;
         display: flex;
-        /* justify-content: center; */
-        /* transform: translateX(-20%); */
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
     }
-    .screens {
-        --zoom: 0.08;
-        zoom: var(--zoom);
-        font-size: 20em;
-        overflow: visible;
-        /* position: relative;
-        margin-top: auto; */
-        position: absolute;
-        left: 50%;
-        top: calc(50% + 950px);
-        /* transform: translateX(-1080px); */
-
-        /* width: 30%;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%); */
+    .currentOverlay {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 580px;
     }
-
-    .screens :global(.lock) {
-        zoom: calc(1 / var(--zoom));
+    .currentOverlay :global(.lock) {
         position: absolute;
-        top: 2px;
-        inset-inline-end: 2px;
-
-        /* pointer-events: initial; */
+        top: 4px;
+        inset-inline-end: 4px;
         padding: 5px !important;
-        z-index: 2;
     }
-
     .bottom {
         position: absolute;
         bottom: 20px;
@@ -397,14 +338,6 @@
         outline: 40px solid var(--secondary);
         background-color: var(--primary-darker);
         z-index: 1;
-    }
-
-    .screen.disabled {
-        opacity: 0.5;
-    }
-    .screen:focus:not(.disabled) {
-        outline: 42px solid var(--secondary);
-        outline-offset: 0;
     }
 
     .preview {
