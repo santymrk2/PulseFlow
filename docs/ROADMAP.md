@@ -1428,35 +1428,47 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   `test:unit` 89/89, prettier. **No verificado visualmente: el cambio de base afecta a toda
   la app y es lo primero que hay que mirar.**
 
-- [x] **F14.7 Completar el kit.** *(Absorbida por F14.8: ver abajo; el kit no se amplió.)*
-  *Archivos:* `src/frontend/lib/components/ui/`, `KitDemo.svelte`, `docs/design/kit.md`.
-  *Pasos:* piezas equivalentes a los `Material*` más usados: number input, checkbox,
-  textarea, slider, color, dropdown con búsqueda, toggle group. Cada una en `KitDemo`,
-  con su API documentada y un uso desde un padre legacy (regla de runes de AGENTS.md).
-  *Aceptación:* cada `Material*` tiene un equivalente del kit o una nota de por qué no.
-
-- [x] **F14.8 Migrar `Material*` por pantalla.** *(Resuelta re-estilando en su lugar; la migración de imports se descartó.)* Un commit por pantalla: (a) Configuración,
-  (b) Looks (`LookGrid`, `LookAdvanced`), (c) Pantallas, (d) herramientas de Edit,
-  (e) cajón inferior.
-  *Pasos:* reemplazar por piezas del kit sin cambiar comportamiento. Cuando un
-  `Material*` se queda sin imports (`rg`), se borra.
-  *Aceptación:* captura después de cada pantalla; el número de archivos que importan
-  `Material*` (240 al 2026-10-20) baja en cada commit.
-  **Decisión y resultado** (2026-10-20). En lugar de reemplazar los 240 llamadores se
-  **re-estilaron en su lugar** los `Material*` (mismas props y eventos): el cambio de
-  F14.4 lote 2 ya llevó a las pantallas (a)–(e) al aspecto del kit en un solo paso. *Por qué
-  no migrar:* en las tres pantallas que pedía el roadmap hay 47 imports en 17 archivos
-  (13 `MaterialButton`, 9 `MaterialToggleSwitch`, 8 `MaterialDropdown`, 4 `MaterialTextInput`,
-  y 13 de piezas **sin** equivalente en el kit: número, popup, color, checkbox, slider,
-  multi-botones, selector de medios y de carpeta). Las piezas del kit son primitivas
-  (`Switch` es sólo un interruptor de bits-ui) y los `Material*` traen funciones que el kit
-  no tiene: `defaultValue` con su botón de restablecer, `flags` de idioma, etiqueta
-  integrada, punto de "cambiado", `allowEmpty`. Migrar obligaba a reimplementarlas en
-  componentes nuevos, sin ganancia visual y con riesgo de perder funciones sin poder
-  verlas. *Consecuencia:* el contador "archivos que importan `Material*`" (240) **no baja**,
-  y los `Material*` no se borran. `docs/design/kit.md` documenta la capa de campos. *Si más
-  adelante se quiere unificar de verdad:* construir componentes compuestos del kit (campo
-  con etiqueta + restablecer) y migrar de a una pantalla con capturas.
+- [ ] **F14.7/F14.8 Una sola librería de componentes.** *(Reabierta el 2026-10-20 por
+  decisión del usuario: no puede haber tres librerías, `Material*`, el kit y los `Button`/
+  `TextInput`/… legacy.)* **Meta:** todo vive en `src/frontend/lib/components/ui/`, con un
+  solo nombre por concepto y sin prefijo `Material`; `components/inputs/` se borra.
+  *Decisiones de diseño:*
+  1. **Contrato de eventos:** las piezas compuestas **conservan `on:click`/`on:change`**
+     (dispatcher con `detail`) y además aceptan el atributo nativo `onclick` (lo que usa hoy
+     el kit). No se reescriben ~1.200 manejadores a ciegas, y AGENTS.md prohíbe migrar a runes
+     de forma masiva. Es un contrato único y documentado en `kit.md`.
+  2. **Un botón:** `button` unifica el `MaterialButton` (638 usos en 200 archivos), el
+     `Button` legacy (~100 usos), `HoverButton` y el `button` del kit (12 archivos). Variantes
+     canónicas del kit (`default`, `secondary`, `outline`, `ghost`, `destructive`, `link`,
+     `live`); `contained`→`default`, `outlined`→`outline`, `text`→`ghost`. Tamaños: `xs` 24,
+     `sm` 28, `default` 32, `icon`, `icon-sm`.
+  3. **Primitivas del kit sin uso** (`input`, `select`, `switch`, `tabs`, `scroll-area`,
+     `skeleton`, `label`, `separator`: verificado con `rg`) se borran; las piezas compuestas
+     las reemplazan.
+  4. **Nombres:** carpeta por pieza en minúsculas (`text-input/text-input.svelte`),
+     importadas con ruta relativa, como el resto del kit. Los usos se migran con un script
+     que renombra la importación y las etiquetas (respeta alias como `MaterialSlider`).
+  5. **Seguridad:** cada paso se verifica con `svelte-check` (línea base 56 errores),
+     `test:unit` y prettier; un paso = un commit; el usuario prueba en la app entre pasos.
+  *Pasos:*
+  - [ ] **F14.8a Botón único.** Reemplaza `MaterialButton`, `Button` legacy, `HoverButton` y
+    el `button` del kit (y adapta `Button`/`TopButton`/`Splash`/`KitDemo` y
+    `svelte5-smoke.test.ts`).
+  - [ ] **F14.8b Texto y número.** `MaterialTextInput`, `MaterialNumberInput`,
+    `MaterialTextarea` y los legacy `TextInput`/`NumberInput`.
+  - [ ] **F14.8c Listas y pickers.** `MaterialDropdown`, `MaterialPopupButton`,
+    `MaterialFilePicker`, `MaterialFolderPicker`, `MaterialTimePicker`,
+    `MaterialDatePicker`, `MaterialRadialPicker`, `MaterialColorInput`,
+    `MaterialColorsInput`, `MaterialFontDropdown`, legacy `Dropdown`.
+  - [ ] **F14.8d Interruptores y demás.** `MaterialToggleSwitch`, `MaterialCheckbox`,
+    `MaterialMultiChoice`, `MaterialMultiButtons`, `MaterialToggleButtons`, `MaterialZoom`,
+    `Slider`.
+  - [ ] **F14.8e Restos y cierre.** `Link`, `HiddenInput`, `CombinedInput` (a la librería);
+    `ShowButton`, `TopButton` y `MediaPicker` (son de dominio: se mueven junto a su pantalla);
+    se borra `components/inputs/` y se actualiza `docs/design/kit.md`.
+  *Aceptación final:* `fd . src/frontend/components/inputs` vacío; `rg -c 'Material[A-Z]'
+  src/frontend` = 0; `svelte-check` ≤ 56 errores; tests y prettier verdes; la app abre y
+  Configuración, Looks, Pantallas, Show y Edit se ven y funcionan como antes.
 
 - [ ] **F14.9 Panel derecho (antes F12.7).** Tira vertical de limpiar y ⓧ de limpiar
   todo sobre la vista previa, con el estilo nuevo. Ver "Decisiones pendientes" en
