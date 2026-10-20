@@ -4,7 +4,7 @@
     import { Main } from "../../../types/IPC/Main"
     import type { Project, Tree } from "../../../types/Projects"
     import { sendMain } from "../../IPC/main"
-    import { activePopup, activeProject, activeRename, contentProviderData, dictionary, drawer, editingProjectTemplate, focusMode, folders, openedFolders, projects, projectTemplates, projectView, providerConnections, showRecentlyUsedProjects, sorted, special } from "../../stores"
+    import { activeProject, activeRename, contentProviderData, dictionary, drawer, editingProjectTemplate, focusMode, folders, openedFolders, projects, projectTemplates, projectView, providerConnections, showRecentlyUsedProjects, sorted, special } from "../../stores"
     import { translateText } from "../../utils/language"
     import { getAccess } from "../../utils/profile"
     import { exportProject } from "../export/project"
@@ -91,7 +91,6 @@
 
     $: projectActive = !$projectView && $activeProject !== null
     $: currentProject = $activeProject ? $projects[$activeProject] : null
-    $: currentProjectPcoFolderId = $activeProject ? ($contentProviderData?.planningcenter?.availablePlans as { planId: string; serviceTypeId: string }[] | undefined)?.find((p) => p.planId === $activeProject)?.serviceTypeId : undefined
     $: currentProjectIsOnStage = !!$providerConnections.onstage && (currentProject?.origin === "onstage" || $activeProject?.startsWith("onstage_"))
 
     function createProject(folder = false) {
@@ -326,17 +325,6 @@
         })
     }
 
-    // PCO Live
-
-    function openPcoPicker() {
-        addMenuOpen = false
-        activePopup.set("pco_picker")
-    }
-
-    function refreshPcoProject(serviceTypeId: string, planId: string) {
-        sendMain(Main.PCO_LOAD_PLAN, { serviceTypeId, planId })
-    }
-
     function refreshOnStageProject(projectId: string) {
         const serviceId = projectId.replace("onstage_", "")
         sendMain(Main.ONSTAGE_LOAD_SERVICE, { serviceId, data: $contentProviderData.onstage })
@@ -386,14 +374,6 @@
                                 <div class="projectDropdown" transition:fade={{ duration: 100 }} role="none" on:click={() => (showProjectDropdown = false)}>
                                     {#if currentProjectIsOnStage && $activeProject}
                                         <MaterialButton title="Sync with OnStage" icon="refresh" on:click={() => refreshOnStageProject($activeProject)} white>
-                                            <T id="cloud.sync" />
-                                        </MaterialButton>
-
-                                        <div class="DIVIDER"></div>
-                                    {/if}
-
-                                    {#if currentProjectPcoFolderId && $activeProject}
-                                        <MaterialButton title="Sync with Planning Center" icon="refresh" on:click={() => refreshPcoProject(currentProjectPcoFolderId, $activeProject)} white>
                                             <T id="cloud.sync" />
                                         </MaterialButton>
 
@@ -500,7 +480,7 @@
 
                 {#if isVisible}
                     <MaterialButton style="width: 100%;padding: 0.08rem 0.65rem;font-weight: normal;" title="actions.id_select_project: <b>{project.name}</b>" on:click={(e) => openRecentlyUsed(e, project.id)} isActive={$activeProject === project.id} tab>
-                        <Icon id={isProjectLinked($projects[project.id], project.id, $contentProviderData) ? "cloud" : "project"} white={$projects[project.id]?.archived} />
+                        <Icon id={isProjectLinked($projects[project.id], project.id) ? "cloud" : "project"} white={$projects[project.id]?.archived} />
                         <HiddenInput value={project.name} id={"project_" + project.id} allowEdit={false} />
                     </MaterialButton>
                 {/if}
@@ -554,11 +534,6 @@
                             <Icon id="folder" size={0.7} white />
                         </div>
                     </MaterialButton>
-
-                    {#if $providerConnections.planningcenter}
-                        <div class="group-spacer" />
-                        <MaterialButton variant="outlined" icon="list" title="Planning Center" on:click={openPcoPicker} white>Planning Center</MaterialButton>
-                    {/if}
                 </div>
             {/if}
 

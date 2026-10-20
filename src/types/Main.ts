@@ -41,7 +41,6 @@ export const dataFolderNames = {
     exports: "Exports",
     imports: "Imports",
     lessons: "Lessons",
-    planningcenter: "Planning Center",
     recordings: "Recordings",
     audio: "Audio",
     userData: "Config",
@@ -524,8 +523,6 @@ export type Popups =
     | "drawer_search_options"
     | "template_info"
     | "cleaning_utility"
-    | "pco_picker"
-    | "sync_folders"
     | "node_options"
     | "looks"
     | "screen_config"

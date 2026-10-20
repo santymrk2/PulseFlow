@@ -4,7 +4,7 @@
     import type { ProjectShowRef, Tree } from "../../../types/Projects"
     import type { ShowType } from "../../../types/Show"
     import { addProjectItem, addToProject, updateRecentlyAddedFiles } from "../../converters/project"
-    import { actions, activeFocus, activePopup, activeProject, activeShow, contextActive, drawer, drawerTabsData, editingProjectTemplate, focusMode, fullColors, playerVideos, popupData, projects, projectTemplates, projectView, recentFiles, selected, shows, special } from "../../stores"
+    import { actions, activeFocus, activePopup, activeProject, activeShow, contextActive, drawer, drawerTabsData, editingProjectTemplate, focusMode, fullColors, playerVideos, popupData, projects, projectTemplates, projectView, recentFiles, selected, special } from "../../stores"
     import { triggerFunction } from "../../utils/common"
     import { getAccess } from "../../utils/profile"
     import { getActionIcon } from "../actions/actions"
@@ -275,7 +275,6 @@
                         {#each splittedItemsList.items as show, i}
                             {@const index = show.index}
                             {@const triggerAction = show.data?.settings?.triggerAction || $special.sectionTriggerAction}
-                            {@const pcoLink = !!$shows[show.id]?.quickAccess?.pcoLink}
                             {@const isFirst = i === 0}
                             {@const isLast = i === splittedItemsList.items.length - 1}
                             {@const borderRadiusStyle = `${isFirst ? "border-top-right-radius: 10px;" : ""}${isLast ? "border-bottom-right-radius: 10px;" : ""}`}
@@ -340,7 +339,7 @@
                                             {/if}
                                         </MaterialButton>
                                     {:else}
-                                        <ShowButton id={show.id} {show} {index} class={projectReadOnly ? "" : `context #${pcoLink ? "pco_item__" : ""}project_${getContextMenuId(show.type)}`} style={borderRadiusStyle} icon isProject />
+                                        <ShowButton id={show.id} {show} {index} class={projectReadOnly ? "" : `context #project_${getContextMenuId(show.type)}`} style={borderRadiusStyle} icon isProject />
                                     {/if}
                                 </SelectElem>
                             {/if}

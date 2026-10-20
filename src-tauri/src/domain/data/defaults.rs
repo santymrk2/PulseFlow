@@ -84,7 +84,6 @@ pub fn default_settings() -> Value {
         "timeline": {},
         "timecode": {},
         "contentProviderData": {
-            "planningcenter": { "localAlways": false },
             "churchApps": { "syncCategories": ["song"] }
         },
         "obsData": {},

@@ -455,11 +455,8 @@ const updateList: { [key in SaveListSettings | SaveListSyncedSettings]: any } = 
             startRemoteController(v.remoteControllerId)
         }
 
-        // DEPRECATED (migrate)
-        if (v.pcoLocalAlways) {
-            contentProviderData.update((a) => ({ ...a, planningcenter: { localAlways: true } }))
-            delete v.pcoLocalAlways
-        }
+        // Planning Center se quitó: descartar la opción vieja
+        delete v.pcoLocalAlways
 
         // DEPRECATED (migrate)
         v.customUserDataLocation = true

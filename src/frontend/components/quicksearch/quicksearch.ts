@@ -678,7 +678,7 @@ const settings = [
         icon: "styles",
         aliases: ["-Looks", "edit.background_color", "edit.background_media", "popup.transition", "edit.media_fit", "settings.aspect_ratio", "settings.active_layers", "settings.lines", "settings.override_with_template", "settings.override_scripture_with_template", "meta.display_metadata"]
     },
-    { id: "connection", name: "settings.connection", icon: "connection", aliases: ["Planning Center", "ChurchApps", "-Network", "-LAN"] },
+    { id: "connection", name: "settings.connection", icon: "connection", aliases: ["ChurchApps", "-Network", "-LAN"] },
     {
         id: "files",
         name: "settings.files",

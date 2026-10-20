@@ -1115,7 +1115,11 @@ pantallas más visibles, una por tarea. **No es una migración global a Tailwind
   contextual, duplicar/borrar/exportar/importar temas). Al arrancar siempre se aplica
   `defaultThemes.default` (PulseFlow); los temas guardados del usuario no se borran del
   archivo, sólo dejan de usarse. (2026-10-20)
-- [ ] **F12.13** Quitar la integración con Planning Center (PCO).
+- [x] **F12.13** Quitar la integración con Planning Center (PCO). El backend Rust nunca
+  la implementó (venía de Electron): se quitan conexión en Configuración → Conexión,
+  selector de servicios, sincronizar carpetas, timers "PCO Live", sincronizar proyecto,
+  desvincular ítems, canales IPC `PCO_*`/`PROVIDER_FETCH_FOLDERS` y la carpeta de datos
+  "Planning Center". Shows y proyectos importados antes siguen abriendo igual. (2026-10-20)
 
 ## Fuera de alcance por ahora
 

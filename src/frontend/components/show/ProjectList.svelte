@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte"
     import type { Tree } from "../../../types/Projects"
-    import { activeProfile, activeProject, contentProviderData, folders, labelsDisabled, openedFolders, projects } from "../../stores"
+    import { activeProfile, activeProject, folders, labelsDisabled, openedFolders, projects } from "../../stores"
     import { history } from "../helpers/history"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
@@ -173,7 +173,7 @@
                                         </MaterialButton>
                                     {:else if project.id && shown && isArchivedShown}
                                         <MaterialButton style="width: 100%;padding: 0.08rem 0.65rem;font-weight: normal;" title="actions.id_select_project: <b>{project.name}</b>" on:click={(e) => open(e, project.id)} class="context #project_button{isReadOnly ? '_readonly' : ''}" isActive={$activeProject === project.id} tab>
-                                            <Icon id={isProjectLinked($projects[project.id], project.id, $contentProviderData) ? "cloud" : "project"} white={$projects[project.id]?.archived} />
+                                            <Icon id={isProjectLinked($projects[project.id], project.id) ? "cloud" : "project"} white={$projects[project.id]?.archived} />
                                             <HiddenInput value={project.name} id={"project_" + project.id} on:edit={(e) => rename(project.id, e.detail.value)} bind:edit={editActive} allowEdit={!isReadOnly} />
                                         </MaterialButton>
                                     {/if}

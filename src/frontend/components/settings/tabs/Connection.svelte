@@ -3,11 +3,9 @@
     import type { ContentProviderId } from "../../../../types/ContentProvider"
     import { Main } from "../../../../types/IPC/Main"
     import { requestMain, sendMain } from "../../../IPC/main"
-    import { activePage, activePopup, activeShow, activeTriggerFunction, cloudSyncData, connections, contentProviderData, disabledServers, maxConnections, notFound, obsData, outputs, popupData, ports, projectTemplates, providerConnections, saved, serverData, special } from "../../../stores"
-    import { translateText } from "../../../utils/language"
+    import { activePage, activePopup, activeShow, activeTriggerFunction, cloudSyncData, connections, contentProviderData, disabledServers, maxConnections, notFound, obsData, outputs, popupData, ports, providerConnections, saved, serverData, special } from "../../../stores"
     import { startRemoteController, stopRemoteController } from "../../../utils/remoteController"
     import { contentProviderSync } from "../../../utils/startup"
-    import { keysToID, sortByName } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import { checkWindowCapture } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
@@ -165,8 +163,6 @@
         saved.set(false)
     }
 
-    $: projectTemplateOptions = [{ value: "", label: translateText("main.none") }, ...sortByName(keysToID($projectTemplates)).map(({ id, name }) => ({ value: id, label: name }))]
-
     $: providerOriginOptions = [
         { value: "", label: "Ask when existing show is found" },
         { value: "local", label: "Always use local instance" },
@@ -284,15 +280,9 @@
     <MaterialToggleSwitch label="" checked={$special.remoteController} on:change={(e) => toggleRemoteController(e.detail)} />
 </InputRow>
 
-{#if !$providerConnections.planningcenter && (!$providerConnections.churchApps || cloudOnly.churchApps) && !$providerConnections.amazinglife && !$providerConnections.onstage}
+{#if (!$providerConnections.churchApps || cloudOnly.churchApps) && !$providerConnections.amazinglife && !$providerConnections.onstage}
     <!-- No provider connected - show connection options -->
     <Title label="settings.content_provider" icon="list" />
-
-    <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("planningcenter")} style="flex: 1;" icon="login">
-            <T id="settings.connect_to" replace={["Planning Center"]} />
-        </MaterialButton>
-    </InputRow>
 
     <InputRow>
         <MaterialButton on:click={() => contentProviderConnect("churchApps")} style="flex: 1;" icon="login">
@@ -311,37 +301,6 @@
             <T id="settings.connect_to" replace={["OnStage"]} />
         </MaterialButton>
     </InputRow>
-{:else if $providerConnections.planningcenter}
-    <!-- Planning Center connected -->
-    <Title label="Content Provider: Planning Center" icon="list" />
-
-    <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("planningcenter")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
-            <T id="settings.disconnect_from" replace={["Planning Center"]} />
-        </MaterialButton>
-        <MaterialButton icon="cloud_sync" on:click={syncContentProvider}>
-            <T id="cloud.sync" />
-        </MaterialButton>
-        <MaterialButton on:click={() => sendMain(Main.URL, "https://planningcenter.com")} title="Planning Center" white>
-            <Icon id="launch" white />
-        </MaterialButton>
-    </InputRow>
-
-    <MaterialToggleSwitch label="settings.auto_sync_startup" checked={$contentProviderData.planningcenter?.autoSync !== false} on:change={(e) => updateProvider("planningcenter", "autoSync", e.detail)} />
-
-    {#if $contentProviderData.planningcenter?.autoSync !== false}
-        <InputRow>
-            <!-- <MaterialPopupButton label="popup.sync_folders" value="" name="" icon="folder" popupId="sync_folders" on:click={() => activePopup.set("sync_folders")} style="flex: 1;" /> -->
-            <MaterialButton icon="folder" on:click={() => activePopup.set("sync_folders")} style="flex: 1;">
-                <T id="popup.sync_folders" />
-            </MaterialButton>
-        </InputRow>
-    {/if}
-
-    <MaterialDropdown label="Song origin" options={providerOriginOptions} value={$contentProviderData.planningcenter?.songOrigin || ""} on:change={(e) => updateProvider("planningcenter", "songOrigin", e.detail)} />
-    {#if Object.keys($projectTemplates).length}
-        <MaterialDropdown label="actions.project_template" options={projectTemplateOptions} value={$contentProviderData.planningcenter?.projectTemplate || ""} on:change={(e) => updateProvider("planningcenter", "projectTemplate", e.detail)} />
-    {/if}
 {:else if $providerConnections.churchApps && !cloudOnly.churchApps}
     <!-- ChurchApps connected -->
     <Title label="Content Provider: ChurchApps" icon="list" />

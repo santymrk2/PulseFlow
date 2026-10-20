@@ -1106,23 +1106,6 @@ const clickActions = {
             return a
         })
     },
-    unlink_pco: (obj: ObjData) => {
-        if (!obj.sel) return
-
-        showsCache.update((a) => {
-            obj.sel!.data.forEach((b) => {
-                if (!a[b.id]) return
-                delete a[b.id].quickAccess.pcoLink
-            })
-            return a
-        })
-        shows.update((a) => {
-            obj.sel!.data.forEach((b) => {
-                delete a[b.id].quickAccess.pcoLink
-            })
-            return a
-        })
-    },
     section: (obj: ObjData) => {
         if (get(projects)[get(activeProject)!]?.sectionsLocked) {
             newToast("output.state_locked")

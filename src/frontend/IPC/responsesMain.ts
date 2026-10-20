@@ -352,19 +352,14 @@ export const mainResponses: MainResponses = {
     [ToMain.PROVIDER_PROJECTS]: async (data) => {
         if (!data.projects) return
 
-        // Planning Center items are seperated into multiple categories based on the type: Songs (default) & Regular items (generic)
-        if (data.providerId === "planningcenter" && data.shows.some((a) => a.category === "planning_center_generic")) {
-            createCategory("Planning Center (Generic)", "presentation")
-        }
-
         // CREATE CATEGORY
         createCategory(data.categoryName)
 
         const replaceIds: { [key: string]: string } = {}
         const allShows = keysToID(get(shows))
         const songOrigin = get(contentProviderData)[data.providerId]?.songOrigin
-        const linkKey = data.providerId === "planningcenter" ? "pcoLink" : data.providerId === "churchApps" ? "chumsLink" : data.providerId === "amazinglife" ? "alLink" : data.providerId === "onstage" ? "onstageLink" : ""
-        const origin = data.providerId === "planningcenter" ? "pco" : data.providerId
+        const linkKey = data.providerId === "churchApps" ? "chumsLink" : data.providerId === "amazinglife" ? "alLink" : data.providerId === "onstage" ? "onstageLink" : ""
+        const origin = data.providerId
 
         function updateExistingShow(showId: string) {
             shows.update((a) => {
@@ -407,7 +402,7 @@ export const mainResponses: MainResponses = {
                 }
             }
 
-            const providerName = data.providerId === "planningcenter" ? "Planning Center" : data.providerId === "churchApps" ? "ChurchApps" : data.providerId === "onstage" ? "OnStage" : "the cloud"
+            const providerName = data.providerId === "churchApps" ? "ChurchApps" : data.providerId === "onstage" ? "OnStage" : "the cloud"
 
             // first find any shows linked to the id
             const linkedShow = linkKey ? allShows.find(({ quickAccess, id: showId }) => quickAccess?.[linkKey] === id || showId === id) : null
@@ -477,19 +472,19 @@ export const mainResponses: MainResponses = {
             if (!templateId) return projectBase
 
             let templateItems = clone(get(projectTemplates)[templateId]?.shows || [])
-            let pcoItems = clone(projectBase.shows || [])
+            let syncedItems = clone(projectBase.shows || [])
 
             // project template first, then append the synced items (first to any placeholders, then to the end)
             templateItems = templateItems.map((item) => {
                 if (item.type === "show_placeholder") {
-                    const show = pcoItems.shift()
+                    const show = syncedItems.shift()
                     if (show) return show
                 }
 
                 return item
             })
 
-            projectBase.shows = [...templateItems, ...pcoItems]
+            projectBase.shows = [...templateItems, ...syncedItems]
             return projectBase
         }
 
@@ -523,16 +518,6 @@ export const mainResponses: MainResponses = {
         if (nextProjectId) {
             activeProject.set(nextProjectId)
             projectView.set(false)
-        }
-
-        // store available PCO plans for Live timer setup
-        if (data.providerId === "planningcenter" && data.pcoPlans?.length) {
-            contentProviderData.update((a) => {
-                if (!a.planningcenter) a.planningcenter = {}
-                const existing = a.planningcenter.availablePlans || []
-                a.planningcenter.availablePlans = [...existing.filter((e) => !data.pcoPlans!.some((i) => i.planId === e.planId)), ...data.pcoPlans!]
-                return a
-            })
         }
     },
     [ToMain.OPEN_FOLDER2]: (a) => {

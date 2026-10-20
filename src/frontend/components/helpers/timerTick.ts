@@ -10,7 +10,6 @@ import { customActionActivation, runAction } from "../actions/actions"
 import { sortByClosestMatch } from "../actions/apiHelper"
 import { getCurrentTimerValue, getTimerDynamicValue, playPauseGlobal } from "../drawer/timers/timers"
 import { getDynamicValue } from "../edit/scripts/itemHelpers"
-import { initPcoLiveSync } from "../../utils/pcoLiveSync"
 import { clone, keysToID, sortByTime } from "./array"
 import { loadShows } from "./setShow"
 import { checkNextAfterMedia } from "./showActions"
@@ -57,16 +56,12 @@ export function startTimerById(id: string) {
 export function stopTimers() {
     // timeout so timer_end action don't clear at the same time as next timer tick starts
     setTimeout(() => {
-        // don't clear pcoLive entries
-        activeTimers.update((a) => a.filter((t) => t.pcoLive))
+        activeTimers.set([])
         customInterval = INTERVAL
     }, 50)
 }
 
 function increment(timer: { id: string; start: number; end: number; [key: string]: any }, i: number) {
-    // PCO Live timers update via pcoLiveSync
-    if (timer.pcoLive) return timer
-
     if (timer.paused) {
         // has ended
         // if (timer.currentTime === timer.end && !timer.overflow) {
@@ -234,10 +229,8 @@ let timerCheckTimeout: NodeJS.Timeout | null = null
 export function checkTimers() {
     if (timerCheckTimeout) clearTimeout(timerCheckTimeout)
 
-    initPcoLiveSync(get(timers))
-
     Object.entries(get(timers)).forEach(([id, timer]) => {
-        if (timer.type === "counter" || timer.type === "pco_live") return
+        if (timer.type === "counter") return
 
         const time = getCurrentTimerValue({ ...timer, overflow: true }, {}, new Date())
 

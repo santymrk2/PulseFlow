@@ -154,17 +154,13 @@ async function textToProjectItems(text: string) {
     return items
 }
 
-export function isProjectLinked(project?: Project | null, projectId?: string, contentProviderDataVal?: any): boolean {
+export function isProjectLinked(project?: Project | null, projectId?: string): boolean {
     if (!project && !projectId) return false
     if (project?.origin) return true
 
     // pre 1.6.6 backwards compatibility for projects without "origin"
     const id = projectId || project?.id
-    if (id) {
-        if (id.startsWith("onstage_")) return true
-        const pcoPlans = contentProviderDataVal?.planningcenter?.availablePlans as { planId: string }[] | undefined
-        if (pcoPlans?.some((p) => p.planId === id)) return true
-    }
+    if (id?.startsWith("onstage_")) return true
 
     return false
 }

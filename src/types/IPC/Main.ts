@@ -1,7 +1,7 @@
 import type { ExifData } from "exif"
 import type { Stats } from "fs"
 import type { Bible } from "json-bible/lib/Bible"
-import type { ContentFile, ContentLibraryCategory, ContentProviderId, MediaLicense, PCOFolderTreeNode } from "../ContentProvider"
+import type { ContentFile, ContentLibraryCategory, ContentProviderId, MediaLicense } from "../ContentProvider"
 import type { EncoderDetection } from "../Encoder"
 import type { SyncProviderId } from "../Sync"
 import type { TimecodeMode } from "../Timecode"
@@ -158,11 +158,6 @@ export enum Main {
     PROVIDER_CONNECTIONS = "PROVIDER_CONNECTIONS",
     PROVIDER_DISCONNECT = "PROVIDER_DISCONNECT",
     PROVIDER_STARTUP_LOAD = "PROVIDER_STARTUP_LOAD",
-    PROVIDER_FETCH_FOLDERS = "PROVIDER_FETCH_FOLDERS",
-    PCO_LIVE_GET = "PCO_LIVE_GET",
-    PCO_PUSHER_AUTH = "PCO_PUSHER_AUTH",
-    PCO_FETCH_SERVICE_TREE = "PCO_FETCH_SERVICE_TREE",
-    PCO_LOAD_PLAN = "PCO_LOAD_PLAN",
     ONSTAGE_LOAD_SERVICE = "ONSTAGE_LOAD_SERVICE",
     ONSTAGE_GET_TEAMS = "ONSTAGE_GET_TEAMS",
     ONSTAGE_SWITCH_TEAM = "ONSTAGE_SWITCH_TEAM",
@@ -275,11 +270,6 @@ export interface MainSendPayloads {
     [Main.PROVIDER_LOAD_SERVICES]: { providerId: ContentProviderId; cloudOnly?: boolean; data?: any }
     [Main.PROVIDER_DISCONNECT]: { providerId: ContentProviderId; scope?: string }
     [Main.PROVIDER_STARTUP_LOAD]: { providerId: ContentProviderId; scope?: string; data?: any; cloudOnly?: boolean }
-    [Main.PROVIDER_FETCH_FOLDERS]: { providerId: ContentProviderId }
-    [Main.PCO_LIVE_GET]: { serviceTypeId: string; planId: string }
-    [Main.PCO_PUSHER_AUTH]: { socketId: string; channelName: string; serviceTypeId: string }
-    [Main.PCO_FETCH_SERVICE_TREE]: undefined
-    [Main.PCO_LOAD_PLAN]: { serviceTypeId: string; planId: string }
     [Main.ONSTAGE_LOAD_SERVICE]: { serviceId: string; data?: any }
     [Main.ONSTAGE_GET_TEAMS]: undefined
     [Main.ONSTAGE_SWITCH_TEAM]: { teamId: string }
@@ -391,10 +381,6 @@ export interface MainReturnPayloads {
     // Provider-based routing
     [Main.PROVIDER_CONNECTIONS]: { [key in ContentProviderId]?: boolean }
     [Main.PROVIDER_DISCONNECT]: { success: boolean }
-    [Main.PROVIDER_FETCH_FOLDERS]: Promise<PCOFolderTreeNode[]>
-    [Main.PCO_FETCH_SERVICE_TREE]: Promise<PCOFolderTreeNode[]>
-    [Main.PCO_LIVE_GET]: Promise<{ liveId: string | null; liveChannel: string | null; orgId: string | null; liveStartAt: string | null; liveEndAt: string | null; length: number | null; isPreService: boolean; serviceStartAt: string | null; serviceEndAt: string | null } | null>
-    [Main.PCO_PUSHER_AUTH]: Promise<{ auth: string; channel_data?: string } | null>
     [Main.ONSTAGE_GET_TEAMS]: Promise<{ id: string; name: string; current: boolean }[]>
     [Main.ONSTAGE_SWITCH_TEAM]: Promise<{ success: boolean }>
     // Content Library

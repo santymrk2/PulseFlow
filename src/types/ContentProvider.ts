@@ -1,11 +1,10 @@
 // ----- FreeShow -----
 // Tipos compartidos de proveedores de contenido.
 //
-// Movidos desde `src/electron/contentProviders/base/types.ts` y
-// `src/electron/contentProviders/planningCenter/request.ts` para que el frontend
+// Movidos desde `src/electron/contentProviders/base/types.ts` para que el frontend
 // no dependa de la carpeta `src/electron` (retirada).
 
-export type ContentProviderId = "planningcenter" | "churchApps" | "amazinglife" | "onstage" | "canva"
+export type ContentProviderId = "churchApps" | "amazinglife" | "onstage" | "canva"
 
 /**
  * Category tree structure for content library
@@ -39,15 +38,4 @@ export interface ContentFile {
 export interface MediaLicense {
     pingbackUrl: string
     expiresAt: number // unix ms; license is valid while Date.now() < expiresAt
-}
-
-/**
- * Planning Center Online folder/service tree node.
- */
-export interface PCOFolderTreeNode {
-    id: string
-    name: string
-    type: "folder" | "service_type" | "plan"
-    serviceTypeId?: string // only present on plan nodes
-    children: PCOFolderTreeNode[]
 }
