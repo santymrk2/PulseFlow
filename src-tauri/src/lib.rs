@@ -115,9 +115,6 @@ pub fn run() {
             commands::output::RENDER_SNAPSHOT,
             commands::output::UPDATE_BOUNDS,
             commands::output::IDENTIFY_SCREENS,
-            commands::output::START_NDI_NATIVE_FEED,
-            commands::output::STOP_NDI_NATIVE_FEED,
-            commands::output::IS_NDI_NATIVE_FEED_ACTIVE,
             // SERVERS
             commands::servers::START,
             commands::servers::STOP,

@@ -260,8 +260,57 @@ La verificación visual necesita GUI. Prueba manual con `bun run dev:tauri`:
 
 ### Resultado (pendiente de ejecutar por el usuario)
 
-## F4 — NDI directo desde framebuffer GPU
-A completar: verificar que START_NDI_NATIVE_FEED inicia la captura y que el feed está activo.
+## F8.4 — NDI (decidido: eliminar la captura de framebuffer)
+Terminado 2026-10-19 (decisión (b) del roadmap: **eliminar**, no conectar).
+
+Qué había: `render/ndi_stream.rs` con un `GpuFramebufferCapture` (staging buffer
+mapeable + `record_copy`/`start`/`stop`) y tres comandos (`START_NDI_NATIVE_FEED`,
+`STOP_NDI_NATIVE_FEED`, `IS_NDI_NATIVE_FEED_ACTIVE`).
+
+Por qué se eliminó (no era viable conectarla sin dependencias pesadas):
+
+1. **Nadie llamaba a `record_copy`.** El único lugar donde podía copiarse el
+   framebuffer era el bucle de render de cada pantalla
+   (`render/screens.rs::spawn_render_loop`), que **nunca** lo invocaba. Por eso el
+   `latest_frame` quedaba siempre en `None` y el staging buffer se creaba y no se
+   usaba para nada.
+2. **El capturador tenía su propio `Device`.** `start_feed` creaba una instancia
+   WGPU, un adaptador y un `Device` nuevos, distintos de los del bucle de render.
+   Una textura o un `CommandEncoder` no se pueden pasar entre devices, así que
+   “conectarlo” no era agregar una línea: había que crear la captura **dentro** de
+   cada bucle (uno por pantalla), añadir el resize del staging buffer al resize de
+   la superficie y sacar un frame por vuelta.
+3. **La captura no lleva a ningún lado.** El roadmap pide “conectar la captura …
+   o eliminarla”. Conectar implicaba además una negociación de ring buffer con el
+   hilo que haría el envío, y el envío en sí depende del backend NDI.
+4. **El backend NDI que existe no puede enviar.** `commands/ndi.rs` sólo carga el
+   runtime por `libloading` para `NDI_STATUS`/`NDI_SOURCES`, y su propio código
+   dice que la secuencia real de `NDIlib_find_*` “queda preparada para su
+   activación cuando se incluya el binding generado del SDK”. **No hay
+   `NDIlib_send_create` ni ningún envío de frames.**
+5. **El motor real es el SDK propietario.** Enviar video por NDI necesita el SDK
+   (o un binding como `ndi-sys`) más una **negociación de licencia** del runtime
+   de NDI. Eso es una dependencia pesada, que `AGENTS.md` prohíbe agregar sin
+   medir antes (F8.3) y sin pedirlo.
+6. **Nadie en la app lo usa.** `grep` en `src/`: ningún `send(..., "START_NDI_NATIVE_FEED"…)`
+   ni uso de los tres comandos. Las referencias NDI del frontend son a los **inputs**
+   de NDI heredados de FreeShow (`NDIStream.svelte`, `NDIStreams.svelte`), que
+   piden `CAPTURE_STREAM`/`RECEIVE_STREAM`/`RECEIVE_LIST` por el canal `NDI` — ninguno
+   de esos canales llega a `invoke` (el canal `NDI` no se registra en `lib.rs`).
+
+Qué se quitó (sólo `src-tauri/`; no se tocó Svelte ni ningún tipo TS, porque no
+había espejo en `src/types/`): `render/ndi_stream.rs`, el campo `ndi_capture` de
+`ScreenManager`, los tres comandos de `commands/output.rs` y sus entradas en
+`lib.rs`, más el test `test_gpu_ndi_capture_buffer`. Se conserva
+`commands/ndi.rs` (`NDI_STATUS`/`NDI_SOURCES`): no es captura de framebuffer, es
+la detección del runtime, y no es código muerto.
+
+Verificación: `cargo check` sin errores ni warnings; `cargo test --lib` 63/63
+(antes 64/64: se eliminó 1 test, el del capturador NDI).
+
+Cuando exista salida NDI de verdad, el punto de partida sigue siendo el bucle de
+render de `screens.rs` (ahí está la textura compuesta, en
+`transition_engine.texture_b`) y la decisión de dependencia pasa por F8.3.
 
 ## F5 — Looks (estilos/temas visuales) — FIN F5: PAUSA
 Marcada la pausa indicada al finalizar F5. Incluir los resultados en `docs/VERIFICAR.md`.

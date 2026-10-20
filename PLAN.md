@@ -16,12 +16,13 @@
 │   wgpu + glyphon/cosmic-text + media pool + shaders WGSL │
 └─────────────┬─────────────────┬──────────────────┬───────┘
               ▼                 ▼                  ▼
-        Proyector (sala)   Stage Display     NDI (framebuffer)
+        Proyector (sala)   Stage Display     (salida de red:
+                                              pendiente, sin NDI)
 ```
 
 Decisiones de diseño:
 
-- **No existe modo legacy web de salida.** La salida (audiencia, stage, NDI) es
+- **No existe modo legacy web de salida.** La salida (audiencia y stage) es
   SIEMPRE el engine Rust nativo. No hay switch "Web / Nativo". Las ventanas de
   salida son ventanas nativas sin webview.
 - La UI de control es Svelte (`src/frontend/`). Se comunica con Rust sólo por IPC
@@ -65,7 +66,6 @@ Hecho y funcionando a nivel código (compila; falta validación manual con hardw
   `render/transition.rs`. **Ojo:** el bucle de render de salida todavía NO los usa; `RENDER_SCENE` sólo
   guarda la configuración (tipo, duración, easing) y el cambio de slide es instantáneo.
 - Stage display: ventana nativa propia.
-- Captura de framebuffer (`copy_texture_to_buffer`) para NDI: existe `render/ndi_stream.rs`.
 - `TOGGLE_OUTPUTS` abre/cierra las salidas y emite `OUTPUT_STATE` al frontend. La API de
   ventanas por tipo (`OPEN/CLOSE/IS_OUTPUT_WINDOW(_OPEN)`, `OPEN/CLOSE/IS_STAGE_WINDOW(_OPEN)`)
   y el no-op `OUTPUTS` se eliminaron en F2.7 (sin uso en el frontend); hoy abrir/cerrar
@@ -82,8 +82,9 @@ Limitaciones reales:
   textura. NO es decodificación por hardware ni zero-copy. Sin sincronización
   audio/video ni control fino de reproducción.
 - **Stage:** muestra texto plano (slide actual/siguiente), no los layouts reales de stage heredados de FreeShow.
-- **NDI:** captura de framebuffer existe, pero falta integración completa (múltiples
-  fuentes, alpha, gestión de ciclo de vida, UI).
+- **NDI:** no hay salida ni captura. La captura de framebuffer del engine se eliminó en
+  F8.4 (2026-10-19) porque era código muerto: escribía a un buffer cuyo contenido nadie
+  leía nunca. Ver `docs/VERIFICAR.md`, sección "F8.4".
 - **Overlays, timers y alertas** no se renderizan en el engine.
 - **Limitaciones del Scene Graph actual:**
   - Sólo items de texto; los items de media, timer, reloj, web, cámara, formas, etc. se ignoran.
@@ -138,8 +139,8 @@ a ejecutar. Plataformas soportadas: **macOS y Windows**.
 
 El frontend envía por el canal `OUTPUT` (→ `invoke(<comando>)`) los comandos de abajo. Casi todos existían para
 alimentar a la ventana webview de salida y a la gestión de ventanas de Electron. Hoy sólo pasan al backend los
-comandos con `#[tauri::command]` propio de salida — `TOGGLE_OUTPUTS`, `RENDER_SCENE`, `UPDATE_BOUNDS`,
-`IDENTIFY_SCREENS` y los NDI —; desde F2.6 el resto se **descarta antes de `invoke`** en la lista blanca de
+comandos con `#[tauri::command]` propio de salida — `TOGGLE_OUTPUTS`, `RENDER_SCENE`, `UPDATE_BOUNDS` e
+`IDENTIFY_SCREENS` (los `*_NDI_NATIVE_FEED` se eliminaron en F8.4) —; desde F2.6 el resto se **descarta antes de `invoke`** en la lista blanca de
 `OUTPUT_COMMANDS` (`src/frontend/IPC/tauri.ts`), sin ensuciar la consola. Dos nombres coinciden con comandos de
 Rust que NO son de salida:
 
@@ -209,7 +210,7 @@ Clasificación:
 | `TO_FRONT` | 1 | Pendiente | Traer ventana al frente |
 | `ALIGN_WITH_SCREEN` | 1 | Pendiente | Alinear la ventana a la pantalla elegida |
 | `IDENTIFY_SCREENS` | 2 | Pendiente | Mostrar el número de cada pantalla (ventanas nativas) |
-| `CAPTURE` | 3 | Pendiente | Captura de frames para NDI/streaming/preview/grabadora (framebuffer del engine) |
+| `CAPTURE` | 3 | Pendiente | Captura de frames para streaming/preview/grabadora (framebuffer del engine). En F8.4 se eliminó la captura NDI que existía: era código muerto (ver `docs/VERIFICAR.md`, "F8.4") |
 
 Los números de la columna "Envíos" son las ocurrencias de `send(OUTPUT, ["X"]...)` en `src/frontend/`
 (los `//` comentados incluidos en algunos casos). Para limpiar la categoría "eliminar" hay que revisar

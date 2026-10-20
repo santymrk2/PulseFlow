@@ -678,8 +678,18 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   suscriptores.
 - [ ] **F8.3 Medir.** CPU/RAM/GPU con un video 1080p en loop durante 30 min en macOS y
   Windows; anotar en `PLAN.md`. Decidir recién entonces si hace falta otra estrategia.
-- [ ] **F8.4 NDI.** Conectar la captura de framebuffer al bucle de una pantalla
-  (hoy crea su propio device y no recibe frames) o eliminarla.
+- [x] **F8.4 NDI.** (2026-10-19, decisión (b): **eliminar**.) La captura de framebuffer
+  (`render/ndi_stream.rs` + `START/STOP/IS_NDI_NATIVE_FEED_ACTIVE`) era código muerto:
+  el bucle de render de cada pantalla nunca llamaba a `record_copy`, el capturador tenía
+  su propio `Device` WGPU (una copia de textura sólo es válida dentro del device que la
+  creó, así que conectarla obligaba a crear la captura dentro de cada bucle), y el
+  backend NDI existente (`commands/ndi.rs`) sólo detecta el runtime: no tiene
+  `NDIlib_send_*` ni envía frames. Enviar por NDI exige el SDK propietario + negociación
+  de licencia (dependencia pesada, prohibida sin medir; ver F8.3). Ningún código del
+  frontend invocaba los tres comandos. Se quitó el módulo, el campo `ndi_capture` de
+  `ScreenManager`, los comandos y su registro; se conserva `NDI_STATUS`/`NDI_SOURCES`.
+  `cargo check` limpio, `cargo test --lib` 63/63. Motivos y qué se quitó, en
+  `docs/VERIFICAR.md` (sección "F8.4").
 
 ---
 

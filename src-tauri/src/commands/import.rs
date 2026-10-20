@@ -7,6 +7,8 @@
 //! `channel: IMPORT2`, que el frontend despacha según el tipo de archivo
 //! (importShow / importTemplate / importOverlay / importProject / convertTexts…).
 
+#![allow(non_snake_case)]
+
 use crate::error::{AppError, AppResult};
 use crate::state::AppState;
 use crate::utils::files::DataFolder;
