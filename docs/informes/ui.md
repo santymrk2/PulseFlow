@@ -258,3 +258,70 @@ los tres modos") quedan pendientes de verificación manual en la app Tauri.
 - `public/lang/en.json`, `public/lang/es.json` (sección `ui.filter`)
 - `docs/ROADMAP.md` (sólo checkboxes propios)
 - `docs/informes/ui.md`
+
+## F11.6b — Panel derecho de verdad como ProPresenter (2026-10-20)
+
+Commit `e86c016a`.
+
+### Funciones movidas
+
+- `Preview.svelte` → `ShowTools.svelte`:
+  - `Audio()` (reproductor/listas de audio) → pestaña `audio`.
+  - `Overlay({currentOutput})` (overlays activos) → pestaña `overlays`.
+  - `NextTimer`/`TimerControls` (timers con play/reset) → pestaña `timers`.
+- `Preview.svelte` conserva `MediaControls` (transporte de medios) y `Show`
+  (controles de diapositiva) en el bloque de capa activa.
+- El botón de expandir capa en `ClearButtons` ahora también cambia la pestaña
+  correspondiente (`openToolsTab`).
+
+### No creadas
+
+- Pestaña `stage`: no hay componente existente reubicable (StageTools es del modo
+  edición).
+- Pestaña `acciones`: sin panel de acciones/macros existente.
+
+Las 3 pestañas originales de ShowTools (grupos, metadatos, medios) quedan al final.
+
+### Chequeos
+
+- `test:unit` 83/83, `test:svelte` 56 errores (línea base), `build` OK, Prettier limpio.
+
+## F11.8b — Menús contextuales (2026-10-20)
+
+Commit `24e79035`.
+
+### Qué se hizo
+
+- `ContextMenu.svelte`: fondo `var(--primary-darker)`, borde 1px `var(--border-color)`,
+  radio `var(--radius)`, separadores (hr) 1px `var(--border-color)`.
+- `ContextItem.svelte`: ítems min-height 32px, hover `var(--hover)`.
+- `ContextChild.svelte`: ítems min-height 32px, hover `var(--hover)`; submenú con fondo
+  `var(--primary-darker)`, borde `var(--border-color)`, radio `var(--radius)`.
+
+Sin cambiar entradas ni su orden.
+
+### Chequeos
+
+- `test:unit` 83/83, `test:svelte` 56 errores (línea base), `build` OK, Prettier limpio.
+
+## F11.10b — Ítems del proyecto en la columna izquierda (2026-10-20)
+
+Commit `40be0a2c`.
+
+### Qué se hizo
+
+- `ProjectContentList` se movió fuera de `Projects.svelte` para que la columna
+  izquierda quede: BIBLIOTECA · PLAYLIST (lista de proyectos) · 'N ÍTEMS' (contenido
+  del proyecto seleccionado, con Filtro abajo) · MEDIA.
+- `MainLayout.svelte`: renderiza `<ProjectContentList tree={[]} />` cuando hay proyecto
+  activo, con título 'N ÍTEMS' (N = shows del proyecto).
+- `Projects.svelte`: eliminado el bloque `{:else}` que renderizaba `ProjectContentList`.
+
+Drag & drop, reordenar, menú contextual y doble clic se mantienen (ProjectContentList
+no cambió; sólo se movió su punto de montaje).
+
+### Chequeos
+
+- `test:unit` 83/83, `test:svelte` 56 errores (línea base), `build` OK, Prettier limpio.
+
+TERMINADO

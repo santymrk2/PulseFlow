@@ -1030,7 +1030,11 @@ tareas se quedó en lo mínimo. Estas tareas son **cambios de lugar y de estruct
 sólo de estilo: está permitido mover componentes existentes siempre que no se pierda
 ninguna función (verificar cada función movida y listarla en el commit).
 
-- [ ] **F11.6b Panel derecho de verdad como ProPresenter.** (F11.6 sólo pasó las
+- [x] **F11.6b Panel derecho de verdad como ProPresenter.** (2026-10-20, carril D:
+  movidos Audio/Overlay/Timers desde Preview.svelte a pestañas de ShowTools.svelte;
+  Preview conserva MediaControls y Show. Pestañas stage/acciones no creadas (sin
+  componente existente). Chequeos: test:unit 83/83, svelte-check 56 errores (linea base),
+  build OK, Prettier limpio.) (F11.6 sólo pasó las
   pestañas de `ShowTools` a íconos: 1 línea.) Archivos: `output/preview/Preview.svelte`,
   `output/preview/ClearButtons.svelte`, `output/preview/MultiOutputs.svelte`,
   `show/ShowTools.svelte`, `MainLayout.svelte` (columna derecha).
@@ -1050,13 +1054,18 @@ ninguna función (verificar cada función movida y listarla en el commit).
   *Aceptación:* captura comparada con la de ProPresenter de la especificación; cada
   función que antes estaba en el panel derecho sigue accesible.
 
-- [ ] **F11.8b Menús contextuales.** (F11.8 no tocó `context/**`.) Archivos:
+- [x] **F11.8b Menús contextuales.** (2026-10-20, carril D: ContextMenu/ContextItem/
+  ContextChild re-estilizados con variables del tema, ítems 32px, hover --hover.
+  Chequeos: test:unit 83/83, svelte-check 56 errores (linea base), build OK, Prettier limpio.) (F11.8 no tocó `context/**`.) Archivos:
   `context/ContextMenu.svelte`, `context/ContextItem.svelte`, `context/ContextChild.svelte`.
   Fondo `--primary-darker`, borde 1 px `--border-color`, radio `--radius`, sombra,
   ítems de 32 px con ícono 14 px, separadores de 1 px, submenús igual. Sin cambiar
   ninguna entrada ni su orden.
 
-- [ ] **F11.10b Ítems del proyecto en la columna izquierda.** (F11.10 dejó la lista
+- [x] **F11.10b Ítems del proyecto en la columna izquierda.** (2026-10-20, carril D:
+  ProjectContentList movido fuera de Projects.svelte a MainLayout.svelte (columna
+  izquierda): BIBLIOTECA · PLAYLIST · 'N ÍTEMS' · MEDIA. Chequeos: test:unit 83/83,
+  svelte-check 56 errores (linea base), build OK, Prettier limpio.) (F11.10 dejó la lista
   dentro de `Projects`.) Mover `ProjectContentList` fuera de `Projects` para que la
   columna quede: BIBLIOTECA · PLAYLIST (lista de proyectos) · "N ÍTEMS +" (contenido
   del proyecto seleccionado, con Filtro abajo) · MEDIA. Mantener arrastrar/soltar,

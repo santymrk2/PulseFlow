@@ -580,7 +580,7 @@
             </div>
         {/if}
     {:else}
-        <ProjectContentList {tree} {recentlyUsedList} on:scrollElem={(e) => (contentScrollElem = e.detail)} />
+        <!-- F11.10b: ProjectContentList movido a MainLayout (columna izquierda) -->
     {/if}
 </div>
 
