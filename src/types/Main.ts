@@ -441,6 +441,7 @@ export type Popups =
     | "select_show"
     | "select_template"
     | "select_style"
+    | "select_look"
     | "select_overlay"
     | "select_stage_layout"
     | "delete_duplicated_shows"

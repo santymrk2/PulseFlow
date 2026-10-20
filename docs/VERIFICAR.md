@@ -266,5 +266,30 @@ A completar: verificar que START_NDI_NATIVE_FEED inicia la captura y que el feed
 ## F5 — Looks (estilos/temas visuales) — FIN F5: PAUSA
 Marcada la pausa indicada al finalizar F5. Incluir los resultados en `docs/VERIFICAR.md`.
 
+Terminado F5.2–F5.5 (2026-10-19). Queda **pendiente de verificación visual del usuario**:
+
+1. **Historial (F5.2):** aplicar un look (selector en Settings → Outputs o en el panel de
+   salida) y deshacer con el historial: los estilos de las salidas y el look activo
+   deben volver al estado anterior.
+2. **Looks y stage (F5.2):** crear un look con una salida de stage presente: la salida
+   de stage **no** debe quedar guardada dentro del look, y aplicar el look no debe
+   tocar las salidas de stage.
+3. **Grilla (F5.3):** en Settings → Looks, cada pantalla de audiencia es una columna con
+   su dropdown de estilo y los toggles de capas (fondo/slide/overlays).
+4. **Duplicar estilo (F5.3):** con dos looks que comparten un estilo, togglear una capa
+   en uno de los looks debe preguntar si duplicar el estilo; aceptar duplica el estilo
+   (no debe afectar al otro look), cancelar no debe cambiar nada.
+5. **Make Live (F5.3):** el botón aplica el look seleccionado.
+6. **Selector en el panel derecho (F5.4):** con más de un look aparece el dropdown en el
+   panel de salida; cambiarlo aplica el look.
+7. **Menú de salida (F5.4):** clic derecho sobre la salida → "Cambiar look" abre el
+   selector y aplica el look elegido.
+8. **Acción de slide `set_look` (F5.4):** una slide con la acción "Aplicar look" debe
+   cambiar el look al activarse (también con la opción "antes de la salida" cuando el
+   estilo elegido no incluye la capa de fondo).
+9. **Configuración de pantallas (F5.5):** Settings → Outputs muestra dos grupos,
+   "Audiencia" y "Stage"; "Crear pantalla de escenario" pide el layout de stage; cada
+   salida muestra su monitor y si está abierta o cerrada.
+
 ## Otras tareas posteriores
 Añadir aquí cualquier hallazgo de F6 en adelante, conforme aparezcan.

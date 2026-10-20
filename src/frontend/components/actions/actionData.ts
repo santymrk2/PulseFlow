@@ -62,6 +62,7 @@ export const actionData = {
     toggle_output: { canAddMultiple: true, name: "actions.toggle_output_window", icon: "outputs", input: "toggle_output", incompatible: ["toggle_output_windows"] },
     // id_select_output_style: { name: "actions.id_select_output_style", icon: "styles", input: "id" },
     change_output_style: { slideId: "outputStyle", common: true, canAddMultiple: true, name: "actions.change_output_style", icon: "styles", input: "change_output_style" },
+    set_look: { common: true, canAddMultiple: true, name: "actions.set_look", icon: "looks", input: "set_look" },
     change_transition: { name: "actions.change_transition", icon: "transition", input: "transition" },
 
     // STAGE

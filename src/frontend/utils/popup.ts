@@ -71,6 +71,7 @@ import RegexManager from "../components/main/popups/RegexManager.svelte"
 import Rename from "../components/main/popups/Rename.svelte"
 import ResetAll from "../components/main/popups/ResetAll.svelte"
 import Restore from "../components/main/popups/Restore.svelte"
+import SelectLook from "../components/main/popups/SelectLook.svelte"
 import SelectOverlay from "../components/main/popups/SelectOverlay.svelte"
 import SelectShow from "../components/main/popups/SelectShow.svelte"
 import SelectStageLayout from "../components/main/popups/SelectStageLayout.svelte"
@@ -104,6 +105,7 @@ export const popups: { [key in Popups]: ComponentType } = {
     select_template: SelectTemplate,
     select_overlay: SelectOverlay,
     select_style: SelectStyle,
+    select_look: SelectLook,
     select_stage_layout: SelectStageLayout,
     delete_duplicated_shows: DeleteDuplicatedShows,
     icon: ChangeIcon,

@@ -21,6 +21,7 @@ import { pauseAllTimers } from "../drawer/timers/timers"
 import { getSlideThumbnail, getThumbnail } from "../helpers/media"
 import { changeStageOutputLayout, startCamera, startRtmpStreaming, startScene, startScreen, startStreaming, stopRtmpStreaming, stopStreaming, toggleOutputs } from "../helpers/output"
 import { OutputHelper } from "../helpers/OutputHelper"
+import { applyLook } from "../helpers/looks"
 import { changeOutputStyle, playSlideTimers, randomSlide, replaceDynamicValues, selectProjectShow, sendMidi, startShowSync } from "../helpers/showActions"
 import { startTimerById, startTimerByName, stopTimers } from "../helpers/timerTick"
 import { clearAll, clearBackground, clearDrawing, clearOverlay, clearOverlays, clearScene, clearSlide, clearTimers, restoreOutput } from "../output/clear"
@@ -146,6 +147,7 @@ export type API_toggle_specific = { value?: boolean }
 export type API_toggle_id = { id?: string; value?: boolean }
 export type API_stage_output_layout = { outputId?: string; stageLayoutId: string }
 export type API_output_style = { outputId?: string; styleId?: string }
+export type API_set_look = { lookId?: string }
 export type API_output_lock = { value?: boolean; outputId?: string }
 export type API_camera = { name?: string; id: string; groupId?: string }
 export type API_screen = { name?: string; id: string }
@@ -293,6 +295,7 @@ export const API_ACTIONS = {
     toggle_output: (data: API_toggle) => toggleOutputs([data.id], { state: data.value }),
     id_select_output_style: (data: API_id) => changeOutputStyle({ styleId: data.id }), // BC
     change_output_style: (data: API_output_style) => changeOutputStyle(data),
+    set_look: (data: API_set_look) => applyLook(data.lookId || ""),
     change_stage_output_layout: (data: API_stage_output_layout) => changeStageOutputLayout(data),
     change_transition: (data: API_transition) => updateTransition(data), // BC
 

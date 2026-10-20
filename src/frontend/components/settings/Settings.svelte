@@ -14,7 +14,7 @@
     import OtherButtons from "./tabs/OtherButtons.svelte"
     import Outputs from "./tabs/Outputs.svelte"
     import OutputsGeneral from "./tabs/OutputsGeneral.svelte"
-    import OutputsTabs from "./tabs/OutputsTabs.svelte"
+    import OutputsGroups from "./tabs/OutputsGroups.svelte"
     import Profiles from "./tabs/Profiles.svelte"
     import ProfilesButtons from "./tabs/ProfilesButtons.svelte"
     import ProfilesTabs from "./tabs/ProfilesTabs.svelte"
@@ -101,7 +101,7 @@
     <div class="tabs">
         {#if tabId === "display_settings"}
             {#if !showGlobalOutputOptions}
-                <OutputsTabs />
+                <OutputsGroups />
             {/if}
         {:else if tabId === "styles"}
             <StylesTabs />

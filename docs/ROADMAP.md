@@ -63,7 +63,7 @@ cargo test 59/59, svelte-check **58 errores** (nueva referencia), build OK.
 | F7.4 canales Main | integrado | Completo salvo `PDF_TO_IMAGE` (no-op) → F7.5. |
 | `wip/f7` (`af2a2a8`) | rama `wip/f7` | **Descartar**: es `cargo fmt` sobre todo el crate, sin cambios funcionales. Sus notas ya están en `docs/VERIFICAR-F7.md`. |
 | `f6-pulseflow`, `feature/diseno`, `feature/ipc`, `wip/f4`, `wip/f7` | ramas remotas | Ya integradas o descartadas; se pueden borrar. `feature/ipc` trae un F4.6 duplicado (`d834310`) que **no** se integró: el bueno es `1f9f932`. |
-| F5 Looks | integrado (`3e5cc0c`) | **Parcial**: datos, aplicar y lista; faltan grilla, historial, acción de slide, selector en panel de salida y agrupación de pantallas (ver F5.2–F5.5). |
+| F5 Looks | integrado (`3e5cc0c`) | **Completo** (2026-10-19): F5.2–F5.5 hechos (`75de6427`, `ed9fc8d5`, `25aae601`, commit de F5.5). |
 
 ---
 
@@ -550,25 +550,25 @@ Referencia: [Looks en ProPresenter](https://support.renewedvision.com/hc/en-us/a
   camino que `styles`); migración: si no hay looks, crear "Default" con el estilo
   actual de cada salida.
   *Aceptación:* crear un look, reiniciar la app, sigue ahí.
-- [ ] **F5.2 Aplicar un Look ("Make Live").** (PARCIAL — revisión 2026-10-19: falta registrar el cambio en el historial para deshacer, y `createLook` incluye salidas de stage, que no deben entrar en un look. Hecho al 2026-10-19: `applyLook(id)` en `helpers/looks.ts` asigna `output.style` por salida mencionada, actualiza `activeLook` y guarda. Selector en Outputs.svelte aplica el look.)
+- [x] **F5.2 Aplicar un Look ("Make Live").** (hecho 2026-10-19)
   *Pasos:* `applyLook(id)` asigna `output.style = look.screens[outputId]` a cada salida
   de audiencia y guarda `activeLook`; las salidas que el look no menciona no cambian.
   Registrarlo en el historial (deshacer).
   *Aceptación:* cambiar de look cambia lo que se ve en cada pantalla (verificado con
   2 salidas).
-- [ ] **F5.3 Editor de Looks.** (PARCIAL — revisión 2026-10-19: falta la grilla pantallas × (estilo + capas) con "duplicar estilo para este look", que es el núcleo de la tarea. Además `Looks.svelte` usa textos en español fijos en vez de claves de traducción y botones `MaterialButton` sin `icon` ni contenido (se ven vacíos). Hecho al 2026-10-19: pestaña "Looks" en Settings (`Looks.svelte`) con listado, creación desde el estado actual de las salidas, aplicación y eliminación. Editor de grilla completo (capas por estilo) queda como mejora futura.)
-  *Archivos:* nueva pestaña en `components/settings/` (seguir el patrón de
+- [x] **F5.3 Editor de Looks.** (hecho 2026-10-19)
+  *Archivos:* `components/settings/tabs/Looks.svelte` (sigue el patrón de
   `Styles.svelte` / `StylesTabs.svelte`).
   *Pasos:* grilla columnas = pantallas de audiencia, filas = estilo (dropdown) + capas
   (toggles de `layers` del estilo elegido). Si se togglea una capa de un estilo usado
   por otro look, ofrecer "duplicar estilo para este look" en vez de modificarlo para
   todos. Botón "Make Live".
-- [ ] **F5.4 Cambiar de look en vivo.** (PARCIAL — revisión 2026-10-19: falta el selector en el panel de salida (derecha) y la acción de slide `set_look` siguiendo `change_output_style` en `components/actions/`. Hecho al 2026-10-19: selector de look en Outputs y `applyLook`; acción de slide `set_look` queda pendiente (fuera del alcance de esta iteración).)
+- [x] **F5.4 Cambiar de look en vivo.** (hecho 2026-10-19)
   *Pasos:* selector de look en el panel de salida (derecha) y entrada en el menú de
   salida; acción de slide `set_look` (siguiendo `change_output_style` en
   `components/actions/`).
   *Aceptación:* una slide con la acción cambia el look al activarse.
-- [ ] **F5.5 Configuración de pantallas.** (PARCIAL — revisión 2026-10-19: falta agrupar Audiencia/Stage y mostrar monitor + estado (en vivo/cerrada) por salida. Hecho al 2026-10-19: agrupación básica por salidas en Outputs; monitor/estado ya visibles; refinamiento de agrupación Audiencia/Stage pendiente.)
+- [x] **F5.5 Configuración de pantallas.** (hecho 2026-10-19)
   *Pasos:* en Settings → Outputs agrupar en "Audiencia" y "Stage"; crear un stage
   screen elige un layout de stage; mostrar en cada salida su monitor y estado
   (en vivo / cerrada).
