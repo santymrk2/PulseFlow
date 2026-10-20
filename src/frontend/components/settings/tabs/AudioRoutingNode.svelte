@@ -5,7 +5,7 @@
     import AudioMeter from "../../drawer/audio/AudioMeter.svelte"
     import Icon from "../../helpers/Icon.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     export let id: string
     export let name: string
@@ -185,7 +185,7 @@
         {/if}
 
         {#if type === "mic" && isSubNode}
-            <MaterialToggleSwitch
+            <ToggleField
                 label=""
                 checked={!!$playingAudio[id]}
                 on:change={() => {
@@ -197,7 +197,7 @@
         {/if}
 
         {#if type === "icecast" && $special.icecast?.enabled !== undefined}
-            <MaterialToggleSwitch
+            <ToggleField
                 label=""
                 checked={$special.icecast?.enabled ?? true}
                 on:change={() => {
@@ -212,11 +212,11 @@
         {/if}
 
         <!-- {#if type === "metronome"}
-            <MaterialToggleSwitch label="" checked={$playingMetronome} on:change={toggleMetronome} small />
+            <ToggleField label="" checked={$playingMetronome} on:change={toggleMetronome} small />
         {/if} -->
 
         {#if type === "desktop_audio"}
-            <MaterialToggleSwitch label="" checked={isEnabled} on:change={(e) => onToggleEnabled?.(e.detail)} small />
+            <ToggleField label="" checked={isEnabled} on:change={(e) => onToggleEnabled?.(e.detail)} small />
         {/if}
 
         {#if type === "icecast" || isChannel || (type === "mic" && isSubNode)}

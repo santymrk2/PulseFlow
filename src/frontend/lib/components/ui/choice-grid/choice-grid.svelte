@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import Icon from "../helpers/Icon.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import Button from "../button/button.svelte"
 
     export let options: { id: string; name: string; title?: string; icon: string; tip?: string; disabled?: boolean; colored?: boolean }[] = []
     export let value: string = ""

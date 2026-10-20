@@ -6,7 +6,7 @@
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
+    import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
@@ -188,7 +188,7 @@
         {@const alwaysEnabled = alwaysEnabledIds.includes(section)}
         {@const alwaysDisabled = (section === "rss" && !$special.dynamicRSS?.length) || (section === "txt" && !$special.dynamicTXT?.length)}
 
-        <MaterialCheckbox label={getTitle(section)} disabled={alwaysEnabled || alwaysDisabled} checked={alwaysDisabled ? false : alwaysEnabled || !hidden.includes(section)} on:change={() => toggleHidden(section)} />
+        <CheckboxField label={getTitle(section)} disabled={alwaysEnabled || alwaysDisabled} checked={alwaysDisabled ? false : alwaysEnabled || !hidden.includes(section)} on:change={() => toggleHidden(section)} />
     {/each}
 </div>
 

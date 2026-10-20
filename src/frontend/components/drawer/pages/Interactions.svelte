@@ -12,7 +12,7 @@
     import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import { formatTimeInteraction, getInteraction, initConnection, startInteraction, stopInteraction } from "./interactions"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
 
@@ -219,12 +219,12 @@
 
     {#if showOptions}
         <div class="options">
-            <MaterialToggleSwitch label="interaction.require_name" checked={openedInteraction?.options?.requireName ?? true} defaultValue={true} on:change={(e) => setOption("requireName", e.detail)} />
+            <ToggleField label="interaction.require_name" checked={openedInteraction?.options?.requireName ?? true} defaultValue={true} on:change={(e) => setOption("requireName", e.detail)} />
             {#if openedInteraction?.options?.requireName === false}
-                <MaterialToggleSwitch label="interaction.random_names" checked={openedInteraction?.options?.randomNames ?? false} defaultValue={false} on:change={(e) => setOption("randomNames", e.detail)} />
+                <ToggleField label="interaction.random_names" checked={openedInteraction?.options?.randomNames ?? false} defaultValue={false} on:change={(e) => setOption("randomNames", e.detail)} />
             {/if}
 
-            <MaterialToggleSwitch label="interaction.all_at_once" checked={openedInteraction?.options?.allAtOnce ?? false} defaultValue={false} disabled={openedInteraction?.inputs?.length <= 1} on:change={(e) => setOption("allAtOnce", e.detail)} />
+            <ToggleField label="interaction.all_at_once" checked={openedInteraction?.options?.allAtOnce ?? false} defaultValue={false} disabled={openedInteraction?.inputs?.length <= 1} on:change={(e) => setOption("allAtOnce", e.detail)} />
 
             {#if !openedInteraction?.options?.allAtOnce}
                 <NumberField label="interaction.max_time (conditions.seconds)" value={openedInteraction?.options?.maxTime ?? 0} defaultValue={0} on:change={(e) => setOption("maxTime", e.detail)} />

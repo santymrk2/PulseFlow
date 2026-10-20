@@ -13,7 +13,7 @@
     import T from "../helpers/T.svelte"
     import FloatingInputs from "../input/FloatingInputs.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialZoom from "../inputs/MaterialZoom.svelte"
+    import ZoomControl from "../../lib/components/ui/zoom-control/zoom-control.svelte"
     import { getStyleResolution } from "../slide/getStyleResolution"
     import Zoomed from "../slide/Zoomed.svelte"
     import Center from "../system/Center.svelte"
@@ -187,7 +187,7 @@
                 </Button>
             {/if}
 
-            <MaterialZoom hidden={!hasStageOutput} columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
+            <ZoomControl hidden={!hasStageOutput} columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
         </FloatingInputs>
 
         <ItemAddMenu {isLocked} />

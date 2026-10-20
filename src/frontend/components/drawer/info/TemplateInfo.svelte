@@ -1,7 +1,7 @@
 <script lang="ts">
     import { special } from "../../../stores"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import Center from "../../system/Center.svelte"
     import Clock from "../../system/Clock.svelte"
     import Date from "../../system/Date.svelte"
@@ -23,9 +23,9 @@
         <main style="overflow-x: hidden;padding: 10px;">
             <TextField label="settings.capitalize_words" title="settings.comma_seperated" value={$special.capitalize_words || ""} defaultValue="Jesus, Lord" on:change={(e) => updateSpecial(e.detail, "capitalize_words", true)} />
             <!-- "text_can_overflow": "Allow text outside of the textbox bounds", -->
-            <!-- <MaterialToggleSwitch label="settings.text_can_overflow" checked={$special.textCanOverflow !== false} defaultValue={true} on:change={(e) => updateSpecial(e.detail, "textCanOverflow", true)} /> -->
+            <!-- <ToggleField label="settings.text_can_overflow" checked={$special.textCanOverflow !== false} defaultValue={true} on:change={(e) => updateSpecial(e.detail, "textCanOverflow", true)} /> -->
 
-            <MaterialToggleSwitch label="settings.style_template_preview" checked={$special.styleTemplatePreview !== false} defaultValue={true} on:change={(e) => updateSpecial(e.detail, "styleTemplatePreview", true)} />
+            <ToggleField label="settings.style_template_preview" checked={$special.styleTemplatePreview !== false} defaultValue={true} on:change={(e) => updateSpecial(e.detail, "styleTemplatePreview", true)} />
         </main>
     {:else}
         <Center>

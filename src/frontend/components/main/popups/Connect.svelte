@@ -13,7 +13,7 @@
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import { startRemoteController, stopRemoteController } from "../../../utils/remoteController"
     import Tip from "../Tip.svelte"
 
@@ -155,7 +155,7 @@
 
         <!-- WIP disable for now until it's working again -->
         {#if $serverData?.output_stream?.sendAudio}
-            <MaterialToggleSwitch label="preview.audio" checked={$serverData?.output_stream?.sendAudio} defaultValue={false} on:change={toggleAudio} />
+            <ToggleField label="preview.audio" checked={$serverData?.output_stream?.sendAudio} defaultValue={false} on:change={toggleAudio} />
         {/if}
     {/if}
 
@@ -163,7 +163,7 @@
         <hr />
 
         <NumberField label="settings.max_connections" value={$maxConnections} max={100} on:change={(e) => maxConnections.set(e.detail)} />
-        <MaterialToggleSwitch label="settings.use_hostname" checked={$special.connectionHostname} defaultValue={false} on:change={(e) => updateSpecial("connectionHostname", e.detail)} />
+        <ToggleField label="settings.use_hostname" checked={$special.connectionHostname} defaultValue={false} on:change={(e) => updateSpecial("connectionHostname", e.detail)} />
     {/if}
 {:else}
     <div on:mouseup={mouseup}>

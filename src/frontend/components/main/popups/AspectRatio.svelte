@@ -7,7 +7,7 @@
     import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     // https://blog.depositphotos.com/common-aspect-ratios.html
     const ratios = [
@@ -89,7 +89,7 @@
     </div>
 {/if}
 
-<MaterialToggleSwitch style="margin-top: {showMore ? 10 : 20}px;" label="settings.output_resolution_ratio" checked={active.outputResolutionAsRatio} defaultValue={false} on:change={(e) => setAspectRatio({ ...active, outputResolutionAsRatio: e.detail })} />
+<ToggleField style="margin-top: {showMore ? 10 : 20}px;" label="settings.output_resolution_ratio" checked={active.outputResolutionAsRatio} defaultValue={false} on:change={(e) => setAspectRatio({ ...active, outputResolutionAsRatio: e.detail })} />
 
 {#if showMore}
     <HRule />

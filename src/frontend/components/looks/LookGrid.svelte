@@ -6,7 +6,7 @@
     import { translateText } from "../../utils/language"
     import { keysToID, sortByName } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialCheckbox from "../inputs/MaterialCheckbox.svelte"
+    import CheckboxField from "../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import LookAdvanced from "./LookAdvanced.svelte"
 
@@ -67,7 +67,7 @@
         {#each screens as screen (screen.id)}
             {@const cell = getCell(screen.id)}
             <div class="cell centered">
-                <MaterialCheckbox checked={!!cell.layers?.slide} label="looks.slide" center on:change={() => toggleLayer(screen.id, "slide")} />
+                <CheckboxField checked={!!cell.layers?.slide} label="looks.slide" center on:change={() => toggleLayer(screen.id, "slide")} />
             </div>
         {/each}
     </div>
@@ -78,7 +78,7 @@
         {#each screens as screen (screen.id)}
             {@const cell = getCell(screen.id)}
             <div class="cell centered">
-                <MaterialCheckbox checked={!!cell.layers?.media} label="looks.media" center on:change={() => toggleLayer(screen.id, "media")} />
+                <CheckboxField checked={!!cell.layers?.media} label="looks.media" center on:change={() => toggleLayer(screen.id, "media")} />
             </div>
         {/each}
     </div>
@@ -89,7 +89,7 @@
         {#each screens as screen (screen.id)}
             {@const cell = getCell(screen.id)}
             <div class="cell centered">
-                <MaterialCheckbox checked={!!cell.layers?.overlays} label="looks.overlays" center on:change={() => toggleLayer(screen.id, "overlays")} />
+                <CheckboxField checked={!!cell.layers?.overlays} label="looks.overlays" center on:change={() => toggleLayer(screen.id, "overlays")} />
             </div>
         {/each}
     </div>

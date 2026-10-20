@@ -5,10 +5,10 @@
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
+    import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     let chosenType = ""
     const types = [
@@ -86,7 +86,7 @@
 </script>
 
 {#if !existing && !chosenType}
-    <MaterialMultiChoice
+    <ChoiceGrid
         options={types}
         on:click={(e) => {
             chosenType = e.detail
@@ -96,7 +96,7 @@
 {:else if !existing && !chosenInputType}
     <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />
 
-    <MaterialMultiChoice
+    <ChoiceGrid
         options={inputTypes[currentInput.type]}
         on:click={(e) => {
             chosenInputType = e.detail
@@ -190,14 +190,14 @@
             </Button>
 
             {#if currentInput.options && currentInput.options.length > 1}
-                <MaterialToggleSwitch label="variables.randomize" style="margin-top: 10px;" checked={currentInput.randomize} defaultValue={false} on:change={(e) => updateValue(e.detail, "randomize")} />
+                <ToggleField label="variables.randomize" style="margin-top: 10px;" checked={currentInput.randomize} defaultValue={false} on:change={(e) => updateValue(e.detail, "randomize")} />
             {/if}
         </div>
     {:else if currentInput.type === "text"}
         <!-- optional - for polls we don't need answers -->
         <TextField label="interaction.answer (interaction.optional)" value={currentInput.answer || ""} on:change={(e) => updateValue(e.detail, "answer")} />
 
-        <MaterialToggleSwitch label="interaction.allow_multiple" checked={currentInput.allowMultiple} defaultValue={false} on:change={(e) => updateValue(e.detail, "allowMultiple")} />
+        <ToggleField label="interaction.allow_multiple" checked={currentInput.allowMultiple} defaultValue={false} on:change={(e) => updateValue(e.detail, "allowMultiple")} />
     {:else if currentInput.type === "number"}
         <NumberField label="interaction.answer (interaction.optional)" type="number" value={currentInput.answer ?? -1} min={currentInput.min ?? 0} max={currentInput.max ?? 1000} on:change={(e) => updateValue(e.detail, "answer")} />
 

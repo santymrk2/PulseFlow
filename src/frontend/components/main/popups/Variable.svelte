@@ -8,10 +8,10 @@
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
+    import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     let chosenType = ""
     const types = [
@@ -249,7 +249,7 @@
 </script>
 
 {#if !existing && !chosenType}
-    <MaterialMultiChoice
+    <ChoiceGrid
         options={types}
         on:click={(e) => {
             chosenType = e.detail
@@ -275,12 +275,12 @@
         <Button class="popup-options {showMoreRN ? 'active' : ''}" icon="options" iconSize={1.3} title={showMoreRN ? "actions.close" : "create_show.more_options"} on:click={() => (showMoreRN = !showMoreRN)} white />
 
         {#if showMoreRN}
-            <MaterialToggleSwitch label="edit.each_number_once" checked={currentVariable.eachNumberOnce} defaultValue={false} on:change={(e) => updateValue(e.detail, "eachNumberOnce")} />
+            <ToggleField label="edit.each_number_once" checked={currentVariable.eachNumberOnce} defaultValue={false} on:change={(e) => updateValue(e.detail, "eachNumberOnce")} />
 
             <InputRow>
-                <MaterialToggleSwitch label="popup.animate" checked={currentVariable.animate} defaultValue={false} style="flex: 1;" on:change={(e) => updateValue(e.detail, "animate")} />
+                <ToggleField label="popup.animate" checked={currentVariable.animate} defaultValue={false} style="flex: 1;" on:change={(e) => updateValue(e.detail, "animate")} />
                 {#if currentVariable.animate}
-                    <MaterialToggleSwitch label="edit.towards_result" checked={currentVariable.animateTowardsResult} defaultValue={false} style="flex: 1;" on:change={(e) => updateValue(e.detail, "animateTowardsResult")} />
+                    <ToggleField label="edit.towards_result" checked={currentVariable.animateTowardsResult} defaultValue={false} style="flex: 1;" on:change={(e) => updateValue(e.detail, "animateTowardsResult")} />
                 {/if}
             </InputRow>
             {#if currentVariable.animate}

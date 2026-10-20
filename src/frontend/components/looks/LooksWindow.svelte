@@ -8,7 +8,7 @@
     import { history } from "../helpers/history"
     import { applyLook, createLook, isStageOutput } from "../helpers/looks"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialSlider from "../inputs/Slider.svelte"
+    import Slider from "../../lib/components/ui/slider/slider.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
     import ListRow from "../../lib/components/ui/list-row/list-row.svelte"
     import SectionHeader from "../../lib/components/ui/section-header/section-header.svelte"
@@ -163,7 +163,7 @@
         {#if draft}
             <div class="transition">
                 <span class="label">{t("looks.transition")}</span>
-                <MaterialSlider value={draft.transitionMs ?? 1000} min={0} max={5000} step={100} style="flex: 1;" on:change={onTransitionChange} />
+                <Slider value={draft.transitionMs ?? 1000} min={0} max={5000} step={100} style="flex: 1;" on:change={onTransitionChange} />
                 <span class="value">{((draft.transitionMs ?? 1000) / 1000).toFixed(1)} s</span>
             </div>
         {/if}

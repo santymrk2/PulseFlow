@@ -12,7 +12,7 @@
     import T from "../../helpers/T.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialZoom from "../../inputs/MaterialZoom.svelte"
+    import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
     import Loader from "../../main/Loader.svelte"
     import { clearBackground } from "../../output/clear"
 
@@ -245,7 +245,7 @@
 
         <div class="divider"></div>
 
-        <MaterialZoom columns={$slidesOptions.columns} on:change={(e) => slidesOptions.set({ ...$slidesOptions, columns: e.detail })} />
+        <ZoomControl columns={$slidesOptions.columns} on:change={(e) => slidesOptions.set({ ...$slidesOptions, columns: e.detail })} />
     </FloatingInputs>
 {/if}
 

@@ -13,7 +13,7 @@
     import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import ItemsList from "./ItemsList.svelte"
 
     $: templateId = $activeEdit?.id || ""
@@ -127,7 +127,7 @@
         </InputRow>
 
         {#if settings.firstSlideTemplate}
-            <MaterialToggleSwitch label="settings.always_place_empty_slide_first" checked={settings.createFirstSlide} defaultValue={false} on:change={(e) => setValue(e.detail, "createFirstSlide")} />
+            <ToggleField label="settings.always_place_empty_slide_first" checked={settings.createFirstSlide} defaultValue={false} on:change={(e) => setValue(e.detail, "createFirstSlide")} />
         {/if}
 
         <!-- <InputRow>

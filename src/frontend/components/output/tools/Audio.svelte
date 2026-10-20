@@ -9,7 +9,7 @@
     import { getFileName, removeExtension } from "../../helpers/media"
     import { joinTime, secondsToTime } from "../../helpers/time"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import Slider from "../../inputs/Slider.svelte"
+    import Slider from "../../../lib/components/ui/slider/slider.svelte"
 
     function getName(id: string) {
         return removeExtension(getFileName(AudioPlayer.getPath(id))) || id

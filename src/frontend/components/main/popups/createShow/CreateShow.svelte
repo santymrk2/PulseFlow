@@ -14,11 +14,11 @@
     import List from "../../../input/List.svelte"
     import Button from "../../../../lib/components/ui/button/button.svelte"
     import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
-    import MaterialMultiChoice from "../../../inputs/MaterialMultiChoice.svelte"
+    import ChoiceGrid from "../../../../lib/components/ui/choice-grid/choice-grid.svelte"
     import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
     import TextareaField from "../../../../lib/components/ui/textarea-field/textarea-field.svelte"
     import TextField from "../../../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import WebSearch from "./WebSearch.svelte"
 
     const changeValue = (e: any, key = "text") => {
@@ -216,7 +216,7 @@
         <SelectField label="show.category" value={selectedCategory?.id} options={cats.map((a) => ({ label: translateText(a.name || "main.unnamed"), value: a.id, icon: a.icon, iconColor: a.iconColor }))} on:change={(e) => (selectedCategory = cats.find((a) => a.id === e.detail))} addNew="new.category" on:new={addNewCategory} />
     </List>
 
-    <MaterialMultiChoice options={resolvedCreateOptions} on:click={(e) => selectOption(e.detail)} />
+    <ChoiceGrid options={resolvedCreateOptions} on:click={(e) => selectOption(e.detail)} />
 {:else}
     <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (selectedOption = "")} />
 {/if}
@@ -231,8 +231,8 @@
 
     {#if showMore}
         <List top={5}>
-            <MaterialToggleSwitch label="create_show.auto_groups" checked={$special.autoGroups !== false} defaultValue={true} on:change={(e) => special.set({ ...$special, autoGroups: e.detail })} />
-            <MaterialToggleSwitch label="create_show.format_new_show" checked={$formatNewShow} defaultValue={false} on:change={(e) => formatNewShow.set(e.detail)} />
+            <ToggleField label="create_show.auto_groups" checked={$special.autoGroups !== false} defaultValue={true} on:change={(e) => special.set({ ...$special, autoGroups: e.detail })} />
+            <ToggleField label="create_show.format_new_show" checked={$formatNewShow} defaultValue={false} on:change={(e) => formatNewShow.set(e.detail)} />
             <NumberField label="create_show.split_lines" value={$splitLines} max={100} on:change={(e) => splitLines.set(e.detail)} hideWhenZero />
         </List>
     {/if}

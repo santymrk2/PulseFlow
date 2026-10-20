@@ -12,8 +12,8 @@
     import HRule from "../../input/HRule.svelte"
     import Link from "../../inputs/Link.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
-    import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
+    import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
+    import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
     import Loader from "../Loader.svelte"
@@ -129,7 +129,7 @@
         <div class="list">
             {#if searchedRecommendedBibles.length}
                 {#each searchedRecommendedBibles as bible}
-                    <MaterialCheckbox label={bible.name} title="{bible.source === 'youversion' ? '[YouVersion] ' : ''}{bible.name}" data={bible.description} style={bible.source === "youversion" ? "border-left: 2px solid #4a3a30;" : bible.source === "api.bible" ? "border-left: 2px solid #253354;" : ""} checked={!!Object.values($scriptures).find((a) => a.id === bible.sourceKey)} on:change={() => toggleScripture(bible)} />
+                    <CheckboxField label={bible.name} title="{bible.source === 'youversion' ? '[YouVersion] ' : ''}{bible.name}" data={bible.description} style={bible.source === "youversion" ? "border-left: 2px solid #4a3a30;" : bible.source === "api.bible" ? "border-left: 2px solid #253354;" : ""} checked={!!Object.values($scriptures).find((a) => a.id === bible.sourceKey)} on:change={() => toggleScripture(bible)} />
                 {/each}
 
                 {#if searchedBibles.length}
@@ -140,7 +140,7 @@
             {#if bibles.length}
                 {#if searchedBibles.length}
                     {#each searchedBibles as bible}
-                        <MaterialCheckbox label={bible.name} title="{bible.source === 'youversion' ? '[YouVersion] ' : ''}{bible.name}" data={bible.description} style={bible.source === "youversion" ? "border-left: 2px solid #4a3a30;" : bible.source === "api.bible" ? "border-left: 2px solid #253354;" : ""} checked={!!Object.values($scriptures).find((a) => a.id === bible.sourceKey)} on:change={() => toggleScripture(bible)} />
+                        <CheckboxField label={bible.name} title="{bible.source === 'youversion' ? '[YouVersion] ' : ''}{bible.name}" data={bible.description} style={bible.source === "youversion" ? "border-left: 2px solid #4a3a30;" : bible.source === "api.bible" ? "border-left: 2px solid #253354;" : ""} checked={!!Object.values($scriptures).find((a) => a.id === bible.sourceKey)} on:change={() => toggleScripture(bible)} />
                     {/each}
                 {:else if !searchedRecommendedBibles.length}
                     <Center faded>
@@ -185,7 +185,7 @@
         <T id="scripture.local" />
     </Button>
 {:else}
-    <MaterialMultiChoice options={importTypes} on:click={(e) => (importType = e.detail)} />
+    <ChoiceGrid options={importTypes} on:click={(e) => (importType = e.detail)} />
 {/if}
 
 <style>

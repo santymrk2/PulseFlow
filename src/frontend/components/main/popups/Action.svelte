@@ -23,7 +23,7 @@
     import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
     import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     $: id = $popupData.id || ""
     $: mode = $popupData.mode || ""
@@ -484,7 +484,7 @@
 
             <!-- only used to disable customActionActivation if any -->
             {#if customActivation || action.enabled === false}
-                <MaterialToggleSwitch label="settings.enabled" style="margin-top: 10px;" checked={action.enabled ?? true} defaultValue={true} on:change={(e) => updateValue("enabled", e.detail)} />
+                <ToggleField label="settings.enabled" style="margin-top: 10px;" checked={action.enabled ?? true} defaultValue={true} on:change={(e) => updateValue("enabled", e.detail)} />
             {/if}
 
             <InputRow arrow={customActionActivations.find((a) => a.id === customActivation)?.inputs}>

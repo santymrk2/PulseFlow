@@ -7,7 +7,7 @@
     import Button from "../../../lib/components/ui/button/button.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     const popupInfo = $popupData
     const nodeId = popupInfo?.nodeId
@@ -77,7 +77,7 @@
 </script>
 
 {#if nodeId === "icecast"}
-    <MaterialToggleSwitch label="settings.enabled" checked={$special.icecast?.enabled ?? true} on:change={(e) => updateIcecast("enabled", e.detail)} />
+    <ToggleField label="settings.enabled" checked={$special.icecast?.enabled ?? true} on:change={(e) => updateIcecast("enabled", e.detail)} />
     <InputRow>
         <TextField label="IP" value={$special.icecast?.host || "localhost"} on:change={(e) => updateIcecast("host", e.detail)} />
         <NumberField label="settings.port" value={$special.icecast?.port ?? 8000} max={65535} min={1} step={1} on:change={(e) => updateIcecast("port", e.detail)} />

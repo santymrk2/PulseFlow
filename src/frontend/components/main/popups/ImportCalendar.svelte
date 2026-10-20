@@ -5,7 +5,7 @@
     import { translateText } from "../../../utils/language"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
+    import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import { fetchAndImportIcs } from "../../drawer/calendar/calendars"
     import { newToast } from "../../../utils/common"
@@ -67,7 +67,7 @@
         <T id="actions.import" />
     </Button>
 {:else}
-    <MaterialMultiChoice options={importTypes} on:click={(e) => (importType = e.detail)} />
+    <ChoiceGrid options={importTypes} on:click={(e) => (importType = e.detail)} />
 {/if}
 
 <style>

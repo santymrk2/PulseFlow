@@ -1,9 +1,9 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { translateText } from "../../utils/language"
-    import InputRow from "../input/InputRow.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
-    import Icon from "../helpers/Icon.svelte"
+    import { translateText } from "../../../../utils/language"
+    import InputRow from "../../../../components/input/InputRow.svelte"
+    import Button from "../button/button.svelte"
+    import Icon from "../../../../components/helpers/Icon.svelte"
 
     export let label: string
     export let icon = ""

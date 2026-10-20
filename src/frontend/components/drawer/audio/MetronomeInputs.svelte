@@ -4,7 +4,7 @@
     import type { API_metronome } from "../../actions/api"
     import InputRow from "../../input/InputRow.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     export let values: API_metronome | MetronomeSettings = {}
     export let action = false
@@ -18,7 +18,7 @@
 </script>
 
 {#if action}
-    <MaterialToggleSwitch label="audio.use_metadata_bpm" checked={values.metadataBPM} defaultValue={false} on:change={(e) => updateValue("metadataBPM", e.detail)} />
+    <ToggleField label="audio.use_metadata_bpm" checked={values.metadataBPM} defaultValue={false} on:change={(e) => updateValue("metadataBPM", e.detail)} />
 {/if}
 <InputRow>
     {#if !values.metadataBPM}

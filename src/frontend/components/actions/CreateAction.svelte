@@ -13,7 +13,7 @@
     import CombinedInput from "../inputs/CombinedInput.svelte"
     import Dropdown from "../../lib/components/ui/dropdown/dropdown.svelte"
     import TextField from "../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../lib/components/ui/toggle-field/toggle-field.svelte"
     import { spotifyState } from "../output/preview/SpotifyManager"
     import { getGlobalGroupName } from "../show/tools/groups"
     import Center from "../system/Center.svelte"
@@ -351,7 +351,7 @@
 {/if}
 
 {#if mode === "slide" && getActionTriggerId(actionId) === "run_action" && $categories[_show().get().category]?.action}
-    <MaterialToggleSwitch label="actions.override_category_action" checked={customData.overrideCategoryAction} defaultValue={false} on:change={(e) => changeAction({ id: actionId, customDataKey: "overrideCategoryAction", customDataValue: e.detail })} />
+    <ToggleField label="actions.override_category_action" checked={customData.overrideCategoryAction} defaultValue={false} on:change={(e) => changeAction({ id: actionId, customDataKey: "overrideCategoryAction", customDataValue: e.detail })} />
 {/if}
 
 <style>

@@ -8,7 +8,7 @@
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import Tip from "../Tip.svelte"
 
     let data
@@ -167,7 +167,7 @@
         </InputRow>
 
         {#if showMore}
-            <MaterialToggleSwitch label="meta.ignore_empty" checked={currentValue.ignoreEmpty} defaultValue={false} on:change={(e) => changeMetadata("ignoreEmpty", e.detail)} />
+            <ToggleField label="meta.ignore_empty" checked={currentValue.ignoreEmpty} defaultValue={false} on:change={(e) => changeMetadata("ignoreEmpty", e.detail)} />
         {/if}
 
         <Tip value="tips.metadata_customize" top={20} />

@@ -13,7 +13,7 @@
     import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
     import PopupField from "../../lib/components/ui/popup-field/popup-field.svelte"
-    import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     export let outputId: string
     export let displays: any[] = []
@@ -175,7 +175,7 @@
 <div class="header">
     <input class="name-input" value={currentOutput.name || ""} on:change={rename} />
     <div class="res">{currentOutput.bounds?.width || 0} × {currentOutput.bounds?.height || 0}</div>
-    <MaterialToggleSwitch label="settings.always_on_top" checked={currentOutput.alwaysOnTop !== false} defaultValue={true} on:change={toggleAlwaysOnTop} />
+    <ToggleField label="settings.always_on_top" checked={currentOutput.alwaysOnTop !== false} defaultValue={true} on:change={toggleAlwaysOnTop} />
 </div>
 
 {#if !isStage}
@@ -237,9 +237,9 @@
             <Button on:click={() => dispatch("refreshDisplays")}>{translateText("screen_config.identify")}</Button>
             <Button on:click={toggleEnabled}>{translateText(currentOutput.enabled && currentOutput.active ? "screen_config.turn_off" : "screen_config.turn_on")}</Button>
         </div>
-        <MaterialToggleSwitch label="settings.invisible_window" checked={!!currentOutput.invisible} defaultValue={false} on:change={(e) => setOutputValue("invisible", e.detail)} />
-        <MaterialToggleSwitch label="settings.transparent" checked={!!currentOutput.transparent} defaultValue={false} on:change={(e) => setOutputValue("transparent", e.detail)} />
-        <MaterialToggleSwitch label="context.hide_from_preview" checked={!!currentOutput.hideFromPreview} defaultValue={false} on:change={(e) => setOutputValue("hideFromPreview", e.detail)} />
+        <ToggleField label="settings.invisible_window" checked={!!currentOutput.invisible} defaultValue={false} on:change={(e) => setOutputValue("invisible", e.detail)} />
+        <ToggleField label="settings.transparent" checked={!!currentOutput.transparent} defaultValue={false} on:change={(e) => setOutputValue("transparent", e.detail)} />
+        <ToggleField label="context.hide_from_preview" checked={!!currentOutput.hideFromPreview} defaultValue={false} on:change={(e) => setOutputValue("hideFromPreview", e.detail)} />
         <ColorField label="edit.color" value={currentOutput.color || "#F0008C"} defaultValue="#F0008C" on:change={(e) => setOutputValue("color", e.detail)} />
         <div class="label">{translateText("settings.resolution")}</div>
         <NumberField label="screen.width" value={currentOutput.forcedResolution?.width || 0} defaultValue={0} max={8192} on:change={(e) => setForcedResolution("width", e.detail)} />
@@ -277,7 +277,7 @@
     <div class="tab-panel scroll">
         <div class="section">
             <div class="section-title">NDI</div>
-            <MaterialToggleSwitch
+            <ToggleField
                 label="NDI"
                 checked={!!currentOutput.ndi}
                 defaultValue={false}
@@ -290,7 +290,7 @@
         </div>
         <div class="section">
             <div class="section-title">OMT</div>
-            <MaterialToggleSwitch
+            <ToggleField
                 label="OMT"
                 checked={!!currentOutput.omt}
                 defaultValue={false}
@@ -303,7 +303,7 @@
         </div>
         <div class="section">
             <div class="section-title">Blackmagic</div>
-            <MaterialToggleSwitch
+            <ToggleField
                 label="Blackmagic"
                 checked={!!currentOutput.blackmagic}
                 defaultValue={false}
@@ -316,7 +316,7 @@
         </div>
         <div class="section">
             <div class="section-title">WebRTC</div>
-            <MaterialToggleSwitch
+            <ToggleField
                 label="WebRTC"
                 checked={!!currentOutput.webrtc}
                 defaultValue={false}
@@ -329,7 +329,7 @@
         </div>
         <div class="section">
             <div class="section-title">RTMP</div>
-            <MaterialToggleSwitch
+            <ToggleField
                 label="RTMP"
                 checked={!!currentOutput.rtmp}
                 defaultValue={false}

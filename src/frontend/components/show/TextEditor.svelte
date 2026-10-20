@@ -9,7 +9,7 @@
     import Icon from "../helpers/Icon.svelte"
     import FloatingInputs from "../input/FloatingInputs.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialZoom from "../inputs/MaterialZoom.svelte"
+    import ZoomControl from "../../lib/components/ui/zoom-control/zoom-control.svelte"
     import { formatText } from "./formatTextEditor"
     import { getPlainEditorText } from "./getTextEditor"
     import HighlightedNotes from "./tools/HighlightedNotes.svelte"
@@ -72,7 +72,7 @@
         </Button>
     {/if}
 
-    <MaterialZoom hidden={showHasChords && itemIndex === 0} columns={$textEditZoom / 10} min={0.5} max={2} defaultValue={1} addValue={-0.1} on:change={(e) => textEditZoom.set(e.detail * 10)} />
+    <ZoomControl hidden={showHasChords && itemIndex === 0} columns={$textEditZoom / 10} min={0.5} max={2} defaultValue={1} addValue={-0.1} on:change={(e) => textEditZoom.set(e.detail * 10)} />
 </FloatingInputs>
 
 {#if maxTextboxes > 1}

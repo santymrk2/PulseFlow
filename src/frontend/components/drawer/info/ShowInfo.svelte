@@ -11,7 +11,7 @@
     import T from "../../helpers/T.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import Center from "../../system/Center.svelte"
     import Clock from "../../system/Clock.svelte"
     import Date from "../../system/Date.svelte"
@@ -105,10 +105,10 @@
     {#if optionsOpen}
         <main style="overflow-x: hidden;padding: 10px;">
             <!-- only relevant for opened show really -->
-            <MaterialToggleSwitch label="settings.always_place_empty_slide_first" checked={$special.alwaysPlaceEmptySlideFirst || false} defaultValue={false} on:change={(e) => updateSpecial(e.detail, "alwaysPlaceEmptySlideFirst")} />
-            <MaterialToggleSwitch label="settings.transparent_slides" style="margin-bottom: 5px;" checked={$special.transparentSlides} defaultValue={false} on:change={(e) => updateSpecial(e.detail, "transparentSlides")} />
+            <ToggleField label="settings.always_place_empty_slide_first" checked={$special.alwaysPlaceEmptySlideFirst || false} defaultValue={false} on:change={(e) => updateSpecial(e.detail, "alwaysPlaceEmptySlideFirst")} />
+            <ToggleField label="settings.transparent_slides" style="margin-bottom: 5px;" checked={$special.transparentSlides} defaultValue={false} on:change={(e) => updateSpecial(e.detail, "transparentSlides")} />
 
-            <MaterialToggleSwitch label="settings.log_song_usage" checked={$special.logSongUsage || false} defaultValue={false} on:change={(e) => updateSpecial(e.detail, "logSongUsage")} />
+            <ToggleField label="settings.log_song_usage" checked={$special.logSongUsage || false} defaultValue={false} on:change={(e) => updateSpecial(e.detail, "logSongUsage")} />
             {#if $special.logSongUsage && $usageLog.all?.length}
                 <InputRow>
                     <Button disabled={exportingUsageLog} style="width: 100%;" icon={usageLogExported ? "reset" : "export"} on:click={() => (usageLogExported ? resetUsageLog() : exportUsageLog())}>

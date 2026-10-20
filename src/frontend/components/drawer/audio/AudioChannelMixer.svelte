@@ -5,7 +5,7 @@
     import { activeAudioEffects, audioChannelsData, recordingChannels } from "../../../stores"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import Stepper from "../../../lib/components/ui/stepper/stepper.svelte"
-    import Slider from "../../inputs/Slider.svelte"
+    import Slider from "../../../lib/components/ui/slider/slider.svelte"
     import AudioMeter from "./AudioMeter.svelte"
 
     export let channelId: string

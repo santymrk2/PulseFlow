@@ -20,7 +20,7 @@
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import TimeField from "../../../lib/components/ui/time-field/time-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     let stored = ""
 
@@ -334,7 +334,7 @@
     <Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 
     {#if showMore}
-        <MaterialToggleSwitch label="calendar.time" style="margin-top: 10px;" checked={editEvent.time} defaultValue={true} on:change={(e) => (editEvent.time = e.detail)} />
+        <ToggleField label="calendar.time" style="margin-top: 10px;" checked={editEvent.time} defaultValue={true} on:change={(e) => (editEvent.time = e.detail)} />
     {/if}
 {:else if selectedType === "action"}
     {#if actionSelector !== null}
@@ -373,7 +373,7 @@
         </InputRow>
     {/if}
 
-    <MaterialToggleSwitch label="calendar.repeat" style="margin-top: 10px;" disabled={!!editEvent.group} checked={editEvent.repeat} on:change={(e) => (editEvent.repeat = e.detail)} />
+    <ToggleField label="calendar.repeat" style="margin-top: 10px;" disabled={!!editEvent.group} checked={editEvent.repeat} on:change={(e) => (editEvent.repeat = e.detail)} />
 
     {#if editEvent.repeat}
         <InputRow style="background-color: var(--primary-darker);border-radius: 4px;">

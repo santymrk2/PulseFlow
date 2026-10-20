@@ -5,7 +5,7 @@
     import { translateText } from "../../utils/language"
     import { select } from "../helpers/select"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialCheckbox from "../inputs/MaterialCheckbox.svelte"
+    import CheckboxField from "../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import ColorField from "../../lib/components/ui/color-field/color-field.svelte"
     import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import { commonInputs } from "./inputs"
@@ -38,7 +38,7 @@
         />
     {/if}
 {:else if input.type === "checkbox"}
-    <MaterialCheckbox {label} checked={input.value} style="flex: 1;{input.style || ''}" on:change={changed} />
+    <CheckboxField {label} checked={input.value} style="flex: 1;{input.style || ''}" on:change={changed} />
 {:else if input.type === "color"}
     <ColorField {label} {...input} {...input.settings || {}} on:input={changed} />
 {:else}

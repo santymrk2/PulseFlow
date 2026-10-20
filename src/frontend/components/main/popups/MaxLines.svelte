@@ -4,7 +4,7 @@
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     const lines = [0, 1, 2, 3, 4]
 
@@ -64,7 +64,7 @@
     <NumberField style="margin-top: 20px;" label="actions.custom_key" value={active} min={0} max={99} on:change={(e) => setValue(e.detail)} />
 
     <InputRow arrow={style?.showAsFaded}>
-        <MaterialToggleSwitch label="edit.show_as_faded" style="width: 100%;" checked={!!style?.showAsFaded} defaultValue={false} on:change={(e) => updateStyle("showAsFaded", e.detail)} />
+        <ToggleField label="edit.show_as_faded" style="width: 100%;" checked={!!style?.showAsFaded} defaultValue={false} on:change={(e) => updateStyle("showAsFaded", e.detail)} />
 
         <div slot="menu">
             <NumberField label="edit.opacity (%)" value={style?.lineOpacity ?? 50} min={0} max={99} on:change={(e) => updateStyle("lineOpacity", e.detail)} />
@@ -72,7 +72,7 @@
     </InputRow>
 
     {#if styleId}
-        <MaterialToggleSwitch label="edit.skip_virtual_breaks" checked={!!style?.skipVirtualBreaks} defaultValue={false} on:change={(e) => updateStyle("skipVirtualBreaks", e.detail)} />
+        <ToggleField label="edit.skip_virtual_breaks" checked={!!style?.skipVirtualBreaks} defaultValue={false} on:change={(e) => updateStyle("skipVirtualBreaks", e.detail)} />
     {/if}
 {/if}
 

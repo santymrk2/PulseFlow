@@ -15,7 +15,7 @@
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import Tip from "../../main/Tip.svelte"
 
     let ip = "localhost"
@@ -254,9 +254,9 @@
         </Button>
 
         {#if server.id === "companion"}
-            <MaterialToggleSwitch label="" checked={$serverData?.companion?.enabled === true} on:change={toggleCompanion} />
+            <ToggleField label="" checked={$serverData?.companion?.enabled === true} on:change={toggleCompanion} />
         {:else}
-            <MaterialToggleSwitch label="" checked={server.enabledByDefault ? $disabledServers[server.id] !== true : $disabledServers[server.id] === false} on:change={(e) => toggleServer(e, server.id)} />
+            <ToggleField label="" checked={server.enabledByDefault ? $disabledServers[server.id] !== true : $disabledServers[server.id] === false} on:change={(e) => toggleServer(e, server.id)} />
         {/if}
     </InputRow>
 {/each}
@@ -277,7 +277,7 @@
         </span>
     </Button>
 
-    <MaterialToggleSwitch label="" checked={$special.remoteController} on:change={(e) => toggleRemoteController(e.detail)} />
+    <ToggleField label="" checked={$special.remoteController} on:change={(e) => toggleRemoteController(e.detail)} />
 </InputRow>
 
 {#if (!$providerConnections.churchApps || cloudOnly.churchApps) && !$providerConnections.amazinglife && !$providerConnections.onstage}
@@ -352,7 +352,7 @@
         </Button>
     </InputRow>
 
-    <MaterialToggleSwitch label="settings.auto_sync_startup" checked={$contentProviderData.onstage?.autoSync !== false} on:change={(e) => updateProvider("onstage", "autoSync", e.detail)} />
+    <ToggleField label="settings.auto_sync_startup" checked={$contentProviderData.onstage?.autoSync !== false} on:change={(e) => updateProvider("onstage", "autoSync", e.detail)} />
 
     {#if onstageTeams.length > 1}
         <SelectField label="Team" options={onstageTeamOptions} value={onstageCurrentTeamId} on:change={(e) => switchOnStageTeam(e.detail)} />
@@ -365,7 +365,7 @@
 <Title label="OBS Studio" icon="record" />
 
 <InputRow arrow={$obsData.enabled}>
-    <MaterialToggleSwitch
+    <ToggleField
         label="OBS Studio Controller"
         style="width: 100%;"
         checked={$obsData.enabled}

@@ -1,9 +1,9 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { translateText } from "../../utils/language"
-    import { removeDuplicates } from "../helpers/array"
-    import InputRow from "../input/InputRow.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
+    import { translateText } from "../../../../utils/language"
+    import { removeDuplicates } from "../../../../components/helpers/array"
+    import InputRow from "../../../../components/input/InputRow.svelte"
+    import Button from "../button/button.svelte"
 
     export let label: string
     export let value: string[]

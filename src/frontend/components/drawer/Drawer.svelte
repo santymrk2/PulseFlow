@@ -23,7 +23,7 @@
     import { updateOut } from "../helpers/showActions"
     import T from "../helpers/T.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import Slider from "../inputs/Slider.svelte"
+    import Slider from "../../lib/components/ui/slider/slider.svelte"
     import Resizeable from "../system/Resizeable.svelte"
     import Info from "./info/Info.svelte"
     import { getBreadcrumbs } from "./breadcrumb"

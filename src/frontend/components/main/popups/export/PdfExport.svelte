@@ -4,7 +4,7 @@
     import Pdf from "../../../export/Pdf.svelte"
     import T from "../../../helpers/T.svelte"
     import Button from "../../../../lib/components/ui/button/button.svelte"
-    import MaterialCheckbox from "../../../inputs/MaterialCheckbox.svelte"
+    import CheckboxField from "../../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import ColorField from "../../../../lib/components/ui/color-field/color-field.svelte"
     import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
@@ -70,24 +70,24 @@
         <SelectField label="clock.type" style="margin-bottom: 10px;" options={pdfTypeOptions} value={pdfOptions.type || "default"} on:change={(e) => (pdfOptions.type = e.detail)} />
 
         <!-- {#if showCount > 1}
-            <MaterialCheckbox label="export.oneFile" style="margin-bottom: 10px;" checked={pdfOptions.oneFile} disabled={exportType === "project"} on:change={(e) => updatePdfOptions(e, "oneFile")} />
+            <CheckboxField label="export.oneFile" style="margin-bottom: 10px;" checked={pdfOptions.oneFile} disabled={exportType === "project"} on:change={(e) => updatePdfOptions(e, "oneFile")} />
         {/if} -->
 
-        <!-- <MaterialCheckbox label="export.title" checked={pdfOptions.title} on:change={(e) => updatePdfOptions(e, "title")} /> -->
+        <!-- <CheckboxField label="export.title" checked={pdfOptions.title} on:change={(e) => updatePdfOptions(e, "title")} /> -->
 
         {#if pdfOptions.type === "media"}
             <!-- no options needed -->
         {:else if pdfOptions.type !== "chordSheet"}
-            <MaterialCheckbox label="export.metadata" checked={pdfOptions.metadata} on:change={(e) => updatePdfOptions(e, "metadata")} />
-            <MaterialCheckbox label="export.page_numbers" checked={pdfOptions.pageNumbers} on:change={(e) => updatePdfOptions(e, "pageNumbers")} />
-            <MaterialCheckbox label="export.groups" checked={pdfOptions.groups} on:change={(e) => updatePdfOptions(e, "groups")} />
-            <MaterialCheckbox label="export.numbers" checked={pdfOptions.numbers} on:change={(e) => updatePdfOptions(e, "numbers")} />
+            <CheckboxField label="export.metadata" checked={pdfOptions.metadata} on:change={(e) => updatePdfOptions(e, "metadata")} />
+            <CheckboxField label="export.page_numbers" checked={pdfOptions.pageNumbers} on:change={(e) => updatePdfOptions(e, "pageNumbers")} />
+            <CheckboxField label="export.groups" checked={pdfOptions.groups} on:change={(e) => updatePdfOptions(e, "groups")} />
+            <CheckboxField label="export.numbers" checked={pdfOptions.numbers} on:change={(e) => updatePdfOptions(e, "numbers")} />
             {#if pdfOptions.type === "default" || pdfOptions.type === "text"}
-                <MaterialCheckbox label="tools.notes" checked={pdfOptions.notes} on:change={(e) => updatePdfOptions(e, "notes")} />
+                <CheckboxField label="tools.notes" checked={pdfOptions.notes} on:change={(e) => updatePdfOptions(e, "notes")} />
             {/if}
-            <MaterialCheckbox label="export.invert" disabled={pdfOptions.type === "text"} checked={pdfOptions.invert} on:change={(e) => updatePdfOptions(e, "invert")} />
+            <CheckboxField label="export.invert" disabled={pdfOptions.type === "text"} checked={pdfOptions.invert} on:change={(e) => updatePdfOptions(e, "invert")} />
 
-            <MaterialCheckbox label="export.original_text_size" style="margin-top: 10px;" disabled={pdfOptions.type === "slides"} checked={pdfOptions.originalTextSize !== false} on:change={(e) => updatePdfOptions(e, "originalTextSize")} />
+            <CheckboxField label="export.original_text_size" style="margin-top: 10px;" disabled={pdfOptions.type === "slides"} checked={pdfOptions.originalTextSize !== false} on:change={(e) => updatePdfOptions(e, "originalTextSize")} />
             <NumberField label="settings.font_size" disabled={pdfOptions.type === "slides" || pdfOptions.originalTextSize !== false} value={pdfOptions.textSize} on:change={(e) => (pdfOptions.textSize = e.detail)} />
 
             {#if pdfOptions.type !== "text"}

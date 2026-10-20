@@ -7,7 +7,7 @@
     import Button from "../../../lib/components/ui/button/button.svelte"
     import FolderField from "../../../lib/components/ui/folder-field/folder-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import { VideoPlayer } from "../../media/video/videoPlayer"
     import AudioEffects from "../audio/AudioEffects.svelte"
     import AudioMixers from "../audio/AudioMixers.svelte"
@@ -50,10 +50,10 @@
         <NumberField label="settings.audio_fade_duration (s)" value={$special.audio_fade_duration ?? 1.5} max={30} step={0.5} on:change={(e) => updateSpecial(e.detail, "audio_fade_duration")} />
 
         <!-- defaultValue={false}  -->
-        <MaterialToggleSwitch label="audio.mute_when_video_plays" checked={$special.muteAudioWhenVideoPlays || false} on:change={(e) => updateSpecial(e.detail, "muteAudioWhenVideoPlays")} />
-        <!-- <MaterialToggleSwitch label="audio.allow_gaining" checked={$special.allowGaining || false} on:change={(e) => updateSpecial(e.detail, "allowGaining")} /> -->
+        <ToggleField label="audio.mute_when_video_plays" checked={$special.muteAudioWhenVideoPlays || false} on:change={(e) => updateSpecial(e.detail, "muteAudioWhenVideoPlays")} />
+        <!-- <ToggleField label="audio.allow_gaining" checked={$special.allowGaining || false} on:change={(e) => updateSpecial(e.detail, "allowGaining")} /> -->
         <!-- ReplayGain enabled always as it uses audio metadata info -->
-        <!-- <MaterialToggleSwitch label="ReplayGain" checked={$special.replayGain || false} on:change={(e) => updateSpecial(e.detail, "replayGain")} /> -->
+        <!-- <ToggleField label="ReplayGain" checked={$special.replayGain || false} on:change={(e) => updateSpecial(e.detail, "replayGain")} /> -->
 
         <FolderField label="settings.recordings_path" value={recordingsPath} allowEmpty={!!$special?.audioRecordingsPath} on:change={(e) => updateRecordingsPath(e.detail)} />
 

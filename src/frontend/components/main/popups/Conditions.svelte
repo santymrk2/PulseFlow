@@ -10,7 +10,7 @@
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
-    import MaterialZoom from "../../inputs/MaterialZoom.svelte"
+    import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Stagebox from "../../stage/Stagebox.svelte"
     import ConditionsBox from "./ConditionsBox.svelte"
@@ -322,7 +322,7 @@
     </div>
 
     <FloatingInputs style={addMoreOuter ? "" : "border: none;"} round>
-        <MaterialZoom hidden={!addMoreOuter} columns={zoom} min={0.5} max={1.5} defaultValue={1} addValue={-0.1} on:change={(e) => (zoom = e.detail)} />
+        <ZoomControl hidden={!addMoreOuter} columns={zoom} min={0.5} max={1.5} defaultValue={1} addValue={-0.1} on:change={(e) => (zoom = e.detail)} />
     </FloatingInputs>
 </div>
 

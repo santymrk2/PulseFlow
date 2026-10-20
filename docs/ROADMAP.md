@@ -1505,9 +1505,13 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
     (se quitó) y `label="actions.delete"` en dos botones de borrar, que era un tooltip y
     pasó a `title`. *Verificado:* `svelte-check` 42 errores (base 56), 0 nuevos; `test:unit`
     93/93; prettier.
-  - [ ] **F14.8d Interruptores y demás.** `MaterialToggleSwitch`, `MaterialCheckbox`,
-    `MaterialMultiChoice`, `MaterialMultiButtons`, `MaterialToggleButtons`, `MaterialZoom`,
-    `Slider`.
+  - [x] **F14.8d Interruptores y demás.** **Hecho** (2026-10-20): `MaterialToggleSwitch`→
+    `toggle-field/`, `MaterialCheckbox`→`checkbox-field/`, `MaterialMultiChoice`→
+    `choice-grid/` (fichas grandes con ícono), `MaterialMultiButtons`→`segmented-field/`
+    (selección única), `MaterialToggleButtons`→`toggle-group-field/` (selección múltiple),
+    `MaterialZoom`→`zoom-control/` (no es un campo: es el control +/- con rueda), `Slider`→
+    `slider/` (el alias `MaterialSlider` de `LooksWindow` se renombró bien). *Verificado:*
+    `svelte-check` 42 errores (base 56), 0 nuevos; `test:unit` 93/93; prettier.
   - [ ] **F14.8e Restos y cierre.** `Link`, `HiddenInput`, `CombinedInput` (a la librería);
     `ShowButton`, `TopButton` y `MediaPicker` (son de dominio: se mueven junto a su pantalla);
     se borra `components/inputs/` y se actualiza `docs/design/kit.md`.

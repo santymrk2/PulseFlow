@@ -6,7 +6,7 @@
     import T from "../../helpers/T.svelte"
     import HRule from "../../input/HRule.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
+    import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
     registerPopupSubmit(create)
@@ -60,7 +60,7 @@
 <div class="list">
     {#each localScripturesList as scripture}
         <div class="item">
-            <MaterialCheckbox style="width: 100%;" label={scripture.customName || scripture.name} on:change={(e) => toggle(e.detail, scripture.id)} />
+            <CheckboxField style="width: 100%;" label={scripture.customName || scripture.name} on:change={(e) => toggle(e.detail, scripture.id)} />
         </div>
     {/each}
 
@@ -70,7 +70,7 @@
 
     {#each apiScripturesList as scripture}
         <div class="item">
-            <MaterialCheckbox style="width: 100%;" label={scripture.customName || scripture.name} on:change={(e) => toggle(e.detail, scripture.id)} />
+            <CheckboxField style="width: 100%;" label={scripture.customName || scripture.name} on:change={(e) => toggle(e.detail, scripture.id)} />
         </div>
     {/each}
 </div>

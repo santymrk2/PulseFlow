@@ -17,10 +17,10 @@
     import InputRow from "../input/InputRow.svelte"
     import Title from "../input/Title.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialCheckbox from "../inputs/MaterialCheckbox.svelte"
+    import CheckboxField from "../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     let currentOutput: Output | null = null
     $: if ($currentOutputSettings) currentOutput = clone({ id: $currentOutputSettings, ...$outputs[$currentOutputSettings] })
@@ -351,11 +351,11 @@
         </InputRow>
 
         {#if currentOutput.blackmagicData?.pixelFormat?.includes("YUV")}
-            <MaterialToggleSwitch label="SDR" title="SDR Encoding (Rec. 709)" checked={currentOutput.blackmagicData?.sdr !== false} defaultValue={true} on:change={(e) => updateBlackmagicData(e.detail, "sdr")} />
+            <ToggleField label="SDR" title="SDR Encoding (Rec. 709)" checked={currentOutput.blackmagicData?.sdr !== false} defaultValue={true} on:change={(e) => updateBlackmagicData(e.detail, "sdr")} />
         {/if}
 
         {#if isAlphaSupported()}
-            <MaterialToggleSwitch label="settings.alpha_key" checked={currentOutput.blackmagicData?.alphaKey} on:change={(e) => updateBlackmagicData(e.detail, "alphaKey")} />
+            <ToggleField label="settings.alpha_key" checked={currentOutput.blackmagicData?.alphaKey} on:change={(e) => updateBlackmagicData(e.detail, "alphaKey")} />
         {/if}
     {/if}
 {/if}
@@ -373,7 +373,7 @@
     </InputRow>
 
     <!-- not sure if we need to toggle this off? -->
-    <MaterialToggleSwitch label="settings.transparent" checked={currentOutput.transparent} defaultValue={true} on:change={(e) => updateOutput("transparent", e.detail)} />
+    <ToggleField label="settings.transparent" checked={currentOutput.transparent} defaultValue={true} on:change={(e) => updateOutput("transparent", e.detail)} />
 
     <!-- Connections count (connection status visible by blue indicator) -->
     <!-- {#if $ndiData[currentOutput?.id || ""]?.connections > 0}
@@ -395,7 +395,7 @@
         <SelectField label="settings.quality" value={currentOutput.omtData?.quality || "Default"} defaultValue="Default" options={omtQualities} on:change={(e) => updateOmtData(e.detail, "quality")} />
     </InputRow>
 
-    <MaterialToggleSwitch label="settings.transparent" checked={currentOutput.transparent} defaultValue={true} on:change={(e) => updateOutput("transparent", e.detail)} />
+    <ToggleField label="settings.transparent" checked={currentOutput.transparent} defaultValue={true} on:change={(e) => updateOutput("transparent", e.detail)} />
 {/if}
 
 {#if currentOutput?.webrtc}
@@ -407,7 +407,7 @@
     </InputRow>
     <TextField label="WHIP Endpoint URL" value={currentOutput.webrtcData?.url || ""} placeholder="e.g. https://live.restream.io/whip/live/YOUR_KEY" on:change={(e) => updateWebrtcData(e.detail, "url")} pasteBtn />
     <TextField label="Bearer Token (Optional)" value={currentOutput.webrtcData?.token || ""} placeholder="Authorization token" on:change={(e) => updateWebrtcData(e.detail, "token")} pasteBtn />
-    <!-- <MaterialToggleSwitch label="settings.transparent" checked={currentOutput.transparent} defaultValue={false} on:change={(e) => updateOutput("transparent", e.detail)} /> -->
+    <!-- <ToggleField label="settings.transparent" checked={currentOutput.transparent} defaultValue={false} on:change={(e) => updateOutput("transparent", e.detail)} /> -->
 
     {#if currentOutput?.enabled && currentOutput?.webrtcData?.url}
         <div style="padding-bottom: 10px;">
@@ -447,7 +447,7 @@
 
                 {#if (currentOutput.rtmpData?.destinations || []).length > 1 || destination.enabled === false}
                     <InputRow>
-                        <MaterialCheckbox label="settings.enabled" checked={destination.enabled} defaultValue={true} style="flex: 1;" on:change={(e) => updateDestination(destination.id, "enabled", e.detail)} />
+                        <CheckboxField label="settings.enabled" checked={destination.enabled} defaultValue={true} style="flex: 1;" on:change={(e) => updateDestination(destination.id, "enabled", e.detail)} />
                         {#if !destination.enabled || !destination.url}
                             <Button variant="outline" icon="delete" title="settings.remove" on:click={() => removeDestination(destination.id)} red />
                         {/if}

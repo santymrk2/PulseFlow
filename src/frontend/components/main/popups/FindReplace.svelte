@@ -6,7 +6,7 @@
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
     registerPopupSubmit(replace)
@@ -35,7 +35,7 @@
 <Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 
 {#if showMore}
-    <MaterialToggleSwitch label="actions.case_sensitive" checked={caseSentitive} defaultValue={true} on:change={(e) => (caseSentitive = e.detail)} />
+    <ToggleField label="actions.case_sensitive" checked={caseSentitive} defaultValue={true} on:change={(e) => (caseSentitive = e.detail)} />
 {/if}
 <TextField label="actions.find" value={findValue} on:input={(e) => (findValue = e.detail)} autofocus />
 <TextField label="actions.replace" value={replaceValue} on:input={(e) => (replaceValue = e.detail)} />

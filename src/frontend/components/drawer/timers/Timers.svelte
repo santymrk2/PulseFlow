@@ -9,7 +9,7 @@
     import { joinTime, secondsToTime } from "../../helpers/time"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import Slider from "../../inputs/Slider.svelte"
+    import Slider from "../../../lib/components/ui/slider/slider.svelte"
     import Timer from "../../slide/views/Timer.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"

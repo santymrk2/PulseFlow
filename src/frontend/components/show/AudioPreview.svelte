@@ -8,7 +8,7 @@
     import Icon from "../helpers/Icon.svelte"
     import { joinTime, secondsToTime } from "../helpers/time"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import Slider from "../inputs/Slider.svelte"
+    import Slider from "../../lib/components/ui/slider/slider.svelte"
 
     export let active: any
 

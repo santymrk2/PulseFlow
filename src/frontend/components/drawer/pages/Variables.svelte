@@ -9,7 +9,7 @@
     import T from "../../helpers/T.svelte"
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import Stepper from "../../../lib/components/ui/stepper/stepper.svelte"
     import Input from "../../../lib/components/ui/input/input.svelte"
     import Center from "../../system/Center.svelte"
@@ -196,7 +196,7 @@
                         <span style="gap: 5px;width: 70%;">
                             {#if variable.type === "text"}
                                 <Input placeholder={translateText("variables.value") || ""} value={variable.text || ""} on:change={(e) => updateVariable(e, variable.id, "text")} />
-                                <MaterialToggleSwitch label="" checked={variable.enabled ?? true} style="padding: 8px;height: 35px;" on:change={(e) => updateVariable(e, variable.id, "enabled")} />
+                                <ToggleField label="" checked={variable.enabled ?? true} style="padding: 8px;height: 35px;" on:change={(e) => updateVariable(e, variable.id, "enabled")} />
                             {/if}
                         </span>
                     </div>

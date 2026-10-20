@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { dictionary } from "../../stores"
-    import { translateText } from "../../utils/language"
+    import { dictionary } from "../../../../stores"
+    import { translateText } from "../../../../utils/language"
 
     export let checked = false
     export let defaultValue: boolean | null = null

@@ -7,7 +7,7 @@
     import InputRow from "../input/InputRow.svelte"
     import ColorField from "../../lib/components/ui/color-field/color-field.svelte"
     import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
-    import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     // F10.6 — "Más opciones": el resto de los campos del LookScreen por pantalla
     // (fondo, ajuste de medios, desenfoque, volumen, líneas, metadata). Colapsado
@@ -52,7 +52,7 @@
                     <ColorField label="edit.background_color" value={cell.background || "#000000"} defaultValue="#000000" on:input={(e) => patch(screen.id, { background: e.detail })} />
 
                     <InputRow>
-                        <MaterialToggleSwitch label="settings.clear_style_background_on_text" checked={!!cell.clearStyleBackgroundOnText} defaultValue={false} on:change={(e) => patch(screen.id, { clearStyleBackgroundOnText: e.detail })} />
+                        <ToggleField label="settings.clear_style_background_on_text" checked={!!cell.clearStyleBackgroundOnText} defaultValue={false} on:change={(e) => patch(screen.id, { clearStyleBackgroundOnText: e.detail })} />
                     </InputRow>
 
                     <InputRow>
@@ -66,7 +66,7 @@
                     </InputRow>
 
                     <InputRow>
-                        <MaterialToggleSwitch label="looks.show_as_faded" checked={!!cell.showAsFaded} defaultValue={false} on:change={(e) => patch(screen.id, { showAsFaded: e.detail })} />
+                        <ToggleField label="looks.show_as_faded" checked={!!cell.showAsFaded} defaultValue={false} on:change={(e) => patch(screen.id, { showAsFaded: e.detail })} />
                     </InputRow>
                 </div>
             {/each}

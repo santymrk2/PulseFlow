@@ -8,7 +8,7 @@
     import InputRow from "../input/InputRow.svelte"
     import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
     import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
-    import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../lib/components/ui/toggle-field/toggle-field.svelte"
     import type { API_midi } from "./api"
     import { defaultMidiActionChannels, midiToNote } from "./midi"
 
@@ -118,11 +118,11 @@
 {/if}
 
 {#if hasActions && midi.type !== "control"}
-    <MaterialToggleSwitch label="midi.use_default_values" disabled={midi.defaultValues && !defaultMidiActionChannels[firstActionId]} checked={midi.defaultValues} on:change={toggleDefaultValues} />
+    <ToggleField label="midi.use_default_values" disabled={midi.defaultValues && !defaultMidiActionChannels[firstActionId]} checked={midi.defaultValues} on:change={toggleDefaultValues} />
 {/if}
 
 {#if !noActionOrDefaultValues}
-    <MaterialToggleSwitch label="midi.auto_values" checked={autoValues} on:change={toggleAutoValues} />
+    <ToggleField label="midi.auto_values" checked={autoValues} on:change={toggleAutoValues} />
 {/if}
 
 {#if type !== "emitter"}

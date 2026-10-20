@@ -2,7 +2,7 @@
     import { categories, contentProviderData, shows } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { keysToID, sortByName } from "../../helpers/array"
-    import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
+    import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import Tip from "../Tip.svelte"
 
     const mappedCategories = keysToID($categories)
@@ -34,7 +34,7 @@
 
 <div class="categories">
     {#each categoryOptions as { id, name, count }}
-        <MaterialCheckbox label="{name} <span style='opacity: 0.7;font-size: 0.7em;'>({count})</span>" checked={currentlySelected.includes(id)} on:change={() => toggleCategory(id)} />
+        <CheckboxField label="{name} <span style='opacity: 0.7;font-size: 0.7em;'>({count})</span>" checked={currentlySelected.includes(id)} on:change={() => toggleCategory(id)} />
     {/each}
 </div>
 

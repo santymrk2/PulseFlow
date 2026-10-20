@@ -2,9 +2,9 @@
     import { createEventDispatcher } from "svelte"
     import { slide } from "svelte/transition"
     import { uid } from "uid"
-    import { translateText } from "../../utils/language"
-    import Icon from "../helpers/Icon.svelte"
-    import Button from "../../lib/components/ui/button/button.svelte"
+    import { translateText } from "../../../../utils/language"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import Button from "../button/button.svelte"
 
     export let columns: number
     export let defaultValue = 4

@@ -15,7 +15,7 @@
     import { changeSlidesView } from "../../show/slides"
     import T from "../helpers/T.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import Slider from "../inputs/Slider.svelte"
+    import Slider from "../../lib/components/ui/slider/slider.svelte"
     import Icon from "../helpers/Icon.svelte"
     import Loader from "../main/Loader.svelte"
     import SkeletonSlide from "../slide/SkeletonSlide.svelte"

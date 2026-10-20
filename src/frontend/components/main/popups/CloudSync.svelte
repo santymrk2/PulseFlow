@@ -1,7 +1,7 @@
 <script lang="ts">
     import { popupData } from "../../../stores"
     import { chooseTeam } from "../../../utils/cloudSync"
-    import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
+    import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
     import Tip from "../Tip.svelte"
 
     const type = $popupData.type
@@ -22,7 +22,7 @@
 {#if type === "choose_team"}
     <Tip type="info" value="Select a team where you want to sync the data." bottom={20} />
 
-    <MaterialMultiChoice options={teams} on:click={teamChosen} highlightFirst={false} />
+    <ChoiceGrid options={teams} on:click={teamChosen} highlightFirst={false} />
 
     <!-- <CombinedInput style="margin-top: 10px;width: initial;">
         <MaterialButton style="width: 100%;" icon="arrow_forward" on:click={() => activePopup.set(null)}>

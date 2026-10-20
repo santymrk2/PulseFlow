@@ -11,7 +11,7 @@
     import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
     import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     $: g = sortByName(
         Object.entries($groups)
@@ -87,8 +87,8 @@
 
 <div style="min-width: calc(100vw - var(--navigation-width) * 2 - 51px);">
     {#if showMore}
-        <MaterialToggleSwitch label="settings.auto_group_numbers" checked={$groupNumbers} defaultValue={true} on:change={(e) => groupNumbers.set(e.detail)} />
-        <MaterialToggleSwitch style="margin-bottom: 10px;" label="settings.shortcuts_on_slides" checked={$special.groupShortcutPreview} defaultValue={false} on:change={(e) => updateSpecial("groupShortcutPreview", e.detail)} />
+        <ToggleField label="settings.auto_group_numbers" checked={$groupNumbers} defaultValue={true} on:change={(e) => groupNumbers.set(e.detail)} />
+        <ToggleField style="margin-bottom: 10px;" label="settings.shortcuts_on_slides" checked={$special.groupShortcutPreview} defaultValue={false} on:change={(e) => updateSpecial("groupShortcutPreview", e.detail)} />
     {/if}
 
     {#if g.length}

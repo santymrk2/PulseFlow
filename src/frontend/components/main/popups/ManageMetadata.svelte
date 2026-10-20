@@ -5,7 +5,7 @@
     import HRule from "../../input/HRule.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
+    import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 
     $: defaultMetadata = Object.keys(initializeMetadata({}))
@@ -54,7 +54,7 @@
 
 <div>
     {#each defaultMetadata as key}
-        <MaterialCheckbox label="meta.{key}" checked={!hidden.includes(key)} on:change={() => toggleHidden(key)} />
+        <CheckboxField label="meta.{key}" checked={!hidden.includes(key)} on:change={() => toggleHidden(key)} />
     {/each}
 </div>
 

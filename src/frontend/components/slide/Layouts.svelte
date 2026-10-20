@@ -16,7 +16,7 @@
     import FloatingInputs from "../input/FloatingInputs.svelte"
     import HiddenInput from "../inputs/HiddenInput.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
-    import MaterialZoom from "../inputs/MaterialZoom.svelte"
+    import ZoomControl from "../../lib/components/ui/zoom-control/zoom-control.svelte"
     import SelectElem from "../system/SelectElem.svelte"
     import Reference from "./Reference.svelte"
 
@@ -132,7 +132,7 @@
 </script>
 
 {#if referenceType === "lessons"}
-    <MaterialZoom hidden columns={$slidesOptions.columns} on:change={(e) => slidesOptions.set({ ...$slidesOptions, columns: e.detail })} />
+    <ZoomControl hidden columns={$slidesOptions.columns} on:change={(e) => slidesOptions.set({ ...$slidesOptions, columns: e.detail })} />
 {:else if layoutSlides.length}
     <FloatingInputs arrow={!isLocked} let:open>
         <div slot="menu">
@@ -186,7 +186,7 @@
             <div class="divider"></div>
         {/if}
 
-        <MaterialZoom hidden={!open} columns={$slidesOptions.columns} on:change={(e) => slidesOptions.set({ ...$slidesOptions, columns: e.detail })} />
+        <ZoomControl hidden={!open} columns={$slidesOptions.columns} on:change={(e) => slidesOptions.set({ ...$slidesOptions, columns: e.detail })} />
 
         <Button class="context #slideViews" title="show.change_view: show.{$slidesOptions.mode} [Ctrl+Shift+V]" on:click={changeSlidesView}>
             <Icon size={1.3} id={$slidesOptions.mode} white={$slidesOptions.mode === "grid"} />

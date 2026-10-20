@@ -6,7 +6,7 @@
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     let chordData = {
         key: "C",
@@ -80,9 +80,9 @@
 
 <Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 
-<MaterialToggleSwitch label="actions.roman_keys" checked={chordData.romanKeysActive} on:change={(e) => (chordData.romanKeysActive = e.detail)} />
+<ToggleField label="actions.roman_keys" checked={chordData.romanKeysActive} on:change={(e) => (chordData.romanKeysActive = e.detail)} />
 {#if showMore}
-    <MaterialToggleSwitch label="German notation (H/B)" checked={germanNotation} on:change={(e) => updateSpecial("germanNotation", e.detail)} />
+    <ToggleField label="German notation (H/B)" checked={germanNotation} on:change={(e) => updateSpecial("germanNotation", e.detail)} />
 {/if}
 
 <TextField label="actions.custom_key" value={chordData.custom} defaultValue="" on:input={(e) => (chordData.custom = e.detail)} />

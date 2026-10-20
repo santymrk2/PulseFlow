@@ -4,7 +4,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
-    import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
+    import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
@@ -46,7 +46,7 @@
 
         <ColorField label="edit.background_color" value={settings.color || "#000000"} defaultValue="#000000" on:input={(e) => updateStageSettings(e.detail, "color")} />
 
-        <MaterialCheckbox label="stage.labels" checked={settings.labels} on:change={(e) => updateStageSettings(e.detail, "labels")} />
+        <CheckboxField label="stage.labels" checked={settings.labels} on:change={(e) => updateStageSettings(e.detail, "labels")} />
         {#if settings.labels}
             <ColorField label="stage.label_color" value={settings.labelColor || "#ac9c35"} defaultValue={"#ac9c35"} on:input={(e) => updateStageSettings(e.detail, "labelColor")} />
         {/if}

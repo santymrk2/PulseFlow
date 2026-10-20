@@ -17,7 +17,7 @@
     import FloatingInputs from "../../input/FloatingInputs.svelte"
     import InputRow from "../../input/InputRow.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
+    import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import Input from "../../../lib/components/ui/input/input.svelte"
     import Loader from "../../main/Loader.svelte"
@@ -1239,7 +1239,7 @@
                     {reference}
 
                     {#if isCollection}
-                        <MaterialCheckbox
+                        <CheckboxField
                             label="scripture.show_all"
                             checked={$scriptureSettings.showAllVersions}
                             on:change={(e) => {
@@ -1248,7 +1248,7 @@
                             small
                         />
 
-                        <MaterialCheckbox label="edit.offset" checked={useOffset} on:change={(e) => (useOffset = e.detail)} small />
+                        <CheckboxField label="edit.offset" checked={useOffset} on:change={(e) => (useOffset = e.detail)} small />
                     {/if}
 
                     <!-- WIP had some issues with selecting multiple verses -->
