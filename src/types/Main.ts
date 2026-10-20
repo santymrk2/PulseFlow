@@ -11,12 +11,20 @@ export interface Rectangle {
 
 /** Monitor/pantalla (reemplaza a `Display` de `electron`). */
 export interface Display {
-    id: number
+    // F10.0c: id estable (nombre del monitor + índice), bounds en lógicos.
+    id: string
     label: string
+    /** Rectángulo del monitor en píxeles lógicos. */
     bounds: Rectangle
+    /** Área útil (aquí igual a `bounds`). */
     workArea: Rectangle
+    /** Resolución física real del monitor (sin escalar). */
+    physicalSize: { width: number; height: number }
+    /** Tamaño lógico (`bounds.width`/`height`). */
     size: { width: number; height: number }
     scaleFactor: number
+    /** Es el monitor principal del sistema. */
+    primary: boolean
     rotation?: number
     internal?: boolean
 }

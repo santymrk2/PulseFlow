@@ -12,46 +12,98 @@
 
 use crate::error::{AppError, AppResult};
 use crate::render::scene::ScenePayload;
+use crate::render::screens::{display_id, monitor_label};
 use crate::render::{IdentifyScreen, ScreenConfig};
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use tauri::{AppHandle, Manager};
 
-fn monitor_name(index: usize, name: Option<&String>) -> String {
-    match name {
-        Some(n) if !n.is_empty() => n.clone(),
-        _ => format!("Display {}", index + 1),
-    }
+/// Rectángulo en píxeles **lógicos** (mismo sistema que usa el frontend).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct LogicalRect {
+    pub x: i32,
+    pub y: i32,
+    pub width: u32,
+    pub height: u32,
+}
+
+/// Monitor detectado, en el formato que espera el frontend (`Display` en
+/// `src/types/Main.ts`). F10.0c: los `bounds` van en lógicos (comparables entre
+/// monitores de distinta escala) y `id` es estable entre conexiones.
+#[derive(Debug, Clone, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+pub struct DisplayInfo {
+    /// Id estable: nombre del monitor + índice como desempate.
+    pub id: String,
+    pub label: String,
+    /// Rectángulo del monitor en píxeles lógicos.
+    pub bounds: LogicalRect,
+    /// Área útil (aquí igual a `bounds`: Tauri no expone el área de trabajo).
+    pub work_area: LogicalRect,
+    /// Resolución física real del monitor (sin escalar).
+    pub physical_size: LogicalSize,
+    /// Tamaño lógico (`bounds.width`/`height`), por comodidad del frontend.
+    pub size: LogicalSize,
+    pub scale_factor: f64,
+    /// Es el monitor principal del sistema.
+    pub primary: bool,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+pub struct LogicalSize {
+    pub width: u32,
+    pub height: u32,
 }
 
 /// `GET_DISPLAYS`: información de todos los monitores (equivalente a
-/// `screen.getAllDisplays()`).
+/// `screen.getAllDisplays()`), en píxeles lógicos (F10.0c).
 #[tauri::command]
-pub fn GET_DISPLAYS(app: AppHandle) -> AppResult<Vec<Value>> {
+pub fn GET_DISPLAYS(app: AppHandle) -> AppResult<Vec<DisplayInfo>> {
     let monitors = app
         .available_monitors()
         .map_err(|e| AppError::new(e.to_string()))?;
+    let primary = app
+        .primary_monitor()
+        .ok()
+        .flatten()
+        .map(|m| m.position().clone());
 
     let mut displays = Vec::new();
     for (index, monitor) in monitors.iter().enumerate() {
-        let position = monitor.position();
-        let size = monitor.size();
-        let bounds = json!({
-            "x": position.x,
-            "y": position.y,
-            "width": size.width,
-            "height": size.height,
-        });
-        displays.push(json!({
-            "id": index,
-            "label": monitor_name(index, monitor.name()),
-            "bounds": bounds,
-            "workArea": bounds,
-            "size": { "width": size.width, "height": size.height },
-            "scaleFactor": monitor.scale_factor(),
-        }));
+        displays.push(display_info(index, monitor, primary.as_ref()));
     }
     Ok(displays)
+}
+
+/// Convierte un `Monitor` a `DisplayInfo` (lógicos + físicos + id estable).
+fn display_info(index: usize, monitor: &tauri::Monitor, primary: Option<&tauri::PhysicalPosition<i32>>) -> DisplayInfo {
+    let scale = monitor.scale_factor();
+    let physical_pos = monitor.position();
+    let physical_size = monitor.size();
+
+    // `to_logical` acepta posición y tamaño físicos y devuelve lógicos.
+    let logical_pos: tauri::LogicalPosition<f64> = physical_pos.to_logical(scale);
+    let logical_size: tauri::LogicalSize<f64> = physical_size.to_logical(scale);
+
+    let bounds = LogicalRect {
+        x: logical_pos.x.round() as i32,
+        y: logical_pos.y.round() as i32,
+        width: logical_size.width.round() as u32,
+        height: logical_size.height.round() as u32,
+    };
+
+    let is_primary = primary.map(|p| p == physical_pos).unwrap_or(false);
+
+    DisplayInfo {
+        id: display_id(index, monitor.name()),
+        label: monitor_label(index, monitor.name()),
+        bounds,
+        work_area: bounds,
+        physical_size: LogicalSize { width: physical_size.width, height: physical_size.height },
+        size: LogicalSize { width: bounds.width, height: bounds.height },
+        scale_factor: scale,
+        primary: is_primary,
+    }
 }
 
 /// `GET_SCREENS`: fuentes de captura de pantalla `{ name, id }`.
@@ -66,7 +118,7 @@ pub fn GET_SCREENS(app: AppHandle) -> AppResult<Vec<Value>> {
         .enumerate()
         .map(|(index, monitor)| {
             json!({
-                "name": monitor_name(index, monitor.name()),
+                "name": monitor_label(index, monitor.name()),
                 "id": format!("screen:{index}"),
             })
         })
@@ -257,6 +309,41 @@ pub fn RENDER_SNAPSHOT(app: AppHandle, data: SnapshotPayload) -> AppResult<Strin
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn display_info_serializa_al_formato_del_frontend() {
+        // F10.0c: `GET_DISPLAYS` devuelve lógicos + físicos + id estable + primary.
+        // El JSON debe coincidir con `Display` de src/types/Main.ts.
+        let info = DisplayInfo {
+            id: "SB220Q#1".to_string(),
+            label: "SB220Q".to_string(),
+            bounds: LogicalRect { x: 1512, y: 0, width: 1920, height: 1080 },
+            work_area: LogicalRect { x: 1512, y: 0, width: 1920, height: 1080 },
+            physical_size: LogicalSize { width: 1920, height: 1080 },
+            size: LogicalSize { width: 1920, height: 1080 },
+            scale_factor: 1.0,
+            primary: false,
+        };
+
+        let value = serde_json::to_value(&info).expect("DisplayInfo serializa");
+        assert_eq!(
+            value,
+            json!({
+                "id": "SB220Q#1",
+                "label": "SB220Q",
+                "bounds": { "x": 1512, "y": 0, "width": 1920, "height": 1080 },
+                "workArea": { "x": 1512, "y": 0, "width": 1920, "height": 1080 },
+                "physicalSize": { "width": 1920, "height": 1080 },
+                "size": { "width": 1920, "height": 1080 },
+                "scaleFactor": 1.0,
+                "primary": false
+            })
+        );
+
+        // Y vuelve a entrar sin pérdida.
+        let back: DisplayInfo = serde_json::from_value(value).expect("DisplayInfo deserializa");
+        assert_eq!(back, info);
+    }
 
     #[test]
     fn snapshot_payload_deserializa_desde_json_de_ejemplo() {

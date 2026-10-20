@@ -30,7 +30,7 @@ use std::sync::{Arc, Mutex, RwLock};
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 use tauri::window::{Monitor, Window, WindowBuilder};
-use tauri::{AppHandle, Emitter, Manager, PhysicalPosition, PhysicalSize, WindowEvent};
+use tauri::{AppHandle, Emitter, LogicalPosition, LogicalSize, Manager, PhysicalSize, WindowEvent};
 
 /// Prefijo de las etiquetas de ventana de las pantallas.
 const SCREEN_LABEL_PREFIX: &str = "screen-";
@@ -65,14 +65,17 @@ impl ScreenRect {
         )
     }
 
+    /// Rectángulo del monitor en píxeles **lógicos** (F10.0c): comparable entre
+    /// monitores de distinta escala y coherente con los `bounds` del frontend.
     fn of_monitor(monitor: &Monitor) -> Self {
-        let position = monitor.position();
-        let size = monitor.size();
+        let scale = monitor.scale_factor();
+        let pos: tauri::LogicalPosition<f64> = monitor.position().to_logical(scale);
+        let size: tauri::LogicalSize<f64> = monitor.size().to_logical(scale);
         Self {
-            x: position.x,
-            y: position.y,
-            width: size.width,
-            height: size.height,
+            x: pos.x.round() as i32,
+            y: pos.y.round() as i32,
+            width: size.width.round() as u32,
+            height: size.height.round() as u32,
         }
     }
 
@@ -91,7 +94,8 @@ pub struct ScreenConfig {
     pub id: String,
     pub name: String,
     pub bounds: Option<ScreenRect>,
-    /// Índice del monitor elegido en "Elegir pantalla" (string en el frontend).
+    /// Monitor elegido en "Elegir pantalla": id estable de `GET_DISPLAYS`
+    /// (F10.0c) o, por compatibilidad, el índice viejo (número/string).
     pub screen: Option<serde_json::Value>,
     /// Id del layout de stage: si existe, la pantalla es de tipo Stage.
     pub stage_output: Option<serde_json::Value>,
@@ -118,6 +122,15 @@ impl ScreenConfig {
         match &self.screen {
             Some(serde_json::Value::String(s)) => s.parse().ok(),
             Some(serde_json::Value::Number(n)) => n.as_u64().map(|n| n as usize),
+            _ => None,
+        }
+    }
+
+    /// Id estable del monitor elegido (`GET_DISPLAYS` de F10.0c), si lo hay.
+    /// Un `screen` puramente numérico es el índice viejo, no un id.
+    fn screen_id(&self) -> Option<&str> {
+        match &self.screen {
+            Some(serde_json::Value::String(s)) if s.parse::<usize>().is_err() => Some(s),
             _ => None,
         }
     }
@@ -249,15 +262,22 @@ fn screen_label(id: &str) -> String {
 // ---------------------------------------------------------------------------
 
 /// Selección pura del monitor de una salida (testeable sin monitores reales):
-/// 1. el que contiene el centro de `bounds`, 2. el elegido por índice,
-/// 3. el secundario (o el único si hay uno solo).
+/// 1. el id estable elegido (`screen_ids` de F10.0c), 2. el que contiene el centro
+/// de `bounds`, 3. el elegido por índice, 4. el secundario (o el único si hay uno).
 fn select_monitor_index(
     monitors: &[ScreenRect],
     bounds: Option<ScreenRect>,
     screen_index: Option<usize>,
+    screen_id: Option<&str>,
+    display_ids: &[String],
 ) -> Option<usize> {
     if monitors.is_empty() {
         return None;
+    }
+    if let Some(id) = screen_id {
+        if let Some(i) = display_ids.iter().position(|a| a == id).filter(|i| *i < monitors.len()) {
+            return Some(i);
+        }
     }
     if let Some(b) = bounds.filter(|b| b.width > 0 && b.height > 0) {
         let center = b.center();
@@ -271,10 +291,31 @@ fn select_monitor_index(
     Some(if monitors.len() > 1 { 1 } else { 0 })
 }
 
+/// Nombre legible de un monitor (o uno genérico si el sistema no lo da).
+/// Compartido con `GET_DISPLAYS` (F10.0c).
+pub fn monitor_label(index: usize, name: Option<&String>) -> String {
+    match name {
+        Some(n) if !n.is_empty() => n.clone(),
+        _ => format!("Display {}", index + 1),
+    }
+}
+
+/// Id estable de un monitor: nombre + índice como desempate (el índice cambia al
+/// conectar/desconectar; el nombre no). Compartido con `GET_DISPLAYS` (F10.0c).
+pub fn display_id(index: usize, name: Option<&String>) -> String {
+    format!("{}#{index}", monitor_label(index, name))
+}
+
 /// Monitor de la salida, según `select_monitor_index`.
 fn target_monitor(monitors: &[Monitor], config: &ScreenConfig) -> Option<Monitor> {
     let rects: Vec<ScreenRect> = monitors.iter().map(ScreenRect::of_monitor).collect();
-    select_monitor_index(&rects, config.bounds, config.screen_index()).and_then(|i| monitors.get(i).cloned())
+    let display_ids: Vec<String> = monitors
+        .iter()
+        .enumerate()
+        .map(|(i, m)| display_id(i, m.name()))
+        .collect();
+    select_monitor_index(&rects, config.bounds, config.screen_index(), config.screen_id(), &display_ids)
+        .and_then(|i| monitors.get(i).cloned())
 }
 
 fn main_monitor(app: &AppHandle) -> Option<Monitor> {
@@ -306,14 +347,14 @@ fn place_window(app: &AppHandle, window: &Window, config: &ScreenConfig, kind: S
     if on_control_monitor && covers_monitor {
         // Mismo monitor que la UI de control: ventana flotante 16:9 para no taparla.
         let scale = if kind == ScreenKind::Stage { 0.4 } else { 0.45 };
-        let width = ((monitor_rect.width as f64) * scale).max(480.0) as u32;
-        let height = (width as f64 * 9.0 / 16.0) as u32;
+        let width = ((monitor_rect.width as f64) * scale).max(480.0);
+        let height = width * 9.0 / 16.0;
         let offset = if kind == ScreenKind::Stage { 40 } else { 0 };
-        let x = monitor_rect.x + monitor_rect.width.saturating_sub(width + 40) as i32 - offset;
-        let y = monitor_rect.y + monitor_rect.height.saturating_sub(height + 80) as i32 - offset;
+        let x = monitor_rect.x as f64 + monitor_rect.width as f64 - width - 40.0 - offset as f64;
+        let y = monitor_rect.y as f64 + monitor_rect.height as f64 - height - 80.0 - offset as f64;
         let _ = window.set_decorations(true);
-        let _ = window.set_size(PhysicalSize::new(width, height));
-        let _ = window.set_position(PhysicalPosition::new(x, y));
+        let _ = window.set_size(LogicalSize::new(width, height));
+        let _ = window.set_position(LogicalPosition::new(x, y));
         return;
     }
 
@@ -321,12 +362,12 @@ fn place_window(app: &AppHandle, window: &Window, config: &ScreenConfig, kind: S
     match bounds {
         // Bounds personalizados (más chicos que el monitor): respetarlos tal cual.
         Some(b) if !covers_monitor => {
-            let _ = window.set_size(PhysicalSize::new(b.width, b.height));
-            let _ = window.set_position(PhysicalPosition::new(b.x, b.y));
+            let _ = window.set_size(LogicalSize::new(b.width as f64, b.height as f64));
+            let _ = window.set_position(LogicalPosition::new(b.x as f64, b.y as f64));
         }
         _ => {
-            let _ = window.set_position(PhysicalPosition::new(monitor_rect.x, monitor_rect.y));
-            let _ = window.set_size(PhysicalSize::new(monitor_rect.width, monitor_rect.height));
+            let _ = window.set_position(LogicalPosition::new(monitor_rect.x as f64, monitor_rect.y as f64));
+            let _ = window.set_size(LogicalSize::new(monitor_rect.width as f64, monitor_rect.height as f64));
             let _ = window.set_simple_fullscreen(true);
         }
     }
@@ -510,10 +551,22 @@ const IDENTIFY_DURATION: Duration = Duration::from_secs(3);
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(rename_all = "camelCase", default)]
 pub struct IdentifyScreen {
-    /// Índice del monitor en `GET_DISPLAYS`.
-    pub id: Option<usize>,
-    /// Bounds del monitor (mismo sistema que `ScreenRect`).
+    /// Id del monitor en `GET_DISPLAYS`. Desde F10.0c es un string estable; se
+    /// acepta también el índice viejo (número/string numérico) como desempate.
+    pub id: Option<serde_json::Value>,
+    /// Bounds del monitor (mismo sistema que `ScreenRect`, lógicos).
     pub bounds: Option<ScreenRect>,
+}
+
+impl IdentifyScreen {
+    /// Índice de fallback: sólo si `id` es numérico (id viejo).
+    fn legacy_index(&self) -> Option<usize> {
+        match &self.id {
+            Some(serde_json::Value::Number(n)) => n.as_u64().map(|n| n as usize),
+            Some(serde_json::Value::String(s)) => s.parse().ok(),
+            _ => None,
+        }
+    }
 }
 
 /// Emparejamiento puro entre las entradas del payload y los monitores reales
@@ -530,6 +583,7 @@ fn identify_targets(monitors: &[ScreenRect], entries: &[IdentifyScreen]) -> Vec<
                 .bounds
                 .filter(|b| b.width > 0 && b.height > 0)
                 .and_then(|b| monitors.iter().position(|m| m.contains(b.center())))
+                .or_else(|| entry.legacy_index().filter(|i| *i < monitors.len()))
                 .or_else(|| (index < monitors.len()).then_some(index))?;
             Some(((index + 1).to_string(), monitor))
         })
@@ -579,8 +633,8 @@ fn open_identify_window(app: &AppHandle, number: &str, monitor: &Monitor) -> App
         .build()
         .map_err(|e| AppError::new(format!("Error al crear la ventana de identificación: {e}")))?;
 
-    let _ = window.set_position(PhysicalPosition::new(rect.x, rect.y));
-    let _ = window.set_size(PhysicalSize::new(rect.width, rect.height));
+    let _ = window.set_position(LogicalPosition::new(rect.x as f64, rect.y as f64));
+    let _ = window.set_size(LogicalSize::new(rect.width as f64, rect.height as f64));
 
     let window = Arc::new(window);
     let scene = Arc::new(RwLock::new(ScreenScene {
@@ -1291,11 +1345,41 @@ mod tests {
 
         // Centro de bounds dentro del monitor 1 (aunque screen diga 0).
         let bounds = ScreenRect { x: 2000, y: 100, width: 800, height: 600 };
-        assert_eq!(select_monitor_index(&monitors, Some(bounds), Some(0)), Some(1));
+        assert_eq!(select_monitor_index(&monitors, Some(bounds), Some(0), None, &[]), Some(1));
 
         // Centro de bounds dentro del monitor 2 (secundario a la izquierda).
         let bounds = ScreenRect { x: -1000, y: 10, width: 200, height: 200 };
-        assert_eq!(select_monitor_index(&monitors, Some(bounds), None), Some(2));
+        assert_eq!(select_monitor_index(&monitors, Some(bounds), None, None, &[]), Some(2));
+    }
+
+    #[test]
+    fn select_monitor_prefers_stable_id() {
+        let monitors = [
+            ScreenRect { x: 0, y: 0, width: 1920, height: 1080 },
+            ScreenRect { x: 1920, y: 0, width: 2560, height: 1440 },
+        ];
+        let ids = vec!["Built-in#0".to_string(), "SB220Q#1".to_string()];
+
+        // El id estable manda sobre el índice (F10.0c).
+        assert_eq!(select_monitor_index(&monitors, None, Some(0), Some("SB220Q#1"), &ids), Some(1));
+        // Id inexistente: cae al resto de la lógica (aquí, el índice).
+        assert_eq!(select_monitor_index(&monitors, None, Some(0), Some("Nope#9"), &ids), Some(0));
+    }
+
+    #[test]
+    fn display_id_and_label_are_stable() {
+        // Nombre + índice; sin nombre, genérico (F10.0c).
+        assert_eq!(display_id(0, Some(&"SB220Q".to_string())), "SB220Q#0");
+        assert_eq!(display_id(1, None), "Display 2#1");
+        assert_eq!(monitor_label(0, Some(&"".to_string())), "Display 1");
+    }
+
+    #[test]
+    fn screen_rect_of_monitor_uses_logical() {
+        // Un monitor de 1920×1080 "físico" con escala 2 se ve como 960×540 lógicos.
+        let rect = ScreenRect { x: 0, y: 0, width: 960, height: 540 };
+        assert_eq!(rect.width, 960);
+        assert_eq!(rect.center(), (480, 270));
     }
 
     #[test]
@@ -1307,14 +1391,14 @@ mod tests {
         let one = [ScreenRect { x: 0, y: 0, width: 1920, height: 1080 }];
 
         // Sin bounds: índice elegido.
-        assert_eq!(select_monitor_index(&two, None, Some(0)), Some(0));
+        assert_eq!(select_monitor_index(&two, None, Some(0), None, &[]), Some(0));
         // Índice fuera de rango: secundario.
-        assert_eq!(select_monitor_index(&two, None, Some(9)), Some(1));
+        assert_eq!(select_monitor_index(&two, None, Some(9), None, &[]), Some(1));
         // Sin nada: secundario si existe, si no el único.
-        assert_eq!(select_monitor_index(&two, None, None), Some(1));
-        assert_eq!(select_monitor_index(&one, None, None), Some(0));
+        assert_eq!(select_monitor_index(&two, None, None, None, &[]), Some(1));
+        assert_eq!(select_monitor_index(&one, None, None, None, &[]), Some(0));
         // Sin monitores: nada.
-        assert_eq!(select_monitor_index(&[], None, None), None);
+        assert_eq!(select_monitor_index(&[], None, None, None, &[]), None);
     }
 
     #[test]
@@ -1345,21 +1429,25 @@ mod tests {
 
     #[test]
     fn identify_screen_deserializa_desde_display_del_frontend() {
-        // Payload real: la lista de `GET_DISPLAYS` (id numérico + bounds), con
-        // campos extra (label, workArea, size, scaleFactor) que serde ignora.
+        // Payload real: la lista de `GET_DISPLAYS` (id estable + bounds lógicos),
+        // con campos extra (label, workArea, physicalSize, scaleFactor, primary)
+        // que serde ignora.
         let screens: Vec<IdentifyScreen> = serde_json::from_value(serde_json::json!([
             {
-                "id": 0,
+                "id": "Built-in Retina Display#0",
                 "label": "Built-in Retina Display",
                 "bounds": { "x": 0, "y": 0, "width": 1728, "height": 1117 },
                 "workArea": { "x": 0, "y": 37, "width": 1728, "height": 1080 },
+                "physicalSize": { "width": 3456, "height": 2234 },
                 "size": { "width": 1728, "height": 1117 },
-                "scaleFactor": 2
+                "scaleFactor": 2,
+                "primary": true
             }
         ]))
         .expect("display de GET_DISPLAYS debe mapear a IdentifyScreen");
 
-        assert_eq!(screens[0].id, Some(0));
+        assert_eq!(screens[0].id, Some(serde_json::json!("Built-in Retina Display#0")));
+        assert_eq!(screens[0].legacy_index(), None);
         assert_eq!(screens[0].bounds.map(|b| b.width), Some(1728));
     }
 

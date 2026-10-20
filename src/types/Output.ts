@@ -49,8 +49,8 @@ export interface SyncedOutputs {
  * en el monitor durante 3 s.
  */
 export interface IdentifyScreen {
-    /** Índice del monitor en `GET_DISPLAYS` */
-    id?: number
+    /** Id del monitor en `GET_DISPLAYS` (estable desde F10.0c; se acepta el índice viejo) */
+    id?: string | number
     label?: string
     bounds?: { x: number; y: number; width: number; height: number }
 }

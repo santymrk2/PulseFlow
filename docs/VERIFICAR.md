@@ -358,5 +358,46 @@ rasteriza el PDF con pdf.js y Rust guarda las páginas en `Imports/PDF/<nombre>/
 5. **Error legible:** un PDF dañado debe dejar el estado en `error` en el panel de progreso
    (sin romper la app ni dejar archivos a medio escribir).
 
+## F10.0a — Barra superior sin indicador rojo ni título
+
+Con `bun run dev:tauri` (ventana principal, macOS preferentemente):
+
+1. **Sin título ni barra roja:** la esquina superior izquierda de la barra superior ya no
+   muestra el texto "PulseFlow" ni la barra roja vertical. En macOS el espacio queda libre
+   para los botones de ventana (verde/amarillo/rojo).
+2. **Espacio reservado:** en macOS, los botones del semáforo no se solapan con ningún
+   control de la app.
+3. **Estado "sin guardar" discreto:** con cambios sin guardar (p. ej. mover un elemento y
+   no guardar) aparece un punto rojo pequeño junto al botón de Settings; al guardar
+   desaparece. El tooltip debe decir "Cambios sin guardar" / "Unsaved changes".
+4. **Windows:** la barra sigue funcionando (la reserva de 80px del semáforo es sólo macOS).
+
+## F10.0b — Mover la ventana desde la barra superior
+
+Con `bun run dev:tauri`:
+
+1. **Arrastre:** hacer clic y arrastrar sobre una zona vacía de la barra superior (a la
+   izquierda del logo o a la derecha, junto a los botones) mueve la ventana.
+2. **Doble clic:** doble clic en esa misma zona maximiza/restaura la ventana.
+3. **Botones intactos:** los botones de la barra (Show, Edit, Stage, Settings, etc.) siguen
+   recibiendo clic normalmente y **no** arrastran la ventana.
+4. **Windows:** repetir 1–3 (Tauri soporta `data-tauri-drag-region` en ambas plataformas).
+
+## F10.0c — Monitores en coordenadas lógicas e identidad estable
+
+Requisito: **2 monitores** (uno de ellos con escala HiDPI ayuda a ver el bug).
+
+1. **Coordenadas lógicas:** con el monitor externo a escala ≠ 1 (o el Retina integrado a
+   escala 2), Settings → Outputs → "Elegir pantalla" debe dibujar el mapa de monitores con
+   tamaños y posiciones **coherentes** (sin el externo "más chico" ni solapado por la
+   diferencia de escala).
+2. **Selección correcta:** elegir el monitor externo y poner la salida en vivo; debe
+   abrirse en el externo (no en el integrado).
+3. **Id estable:** con `outputs` guardados, desconectar y reconectar el monitor externo
+   (o cambiar el orden de los monitores en el sistema) y reabrir la salida: debe volver al
+   mismo monitor físico, no a un índice distinto.
+4. **Identificar pantallas (F2.5):** el comando `IDENTIFY_SCREENS` sigue mostrando el número
+   correcto en cada monitor (el payload ahora lleva `id` string + bounds lógicos).
+
 ## Otras tareas posteriores
 Añadir aquí cualquier hallazgo de F6 en adelante, conforme aparezcan.
