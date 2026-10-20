@@ -134,15 +134,12 @@
     <Capsule>
         <Button variant="ghost" size="sm" data-title={translateText("menu.search")} onclick={() => quickSearchActive.set(true)}>
             <Icon id="search" size={1} white />
-            <span class="cap-label">{translateText("menu.search")}</span>
         </Button>
         <Button variant="ghost" size="sm" data-title={translateText("menu.text")} onclick={toggleTextMode}>
             <Icon id="text" size={1} white />
-            <span class="cap-label">{translateText("menu.text")}</span>
         </Button>
         <Button variant="ghost" size="sm" data-title={translateText("menu.theme")} onclick={openTemplatesDrawer}>
             <Icon id="theme" size={1} white />
-            <span class="cap-label">{translateText("menu.theme")}</span>
         </Button>
     </Capsule>
 
@@ -152,7 +149,6 @@
         <TopButton id="edit" disabled={editDisabled} />
         <Button variant="ghost" size="sm" data-title={translateText("menu.bible")} onclick={openScriptureDrawer}>
             <Icon id="scripture" size={1} white />
-            <span class="cap-label">{translateText("menu.bible")}</span>
         </Button>
         <div class="menu-anchor">
             <Button variant="ghost" size="sm" data-title={translateText("menu.more")} onclick={() => (moreOpen = !moreOpen)}>
@@ -172,13 +168,10 @@
     <Capsule>
         <Button variant="ghost" size="sm" data-title={translateText("menu.media")} onclick={toggleMediaDrawer}>
             <Icon id="media" size={1} white />
-            <span class="cap-label">{translateText("menu.media")}</span>
         </Button>
         <div class="menu-anchor">
-            <Button variant="ghost" size="sm" class="look-button" data-title={translateText("looks.looks")} onclick={() => (lookOpen = !lookOpen)}>
-                <span class="look-label">{translateText("looks.look")}</span>
-                <span class="look-name">{$looks[$activeLook]?.name || "—"}</span>
-                <span class="look-caret">▾</span>
+            <Button variant="ghost" size="sm" data-title={translateText("looks.looks") + ": " + ($looks[$activeLook]?.name || "")} onclick={() => (lookOpen = !lookOpen)}>
+                <Icon id="looks" size={1} white />
             </Button>
             <Menu open={lookOpen} class="min-w-52" onclose={() => (lookOpen = false)}>
                 {#each lookOptions as look}
@@ -190,19 +183,24 @@
         </div>
         <Button variant="ghost" size="sm" data-title={translateText("menu.live")} onclick={openLiveSettings}>
             <Icon id="broadcast" size={1} white />
-            <span class="cap-label">{translateText("menu.live")}</span>
         </Button>
+    </Capsule>
+
+    <!-- Derecha 3: Dibujo · Configuración (en la barra superior, junto a las pantallas) -->
+    <Capsule>
+        <TopButton id="draw" red={$drawTool === "fill" || ($drawTool === "zoom" && $drawSettings.zoom?.size !== 100) || !!($drawTool === "paint" && $paintCache?.length)} />
+        {#if !settingsDisabled}
+            <TopButton id="settings" />
+        {/if}
     </Capsule>
 
     <!-- Derecha 2: Audiencia · Stage (rojo mientras están en vivo); clic derecho abre Configurar pantallas -->
     <Capsule>
         <Button variant="live" size="sm" aria-pressed={audienceLive} data-title={translateText("menu.audience")} oncontextmenu={onScreensContextMenu} onclick={toggleAudience}>
-            <Icon id="display" size={1} white />
-            <span class="cap-label">{translateText("menu.audience")}</span>
+            <Icon id="people" size={1} white />
         </Button>
         <Button variant="live" size="sm" aria-pressed={stageLive} data-title={translateText("menu.stage")} oncontextmenu={onScreensContextMenu} onclick={toggleStage}>
-            <Icon id="stage" size={1} white />
-            <span class="cap-label">{translateText("menu.stage")}</span>
+            <Icon id="user" size={1} white />
         </Button>
         {#if users.length}
             <div class="users" data-data-title={translateText("settings.connections")}>
@@ -221,13 +219,9 @@
     </Capsule>
 
     <span style="width: var(--navigation-width);justify-content: flex-end;" data-tauri-drag-region>
-        <TopButton id="draw" red={$drawTool === "fill" || ($drawTool === "zoom" && $drawSettings.zoom?.size !== 100) || !!($drawTool === "paint" && $paintCache?.length)} hideLabel />
-        {#if !settingsDisabled}
-            <TopButton id="settings" hideLabel />
-        {/if}
-        <span class="unsaved-dot" class:hidden={$saved} data-data-title={translateText("menu.unsaved")} role="none" />
+        <span class="unsaved-dot" class:hidden={$saved} data-title={translateText("menu.unsaved")} role="none" />
         {#if !$outputDisplay && !physicalOutputWindows.length}
-            <div data-data-title={translateText("No 'physical' outputs available!")} style="position: absolute;top: 0;inset-inline-end: 0;height: 100%;width: 60px;" role="none" onclick={openOutputSettings} />
+            <div data-title={translateText("No 'physical' outputs available!")} style="position: absolute;top: 0;inset-inline-end: 0;height: 100%;width: 60px;" role="none" onclick={openOutputSettings}></div>
         {/if}
     </span>
 </div>
@@ -254,35 +248,9 @@
         flex: 1;
     }
 
-    .cap-label {
-        white-space: nowrap;
-    }
-
-    /* a 1280 px no entran las etiquetas: quedan sólo íconos con tooltip */
-    @media screen and (max-width: 1400px) {
-        .cap-label {
-            display: none;
-        }
-    }
-
     .menu-anchor {
         position: relative;
         display: flex;
-    }
-
-    .look-label {
-        opacity: 0.7;
-        font-size: 11px;
-    }
-    .look-name {
-        max-width: 140px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
-    .look-caret {
-        font-size: 10px;
-        opacity: 0.8;
     }
 
     .macTitleSpace {
