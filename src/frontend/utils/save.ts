@@ -99,6 +99,7 @@ import {
     activeLook,
     looks,
     styles,
+    stylesLegacyBackup,
     syncedOutputs,
     templateCategories,
     templates,
@@ -289,7 +290,10 @@ export function getSyncedSettings(): { [key in SaveListSyncedSettings]: any } {
         customMetadata,
         effects,
         deletedDefaults,
-        syncedOutputs
+        syncedOutputs,
+        looks,
+        activeLook,
+        stylesLegacyBackup
     }
 }
 
@@ -524,5 +528,8 @@ const saveList: { [key in SaveList]: any } = {
     audioRouting,
     deletedDefaults: null,
     syncedOutputs,
+    looks: null,
+    activeLook: null,
+    stylesLegacyBackup: null,
     ai: ai
 }
