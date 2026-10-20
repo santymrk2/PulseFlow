@@ -6,7 +6,7 @@
     import type { OutData } from "../../../types/Output"
     import type { Styles } from "../../../types/Settings"
     import type { AnimationData, Item, LayoutRef, OutBackground, OutScene, OutSlide, Slide, SlideData, Template, Overlays as TOverlays, Transition } from "../../../types/Show"
-    import { allOutputs, colorbars, currentWindow, drawSettings, drawTool, effects, media, outputs, overlays, showsCache, styles, templates, transitionData } from "../../stores"
+    import { allOutputs, colorbars, drawSettings, drawTool, effects, media, outputs, overlays, showsCache, styles, templates, transitionData } from "../../stores"
     import { wait } from "../../utils/common"
     import { custom } from "../../utils/transitions"
     import Draw from "../draw/Draw.svelte"
@@ -225,7 +225,8 @@
     // lines
     let lines: { [key: string]: { start: number | null; end: number | null; linesStart?: number | null; linesEnd?: number | null; clickRevealed?: boolean } } = {}
     $: currentLineId = slide?.id
-    const updateLinesTime = $currentWindow === "output" ? 50 : 10
+    // no hay ventana webview de salida: la salida siempre es el engine nativo de Rust
+    const updateLinesTime = 10
     let linesTimeout: NodeJS.Timeout | null = null
     $: if (currentLineId) {
         // don't update until all outputs has updated their "line" value
