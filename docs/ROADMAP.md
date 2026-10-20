@@ -1007,7 +1007,11 @@ tareas se quedó en lo mínimo. Estas tareas son **cambios de lugar y de estruct
 sólo de estilo: está permitido mover componentes existentes siempre que no se pierda
 ninguna función (verificar cada función movida y listarla en el commit).
 
-- [ ] **F11.6b Panel derecho de verdad como ProPresenter.** (F11.6 sólo pasó las
+- [x] **F11.6b Panel derecho de verdad como ProPresenter.** (2026-10-20, carril D:
+  movidos Audio/Overlay/Timers desde Preview.svelte a pestañas de ShowTools.svelte;
+  Preview conserva MediaControls y Show. Pestañas stage/acciones no creadas (sin
+  componente existente). Chequeos: test:unit 83/83, svelte-check 56 errores (linea base),
+  build OK, Prettier limpio.) (F11.6 sólo pasó las
   pestañas de `ShowTools` a íconos: 1 línea.) Archivos: `output/preview/Preview.svelte`,
   `output/preview/ClearButtons.svelte`, `output/preview/MultiOutputs.svelte`,
   `show/ShowTools.svelte`, `MainLayout.svelte` (columna derecha).

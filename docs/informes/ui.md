@@ -258,3 +258,30 @@ los tres modos") quedan pendientes de verificación manual en la app Tauri.
 - `public/lang/en.json`, `public/lang/es.json` (sección `ui.filter`)
 - `docs/ROADMAP.md` (sólo checkboxes propios)
 - `docs/informes/ui.md`
+
+## F11.6b — Panel derecho de verdad como ProPresenter (2026-10-20)
+
+Commit `e86c016a`.
+
+### Funciones movidas
+
+- `Preview.svelte` → `ShowTools.svelte`:
+  - `Audio()` (reproductor/listas de audio) → pestaña `audio`.
+  - `Overlay({currentOutput})` (overlays activos) → pestaña `overlays`.
+  - `NextTimer`/`TimerControls` (timers con play/reset) → pestaña `timers`.
+- `Preview.svelte` conserva `MediaControls` (transporte de medios) y `Show`
+  (controles de diapositiva) en el bloque de capa activa.
+- El botón de expandir capa en `ClearButtons` ahora también cambia la pestaña
+  correspondiente (`openToolsTab`).
+
+### No creadas
+
+- Pestaña `stage`: no hay componente existente reubicable (StageTools es del modo
+  edición).
+- Pestaña `acciones`: sin panel de acciones/macros existente.
+
+Las 3 pestañas originales de ShowTools (grupos, metadatos, medios) quedan al final.
+
+### Chequeos
+
+- `test:unit` 83/83, `test:svelte` 56 errores (línea base), `build` OK, Prettier limpio.
