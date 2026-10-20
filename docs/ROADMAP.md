@@ -685,7 +685,12 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
 
 ## F9 — Frontend: desacople gradual
 
-- [ ] **F9.1** `App.svelte`: mover timers y listeners globales a `utils/startup.ts`.
+- [x] **F9.1** `App.svelte`: mover timers y listeners globales a `utils/startup.ts`.
+  Hecho 2026-10-19: `startupAppEffects()` (idempotente) mueve a `utils/startup.ts` los
+  ticks de timers (`activeTimers`/`timers`), el evento agendado (`events`), el stream a
+  OutputShow (`loaded`/`disabledServers`/`outputDisplay`), el reset de `closeAd` y la
+  dirección/idioma del documento (`localeDirection`/`language`). `App.svelte` sólo los
+  arranca; quedan las reactivas de presentación (contraste, `isWindows`, `ready`).
 - [ ] **F9.2** `stores.ts`: agrupar por dominio con comentarios; tipar primero los
   stores de salidas (`outputs`, `outputState`, `styles`, `looks`).
 - [ ] **F9.3** Eliminar ramas `$currentWindow === "output"` (lista en `PLAN.md`) una por

@@ -4,7 +4,6 @@
     import Pdf from "./components/export/Pdf.svelte"
     import Guide from "./components/guide/Guide.svelte"
     import { getContrast } from "./components/helpers/color"
-    import { checkTimers, startEventTimer, startTimer } from "./components/helpers/timerTick"
     import Loader from "./components/main/Loader.svelte"
     import ProgressPanel from "./components/main/ProgressPanel.svelte"
     import MenuBar from "./components/main/MenuBar.svelte"
@@ -16,33 +15,18 @@
     import TooltipManager from "./components/main/TooltipManager.svelte"
     import QuickSearch from "./components/quicksearch/QuickSearch.svelte"
     import Center from "./components/system/Center.svelte"
-    import { activeProfile, activeTimers, closeAd, currentWindow, disabledServers, events, language, loaded, localeDirection, os, outputDisplay, profiles, theme, themes, timers } from "./stores"
-    import { focusArea, logerror, mainClick, toggleRemoteStream } from "./utils/common"
+    import { activeProfile, closeAd, currentWindow, loaded, os, profiles, theme, themes } from "./stores"
+    import { focusArea, logerror, mainClick } from "./utils/common"
     import { keydown } from "./utils/shortcuts"
-    import { startup } from "./utils/startup"
+    import { startup, startupAppEffects } from "./utils/startup"
 
     startup()
+    // timers y listeners globales (F9.1: viven en utils/startup.ts)
+    startupAppEffects()
 
     $: isWindows = !$currentWindow && $os.platform === "win32"
 
     ///// UPDATERS /////
-
-    // countdown timer tick
-    $: if ($activeTimers.length) startTimer()
-    $: if (Object.keys($timers).length) checkTimers()
-
-    // check for show event
-    $: if (Object.keys($events).length) startEventTimer()
-
-    // stream to OutputShow
-    $: if (($loaded && $disabledServers.output_stream !== "") || !$outputDisplay) setTimeout(toggleRemoteStream, 1000)
-
-    // close youtube ad
-    $: if ($closeAd) setTimeout(() => closeAd.set(false), 10)
-
-    // set language direction
-    $: document.documentElement.setAttribute("dir", $localeDirection)
-    $: document.documentElement.setAttribute("lang", $language)
 
     $: contrastColor = getContrast($themes[$theme]?.colors?.secondary || "")
     $: secondaryContrast = `--secondary-text: ${contrastColor === "#000000" ? "#131313" : "#f0f0ff"};`

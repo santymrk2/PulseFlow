@@ -5,12 +5,13 @@ import { Main } from "../../types/IPC/Main"
 import { checkStartupActions } from "../components/actions/actions"
 import { syncIcsCalendars } from "../components/drawer/calendar/calendars"
 import { getTimeFromInterval } from "../components/helpers/time"
+import { checkTimers, startEventTimer, startTimer } from "../components/helpers/timerTick"
 import { requestMain, requestMainMultiple, sendMain, sendMainMultiple } from "../IPC/main"
 import { cameraManager } from "../media/cameraManager"
-import { activePopup, activeProfile, alertMessage, cachePath, cloudSyncData, contentProviderData, currentWindow, dataPath, deviceId, driveKeys, isDev, loaded, loadedState, os, profiles, providerConnections, shows, special, version, windowState } from "../stores"
+import { activePopup, activeProfile, activeTimers, alertMessage, cachePath, closeAd, cloudSyncData, contentProviderData, currentWindow, dataPath, deviceId, disabledServers, driveKeys, events, isDev, language, loaded, loadedState, localeDirection, os, outputDisplay, profiles, providerConnections, shows, special, timers, version, windowState } from "../stores"
 import { startTracking } from "./analytics"
 import { setupCloudSync } from "./cloudSync"
-import { wait, waitUntilValueIsDefined } from "./common"
+import { toggleRemoteStream, wait, waitUntilValueIsDefined } from "./common"
 import { getDefaultElements } from "./createData"
 import { setLanguage } from "./language"
 import { storeSubscriber } from "./listeners"
@@ -51,6 +52,49 @@ export async function startup() {
     )
 
     window.api.send(STARTUP, { channel: "READY" })
+}
+
+let appEffectsInitialized = false
+
+/// Timers y listeners globales de la ventana principal (F9.1).
+/// Antes vivían como sentencias reactivas en `App.svelte`; acá se suscriben
+/// a los stores una sola vez (idempotente, igual que `startup`).
+export function startupAppEffects() {
+    if (appEffectsInitialized) return
+    appEffectsInitialized = true
+
+    // reloj de cuenta regresiva de los timers activos
+    activeTimers.subscribe((a) => {
+        if (a.length) startTimer()
+    })
+    timers.subscribe((t) => {
+        if (Object.keys(t).length) checkTimers()
+    })
+
+    // chequeo de eventos de acción agendados
+    events.subscribe((e) => {
+        if (Object.keys(e).length) startEventTimer()
+    })
+
+    // stream a OutputShow
+    loaded.subscribe(checkRemoteStream)
+    disabledServers.subscribe(checkRemoteStream)
+    outputDisplay.subscribe(checkRemoteStream)
+
+    // cierre del ad de YouTube
+    closeAd.subscribe(closeAdNow)
+
+    // dirección e idioma del documento
+    localeDirection.subscribe((dir) => document.documentElement.setAttribute("dir", dir))
+    language.subscribe((lang) => document.documentElement.setAttribute("lang", lang))
+}
+
+function checkRemoteStream() {
+    if ((get(loaded) && get(disabledServers).output_stream !== "") || !get(outputDisplay)) setTimeout(toggleRemoteStream, 1000)
+}
+
+function closeAdNow(close: boolean) {
+    if (close) setTimeout(() => closeAd.set(false), 10)
 }
 
 async function startupMain() {
