@@ -70,7 +70,7 @@
     }
 </script>
 
-<Modal title={translateText("screen_config.title")} width={960} height={620} on:close={() => activePopup.set(null)}>
+<Modal title="screen_config.title" width={960} height={620} on:close={() => activePopup.set(null)}>
     <div class="container">
         <div class="left">
             <ScreenList

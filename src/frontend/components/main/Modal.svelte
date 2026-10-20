@@ -1,14 +1,26 @@
 <script lang="ts">
     import { createEventDispatcher, onDestroy, onMount } from "svelte"
-    import { activePopup } from "../../stores"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import { fade, scale } from "svelte/transition"
+    import { activePopup, os, special } from "../../stores"
+    import { MENU_BAR_HEIGHT } from "../../utils/common"
+    import { translateText } from "../../utils/language"
+    import Icon from "../helpers/Icon.svelte"
+
+    // Base única de modales de pantalla completa (F12.1): "Configuración de pantallas" y "Looks".
+    // Vive fuera de Popup.svelte, que sólo sirve para diálogos chicos.
 
     export let title = ""
     export let width = 960
     export let height = 620
+    /** false: el modal se puede cerrar sin confirmar (no usado hoy). */
     export let closable = true
+    /** true: clic afuera NO cierra (evita perder cambios sin guardar). */
+    export let lockOutsideClick = true
 
     const dispatch = createEventDispatcher()
+
+    $: isWindows = $os.platform === "win32"
+    $: isOptimized = $special.optimizedMode
 
     function close() {
         if (!closable) return
@@ -16,34 +28,52 @@
         activePopup.set(null)
     }
 
+    // capture: Esc cierra el modal sin llegar a utils/shortcuts.ts (que limpia la salida con Esc)
     function onKeydown(e: KeyboardEvent) {
         if (e.key !== "Escape") return
-        if (!closable) return
         e.preventDefault()
         e.stopPropagation()
         close()
     }
 
+    let card: HTMLDivElement
     onMount(() => {
         window.addEventListener("keydown", onKeydown, true)
+        card?.focus()
     })
 
     onDestroy(() => {
         window.removeEventListener("keydown", onKeydown, true)
     })
+
+    function backdropMousedown(e: MouseEvent) {
+        if (lockOutsideClick) return
+        if (e.target === e.currentTarget) close()
+    }
 </script>
 
-<div class="modal-backdrop" role="dialog" aria-modal="true">
-    <div class="modal" style="width: {width}px; height: {height}px; max-width: calc(100vw - 40px); max-height: calc(100vh - 40px);">
-        <div class="modal-header">
-            <div class="header-title">{title}</div>
+<!-- svelte-ignore a11y_no_static_element_interactions -->
+<div class="modal-backdrop" style={isWindows ? `height: calc(100% - ${MENU_BAR_HEIGHT}px);` : null} transition:fade={{ duration: isOptimized ? 20 : 100 }} on:mousedown={backdropMousedown}>
+    <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
+    <div class="modal" bind:this={card} tabindex="-1" role="dialog" aria-modal="true" aria-label={translateText(title)} style="--modal-width: {width}px; --modal-height: {height}px;" transition:scale={{ duration: isOptimized ? 50 : 200 }}>
+        <header class="modal-header">
+            <span class="modal-title">{translateText(title)}</span>
             {#if closable}
-                <MaterialButton class="modal-close" icon="close" iconSize={1.2} title="actions.close" on:click={close} />
+                <button class="modal-close" title={translateText("actions.close [esc]")} on:click={close}>
+                    <Icon id="close" size={1.1} />
+                </button>
             {/if}
-        </div>
+        </header>
+
         <div class="modal-body">
             <slot />
         </div>
+
+        {#if $$slots.footer}
+            <footer class="modal-footer">
+                <slot name="footer" />
+            </footer>
+        {/if}
     </div>
 </div>
 
@@ -51,57 +81,103 @@
     .modal-backdrop {
         position: absolute;
         inset: 0;
-        background-color: rgb(0 0 0 / 0.6);
         z-index: 5000;
+
         display: flex;
         align-items: center;
         justify-content: center;
+
+        padding: 16px;
+
+        background-color: rgb(0 0 0 / 0.6);
         backdrop-filter: blur(2px);
     }
 
     .modal {
         position: relative;
-        background-color: var(--primary);
-        border: 1px solid var(--border-color, var(--primary-lighter));
-        border-radius: var(--radius, 8px);
-        box-shadow: 0 10px 40px rgb(0 0 0 / 0.5);
         display: flex;
         flex-direction: column;
+
+        /* 960×620 como ProPresenter; si la ventana es chica se reduce con 16 px de margen */
+        width: min(var(--modal-width), calc(100vw - 32px));
+        height: min(var(--modal-height), calc(100vh - 32px));
+
+        background-color: var(--primary);
+        border: 1px solid var(--border-color, var(--primary-lighter));
+        border-radius: calc(var(--radius, 10px) * 1.5);
+        box-shadow: 0 16px 48px rgb(0 0 0 / 0.5);
+
         overflow: hidden;
+        outline: none;
     }
 
+    /* cabecera fija de 44 px: título a la izquierda, ✕ a la derecha */
+
     .modal-header {
-        height: 36px;
-        min-height: 36px;
+        flex: 0 0 44px;
+        height: 44px;
+
         display: flex;
         align-items: center;
-        justify-content: center;
-        position: relative;
+        justify-content: space-between;
+        gap: 8px;
+
+        padding: 0 8px 0 16px;
         border-bottom: 1px solid var(--border-color, var(--primary-lighter));
         background-color: var(--primary-darker);
     }
 
-    .header-title {
-        font-size: 0.9em;
+    .modal-title {
+        font-size: 14px;
+        font-weight: 600;
         color: var(--text);
-        text-align: center;
-        opacity: 0.9;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
-    .modal :global(.modal-close) {
-        position: absolute;
-        right: 4px;
-        top: 50%;
-        transform: translateY(-50%);
-        padding: 4px !important;
+    .modal-close {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        width: 28px;
         height: 28px;
-        aspect-ratio: 1;
+        padding: 0;
+
+        color: var(--text);
+        background: none;
+        border: none;
         border-radius: var(--radius, 4px);
+        cursor: pointer;
     }
+    .modal-close:hover {
+        background-color: var(--primary-lightest, rgb(255 255 255 / 0.1));
+    }
+
+    /* el cuerpo ocupa el resto; cada modal decide qué parte scrollea */
 
     .modal-body {
         flex: 1;
-        display: flex;
         min-height: 0;
+        display: flex;
+        overflow: hidden;
+    }
+
+    /* pie fijo de 52 px (botones Aplicar / Duplicar / Borrar) */
+
+    .modal-footer {
+        flex: 0 0 52px;
+        height: 52px;
+
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 8px;
+
+        padding: 0 16px;
+        border-top: 1px solid var(--border-color, var(--primary-lighter));
+        background-color: var(--primary-darker);
     }
 </style>

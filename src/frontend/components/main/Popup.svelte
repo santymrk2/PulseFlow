@@ -44,45 +44,52 @@
     }
 
     $: isOptimized = $special.optimizedMode
+
+    // modales de pantalla completa: traen su propia base (main/Modal.svelte), sin la tarjeta de este popup
+    const FULL_MODALS: Popups[] = ["looks", "screen_config"]
 </script>
 
 {#if popupId !== null}
     {#key popupId}
-        <div style={isWindows ? `height: calc(100% - ${MENU_BAR_HEIGHT}px);` : null} class="popup" class:isOptimized transition:fade={{ duration: isOptimized ? 20 : 100 }} on:mousedown={mousedown}>
-            <div class="card" transition:scale={{ duration: isOptimized ? 50 : 200 }}>
-                {#if popupId !== "alert"}
-                    <div class="headerContent" style="border-bottom: 1px solid var(--border-color, var(--primary-lighter));{scrolled ? 'box-shadow: 2px 2px 4px 5px rgb(0 0 0 / 0.1);' : ''}">
-                        <div class="headerMargin">
-                            {#key popupId}
-                                <!-- margin-top: -5px; -->
-                                <h2 style="font-size: 1.3em;margin-top: -2px;">
-                                    {#if $popupData?.popupTitle}
-                                        {translateText($popupData.popupTitle)}
-                                    {:else if popupId === "new_update"}
-                                        <T id="about.new_update" />: <span style="color: var(--secondary);">v{$popupData.latestVersion}</span>
-                                    {:else if popupId === "pco_picker"}
-                                        Planning Center
-                                    {:else if popupId === "audio_effect" && $popupData?.effect}
-                                        <T id={EFFECTS_LIST.find((a) => a.id === $popupData.effect)?.label || "popup.audio_effect"} />
-                                    {:else}
-                                        <T id="popup.{popupId}" />
-                                    {/if}
-                                </h2>
-                            {/key}
+        {#if FULL_MODALS.includes(popupId)}
+            <svelte:component this={popups[popupId]} />
+        {:else}
+            <div style={isWindows ? `height: calc(100% - ${MENU_BAR_HEIGHT}px);` : null} class="popup" class:isOptimized transition:fade={{ duration: isOptimized ? 20 : 100 }} on:mousedown={mousedown}>
+                <div class="card" transition:scale={{ duration: isOptimized ? 50 : 200 }}>
+                    {#if popupId !== "alert"}
+                        <div class="headerContent" style="border-bottom: 1px solid var(--border-color, var(--primary-lighter));{scrolled ? 'box-shadow: 2px 2px 4px 5px rgb(0 0 0 / 0.1);' : ''}">
+                            <div class="headerMargin">
+                                {#key popupId}
+                                    <!-- margin-top: -5px; -->
+                                    <h2 style="font-size: 1.3em;margin-top: -2px;">
+                                        {#if $popupData?.popupTitle}
+                                            {translateText($popupData.popupTitle)}
+                                        {:else if popupId === "new_update"}
+                                            <T id="about.new_update" />: <span style="color: var(--secondary);">v{$popupData.latestVersion}</span>
+                                        {:else if popupId === "pco_picker"}
+                                            Planning Center
+                                        {:else if popupId === "audio_effect" && $popupData?.effect}
+                                            <T id={EFFECTS_LIST.find((a) => a.id === $popupData.effect)?.label || "popup.audio_effect"} />
+                                        {:else}
+                                            <T id="popup.{popupId}" />
+                                        {/if}
+                                    </h2>
+                                {/key}
 
-                            {#if !disablePopupClose.includes(popupId)}
-                                <MaterialButton class="popup-close" icon="close" iconSize={1.3} title="actions.close [esc]" on:click={() => activePopup.set(null)} />
-                            {/if}
+                                {#if !disablePopupClose.includes(popupId)}
+                                    <MaterialButton class="popup-close" icon="close" iconSize={1.3} title="actions.close [esc]" on:click={() => activePopup.set(null)} />
+                                {/if}
+                            </div>
                         </div>
-                    </div>
-                {/if}
-                <div class="scroll" style="--top-height: {isWindows ? MENU_BAR_HEIGHT : 0}px;" on:scroll={scroll}>
-                    <div class="body">
-                        <svelte:component this={popups[popupId]} />
+                    {/if}
+                    <div class="scroll" style="--top-height: {isWindows ? MENU_BAR_HEIGHT : 0}px;" on:scroll={scroll}>
+                        <div class="body">
+                            <svelte:component this={popups[popupId]} />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {/if}
     {/key}
 {/if}
 

@@ -11,7 +11,7 @@
     import MaterialButton from "../inputs/MaterialButton.svelte"
     import MaterialSlider from "../inputs/Slider.svelte"
     import LookGrid from "./LookGrid.svelte"
-    import Modal from "./Modal.svelte"
+    import Modal from "../main/Modal.svelte"
 
     // F10.6 — modal "Looks": presets a la izquierda, grilla pantallas × capas a la
     // derecha. Los cambios se editan en una copia y se aplican al tocar "Guardar".
