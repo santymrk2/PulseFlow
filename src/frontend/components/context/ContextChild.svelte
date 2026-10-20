@@ -117,13 +117,15 @@
 
 <style>
     .item {
-        padding: 6px 16px;
+        min-height: 32px;
+        padding: 0 16px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
     .item:hover,
     .item.open {
-        background-color: rgb(0 0 0 / 0.2);
+        background-color: var(--hover, rgb(0 0 0 / 0.2));
     }
 
     .item.highlighted {
@@ -155,10 +157,9 @@
         border-top-left-radius: 2px;
         border-bottom-left-radius: 2px;
 
-        border: 1px solid var(--primary-lighter);
-        /* border-left: none; */
+        border: 1px solid var(--border-color, var(--primary-lighter));
 
-        background-color: var(--background);
+        background-color: var(--primary-darker);
 
         /* this does not work here */
         /* backdrop-filter: blur(8px); */

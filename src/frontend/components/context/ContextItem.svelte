@@ -569,11 +569,12 @@
         align-items: center;
         justify-content: space-between;
         gap: 10px;
-        padding: 6px 16px;
+        min-height: 32px;
+        padding: 0 16px;
         cursor: pointer;
     }
     div:hover:not(.disabled) {
-        background-color: rgb(0 0 0 / 0.2);
+        background-color: var(--hover, rgb(0 0 0 / 0.2));
     }
 
     div.disabled {
