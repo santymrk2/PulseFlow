@@ -1,21 +1,14 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { BLACKMAGIC, NDI, OMT, OUTPUT } from "../../../types/Channels"
-    import { Main } from "../../../types/IPC/Main"
-    import { activePopup, currentOutputSettings, ndiData, omtData, os, outputs, rtmpStatus, stageShows } from "../../stores"
-    import { requestMain } from "../../IPC/main"
+    import { NDI, OMT, OUTPUT } from "../../../types/Channels"
+    import { outputs } from "../../stores"
     import { send } from "../../utils/request"
-    import { addRtmpDestination, checkFFmpeg, refreshOut, removeRtmpDestination, startRtmpStreaming, startStreaming, stopRtmpStreaming, stopStreaming, toggleOutputs, updateOutputRtmpData, updateOutputWebrtcData } from "../helpers/output"
+    import { addRtmpDestination, removeRtmpDestination, startRtmpStreaming, startStreaming, stopRtmpStreaming, stopStreaming, toggleOutputs, updateOutputRtmpData, updateOutputWebrtcData } from "../helpers/output"
     import { clone } from "../helpers/array"
-    import { translateText } from "../../utils/language"
     import DisplayLayout from "./DisplayLayout.svelte"
     import MaterialButton from "../inputs/MaterialButton.svelte"
     import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
-    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
     import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
-    import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
-    import InputRow from "../input/InputRow.svelte"
-    import T from "../helpers/T.svelte"
 
     export let outputId: string
     export let displays: any[] = []
@@ -95,38 +88,6 @@
         })
     }
 
-    // stage layout
-    function setStageLayout(e: any) {
-        const val = e.target.value
-        outputs.update((a) => {
-            if (!a[outputId]) return a
-            a[outputId].stageLayout = val
-            a[outputId].stageOutput = val
-            return a
-        })
-    }
-
-    // screen type
-    function setScreenType(e: any) {
-        const val = e.target.value
-        outputs.update((a) => {
-            if (!a[outputId]) return a
-            a[outputId].screenType = val
-            if (val !== "mirror") delete a[outputId].mirrorOf
-            return a
-        })
-    }
-
-    function setMirrorOf(e: any) {
-        const val = e.target.value
-        outputs.update((a) => {
-            if (!a[outputId]) return a
-            if (val) a[outputId].mirrorOf = val
-            else delete a[outputId].mirrorOf
-            return a
-        })
-    }
-
     // NDI/OMT/Blackmagic/WebRTC/RTMP (mirror minimal logic)
     function updateNdiData(e: any, key: string) {
         let newData = $outputs[outputId]?.ndiData || {}
@@ -151,9 +112,6 @@
     function updateWebrtcData(e: any, key: string) {
         let value = e?.detail?.id ?? e
         updateOutputWebrtcData(outputId, key, value)
-    }
-    function updateRtmpData(value: any, key: string) {
-        updateOutputRtmpData(outputId, key, value)
     }
     function addDest() {
         addRtmpDestination(outputId)
@@ -266,9 +224,10 @@
                     if (disp) setScreen({ detail: disp })
                     else
                         outputs.update((a) => {
-                            if (a[outputId]) {
-                                a[outputId].screen = val || null
-                                if (a[outputId].display) a[outputId].display.screen = a[outputId].screen
+                            const o = a[outputId]
+                            if (o) {
+                                o.screen = val || null
+                                if (o.display) o.display.screen = o.screen
                             }
                             return a
                         })

@@ -3,7 +3,6 @@
     import { outputs } from "../../stores"
     import { keysToID, sortByName, sortObject } from "../helpers/array"
     import { toggleOutputs } from "../helpers/output"
-    import Icon from "../helpers/Icon.svelte"
 
     export let selectedOutputId: string | null = null
 
