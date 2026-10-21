@@ -171,6 +171,20 @@ pub fn REMOVE_SCREEN(app: AppHandle, data: RemoveScreenPayload) -> AppResult<()>
     crate::render::remove_screen(&app, &data.id)
 }
 
+/// Payload de `RENDER_PREFETCH` (espejo: `PrefetchPayload` en `src/types/Output.ts`).
+#[derive(Debug, Deserialize)]
+pub struct PrefetchPayload {
+    pub paths: Vec<String>,
+}
+
+/// `RENDER_PREFETCH`: pide a los workers las imágenes de las próximas slides para que ya estén en
+/// la GPU cuando el operador cambie de slide. Es best-effort: nunca falla por una ruta mala.
+#[tauri::command]
+pub fn RENDER_PREFETCH(data: PrefetchPayload) -> AppResult<()> {
+    crate::render::prefetch_images(data.paths.iter().map(String::as_str));
+    Ok(())
+}
+
 /// Payload para el comando `TOGGLE_OUTPUTS` de Svelte.
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
@@ -239,6 +253,9 @@ pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<b
 #[tauri::command]
 pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
     data.validate_version()?;
+
+    // las imágenes de la escena se piden a los workers apenas llega (antes de que el render las necesite)
+    crate::render::prefetch_images(data.image_paths().iter().map(String::as_str));
 
     if let Some(transition) = &data.transition {
         crate::render::set_transition_config(
@@ -408,4 +425,12 @@ mod tests {
         assert_eq!(payload.id, "out-1");
         assert!(serde_json::from_value::<RemoveScreenPayload>(json!({})).is_err());
     }
+
+    #[test]
+    fn prefetch_payload_deserializa_desde_el_frontend() {
+        let payload: PrefetchPayload = serde_json::from_value(json!({ "paths": ["/m/a.png", "/m/b.jpg"] })).expect("payload válido");
+        assert_eq!(payload.paths, vec!["/m/a.png", "/m/b.jpg"]);
+        assert!(serde_json::from_value::<PrefetchPayload>(json!({})).is_err());
+    }
 }
+

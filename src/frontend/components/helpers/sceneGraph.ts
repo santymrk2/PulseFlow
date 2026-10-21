@@ -14,7 +14,7 @@ import { get } from "svelte/store"
 import dayjs from "dayjs"
 import localizedFormat from "dayjs/plugin/localizedFormat"
 import { OUTPUT } from "../../../types/Channels"
-import type { Output } from "../../../types/Output"
+import type { Output, PrefetchPayload } from "../../../types/Output"
 import type { SceneBackground, SceneGraph, SceneItem, SceneMediaItem, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
 import type { Item, OutSlide, Slide } from "../../../types/Show"
 import { activeTimers, media, overlays, outputs, stageShows, styles, timeFormat as timeFormatStore, timers, transitionData } from "../../stores"
@@ -29,6 +29,7 @@ import { getCurrentTimerValue } from "../drawer/timers/timers"
 import { defaultLayers, getCurrentStyle, getOutputLines, getOutputResolution, getOutputTransitions, getStyleTemplate, percentageStylePos, setTemplateStyle } from "./output"
 import { _show } from "./shows"
 import { replaceDynamicValues } from "./showActions"
+import { imagePathsOf } from "./sceneMedia"
 import { applyTextTransform, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
 import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
 
@@ -490,6 +491,31 @@ function buildStageScene(outputId: string, output: Output, outputsData: { [id: s
     })
 }
 
+// PREFETCH (F19.2)
+
+/** Cuántas slides hacia adelante se precargan. */
+const PREFETCH_AHEAD = 2
+
+/** Imágenes de las próximas slides de una salida de audiencia (items de medio y fondo de la plantilla). */
+function nextSlidesImagePaths(outputId: string, output: Output): string[] {
+    const currentStyle = getCurrentStyle(get(styles), output.style)
+    const layers = Array.isArray(currentStyle.layers) ? currentStyle.layers : defaultLayers
+    const slide = output.out?.slide
+    if (!slide || !layers.includes("slide")) return []
+
+    const resolution = getOutputResolution(outputId, get(outputs), true, output.style || "")
+    const paths: string[] = []
+    let next = getNextSlideRef(slide)
+    for (let ahead = 0; ahead < PREFETCH_AHEAD && next; ahead++) {
+        const built = buildSlideItems(next, outputId, currentStyle, resolution)
+        const background = getStyleTemplate(next, currentStyle)?.settings?.backgroundPath || ""
+        const backgroundIsImage = background && getMediaType(getExtension(background)) === "image"
+        paths.push(...imagePathsOf(built.items, backgroundIsImage ? [background] : []))
+        next = getNextSlideRef(next)
+    }
+    return paths
+}
+
 // SEND
 
 /**
@@ -515,4 +541,25 @@ export function sendOutputScenes(outputsData: { [id: string]: Output } = get(out
             console.error("[sceneGraph] could not build scene for output", id, err)
         }
     })
+
+    prefetchNextSlides(ids, outputsData)
+}
+
+/** Pide al engine las imágenes de las próximas slides de las audiencias (sin repetir entre salidas). */
+function prefetchNextSlides(ids: string[], outputsData: { [id: string]: Output }) {
+    const paths: string[] = []
+    ids.forEach((id) => {
+        try {
+            const sourceId = getSceneSourceId(id, outputsData)
+            const source = outputsData[sourceId]
+            if (!source || source.stageOutput) return
+            nextSlidesImagePaths(sourceId, source).forEach((path) => {
+                if (!paths.includes(path)) paths.push(path)
+            })
+        } catch (err) {
+            console.error("[sceneGraph] could not collect prefetch paths for output", id, err)
+        }
+    })
+
+    if (paths.length) send(OUTPUT, ["RENDER_PREFETCH"], { paths } satisfies PrefetchPayload)
 }

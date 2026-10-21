@@ -50,6 +50,13 @@ pub use screens::{
     set_stage_scene, set_transition_config, IdentifyScreen, ScreenConfig, ScreenKind, ScreenManager,
     ScreenRect,
 };
+/// Precarga imágenes en los workers. Best-effort: si todavía no hay pantallas (no existe el almacén)
+/// no hace nada, y las rutas malas quedan como `Failed` sin molestar a nadie.
+pub fn prefetch_images<'a>(paths: impl IntoIterator<Item = &'a str>) {
+    if let Some(store) = media::store_if_ready() {
+        store.prefetch(paths);
+    }
+}
 pub use types::{BackgroundMedia, MediaItem, OverlayItem, StageData, TextBlock};
 
 #[cfg(test)]

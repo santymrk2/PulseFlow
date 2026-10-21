@@ -121,6 +121,7 @@ pub fn run() {
             commands::output::UPDATE_BOUNDS,
             commands::output::IDENTIFY_SCREENS,
             commands::output::REMOVE_SCREEN,
+            commands::output::RENDER_PREFETCH,
             // SERVERS
             commands::servers::START,
             commands::servers::STOP,

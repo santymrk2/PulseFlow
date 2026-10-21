@@ -75,6 +75,14 @@ export interface RemoveScreenPayload {
     id: string
 }
 
+/**
+ * Payload de `RENDER_PREFETCH` (espejo de `PrefetchPayload` en `src-tauri/src/commands/output.rs`):
+ * rutas de imágenes que el engine debe tener listas en la GPU antes de que se muestren.
+ */
+export interface PrefetchPayload {
+    paths: string[]
+}
+
 // RTMP
 export interface RtmpDestination {
     id: string

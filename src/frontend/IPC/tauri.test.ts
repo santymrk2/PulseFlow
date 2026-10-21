@@ -84,6 +84,12 @@ describe("send (F7.2)", () => {
         expect(invokeMock).toHaveBeenCalledWith("REMOVE_SCREEN", { data: { id: "out-1" } })
     })
 
+    it("deja pasar RENDER_PREFETCH del canal OUTPUT hacia Rust", async () => {
+        api.send("OUTPUT", { channel: "RENDER_PREFETCH", data: { paths: ["/m/a.png"] } })
+        await vi.waitFor(() => expect(commandCalls().length).toBe(1))
+        expect(invokeMock).toHaveBeenCalledWith("RENDER_PREFETCH", { data: { paths: ["/m/a.png"] } })
+    })
+
     it("un canal pospuesto repetido responde a cada listener sin invocar", async () => {
         // `dispatch` llega a todos los receptores de MAIN; el filtrado por
         // listenedId lo hace el callback (como en requestMain).

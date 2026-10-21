@@ -341,6 +341,21 @@ impl ScenePayload {
         })
     }
 
+    /// Rutas de todas las **imágenes** de la escena (fondo, items de la slide y de los overlays), sin
+    /// repetir y en ese orden. Los videos no entran: los decodifica el hub de video. Sirve para
+    /// precargarlas en los workers antes de que el render las necesite (F19.2).
+    pub fn image_paths(&self) -> Vec<String> {
+        let mut paths: Vec<String> = Vec::new();
+        let background = self.background_media().filter(|b| b.media_type == "image").and_then(|b| b.path);
+        let items = self.media_items().into_iter().chain(self.overlay_media_items()).filter(|m| m.media_type == "image").map(|m| m.path);
+        for path in background.into_iter().chain(items) {
+            if !paths.contains(&path) {
+                paths.push(path);
+            }
+        }
+        paths
+    }
+
     /// Texto de las overlays activas (capa propia dibujada encima de la slide, F4.6).
     pub fn overlay_text_blocks(&self) -> Vec<TextBlock> {
         let design_width = self.design_width();
@@ -545,4 +560,39 @@ mod tests {
             "el mensaje debe decir la versión soportada: {message}"
         );
     }
+
+    /// F19.2: al aplicar una escena se piden a los workers todas sus imágenes (fondo, slide y overlays).
+    #[test]
+    fn image_paths_collects_background_slide_and_overlay_images_once() {
+        let payload: ScenePayload = serde_json::from_value(json!({
+            "outputId": "out1",
+            "width": 1920,
+            "height": 1080,
+            "background": { "path": "/m/bg.png", "type": "image" },
+            "items": [
+                { "type": "media", "x": 0, "y": 0, "width": 10, "height": 10, "src": "/m/a.png", "mediaType": "image" },
+                { "type": "media", "x": 0, "y": 0, "width": 10, "height": 10, "src": "/m/clip.mp4", "mediaType": "video" },
+                { "type": "media", "x": 5, "y": 5, "width": 10, "height": 10, "src": "/m/a.png", "mediaType": "image" }
+            ],
+            "overlays": [
+                { "type": "media", "x": 0, "y": 0, "width": 10, "height": 10, "src": "/m/o.png", "mediaType": "image" }
+            ]
+        }))
+        .expect("payload válido");
+
+        assert_eq!(payload.image_paths(), vec!["/m/bg.png", "/m/a.png", "/m/o.png"]);
+    }
+
+    #[test]
+    fn image_paths_skips_a_video_background_and_empty_scenes() {
+        let video_bg: ScenePayload = serde_json::from_value(json!({
+            "outputId": "out1", "width": 1920, "height": 1080,
+            "background": { "path": "/m/bg.mp4", "type": "video" }
+        }))
+        .expect("payload válido");
+        assert!(video_bg.image_paths().is_empty(), "los videos los decodifica el hub, no se precargan como imagen");
+
+        assert!(ScenePayload::default().image_paths().is_empty());
+    }
 }
+

@@ -178,6 +178,9 @@ enum Job {
     Failed(String),
 }
 
+/// Cuántas rutas acepta un pedido de precarga (lo que sobra se descarta).
+pub const MAX_PREFETCH: usize = 64;
+
 /// Lado máximo (px) de una imagen: más que eso no cabe en una textura y se rechaza sin decodificar.
 const MAX_IMAGE_SIDE: u32 = 16_384;
 
@@ -298,6 +301,23 @@ impl MediaStore {
         let owned = path.to_path_buf();
         super::workers::submit(move || store.run_image_job(&key, &owned));
         MediaState::Loading
+    }
+
+    /// Precarga imágenes en los workers antes de que alguna pantalla las necesite. Ignora rutas
+    /// vacías y repetidas y acepta hasta `MAX_PREFETCH`; devuelve cuántas rutas distintas aceptó.
+    pub fn prefetch<'a>(self: &Arc<Self>, paths: impl IntoIterator<Item = &'a str>) -> usize {
+        let mut accepted: Vec<&str> = Vec::new();
+        for path in paths {
+            if accepted.len() >= MAX_PREFETCH {
+                break;
+            }
+            if path.trim().is_empty() || accepted.contains(&path) {
+                continue;
+            }
+            accepted.push(path);
+            let _ = self.request_image(Path::new(path));
+        }
+        accepted.len()
     }
 
     /// Trabajo del worker: valida el tamaño, decodifica y sube; deja el resultado en `jobs`/`textures`.
@@ -631,6 +651,11 @@ static SHARED_STORE: std::sync::OnceLock<Arc<MediaStore>> = std::sync::OnceLock:
 /// Serializa la primera creación del almacén compartido.
 static STORE_INIT: Mutex<()> = Mutex::new(());
 
+/// El almacén de medios si ya se creó (la primera pantalla lo crea); no inicializa la GPU.
+pub fn store_if_ready() -> Option<Arc<MediaStore>> {
+    SHARED_STORE.get().cloned()
+}
+
 /// Almacén de medios del proceso, sobre el `GpuContext` compartido.
 pub fn shared_store() -> AppResult<Arc<MediaStore>> {
     if let Some(store) = SHARED_STORE.get() {
@@ -785,6 +810,27 @@ mod tests {
             MediaState::Failed(reason) => assert!(reason.contains("16384"), "{reason}"),
             _ => panic!("tenía que fallar por tamaño"),
         }
+    }
+
+    #[test]
+    fn prefetch_queues_each_image_once_and_ignores_blanks() {
+        let store = store();
+        let (a, b) = (noisy_png("pre-a.png", 32, 32), noisy_png("pre-b.png", 32, 32));
+        let (a_str, b_str) = (a.to_string_lossy().to_string(), b.to_string_lossy().to_string());
+
+        let queued = store.prefetch([a_str.as_str(), "", "   ", b_str.as_str(), a_str.as_str()]);
+        assert_eq!(queued, 2, "dos imágenes distintas; los vacíos y el repetido no cuentan");
+
+        assert!(matches!(wait_until_settled(&store, &a), MediaState::Ready(_)));
+        assert!(matches!(wait_until_settled(&store, &b), MediaState::Ready(_)));
+        assert_eq!(store.decodes(), 2);
+    }
+
+    #[test]
+    fn prefetch_is_capped() {
+        let store = store();
+        let paths: Vec<String> = (0..200).map(|i| format!("/no/existe/{i}.png")).collect();
+        assert_eq!(store.prefetch(paths.iter().map(String::as_str)), MAX_PREFETCH);
     }
 }
 

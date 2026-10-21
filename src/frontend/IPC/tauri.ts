@@ -43,7 +43,7 @@ const listenerPromises: { [channel: string]: Promise<void> } = {}
 // no llenar la consola de errores "Command … not found" (p. ej. al cambiar de
 // slide, que dispara muchas señales heredadas). En desarrollo se avisa una sola
 // vez por nombre (ver `ipcDebugWarn`, F10.0f).
-const OUTPUT_COMMANDS = new Set(["TOGGLE_OUTPUTS", "RENDER_SCENE", "UPDATE_BOUNDS", "IDENTIFY_SCREENS", "REMOVE_SCREEN"])
+const OUTPUT_COMMANDS = new Set(["TOGGLE_OUTPUTS", "RENDER_SCENE", "UPDATE_BOUNDS", "IDENTIFY_SCREENS", "REMOVE_SCREEN", "RENDER_PREFETCH"])
 
 // Canales de servidor (F10.0f): en Electron estos mensajes iban por websocket a
 // las apps web de control remoto/stage/controller/output-stream (el puente
