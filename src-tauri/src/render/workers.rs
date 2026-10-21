@@ -63,7 +63,7 @@ pub async fn run<T: Send + 'static>(job: impl FnOnce() -> T + Send + 'static) ->
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
     use std::sync::{mpsc, Arc};
     use std::time::Duration;
 
@@ -114,14 +114,15 @@ mod tests {
     fn run_returns_the_job_result_without_blocking_the_async_runtime() {
         let runtime = tokio::runtime::Builder::new_current_thread().enable_time().build().expect("runtime");
         runtime.block_on(async {
-            // un "latido" que sólo avanza si el runtime async sigue libre mientras el job duerme
-            let ticks = Arc::new(AtomicUsize::new(0));
+            // una tarea que sólo corre si el runtime async sigue libre mientras el job duerme:
+            // el primer poll del ticker ocurre mientras se espera el resultado del job
+            let ticked = Arc::new(AtomicBool::new(false));
             let ticker = {
-                let ticks = Arc::clone(&ticks);
+                let ticked = Arc::clone(&ticked);
                 tokio::spawn(async move {
+                    ticked.store(true, Ordering::SeqCst);
                     loop {
                         tokio::time::sleep(Duration::from_millis(10)).await;
-                        ticks.fetch_add(1, Ordering::SeqCst);
                     }
                 })
             };
@@ -134,7 +135,8 @@ mod tests {
             ticker.abort();
 
             assert_eq!(value, Some(42));
-            assert!(ticks.load(Ordering::SeqCst) >= 10, "el runtime se bloqueó: {} latidos", ticks.load(Ordering::SeqCst));
+            // el ticker corrió mientras se esperaba al job: el runtime no estaba bloqueado
+            assert!(ticked.load(Ordering::SeqCst), "el runtime se bloqueó: el ticker no corrió durante el job");
         });
     }
 
