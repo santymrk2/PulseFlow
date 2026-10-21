@@ -43,6 +43,7 @@
 
     export let mouse: any = {}
     function mousedown(e: any) {
+        console.warn("SNAPDBG down", e.target?.className?.toString?.().slice(0, 40), index)
         if (e.target.closest(".chords") || e.target.closest(".editTools")) return
         if (!e.shiftKey && !e.target.closest(".line") && !e.target.closest(".square") && !e.target.closest(".rotate") && !e.target.closest(".radius") && !e.target.closest(".cropHandle") && !e.target.closest(".cropOverlay")) {
             openToolsTab.set("text")

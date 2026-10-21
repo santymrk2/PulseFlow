@@ -16,6 +16,7 @@
 
     let styles: { [key: string]: any } = {}
     function mousemove(e: any) {
+        if (e.buttons) console.warn("SNAPDBG move", !!mouse, mouse?.item?.type, !!mouse?.rightClick, e.buttons, e.clientX, e.clientY)
         if (!mouse?.item || mouse.rightClick) return
 
         let notTextBox: boolean = mouse.item.type !== undefined && mouse.item.type !== "text"
@@ -121,6 +122,7 @@
     }
 
     function mouseup() {
+        console.warn("SNAPDBG up", !!mouse)
         stopResizing()
         mouse = null
         lines = []
