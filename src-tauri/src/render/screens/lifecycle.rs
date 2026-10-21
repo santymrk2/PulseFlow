@@ -72,8 +72,12 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
         let app = app.clone();
         let id = config.id.clone();
         Arc::new(move || {
-            let _ = close_screen(&app, &id);
-            emit_output_state(&app, &[(id.clone(), false)]);
+            // en otro hilo: se llama desde el hilo de render de la propia ventana y cerrarla ahí mismo la dejaba congelada
+            let (app, id) = (app.clone(), id.clone());
+            let _ = thread::Builder::new().name(format!("PulseFlow-CloseButton-{id}")).spawn(move || {
+                let _ = close_screen(&app, &id);
+                emit_output_state(&app, &[(id.clone(), false)]);
+            });
         })
     };
 
