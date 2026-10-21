@@ -8,47 +8,7 @@ import type { Item, Layout, LayoutRef, Media, OutSlide, Show, Slide, SlideData, 
 import { AudioAnalyser } from "../../audio/audioAnalyser"
 import { requestMain, sendMain } from "../../IPC/main"
 import { invokeCommand } from "../../IPC/tauri"
-import {
-    actions,
-    activeFocus,
-    activeProject,
-    activeRename,
-    activeScenes,
-    activeShow,
-    activeTimers,
-    allOutputs,
-    categories,
-    connections,
-    currentOutputSettings,
-    customMessageCredits,
-    disabledServers,
-    effects,
-    focusMode,
-    lockedOverlays,
-    media,
-    outLocked,
-    outputDisplay,
-    outputs,
-    outputSlideCache,
-    outputState,
-    overlays,
-    overlayTimers,
-    projects,
-    scenes,
-    scriptures,
-    scriptureSettings,
-    serverData,
-    showsCache,
-    special,
-    stageShows,
-    styles,
-    syncedOutputs,
-    templates,
-    theme,
-    themes,
-    transitionData,
-    usageLog
-} from "../../stores"
+import { actions, activeFocus, activeProject, activeRename, activeScenes, activeShow, activeTimers, allOutputs, categories, connections, currentOutputSettings, customMessageCredits, disabledServers, effects, focusMode, lockedOverlays, media, outLocked, outputDisplay, outputs, outputSlideCache, outputState, overlays, overlayTimers, projects, scenes, scriptures, scriptureSettings, serverData, showsCache, special, stageShows, styles, syncedOutputs, templates, theme, themes, transitionData, usageLog, previewOutputId } from "../../stores"
 import { trackScriptureUsage } from "../../utils/analytics"
 import { isMainWindow, isOutputWindow, newToast } from "../../utils/common"
 import { translateText } from "../../utils/language"
@@ -63,7 +23,7 @@ import type { EditInput } from "../edit/values/boxes"
 import { VideoPlayer } from "../media/video/videoPlayer"
 import { clearBackground, clearSlide } from "../output/clear"
 import { areObjectsEqual, clone, keysToID, removeDuplicates, sortByName, sortObject } from "./array"
-import { resolveOutputAspect } from "./outputAspect"
+import { referenceOutputId, resolveOutputAspect } from "./outputAspect"
 import { getExtension, getFileName, getMediaLayerType, getMediaType, removeExtension } from "./media"
 import { createDestination, hasStreamableDestination } from "./rtmpDestinations"
 import { getLayoutRef } from "./show"
@@ -821,7 +781,8 @@ export function outputSlideHasContent(output) {
 export function getResolution(initial: Resolution | undefined | null = null, _updater: any = null, _getSlideRes = false, outputId = "", styleIdOverride = ""): Resolution {
     if (initial?.width) return initial
 
-    if (!outputId) outputId = getFirstActiveOutput()?.id || ""
+    // sin salida indicada: la elegida en el selector de la vista previa (si es una audiencia) o la primera activa
+    if (!outputId) outputId = referenceOutputId(get(outputs), get(previewOutputId)) || getFirstActiveOutput()?.id || ""
     const currentOutput = get(outputs)[outputId]
 
     const styleId = styleIdOverride || currentOutput?.style || ""

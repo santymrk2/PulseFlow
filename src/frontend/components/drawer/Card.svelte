@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Resolution } from "../../../types/Settings"
-    import { mediaOptions, outputs, styles } from "../../stores"
+    import { mediaOptions, outputs, styles, previewOutputId } from "../../stores"
     import { triggerClickOnEnterSpace } from "../../utils/clickable"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
@@ -25,7 +25,7 @@
     export let showApplyOnHover = false
     export let checkered = false
     export let mode: "grid" | "list" | "lyrics" = "grid"
-    export let resolution: Resolution = getResolution(null, { $outputs, $styles })
+    export let resolution: Resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
     $: resolution = getResolution(resolution, { $outputs, $styles })
     $: mainWidth = width || (mode === "grid" ? 100 / $mediaOptions.columns : 100)
 </script>

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import { uid } from "uid"
-    import { activePopup, outputs, overlays, popupData, styles } from "../../../stores"
+    import { activePopup, outputs, overlays, popupData, styles, previewOutputId } from "../../../stores"
     import Card from "../../drawer/Card.svelte"
     import { keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
@@ -18,7 +18,7 @@
 
     let searchValue = ""
 
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     let allOverlays: any[] = []
     $: allOverlays = sortByName(keysToID($overlays)).filter((a) => !hide.includes(a.id))

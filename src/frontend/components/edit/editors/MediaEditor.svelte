@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { MediaStyle } from "../../../../types/Main"
-    import { activeEdit, activeShow, media, outputs, playingVideoState, styles } from "../../../stores"
+    import { activeEdit, activeShow, media, outputs, playingVideoState, styles, previewOutputId } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
     import { getExtension, getMedia, getMediaStyle, getMediaType } from "../../helpers/media"
     import { getCurrentStyle, getFirstActiveOutput, getResolution } from "../../helpers/output"
@@ -39,7 +39,7 @@
 
     let width = 0
     let height = 0
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
     $: widthOrHeight = getStyleResolution(resolution, width, height, "fit")
 
     $: extension = getExtension(mediaPath)

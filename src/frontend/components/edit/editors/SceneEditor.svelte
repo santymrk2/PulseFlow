@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { activeEdit, outputs, scenes, styles } from "../../../stores"
+    import { activeEdit, outputs, scenes, styles, previewOutputId } from "../../../stores"
     import ScenePreview from "../../drawer/pages/ScenePreview.svelte"
     import { getResolution } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
@@ -17,7 +17,7 @@
 
     let width = 0
     let height = 0
-    $: resolution = getResolution(null, { $outputs, $styles }, false, "", sceneStyleId)
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId }, false, "", sceneStyleId)
 
     let scrollElem: HTMLDivElement | undefined
     let zoom = 1

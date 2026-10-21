@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { activeEdit, effects, outputs, styles } from "../../../stores"
+    import { activeEdit, effects, outputs, styles, previewOutputId } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import Icon from "../../helpers/Icon.svelte"
     import { getResolution } from "../../helpers/output"
@@ -15,7 +15,7 @@
 
     let width = 0
     let height = 0
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     let zoom = 1
 </script>

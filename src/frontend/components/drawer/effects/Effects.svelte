@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onMount } from "svelte"
-    import { activeEdit, activePage, activeShow, effects, mediaOptions, outLocked, outputs, styles } from "../../../stores"
+    import { activeEdit, activePage, activeShow, effects, mediaOptions, outLocked, outputs, styles, previewOutputId } from "../../../stores"
     import { addProjectItem } from "../../../converters/project"
     import T from "../../helpers/T.svelte"
     import { clone, keysToID, sortByName } from "../../helpers/array"
@@ -12,7 +12,7 @@
     import Card from "../Card.svelte"
     import EffectIcons from "./EffectIcons.svelte"
 
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
     let filteredEffects: any[] = []
     $: filteredEffects = sortByName(keysToID($effects))
 

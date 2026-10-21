@@ -5,7 +5,7 @@
     import { requestMain } from "../../../IPC/main"
     import { AudioMicrophone } from "../../../audio/audioMicrophone"
     import { AudioPlayer } from "../../../audio/audioPlayer"
-    import { activePopup, activeShow, alertMessage, media, outLocked, outputs, overlays, playingAudio, showsCache, styles } from "../../../stores"
+    import { activePopup, activeShow, alertMessage, media, outLocked, outputs, overlays, playingAudio, showsCache, styles, previewOutputId } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { getAccess } from "../../../utils/profile"
     import { actionData } from "../../actions/actionData"
@@ -28,7 +28,7 @@
 
     $: outputId = getActiveOutputs($outputs, false, true, true)[0]
     $: outputStyle = getCurrentStyle($styles, $outputs[outputId]?.style)
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     let layoutBackgrounds: string[] = []
     let layoutOverlays: string[] = []

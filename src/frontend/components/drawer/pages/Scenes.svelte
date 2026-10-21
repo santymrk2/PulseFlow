@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import type { Scene } from "../../../../types/Show"
-    import { activeEdit, activePage, labelsDisabled, mediaOptions, outLocked, outputs, scenes, styles } from "../../../stores"
+    import { activeEdit, activePage, labelsDisabled, mediaOptions, outLocked, outputs, scenes, styles, previewOutputId } from "../../../stores"
     import { getAccess } from "../../../utils/profile"
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
@@ -19,7 +19,7 @@
     const profile = getAccess("scenes")
     $: readOnly = profile.global === "read"
 
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     let filteredScenes: (Scene & { id: string })[] = []
     $: filteredScenes = sortByName(keysToID($scenes)).filter((s) => profile[s.id] !== "none")

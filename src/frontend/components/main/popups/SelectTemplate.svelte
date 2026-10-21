@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
-    import { activePopup, activeStyle, drawerTabsData, outputs, popupData, scriptures, styles, templates } from "../../../stores"
+    import { activePopup, activeStyle, drawerTabsData, outputs, popupData, scriptures, styles, templates, previewOutputId } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { formatSearch } from "../../../utils/search"
     import Card from "../../drawer/Card.svelte"
@@ -89,7 +89,7 @@
         })
     }
 
-    let resolution = getResolution(null, { $outputs, $styles })
+    let resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     $: normalTemplates = searchedTemplates.filter((a) => a.category !== "scripture")
     $: scriptureTemplates = searchedTemplates.filter((a) => a.category === "scripture")

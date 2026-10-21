@@ -33,7 +33,7 @@
 
 <script lang="ts">
     import type { Cropping, Resolution } from "../../../types/Settings"
-    import { outputs, styles } from "../../stores"
+    import { outputs, styles, previewOutputId } from "../../stores"
     import { DEFAULT_BOUNDS, getActiveOutputs, getOutputResolution, getResolution } from "../helpers/output"
 
     export let id = ""
@@ -60,7 +60,7 @@
     // recorte por pantalla (sólo ventana de salida; en las previsualizaciones de la UI se ignora)
     export let cropping: Cropping | undefined = { top: 0, right: 0, bottom: 0, left: 0 }
     export let styleIdOverride = ""
-    export let resolution: Resolution = getResolution(null, { $outputs, $styles }, false, outputId, styleIdOverride)
+    export let resolution: Resolution = getResolution(null, { $outputs, $styles, $previewOutputId }, false, outputId, styleIdOverride)
     $: if (!isStage) resolution = getResolution(resolution, { $outputs, $styles }, false, outputId, styleIdOverride)
     $: outputRes = isStage ? resolution : getOutputResolution(outputId, $outputs)
 
