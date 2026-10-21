@@ -13,6 +13,7 @@
 //! uniforms, de modo que puede dibujarse desde varias pantallas a la vez.
 
 use super::gpu::GpuContext;
+use super::video::nv12::Nv12Pipeline;
 use super::sync::{MutexExt, RwLockExt};
 use crate::error::{AppError, AppResult};
 use std::collections::HashMap;
@@ -55,6 +56,8 @@ pub struct LayerUniforms {
     pub media_ratio: f32,
     /// Rect destino normalizado [0, 1] (x, y, ancho, alto), origen arriba-izquierda.
     pub rect: [f32; 4],
+    /// Sólo video NV12: [matriz (0 BT.601, 1 BT.709, 2 BT.2020), 1 si rango completo, 0, 0].
+    pub color: [u32; 4],
 }
 
 /// Layouts de bind groups comunes a todos los pipelines de capa.
@@ -111,7 +114,7 @@ impl LayerLayouts {
 /// escribir siempre en el mismo sitio haría que todas las capas vieran la última.
 pub struct LayerArena {
     buffer: wgpu::Buffer,
-    bind_group: BindGroup,
+    pub(crate) bind_group: BindGroup,
     stride: u32,
     cursor: u32,
 }
@@ -148,7 +151,7 @@ impl LayerArena {
     }
 
     /// Escribe `uniforms` en una entrada nueva y devuelve su offset dinámico.
-    fn push(&mut self, queue: &Queue, uniforms: &LayerUniforms) -> Option<u32> {
+    pub(crate) fn push(&mut self, queue: &Queue, uniforms: &LayerUniforms) -> Option<u32> {
         if self.cursor >= MAX_LAYERS_PER_FRAME {
             eprintln!("[media] más de {MAX_LAYERS_PER_FRAME} capas en un frame: se omite el resto");
             return None;
@@ -166,6 +169,7 @@ pub struct MediaStore {
     layouts: LayerLayouts,
     textures: RwLock<HashMap<String, Arc<MediaTexture>>>,
     pipelines: Mutex<HashMap<TextureFormat, Arc<BackgroundPipeline>>>,
+    nv12_pipelines: Mutex<HashMap<TextureFormat, Arc<Nv12Pipeline>>>,
     /// Subidas de fotogramas de video (sólo tests: comprueba que sea una por frame).
     #[cfg(test)]
     uploads: std::sync::atomic::AtomicUsize,
@@ -179,6 +183,7 @@ impl MediaStore {
             layouts,
             textures: RwLock::new(HashMap::new()),
             pipelines: Mutex::new(HashMap::new()),
+            nv12_pipelines: Mutex::new(HashMap::new()),
             #[cfg(test)]
             uploads: std::sync::atomic::AtomicUsize::new(0),
         })
@@ -190,6 +195,12 @@ impl MediaStore {
         Arc::clone(pipelines.entry(format).or_insert_with(|| {
             Arc::new(BackgroundPipeline::new(&self.gpu.device, format, &self.layouts))
         }))
+    }
+
+    /// Pipeline de video NV12 para `format` (uno por formato de superficie, compartido).
+    pub fn nv12_pipeline(&self, format: TextureFormat) -> Arc<Nv12Pipeline> {
+        let mut pipelines = self.nv12_pipelines.lock_safe();
+        Arc::clone(pipelines.entry(format).or_insert_with(|| Arc::new(Nv12Pipeline::new(&self.gpu.device, format, &self.layouts))))
     }
 
     /// Arena de uniforms para una pantalla (o un snapshot).
@@ -309,7 +320,7 @@ impl BackgroundPipeline {
     pub fn new(device: &Device, format: TextureFormat, layouts: &LayerLayouts) -> Self {
         let shader = device.create_shader_module(ShaderModuleDescriptor {
             label: Some("PulseFlow Composite Shader"),
-            source: ShaderSource::Wgsl(include_str!("shaders/composite.wgsl").into()),
+            source: ShaderSource::Wgsl(concat!(include_str!("shaders/layer_common.wgsl"), include_str!("shaders/composite.wgsl")).into()),
         });
 
         let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
@@ -441,6 +452,7 @@ impl BackgroundPipeline {
             target_ratio,
             media_ratio,
             rect,
+            color: [0; 4],
         };
 
         let Some(offset) = arena.push(queue, &uniforms) else {
@@ -585,7 +597,7 @@ mod tests {
         let store = store();
         let mut arena = store.new_arena();
         let gpu = super::super::gpu::shared().expect("GPU disponible");
-        let u = LayerUniforms { opacity: 1.0, aspect_mode: 0, target_ratio: 1.0, media_ratio: 1.0, rect: [0.0, 0.0, 1.0, 1.0] };
+        let u = LayerUniforms { opacity: 1.0, aspect_mode: 0, target_ratio: 1.0, media_ratio: 1.0, rect: [0.0, 0.0, 1.0, 1.0], color: [0; 4] };
         let first = arena.push(&gpu.queue, &u).expect("entrada 0");
         let second = arena.push(&gpu.queue, &u).expect("entrada 1");
         assert_ne!(first, second);
@@ -598,7 +610,7 @@ mod tests {
         let store = store();
         let mut arena = store.new_arena();
         let gpu = super::super::gpu::shared().expect("GPU disponible");
-        let u = LayerUniforms { opacity: 1.0, aspect_mode: 0, target_ratio: 1.0, media_ratio: 1.0, rect: [0.0, 0.0, 1.0, 1.0] };
+        let u = LayerUniforms { opacity: 1.0, aspect_mode: 0, target_ratio: 1.0, media_ratio: 1.0, rect: [0.0, 0.0, 1.0, 1.0], color: [0; 4] };
         for _ in 0..MAX_LAYERS_PER_FRAME {
             assert!(arena.push(&gpu.queue, &u).is_some());
         }

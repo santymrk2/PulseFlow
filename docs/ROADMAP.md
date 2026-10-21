@@ -1670,7 +1670,7 @@ Plan: `docs/superpowers/plans/2026-10-20-gpu-compartida-zero-copy-workers.md`.
 Plan: `docs/superpowers/plans/2026-10-20-gpu-compartida-zero-copy-workers.md`. Diseño: `docs/design/zero-copy.md`.
 
 - [x] **F18.1 Spike de importación nativa.** macOS verificado: `CVPixelBuffer` NV12 → `CVMetalTextureCache` → `wgpu::Texture` sin copiar (`render/video/metal_import.rs`, test que lee de vuelta los planos). Diseño de Windows documentado, sin verificar.
-- [ ] **F18.2** Pipeline NV12 → RGB en el shader.
+- [x] **F18.2** Pipeline NV12 → RGB en el shader (`video/nv12.rs`, `shaders/video_nv12.wgsl`; el mapeo de aspecto pasó a `layer_common.wgsl`, compartido con `composite.wgsl`). Tests: rojo BT.709 limitado, blanco, rango completo vs limitado, matrices, dimensiones impares.
 - [ ] **F18.3** Trait `VideoDecoder`, ffmpeg en NV12, PTS en cada frame y `ShowClock`.
 - [ ] **F18.4** Decodificador nativo macOS (AVFoundation).
 - [ ] **F18.5** Importación Metal sin copias cableada al render + medición.
