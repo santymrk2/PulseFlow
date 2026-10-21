@@ -1675,6 +1675,18 @@ Sin documento de plan aparte (el usuario pidió ejecutar directo).
 
 ---
 
+## F22 — Correcciones reportadas en Windows y macOS (2026-10-21)
+
+- [x] **F22.1** Actualizaciones: `checkForUpdates.ts`, `NewUpdate` y `UpdateManager` apuntaban a `ChurchApps/FreeShow` y `freeshow.app`; ahora consultan y abren `santymrk2/PulseFlow/releases`. README reescrito para PulseFlow (con atribución a FreeShow por la GPL).
+- [x] **F22.2** **Causa de que no anduvieran "agregar carpeta" ni "agregar medios":** `OPEN_FOLDER`/`OPEN_FILE` devuelven lo elegido como resultado del comando, pero todos los componentes esperan el evento `OPEN_FOLDER2`/`OPEN_FILE2` y nadie lo emitía. `IPC/pickerEvents.ts` (con test) traduce el resultado y `IPC/tauri.ts` lo despacha.
+- [x] **F22.3** **Causa de que en Windows no apareciera el menú superior:** `GET_OS` devolvía `windows`/`macos` (Rust) y el frontend compara `win32`/`darwin` (Node). Corregido con `node_platform` (test); de paso arregla atajos Cmd/Ctrl y esperas de arranque en macOS.
+- [x] **F22.4** Botón ✕ abajo a la izquierda de cada pantalla de salida al pasar el mouse (`render/screens/close_button.rs`; consulta cursor y botón izquierdo cada fotograma, sin webview). **Sin probar en pantallas reales.** También se registra en el log cada pantalla que se abre (id, tipo, monitor asignado) para diagnosticar la ventana extra: una salida sin monitor asignado se abre como vista previa flotante 16:9 (F10.0d), así que si hay dos audiencias habilitadas y una sin monitor, se abren dos ventanas.
+- [x] **F22.5** Panel de salida: sin el ojito para ocultar la vista previa; cuando suena un video, la barra de transporte (nombre, play/pausa, stop, línea de tiempo, loop, mute) reemplaza al selector de looks. Cabecera del show: sin "Present", cantidad de slides junto al nombre, botones del kit; se quita el pie duplicado de la grilla (quedan las barras flotantes). El menú ⋯ de la barra superior queda por encima de la cabecera del show. LIBRARIES oculta "Scripture" y las de fábrica vacías. El aro de foco de los botones sólo aparece con teclado (el borde blanco tras elegir una carpeta era el foco restaurado al volver del diálogo).
+- [x] **F22.6** Se quita un `EOF` suelto que se renderizaba al final del panel de herramientas del show; el panel muestra el título de la pestaña activa.
+- [ ] **F22.7 Verificación (usuario).** Probar en la app real: ✕ en pantalla de audiencia/stage (Mac y Windows), menú superior en Windows, agregar carpeta y medios, barra de video, cabecera del show y botones con borde blanco que queden.
+
+---
+
 ## Deuda registrada (sin tarea)
 
 - **Cliente `src/server/controller`** todavía tiene la interfaz de Dibujo (Focus, Zoom,
