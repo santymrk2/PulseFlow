@@ -22,8 +22,7 @@ pub fn set_audience_scene(
     // cambiar de diapositiva; por eso sólo se pide transición si el contenido visible
     // cambió de verdad (F4.4).
     let changed = {
-        let scene = state.scene(id);
-        let current = scene.read_safe();
+        let current = state.scene(id).load();
         current.text != text
             || current.media != media
             || current.background != background
@@ -32,16 +31,22 @@ pub fn set_audience_scene(
             || current.content != content
     };
 
-    set_scene_text(app, id, text)?;
-    set_scene_media(app, id, media)?;
-    set_scene_background(app, id, background)?;
-    // Overlays del Scene Graph (F4.6): capa propia encima de la slide.
-    {
-        let scene = state.scene(id);
-        let mut scene = scene.write_safe();
+    // Una sola publicación: el hilo de render nunca ve la escena a medio cambiar.
+    state.scene(id).update(|scene| {
+        scene.text = text;
+        scene.media = media;
+        scene.background = background.clone();
         scene.overlay_text = overlay_text;
         scene.overlay_media = overlay_media;
         scene.content = content;
+    });
+
+    // El video de fondo se sincroniza aparte (toca el hub de decodificadores).
+    {
+        let mut screens = state.screens.lock_safe();
+        if let Some(handle) = screens.get_mut(id) {
+            sync_video(app, handle, background.as_ref());
+        }
     }
 
     if changed {
@@ -52,15 +57,17 @@ pub fn set_audience_scene(
 
 /// Reemplaza sólo el texto de la escena de una salida.
 pub fn set_scene_text(app: &AppHandle, id: &str, text: Vec<TextBlock>) -> AppResult<()> {
-    let scene = manager(app)?.scene(id);
-    scene.write_safe().text = text;
+    manager(app)?
+        .scene(id)
+        .update(|scene| scene.text = text);
     Ok(())
 }
 
 /// Reemplaza sólo los items de medio (imágenes) de la escena de una salida.
 pub fn set_scene_media(app: &AppHandle, id: &str, media: Vec<MediaItem>) -> AppResult<()> {
-    let scene = manager(app)?.scene(id);
-    scene.write_safe().media = media;
+    manager(app)?
+        .scene(id)
+        .update(|scene| scene.media = media);
     Ok(())
 }
 
@@ -71,11 +78,9 @@ pub fn set_scene_background(
     background: Option<BackgroundMedia>,
 ) -> AppResult<()> {
     let state = manager(app)?;
-    let scene = state.scene(id);
-    {
-        let mut scene = scene.write_safe();
-        scene.background = background.clone();
-    }
+    state
+        .scene(id)
+        .update(|scene| scene.background = background.clone());
 
     let mut screens = state.screens.lock_safe();
     if let Some(handle) = screens.get_mut(id) {
@@ -87,9 +92,8 @@ pub fn set_scene_background(
 /// Reemplaza los datos de una pantalla de stage.
 pub fn set_stage_scene(app: &AppHandle, id: &str, data: StageData) -> AppResult<()> {
     let state = manager(app)?;
-    let scene = state.scene(id);
-    let changed = scene.read_safe().stage != data;
-    scene.write_safe().stage = data;
+    let changed = state.scene(id).load().stage != data;
+    state.scene(id).update(|scene| scene.stage = data);
 
     if changed {
         request_transition(&state, id);

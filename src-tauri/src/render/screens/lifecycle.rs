@@ -137,7 +137,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
     };
 
     // Arrancar el video de fondo si la escena actual ya tiene uno.
-    let background = scene.read_safe().background.clone();
+    let background = scene.load().background.clone();
     if kind == ScreenKind::Audience {
         sync_video(app, &mut handle, background.as_ref());
     }

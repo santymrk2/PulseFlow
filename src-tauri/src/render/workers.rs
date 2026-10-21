@@ -1,15 +1,28 @@
 //! Workers de I/O del engine (F19): un pequeño pool de hilos para trabajo que no puede bloquear ni
 //! al hilo de render ni al de comandos (decodificar imágenes, leer disco, generar miniaturas).
+//!
+//! La cola es **acotada** (`crossbeam-channel`): si llegan más peticiones de las que el pool
+//! puede atender, el trabajo nuevo se descarta en vez de acumularse en memoria (precargar miles
+//! de assets no puede disparar el uso de RAM). Los canales de crossbeam son MPMC: cada
+//! trabajador tiene su propio `Receiver` clonado, así que no hace falta ningún `Mutex`.
 
-use super::sync::MutexExt;
 use std::panic::{catch_unwind, AssertUnwindSafe};
-use std::sync::{mpsc, Arc, Mutex, OnceLock};
+use std::sync::OnceLock;
 use std::thread;
+use std::time::Duration;
+
+use crossbeam_channel::{bounded, Receiver, Sender, TrySendError};
 
 type Job = Box<dyn FnOnce() + Send + 'static>;
 
+/// Jobs que pueden esperar en la cola antes de que el trabajo se descarte.
+const QUEUE_CAPACITY: usize = 512;
+
+/// Cuánto espera un comando async a que haya lugar en la cola antes de rendirse.
+const QUEUE_WAIT: Duration = Duration::from_secs(30);
+
 struct Pool {
-    sender: mpsc::Sender<Job>,
+    sender: Sender<Job>,
 }
 
 static POOL: OnceLock<Pool> = OnceLock::new();
@@ -19,34 +32,51 @@ fn worker_count() -> usize {
     thread::available_parallelism().map(|n| n.get() / 2).unwrap_or(2).clamp(2, 8)
 }
 
-fn pool() -> &'static Pool {
-    POOL.get_or_init(|| {
-        let (sender, receiver) = mpsc::channel::<Job>();
-        let receiver = Arc::new(Mutex::new(receiver));
-        for index in 0..worker_count() {
-            let receiver = Arc::clone(&receiver);
-            let spawned = thread::Builder::new().name(format!("PulseFlow-IO-{index}")).spawn(move || loop {
-                // el lock sólo se sostiene mientras se espera el próximo job, no mientras se ejecuta
-                let job = receiver.lock_safe().recv();
-                let Ok(job) = job else { break };
+/// Crea un pool con `capacity` trabajos en cola y `workers` hilos consumidores.
+fn build_pool(capacity: usize, workers: usize) -> Pool {
+    let (sender, receiver) = bounded::<Job>(capacity);
+    for index in 0..workers {
+        // Cada trabajador tiene su propio receptor (MPMC): el lock del `std::sync::mpsc` no hace falta.
+        let receiver: Receiver<Job> = receiver.clone();
+        let spawned = thread::Builder::new().name(format!("PulseFlow-IO-{index}")).spawn(move || {
+            while let Ok(job) = receiver.recv() {
                 // un job que hace panic no puede matar al trabajador
                 if catch_unwind(AssertUnwindSafe(job)).is_err() {
                     log::warn!("[workers] un job de I/O terminó en panic");
                 }
-            });
-            if let Err(e) = spawned {
-                log::warn!("[workers] no se pudo iniciar el trabajador {index}: {e}");
             }
+        });
+        if let Err(e) = spawned {
+            log::warn!("[workers] no se pudo iniciar el trabajador {index}: {e}");
         }
-        Pool { sender }
-    })
+    }
+    Pool { sender }
+}
+
+/// Pool de I/O del proceso.
+fn pool() -> &'static Pool {
+    POOL.get_or_init(|| build_pool(QUEUE_CAPACITY, worker_count()))
+}
+
+/// Encola `job` **sin bloquear**: si la cola está llena, el trabajo se descarta (queda registrado
+/// en el log). `true` si el job entró en la cola.
+fn enqueue(pool: &Pool, job: Job) -> bool {
+    match pool.sender.try_send(job) {
+        Ok(()) => true,
+        Err(TrySendError::Full(_)) => {
+            log::warn!("[workers] cola de I/O llena: se descarta el trabajo");
+            false
+        }
+        Err(TrySendError::Disconnected(_)) => {
+            log::warn!("[workers] el pool de I/O no está disponible");
+            false
+        }
+    }
 }
 
 /// Ejecuta `job` en un hilo del pool y devuelve de inmediato.
 pub fn submit(job: impl FnOnce() + Send + 'static) {
-    if pool().sender.send(Box::new(job)).is_err() {
-        log::warn!("[workers] el pool de I/O no está disponible");
-    }
+    enqueue(pool(), Box::new(job));
 }
 
 /// Ejecuta `job` en el pool y espera su resultado **sin bloquear el hilo** que lo pide: pensado para
@@ -54,18 +84,36 @@ pub fn submit(job: impl FnOnce() + Send + 'static) {
 /// disco) dentro de su cuerpo porque ocuparían un hilo del runtime. `None` si el job hizo panic.
 pub async fn run<T: Send + 'static>(job: impl FnOnce() -> T + Send + 'static) -> Option<T> {
     let (sender, receiver) = tokio::sync::oneshot::channel();
-    submit(move || {
-        let _ = sender.send(job());
-    });
-    receiver.await.ok()
+    // Encolar puede bloquear si la cola está llena: se hace en un hilo de apoyo para no
+    // ocupar el runtime async (y para que el comando espere a que haya lugar en vez de
+    // perder el trabajo).
+    let queued = tokio::task::spawn_blocking(move || {
+        let job: Job = Box::new(move || {
+            let _ = sender.send(job());
+        });
+        pool().sender.send_timeout(job, QUEUE_WAIT)
+    })
+    .await;
+
+    match queued {
+        Ok(Ok(())) => receiver.await.ok(),
+        Ok(Err(_)) => {
+            log::warn!("[workers] la cola de I/O no se vació a tiempo: el trabajo no se encola");
+            None
+        }
+        Err(e) => {
+            log::warn!("[workers] no se pudo encolar el trabajo: {e}");
+            None
+        }
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
-    use std::sync::{mpsc, Arc};
-    use std::time::Duration;
+    use std::sync::mpsc;
+    use std::sync::Arc;
 
     #[test]
     fn submit_runs_the_job_off_the_calling_thread() {
@@ -108,6 +156,37 @@ mod tests {
         for _ in 0..16 {
             rx.recv_timeout(Duration::from_secs(5)).expect("el pool sigue vivo");
         }
+    }
+
+    #[test]
+    fn the_queue_is_bounded_and_enqueue_never_blocks() {
+        // Pool propio (cola de 2, un solo trabajador): no toca el pool del proceso.
+        let pool = build_pool(2, 1);
+        let release = Arc::new(AtomicBool::new(false));
+        let (started_tx, started_rx) = mpsc::channel();
+
+        // El primer job ocupa al trabajador (no termina hasta que se suelta).
+        let flag = Arc::clone(&release);
+        assert!(enqueue(&pool, Box::new(move || {
+            let _ = started_tx.send(());
+            while !flag.load(Ordering::SeqCst) {
+                thread::sleep(Duration::from_millis(1));
+            }
+        })));
+        // Se espera a que el trabajador lo tome: recién ahí la cola está vacía y el
+        // trabajador no puede tomar nada más.
+        started_rx.recv_timeout(Duration::from_secs(5)).expect("el trabajador tomó el job");
+
+        // Los dos siguientes llenan la cola.
+        assert!(enqueue(&pool, Box::new(|| {})));
+        assert!(enqueue(&pool, Box::new(|| {})));
+
+        // El cuarto no entra: se descarta y el llamante no espera.
+        let started = std::time::Instant::now();
+        assert!(!enqueue(&pool, Box::new(|| {})), "la cola debería estar llena");
+        assert!(started.elapsed() < Duration::from_millis(100), "encolar bloqueó: {:?}", started.elapsed());
+
+        release.store(true, Ordering::SeqCst);
     }
 
     #[test]

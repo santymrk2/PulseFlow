@@ -102,10 +102,9 @@ pub(super) fn open_identify_window(app: &AppHandle, number: &str, monitor: &Moni
     let _ = window.set_size(LogicalSize::new(rect.width as f64, rect.height as f64));
 
     let window = Arc::new(window);
-    let scene = Arc::new(RwLock::new(ScreenScene {
-        text: identify_blocks(number, rect.width, rect.height),
-        ..Default::default()
-    }));
+    // La escena de la ventana de identificación es fija: se publica una vez y no cambia.
+    let scene = Arc::new(SceneSlot::new());
+    scene.update(|scene| scene.text = identify_blocks(number, rect.width, rect.height));
     let running = Arc::new(AtomicBool::new(true));
 
     // La ventana de identificación no transiciona: nace con su contenido.

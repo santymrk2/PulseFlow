@@ -11,7 +11,7 @@ use crate::render::{gpu, media};
 pub(super) fn spawn_render_loop(
     window: Arc<Window>,
     kind: ScreenKind,
-    scene: Arc<RwLock<ScreenScene>>,
+    scene: Arc<SceneSlot>,
     running: Arc<AtomicBool>,
     pending_transition: Arc<Mutex<Option<TransitionRequest>>>,
     surface_size: Arc<Mutex<PhysicalSize<u32>>>,
@@ -39,8 +39,13 @@ pub(super) fn spawn_render_loop(
     thread::Builder::new()
         .name(format!("PulseFlow-Screen-{}", window.label()))
         .spawn(move || {
-            let background_pipeline = store.pipeline(config.format);
-            let nv12_pipeline = store.nv12_pipeline(config.format);
+            // Contexto GPU vigente: si el driver pierde el dispositivo, se reabre y
+            // hay que rehacer todo lo que dependía de él (F23.3).
+            let mut context = gpu;
+            let mut device = device;
+            let mut queue = queue;
+            let mut background_pipeline = store.pipeline(config.format);
+            let mut nv12_pipeline = store.nv12_pipeline(config.format);
             let mut arena = store.new_arena();
             let mut text_engine = TextEngine::new(&device, &queue, config.format);
             // F4.4: doble buffer offscreen donde se compone la escena + la transición.
@@ -57,6 +62,40 @@ pub(super) fn spawn_render_loop(
 
             while running.load(Ordering::Relaxed) {
                 let frame_start = Instant::now();
+
+                // F23.3: el driver perdió el dispositivo (o ya lo reabrió otra
+                // pantalla): se reconfigura la superficie y se rehacen pipelines,
+                // arena, textos y transición, que eran del dispositivo perdido.
+                match gpu::shared() {
+                    Ok(current) => {
+                        if !Arc::ptr_eq(&current, &context) {
+                            log::warn!("[render] el dispositivo se perdió: se reconstruye {}", window.label());
+                            device = current.device.clone();
+                            queue = current.queue.clone();
+                            context = Arc::clone(&current);
+                            surface.configure(&device, &config);
+                            if let Err(err) = store.sync_device() {
+                                log::warn!("[render] no se pudo rehacer el almacén de medios: {err}");
+                            }
+                            background_pipeline = store.pipeline(config.format);
+                            nv12_pipeline = store.nv12_pipeline(config.format);
+                            arena = store.new_arena();
+                            text_engine = TextEngine::new(&device, &queue, config.format);
+                            transition_engine = crate::render::transition::TransitionEngine::new(
+                                &device,
+                                config.format,
+                                config.width,
+                                config.height,
+                            );
+                        }
+                    }
+                    Err(err) => {
+                        log::warn!("[render] no se pudo recuperar el dispositivo: {err}");
+                        thread::sleep(Duration::from_millis(250));
+                        continue;
+                    }
+                }
+
                 let (cursor_inside, cursor_on_button, clicked) = {
                     let down = close_button::left_button_down();
                     let local = match (window.cursor_position(), window.inner_position(), window.scale_factor()) {
@@ -159,7 +198,9 @@ pub(super) fn spawn_render_loop(
                         multiview_mask: None,
                     });
 
-                    let current = scene.read_safe().clone();
+                    // La escena se lee como una instantánea: una única operación
+                    // atómica, sin locks (arc-swap).
+                    let current = scene.load();
                     // F21.2: el contenido se encuadra en la ventana (barras negras + `alignPosition`) cuando la
                     // proporción de la escena no coincide con la de la salida
                     let frame_rect = crate::render::frame::fit_content_rect(current.content, config.width, config.height);
@@ -168,8 +209,8 @@ pub(super) fn spawn_render_loop(
 
                     let blocks = match kind {
                         ScreenKind::Audience => {
-                            if let Some(bg) = current.background {
-                                if is_video(&bg) {
+                            if let Some(bg) = &current.background {
+                                if is_video(bg) {
                                     // video: un frame NV12 por archivo (la ruta es el id), convertido a RGB en el shader
                                     if let Some(frame) = bg.path.as_deref().and_then(|path| store.get_video(path)) {
                                         nv12_pipeline.render(&device, &queue, &mut arena, &mut pass, &frame, w, h, bg.opacity, bg.aspect_mode);

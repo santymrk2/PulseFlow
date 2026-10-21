@@ -124,7 +124,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
         let cache = MetalTextureCache::new(&gpu).map_err(|e| e.to_string())?;
         Ok((cache, Source::open(path)?, gpu))
     };
-    let (cache, mut source, gpu) = match setup() {
+    let (mut cache, mut source, mut gpu) = match setup() {
         Ok(parts) => parts,
         Err(message) => {
             let _ = ready.send(Err(message));
@@ -140,6 +140,29 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
     let (mut frames, mut failures) = (0u64, 0u32);
 
     while running.load(Ordering::Relaxed) {
+        // F23.3: si el driver perdió el dispositivo, las texturas importadas quedan
+        // huérfanas: la caché de CoreVideo está atada al `MTLDevice`, así que se
+        // rehace con el contexto nuevo.
+        if let Ok(current) = crate::render::gpu::shared() {
+            if !Arc::ptr_eq(&current, &gpu) {
+                match MetalTextureCache::new(&current) {
+                    Ok(fresh) => {
+                        log::warn!("[VideoEngine] el dispositivo se perdió: se rehacen las texturas de {path}");
+                        gpu = current;
+                        cache = fresh;
+                    }
+                    Err(err) => log::warn!("[VideoEngine] no se pudo rehacer la caché de texturas de {path}: {err}"),
+                }
+            }
+        }
+
+        // Con el dispositivo perdido no se importan texturas: las que habría que
+        // importar pertenecen a un dispositivo muerto.
+        if gpu.is_lost() {
+            thread::sleep(Duration::from_millis(50));
+            continue;
+        }
+
         let produced = autoreleasepool(|_| {
             // SAFETY: `output` pertenece a `source`, vivo durante esta iteración.
             let sample = unsafe { source.output.copyNextSampleBuffer() }?;

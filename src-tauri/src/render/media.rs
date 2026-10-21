@@ -13,7 +13,7 @@
 //! uniforms, de modo que puede dibujarse desde varias pantallas a la vez.
 
 use super::gpu::GpuContext;
-use super::video::nv12::{Nv12Frame, Nv12Pipeline, YuvMatrix};
+use super::video::nv12::{Nv12Frame, Nv12Pipeline, YuvMatrix, YuvTransform};
 use super::sync::{MutexExt, RwLockExt};
 use crate::error::{AppError, AppResult};
 use std::collections::HashMap;
@@ -56,8 +56,10 @@ pub struct LayerUniforms {
     pub media_ratio: f32,
     /// Rect destino normalizado [0, 1] (x, y, ancho, alto), origen arriba-izquierda.
     pub rect: [f32; 4],
-    /// Sólo video NV12: [matriz (0 BT.601, 1 BT.709, 2 BT.2020), 1 si rango completo, 0, 0].
-    pub color: [u32; 4],
+    /// Sólo video NV12: matriz YCbCr→RGB y offset, ya precalculados (el shader no
+    /// decide el rango ni la matriz: multiplica y listo).
+    pub yuv_matrix: [[f32; 4]; 3],
+    pub yuv_offset: [f32; 4],
 }
 
 /// Layouts de bind groups comunes a todos los pipelines de capa.
@@ -190,8 +192,10 @@ const MAX_IMAGE_SIDE: u32 = 16_384;
 
 /// Almacén de texturas y pipelines compartido por todas las pantallas.
 pub struct MediaStore {
-    gpu: Arc<GpuContext>,
-    layouts: LayerLayouts,
+    /// Contexto GPU vigente: se cambia si el driver pierde el dispositivo (F23.3).
+    context: RwLock<Arc<GpuContext>>,
+    /// Layouts de bind group: dependen del dispositivo, así que se rehacen con él.
+    layouts: RwLock<LayerLayouts>,
     textures: RwLock<HashMap<String, Arc<MediaTexture>>>,
     /// Último frame de cada video en reproducción (clave = ruta del archivo).
     videos: RwLock<HashMap<String, Arc<Nv12Frame>>>,
@@ -216,8 +220,8 @@ impl MediaStore {
     pub(crate) fn new_with_retry(gpu: Arc<GpuContext>, retry_after: std::time::Duration) -> Arc<Self> {
         let layouts = LayerLayouts::new(&gpu.device);
         Arc::new(Self {
-            gpu,
-            layouts,
+            context: RwLock::new(gpu),
+            layouts: RwLock::new(layouts),
             textures: RwLock::new(HashMap::new()),
             videos: RwLock::new(HashMap::new()),
             pipelines: Mutex::new(HashMap::new()),
@@ -231,23 +235,64 @@ impl MediaStore {
         })
     }
 
+    /// Si el driver perdió el dispositivo, rehace layouts, pipelines y texturas: lo
+    /// que había en VRAM pertenecía al dispositivo perdido y ya no sirve.
+    ///
+    /// `true` si hubo que reconstruir. Las imágenes vuelven a pedirse (se vuelven a
+    /// decodificar) y los videos se vuelven a subir en el próximo frame.
+    pub fn sync_device(&self) -> AppResult<bool> {
+        let current = super::gpu::shared()?;
+        {
+            let context = self.context.read_safe();
+            if Arc::ptr_eq(&context, &current) {
+                return Ok(false);
+            }
+        }
+
+        log::warn!("[media] el dispositivo se perdió: se rehacen pipelines y texturas");
+        // El orden de los locks es siempre contexto → layouts → pipelines → jobs →
+        // texturas → videos, para que nadie pueda tomarlos en otro orden y se muerda.
+        let mut _context = self.context.write_safe();
+        let mut _layouts = self.layouts.write_safe();
+        let mut pipelines = self.pipelines.lock_safe();
+        let mut nv12_pipelines = self.nv12_pipelines.lock_safe();
+        let mut jobs = self.jobs.lock_safe();
+        let mut textures = self.textures.write_safe();
+        let mut videos = self.videos.write_safe();
+
+        *_context = Arc::clone(&current);
+        *_layouts = LayerLayouts::new(&current.device);
+        pipelines.clear();
+        nv12_pipelines.clear();
+        textures.clear();
+        videos.clear();
+        jobs.clear();
+        Ok(true)
+    }
+
     /// Pipeline de capa para `format` (uno por formato de superficie, compartido).
     pub fn pipeline(&self, format: TextureFormat) -> Arc<BackgroundPipeline> {
+        let context = self.context.read_safe();
+        let layouts = self.layouts.read_safe();
         let mut pipelines = self.pipelines.lock_safe();
         Arc::clone(pipelines.entry(format).or_insert_with(|| {
-            Arc::new(BackgroundPipeline::new(&self.gpu.device, format, &self.layouts))
+            Arc::new(BackgroundPipeline::new(&context.device, format, &layouts))
         }))
     }
 
     /// Pipeline de video NV12 para `format` (uno por formato de superficie, compartido).
     pub fn nv12_pipeline(&self, format: TextureFormat) -> Arc<Nv12Pipeline> {
+        let context = self.context.read_safe();
+        let layouts = self.layouts.read_safe();
         let mut pipelines = self.nv12_pipelines.lock_safe();
-        Arc::clone(pipelines.entry(format).or_insert_with(|| Arc::new(Nv12Pipeline::new(&self.gpu.device, format, &self.layouts))))
+        Arc::clone(pipelines.entry(format).or_insert_with(|| Arc::new(Nv12Pipeline::new(&context.device, format, &layouts))))
     }
 
     /// Arena de uniforms para una pantalla (o un snapshot).
     pub fn new_arena(&self) -> LayerArena {
-        LayerArena::new(&self.gpu.device, &self.layouts)
+        let context = self.context.read_safe();
+        let layouts = self.layouts.read_safe();
+        LayerArena::new(&context.device, &layouts)
     }
 
     #[cfg(test)]
@@ -393,14 +438,19 @@ impl MediaStore {
         #[cfg(test)]
         self.uploads.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
 
+        // El contexto se toma una vez y se mantiene hasta publicar el frame: si el
+        // dispositivo se pierde mientras tanto, `sync_device` espera a que termine
+        // esta subida (así no queda un frame del dispositivo muerto en la lista).
+        let context = self.context.read_safe();
+
         if let Some(existing) = self.get_video(id) {
             if existing.is_cpu_backed() && existing.width == width && existing.height == height {
-                existing.write_cpu_planes(&self.gpu, y, uv);
+                existing.write_cpu_planes(&context, y, uv);
                 return Ok(());
             }
         }
 
-        let frame = Arc::new(Nv12Frame::from_cpu_planes(&self.gpu, width, height, y, uv, matrix, full_range)?);
+        let frame = Arc::new(Nv12Frame::from_cpu_planes(&context, width, height, y, uv, matrix, full_range)?);
         self.videos.write_safe().insert(id.to_string(), frame);
         Ok(())
     }
@@ -417,10 +467,12 @@ impl MediaStore {
 
     /// Sube `rgba` como textura `id`; si otro hilo la insertó antes, gana esa.
     fn insert_rgba(&self, id: &str, width: u32, height: u32, rgba: &[u8]) -> AppResult<Arc<MediaTexture>> {
+        let context = self.context.read_safe();
+        let layouts = self.layouts.read_safe();
         let media = Arc::new(create_texture_from_rgba(
-            &self.gpu.device,
-            &self.gpu.queue,
-            &self.layouts,
+            &context.device,
+            &context.queue,
+            &layouts,
             id,
             width,
             height,
@@ -572,7 +624,9 @@ impl BackgroundPipeline {
             target_ratio,
             media_ratio,
             rect,
-            color: [0; 4],
+            // El shader de imagen no convierte de color: la matriz no se usa.
+            yuv_matrix: YuvTransform::IDENTITY.matrix,
+            yuv_offset: YuvTransform::IDENTITY.offset,
         };
 
         let Some(offset) = arena.push(queue, &uniforms) else {
@@ -718,11 +772,32 @@ mod tests {
     }
 
     #[test]
+    fn sync_device_rebuilds_the_store_when_the_context_changed() {
+        // Un almacén propio sobre **otro** dispositivo: al sincronizar tiene que
+        // adoptar el contexto compartido y tirar lo que era del dispositivo viejo.
+        let own = super::super::gpu::GpuContext::new().expect("GPU disponible");
+        let store = MediaStore::new(Arc::clone(&own));
+        let texture = store.load_image(&test_png("sync-device.png")).expect("carga");
+        assert!(store.get(&texture.id).is_some());
+
+        assert!(store.sync_device().expect("sincroniza"), "el almacén tenía que rehacerse");
+        assert!(store.get(&texture.id).is_none(), "las texturas del dispositivo viejo se tiran");
+        // La segunda vez ya está en el contexto vigente: no hay nada que rehacer.
+        assert!(!store.sync_device().expect("sincroniza"), "no hay nada que rehacer");
+    }
+
+    #[test]
+    fn sync_device_does_nothing_when_the_context_is_the_same() {
+        let store = store();
+        assert!(!store.sync_device().expect("sincroniza"), "el contexto ya es el vigente");
+    }
+
+    #[test]
     fn arena_gives_each_layer_its_own_offset() {
         let store = store();
         let mut arena = store.new_arena();
         let gpu = super::super::gpu::shared().expect("GPU disponible");
-        let u = LayerUniforms { opacity: 1.0, aspect_mode: 0, target_ratio: 1.0, media_ratio: 1.0, rect: [0.0, 0.0, 1.0, 1.0], color: [0; 4] };
+        let u = LayerUniforms { opacity: 1.0, aspect_mode: 0, target_ratio: 1.0, media_ratio: 1.0, rect: [0.0, 0.0, 1.0, 1.0], yuv_matrix: YuvTransform::IDENTITY.matrix, yuv_offset: YuvTransform::IDENTITY.offset };
         let first = arena.push(&gpu.queue, &u).expect("entrada 0");
         let second = arena.push(&gpu.queue, &u).expect("entrada 1");
         assert_ne!(first, second);
@@ -735,7 +810,7 @@ mod tests {
         let store = store();
         let mut arena = store.new_arena();
         let gpu = super::super::gpu::shared().expect("GPU disponible");
-        let u = LayerUniforms { opacity: 1.0, aspect_mode: 0, target_ratio: 1.0, media_ratio: 1.0, rect: [0.0, 0.0, 1.0, 1.0], color: [0; 4] };
+        let u = LayerUniforms { opacity: 1.0, aspect_mode: 0, target_ratio: 1.0, media_ratio: 1.0, rect: [0.0, 0.0, 1.0, 1.0], yuv_matrix: YuvTransform::IDENTITY.matrix, yuv_offset: YuvTransform::IDENTITY.offset };
         for _ in 0..MAX_LAYERS_PER_FRAME {
             assert!(arena.push(&gpu.queue, &u).is_some());
         }

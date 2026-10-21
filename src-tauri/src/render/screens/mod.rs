@@ -17,15 +17,16 @@
 //! monitor es el de la ventana de control, se abre en modo ventana (para no tapar
 //! la UI); en cualquier otro monitor cubre la pantalla completa.
 
-use super::sync::{MutexExt, RwLockExt};
+use super::sync::MutexExt;
 use super::text::TextEngine;
 use super::types::{BackgroundMedia, MediaItem, OverlayItem, StageData, TextBlock};
 use super::video::{self, VideoDecoder};
 use crate::error::{AppError, AppResult};
+use arc_swap::ArcSwap;
 use serde::Deserialize;
 use std::collections::{HashMap, HashSet};
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{Arc, Mutex, RwLock};
+use std::sync::{Arc, Mutex};
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 use tauri::window::{Monitor, Window, WindowBuilder};
@@ -167,6 +168,49 @@ pub struct ScreenScene {
     pub content: Option<super::frame::ContentFrame>,
 }
 
+/// Escena viva de una salida.
+///
+/// La escena es **inmutable** mientras se dibuja: cada cambio la reemplaza entera
+/// con `arc-swap`. Así el hilo de render la lee con una única operación atómica
+/// (sin locks, sin esperas) y nunca ve una escena a medio cambiar.
+pub struct SceneSlot {
+    /// Instantánea publicada: la que lee el hilo de render.
+    snapshot: ArcSwap<ScreenScene>,
+    /// Serializa a los que escriben: dos cambios seguidos no se pisan.
+    writer: Mutex<()>,
+}
+
+impl Default for SceneSlot {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl SceneSlot {
+    pub fn new() -> Self {
+        Self {
+            snapshot: ArcSwap::from_pointee(ScreenScene::default()),
+            writer: Mutex::new(()),
+        }
+    }
+
+    /// Instantánea actual: una lectura atómica, sin locks.
+    pub fn load(&self) -> Arc<ScreenScene> {
+        self.snapshot.load_full()
+    }
+
+    /// Aplica `change` sobre una copia de la escena y publica la nueva.
+    ///
+    /// El hilo de render sigue viendo la instantánea anterior hasta que termina
+    /// el cambio: nunca ve un estado intermedio.
+    pub fn update(&self, change: impl FnOnce(&mut ScreenScene)) {
+        let _guard = self.writer.lock_safe();
+        let mut scene = (*self.load()).clone();
+        change(&mut scene);
+        self.snapshot.store(Arc::new(scene));
+    }
+}
+
 /// Petición de transición pendiente de una pantalla. La escribe el hilo que aplica
 /// la escena (`RENDER_SCENE`) y la consume el bucle de render (F4.4), que es quien
 /// tiene la `TransitionEngine`.
@@ -251,7 +295,7 @@ struct SharedVideo {
 pub struct ScreenManager {
     /// Escena por id de salida. Se conserva aunque la pantalla esté cerrada, para
     /// que al abrirla muestre de inmediato el contenido actual.
-    scenes: Mutex<HashMap<String, Arc<RwLock<ScreenScene>>>>,
+    scenes: Mutex<HashMap<String, Arc<SceneSlot>>>,
     screens: Mutex<HashMap<String, ScreenHandle>>,
     /// Un decodificador por archivo de video, compartido entre pantallas (F8.2).
     video_hub: Mutex<HashMap<String, SharedVideo>>,
@@ -274,9 +318,13 @@ impl ScreenManager {
         }
     }
 
-    fn scene(&self, id: &str) -> Arc<RwLock<ScreenScene>> {
+    fn scene(&self, id: &str) -> Arc<SceneSlot> {
         let mut scenes = self.scenes.lock_safe();
-        Arc::clone(scenes.entry(id.to_string()).or_default())
+        Arc::clone(
+            scenes
+                .entry(id.to_string())
+                .or_insert_with(|| Arc::new(SceneSlot::new())),
+        )
     }
 
     /// Olvida la escena persistida de una salida eliminada. `true` si existía.

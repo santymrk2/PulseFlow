@@ -144,14 +144,14 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
         let interop = D3dInterop::new(&gpu).map_err(|e| e.to_string())?;
         Ok((runtime, gpu, interop))
     };
-    let (_runtime, gpu, mut interop) = match setup() {
+    let (_runtime, mut gpu, mut interop) = match setup() {
         Ok(parts) => parts,
         Err(message) => {
             let _ = ready.send(Err(message));
             return;
         }
     };
-    let source = match Source::open(path, &interop) {
+    let mut source = match Source::open(path, &interop) {
         Ok(source) => source,
         Err(message) => {
             let _ = ready.send(Err(message));
@@ -166,6 +166,33 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
     let (mut last_total, mut frame_duration) = (Duration::ZERO, FALLBACK_FRAME_DURATION);
 
     while running.load(Ordering::Relaxed) {
+        // F23.3: si el driver perdió el dispositivo, el anillo de texturas
+        // compartidas y el lector de Media Foundation eran del dispositivo
+        // perdido: se rehacen con el contexto nuevo.
+        if let Ok(current) = crate::render::gpu::shared() {
+            if !Arc::ptr_eq(&current, &gpu) {
+                match D3dInterop::new(&current).map_err(|e| e.to_string()) {
+                    Ok(fresh) => match Source::open(path, &fresh) {
+                        Ok(fresh_source) => {
+                            log::warn!("[VideoEngine] el dispositivo se perdió: se rehace el interop D3D de {path}");
+                            gpu = current;
+                            interop = fresh;
+                            source = fresh_source;
+                        }
+                        Err(err) => log::warn!("[VideoEngine] no se pudo reabrir {path} tras perder el dispositivo: {err}"),
+                    },
+                    Err(err) => log::warn!("[VideoEngine] no se pudo rehacer el interop D3D de {path}: {err}"),
+                }
+            }
+        }
+
+        // Con el dispositivo perdido no se publican texturas: las que habría que
+        // publicar pertenecen a un dispositivo muerto.
+        if gpu.is_lost() {
+            thread::sleep(Duration::from_millis(50));
+            continue;
+        }
+
         let mut flags = 0u32;
         let mut timestamp = 0i64;
         let mut sample = None;

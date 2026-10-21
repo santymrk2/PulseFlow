@@ -23,8 +23,10 @@ wgpu = "30.0.1"
 bytemuck = { version = "1", features = ["derive"] }
 pollster = "1.0.1"
 image = { version = "0.25", default-features = false, features = ["png"] }
-tokio = { version = "1", features = ["sync"] }
+tokio = { version = "1", features = ["rt", "sync", "time", "macros"] }
 log = "0.4"
+arc-swap = "1.7"
+crossbeam-channel = "0.5"
 
 [target.'cfg(windows)'.dependencies]
 windows = { version = "0.62", features = [

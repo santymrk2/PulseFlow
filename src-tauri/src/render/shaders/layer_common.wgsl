@@ -16,7 +16,10 @@ struct LayerUniforms {
     target_ratio: f32,
     media_ratio: f32,
     rect: vec4<f32>, // x, y, ancho, alto normalizados [0,1], origen arriba-izquierda
-    color: vec4<u32>, // video NV12: x = matriz (0 BT.601, 1 BT.709, 2 BT.2020), y = 1 si rango completo
+    // Video NV12: matriz YCbCr→RGB y offset ya precalculados en la CPU, para que el
+    // fragment shader no tenga ramas (divergencia de ejecución en la GPU).
+    yuv_matrix: mat3x3<f32>,
+    yuv_offset: vec4<f32>,
 }
 
 @group(0) @binding(0)

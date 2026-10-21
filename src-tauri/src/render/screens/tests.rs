@@ -257,6 +257,85 @@ fn forget_scene_drops_the_persisted_scene() {
 }
 
 #[test]
+fn the_scene_snapshot_is_published_whole() {
+    let slot = SceneSlot::new();
+    assert!(slot.load().text.is_empty(), "la escena arranca vacía");
+
+    slot.update(|scene| {
+        scene.text = vec![TextBlock { text: "hola".to_string(), ..Default::default() }];
+        scene.media = vec![MediaItem {
+            id: "m1".to_string(),
+            path: "/tmp/imagen.png".to_string(),
+            media_type: "image".to_string(),
+            x: 0.0,
+            y: 0.0,
+            width: 100.0,
+            height: 100.0,
+            aspect_mode: 0,
+            opacity: 1.0,
+            design_width: None,
+        }];
+    });
+
+    let published = slot.load();
+    assert_eq!(published.text.len(), 1);
+    assert_eq!(published.media.len(), 1);
+
+    // La instantánea que ya tenía el hilo de render no cambia por debajo.
+    slot.update(|scene| {
+        scene.text.clear();
+        scene.media.clear();
+    });
+    assert_eq!(published.text.len(), 1, "la instantánea vieja sigue intacta");
+    assert_eq!(published.media.len(), 1);
+    assert!(slot.load().text.is_empty());
+}
+
+#[test]
+fn a_reader_never_sees_a_half_updated_scene() {
+    use std::sync::atomic::{AtomicBool, Ordering};
+
+    let slot = Arc::new(SceneSlot::new());
+    let item = MediaItem {
+        id: "m1".to_string(),
+        path: "/tmp/imagen.png".to_string(),
+        media_type: "image".to_string(),
+        x: 0.0,
+        y: 0.0,
+        width: 100.0,
+        height: 100.0,
+        aspect_mode: 0,
+        opacity: 1.0,
+        design_width: None,
+    };
+    slot.update(|scene| {
+        scene.text = vec![TextBlock { text: "a".to_string(), ..Default::default() }];
+        scene.media = vec![item.clone()];
+    });
+
+    let stop = Arc::new(AtomicBool::new(false));
+    let reader = {
+        let (slot, stop) = (Arc::clone(&slot), Arc::clone(&stop));
+        std::thread::spawn(move || {
+            while !stop.load(Ordering::Relaxed) {
+                let snapshot = slot.load();
+                // Siempre una escena entera: el texto y el medio van juntos.
+                assert_eq!(snapshot.text.len(), snapshot.media.len(), "escena a medio cambiar");
+            }
+        })
+    };
+
+    for _ in 0..500 {
+        slot.update(|scene| {
+            scene.text = vec![TextBlock { text: "b".to_string(), ..Default::default() }];
+            scene.media = vec![item.clone()];
+        });
+    }
+    stop.store(true, Ordering::Relaxed);
+    reader.join().expect("el lector terminó");
+}
+
+#[test]
 fn detach_forgets_scene_and_tolerates_unknown_ids() {
     let manager = ScreenManager::new();
     let _ = manager.scene("a");
