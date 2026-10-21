@@ -1,6 +1,6 @@
 name: Build
 
-# Se puede correr a mano o desde `release.yml` (workflow_call). Genera los instaladores de macOS (Apple Silicon e Intel)
+# Se puede correr a mano o desde `release.yml` (workflow_call). Genera los instaladores de macOS (Apple Silicon)
 # y de Windows x64 y los sube como artefactos `pulseflow-<plataforma>`.
 on:
     workflow_dispatch:
@@ -16,7 +16,6 @@ jobs:
             matrix:
                 include:
                     - { name: macos-arm64, os: macos-latest }
-                    - { name: macos-x64, os: macos-15-intel }
                     - { name: windows-x64, os: windows-latest }
 
         steps:

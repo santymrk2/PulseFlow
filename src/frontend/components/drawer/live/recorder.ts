@@ -175,7 +175,9 @@ function getOutputAudioStream(outputId: string): { stream: MediaStream; cleanup:
 
     const netNode = networkChannels.length > 0 ? AudioAnalyser.getOrCreateDestinationNode(outputId) : null
     if (netNode) {
-        try { netNode.connect(audioDest) } catch {}
+        try {
+            netNode.connect(audioDest)
+        } catch {}
     }
 
     return {
@@ -183,7 +185,9 @@ function getOutputAudioStream(outputId: string): { stream: MediaStream; cleanup:
         cleanup: () => {
             audioDest.stream.getTracks().forEach((t) => t.stop())
             if (netNode) {
-                try { netNode.disconnect(audioDest) } catch {}
+                try {
+                    netNode.disconnect(audioDest)
+                } catch {}
             }
             targetChannels.forEach((chId) => AudioRoutingManager.getInstance().unregisterChannelRecorder(chId, audioDest))
         }

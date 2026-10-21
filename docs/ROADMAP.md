@@ -1646,6 +1646,17 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
 
 - [ ] **F16.2 Actualizaciones.** Depende de F16.1. **No iniciado a propósito**: exige generar el par de claves del updater (la privada va a un secreto, no al repo) y elegir el endpoint; los pasos están en `docs/distribucion.md`.
 
+- [x] **F16.3 Distribución: sólo Apple Silicon y Windows, y primer pre-release.** (2026-10-21) `build.yml`
+  dejó de generar el `.dmg` de Intel (se sacó `macos-x64`/`macos-15-intel` de la matriz; quedan `macos-arm64`
+  y `windows-x64`), y la versión subió a **`0.1.0-beta.1`** en `src-tauri/tauri.conf.json`, `src-tauri/Cargo.toml`
+  (+ `Cargo.lock`) para que `release.yml` publique `v0.1.0-beta.1`: el workflow sólo publica cuando `v<versión>`
+  todavía no existe, y como la versión lleva guion GitHub lo marca **pre-release** automáticamente. Los
+  instaladores quedan adjuntos al release como assets (`.dmg` y `.exe` NSIS). *Nota:* los artefactos intermedios
+  de la corrida viven 14 días; los assets del release son permanentes.
+  *Archivos:* `.github/workflows/build.yml`, `.github/workflows/release.yml`, `src-tauri/tauri.conf.json`,
+  `src-tauri/Cargo.toml`, `src-tauri/Cargo.lock`.
+  *Verificación:* pendiente de confirmar la publicación de `v0.1.0-beta.1` desde `main`.
+
 ---
 
 ## F17 — GPU compartida

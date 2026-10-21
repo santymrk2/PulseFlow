@@ -1,7 +1,7 @@
 name: Release
 
 # Al mergear a main: si la versión de `src-tauri/tauri.conf.json` todavía no tiene release, se compilan los instaladores
-# (macOS Apple Silicon e Intel, Windows x64) y se publica `v<versión>` en GitHub Releases con ellos adjuntos.
+# (macOS Apple Silicon y Windows x64) y se publica `v<versión>` en GitHub Releases con ellos adjuntos.
 # Para sacar una versión nueva hay que subir `version` en tauri.conf.json: si la etiqueta ya existe no se publica nada.
 on:
     push:
