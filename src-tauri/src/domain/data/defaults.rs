@@ -95,8 +95,7 @@ pub fn default_settings() -> Value {
 pub fn default_synced_settings() -> Value {
     json!({
         "categories": {
-            "song": { "name": "category.song", "icon": "song", "default": true },
-            "presentation": { "name": "category.presentation", "icon": "presentation", "default": true }
+            "general": { "name": "category.general", "icon": "folder", "default": true }
         },
         "drawSettings": {},
         "overlayCategories": {
@@ -204,5 +203,17 @@ mod tests {
                 "el estilo {style_id:?} necesita un nombre visible"
             );
         }
+    }
+
+    /// Una instalación limpia arranca con una sola library, "General" (sin las
+    /// categorías de FreeShow). El id debe coincidir con `DEFAULT_LIBRARY_ID` del frontend.
+    #[test]
+    fn la_unica_library_por_defecto_es_general() {
+        let synced = default_synced_settings();
+        let categories = synced["categories"].as_object().expect("categories es un objeto");
+
+        assert_eq!(categories.len(), 1, "sólo una library por defecto");
+        assert_eq!(categories["general"]["name"], "category.general");
+        assert_eq!(categories["general"]["default"], true);
     }
 }
