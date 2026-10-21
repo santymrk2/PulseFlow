@@ -3,6 +3,21 @@
 Estado al 2026-10-21. El flujo está **preparado pero inerte**: sin los secretos de abajo, `build.yml` produce los
 mismos instaladores sin firmar que antes. Nada de esto se pudo probar: necesita tus cuentas.
 
+## Release automático (F22.14)
+
+`.github/workflows/release.yml` corre en cada push a `main` (o a mano):
+
+1. Lee `version` de `src-tauri/tauri.conf.json` y mira si ya existe el release `v<versión>`.
+2. Si **no** existe, llama a `build.yml` (macOS Apple Silicon, macOS Intel y Windows x64; con firma si están los
+   secretos de abajo) y publica `v<versión>` en GitHub Releases con los `.dmg` y los `.exe` de NSIS adjuntos
+   (marcado como pre-release si la versión lleva `-beta`, `-rc`, etc.).
+3. Si ya existe, no hace nada y deja un aviso: **para sacar una versión nueva hay que subir `version`** en
+   `tauri.conf.json` antes de mergear. Así la etiqueta coincide con la versión que ve la app (el chequeo de
+   actualizaciones compara contra los releases de `santymrk2/PulseFlow`).
+
+Sin los secretos de firma, los instaladores salen sin firmar (Gatekeeper y SmartScreen van a avisar).
+**No se pudo probar**: el workflow nunca corrió.
+
 ## Firma (F16.1)
 
 `.github/workflows/build.yml` detecta los secretos y, si existen, firma. Se configuran en

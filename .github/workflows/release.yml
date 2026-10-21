@@ -1,0 +1,68 @@
+name: Release
+
+# Al mergear a main: si la versión de `src-tauri/tauri.conf.json` todavía no tiene release, se compilan los instaladores
+# (macOS Apple Silicon e Intel, Windows x64) y se publica `v<versión>` en GitHub Releases con ellos adjuntos.
+# Para sacar una versión nueva hay que subir `version` en tauri.conf.json: si la etiqueta ya existe no se publica nada.
+on:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+jobs:
+    meta:
+        name: Versión
+        runs-on: ubuntu-latest
+        outputs:
+            version: ${{ steps.v.outputs.version }}
+            publish: ${{ steps.v.outputs.publish }}
+            prerelease: ${{ steps.v.outputs.prerelease }}
+        steps:
+            - uses: actions/checkout@v5
+
+            - name: Leer versión y comprobar la etiqueta
+              id: v
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  version=$(jq -r .version src-tauri/tauri.conf.json)
+                  echo "version=$version" >> "$GITHUB_OUTPUT"
+                  case "$version" in *-*) echo "prerelease=true" >> "$GITHUB_OUTPUT" ;; *) echo "prerelease=false" >> "$GITHUB_OUTPUT" ;; esac
+                  if gh release view "v$version" >/dev/null 2>&1; then
+                      echo "publish=false" >> "$GITHUB_OUTPUT"
+                      echo "::notice::v$version ya tiene release: subí la versión en src-tauri/tauri.conf.json para publicar una nueva."
+                  else
+                      echo "publish=true" >> "$GITHUB_OUTPUT"
+                  fi
+
+    build:
+        name: Instaladores
+        needs: meta
+        if: needs.meta.outputs.publish == 'true'
+        uses: ./.github/workflows/build.yml
+        secrets: inherit
+
+    publish:
+        name: Publicar release
+        needs: [meta, build]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
+
+            - name: Descargar instaladores
+              uses: actions/download-artifact@v4
+              with:
+                  path: dist
+                  pattern: pulseflow-*
+
+            - name: Crear release
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  VERSION: ${{ needs.meta.outputs.version }}
+                  PRERELEASE: ${{ needs.meta.outputs.prerelease }}
+              run: |
+                  flag=""
+                  if [ "$PRERELEASE" = "true" ]; then flag="--prerelease"; fi
+                  gh release create "v$VERSION" $flag --target "$GITHUB_SHA" --title "PulseFlow $VERSION" --generate-notes dist/*/*
