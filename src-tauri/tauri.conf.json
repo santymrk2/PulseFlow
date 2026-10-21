@@ -27,8 +27,7 @@
       "assetProtocol": {
         "enable": true,
         "scope": [
-          "$APPCONFIG/media-cache/**",
-          "$DOCUMENT/PulseFlow/**"
+          "**"
         ]
       }
     }

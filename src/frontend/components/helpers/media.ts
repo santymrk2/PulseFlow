@@ -14,6 +14,7 @@ import { isMainWindow, newToast, wait, waitUntilValueIsDefined } from "../../uti
 import { audioExtensions, imageExtensions, mediaExtensions, presentationExtensions, videoExtensions } from "../../values/extensions"
 import type { API_media, API_slide_thumbnail } from "../actions/api"
 import { clone } from "./array"
+import { toDisplayUrl } from "./assetUrl"
 import { getFirstActiveOutput, getOutputResolution } from "./output"
 
 export function getExtension(path: string): string {
@@ -75,6 +76,10 @@ export function isLocalFile(path: string): boolean {
 export function encodeFilePath(path: string): string {
     if (typeof path !== "string") return ""
     if (!isLocalFile(path)) return path
+
+    // en la app, los archivos locales van por el protocolo asset (el webview no carga file://)
+    const assetUrl = toDisplayUrl(path)
+    if (assetUrl) return assetUrl
 
     if (path.startsWith("file://")) path = path.replace("file://", "")
     try {
