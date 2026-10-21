@@ -86,7 +86,7 @@
     data-title={title ? translateText(title, $dictionary) : undefined}
     {...restProps}
     bind:this={button}
-    class="btn {variant} {size} {className}"
+    class="btn {variant === 'outline' ? 'outlined' : variant} {size} {className}"
     class:pointerFocus
     class:isActive
     class:showOutline
@@ -199,10 +199,11 @@
         .btn.secondary:hover:not(:disabled) {
             background: var(--bg-selected);
         }
-        .btn.outline {
+        /* "outlined" y no "outline": la clase `outline` es una utilidad de Tailwind (outline-style: solid) y dibujaba un contorno blanco */
+        .btn.outlined {
             border-color: var(--border-strong);
         }
-        .btn.outline:hover:not(:disabled),
+        .btn.outlined:hover:not(:disabled),
         .btn.ghost:hover:not(:disabled) {
             background: var(--bg-hover);
         }
