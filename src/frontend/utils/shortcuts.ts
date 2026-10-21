@@ -105,6 +105,8 @@ const MENU_ACTIONS: Record<string, () => void> = {
     },
     "app.settings": () => openSettings(),
     "app.quit": () => initializeClosing(),
+    "file.import": () => activePopup.set("import"),
+    "file.export": () => activePopup.set("export"),
     "screens.configure": () => activePopup.set("screen_config"),
     "screens.looks": () => activePopup.set("looks")
 }

@@ -9,6 +9,7 @@
     import ContextChild from "./ContextChild.svelte"
     import ContextItem from "./ContextItem.svelte"
     import { contextMenuGroups, contextMenuItems, contextMenuLayouts } from "./contextMenus"
+    import { contextMenuMode } from "./nativeMenu"
     import { flattenMenuItems, handleKeydown as handleSearchKeydown, searchMenuItems, type FlatMenuItem } from "./contextMenuSearch"
     import { quickLoadItems } from "./loadItems"
     import { saveTextSelectionRange } from "./menuClick"
@@ -35,6 +36,11 @@
         if (!target || closingMenuTimeout) return
 
         let input = ["text", "textarea"].includes(target.type) && !target.closest?.(".numberInput")
+        if (contextMenuMode(input, $os.platform) === "native") {
+            closeContextMenu()
+            return
+        }
+        e.preventDefault()
         if ((!input && (target.closest?.(".contextMenu") || $activePopup)) || target.closest?.(".nocontext")) {
             closeContextMenu()
             return
