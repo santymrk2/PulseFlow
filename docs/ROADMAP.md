@@ -1610,6 +1610,8 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
 
 - [x] **F15.5 Ordenar la documentación.** (2026-10-21) `PLAN-HAIKU`, `PLAN-NOCHE`, `VERIFICAR-F6` y `VERIFICAR-F7` pasaron a `docs/archivo/` (se actualizaron las referencias en `PLAN.md`, los README de `design-reference/`, `scripts/carril.sh` y este roadmap); se borró `docs/drafts/render_screens.rs` (ningún `rg` lo referenciaba); nuevo índice `docs/README.md` con todo lo vigente.
 
+- [x] **F15.6 Dependencias sin uso.** (2026-10-21) Auditoría de `package.json` y `Cargo.toml`: **24 paquetes JS sin un solo import** (estático ni dinámico) fuera de `package.json`/`bun.lock` — en `dependencies` `@googleapis/drive`, `axios`, `bonjour-service`, `ebml`, `fast-xml-parser`, `genius-lyrics`, `mdb-reader`, `mp4box`, `osc-js`, `protobufjs`, `upath`, `word-extractor`, `yauzl`, `yazl`; en `devDependencies` `chord-transposer`, `pusher-js`, `svelte-inspector` (no está registrado en `vite.config.mjs`), `tmp`, `tslib` y los `@types` de `ebml`, `follow-redirects`, `tmp`, `yauzl` y `yazl` — más `raw-window-handle` en Rust (0 referencias). **Se conservan** `@types/exif`, `@types/vimeo__player` y `@types/xml2js` (esos tres paquetes no traen tipos propios), `eslint-config-prettier` (los configs extienden `"prettier"`) y `socket.io-client`: sólo lo usan los clientes web de `src/server/**`, que no tienen importadores desde el frontend — se elimina junto con ese código, no suelto. Verificado: `bun install` (24 paquetes fuera), `test:unit` (201), `test:svelte` (40 errores, igual a la línea base), `test:budget` y `build` en verde; `cargo check`/`cargo test --lib` en verde.
+
 ---
 
 ## F16 — Distribución
