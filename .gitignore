@@ -22,3 +22,5 @@ test-results/
 *.ipr
 *.iws
 .serena
+# maquetas y estado de las sesiones de diseño
+.superpowers/
