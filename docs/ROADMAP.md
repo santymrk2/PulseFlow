@@ -714,6 +714,8 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   `Top.svelte`/`About.svelte` (`public/import-logos/freeshow.webp`) e íconos de la app
   cuando haya logo de PulseFlow. (Texto "FreeShow" → "PulseFlow" ya reemplazado en
   `Splash.svelte` e `ImportScripture.svelte`; logo e íconos siguen pendientes.)
+  *Bloqueada (2026-10-21):* no hay un logo de PulseFlow en el repo (`docs/brand/` no lo tiene); hace falta el
+  archivo (SVG o PNG de alta resolución) para generar los íconos con `tauri icon` y reemplazar los `freeshow.*`.
 
 ---
 
@@ -946,13 +948,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   *Aceptación:* cada clave de la lista se puede editar desde el modal y se guarda;
   marcar también F10.3 y F10.5.
 
-- [ ] **F10.9 Quitar el puente.**
-  *Pasos:* helper `getOutputLook(outputId): LookScreen`; reemplazar los usos de
-  `$styles[output.style]` / `getCurrentStyle(styles, output.style)` (≈44 archivos) **un
-  commit por carpeta** (`output/`, `slide/`, `show/`, `edit/`, `helpers/`, …); al final
-  eliminar `__look__*`, `output.style` y el store `styles` (queda sólo el backup).
-  *Aceptación:* `grep -rn "\$styles\|get(styles)" src/frontend` sin resultados fuera de la
-  migración; todos los chequeos y goldens en verde.
+- [ ] **F10.9 Quitar el puente.** **Decisión (2026-10-21): no se inicia todavía.** Hoy 62 archivos de `src/frontend` leen `$styles` / `get(styles)` / `getCurrentStyle` y no hay tests de interfaz que cubran esos caminos: migrarlos a ciegas (sin poder correr la app en esta etapa) arriesga romper la salida en silencio, y el puente ya está cubierto por tests (`looks.migration.test.ts`, `computeLookBridgeStyles`, `outputAspect`). Conviene hacerlo **después de F20.8 y F13.4**, con la app probada, y con el CI de F13.1 como red. *Pasos (sin cambio):* helper `getOutputLook(outputId): LookScreen`; reemplazar los usos **un commit por carpeta** (`output/`, `slide/`, `show/`, `edit/`, `helpers/`, …); al final eliminar `__look__*`, `output.style` y el store `styles` (queda el backup). *Aceptación:* `grep -rn "\$styles\|get(styles)" src/frontend` sin resultados fuera de la migración; chequeos y goldens en verde.
 
 - [ ] **F10.10 Prueba manual (usuario).** Sección nueva en `docs/VERIFICAR.md`: crear 2
   pantallas de audiencia + 1 stage desde la ventana, 3 looks, cambiar en vivo desde el
@@ -1558,7 +1554,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   siguen en color; (3) `Tipbar` ("Donate" de FreeShow) sigue; (4) los botones "New collection"
   / "New category" se ven con borde claro (contorno de énfasis `showOutline`).
 
-- [ ] **F14.11 Ajustes de estructura tras el repaso** (pedidos del usuario, 2026-10-20).
+- [x] **F14.11 Ajustes de estructura tras el repaso** (pedidos del usuario, 2026-10-20). *Cerrada el 2026-10-21:* todo lo de abajo está hecho; el punto (1) (el `+` de LIBRARY y la pestaña Shows del cajón) lo **reemplaza F20** (la columna izquierda ahora es LIBRARIES · PLAYLISTS · ÍTEMS y `LibraryAddMenu` pasó al `+` de ÍTEMS). La verificación visual de lo demás va con F20.8.
   *Hecho:* (1) **`+` de LIBRARY** (`components/show/LibraryAddMenu.svelte`): un solo ícono sin
   texto que abre New show, New category, New project, New folder e Import; se escondió la
   **pestaña Shows del cajón** (se entra por LIBRARY; `Ctrl+1` sigue abriéndola) y se quitó el `+`
