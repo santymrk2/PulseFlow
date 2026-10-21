@@ -1617,16 +1617,9 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
 
 ## F16 — Distribución
 
-- [ ] **F16.1 Firma.** macOS: Developer ID + notarización en `build.yml` (secretos en
-  GitHub). Windows: firma de código (certificado o Azure Trusted Signing). Requiere las
-  cuentas del usuario.
-  *Aceptación:* el `.dmg` abre sin aviso de Gatekeeper y el instalador NSIS sin
-  SmartScreen "editor desconocido".
+- [ ] **F16.1 Firma.** (2026-10-21, **preparada, no probada**) `build.yml` detecta los secretos y, si existen, firma y notariza en macOS (`APPLE_*`) y firma en Windows con Azure Trusted Signing (`AZURE_*`, `signCommand` por `TAURI_CONFIG`); sin secretos el build es idéntico al de antes. Falta lo que sólo vos podés poner: las cuentas y los secretos (lista en `docs/distribucion.md`). *Aceptación pendiente:* `.dmg` sin aviso de Gatekeeper e instalador NSIS sin SmartScreen.
 
-- [ ] **F16.2 Actualizaciones.** `tauri-plugin-updater` con manifiesto firmado en GitHub
-  Releases. Depende de F16.1.
-  *Aceptación:* una versión instalada detecta la siguiente y se actualiza en macOS y
-  Windows.
+- [ ] **F16.2 Actualizaciones.** Depende de F16.1. **No iniciado a propósito**: exige generar el par de claves del updater (la privada va a un secreto, no al repo) y elegir el endpoint; los pasos están en `docs/distribucion.md`.
 
 ---
 

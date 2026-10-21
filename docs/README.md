@@ -9,6 +9,7 @@
 | [`ROADMAP.md`](ROADMAP.md) | El plan de trabajo: fases, tareas y su estado. Una tarea por vez, con su checkbox. |
 | [`VERIFICAR.md`](VERIFICAR.md) | Pruebas manuales que sólo se pueden hacer con la app y los monitores reales. |
 | [`VERIFICAR-F12.md`](VERIFICAR-F12.md) | Repaso visual parcial de la fase F12 (lo que queda lo retoma F14.10). |
+| [`distribucion.md`](distribucion.md) | Firma (F16.1, preparada) y actualizaciones (F16.2, pendiente): secretos y pasos. |
 | [`PLAN-F12.md`](PLAN-F12.md) | Plan detallado de coherencia visual (F12), todavía en curso. |
 
 ## Diseño

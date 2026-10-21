@@ -34,7 +34,45 @@ jobs:
             - name: Prepare FFmpeg sidecars
               run: bun run setup:sidecars --only-host
 
-            - name: Build app
+            # F16.1: la firma se activa sola cuando los secretos existen; sin ellos el build es igual que antes.
+            - name: Detect signing secrets
+              id: sign
+              shell: bash
+              env:
+                  APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+                  AZURE_SIGNING_ENDPOINT: ${{ secrets.AZURE_SIGNING_ENDPOINT }}
+              run: |
+                  if [ "${{ runner.os }}" = "macOS" ] && [ -n "$APPLE_CERTIFICATE" ]; then echo "mac=true" >> "$GITHUB_OUTPUT"; fi
+                  if [ "${{ runner.os }}" = "Windows" ] && [ -n "$AZURE_SIGNING_ENDPOINT" ]; then echo "win=true" >> "$GITHUB_OUTPUT"; fi
+
+            # macOS: Developer ID + notarización. `tauri build` lee estas variables y firma y notariza el .app/.dmg.
+            - name: Build app (macOS firmado y notarizado)
+              if: steps.sign.outputs.mac == 'true'
+              env:
+                  APPLE_CERTIFICATE: ${{ secrets.APPLE_CERTIFICATE }}
+                  APPLE_CERTIFICATE_PASSWORD: ${{ secrets.APPLE_CERTIFICATE_PASSWORD }}
+                  APPLE_SIGNING_IDENTITY: ${{ secrets.APPLE_SIGNING_IDENTITY }}
+                  APPLE_ID: ${{ secrets.APPLE_ID }}
+                  APPLE_PASSWORD: ${{ secrets.APPLE_PASSWORD }}
+                  APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+              run: bun run build:tauri
+
+            # Windows: Azure Trusted Signing mediante `signCommand` (override de tauri.conf.json por TAURI_CONFIG).
+            - name: Install trusted-signing-cli
+              if: steps.sign.outputs.win == 'true'
+              run: cargo install trusted-signing-cli --locked
+
+            - name: Build app (Windows firmado)
+              if: steps.sign.outputs.win == 'true'
+              env:
+                  AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
+                  AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
+                  AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
+                  TAURI_CONFIG: '{"bundle":{"windows":{"signCommand":"trusted-signing-cli -e ${{ secrets.AZURE_SIGNING_ENDPOINT }} -a ${{ secrets.AZURE_SIGNING_ACCOUNT }} -c ${{ secrets.AZURE_SIGNING_PROFILE }} -d PulseFlow %1"}}}'
+              run: bun run build:tauri
+
+            - name: Build app (sin firma)
+              if: steps.sign.outputs.mac != 'true' && steps.sign.outputs.win != 'true'
               run: bun run build:tauri
 
             - name: Upload bundles
