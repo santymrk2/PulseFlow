@@ -32,7 +32,11 @@ pub(super) fn block(height: u32, hovered: bool) -> TextBlock {
         text: "✕".to_string(),
         font_size: side * 0.8,
         font_weight: 700,
-        color: if hovered { [1.0, 0.35, 0.35, 1.0] } else { [1.0, 1.0, 1.0, 0.9] },
+        color: if hovered {
+            [1.0, 0.35, 0.35, 1.0]
+        } else {
+            [1.0, 1.0, 1.0, 0.9]
+        },
         alignment: "center".to_string(),
         x,
         y: y + side * 0.05,
