@@ -17,6 +17,15 @@ pub enum YuvMatrix {
     Bt2020,
 }
 
+/// Matriz por defecto cuando el contenedor no la declara: HD (≥ 720 líneas) es BT.709 y SD es BT.601.
+pub fn guess_matrix(height: u32) -> YuvMatrix {
+    if height >= 720 {
+        YuvMatrix::Bt709
+    } else {
+        YuvMatrix::Bt601
+    }
+}
+
 /// Dos texturas (Y: `R8Unorm`, CbCr: `Rg8Unorm` a mitad de resolución) + cómo interpretarlas.
 pub struct Nv12Frame {
     pub y: wgpu::Texture,
@@ -33,6 +42,11 @@ pub struct Nv12Frame {
 }
 
 impl Nv12Frame {
+    /// `true` si las texturas son propias (planos subidos desde la CPU) y se pueden reescribir en el lugar.
+    pub fn is_cpu_backed(&self) -> bool {
+        self._keepalive.is_none()
+    }
+
     pub fn new(y: wgpu::Texture, uv: wgpu::Texture, matrix: YuvMatrix, full_range: bool, keepalive: Option<Box<dyn Any + Send + Sync>>) -> Self {
         let y_view = y.create_view(&wgpu::TextureViewDescriptor::default());
         let uv_view = uv.create_view(&wgpu::TextureViewDescriptor::default());
@@ -257,6 +271,13 @@ mod tests {
             assert!(diff.abs() <= 4, "{what}: canal {channel} = {} (esperado ~{})", actual[channel], expected[channel]);
         }
         assert_eq!(actual[3], 255, "{what}: opaco");
+    }
+
+    #[test]
+    fn matrix_is_guessed_from_the_height() {
+        assert_eq!(guess_matrix(1080), YuvMatrix::Bt709);
+        assert_eq!(guess_matrix(720), YuvMatrix::Bt709);
+        assert_eq!(guess_matrix(480), YuvMatrix::Bt601);
     }
 
     #[test]

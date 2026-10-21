@@ -2,6 +2,7 @@
 
 use super::*;
 use crate::render::media::{self, MediaStore};
+use crate::render::video::{DecodedFrame, FramePixels, FrameSink};
 
 /// Arranca, mantiene o detiene el video de fondo de una pantalla según el fondo actual.
 /// Usa el hub de decodificadores compartidos (uno por archivo, F8.2).
@@ -28,10 +29,22 @@ pub(super) fn sync_video(app: &AppHandle, handle: &mut ScreenHandle, background:
     }
 }
 
-/// Sube un fotograma decodificado a la textura compartida del archivo. Es **una**
-/// subida por frame, vea el video una pantalla o diez (F17.4).
-pub(super) fn publish_frame(store: &MediaStore, path: &str, width: u32, height: u32, rgba: &[u8]) {
-    let _ = store.update_video_frame(path, width, height, rgba);
+/// Recibe los frames del decodificador de un archivo y los publica en la textura compartida
+/// (clave = ruta). Es **una** publicación por frame, vea el video una pantalla o diez (F17.4).
+pub(super) struct HubSink {
+    pub(super) store: Arc<MediaStore>,
+    pub(super) key: String,
+}
+
+impl FrameSink for HubSink {
+    fn push(&self, frame: DecodedFrame<'_>) {
+        match frame.pixels {
+            FramePixels::Nv12Cpu { width, height, y, uv, matrix, full_range } => {
+                let _ = self.store.update_video_nv12_cpu(&self.key, width, height, y, uv, matrix, full_range);
+            }
+            FramePixels::Native(native) => self.store.set_video_native(&self.key, native),
+        }
+    }
 }
 
 /// Suscribe una pantalla (`subscriber` = etiqueta de su ventana) al decodificador
@@ -46,11 +59,8 @@ pub(super) fn video_hub_acquire(app: &AppHandle, path: &str, subscriber: &str) -
         return Ok(());
     }
 
-    let store = media::shared_store()?;
-    let key = path.to_string();
-    let playback = video::start_video_playback(app, path, path, 1920, 1080, move |_vid_id, w, h, bytes| {
-        publish_frame(&store, &key, w, h, bytes);
-    })?;
+    let sink = Arc::new(HubSink { store: media::shared_store()?, key: path.to_string() });
+    let playback = video::start(app, path, sink)?;
 
     let mut subscribers = Subscribers::default();
     subscribers.add(subscriber);
@@ -68,6 +78,9 @@ pub(super) fn video_hub_release(app: &AppHandle, path: &str, subscriber: &str) -
     if should_stop {
         if let Some(mut entry) = hub.remove(path) {
             entry.playback.stop();
+            if let Ok(store) = media::shared_store() {
+                store.remove_video(path);
+            }
         }
     }
     Ok(())

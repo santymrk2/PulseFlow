@@ -8,6 +8,7 @@
 //! (`ScreenManager`, una pantalla por salida); el layout de stage en `stage`;
 //! texto, media, video y transiciones en sus propios módulos.
 
+pub mod clock;
 pub mod gpu;
 pub mod media;
 pub mod scene;
@@ -31,6 +32,16 @@ mod golden;
 // Ayudas compartidas por los tests que leen texturas de vuelta.
 #[cfg(test)]
 pub(crate) mod test_util;
+
+// Planos NV12 sintéticos para los tests de video.
+#[cfg(test)]
+pub(crate) mod nv12_test_support {
+    /// Planos Y y CbCr de un frame uniforme `width × height`.
+    pub fn cpu_frame_planes(width: u32, height: u32, y: u8, cb: u8, cr: u8) -> (Vec<u8>, Vec<u8>) {
+        let uv_samples = width.div_ceil(2) * height.div_ceil(2);
+        (vec![y; (width * height) as usize], (0..uv_samples).flat_map(|_| [cb, cr]).collect())
+    }
+}
 
 pub use screens::{
     close_all_screens, close_screen, emit_output_state, identify_screens, open_ids, open_screen,
@@ -83,19 +94,18 @@ mod tests {
     }
 
     #[test]
-    fn test_media_store_reuses_video_texture() {
+    fn test_media_store_reuses_video_frame() {
         let store = media::MediaStore::new(gpu::shared().unwrap());
 
-        // Crear una textura sintética de prueba 64x64 RGBA en VRAM
-        let width = 64;
-        let height = 64;
-        let rgba_data = vec![255u8; (width * height * 4) as usize];
+        // Un frame NV12 sintético de 64x64 en VRAM
+        let (y, uv) = nv12_test_support::cpu_frame_planes(64, 64, 128, 128, 128);
+        store.update_video_nv12_cpu("test_video_bg", 64, 64, &y, &uv, video::nv12::YuvMatrix::Bt709, false).unwrap();
+        let first = store.get_video("test_video_bg").unwrap();
 
-        let tex1 = store.update_video_frame("test_video_bg", width, height, &rgba_data).unwrap();
-
-        // Verificar que una segunda consulta reutilice el mismo Arc en VRAM sin duplicar
-        let tex2 = store.get("test_video_bg").unwrap();
-        assert_eq!(Arc::as_ptr(&tex1), Arc::as_ptr(&tex2), "Ambas referencias deben apuntar al mismo recurso VRAM");
+        // Un segundo frame del mismo tamaño se escribe en el lugar: el mismo recurso en VRAM
+        store.update_video_nv12_cpu("test_video_bg", 64, 64, &y, &uv, video::nv12::YuvMatrix::Bt709, false).unwrap();
+        let second = store.get_video("test_video_bg").unwrap();
+        assert_eq!(Arc::as_ptr(&first), Arc::as_ptr(&second), "Ambas referencias deben apuntar al mismo recurso VRAM");
     }
 
     #[test]

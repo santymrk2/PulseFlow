@@ -2,7 +2,7 @@
 //!
 //! Soporta:
 //! - Subida y cacheo de imágenes a texturas GPU (`wgpu::Texture`).
-//! - Buffer de fotogramas de video con decodificación acelerada por hardware.
+//! - Último fotograma NV12 de cada video en reproducción, compartido por todas las pantallas.
 //! - Reutilización de texturas: todas las pantallas comparten el `MediaStore` (y el
 //!   `Device` de `GpuContext`), así que un mismo medio vive una sola vez en VRAM.
 //! - Pipeline de composición con ajuste de aspecto (Cover, Contain, Stretch).
@@ -13,7 +13,7 @@
 //! uniforms, de modo que puede dibujarse desde varias pantallas a la vez.
 
 use super::gpu::GpuContext;
-use super::video::nv12::Nv12Pipeline;
+use super::video::nv12::{Nv12Frame, Nv12Pipeline, YuvMatrix};
 use super::sync::{MutexExt, RwLockExt};
 use crate::error::{AppError, AppResult};
 use std::collections::HashMap;
@@ -25,10 +25,10 @@ use wgpu::{
     BindGroup, BindGroupDescriptor, BindGroupEntry, BindGroupLayout, BindGroupLayoutDescriptor,
     BindGroupLayoutEntry, BindingResource, BindingType, BlendComponent, BlendFactor, BlendOperation,
     BlendState, ColorTargetState, ColorWrites, Device, Extent3d, FragmentState, MultisampleState,
-    Origin3d, PipelineCompilationOptions, PipelineLayoutDescriptor, PrimitiveState, Queue,
+    PipelineCompilationOptions, PipelineLayoutDescriptor, PrimitiveState, Queue,
     RenderPass, RenderPipeline, RenderPipelineDescriptor, Sampler, SamplerBindingType,
-    SamplerDescriptor, ShaderModuleDescriptor, ShaderSource, ShaderStages, TexelCopyBufferLayout,
-    TexelCopyTextureInfo, Texture, TextureAspect, TextureDescriptor, TextureDimension,
+    SamplerDescriptor, ShaderModuleDescriptor, ShaderSource, ShaderStages,
+    Texture, TextureDescriptor, TextureDimension,
     TextureFormat, TextureSampleType, TextureUsages, TextureView, TextureViewDescriptor,
     TextureViewDimension, VertexState,
 };
@@ -168,6 +168,8 @@ pub struct MediaStore {
     gpu: Arc<GpuContext>,
     layouts: LayerLayouts,
     textures: RwLock<HashMap<String, Arc<MediaTexture>>>,
+    /// Último frame de cada video en reproducción (clave = ruta del archivo).
+    videos: RwLock<HashMap<String, Arc<Nv12Frame>>>,
     pipelines: Mutex<HashMap<TextureFormat, Arc<BackgroundPipeline>>>,
     nv12_pipelines: Mutex<HashMap<TextureFormat, Arc<Nv12Pipeline>>>,
     /// Subidas de fotogramas de video (sólo tests: comprueba que sea una por frame).
@@ -182,6 +184,7 @@ impl MediaStore {
             gpu,
             layouts,
             textures: RwLock::new(HashMap::new()),
+            videos: RwLock::new(HashMap::new()),
             pipelines: Mutex::new(HashMap::new()),
             nv12_pipelines: Mutex::new(HashMap::new()),
             #[cfg(test)]
@@ -248,51 +251,37 @@ impl MediaStore {
         self.insert_rgba(id, width, height, &img.into_raw())
     }
 
-    /// Sube o actualiza un fotograma de video acelerado por hardware a VRAM.
-    pub fn update_video_frame(
-        &self,
-        id: &str,
-        width: u32,
-        height: u32,
-        rgba_bytes: &[u8],
-    ) -> AppResult<Arc<MediaTexture>> {
+    /// Último frame de video publicado con `id` (la ruta del archivo).
+    pub fn get_video(&self, id: &str) -> Option<Arc<Nv12Frame>> {
+        self.videos.read_safe().get(id).cloned()
+    }
+
+    /// Publica un frame NV12 con los planos en memoria de la CPU: **una subida** por frame, que ven
+    /// todas las pantallas. Si el tamaño no cambió se reescriben las texturas en el lugar.
+    pub fn update_video_nv12_cpu(&self, id: &str, width: u32, height: u32, y: &[u8], uv: &[u8], matrix: YuvMatrix, full_range: bool) -> AppResult<()> {
         #[cfg(test)]
         self.uploads.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
-        if let Some(existing) = self.get(id) {
-            if existing.width == width && existing.height == height {
-                // Actualización in-place sin reasignar memoria en VRAM (Zero Allocation)
-                self.gpu.queue.write_texture(
-                    TexelCopyTextureInfo {
-                        texture: &existing.texture,
-                        mip_level: 0,
-                        origin: Origin3d::ZERO,
-                        aspect: TextureAspect::All,
-                    },
-                    rgba_bytes,
-                    TexelCopyBufferLayout {
-                        offset: 0,
-                        bytes_per_row: Some(4 * width),
-                        rows_per_image: Some(height),
-                    },
-                    Extent3d { width, height, depth_or_array_layers: 1 },
-                );
-                return Ok(existing);
+
+        if let Some(existing) = self.get_video(id) {
+            if existing.is_cpu_backed() && existing.width == width && existing.height == height {
+                existing.write_cpu_planes(&self.gpu, y, uv);
+                return Ok(());
             }
         }
 
-        // Si no existe o cambió la resolución, crear nueva textura
-        let media = create_texture_from_rgba(
-            &self.gpu.device,
-            &self.gpu.queue,
-            &self.layouts,
-            id,
-            width,
-            height,
-            rgba_bytes,
-        );
-        let arc_media = Arc::new(media);
-        self.textures.write_safe().insert(id.to_string(), Arc::clone(&arc_media));
-        Ok(arc_media)
+        let frame = Arc::new(Nv12Frame::from_cpu_planes(&self.gpu, width, height, y, uv, matrix, full_range)?);
+        self.videos.write_safe().insert(id.to_string(), frame);
+        Ok(())
+    }
+
+    /// Publica un frame cuyas texturas ya respaldan memoria de GPU (decodificador nativo): no se copia nada.
+    pub fn set_video_native(&self, id: &str, frame: Nv12Frame) {
+        self.videos.write_safe().insert(id.to_string(), Arc::new(frame));
+    }
+
+    /// Libera el frame de un video que ya nadie reproduce.
+    pub fn remove_video(&self, id: &str) {
+        self.videos.write_safe().remove(id);
     }
 
     /// Sube `rgba` como textura `id`; si otro hilo la insertó antes, gana esa.

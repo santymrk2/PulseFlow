@@ -5,7 +5,7 @@
 //! IOSurface; `wgpu::hal::metal` la envuelve como `wgpu::Texture`. Mientras la textura viva,
 //! el `CVMetalTexture` y el `CVPixelBuffer` se retienen en el callback de destrucción.
 
-use super::nv12::{Nv12Frame, YuvMatrix};
+use super::nv12::{guess_matrix, Nv12Frame};
 use crate::error::{AppError, AppResult};
 use crate::render::gpu::GpuContext;
 use objc2::rc::Retained;
@@ -71,8 +71,8 @@ pub fn import_pixel_buffer(gpu: &GpuContext, cache: &MetalTextureCache, pixel_bu
     let y = import_plane(gpu, cache, pixel_buffer, 0, MTLPixelFormat::R8Unorm, wgpu::TextureFormat::R8Unorm)?;
     let uv = import_plane(gpu, cache, pixel_buffer, 1, MTLPixelFormat::RG8Unorm, wgpu::TextureFormat::Rg8Unorm)?;
 
-    // Sin metadatos de color confiables, HD y menos es BT.709 y SD es BT.601 (convención de los decodificadores).
-    let matrix = if y.height() >= 720 { YuvMatrix::Bt709 } else { YuvMatrix::Bt601 };
+    // Sin metadatos de color confiables se usa la convención de los decodificadores.
+    let matrix = guess_matrix(y.height());
     let keepalive: Box<dyn std::any::Any + Send + Sync> = Box::new(Keepalive(retain_buffer(pixel_buffer)));
     Ok(Nv12Frame::new(y, uv, matrix, full_range, Some(keepalive)))
 }

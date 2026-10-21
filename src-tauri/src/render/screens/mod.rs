@@ -20,7 +20,7 @@
 use super::sync::{MutexExt, RwLockExt};
 use super::text::TextEngine;
 use super::types::{BackgroundMedia, MediaItem, OverlayItem, StageData, TextBlock};
-use super::video::{self, VideoPlayback};
+use super::video::{self, VideoDecoder};
 use crate::error::{AppError, AppResult};
 use serde::Deserialize;
 use std::collections::{HashMap, HashSet};
@@ -233,7 +233,7 @@ impl Subscribers {
 /// Un video en el hub: un único decodificador, una única textura en VRAM
 /// (con la ruta como id) y las pantallas suscritas.
 struct SharedVideo {
-    playback: VideoPlayback,
+    playback: Box<dyn VideoDecoder>,
     subscribers: Subscribers,
 }
 

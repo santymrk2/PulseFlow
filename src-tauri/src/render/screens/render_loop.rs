@@ -37,6 +37,7 @@ pub(super) fn spawn_render_loop(
         .name(format!("PulseFlow-Screen-{}", window.label()))
         .spawn(move || {
             let background_pipeline = store.pipeline(config.format);
+            let nv12_pipeline = store.nv12_pipeline(config.format);
             let mut arena = store.new_arena();
             let mut text_engine = TextEngine::new(&device, &queue, config.format);
             // F4.4: doble buffer offscreen donde se compone la escena + la transición.
@@ -147,9 +148,12 @@ pub(super) fn spawn_render_loop(
                                         }
                                     }
                                 }
-                                // el video se guarda con su ruta como id (una textura por archivo)
-                                let texture_id = if is_video(&bg) { bg.path.clone().unwrap_or_default() } else { bg.id.clone() };
-                                if let Some(texture) = store.get(&texture_id) {
+                                if is_video(&bg) {
+                                    // video: un frame NV12 por archivo (la ruta es el id), convertido a RGB en el shader
+                                    if let Some(frame) = bg.path.as_deref().and_then(|path| store.get_video(path)) {
+                                        nv12_pipeline.render(&device, &queue, &mut arena, &mut pass, &frame, w, h, bg.opacity, bg.aspect_mode);
+                                    }
+                                } else if let Some(texture) = store.get(&bg.id) {
                                     background_pipeline.render(
                                         &queue,
                                         &mut arena,

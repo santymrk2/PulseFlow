@@ -1,5 +1,6 @@
 use super::identify::*;
 use super::*;
+use crate::render::video::{DecodedFrame, FramePixels, FrameSink};
 use serde_json::json;
 
 
@@ -278,18 +279,28 @@ fn subscribers_first_add_starts_and_last_remove_stops() {
 
 #[test]
 fn video_frames_are_uploaded_once_per_frame_not_once_per_subscriber() {
+    use crate::render::nv12_test_support::cpu_frame_planes;
+    use crate::render::video::nv12::YuvMatrix;
+
     let store = super::super::media::MediaStore::new(super::super::gpu::shared().expect("GPU"));
-    let frame = vec![255u8; 4 * 4 * 4];
+    let sink = HubSink { store: Arc::clone(&store), key: "fondo.mp4".to_string() };
+    let (y, uv) = cpu_frame_planes(4, 4, 63, 102, 240);
 
     // dos pantallas suscritas al mismo archivo: el decodificador publica un frame por tick
     let mut subs = Subscribers::default();
     subs.add("audience");
     subs.add("stage");
-    for _ in 0..3 {
-        publish_frame(&store, "fondo.mp4", 4, 4, &frame);
+    for index in 0..3 {
+        sink.push(DecodedFrame {
+            pts: std::time::Duration::from_millis(index * 33),
+            pixels: FramePixels::Nv12Cpu { width: 4, height: 4, y: &y, uv: &uv, matrix: YuvMatrix::Bt709, full_range: false },
+        });
     }
 
     assert_eq!(store.uploads(), 3);
-    assert!(store.get("fondo.mp4").is_some(), "la textura se guarda con la ruta como id");
-}
+    assert!(store.get_video("fondo.mp4").is_some(), "el frame se guarda con la ruta como id");
 
+    // el hub libera el frame cuando ya nadie reproduce el archivo
+    store.remove_video("fondo.mp4");
+    assert!(store.get_video("fondo.mp4").is_none());
+}
