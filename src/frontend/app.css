@@ -13,6 +13,18 @@
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);
 
+/*
+ * Sin el preflight de Tailwind el color de borde por defecto es `currentColor` (blanco): cualquier clase `border`
+ * dibujaba un recuadro blanco. Va en `base`, así `border-border` y los CSS de los componentes le siguen ganando.
+ */
+@layer base {
+    *,
+    ::before,
+    ::after {
+        border-color: var(--border-color, var(--primary-lighter));
+    }
+}
+
 @custom-variant dark (&:where(.dark, .dark *));
 
 /*

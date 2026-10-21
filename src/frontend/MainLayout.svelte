@@ -155,6 +155,7 @@
 
     .right :global(.border) {
         /* divisor entre secciones (referencia: RightPanel.tsx Divider: h-px mx-3) */
+        border: none;
         border-top: 1px solid var(--border-color, var(--primary-lighter));
         margin: 0 12px;
     }

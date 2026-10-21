@@ -218,7 +218,7 @@
         <div class="breadcrumbs">
             {#each crumbs as crumb, i}
                 {#if i}<span class="sep">›</span>{/if}
-                <span class="crumb" class:current={i === crumbs.length - 1}>{crumb.key ? translateText(crumb.key) : crumb.name || ""}</span>
+                <span class="crumb" class:current={i === crumbs.length - 1}>{crumb.key ? translateText(crumb.key) : crumb.name?.includes(".") ? translateText(crumb.name) : crumb.name || ""}</span>
             {/each}
         </div>
     {/if}
