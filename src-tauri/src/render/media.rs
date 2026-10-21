@@ -163,6 +163,24 @@ impl LayerArena {
     }
 }
 
+/// Estado de una imagen pedida con `MediaStore::request_image`.
+pub enum MediaState {
+    /// Se está decodificando en un worker: el render no la dibuja todavía.
+    Loading,
+    Ready(Arc<MediaTexture>),
+    /// No se pudo cargar (no existe, está corrupta o es demasiado grande): no se reintenta.
+    Failed(String),
+}
+
+/// Pedido en curso o fallido de una imagen (las listas viven en `MediaStore::jobs`).
+enum Job {
+    Loading,
+    Failed(String),
+}
+
+/// Lado máximo (px) de una imagen: más que eso no cabe en una textura y se rechaza sin decodificar.
+const MAX_IMAGE_SIDE: u32 = 16_384;
+
 /// Almacén de texturas y pipelines compartido por todas las pantallas.
 pub struct MediaStore {
     gpu: Arc<GpuContext>,
@@ -172,6 +190,11 @@ pub struct MediaStore {
     videos: RwLock<HashMap<String, Arc<Nv12Frame>>>,
     pipelines: Mutex<HashMap<TextureFormat, Arc<BackgroundPipeline>>>,
     nv12_pipelines: Mutex<HashMap<TextureFormat, Arc<Nv12Pipeline>>>,
+    /// Imágenes pedidas a los workers: cargando o fallidas (las listas salen de `textures`).
+    jobs: Mutex<HashMap<String, Job>>,
+    /// Decodificaciones iniciadas (sólo tests: comprueba que se pidan una sola vez).
+    #[cfg(test)]
+    decodes: std::sync::atomic::AtomicUsize,
     /// Subidas de fotogramas de video (sólo tests: comprueba que sea una por frame).
     #[cfg(test)]
     uploads: std::sync::atomic::AtomicUsize,
@@ -187,6 +210,9 @@ impl MediaStore {
             videos: RwLock::new(HashMap::new()),
             pipelines: Mutex::new(HashMap::new()),
             nv12_pipelines: Mutex::new(HashMap::new()),
+            jobs: Mutex::new(HashMap::new()),
+            #[cfg(test)]
+            decodes: std::sync::atomic::AtomicUsize::new(0),
             #[cfg(test)]
             uploads: std::sync::atomic::AtomicUsize::new(0),
         })
@@ -209,6 +235,11 @@ impl MediaStore {
     /// Arena de uniforms para una pantalla (o un snapshot).
     pub fn new_arena(&self) -> LayerArena {
         LayerArena::new(&self.gpu.device, &self.layouts)
+    }
+
+    #[cfg(test)]
+    pub(crate) fn decodes(&self) -> usize {
+        self.decodes.load(std::sync::atomic::Ordering::SeqCst)
     }
 
     #[cfg(test)]
@@ -236,6 +267,75 @@ impl MediaStore {
             .to_rgba8();
         let (width, height) = img.dimensions();
         self.insert_rgba(&id, width, height, &img.into_raw())
+    }
+
+    /// Pide una imagen **sin bloquear**: si no está, se encola en un worker (una sola vez por ruta,
+    /// aunque se pida 50 veces) y mientras tanto devuelve `Loading`. El worker decodifica y sube la
+    /// textura a la GPU compartida; la siguiente llamada devuelve `Ready`. Un fallo es permanente
+    /// (`Failed`) y no se reintenta.
+    pub fn request_image(self: &Arc<Self>, path: &Path) -> MediaState {
+        let key = path.to_string_lossy().to_string();
+        if let Some(texture) = self.get(&key) {
+            return MediaState::Ready(texture);
+        }
+
+        {
+            let mut jobs = self.jobs.lock_safe();
+            // el worker inserta la textura antes de soltar el pedido: revisar de nuevo con el lock tomado
+            if let Some(texture) = self.get(&key) {
+                return MediaState::Ready(texture);
+            }
+            match jobs.get(&key) {
+                Some(Job::Loading) => return MediaState::Loading,
+                Some(Job::Failed(reason)) => return MediaState::Failed(reason.clone()),
+                None => {
+                    jobs.insert(key.clone(), Job::Loading);
+                }
+            }
+        }
+
+        let store = Arc::clone(self);
+        let owned = path.to_path_buf();
+        super::workers::submit(move || store.run_image_job(&key, &owned));
+        MediaState::Loading
+    }
+
+    /// Trabajo del worker: valida el tamaño, decodifica y sube; deja el resultado en `jobs`/`textures`.
+    fn run_image_job(&self, key: &str, path: &Path) {
+        #[cfg(test)]
+        self.decodes.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
+
+        let result = self.decode_and_upload(key, path);
+        let mut jobs = self.jobs.lock_safe();
+        match result {
+            Ok(()) => {
+                jobs.remove(key);
+            }
+            Err(err) => {
+                eprintln!("[media] {err}");
+                jobs.insert(key.to_string(), Job::Failed(err.to_string()));
+            }
+        }
+    }
+
+    fn decode_and_upload(&self, key: &str, path: &Path) -> AppResult<()> {
+        let open_error = |e: &dyn std::fmt::Display| AppError::new(format!("Error abriendo imagen '{}': {e}", path.display()));
+
+        // el encabezado dice el tamaño sin decodificar: se rechaza lo enorme antes de reservar memoria
+        let (width, height) = image::ImageReader::open(path)
+            .map_err(|e| open_error(&e))?
+            .with_guessed_format()
+            .map_err(|e| open_error(&e))?
+            .into_dimensions()
+            .map_err(|e| open_error(&e))?;
+        if width > MAX_IMAGE_SIDE || height > MAX_IMAGE_SIDE {
+            return Err(AppError::new(format!("Imagen '{}' demasiado grande ({width}x{height}): el máximo es {MAX_IMAGE_SIDE} px por lado", path.display())));
+        }
+
+        let rgba = image::open(path).map_err(|e| open_error(&e))?.to_rgba8();
+        let (width, height) = rgba.dimensions();
+        self.insert_rgba(key, width, height, &rgba.into_raw())?;
+        Ok(())
     }
 
     /// Carga una imagen desde bytes binarios en memoria.
@@ -605,4 +705,86 @@ mod tests {
         }
         assert_eq!(arena.push(&gpu.queue, &u), None);
     }
+
+    // --- F19.1: carga de imágenes fuera del hilo de render ---
+
+    /// PNG de `width × height` con ruido (para que decodificarlo no sea instantáneo).
+    fn noisy_png(name: &str, width: u32, height: u32) -> std::path::PathBuf {
+        let dir = std::env::temp_dir().join("pulseflow-media-tests");
+        std::fs::create_dir_all(&dir).expect("carpeta temporal");
+        let path = dir.join(name);
+        let image = image::RgbaImage::from_fn(width, height, |x, y| {
+            let n = x.wrapping_mul(2_654_435_761).wrapping_add(y.wrapping_mul(40_503));
+            image::Rgba([n as u8, (n >> 8) as u8, (n >> 16) as u8, 255])
+        });
+        image.save(&path).expect("guardar PNG de prueba");
+        path
+    }
+
+    fn wait_until_settled(store: &Arc<MediaStore>, path: &std::path::Path) -> MediaState {
+        let started = std::time::Instant::now();
+        loop {
+            let state = store.request_image(path);
+            if !matches!(state, MediaState::Loading) || started.elapsed() > std::time::Duration::from_secs(10) {
+                return state;
+            }
+            std::thread::sleep(std::time::Duration::from_millis(5));
+        }
+    }
+
+    #[test]
+    fn request_returns_immediately_while_loading() {
+        let store = store();
+        let path = noisy_png("grande.png", 3000, 3000);
+
+        let started = std::time::Instant::now();
+        let first = store.request_image(&path);
+        assert!(started.elapsed() < std::time::Duration::from_millis(50), "el pedido bloqueó {:?}", started.elapsed());
+        assert!(matches!(first, MediaState::Loading), "la primera respuesta es Loading");
+    }
+
+    #[test]
+    fn ready_after_worker_finishes() {
+        let store = store();
+        let path = noisy_png("lista.png", 64, 64);
+        match wait_until_settled(&store, &path) {
+            MediaState::Ready(texture) => assert_eq!((texture.width, texture.height), (64, 64)),
+            _ => panic!("tenía que quedar Ready"),
+        }
+        assert!(store.get(&path.to_string_lossy()).is_some(), "la textura queda en el almacén");
+    }
+
+    #[test]
+    fn fifty_requests_one_decode() {
+        let store = store();
+        let path = noisy_png("repetida.png", 512, 512);
+        for _ in 0..50 {
+            let _ = store.request_image(&path);
+        }
+        assert!(matches!(wait_until_settled(&store, &path), MediaState::Ready(_)));
+        assert_eq!(store.decodes(), 1, "un solo decode aunque se pida 50 veces");
+    }
+
+    #[test]
+    fn missing_file_is_failed_and_stable() {
+        let store = store();
+        let path = std::path::Path::new("/no/existe/imagen.png");
+        assert!(matches!(wait_until_settled(&store, path), MediaState::Failed(_)));
+        for _ in 0..10 {
+            assert!(matches!(store.request_image(path), MediaState::Failed(_)), "sigue Failed");
+        }
+        assert_eq!(store.decodes(), 1, "no se reencola");
+    }
+
+    #[test]
+    fn oversized_image_fails_without_decoding_it() {
+        let store = store();
+        // 20000 px de ancho: pasa el límite de 16384 por lado (el archivo en sí es chico)
+        let path = noisy_png("ancha.png", 20_000, 1);
+        match wait_until_settled(&store, &path) {
+            MediaState::Failed(reason) => assert!(reason.contains("16384"), "{reason}"),
+            _ => panic!("tenía que fallar por tamaño"),
+        }
+    }
 }
+

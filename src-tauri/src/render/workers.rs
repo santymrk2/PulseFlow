@@ -1,0 +1,101 @@
+//! Workers de I/O del engine (F19): un pequeño pool de hilos para trabajo que no puede bloquear ni
+//! al hilo de render ni al de comandos (decodificar imágenes, leer disco, generar miniaturas).
+
+use super::sync::MutexExt;
+use std::panic::{catch_unwind, AssertUnwindSafe};
+use std::sync::{mpsc, Arc, Mutex, OnceLock};
+use std::thread;
+
+type Job = Box<dyn FnOnce() + Send + 'static>;
+
+struct Pool {
+    sender: mpsc::Sender<Job>,
+}
+
+static POOL: OnceLock<Pool> = OnceLock::new();
+
+/// Mitad de los núcleos (mínimo 2, máximo 8): deja aire al hilo de render y a los de la app.
+fn worker_count() -> usize {
+    thread::available_parallelism().map(|n| n.get() / 2).unwrap_or(2).clamp(2, 8)
+}
+
+fn pool() -> &'static Pool {
+    POOL.get_or_init(|| {
+        let (sender, receiver) = mpsc::channel::<Job>();
+        let receiver = Arc::new(Mutex::new(receiver));
+        for index in 0..worker_count() {
+            let receiver = Arc::clone(&receiver);
+            let spawned = thread::Builder::new().name(format!("PulseFlow-IO-{index}")).spawn(move || loop {
+                // el lock sólo se sostiene mientras se espera el próximo job, no mientras se ejecuta
+                let job = receiver.lock_safe().recv();
+                let Ok(job) = job else { break };
+                // un job que hace panic no puede matar al trabajador
+                if catch_unwind(AssertUnwindSafe(job)).is_err() {
+                    eprintln!("[workers] un job de I/O terminó en panic");
+                }
+            });
+            if let Err(e) = spawned {
+                eprintln!("[workers] no se pudo iniciar el trabajador {index}: {e}");
+            }
+        }
+        Pool { sender }
+    })
+}
+
+/// Ejecuta `job` en un hilo del pool y devuelve de inmediato.
+pub fn submit(job: impl FnOnce() + Send + 'static) {
+    if pool().sender.send(Box::new(job)).is_err() {
+        eprintln!("[workers] el pool de I/O no está disponible");
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+    use std::sync::{mpsc, Arc};
+    use std::time::Duration;
+
+    #[test]
+    fn submit_runs_the_job_off_the_calling_thread() {
+        let (tx, rx) = mpsc::channel();
+        submit(move || {
+            let _ = tx.send(std::thread::current().id());
+        });
+        let worker = rx.recv_timeout(Duration::from_secs(2)).expect("el job corrió");
+        assert_ne!(worker, std::thread::current().id());
+    }
+
+    #[test]
+    fn every_submitted_job_runs() {
+        let counter = Arc::new(AtomicUsize::new(0));
+        let (tx, rx) = mpsc::channel();
+        for _ in 0..200 {
+            let (counter, tx) = (Arc::clone(&counter), tx.clone());
+            submit(move || {
+                counter.fetch_add(1, Ordering::SeqCst);
+                let _ = tx.send(());
+            });
+        }
+        for _ in 0..200 {
+            rx.recv_timeout(Duration::from_secs(5)).expect("terminó cada job");
+        }
+        assert_eq!(counter.load(Ordering::SeqCst), 200);
+    }
+
+    #[test]
+    fn a_panicking_job_does_not_kill_the_pool() {
+        submit(|| panic!("job que falla a propósito"));
+        let (tx, rx) = mpsc::channel();
+        // sobran trabajadores sanos o el hilo se recupera: igual tiene que correr el siguiente job
+        for _ in 0..16 {
+            let tx = tx.clone();
+            submit(move || {
+                let _ = tx.send(());
+            });
+        }
+        for _ in 0..16 {
+            rx.recv_timeout(Duration::from_secs(5)).expect("el pool sigue vivo");
+        }
+    }
+}

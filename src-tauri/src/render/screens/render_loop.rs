@@ -1,6 +1,7 @@
 //! Bucle de render por pantalla (un hilo WGPU por ventana).
 
 use super::*;
+use crate::render::media::{MediaState, MediaStore, MediaTexture};
 use crate::render::{gpu, media};
 
 // ---------------------------------------------------------------------------
@@ -47,7 +48,6 @@ pub(super) fn spawn_render_loop(
                 config.width,
                 config.height,
             );
-            let mut failed_images: HashSet<String> = HashSet::new();
 
             while running.load(Ordering::Relaxed) {
                 let frame_start = Instant::now();
@@ -137,23 +137,12 @@ pub(super) fn spawn_render_loop(
                     let blocks = match kind {
                         ScreenKind::Audience => {
                             if let Some(bg) = current.background {
-                                if store.get(&bg.id).is_none()
-                                    && !is_video(&bg)
-                                    && !failed_images.contains(&bg.id)
-                                {
-                                    if let Some(path) = bg.path.as_deref() {
-                                        if let Err(err) = store.load_image(path) {
-                                            eprintln!("[screens] {err}");
-                                            failed_images.insert(bg.id.clone());
-                                        }
-                                    }
-                                }
                                 if is_video(&bg) {
                                     // video: un frame NV12 por archivo (la ruta es el id), convertido a RGB en el shader
                                     if let Some(frame) = bg.path.as_deref().and_then(|path| store.get_video(path)) {
                                         nv12_pipeline.render(&device, &queue, &mut arena, &mut pass, &frame, w, h, bg.opacity, bg.aspect_mode);
                                     }
-                                } else if let Some(texture) = store.get(&bg.id) {
+                                } else if let Some(texture) = bg.path.as_deref().and_then(|path| ready_image(&store, path)) {
                                     background_pipeline.render(
                                         &queue,
                                         &mut arena,
@@ -173,15 +162,7 @@ pub(super) fn spawn_render_loop(
                                 if item.media_type != "image" || item.path.is_empty() {
                                     continue;
                                 }
-                                if store.get(&item.id).is_none()
-                                    && !failed_images.contains(&item.id)
-                                {
-                                    if let Err(err) = store.load_image(&item.path) {
-                                        eprintln!("[screens] {err}");
-                                        failed_images.insert(item.id.clone());
-                                    }
-                                }
-                                if let Some(texture) = store.get(&item.id) {
+                                if let Some(texture) = ready_image(&store, &item.path) {
                                     // La caja viene en la resolución lógica de la escena.
                                     let scale = match item.design_width {
                                         Some(dw) if dw > 0.0 => w as f32 / dw,
@@ -225,15 +206,7 @@ pub(super) fn spawn_render_loop(
                             if item.media_type != "image" || item.path.is_empty() {
                                 continue;
                             }
-                            if store.get(&item.id).is_none()
-                                && !failed_images.contains(&item.id)
-                            {
-                                if let Err(err) = store.load_image(&item.path) {
-                                    eprintln!("[screens] {err}");
-                                    failed_images.insert(item.id.clone());
-                                }
-                            }
-                            if let Some(texture) = store.get(&item.id) {
+                            if let Some(texture) = ready_image(&store, &item.path) {
                                 let scale = match item.design_width {
                                     Some(dw) if dw > 0.0 => w as f32 / dw,
                                     _ => 1.0,
@@ -342,3 +315,11 @@ pub(super) fn overlay_block(o: OverlayItem, surface_width: u32) -> TextBlock {
     }
 }
 
+/// Textura de la imagen si ya está lista. Si no, la pide a los workers (sin bloquear el hilo de render)
+/// y devuelve `None`: la capa aparece en el primer frame después de que termine de cargarse.
+fn ready_image(store: &Arc<MediaStore>, path: &str) -> Option<Arc<MediaTexture>> {
+    match store.request_image(std::path::Path::new(path)) {
+        MediaState::Ready(texture) => Some(texture),
+        MediaState::Loading | MediaState::Failed(_) => None,
+    }
+}

@@ -20,6 +20,7 @@ pub mod text;
 pub mod transition;
 pub mod types;
 pub mod video;
+pub mod workers;
 
 // F4.2: tests del contrato Scene Graph contra los fixtures del frontend.
 #[cfg(test)]
