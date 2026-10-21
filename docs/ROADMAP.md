@@ -1665,6 +1665,24 @@ Plan: `docs/superpowers/plans/2026-10-20-gpu-compartida-zero-copy-workers.md`.
 
 ---
 
+## F20 — Columna izquierda: LIBRARIES · PLAYLISTS · ÍTEMS
+
+Diseño: `docs/superpowers/specs/2026-10-20-columna-izquierda-library-playlist-items-design.md`.
+Sin documento de plan aparte (el usuario pidió ejecutar directo).
+
+- [x] **F20.1** Lógica pura de la fuente de ÍTEMS (`show/leftSource.ts`: fuente válida/inicial, filtro sin acentos, selección múltiple, shows de una biblioteca) y store `leftSource`.
+- [x] **F20.2** Una sola library por defecto, `general` ("General"), en `default_synced_settings` (Rust) y traducciones. Los usuarios existentes conservan las suyas.
+- [x] **F20.3** `show/projectTree.ts`: el árbol de playlists de `Projects.svelte` como función pura con tests.
+- [x] **F20.4** Paneles `show/left/` (`LeftColumn`, `LibrariesPanel`, `PlaylistsPanel`, `ItemsPanel`, `LeftPanel` con barra de título/contador/pastilla), modal "Agregar shows" (`add_shows`) y divisores arrastrables (`panelSizes.ts`, 18 · 22 · resto, guardados en `resized`). `openProject` marca la fuente.
+- [x] **F20.5** Cajón sin la vista Shows, pestañas con texto, arranca en Media; `Ctrl+1` enfoca el buscador de la biblioteca.
+- [x] **F20.6** Armar un servicio: arrastrar un show de ÍTEMS a una playlist (`dropActions.projects`) y clic derecho → "Agregar a playlist" (`LOAD_add_to_playlist`). `LibrariesPanel` conserva mover shows entre bibliotecas arrastrando (`DropArea id="navigation"`).
+- [x] **F20.7** "Importar" en el `+` de ÍTEMS (con biblioteca) y opciones de playlists (nombre por defecto, lista al inicio) en un modal.
+- [ ] **F20.8 Verificación en la app real (usuario).** No se pudo mirar la pantalla (extensión de Chrome sin conexión). Falta probar: elegir biblioteca/playlist, buscar, modal Agregar shows, arrastrar, divisores, renombrar y menú contextual de una biblioteca, pestañas del cajón con poco ancho, perfil con acceso restringido.
+
+*Decisiones propias:* ÍTEMS no tiene "⋯ más" en el cajón (la tira de pestañas se desplaza); "Agregar a playlist" muestra todas las playlists; la library virtual "Sin etiqueta" aparece sólo si hay shows sin categoría; `Projects.svelte` quedó sin usar (se conserva): su lista de "usadas recientemente" y la vista de edición de plantillas de proyecto ya no tienen acceso.
+
+---
+
 ## Deuda registrada (sin tarea)
 
 - **Cliente `src/server/controller`** todavía tiene la interfaz de Dibujo (Focus, Zoom,
