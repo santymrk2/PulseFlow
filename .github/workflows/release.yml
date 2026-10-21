@@ -65,4 +65,16 @@ jobs:
               run: |
                   flag=""
                   if [ "$PRERELEASE" = "true" ]; then flag="--prerelease"; fi
-                  gh release create "v$VERSION" $flag --target "$GITHUB_SHA" --title "PulseFlow $VERSION" --generate-notes dist/*/*
+                  # Sólo archivos: los artefactos pueden traer subcarpetas (p. ej. nsis/) y un glob
+                  # `dist/*/*` haría que gh intente subir un directorio como si fuera un asset.
+                  # Si un intento anterior ya creó el release, se le suben los assets de vuelta.
+                  mapfile -t assets < <(find dist -type f)
+                  if [ "${#assets[@]}" -eq 0 ]; then
+                      echo "::error::No se descargó ningún instalador (revisar el patrón de artefactos)."
+                      exit 1
+                  fi
+                  if gh release view "v$VERSION" >/dev/null 2>&1; then
+                      gh release upload "v$VERSION" "${assets[@]}" --clobber
+                  else
+                      gh release create "v$VERSION" $flag --target "$GITHUB_SHA" --title "PulseFlow $VERSION" --generate-notes "${assets[@]}"
+                  fi
