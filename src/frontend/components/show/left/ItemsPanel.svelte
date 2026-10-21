@@ -6,6 +6,7 @@
     import { activePopup, activeProfile, categories, leftSource, projects, sortedShowsList } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { getAccess } from "../../../utils/profile"
+    import LibraryAddMenu from "../LibraryAddMenu.svelte"
     import ProjectContentList from "../ProjectContentList.svelte"
     import { filterShows, showsOfLibrary, UNLABELED_LIBRARY_ID } from "../leftSource"
     import LeftPanel from "./LeftPanel.svelte"
@@ -34,17 +35,15 @@
     const rawName = (name: string | undefined) => (name?.includes(".") ? translateText(name) : name || "")
     $: contextName = library ? (library === UNLABELED_LIBRARY_ID ? translateText("category.unlabeled") : rawName($categories[library]?.name)) : playlistId ? $projects[playlistId]?.name || translateText("main.unnamed") : ""
     $: count = library ? libraryShows.length : playlistId ? ($projects[playlistId]?.shows?.length ?? 0) : null
-
-    // biblioteca: show nuevo (queda en esa biblioteca); playlist: modal para elegir shows
-    const add = () => activePopup.set(library ? "show" : "add_shows")
-    $: addTitle = library ? "new.show" : "ui.add_shows"
 </script>
 
 <LeftPanel title={translateText("ui.items_title")} context={contextName} {count}>
     {#snippet actions()}
         {#if playlistId}<PlaylistOptionsMenu projectId={playlistId} />{/if}
-        {#if source}
-            <Button variant="ghost" size="icon-sm" icon="add" iconSize={0.9} title={addTitle} disabled={readOnly} onclick={add} />
+        {#if library}
+            <LibraryAddMenu {readOnly} />
+        {:else if playlistId}
+            <Button variant="ghost" size="icon-sm" icon="add" iconSize={0.9} title="ui.add_shows" disabled={readOnly} onclick={() => activePopup.set("add_shows")} />
         {/if}
     {/snippet}
 

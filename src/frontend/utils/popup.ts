@@ -93,6 +93,7 @@ import UpdateManager from "../components/main/popups/UpdateManager.svelte"
 import Variable from "../components/main/popups/Variable.svelte"
 import ScreenConfig from "../components/screens/ScreenConfig.svelte"
 import AddShowsModal from "../components/show/left/AddShowsModal.svelte"
+import PlaylistOptionsModal from "../components/show/left/PlaylistOptionsModal.svelte"
 import { activePopup, popupData } from "../stores"
 
 export const popups: { [key in Popups]: ComponentType } = {
@@ -186,6 +187,7 @@ export const popups: { [key in Popups]: ComponentType } = {
     looks: LooksWindow,
     screen_config: ScreenConfig,
     add_shows: AddShowsModal,
+    playlist_options: PlaylistOptionsModal,
     kit_demo: KitDemo
 }
 

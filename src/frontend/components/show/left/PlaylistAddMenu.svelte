@@ -8,7 +8,7 @@
     import Menu from "../../../lib/components/ui/menu/menu.svelte"
     import MenuItem from "../../../lib/components/ui/menu/menu-item.svelte"
     import MenuSeparator from "../../../lib/components/ui/menu/menu-separator.svelte"
-    import { activeProject, activeRename, folders, projects, projectTemplates } from "../../../stores"
+    import { activePopup, activeProject, activeRename, folders, projects, projectTemplates } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
@@ -70,6 +70,8 @@
         <MenuSeparator />
         <MenuItem onclick={() => run(newTemplate)}>{translateText("actions.project_template")}</MenuItem>
         <MenuItem onclick={() => run(importProject)}>{translateText("actions.import")}</MenuItem>
+        <MenuSeparator />
+        <MenuItem onclick={() => run(() => activePopup.set("playlist_options"))}>{translateText("edit.options")}</MenuItem>
     </Menu>
 </div>
 

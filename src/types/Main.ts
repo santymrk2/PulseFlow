@@ -526,6 +526,7 @@ export type Popups =
     | "looks"
     | "screen_config"
     | "add_shows"
+    | "playlist_options"
     | "kit_demo"
 
 export type DefaultProjectNames = "date" | "today" | "sunday" | "week" | "custom" | "blank"
