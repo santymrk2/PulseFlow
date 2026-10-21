@@ -62,6 +62,15 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
     let running = Arc::new(AtomicBool::new(true));
     let surface_size = Arc::new(Mutex::new(window.inner_size().unwrap_or(PhysicalSize::new(1920, 1080))));
 
+    let on_close: Arc<dyn Fn() + Send + Sync> = {
+        let app = app.clone();
+        let id = config.id.clone();
+        Arc::new(move || {
+            let _ = close_screen(&app, &id);
+            emit_output_state(&app, &[(id.clone(), false)]);
+        })
+    };
+
     let thread = match spawn_render_loop(
         Arc::clone(&window),
         kind,
@@ -69,6 +78,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
         Arc::clone(&running),
         Arc::clone(&transition),
         Arc::clone(&surface_size),
+        Some(on_close),
     ) {
         Ok(thread) => thread,
         Err(err) => {

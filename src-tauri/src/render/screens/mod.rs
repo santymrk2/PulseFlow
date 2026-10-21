@@ -308,6 +308,7 @@ fn screen_label(id: &str) -> String {
 }
 
 
+mod close_button;
 mod identify;
 mod lifecycle;
 mod monitors;

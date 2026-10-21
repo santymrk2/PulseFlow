@@ -15,6 +15,8 @@ pub(super) fn spawn_render_loop(
     running: Arc<AtomicBool>,
     pending_transition: Arc<Mutex<Option<TransitionRequest>>>,
     surface_size: Arc<Mutex<PhysicalSize<u32>>>,
+    // `None` en ventanas sin botón de cierre (identificación de pantallas)
+    on_close: Option<Arc<dyn Fn() + Send + Sync>>,
 ) -> AppResult<JoinHandle<()>> {
     let gpu = gpu::shared()?;
     let store = media::shared_store()?;
@@ -49,8 +51,33 @@ pub(super) fn spawn_render_loop(
                 config.height,
             );
 
+            // "✕" de cierre: se muestra con el mouse sobre la ventana; el clic se detecta por flanco.
+            let mut was_down = false;
+            let mut close_fired = false;
+
             while running.load(Ordering::Relaxed) {
                 let frame_start = Instant::now();
+                let (cursor_inside, cursor_on_button, clicked) = {
+                    let down = close_button::left_button_down();
+                    let local = match (window.cursor_position(), window.inner_position()) {
+                        (Ok(c), Ok(o)) => Some(((c.x - o.x as f64) as f32, (c.y - o.y as f64) as f32)),
+                        _ => None,
+                    };
+                    let state = local
+                        .map(|(x, y)| {
+                            let inside = close_button::inside(config.width, config.height, x, y);
+                            (inside, inside && close_button::hit(config.height, x, y))
+                        })
+                        .unwrap_or((false, false));
+                    let clicked = down && !was_down && state.1;
+                    was_down = down;
+                    (state.0, state.1, clicked)
+                };
+                let cursor_inside = cursor_inside && on_close.is_some();
+                if let (true, false, Some(close)) = (clicked, close_fired, on_close.as_ref()) {
+                    close_fired = true;
+                    close();
+                }
                 arena.begin_frame();
 
                 {
@@ -280,6 +307,27 @@ pub(super) fn spawn_render_loop(
                         multiview_mask: None,
                     });
                     transition_engine.render(&queue, &mut pass);
+                }
+
+                if cursor_inside {
+                    let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                        label: Some("PulseFlow Close Button Pass"),
+                        color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                            view: &view,
+                            resolve_target: None,
+                            ops: wgpu::Operations {
+                                load: wgpu::LoadOp::Load,
+                                store: wgpu::StoreOp::Store,
+                            },
+                            depth_slice: None,
+                        })],
+                        depth_stencil_attachment: None,
+                        timestamp_writes: None,
+                        occlusion_query_set: None,
+                        multiview_mask: None,
+                    });
+                    let block = close_button::block(config.height, cursor_on_button);
+                    let _ = text_engine.render(&device, &queue, &mut pass, config.width, config.height, &[block]);
                 }
 
                 queue.submit([encoder.finish()]);
