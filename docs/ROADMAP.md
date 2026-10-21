@@ -1655,7 +1655,13 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   de la corrida viven 14 días; los assets del release son permanentes.
   *Archivos:* `.github/workflows/build.yml`, `.github/workflows/release.yml`, `src-tauri/tauri.conf.json`,
   `src-tauri/Cargo.toml`, `src-tauri/Cargo.lock`.
-  *Verificación:* pendiente de confirmar la publicación de `v0.1.0-beta.1` desde `main`.
+  *Corrección en el camino:* el primer intento de publicar dejó el release **sin assets** porque el glob
+  `dist/*/*` incluía las subcarpetas de los artefactos (p. ej. `pulseflow-windows-x64/nsis/`) y `gh release`
+  intentaba subir un directorio como asset; ahora la publicación enumera sólo archivos (`find dist -type f`),
+  valida que haya al menos un instalador y, si el release ya existe, le sube los assets con `--clobber`.
+  *Verificación:* ✅ publicado **`v0.1.0-beta.1`** desde `main` (2026-10-21, corrida 39657553622) como
+  **pre-release** con ambos instaladores adjuntos: `PulseFlow_0.1.0-beta.1_aarch64.dmg` (35 MB) y
+  `PulseFlow_0.1.0-beta.1_x64-setup.exe` (49 MB).
 
 ---
 
