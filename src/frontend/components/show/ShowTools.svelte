@@ -2,6 +2,7 @@
     import type { TabsObj } from "../../../types/Tabs"
     import type { Output } from "../../../types/Output"
     import { activeShow, labelsDisabled, outputs, showsCache, slideTimers } from "../../stores"
+    import { translateText } from "../../utils/language"
     import { getActiveOutputs } from "../helpers/output"
     import { _show } from "../helpers/shows"
     import Tabs from "../main/Tabs.svelte"
@@ -57,6 +58,7 @@
         <!-- nothing needed -->
     {:else}
         <Tabs {tabs} bind:active labels={false} />
+        <div class="tabTitle">{translateText(tabs[active]?.name || "")}</div>
 
         {#if currentShow}
             {#if active === "audio"}
@@ -88,6 +90,15 @@
         flex-direction: column;
         overflow: hidden;
         height: 100%;
+    }
+    .tabTitle {
+        padding: 4px 10px;
+        font-size: var(--text-xs);
+        font-weight: 600;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        opacity: 0.6;
+        border-bottom: 1px solid var(--border);
     }
     .content {
         height: 100%;

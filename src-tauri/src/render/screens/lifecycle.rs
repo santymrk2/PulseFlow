@@ -55,6 +55,12 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
         .map_err(|e| AppError::new(format!("Error al crear la ventana de salida: {e}")))?;
 
     place_window(app, &window, config, kind);
+    log::info!(
+        "Pantalla abierta: id={} etiqueta={label} tipo={kind:?} monitor_asignado={} bounds={:?}",
+        config.id,
+        config.has_assigned_monitor(),
+        config.bounds
+    );
 
     let window = Arc::new(window);
     let scene = state.scene(&config.id);
