@@ -47,6 +47,18 @@ pub(super) struct VideoInfo {
     pub width: u32,
     pub height: u32,
     pub fps: (u32, u32),
+    /// Matriz de color declarada por el archivo (`color_space` de ffprobe); `None` si no la trae.
+    pub matrix: Option<YuvMatrix>,
+}
+
+/// `color_space` de ffprobe → matriz de conversión YCbCr→RGB. `None` para lo desconocido o no-YCbCr.
+pub(super) fn matrix_from_color_space(name: &str) -> Option<YuvMatrix> {
+    match name.trim().to_ascii_lowercase().as_str() {
+        "bt709" => Some(YuvMatrix::Bt709),
+        "bt470bg" | "smpte170m" | "bt470m" | "smpte240m" => Some(YuvMatrix::Bt601),
+        "bt2020nc" | "bt2020c" | "bt2020_ncl" | "bt2020_cl" => Some(YuvMatrix::Bt2020),
+        _ => None,
+    }
 }
 
 /// Lee tamaño y tasa de cuadros del primer stream de video del JSON de `ffprobe`.
@@ -55,7 +67,8 @@ pub(super) fn video_info_from_probe(probe: &serde_json::Value) -> Option<VideoIn
     let width = u32::try_from(stream["width"].as_u64()?).ok()?;
     let height = u32::try_from(stream["height"].as_u64()?).ok()?;
     let fps = ["avg_frame_rate", "r_frame_rate"].iter().find_map(|key| parse_frame_rate(stream[key].as_str()?)).unwrap_or(FALLBACK_FPS);
-    Some(VideoInfo { width, height, fps })
+    let matrix = stream["color_space"].as_str().and_then(matrix_from_color_space);
+    Some(VideoInfo { width, height, fps, matrix })
 }
 
 /// Tamaño de salida: entra en `max_w × max_h` sin agrandar, conserva la proporción y es par
@@ -119,14 +132,16 @@ impl FfmpegDecoder {
             .spawn(move || {
                 // `ffprobe` es async: se espera acá, en el hilo del decodificador, no en el de comandos.
                 let info = tauri::async_runtime::block_on(ffmpeg_bin::probe(&app, &video_path)).ok().and_then(|probe| video_info_from_probe(&probe));
-                let (width, height, fps) = match &info {
+                let (width, height, fps, declared_matrix) = match &info {
                     Some(info) => {
                         let (w, h) = fit_even(info.width, info.height, MAX_WIDTH, MAX_HEIGHT);
-                        (w, h, info.fps)
+                        (w, h, info.fps, info.matrix)
                     }
-                    None => (MAX_WIDTH, MAX_HEIGHT, FALLBACK_FPS),
+                    None => (MAX_WIDTH, MAX_HEIGHT, FALLBACK_FPS, None),
                 };
-                let mut session = Session { ffmpeg: &ffmpeg, path: &video_path, width, height, fps, running: &running_thread, child: &child_thread, sink: sink.as_ref(), frames: 0 };
+                // la que declara el archivo; si no trae, la convención por alto
+                let matrix = declared_matrix.unwrap_or_else(|| guess_matrix(height));
+                let mut session = Session { ffmpeg: &ffmpeg, path: &video_path, width, height, fps, matrix, running: &running_thread, child: &child_thread, sink: sink.as_ref(), frames: 0 };
 
                 // 1er intento: aceleración por hardware nativa.
                 let end = session.run(Some(hwaccel));
@@ -149,6 +164,7 @@ struct Session<'a> {
     width: u32,
     height: u32,
     fps: (u32, u32),
+    matrix: YuvMatrix,
     running: &'a Arc<AtomicBool>,
     child: &'a Arc<Mutex<Option<Child>>>,
     sink: &'a dyn FrameSink,
@@ -208,7 +224,7 @@ impl Session<'_> {
     fn read_frames(&mut self, mut stdout: impl Read, hwaccel: Option<&str>) -> SessionEnd {
         let mut buffer = vec![0u8; nv12_frame_size(self.width, self.height)];
         let luma = (self.width * self.height) as usize;
-        let matrix: YuvMatrix = guess_matrix(self.height);
+        let matrix = self.matrix;
 
         while self.running.load(Ordering::Relaxed) {
             if let Err(e) = stdout.read_exact(&mut buffer) {
@@ -281,6 +297,27 @@ mod tests {
 
         assert!(video_info_from_probe(&json!({ "streams": [{ "codec_type": "audio" }] })).is_none());
         assert!(video_info_from_probe(&json!({})).is_none());
+    }
+
+    #[test]
+    fn color_space_names_map_to_matrices() {
+        assert_eq!(matrix_from_color_space("bt709"), Some(YuvMatrix::Bt709));
+        assert_eq!(matrix_from_color_space("bt470bg"), Some(YuvMatrix::Bt601));
+        assert_eq!(matrix_from_color_space("smpte170m"), Some(YuvMatrix::Bt601));
+        assert_eq!(matrix_from_color_space("bt2020nc"), Some(YuvMatrix::Bt2020));
+        assert_eq!(matrix_from_color_space("BT2020C"), Some(YuvMatrix::Bt2020), "sin importar mayúsculas");
+        assert_eq!(matrix_from_color_space("unknown"), None);
+        assert_eq!(matrix_from_color_space("gbr"), None);
+        assert_eq!(matrix_from_color_space(""), None);
+    }
+
+    #[test]
+    fn video_info_reads_the_declared_matrix() {
+        let tagged = json!({ "streams": [{ "codec_type": "video", "width": 640, "height": 360, "avg_frame_rate": "30/1", "color_space": "bt709" }] });
+        assert_eq!(video_info_from_probe(&tagged).expect("info").matrix, Some(YuvMatrix::Bt709));
+
+        let untagged = json!({ "streams": [{ "codec_type": "video", "width": 640, "height": 360, "avg_frame_rate": "30/1" }] });
+        assert_eq!(video_info_from_probe(&untagged).expect("info").matrix, None, "sin etiqueta se adivina después, por el alto");
     }
 
     #[test]

@@ -22,8 +22,7 @@ CbCr: `RG8Unorm`) → `wgpu::hal::metal::Device::texture_from_raw` → `Device::
 - El `CVMetalTexture` y el `CVPixelBuffer` se retienen en el callback de destrucción de la textura (el `Nv12Frame`
   guarda además el buffer): el decodificador puede reciclar el buffer sólo cuando la GPU terminó.
 - `CVMetalTextureCache` se declara `Send` (no `Sync`): quien la comparte la guarda en un `Mutex`.
-- Límites: sólo NV12 de 8 bits. 10 bits (P010/HDR), 4:2:2 y 4:4:4 se rechazan y caen al camino ffmpeg. La matriz
-  de color se elige por alto (≥720 → BT.709, si no BT.601); falta leer los adjuntos de color del buffer.
+- Límites: sólo NV12 de 8 bits. 10 bits (P010/HDR), 4:2:2 y 4:4:4 se rechazan y caen al camino ffmpeg. La matriz de color sale del adjunto `kCVImageBufferYCbCrMatrixKey` del buffer (nativo) o de `color_space` de ffprobe (ffmpeg); si el video no la declara se usa la convención por alto (≥ 720 → BT.709, si no BT.601).
 
 ## Windows — implementado y compilado, sin ejecutar
 

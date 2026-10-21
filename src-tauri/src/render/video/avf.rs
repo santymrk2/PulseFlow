@@ -313,6 +313,35 @@ mod tests {
         assert_near(render_center(&frame), [255, 0, 0], "rojo decodificado por AVFoundation");
     }
 
+    /// Primer frame nativo de `path`.
+    fn first_native_frame(path: &str) -> super::super::nv12::Nv12Frame {
+        let sink = Arc::new(First::default());
+        let mut decoder = start(path, sink.clone()).expect("abrir el video");
+        let started = Instant::now();
+        while sink.0.lock().expect("lock").is_none() && started.elapsed() < Duration::from_secs(5) {
+            std::thread::sleep(Duration::from_millis(10));
+        }
+        decoder.stop();
+        let frame = sink.0.lock().expect("lock").take();
+        frame.expect("llegó un frame nativo")
+    }
+
+    #[test]
+    fn native_frame_uses_the_matrix_declared_by_the_file() {
+        use super::super::nv12::YuvMatrix;
+
+        // etiquetado BT.709 aunque sólo mide 64 px (la convención por alto diría BT.601)
+        let tagged = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/video/solid_red_64_bt709.mp4");
+        assert_eq!(first_native_frame(tagged).matrix, YuvMatrix::Bt709);
+    }
+
+    #[test]
+    fn a_file_without_a_declared_matrix_falls_back_to_the_height_convention() {
+        use super::super::nv12::YuvMatrix;
+
+        assert_eq!(first_native_frame(FIXTURE).matrix, YuvMatrix::Bt601, "64 px y sin etiqueta: SD");
+    }
+
     /// CPU (usuario + sistema) consumido por este proceso hasta ahora.
     fn process_cpu() -> Duration {
         // SAFETY: `getrusage` escribe en una estructura propia y válida.

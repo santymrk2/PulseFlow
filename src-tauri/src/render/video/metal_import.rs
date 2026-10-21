@@ -5,14 +5,14 @@
 //! IOSurface; `wgpu::hal::metal` la envuelve como `wgpu::Texture`. Mientras la textura viva,
 //! el `CVMetalTexture` y el `CVPixelBuffer` se retienen en el callback de destrucción.
 
-use super::nv12::{guess_matrix, Nv12Frame};
+use super::nv12::{guess_matrix, Nv12Frame, YuvMatrix};
 use crate::error::{AppError, AppResult};
 use crate::render::gpu::GpuContext;
 use objc2::rc::Retained;
 use objc2::runtime::ProtocolObject;
-use objc2_core_foundation::CFRetained;
+use objc2_core_foundation::{CFRetained, CFString};
 use objc2_core_video::{
-    kCVPixelFormatType_420YpCbCr8BiPlanarFullRange, kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange, kCVReturnSuccess, CVMetalTextureCache, CVMetalTextureGetTexture, CVPixelBuffer,
+    kCVImageBufferYCbCrMatrixKey, kCVImageBufferYCbCrMatrix_ITU_R_2020, kCVImageBufferYCbCrMatrix_ITU_R_601_4, kCVImageBufferYCbCrMatrix_ITU_R_709_2, kCVPixelFormatType_420YpCbCr8BiPlanarFullRange, kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange, kCVReturnSuccess, CVMetalTextureCache, CVMetalTextureGetTexture, CVPixelBuffer,
     CVPixelBufferGetHeightOfPlane, CVPixelBufferGetPixelFormatType, CVPixelBufferGetPlaneCount, CVPixelBufferGetWidthOfPlane,
 };
 use objc2_metal::{MTLDevice, MTLPixelFormat, MTLTexture, MTLTextureType};
@@ -61,6 +61,22 @@ fn retain_buffer(pixel_buffer: &CVPixelBuffer) -> CFRetained<CVPixelBuffer> {
     unsafe { CFRetained::retain(NonNull::from(pixel_buffer)) }
 }
 
+/// Matriz de color que el `CVPixelBuffer` trae como adjunto (`kCVImageBufferYCbCrMatrixKey`), si la trae.
+fn declared_matrix(pixel_buffer: &CVPixelBuffer) -> Option<YuvMatrix> {
+    // SAFETY: lectura de un adjunto con la clave de CoreVideo; `attachment` devuelve una referencia +1 propia.
+    let value = unsafe { pixel_buffer.attachment(kCVImageBufferYCbCrMatrixKey, std::ptr::null_mut()) }?;
+    let name = value.downcast_ref::<CFString>()?.to_string();
+
+    // SAFETY: las constantes de CoreVideo son `CFString` inmortales.
+    let (bt709, bt601, bt2020) = unsafe { (kCVImageBufferYCbCrMatrix_ITU_R_709_2.to_string(), kCVImageBufferYCbCrMatrix_ITU_R_601_4.to_string(), kCVImageBufferYCbCrMatrix_ITU_R_2020.to_string()) };
+    match name {
+        n if n == bt709 => Some(YuvMatrix::Bt709),
+        n if n == bt601 => Some(YuvMatrix::Bt601),
+        n if n == bt2020 => Some(YuvMatrix::Bt2020),
+        _ => None,
+    }
+}
+
 /// Envuelve los dos planos de `pixel_buffer` (NV12) como texturas de wgpu, sin copiar.
 pub fn import_pixel_buffer(gpu: &GpuContext, cache: &MetalTextureCache, pixel_buffer: &CVPixelBuffer) -> AppResult<Nv12Frame> {
     let format = CVPixelBufferGetPixelFormatType(pixel_buffer);
@@ -76,8 +92,8 @@ pub fn import_pixel_buffer(gpu: &GpuContext, cache: &MetalTextureCache, pixel_bu
     let y = import_plane(gpu, cache, pixel_buffer, 0, MTLPixelFormat::R8Unorm, wgpu::TextureFormat::R8Unorm)?;
     let uv = import_plane(gpu, cache, pixel_buffer, 1, MTLPixelFormat::RG8Unorm, wgpu::TextureFormat::Rg8Unorm)?;
 
-    // Sin metadatos de color confiables se usa la convención de los decodificadores.
-    let matrix = guess_matrix(y.height());
+    // la matriz que declara el video; si no la trae, la convención por alto (HD = BT.709, SD = BT.601)
+    let matrix = declared_matrix(pixel_buffer).unwrap_or_else(|| guess_matrix(y.height()));
     let keepalive: Box<dyn std::any::Any + Send + Sync> = Box::new(Keepalive(retain_buffer(pixel_buffer)));
     Ok(Nv12Frame::new(y, uv, matrix, full_range, Some(keepalive)))
 }
