@@ -1,11 +1,10 @@
 <script lang="ts">
     import type { SettingsTabs } from "../../../types/Tabs"
-    import { activePage, activeProfile, focusMode, profiles, settingsTab } from "../../stores"
+    import { activeProfile, profiles, settingsTab } from "../../stores"
     import { settingsTabs } from "../../values/tabs"
     import { clone } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import Button from "../inputs/Button.svelte"
 
     let activeTabs: SettingsTabs[] = []
     $: profile = $profiles[$activeProfile || ""]
@@ -40,40 +39,49 @@
 
 <svelte:window on:keydown={keydown} />
 
-{#if $focusMode}
-    <Button on:click={() => activePage.set("show")} center dark>
-        <Icon id="back" right />
-        <T id="actions.back" />
-    </Button>
-{/if}
-
-<div class="main">
+<nav class="settings-tabs-nav">
     {#each activeTabs as tab}
-        <Button id="button" on:click={() => settingsTab.set(tab)} active={$settingsTab === tab} bold={false}>
-            <Icon id={tab} right white={$settingsTab === tab} />
-            <p style="margin: 5px;"><T id="settings.{tab}" /></p>
-        </Button>
+        <button class="settings-tab" class:active={$settingsTab === tab} on:click={() => settingsTab.set(tab)}>
+            <Icon id={tab} size={1} />
+            <span><T id="settings.{tab}" /></span>
+        </button>
     {/each}
-</div>
+</nav>
 
 <style>
-    .main {
+    .settings-tabs-nav {
+        flex: 1;
+        min-height: 0;
+        overflow-y: auto;
         display: flex;
         flex-direction: column;
-        height: 100%;
-        overflow: auto;
+        gap: 2px;
+        padding: 8px;
     }
-
-    .main :global(#button) {
-        padding: 0.3em 0.8em;
+    .settings-tab {
+        display: flex;
+        align-items: center;
+        gap: 10px;
         width: 100%;
+        text-align: left;
+        padding: 8px 10px;
+        border: none;
+        border-radius: 6px;
+        background: transparent;
+        color: var(--text);
+        opacity: 0.7;
+        font-size: 0.85em;
+        cursor: pointer;
+        transition:
+            background-color 0.15s ease,
+            opacity 0.15s ease;
     }
-
-    .main :global(button:nth-child(even)) {
-        background-color: rgb(0 0 20 / 0.08);
+    .settings-tab:hover {
+        background-color: var(--bg-hover);
+        opacity: 1;
     }
-
-    .main :global(button.active) {
-        background-color: var(--primary-darker);
+    .settings-tab.active {
+        background-color: var(--primary-lighter, var(--bg-selected));
+        opacity: 1;
     }
 </style>

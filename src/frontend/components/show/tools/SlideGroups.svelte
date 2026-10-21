@@ -12,8 +12,8 @@
     import Icon from "../../helpers/Icon.svelte"
     import { _show } from "../../helpers/shows"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import { getDuplicateGroups, getSlideGroups, mergeDuplicateGroups } from "./groups"
@@ -186,20 +186,20 @@
         {/if}
     </div>
 
-    <FloatingInputs round={!(!isLocked && duplicateGroups.length)}>
+    <FloatingBar round={!(!isLocked && duplicateGroups.length)}>
         {#if !isLocked && duplicateGroups.length}
-            <MaterialButton title="groups.merge_duplicated_groups" on:click={() => mergeDuplicateGroups(showId, duplicateGroups)}>
-                <Icon id="autofill" gradient />
+            <Button title="groups.merge_duplicated_groups" on:click={() => mergeDuplicateGroups(showId, duplicateGroups)}>
+                <Icon id="autofill" />
                 <T id="groups.merge_duplicated_groups" />
-            </MaterialButton>
+            </Button>
 
             <div class="divider"></div>
         {/if}
 
-        <MaterialButton isActive={displayGlobalGroups} title="groups.toggle_global_group" on:click={() => globalGroupViewEnabled.set(!$globalGroupViewEnabled)}>
+        <Button isActive={displayGlobalGroups} title="groups.toggle_global_group" on:click={() => globalGroupViewEnabled.set(!$globalGroupViewEnabled)}>
             <Icon style={displayGlobalGroups ? "" : "opacity: 0.8;"} id="groups" white={!displayGlobalGroups} />
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 </div>
 
 <style>

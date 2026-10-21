@@ -138,10 +138,7 @@ export interface Item {
     blend?: string
     muted?: boolean // media item
     loop?: boolean // media item
-    volume?: number // media item
     speed?: number // media item
-    fromTime?: number // media item
-    toTime?: number // media item
     variable?: any
     web?: any
     qr_code?: { text?: string; color?: string; background?: string }
@@ -210,7 +207,7 @@ export interface ShowGroup {
 export interface Timer {
     id?: string
     name: string
-    type: "counter" | "clock" | "event" | "pco_live"
+    type: "counter" | "clock" | "event"
     viewType?: "time" | "line" | "circle"
     circleMask?: boolean
     showHours?: boolean // use just minutes or minutes and hours
@@ -220,13 +217,6 @@ export interface Timer {
     endDynamic?: string
     event?: string
     time?: string
-
-    // PCO Live
-    pco?: {
-        serviceTypeId: string
-        planId: string
-        countdownType: "end_on_time" | "full_length" | "end_service"
-    }
 
     warn?: boolean
     warnOffset?: number

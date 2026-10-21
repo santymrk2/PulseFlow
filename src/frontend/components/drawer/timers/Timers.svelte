@@ -7,30 +7,28 @@
     import T from "../../helpers/T.svelte"
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { joinTime, secondsToTime } from "../../helpers/time"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import Slider from "../../inputs/Slider.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import Slider from "../../../lib/components/ui/slider/slider.svelte"
     import Timer from "../../slide/views/Timer.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import { getCurrentTimerValue, getTimerDynamicValue, playPauseGlobal, resetTimer } from "./timers"
     import { openDrawer } from "../../edit/scripts/edit"
 
-    export let searchValue
     export let onlyPlaying: boolean = false
 
     const profile = getAccess("timers")
     const readOnly = profile.global === "read"
 
     // $: sortedTimers = getSortedTimers($timers)
-    const typeOrder = { counter: 1, clock: 2, event: 3, pco_live: 4 }
+    const typeOrder = { counter: 1, clock: 2, event: 3 }
     $: sortedTimers = sortByName(keysToID(clone($timers)), "name", true)
-        .filter((a) => (onlyPlaying ? (a.type === "counter" || a.type === "pco_live") && $activeTimers.some((at) => a.id === at.id) : true))
+        .filter((a) => (onlyPlaying ? a.type === "counter" && $activeTimers.some((at) => a.id === at.id) : true))
         .sort((a, b) => typeOrder[a.type] - typeOrder[b.type])
     $: filteredTimersTags = sortedTimers.filter((a) => !$activeTimerTagFilter.length || (a.tags?.length && !$activeTimerTagFilter.find((tagId) => !a.tags?.includes(tagId)))).filter((a) => !a.tags?.some((tagId) => profile[tagId] === "none"))
     $: sortedTimersWithProject = filteredTimersTags.sort((a, b) => (list.includes(a.id) && !list.includes(b.id) ? -1 : 1))
-    $: filteredTimers = searchValue.length > 1 ? sortedTimersWithProject.filter((a) => a.name.toLowerCase().includes(searchValue.toLowerCase())) : sortedTimersWithProject
+    $: filteredTimers = sortedTimersWithProject
 
     // place timers in shows in project first
     let list: string[] = []
@@ -82,27 +80,11 @@
     const timerTypeNames = {
         counter: "timer.from_to",
         clock: "timer.to_time",
-        event: "timer.to_event",
-        pco_live: "PCO Live"
-    }
-
-    function keydown(e: KeyboardEvent) {
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest(".search")) {
-            let timer = filteredTimers[0]
-            if (!timer) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                playPauseGlobal(timer.id, timer, true)
-                return
-            }
-
-            // add to project (no need)
-        }
+        event: "timer.to_event"
     }
 </script>
 
-<svelte:window on:keydown={keydown} on:mouseup={() => disableDragging.set(false)} />
+<svelte:window on:mouseup={() => disableDragging.set(false)} />
 
 {#if filteredTimers.length}
     <div class="timers context #timers{readOnly ? '_readonly' : ''}" style={onlyPlaying ? "" : "padding-bottom: 60px;"}>
@@ -123,7 +105,7 @@
             <SelectElem id="global_timer" data={timer} draggable={!onlyPlaying} selectable={!onlyPlaying}>
                 <div class:outline={!onlyPlaying && isActive} class:project={list.includes(timer.id)} class={onlyPlaying ? "" : `context #global_timer${isReadOnly ? "_readonly" : ""}`} style="display: flex;justify-content: space-between;padding: 3px;">
                     <div style="display: flex;{onlyPlaying ? '' : 'width: 50%;'}">
-                        <Button disabled={isReadOnly || timer.type !== "counter"} on:click={() => playPauseGlobal(timer.id, timer)} title={translateText(isPlaying ? "media.pause" : "media.play")}>
+                        <Button align="start" disabled={isReadOnly || timer.type !== "counter"} on:click={() => playPauseGlobal(timer.id, timer)} title={translateText(isPlaying ? "media.pause" : "media.play")}>
                             <Icon id={isPlaying ? "pause" : "play"} white={!isPlaying} />
                         </Button>
                         {#if !onlyPlaying}
@@ -162,11 +144,11 @@
                             {@const delta = currentVal < 60 ? 10 : 60}
 
                             {#if !onlyPlaying}
-                                <Button disabled={isReadOnly || currentVal >= maxVal} on:click={() => adjustTimer(delta, { id: timer.id }, minVal, maxVal)} title={delta === 10 ? "-10 sec" : "-1 min"}>{delta === 10 ? "-10s" : "-1m"}</Button>
-                                <Button disabled={isReadOnly || currentVal <= minVal} on:click={() => adjustTimer(-delta, { id: timer.id }, minVal, maxVal)} title={delta === 10 ? "+10 sec" : "+1 min"}>{delta === 10 ? "+10s" : "+1m"}</Button>
+                                <Button align="start" disabled={isReadOnly || currentVal >= maxVal} on:click={() => adjustTimer(delta, { id: timer.id }, minVal, maxVal)} title={delta === 10 ? "-10 sec" : "-1 min"}>{delta === 10 ? "-10s" : "-1m"}</Button>
+                                <Button align="start" disabled={isReadOnly || currentVal <= minVal} on:click={() => adjustTimer(-delta, { id: timer.id }, minVal, maxVal)} title={delta === 10 ? "+10 sec" : "+1 min"}>{delta === 10 ? "+10s" : "+1m"}</Button>
                             {/if}
 
-                            <Button on:click={() => resetTimer(timer.id)} title={translateText("media.stop")} disabled={isReadOnly || !isActive}>
+                            <Button align="start" on:click={() => resetTimer(timer.id)} title={translateText("media.stop")} disabled={isReadOnly || !isActive}>
                                 <Icon id="stop" white={!isPlaying} />
                             </Button>
                         {/if}
@@ -182,11 +164,11 @@
 {/if}
 
 {#if !onlyPlaying}
-    <FloatingInputs onlyOne>
-        <MaterialButton disabled={readOnly} icon="add" title="new.timer" on:click={() => activePopup.set("timer")}>
+    <FloatingBar onlyOne>
+        <Button disabled={readOnly} icon="add" title="new.timer" on:click={() => activePopup.set("timer")}>
             {#if !$labelsDisabled}<T id="new.timer" />{/if}
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 {/if}
 
 <style>
@@ -200,7 +182,7 @@
 
     .timers div.outline {
         outline-offset: -2px;
-        outline: 2px solid var(--secondary) !important;
+        outline: 2px solid var(--text-muted) !important;
     }
 
     .timers div.project {

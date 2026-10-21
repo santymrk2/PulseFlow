@@ -12,7 +12,7 @@ import { keysToID, sortByName } from "../components/helpers/array"
 import { copy, cut, deleteAction, duplicate, paste, selectAll } from "../components/helpers/clipboard"
 import { history, redo, undo } from "../components/helpers/history"
 import { getExtension, getMedia, getMediaLayerType, getMediaStyle, getMediaType } from "../components/helpers/media"
-import { getFirstActiveOutput, refreshOut, setOutput, startFolderTimer, toggleOutputs } from "../components/helpers/output"
+import { getActiveOutputs, getFirstActiveOutput, refreshOut, setOutput, startFolderTimer, toggleOutputs } from "../components/helpers/output"
 import { OutputHelper } from "../components/helpers/OutputHelper"
 import { VideoPlayer } from "../components/media/video/videoPlayer"
 import { clearAll, clearBackground, clearSlide } from "../components/output/clear"
@@ -21,7 +21,7 @@ import { importFromClipboard } from "../converters/importHelpers"
 import { addSection } from "../converters/project"
 import { requestMain, sendMain } from "../IPC/main"
 import { changeSlidesView } from "../show/slides"
-import { activeDrawerTab, activeEdit, activeFocus, activePage, activePopup, activeProject, activeStage, alertMessage, audioChannelsData, contextActive, drawer, editMode, focusedArea, focusMode, guideActive, media, os, outLocked, outputs, playingVideoState, projects, quickSearchActive, refreshEditSlide, selected, showRecentlyUsedProjects, special, spellcheck, styles, timelineRecordingAction, topContextActive } from "../stores"
+import { activeDrawerTab, activeEdit, activeFocus, activePage, activePopup, activeProject, activeStage, alertMessage, audioChannelsData, contextActive, drawer, editMode, focusedArea, focusMode, guideActive, media, os, outLocked, outputDisplay, outputs, playingVideoState, projects, quickSearchActive, refreshEditSlide, selected, showRecentlyUsedProjects, special, spellcheck, styles, timelineRecordingAction, topContextActive } from "../stores"
 import { audioExtensions, imageExtensions, videoExtensions } from "../values/extensions"
 import { drawerTabs } from "../values/tabs"
 import { activeShow } from "./../stores"
@@ -29,19 +29,27 @@ import { hideDisplay, isOutputWindow, togglePanels, triggerFunction } from "./co
 import { getAccess } from "./profile"
 import { triggerPopupSubmit } from "./popup"
 import { send } from "./request"
-import { save } from "./save"
+import { initializeClosing, save } from "./save"
 import { isTypingTarget } from "./shortcutsHelper"
+import { listen } from "@tauri-apps/api/event"
+import { applyLook } from "../components/helpers/looks"
+import { openSettings } from "../components/settings/openSettings"
+import { getAllNormalOutputs, getAllStageOutputs } from "../components/helpers/output"
+import { invoke } from "@tauri-apps/api/core"
+import { activeLook, looks } from "../stores"
+import { derived } from "svelte/store"
 
-const menus: TopViews[] = ["show", "edit", "stage", "draw", "settings"]
+const menus: TopViews[] = ["show", "edit", "stage"]
 
 const ctrlKeys = {
     a: () => selectAll(),
     c: () => copy(),
-    f: () => (shouldOpenReplace() ? activePopup.set("find_replace") : null),
+    f: () => (shouldOpenReplace() ? activePopup.set("find_replace") : quickSearchActive.set(true)),
     v: () => paste(),
     // give time for drawer to not toggle
     d: () => setTimeout(() => duplicate(get(selected))),
     x: () => cut(),
+    ",": () => openSettings(),
     e: () => activePopup.set("export"),
     i: (e: KeyboardEvent) => (e.altKey ? importFromClipboard() : activePopup.set("import")),
     n: () => createNew(),
@@ -84,6 +92,23 @@ const shiftCtrlKeys = {
 const altKeys = {
     // when the caret is inside a list view textbox, EditboxLines splits at the caret instead
     Enter: () => (get(activePage) === "show" && !document.activeElement?.closest(".quickEdit") ? menuClick("cut_in_half", true, null, null, null, get(selected)) : null)
+}
+
+const MENU_ACTIONS: Record<string, () => void> = {
+    "screens.toggle_audience": () => {
+        const ids = getAllNormalOutputs().map((a) => a.id)
+        if (ids.length) toggleOutputs(ids)
+    },
+    "screens.toggle_stage": () => {
+        const ids = getAllStageOutputs().map((a) => a.id)
+        if (ids.length) toggleOutputs(ids)
+    },
+    "app.settings": () => openSettings(),
+    "app.quit": () => initializeClosing(),
+    "file.import": () => activePopup.set("import"),
+    "file.export": () => activePopup.set("export"),
+    "screens.configure": () => activePopup.set("screen_config"),
+    "screens.looks": () => activePopup.set("looks")
 }
 
 export const disablePopupClose = ["initialize", "cloud_method"]
@@ -177,10 +202,22 @@ export function keydown(e: KeyboardEvent) {
     }
 
     if (e.ctrlKey || e.metaKey) {
+        // F10.7 — En macOS, ⌘1/⌘2 los captura el menú nativo (aceleradores de
+        // `src-tauri/src/menu.rs`) antes de llegar al webview, así que este
+        // bloque no los ve. En Windows los items de "Pantallas" no registran
+        // aceleradores (el menú se abre con el mouse), así que Ctrl+1/Ctrl+2
+        // siguen cambiando de pestaña del drawer como antes. Decisión: no se
+        // duplican atajos para no romper el cambio de pestaña en Windows.
         const drawerMenus = Object.keys(drawerTabs) as DrawerTabIds[]
         if (document.activeElement === document.body && Object.keys(drawerMenus).includes((Number(e.key) - 1).toString())) {
             const tabId = drawerMenus[Number(e.key) - 1]
             if (getAccess(tabId).global === "none") return
+
+            // Ctrl+1 era la pestaña Shows: ahora lleva al buscador de la biblioteca (ÍTEMS)
+            if (tabId === "shows") {
+                window.dispatchEvent(new CustomEvent("focus-library-search"))
+                return
+            }
 
             activeDrawerTab.set(tabId)
             // open drawer
@@ -344,10 +381,24 @@ export const previewCtrlShortcuts = {
     }
 }
 
+/** Hay algo proyectado (slide, fondo u overlays) en alguna salida activa. */
+function isAnythingDisplayed() {
+    const all = get(outputs)
+    return getActiveOutputs(all, true, true, true).some((id) => {
+        const out = all[id]?.out
+        return !!(out?.slide || out?.background?.path || out?.background?.id || out?.overlays?.length)
+    })
+}
+
 export const previewShortcuts = {
     // presenter controller keys
     Escape: () => {
-        // WIP if (allCleared) fullscreen = false
+        // Con las pantallas en vivo y nada proyectado, Esc las apaga. Si hay algo
+        // proyectado, el primer Esc limpia (como siempre) y el segundo las apaga.
+        if (get(outputDisplay) && !isAnythingDisplayed()) {
+            toggleOutputs(null, { state: false })
+            return true
+        }
 
         setTimeout(clearAll)
     },
@@ -478,6 +529,38 @@ function createNew() {
         console.info("CREATE NEW:", selectId)
         activePopup.set("show")
     }
+}
+
+export function initMenuActions() {
+    if (typeof window === "undefined") return
+    listen<string>("menu-action", (event) => {
+        const id = event.payload
+        if (typeof id !== "string") return
+        const action = MENU_ACTIONS[id]
+        if (action) {
+            action()
+            return
+        }
+        if (id.startsWith("screens.look.")) {
+            const lookId = id.slice("screens.look.".length)
+            applyLook(lookId)
+        }
+    }).catch((e) => console.warn("[menu-action] listen failed:", e))
+
+    // Actualizar submenu "En vivo" cuando cambian los looks o el look activo.
+    const liveMenuStore = derived([looks, activeLook], ([ls, al]) => {
+        const items = Object.entries(ls || {}).map(([id, look]: any) => ({
+            id,
+            name: look?.name || id,
+            active: al === id
+        }))
+        return items
+    })
+    liveMenuStore.subscribe((items) => {
+        invoke("update_live_menu", { items }).catch((e) => {
+            console.warn("[menu] update_live_menu failed:", e)
+        })
+    })
 }
 
 // this only works if opened in preview - if not api

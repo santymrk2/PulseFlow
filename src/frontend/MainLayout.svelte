@@ -1,22 +1,21 @@
 <script lang="ts">
-    import AiFloating from "./ai/components/floating/AiFloating.svelte"
     import { customActionActivation } from "./components/actions/actions"
-    import DrawTabs from "./components/draw/DrawTabs.svelte"
     import Navigation from "./components/edit/Navigation.svelte"
     import LazyLoad from "./components/helpers/LazyLoad.svelte"
     import ProfileChangerMenu from "./components/main/ProfileChangerMenu.svelte"
     import Tipbar from "./components/main/Tipbar.svelte"
     import Top from "./components/main/Top.svelte"
     import Preview from "./components/output/preview/Preview.svelte"
-    import SettingsTabs from "./components/settings/SettingsTabs.svelte"
-    import Projects from "./components/show/Projects.svelte"
     import Show from "./components/show/Show.svelte"
+    import LeftColumn from "./components/show/left/LeftColumn.svelte"
+    import OverlayNavigation from "./components/edit/OverlayNavigation.svelte"
+    import ThemeNavigation from "./components/edit/ThemeNavigation.svelte"
     import ShowTools from "./components/show/ShowTools.svelte"
     import StageLayouts from "./components/stage/StageLayouts.svelte"
     import Resizeable from "./components/system/Resizeable.svelte"
     import Timeline from "./components/timeline/Timeline.svelte"
-    import { activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, ai, currentWindow, editMode, focusMode, loaded, os, projectView, resized, showChangeProfileMenu, showsCache, special } from "./stores"
     import { DEFAULT_WIDTH } from "./utils/common"
+    import { activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, currentWindow, editMode, focusMode, loaded, os, projectView, resized, showChangeProfileMenu, showsCache, special } from "./stores"
 
     $: page = $activePage
     $: isWindows = !$currentWindow && $os.platform === "win32"
@@ -41,16 +40,18 @@
             <div class="left">
                 {#if page === "show"}
                     {#key $activeProfile}
-                        <Projects />
+                        <LeftColumn />
                     {/key}
                 {:else if page === "edit"}
-                    <Navigation />
+                    {#if $activeEdit.type === "template"}
+                        <ThemeNavigation />
+                    {:else if $activeEdit.type === "overlay" || $activeEdit.type === "effect"}
+                        <OverlayNavigation />
+                    {:else}
+                        <Navigation />
+                    {/if}
                 {:else if page === "stage"}
                     <StageLayouts />
-                {:else if page === "draw"}
-                    <DrawTabs />
-                {:else if page === "settings"}
-                    <SettingsTabs />
                 {/if}
             </div>
         </Resizeable>
@@ -64,10 +65,6 @@
                 {/if}
             {:else if page === "edit"}
                 <LazyLoad component={() => import("./components/edit/Editor.svelte")} show={page === "edit"} />
-            {:else if page === "draw"}
-                <LazyLoad component={() => import("./components/draw/Slide.svelte")} show={page === "draw"} />
-            {:else if page === "settings"}
-                <LazyLoad component={() => import("./components/settings/Settings.svelte")} show={page === "settings"} />
             {:else if page === "stage"}
                 <LazyLoad component={() => import("./components/stage/StageLayout.svelte")} show={page === "stage"} />
             {/if}
@@ -96,12 +93,8 @@
                             <LazyLoad component={() => import("./components/edit/EditTools.svelte")} show={!$focusMode} />
                         {/if}
                     {/if}
-                {:else if page === "draw"}
-                    <LazyLoad component={() => import("./components/draw/DrawSettings.svelte")} show={page === "draw"} />
                 {:else if page === "stage" && $activeStage.id}
                     <LazyLoad component={() => import("./components/stage/StageTools.svelte")} show={page === "stage" && !!$activeStage.id} />
-                {:else if page === "settings"}
-                    <LazyLoad component={() => import("./components/settings/SettingsTools.svelte")} show={page === "settings"} />
                 {/if}
             </div>
         </Resizeable>
@@ -121,10 +114,6 @@
 
     {#if $showChangeProfileMenu && $activeProfile !== null}
         <ProfileChangerMenu />
-    {/if}
-
-    {#if $ai.enabled}
-        <AiFloating />
     {/if}
 
     <Tipbar />
@@ -173,11 +162,15 @@
     }
 
     .right :global(.border) {
-        border-top: 2px solid var(--primary-lighter);
+        /* divisor entre secciones (referencia: RightPanel.tsx Divider: h-px mx-3) */
+        border: none;
+        border-top: 1px solid var(--border-color, var(--primary-lighter));
+        margin: 0 12px;
     }
     .right.row :global(.border) {
         border: none;
-        border-inline-end: 2px solid var(--primary-lighter);
+        border-inline-end: 1px solid var(--border-color, var(--primary-lighter));
+        margin: 12px 0;
         min-width: 50%;
     }
 

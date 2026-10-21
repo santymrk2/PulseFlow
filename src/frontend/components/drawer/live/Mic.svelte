@@ -5,7 +5,7 @@
     import { sendMain } from "../../../IPC/main"
     import { activeFocus, activeShow, focusMode, playingAudio } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     export let mic: { id: string; name: string }
 
@@ -79,6 +79,7 @@
 
 <div class="main">
     <Button
+        align="start"
         style="width: 100%;"
         bold={false}
         disabled={!context}
@@ -87,7 +88,7 @@
             AudioMicrophone.start(mic.id, { name: mic.name }, { pauseIfPlaying: true })
         }}
         on:dblclick={(e) => {
-            if (e.ctrlKey || e.metaKey) return
+            if (e.detail.ctrl) return
 
             if ($focusMode) activeFocus.set({ id: mic.id, type: "audio" })
             else activeShow.set({ id: mic.id, name: mic.name, type: "audio", data: { isMic: true } })

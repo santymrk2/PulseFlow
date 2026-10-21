@@ -1,7 +1,7 @@
 <script lang="ts">
     import { uid } from "uid"
     import type { Item, Transition } from "../../../../types/Show"
-    import { currentWindow, scriptureSettings, templates } from "../../../stores"
+    import { scriptureSettings, templates } from "../../../stores"
     import { clone } from "../../helpers/array"
     import { getStyleTemplate, itemNeedsAutoSize, slideHasAutoSizeItem } from "../../helpers/output"
     import OutputTransition from "./OutputTransition.svelte"
@@ -33,7 +33,7 @@
         if (out.type === "none") out.duration = 0
 
         // keep custom "hide" delay, without auto size delay
-        const hideDuration = $currentWindow === "output" || preview ? currentItem?.actions?.hideTimer || 0 : 0
+        const hideDuration = preview ? currentItem?.actions?.hideTimer || 0 : 0
         out.delay = hideDuration ? hideDuration * 1000 : 0
 
         // delay won't work if no transition
@@ -75,9 +75,9 @@
         let autoSizeDelay = 0
 
         // ITEM IN/OUT DELAY
-        let showDuration = $currentWindow === "output" || preview ? item?.actions?.showTimer || 0 : 0
+        let showDuration = preview ? item?.actions?.showTimer || 0 : 0
         inDelay = showDuration ? showDuration * 1000 : 0
-        let hideDuration = $currentWindow === "output" || preview ? item?.actions?.hideTimer || 0 : 0
+        let hideDuration = preview ? item?.actions?.hideTimer || 0 : 0
         outDelay = hideDuration ? hideDuration * 1000 : 0
 
         // EXTRA DELAY

@@ -16,7 +16,7 @@
 </script>
 
 <div class="tip {type}" style="{style}margin-top: {top}px;margin-bottom: {bottom}px;{hiddenText ? 'cursor: help;' : ''}" data-title={hiddenText ? translatedValue : ""}>
-    <Icon id={type} size={hiddenText ? 1 : 1.2} gradient gradientColor={type === "warning" ? "#FFA500" : type === "info" ? "#00BFFF" : null} {white} />
+    <Icon id={type} size={hiddenText ? 1 : 1.2} color={type === "warning" ? "var(--warning)" : ""} white={white || type === "warning"} />
     {#if !hiddenText}<p>{@html markedValue}</p>{/if}
 </div>
 

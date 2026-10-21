@@ -1,6 +1,7 @@
 <script lang="ts">
     import { onDestroy, setContext } from "svelte"
-    import { activePage, activeStage, allOutputs, currentOutputSettings, outputs, settingsTab, stageShows, toggleOutputEnabled } from "../../stores"
+    import { activeStage, allOutputs, currentOutputSettings, outputs, stageShows, toggleOutputEnabled } from "../../stores"
+    import { openSettings } from "../settings/openSettings"
     import { getAccess } from "../../utils/profile"
     import ItemAddMenu from "../edit/ItemAddMenu.svelte"
     import { getSortedStageItems, shouldItemBeShown } from "../edit/scripts/itemHelpers"
@@ -10,9 +11,9 @@
     import { enableStageOutput, getStageOutputId, getStageResolution } from "../helpers/output"
     import { getStyles } from "../helpers/style"
     import T from "../helpers/T.svelte"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
-    import MaterialZoom from "../inputs/MaterialZoom.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import ZoomControl from "../../lib/components/ui/zoom-control/zoom-control.svelte"
     import { getStyleResolution } from "../slide/getStyleResolution"
     import Zoomed from "../slide/Zoomed.svelte"
     import Center from "../system/Center.svelte"
@@ -95,7 +96,7 @@
 
     let width = 0
     let height = 0
-    $: stageOutputId = outputId || getStageOutputId($outputs)
+    $: stageOutputId = getStageOutputId($outputs)
     $: resolution = getStageResolution(stageOutputId, $outputs)
 
     // ACTION BAR
@@ -138,8 +139,7 @@
         setTimeout(() => {
             let id = enableStageOutput({ stageOutput: stageLayoutId, name: layout?.name || "" })
             currentOutputSettings.set(id)
-            settingsTab.set("display_settings")
-            activePage.set("settings")
+            openSettings("display_settings")
         }, 100)
     }
 </script>
@@ -154,7 +154,7 @@
                         {#key stageLayoutId}
                             {#each stageItems as item, index (item.id)}
                                 {#if (item.type || item.enabled !== false) && (edit || checkVisibility(index, conditionsUpdater))}
-                                    <Stagebox edit stageLayout={edit ? null : layout} id={item.id} {item} {ratio} {resolution} {preview} {disableStagePreview} bind:mouse />
+                                    <Stagebox edit stageLayout={edit ? null : layout} id={item.id} {item} {ratio} {preview} {disableStagePreview} bind:mouse />
                                 {/if}
                             {/each}
                         {/key}
@@ -165,7 +165,7 @@
                     {#key stageLayoutId}
                         {#each stageItems as item, index (item.id)}
                             {#if (item.type || item.enabled !== false) && (edit || checkVisibility(index, conditionsUpdater))}
-                                <Stagebox stageLayout={edit ? null : layout} id={item.id} {item} {ratio} {resolution} {preview} {disableStagePreview} bind:mouse />
+                                <Stagebox stageLayout={edit ? null : layout} id={item.id} {item} {ratio} {preview} {disableStagePreview} bind:mouse />
                             {/if}
                         {/each}
                     {/key}
@@ -179,16 +179,16 @@
     </div>
 
     {#if edit && stageLayoutId}
-        <FloatingInputs side="left" onlyOne>
+        <FloatingBar side="left" onlyOne>
             {#if !hasStageOutput}
-                <MaterialButton title="stage.create_stage_output" on:click={createStageOutput}>
-                    <Icon id="autofill" gradient />
+                <Button title="stage.create_stage_output" on:click={createStageOutput}>
+                    <Icon id="autofill" />
                     <T id="stage.create_stage_output" />
-                </MaterialButton>
+                </Button>
             {/if}
 
-            <MaterialZoom hidden={!hasStageOutput} columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
-        </FloatingInputs>
+            <ZoomControl hidden={!hasStageOutput} columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
+        </FloatingBar>
 
         <ItemAddMenu {isLocked} />
     {/if}

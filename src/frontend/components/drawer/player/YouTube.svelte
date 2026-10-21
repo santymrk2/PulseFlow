@@ -1,6 +1,6 @@
 <script lang="ts">
     import { createEventDispatcher, onDestroy } from "svelte"
-    import { currentWindow, focusMode, special } from "../../../stores"
+    import { focusMode, special } from "../../../stores"
     import YouTubePlayer from "./YouTubePlayer.svelte"
 
     export let videoData = { paused: false, muted: true, loop: false, duration: 0 }
@@ -34,8 +34,6 @@
     let loaded = false
     function onReady(e) {
         player = e.detail.target
-
-        // if (videoData.muted || (!preview && $currentWindow !== "output")) player.mute()
 
         loaded = true
 
@@ -83,15 +81,8 @@
         else player.playVideo()
     }
 
-    // mute state
-    $: shouldBeMuted = preview || $currentWindow !== "output" ? true : !!videoData.muted
-    $: if (player && loaded && shouldBeMuted !== undefined) {
-        if (shouldBeMuted) {
-            if (!player.isMuted()) player.mute()
-        } else if ($currentWindow === "output" || preview) {
-            player.unMute()
-        }
-    }
+    // mute state (la ventana webview de salida ya no existe: el player siempre va en silencio)
+    $: if (player && loaded && !player.isMuted()) player.mute()
 
     $: if (!id && player) player.stopVideo()
 
@@ -126,14 +117,7 @@
 
 <div class="main" class:hide={!id}>
     {#if id}
-        <!-- {#if $currentWindow === "output"} -->
-        <!-- on:stateChange={change} -->
         <YouTubePlayer class="yt" videoId={id} {options} on:ready={onReady} on:end={ended} />
-        <!-- {:else}
-            <div style="width: 100%;height: 100%;display: flex;align-items: center;justify-content: center;">
-                <Icon id="youtube" size={6} white />
-            </div>
-        {/if} -->
     {/if}
 </div>
 

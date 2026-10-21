@@ -11,7 +11,6 @@ export type SaveList = SaveListSettings | SaveListSyncedSettings | "themes" | "e
 
 export type SaveListSyncedSettings =
     | "categories"
-    | "drawSettings"
     | "overlayCategories"
     | "templateCategories"
     | "styles"
@@ -42,6 +41,9 @@ export type SaveListSyncedSettings =
     | "effects"
     | "deletedDefaults"
     | "syncedOutputs"
+    | "looks"
+    | "activeLook"
+    | "stylesLegacyBackup"
 
 export type SaveListSettings =
     | "initialized"

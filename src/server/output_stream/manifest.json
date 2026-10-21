@@ -1,12 +1,12 @@
 {
     "$schema": "https://json.schemastore.org/web-manifest-combined.json",
-    "name": "FreeShow Output",
-    "short_name": "FreeShow Output",
+    "name": "PulseFlow Output",
+    "short_name": "PulseFlow Output",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#242832",
     "theme_color": "#242832",
-    "description": "View the output from FreeShow.",
+    "description": "View the output from PulseFlow.",
     "icons": [
         {
             "src": "icon.png",

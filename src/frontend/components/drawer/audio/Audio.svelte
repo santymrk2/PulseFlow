@@ -5,7 +5,6 @@
     import { requestMain } from "../../../IPC/main"
     import { AudioPlayer } from "../../../audio/audioPlayer"
     import { AudioPlaylist } from "../../../audio/audioPlaylist"
-    import { addProjectItem } from "../../../converters/project"
     import { activePlaylist, activePopup, activeRename, audioFolders, audioPlaylists, drawerTabsData, effectsLibrary, labelsDisabled, media, outLocked, selectAllAudio, selected } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import Icon from "../../helpers/Icon.svelte"
@@ -14,9 +13,9 @@
     import { splitPath } from "../../helpers/get"
     import { getExtension, getFileName, getMediaType } from "../../helpers/media"
     import { joinTime, secondsToTime } from "../../helpers/time"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import Center from "../../system/Center.svelte"
     import DropArea from "../../system/DropArea.svelte"
     import AudioStreams from "../live/AudioStreams.svelte"
@@ -27,7 +26,6 @@
     import Metronome from "./Metronome.svelte"
 
     export let active: string | null
-    export let searchValue = ""
 
     type File = { path: string; name: string; extension?: string; folder?: boolean; favourite?: boolean; audio?: boolean }
 
@@ -86,11 +84,8 @@
     let allRelevantFiles: FileFolder[] = []
 
     let requesting = 0
-    let currentDepth = 0
     async function requestFiles(path: string | string[], depth: number = 0) {
         if (!path) return
-
-        currentDepth = depth
 
         requesting++
         let currentRequest = requesting
@@ -116,14 +111,6 @@
             return
         }
 
-        if (searchValue.length > 1) {
-            foldersList = allRelevantFiles.filter((a) => a.isFolder)
-            filesList = allRelevantFiles.filter((a) => !a.isFolder)
-
-            filterFiles()
-            return
-        }
-
         const folder = allRelevantFiles.find((a) => a.isFolder && a.path === path)
         if (!folder) return
 
@@ -134,7 +121,6 @@
     }
 
     // $: if ($sorted) filterFiles()
-    $: if (searchValue !== undefined) filterSearch()
 
     let filteredFiles: FileFolder[] = []
     function filterFiles() {
@@ -153,62 +139,15 @@
         localFilteredFiles = [...sortFilenames(foldersList), ...localFilteredFiles]
 
         filteredFiles = clone(localFilteredFiles)
-        if (searchValue.length < 2) searchedFiles = clone(filteredFiles)
-        else filterSearch()
+        searchedFiles = clone(filteredFiles)
 
         // scroll to top
         scrollElem?.scrollTo(0, 0)
     }
 
-    // search
-    $: if (searchValue !== undefined) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()]/g, "")
-    let searchFilterActive = false
     let searchedFiles: FileFolder[] = []
-    async function filterSearch() {
-        if (searchFilterActive) return
-        searchFilterActive = true
-
-        if (searchValue.length === 1) {
-            searchFilterActive = false
-            return
-        }
-        if (searchValue.length < 2) {
-            if (active !== "all" && active !== "favourites" && active !== "effects_library") requestFiles(path)
-            else searchedFiles = clone(filteredFiles)
-            searchFilterActive = false
-            return
-        }
-
-        if (active !== "all" && active !== "favourites" && active !== "effects_library" && currentDepth < 5) {
-            await requestFiles(path, 5)
-        }
-
-        searchedFiles = clone(filteredFiles).filter((a) => filter(a.name).includes(filter(searchValue)))
-
-        // scroll to top
-        document.querySelector("svelte-virtual-list-viewport")?.scrollTo(0, 0)
-
-        searchFilterActive = false
-    }
 
     function keydown(e: KeyboardEvent) {
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest(".search")) {
-            let file = searchedFiles.filter((a) => !a.isFolder)[0]
-            if (!file) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                AudioPlayer.start(file.path, { name: file.name })
-                return
-            }
-
-            // add to project
-            const data = { id: file.path, name: file.name, type: "audio" as const }
-            addProjectItem(data)
-            return
-        }
-
         if (e.target?.closest?.("input") || e.target?.closest?.(".edit")) return
 
         if ((e.ctrlKey || e.metaKey) && e.key === "Backspace") {
@@ -318,14 +257,14 @@
 
 {#if active === "inputs"}
     <div class="tabs">
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "microphones"} on:click={() => setSubSubTab("microphones")}>
+        <Button style="flex: 1;" isActive={inputsTab === "microphones"} on:click={() => setSubSubTab("microphones")}>
             <Icon size={1.2} id="microphone" white />
             <p><T id="live.microphones" /></p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "audio_streams"} on:click={() => setSubSubTab("audio_streams")}>
+        </Button>
+        <Button style="flex: 1;" isActive={inputsTab === "audio_streams"} on:click={() => setSubSubTab("audio_streams")}>
             <Icon size={1.2} id="audio_stream" white />
             <p><T id="live.audio_streams" /></p>
-        </MaterialButton>
+        </Button>
     </div>
 {/if}
 
@@ -341,8 +280,8 @@
             <Metronome />
         {:else if playlist && playlistSettings}
             <div class="settings">
-                <MaterialNumberInput label="settings.audio_crossfade (s)" value={playlist?.crossfade || 0} max={60} on:change={(e) => AudioPlaylist.update(active || "", "crossfade", e.detail)} sliderValues={{ max: 10, step: 0.5 }} showSlider />
-                <MaterialNumberInput label="settings.playlist_volume (%)" value={Number(((playlist?.volume || 1) * 100).toFixed(2))} min={1} max={100} on:change={(e) => AudioPlaylist.update(active || "", "volume", e.detail / 100)} showSlider />
+                <NumberField label="settings.audio_crossfade (s)" value={playlist?.crossfade || 0} max={60} on:change={(e) => AudioPlaylist.update(active || "", "crossfade", e.detail)} sliderValues={{ max: 10, step: 0.5 }} showSlider />
+                <NumberField label="settings.playlist_volume (%)" value={Number(((playlist?.volume || 1) * 100).toFixed(2))} min={1} max={100} on:change={(e) => AudioPlaylist.update(active || "", "volume", e.detail / 100)} showSlider />
             </div>
         {:else if playlist}
             <DropArea id="audio_playlist" selectChildren let:fileOver file>
@@ -394,15 +333,15 @@
     <!-- nothing -->
 {:else if active === "inputs"}
     {#if inputsTab === "audio_streams"}
-        <FloatingInputs onlyOne>
-            <MaterialButton icon="add" style="flex: 1;" on:click={() => activePopup.set("audio_stream")} center title="new.audio_stream">
+        <FloatingBar onlyOne>
+            <Button icon="add" style="flex: 1;" on:click={() => activePopup.set("audio_stream")} center title="new.audio_stream">
                 {#if !$labelsDisabled}<T id="new.audio_stream" />{/if}
-            </MaterialButton>
-        </FloatingInputs>
+            </Button>
+        </FloatingBar>
     {/if}
 {:else if playlist}
-    <FloatingInputs side="left">
-        <MaterialButton
+    <FloatingBar side="left">
+        <Button
             disabled={$outLocked}
             title={$activePlaylist?.id === active ? "media.stop" : "media.play"}
             on:click={() => {
@@ -411,11 +350,11 @@
             }}
         >
             <Icon size={1.3} id={$activePlaylist?.id === active ? "stop" : "play"} white={$activePlaylist?.id !== active} />
-        </MaterialButton>
+        </Button>
 
         <div class="divider" />
 
-        <MaterialButton
+        <Button
             title="media.toggle_shuffle"
             on:click={() => {
                 if (!active) return
@@ -424,8 +363,8 @@
             }}
         >
             <Icon size={1.1} id="shuffle_play" white={$audioPlaylists[active || ""]?.mode !== "shuffle"} />
-        </MaterialButton>
-        <MaterialButton
+        </Button>
+        <Button
             title={`media._loop${$audioPlaylists[active || ""]?.loop !== false ? ": settings.enabled" : ""}`}
             on:click={() => {
                 if (!active) return
@@ -433,10 +372,10 @@
             }}
         >
             <Icon size={1.1} id="loop" white={$audioPlaylists[active || ""]?.loop === false} />
-        </MaterialButton>
+        </Button>
 
         <!-- auto play next song in playlist -->
-        <MaterialButton
+        <Button
             title={`media.auto_next${$audioPlaylists[active || ""]?.autoNext !== false ? ": settings.enabled" : ""}`}
             on:click={() => {
                 if (!active) return
@@ -444,7 +383,7 @@
             }}
         >
             <Icon size={1.1} id="auto" white={$audioPlaylists[active || ""]?.autoNext === false} />
-        </MaterialButton>
+        </Button>
 
         <div class="divider" />
 
@@ -460,22 +399,22 @@
                     )
                 )}
         </p>
-    </FloatingInputs>
+    </FloatingBar>
 
-    <FloatingInputs round>
-        <MaterialButton isActive={playlistSettings} title="audio.playlist_settings" on:click={() => (playlistSettings = !playlistSettings)}>
+    <FloatingBar round>
+        <Button isActive={playlistSettings} title="audio.playlist_settings" on:click={() => (playlistSettings = !playlistSettings)}>
             <Icon size={1.1} id="options" white={!playlistSettings} />
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 {:else if active === "all" || active === "favourites"}
     <!-- nothing -->
 {:else}
     <!--  -->
     {#if rootPath !== path}
-        <FloatingInputs side="left">
-            <MaterialButton disabled={rootPath === path} title="actions.back" on:click={goBack}>
+        <FloatingBar side="left">
+            <Button disabled={rootPath === path} title="actions.back" on:click={goBack}>
                 <Icon id="back" white />
-            </MaterialButton>
+            </Button>
 
             <div class="divider"></div>
 
@@ -488,17 +427,17 @@
             <span style="opacity: 0.5;font-size: 0.9em;margin-inline-start: 10px;">{content}</span>
         {/if} -->
             </p>
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 
     <!-- only show if audio content -->
     {#if filteredFiles.filter((a) => !a.isFolder)?.length}
-        <FloatingInputs onlyOne on:mousedown={storeSelected}>
-            <MaterialButton title="new.playlist" on:click={createPlaylist}>
+        <FloatingBar onlyOne on:mousedown={storeSelected}>
+            <Button title="new.playlist" on:click={createPlaylist}>
                 <Icon size={1.2} id="playlist_create" />
                 {#if !$labelsDisabled}<p><T id="new.playlist" /></p>{/if}
-            </MaterialButton>
-        </FloatingInputs>
+            </Button>
+        </FloatingBar>
     {/if}
 {/if}
 
@@ -583,5 +522,7 @@
         font-size: 0.9em;
         padding: 0 10px;
         opacity: 0.8;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
 </style>

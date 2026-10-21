@@ -1,9 +1,9 @@
 <script lang="ts">
     import { activeInteractions, interactions, openedInteractionId, shows } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
-    import Link from "../../inputs/Link.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
     import { getInteraction } from "./interactions"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { generateSlide } from "./interactionSlides"
     import T from "../../helpers/T.svelte"
     import { onMount } from "svelte"
@@ -42,11 +42,11 @@
 
             <!-- Generate slides -->
             {#if !isActive || !showExists}
-                <MaterialButton variant="outlined" icon="slide" style="width: 100%;justify-content: left;" on:click={() => generateSlide("join")} white><T id="interaction.generate_slide" />: Join</MaterialButton>
-                <MaterialButton variant="outlined" icon="slide" style="width: 100%;justify-content: left;" on:click={() => generateSlide("players")} white><T id="interaction.generate_slide" />: Players</MaterialButton>
-                <MaterialButton variant="outlined" icon="slide" style="width: 100%;justify-content: left;" on:click={() => generateSlide("question")} white><T id="interaction.generate_slide" />: Question</MaterialButton>
-                <MaterialButton variant="outlined" icon="slide" style="width: 100%;justify-content: left;" on:click={() => generateSlide("chart")} white><T id="interaction.generate_slide" />: Chart</MaterialButton>
-                <MaterialButton variant="outlined" icon="slide" style="width: 100%;justify-content: left;" on:click={() => generateSlide("leaderboard")} white><T id="interaction.generate_slide" />: Leaderboard</MaterialButton>
+                <Button variant="outline" icon="slide" style="width: 100%;justify-content: left;" on:click={() => generateSlide("join")} white><T id="interaction.generate_slide" />: Join</Button>
+                <Button variant="outline" icon="slide" style="width: 100%;justify-content: left;" on:click={() => generateSlide("players")} white><T id="interaction.generate_slide" />: Players</Button>
+                <Button variant="outline" icon="slide" style="width: 100%;justify-content: left;" on:click={() => generateSlide("question")} white><T id="interaction.generate_slide" />: Question</Button>
+                <Button variant="outline" icon="slide" style="width: 100%;justify-content: left;" on:click={() => generateSlide("chart")} white><T id="interaction.generate_slide" />: Chart</Button>
+                <Button variant="outline" icon="slide" style="width: 100%;justify-content: left;" on:click={() => generateSlide("leaderboard")} white><T id="interaction.generate_slide" />: Leaderboard</Button>
             {/if}
         {/if}
 

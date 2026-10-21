@@ -62,19 +62,14 @@ async function getNextBackground(currentOutputSlide: OutSlide | null, returnPath
     if (!nextLayout) return {}
 
     const bgId = nextLayout.data.background || ""
-    const showMediaItem = _show(currentOutputSlide.id).media([bgId]).get()?.[0]
-    let path = showMediaItem?.path || ""
+    let path = _show(currentOutputSlide.id).media([bgId]).get()?.[0]?.path || ""
     if (typeof path !== "string") path = ""
 
-    const mediaData = get(media)[path]
-    const thumbnail = mediaData?.contentFile?.thumbnail || ""
+    if (returnPath) return { path, mediaStyle: get(media)[path] || {} }
 
-    if (returnPath) return { path, filePath: path, thumbnail, mediaStyle: mediaData || {} }
+    const base64path = await getBase64Path(path)
 
-    const targetPath = thumbnail || path
-    const base64path = await getBase64Path(targetPath)
-
-    return { path: base64path || targetPath, filePath: path, thumbnail, mediaStyle: mediaData || {} }
+    return { path: base64path, filePath: path, mediaStyle: get(media)[path] || {} }
 }
 
 export const receiveSTAGE = {

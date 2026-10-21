@@ -1,8 +1,7 @@
 <script lang="ts">
     import { getDocument, GlobalWorkerOptions, type PDFDocumentLoadingTask } from "pdfjs-dist"
     import { onDestroy, onMount } from "svelte"
-    import { Main } from "../../../../types/IPC/Main"
-    import { sendMain } from "../../../IPC/main"
+    import { pdfToImageShow } from "../../../converters/pdfToImages"
     import { activePopup, activeProject, focusMode, labelsDisabled, outLocked, outputs, popupData, projects, slidesOptions, styles } from "../../../stores"
     import { triggerClickOnEnterSpace } from "../../../utils/clickable"
     import { newToast, wait } from "../../../utils/common"
@@ -11,9 +10,9 @@
     import { encodeFilePath, getFileName, locateMediaFile, removeExtension } from "../../helpers/media"
     import { getActiveOutputs, setOutput, startFolderTimer } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialZoom from "../../inputs/MaterialZoom.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
     import Loader from "../../main/Loader.svelte"
     import { clearBackground } from "../../output/clear"
 
@@ -180,9 +179,10 @@
         }
     }
 
-    function convertToImages() {
+    async function convertToImages() {
+        if (!pageCount || !canvases.filter(Boolean).length) return
         newToast("actions.converting")
-        sendMain(Main.PDF_TO_IMAGE, { filePath: resolvedId || show.id })
+        pdfToImageShow(resolvedId || show.id)
     }
 
     $: timer = data?.timer || 0
@@ -220,18 +220,18 @@
 </div>
 
 {#if !$focusMode}
-    <!-- <FloatingInputs side="left">
+    <!-- <FloatingBar side="left">
     <span style="min-width: 60px;display: flex;align-items: center;justify-content: center;opacity: 0.8;">PDF</span>
-</FloatingInputs> -->
+</FloatingBar> -->
 
-    <FloatingInputs>
-        <MaterialButton icon="image" on:click={convertToImages} style="white-space: nowrap;">
+    <FloatingBar>
+        <Button icon="image" on:click={convertToImages} style="white-space: nowrap;">
             {#if !$labelsDisabled}<T id="actions.convert_to_images" />{/if}
-        </MaterialButton>
+        </Button>
 
         <div class="divider"></div>
 
-        <MaterialButton
+        <Button
             disabled={pageCount < 2}
             on:click={() => {
                 popupData.set({ type: "pdf", value: timer, totalTime, count: pageCount })
@@ -241,12 +241,12 @@
         >
             <Icon size={1.1} id="clock" white={totalTime === 0} />
             <!-- {joinTime(secondsToTime(totalTime))} -->
-        </MaterialButton>
+        </Button>
 
         <div class="divider"></div>
 
-        <MaterialZoom columns={$slidesOptions.columns} on:change={(e) => slidesOptions.set({ ...$slidesOptions, columns: e.detail })} />
-    </FloatingInputs>
+        <ZoomControl columns={$slidesOptions.columns} on:change={(e) => slidesOptions.set({ ...$slidesOptions, columns: e.detail })} />
+    </FloatingBar>
 {/if}
 
 <style>
@@ -321,7 +321,7 @@
     }
 
     .main.active {
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: -1px;
     }
 

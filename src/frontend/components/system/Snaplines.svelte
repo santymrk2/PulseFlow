@@ -4,6 +4,7 @@
     import { throttle } from "../../utils/common"
     import { stopResizing } from "../../utils/cursor"
     import { DEFAULT_BOUNDS, getActiveOutputs, getOutputResolution, getStageResolution } from "../helpers/output"
+    import { shouldStartDrag } from "./dragThreshold"
     import { getRadius, moveBox, resizeBox, rotateBox } from "./textbox"
 
     export let lines: [string, number][]
@@ -15,17 +16,32 @@
 
     let styles: { [key: string]: any } = {}
     function mousemove(e: any) {
+        if (e.buttons) console.warn("SNAPDBG move", !!mouse, mouse?.item?.type, !!mouse?.rightClick, e.buttons, e.clientX, e.clientY)
         if (!mouse?.item || mouse.rightClick) return
 
         let notTextBox: boolean = mouse.item.type !== undefined && mouse.item.type !== "text"
         let isShift = e.shiftKey || mouse.e.shiftKey
         let control = mouse.e.ctrlKey || mouse.e.metaKey
-        if (!notTextBox && !control && !isShift && !mouse.e.target.closest(".line") && !mouse.e.target.closest(".square") && !mouse.e.target.closest(".rotate") && !mouse.e.target.closest(".radius")) return
+
+        // Arrastrar desde el texto de un cuadro mueve el cuadro (el clic sin arrastrar sigue poniendo el cursor de texto).
+        // Antes sólo se podía mover desde los bordes o con Shift/Ctrl/Alt, así que arrastrar el texto parecía "no hacer nada".
+        const fromText = !notTextBox && !control && !isShift && !mouse.e.altKey && !!mouse.e.target.closest(".edit") && !mouse.e.target.closest(".line, .square, .rotate, .radius, .chords")
+        if (fromText && !mouse.dragMove) {
+            if (!shouldStartDrag(mouse.x, mouse.y, e.clientX, e.clientY)) return
+            mouse.dragMove = true
+        }
+        const dragFromText = fromText && !!mouse.dragMove
+        if (dragFromText) {
+            window.getSelection()?.removeAllRanges()
+            ;(document.activeElement as HTMLElement | null)?.blur?.()
+        }
+
+        if (!notTextBox && !control && !isShift && !dragFromText && !mouse.e.target.closest(".line") && !mouse.e.target.closest(".square") && !mouse.e.target.closest(".rotate") && !mouse.e.target.closest(".radius")) return
 
         e?.preventDefault()
         styles = {}
 
-        let moveCondition: boolean = mouse.e.target.closest(".line") || ((!mouse.e.target.closest(".edit") || notTextBox || mouse.e.altKey || isShift) && !mouse.e.target.closest(".square")) || (control && !mouse.e.target.closest(".square")) || mouse.e.buttons === 4
+        let moveCondition: boolean = mouse.e.target.closest(".line") || ((!mouse.e.target.closest(".edit") || notTextBox || mouse.e.altKey || isShift) && !mouse.e.target.closest(".square")) || (control && !mouse.e.target.closest(".square")) || mouse.e.buttons === 4 || dragFromText
 
         let keepAspectRatio = e.shiftKey
         // WIP square option currently not working well (also custom SVG icons can be any ratio)
@@ -106,6 +122,7 @@
     }
 
     function mouseup() {
+        console.warn("SNAPDBG up", !!mouse)
         stopResizing()
         mouse = null
         lines = []
@@ -123,10 +140,7 @@
     {@const isX = line[0].includes("x")}
     {@const isCenter = line[0].endsWith("c")}
     {@const thickness = (isCenter ? 2.5 : 1.25) / ratio}
-    <div
-        class="line {line[0]}"
-        style="{isX ? `left: ${line[1]}px; width: ${thickness}px; height: 100%;` : `top: ${line[1]}px; height: ${thickness}px; width: 100%;`}transform: translate{isX ? 'X' : 'Y'}(-50%);"
-    />
+    <div class="line {line[0]}" style="{isX ? `left: ${line[1]}px; width: ${thickness}px; height: 100%;` : `top: ${line[1]}px; height: ${thickness}px; width: 100%;`}transform: translate{isX ? 'X' : 'Y'}(-50%);" />
 {/each}
 
 <style>

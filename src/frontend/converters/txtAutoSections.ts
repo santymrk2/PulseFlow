@@ -12,9 +12,7 @@ export function findPatterns(sections: string[], autoGroups: boolean) {
 
     // Pre-calculate similarity counts for each section
     const similarCount = sections.map((sec, i) => {
-        const matches = sections
-            .map((s, j) => (i !== j && similarity(sec, s) >= SIMILARITY_THRESHOLD ? j : -1))
-            .filter((j) => j !== -1)
+        const matches = sections.map((s, j) => (i !== j && similarity(sec, s) >= SIMILARITY_THRESHOLD ? j : -1)).filter((j) => j !== -1)
         return { matches, count: matches.length }
     })
 
@@ -79,7 +77,12 @@ export function findPatterns(sections: string[], autoGroups: boolean) {
     }
 
     function cleanText(text: string): string {
-        return text.toLowerCase().replace(/\n/g, " ").replace(/[^\p{L}\s]/gu, "").replace(/\s+/g, " ").trim()
+        return text
+            .toLowerCase()
+            .replace(/\n/g, " ")
+            .replace(/[^\p{L}\s]/gu, "")
+            .replace(/\s+/g, " ")
+            .trim()
     }
 
     function hasExplicitHeader(section: string): boolean {
@@ -192,11 +195,7 @@ export function findPatterns(sections: string[], autoGroups: boolean) {
         const currentClean = cleanText(section)
         const match = stored.find(({ text }) => {
             const storedClean = cleanText(text)
-            return (
-                similarity(text, section) >= SIMILARITY_THRESHOLD ||
-                (storedClean === currentClean && currentClean.length > 0) ||
-                isLineSubsetMatch(text, section)
-            )
+            return similarity(text, section) >= SIMILARITY_THRESHOLD || (storedClean === currentClean && currentClean.length > 0) || isLineSubsetMatch(text, section)
         })
         return match?.type ?? null
     }

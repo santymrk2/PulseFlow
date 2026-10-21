@@ -21,9 +21,10 @@ import { pauseAllTimers } from "../drawer/timers/timers"
 import { getSlideThumbnail, getThumbnail } from "../helpers/media"
 import { changeStageOutputLayout, startCamera, startRtmpStreaming, startScene, startScreen, startStreaming, stopRtmpStreaming, stopStreaming, toggleOutputs } from "../helpers/output"
 import { OutputHelper } from "../helpers/OutputHelper"
+import { applyLook } from "../helpers/looks"
 import { changeOutputStyle, playSlideTimers, randomSlide, replaceDynamicValues, selectProjectShow, sendMidi, startShowSync } from "../helpers/showActions"
 import { startTimerById, startTimerByName, stopTimers } from "../helpers/timerTick"
-import { clearAll, clearBackground, clearDrawing, clearOverlay, clearOverlays, clearScene, clearSlide, clearTimers, restoreOutput } from "../output/clear"
+import { clearAll, clearBackground, clearOverlay, clearOverlays, clearScene, clearSlide, clearTimers, restoreOutput } from "../output/clear"
 import { fadePause, skipNext, skipPrev, spotifyPause, spotifyPlay } from "../output/preview/SpotifyManager"
 import { formatText } from "../show/formatTextEditor"
 import { getPlainEditorText } from "../show/getTextEditor"
@@ -34,7 +35,6 @@ import {
     addGroup,
     addToProject,
     audioSeekTo,
-    changeDrawZoom,
     changeShowLayout,
     changeVariable,
     createProject,
@@ -146,12 +146,12 @@ export type API_toggle_specific = { value?: boolean }
 export type API_toggle_id = { id?: string; value?: boolean }
 export type API_stage_output_layout = { outputId?: string; stageLayoutId: string }
 export type API_output_style = { outputId?: string; styleId?: string }
+export type API_set_look = { lookId?: string }
 export type API_output_lock = { value?: boolean; outputId?: string }
 export type API_camera = { name?: string; id: string; groupId?: string }
 export type API_screen = { name?: string; id: string }
 export type API_microphone = { name?: string; id: string }
 export type API_dynamic_value = { value: string; ref?: any }
-export type API_draw_zoom = { size?: number; x?: number; y?: number }
 export type API_edit_timer = { id: string; key: string; value: any }
 export type API_transition = {
     id?: "text" | "media" // default: "text"
@@ -221,7 +221,6 @@ export const API_ACTIONS = {
     index_select_project_item: (data: API_index) => selectProjectShow(data.index), // BC
     name_start_project_item: (data: API_strval) => startProjectItemByName(data.value),
     mark_active_as_played: (data: API_toggle_specific) => markItemsAsPlayed("active", data.value),
-    unmark_all_as_played: () => markItemsAsPlayed("all", false),
 
     // SHOWS
     id_select_show: (data: API_id) => selectShowById(data.id),
@@ -257,7 +256,6 @@ export const API_ACTIONS = {
     clear_audio: () => clearAudio("", { clearPlaylist: true, commonClear: true }), // BC
     clear_next_timer: () => clearTimers(), // BC
     clear_scene: (data: API_id) => clearScene(data?.id),
-    clear_drawing: () => clearDrawing(),
 
     // MEDIA (Backgrounds)
     start_camera: (data: API_camera) => startCamera(data),
@@ -294,6 +292,7 @@ export const API_ACTIONS = {
     toggle_output: (data: API_toggle) => toggleOutputs([data.id], { state: data.value }),
     id_select_output_style: (data: API_id) => changeOutputStyle({ styleId: data.id }), // BC
     change_output_style: (data: API_output_style) => changeOutputStyle(data),
+    set_look: (data: API_set_look) => applyLook(data.lookId || ""),
     change_stage_output_layout: (data: API_stage_output_layout) => changeStageOutputLayout(data),
     change_transition: (data: API_transition) => updateTransition(data), // BC
 
@@ -343,7 +342,6 @@ export const API_ACTIONS = {
     change_variable: (data: API_variable) => changeVariable(data), // BC
 
     // DRAW
-    change_draw_zoom: (data: API_draw_zoom) => changeDrawZoom(data),
 
     // CONNECTION
     sync_content_provider: () => contentProviderSync(),

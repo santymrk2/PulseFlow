@@ -3,7 +3,7 @@
     import { audioStreams, playingAudio } from "../../../stores"
     import T from "../../helpers/T.svelte"
     import { keysToID, sortByName } from "../../helpers/array"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Loader from "../../main/Loader.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
@@ -30,7 +30,7 @@
             {@const isLoading = loadingStreams.has(stream.id)}
 
             <SelectElem id="audio_stream" data={{ id: stream.id, type: "audio_stream" }} draggable>
-                <Button class="context #audio_stream" style="flex: 1;" outline={Object.keys($playingAudio).includes(stream.value)} on:click={() => loadStream(stream.id)} bold={false}>
+                <Button align="start" class="context #audio_stream" style="flex: 1;" showOutline={Object.keys($playingAudio).includes(stream.value)} on:click={() => loadStream(stream.id)} bold={false}>
                     <div class="stream">
                         <div class="loader" style="overflow: hidden;">
                             {#if isLoading}<Loader size={0.3} />{/if}

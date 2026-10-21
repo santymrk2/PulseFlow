@@ -2,13 +2,14 @@ import { get } from "svelte/store"
 import { uid } from "uid"
 import { OUTPUT } from "../../types/Channels"
 import { Main } from "../../types/IPC/Main"
-import type { Output } from "../../types/Output"
+import type { Output, Outputs } from "../../types/Output"
 import type { SaveListSettings, SaveListSyncedSettings } from "../../types/Save"
 import type { Metadata, Themes } from "../../types/Settings"
 import { migrateAudioEffects } from "../audio/effects/audioEffectsHelpers"
 import { initAudioRouting } from "../audio/routing/audioRoutingInit"
 import { clone, keysToID } from "../components/helpers/array"
 import { checkFFmpeg, checkWindowCapture, setOutput, startScene, toggleOutputs } from "../components/helpers/output"
+import { type LooksMigrationResult, migrateLooksSettings } from "../components/helpers/looks"
 import { migrateOutputsRtmp } from "../components/helpers/rtmpDestinations"
 import { defaultThemes } from "../components/settings/tabs/defaultThemes"
 import { sendMain } from "../IPC/main"
@@ -37,7 +38,6 @@ import {
     customizedIcons,
     deletedDefaults,
     disabledServers,
-    drawSettings,
     drawer,
     drawerTabsData,
     driveData,
@@ -84,10 +84,12 @@ import {
     sorted,
     special,
     splitLines,
+    activeLook,
+    looks,
     styles,
+    stylesLegacyBackup,
     templateCategories,
     theme,
-    themes,
     timeFormat,
     timecode,
     timeline,
@@ -104,6 +106,25 @@ import { isMainWindow, startAutosave } from "./common"
 import { setLanguage } from "./language"
 import { startRemoteController } from "./remoteController"
 import { send } from "./request"
+
+/** F10.1: migra looks/salidas al modelo nuevo si hace falta y actualiza los stores
+ *  afectados (looks, activeLook, stylesLegacyBackup). Los outputs migrados los
+ *  devuelve el resultado: quien llama decide cuándo ponerlos en el store. */
+function migrateLoadedLooks(outputsData: Outputs): LooksMigrationResult {
+    const result = migrateLooksSettings({
+        looks: get(looks),
+        styles: get(styles),
+        outputs: outputsData,
+        activeLook: get(activeLook),
+        stylesLegacyBackup: get(stylesLegacyBackup)
+    })
+    if (!result.changed) return result
+
+    looks.set(result.looks)
+    activeLook.set(result.activeLook)
+    stylesLegacyBackup.set(result.stylesLegacyBackup)
+    return result
+}
 
 export function updateSyncedSettings(data: any) {
     if (!data || !Object.keys(data).length) return
@@ -123,6 +144,10 @@ export function updateSyncedSettings(data: any) {
         if (updateList[key as SaveListSyncedSettings]) updateList[key as SaveListSyncedSettings](value)
         else console.info("RECEIVED UNKNOWN SETTINGS KEY:", key)
     })
+
+    // si los looks llegaron después de los outputs (orden no garantizado), migrar acá
+    const migrated = migrateLoadedLooks(get(outputs))
+    if (migrated.changed) outputs.set(migrated.outputs)
 
     loadedState.set([...get(loadedState), "synced_settings"])
 }
@@ -176,29 +201,17 @@ export function updateSettings(data: any) {
     const customPorts: { [key: string]: number } = data.ports || { remote: 5510, stage: 5511 }
     sendMain(Main.START, { ports: customPorts, max: data.maxConnections === undefined ? 10 : data.maxConnections, disabled, data: get(serverData) })
 
-    // theme
-    let currentTheme = get(themes)[data.theme]
-    if (currentTheme?.colors) {
-        // update colors (pre 0.9.2 or 1.4.9)
-        const pre092 = currentTheme.colors.secondary?.toLowerCase() === "#e6349c"
-        const pre149 = currentTheme.colors.primary?.toLowerCase() === "#292c36"
-        if (data.theme === "default" && (pre092 || pre149)) {
-            themes.update((a) => {
-                a.default = clone(defaultThemes.default)
-                currentTheme = a.default
-                return a
-            })
-        }
-
-        updateThemeValues(currentTheme)
-    }
+    // tema fijo (PulseFlow): la pestaña "Tema" de Configuración se quitó
+    theme.set("default")
+    updateThemeValues(defaultThemes.default)
 
     // load all shows
     // loadShows(Object.keys(get(shows)))
 
     loaded.set(true)
 
-    window.api.send("LOADED")
+    // F10.0f: el envío de "LOADED" se quitó: era el handshake de la ventana
+    // webview de Electron y en PulseFlow nada lo escuchaba ni lo comandaba.
 }
 
 // pre v1.6.1
@@ -341,6 +354,9 @@ const updateList: { [key in SaveListSettings | SaveListSyncedSettings]: any } = 
             if (v[id].rtmpData?.streaming) v[id].rtmpData.streaming = false
         })
         migrateOutputsRtmp(v)
+        // F10.1: migrar antes de que el puente (suscrito a outputs) vea los datos,
+        // así conserva el estilo original de cada salida
+        v = migrateLoadedLooks(v).outputs
         outputs.set(v)
 
         // RTMP check
@@ -362,12 +378,20 @@ const updateList: { [key in SaveListSettings | SaveListSyncedSettings]: any } = 
 
         styles.set(v)
     },
+    looks: (v: any) => {
+        // la migración al modelo F10 (celdas LookScreen) corre en
+        // migrateLoadedLooks, cuando ya están cargados outputs y styles
+        looks.set(v || {})
+    },
+    activeLook: (v: any) => {
+        activeLook.set(v || "default")
+    },
+    stylesLegacyBackup: (v: any) => stylesLegacyBackup.set(v || {}),
     profiles: (v: any) => profiles.set(v),
     audioFolders: (v: any) => audioFolders.set(v),
     categories: (v: any) => categories.set(v),
     drawer: (v: any) => drawer.set(v),
     drawerTabsData: (v: any) => drawerTabsData.set(v),
-    drawSettings: (v: any) => drawSettings.set(v),
     groupNumbers: (v: any) => groupNumbers.set(v),
     fullColors: (v: any) => fullColors.set(v),
     formatNewShow: (v: any) => formatNewShow.set(v),
@@ -391,7 +415,7 @@ const updateList: { [key in SaveListSettings | SaveListSyncedSettings]: any } = 
     interactions: (v: any) => interactions.set(v),
     audioStreams: (v: any) => audioStreams.set(v),
     audioPlaylists: (v: any) => audioPlaylists.set(v),
-    theme: (v: any) => theme.set(v),
+    theme: () => theme.set("default"),
     transitionData: (v: any) => transitionData.set(v),
     audioChannelsData: (v: any) => audioChannelsData.set(v),
     emitters: (v: any) => emitters.set(v),
@@ -429,11 +453,8 @@ const updateList: { [key in SaveListSettings | SaveListSyncedSettings]: any } = 
             startRemoteController(v.remoteControllerId)
         }
 
-        // DEPRECATED (migrate)
-        if (v.pcoLocalAlways) {
-            contentProviderData.update((a) => ({ ...a, planningcenter: { localAlways: true } }))
-            delete v.pcoLocalAlways
-        }
+        // Planning Center se quitó: descartar la opción vieja
+        delete v.pcoLocalAlways
 
         // DEPRECATED (migrate)
         v.customUserDataLocation = true

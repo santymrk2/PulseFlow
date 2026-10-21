@@ -1,14 +1,21 @@
 <script lang="ts">
-    import { slide } from "svelte/transition"
-    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, dictionary, drawSettings, drawTool, os, outputDisplay, outputs, paintCache, profiles, saved, settingsTab, shows } from "../../stores"
+    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, outputDisplay, outputState, outputs, profiles, quickSearchActive, saved, shows, activeDrawerTab, drawer, looks, activeLook, activePopup } from "../../stores"
     import { getCloudUsers } from "../../utils/cloudSync"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
     import { toggleOutputs } from "../helpers/output"
-    import T from "../helpers/T.svelte"
-    import Button from "../inputs/Button.svelte"
-    import TopButton from "../inputs/TopButton.svelte"
+    import { openOverlayEditor, openThemeEditor } from "../edit/scripts/libraryEditor"
+
+    import TopButton from "./TopButton.svelte"
     import { DEFAULT_DISPLAY_NAME } from "../../utils/SocketHelper"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import Capsule from "../../lib/components/ui/capsule/capsule.svelte"
+    import Menu from "../../lib/components/ui/menu/menu.svelte"
+    import MenuItem from "../../lib/components/ui/menu/menu-item.svelte"
+    import MenuSeparator from "../../lib/components/ui/menu/menu-separator.svelte"
+    import { applyLook } from "../helpers/looks"
+    import { getAllNormalOutputs, getAllStageOutputs } from "../helpers/output"
+    import { DEFAULT_DRAWER_HEIGHT } from "../../utils/common"
 
     export let isWindows = false
 
@@ -20,46 +27,13 @@
     $: editDisabled = $activeEdit.id && ($activeEdit.type || "show") !== "show" ? false : $activeShow && ($activeShow?.type || "show") === "show" ? isLocked : $activeShow?.type === "pdf" || !$activeShow?.id
     $: physicalOutputWindows = Object.values($outputs).filter((a) => a.enabled && !a.invisible)
 
-    let confirm = false
-    let disableClick = false
-    let cancelConfirmTimeout: NodeJS.Timeout | null = null
-    function toggleOutput(e: any) {
-        if (cancelConfirmTimeout) clearTimeout(cancelConfirmTimeout)
-
-        const forceKey = e.ctrlKey || e.metaKey
-
-        if (!$outputDisplay || confirm) {
-            if (confirm) {
-                // prevent displaying just after close
-                disableClick = true
-                setTimeout(() => (disableClick = false), 800)
-            }
-
-            confirm = false
-            toggleOutputs(null, { force: forceKey })
-            return
-        }
-
-        if (forceKey) return
-
-        confirm = true
-        cancelConfirmTimeout = setTimeout(() => {
-            confirm = false
-        }, 1800)
-    }
-
     function openOutputSettings() {
-        settingsTab.set("display_settings")
-        activePage.set("settings")
+        activePopup.set("screen_config")
     }
 
-    // disabled tabs
-
-    let settingsDisabled = false
     $: profile = $profiles[$activeProfile || ""]
-    $: settingsDisabled = Object.keys(profile?.access.settings || {}).length > 7
 
-    $: noPhysicalOutputWindows = (!$outputDisplay && !physicalOutputWindows.length) || disableClick
+    $: lookOptions = Object.entries($looks || {}).map(([id, look]: any) => ({ id, label: look?.name || id, value: id }))
 
     $: users = getCloudUsers($cloudUsers)
     function goToUser(user: { [key: string]: any }) {
@@ -72,87 +46,142 @@
             else activeEdit.set({ type: "show", slide: 0, items: [], showId: user.activeShow.id })
         }
     }
+
+    // --- F11.1 helpers ---
+
+    function openScriptureDrawer() {
+        activeDrawerTab.set("scripture")
+        if ($drawer.height < 300) drawer.set({ height: $drawer.stored || DEFAULT_DRAWER_HEIGHT, stored: null })
+    }
+
+    function toggleMediaDrawer() {
+        if ($activeDrawerTab === "media" && $drawer.height > 40) {
+            drawer.set({ height: 40, stored: $drawer.height, autoclosed: true })
+        } else {
+            activeDrawerTab.set("media")
+            if ($drawer.height < 300) drawer.set({ height: $drawer.stored || DEFAULT_DRAWER_HEIGHT, stored: null })
+        }
+    }
+
+    function toggleAudience() {
+        toggleOutputs(getAllNormalOutputs().map((a: any) => a.id))
+    }
+
+    function toggleStage() {
+        toggleOutputs(getAllStageOutputs().map((a: any) => a.id))
+    }
+
+    // live status per group
+    $: normalOutputIds = getAllNormalOutputs().map((o: any) => o.id)
+    $: stageOutputIds = getAllStageOutputs().map((o: any) => o.id)
+    $: audienceLive = ($outputState || []).some((s: any) => s.active === true && normalOutputIds.includes(s.id))
+    $: stageLive = ($outputState || []).some((s: any) => s.active === true && stageOutputIds.includes(s.id))
+
+    // menús desplegables de la barra (kit: menu)
+    let moreOpen = false
+    let lookOpen = false
+    function runMore(fn: () => void) {
+        fn()
+        moreOpen = false
+    }
+    function applyLookFromMenu(id: string) {
+        applyLook(id)
+        lookOpen = false
+    }
+    function editLooks() {
+        lookOpen = false
+        activePopup.set("looks")
+    }
+
+    // right-click on audience/stage -> configure screens
+    function onScreensContextMenu(e: MouseEvent) {
+        e.preventDefault()
+        activePopup.set("screen_config")
+    }
 </script>
 
-{#if users.length}
-    <div class="users" style="{isWindows ? 'top: 25px;' : ''}width: calc(17px + ((22px - 5px) * {users.length}));" data-title={translateText("settings.connections")}>
-        {#each users as user, i}
-            {@const isSameArea = $activeShow && user.activeShow?.id === $activeShow?.id}
-            {@const name = user.displayName || DEFAULT_DISPLAY_NAME}
-
-            <div class="user" class:isSameArea data-title={name} style="background-color: {user.color};transform: translateX(-{5 * i}px);" role="none" on:click={() => goToUser(user)}>
-                {#if name === DEFAULT_DISPLAY_NAME}
-                    <Icon id="profiles" size={1.2} white />
-                {:else}
-                    {name.charAt(0)}
-                {/if}
-            </div>
-        {/each}
-    </div>
-{/if}
-
-<div class="top" class:drag={!isWindows}>
-    <!-- {#if !isWindows}
-    <div class="dragZone" />
-    {/if} -->
-    <span style="width: var(--navigation-width);">
-        {#if !$saved && $os.platform !== "win32"}
-            <div class="unsaved" />
+<div class="top" data-tauri-drag-region>
+    <span style="width: var(--navigation-width);" data-tauri-drag-region>
+        {#if !isWindows}
+            <div class="macTitleSpace" data-tauri-drag-region />
         {/if}
-        <!-- logo -->
-        <h1 style="align-self: center;width: 100%;padding: 0px 10px;text-align: center;font-size: 1.8em;">FreeShow</h1>
-        <!-- <div class="logo">
-            <img style="height: 35px;" src="./import-logos/freeshow.webp" alt="FreeShow-logo" draggable={false} />
-            <h1 style="color: var(--text);font-size: 1.7em;">FreeShow</h1>
-        </div> -->
     </span>
-    <span>
+
+    <!-- Izquierda 1: Buscar (F12.5: cápsula del kit; F14.1b: Texto y Estilos salen, el modo texto sigue con Ctrl+Shift+T y los estilos están en el cajón) -->
+    <Capsule>
+        <Button variant="ghost" size="sm" data-title={translateText("menu.search")} onclick={() => quickSearchActive.set(true)}>
+            <Icon id="search" size={1} white />
+        </Button>
+    </Capsule>
+
+    <!-- Izquierda 2: Show · Edit · Biblia · ⋯ -->
+    <Capsule>
         <TopButton id="show" />
         <TopButton id="edit" disabled={editDisabled} />
-        <TopButton id="stage" />
-    </span>
-    <span style="width: var(--navigation-width);justify-content: flex-end;">
-        <TopButton id="draw" red={$drawTool === "fill" || ($drawTool === "zoom" && $drawSettings.zoom?.size !== 100) || !!($drawTool === "paint" && $paintCache?.length)} hideLabel />
-        {#if !settingsDisabled}
-            <TopButton id="settings" hideLabel />
-        {/if}
-
-        <!-- <MaterialButton id="output_window_button" class="context #output display {$outputDisplay ? 'on' : 'off'}" title="menu.{$outputDisplay ? (confirm ? 'again_confirm' : '_title_display_stop') : '_title_display'} [Ctrl+O]" style={$outputDisplay || disableClick ? "" : "border-bottom: 2px solid var(--secondary);"} on:click={toggleOutput} disabled={(!$outputDisplay && !physicalOutputWindows.length) || disableClick} red={$outputDisplay}>
-            {#if $outputDisplay}
-                {#if confirm}
-                    <Icon id="close" size={1.6} white />
-                {:else}
-                    <Icon id="cancelDisplay" size={1.6} white />
-                {/if}
-            {:else}
-                <Icon id="outputs" size={1.6} white />
-            {/if}
-
-            {#if $outputDisplay && confirm}
-                <div class="click_again" transition:slide>
-                    <T id="menu.again_confirm" />
-                </div>
-            {/if}
-        </MaterialButton> -->
-        <Button id="output_window_button" title={translateText(`menu.${$outputDisplay ? (confirm ? "again_confirm" : "_title_display_stop") : "_title_display"} [Ctrl+O]`, $dictionary)} style={$outputDisplay || disableClick ? "" : "border-bottom: 2px solid var(--secondary);"} on:click={toggleOutput} class="context #output display {$outputDisplay ? 'on' : 'off'}" red={$outputDisplay} disabled={noPhysicalOutputWindows}>
-            {#if $outputDisplay}
-                {#if confirm}
-                    <Icon id="close" size={1.6} white />
-                {:else}
-                    <Icon id="cancelDisplay" size={1.6} white />
-                {/if}
-            {:else}
-                <Icon id="outputs" size={1.6} white />
-            {/if}
-
-            {#if $outputDisplay && confirm}
-                <div class="click_again" transition:slide>
-                    <T id="menu.again_confirm" />
-                </div>
-            {/if}
+        <Button variant="ghost" size="sm" data-title={translateText("menu.bible")} onclick={openScriptureDrawer}>
+            <Icon id="scripture" size={1} white />
         </Button>
+        <div class="menu-anchor">
+            <Button variant="ghost" size="sm" data-title={translateText("menu.more")} onclick={() => (moreOpen = !moreOpen)}>
+                <Icon id="more" size={1} white />
+            </Button>
+            <Menu open={moreOpen} onclose={() => (moreOpen = false)}>
+                <MenuItem onclick={() => runMore(() => activePage.set("stage"))}>{translateText("menu.stage_editor")}</MenuItem>
+                <MenuItem onclick={() => runMore(openThemeEditor)}>{translateText("menu.theme_editor")}</MenuItem>
+                <MenuItem onclick={() => runMore(() => openOverlayEditor())}>{translateText("menu.overlay_editor")}</MenuItem>
+            </Menu>
+        </div>
+    </Capsule>
+
+    <span class="spacer" data-tauri-drag-region />
+
+    <!-- Derecha 1: Media · Look ▾ -->
+    <Capsule>
+        <Button variant="ghost" size="sm" data-title={translateText("menu.media")} onclick={toggleMediaDrawer}>
+            <Icon id="media" size={1} white />
+        </Button>
+        <div class="menu-anchor">
+            <Button variant="ghost" size="sm" data-title={translateText("looks.looks") + ": " + ($looks[$activeLook]?.name || "")} onclick={() => (lookOpen = !lookOpen)}>
+                <Icon id="looks" size={1} white />
+            </Button>
+            <Menu open={lookOpen} class="min-w-52" onclose={() => (lookOpen = false)}>
+                {#each lookOptions as look}
+                    <MenuItem checked={look.id === $activeLook} onclick={() => applyLookFromMenu(look.id)}>{look.label}</MenuItem>
+                {/each}
+                {#if lookOptions.length}<MenuSeparator />{/if}
+                <MenuItem onclick={editLooks}>{translateText("looks.edit_looks")}</MenuItem>
+            </Menu>
+        </div>
+    </Capsule>
+
+    <!-- Derecha 2: Audiencia · Stage (rojas apagadas, verdes en vivo); clic derecho abre Configurar pantallas -->
+    <Capsule>
+        <Button variant="live" size="sm" aria-pressed={audienceLive} data-title={translateText("menu.audience")} oncontextmenu={onScreensContextMenu} onclick={toggleAudience}>
+            <Icon id="display" size={1} white />
+        </Button>
+        <Button variant="live" size="sm" aria-pressed={stageLive} data-title={translateText("menu.stage")} oncontextmenu={onScreensContextMenu} onclick={toggleStage}>
+            <Icon id="stage" size={1} white />
+        </Button>
+        {#if users.length}
+            <div class="users" data-data-title={translateText("settings.connections")}>
+                {#each users as user}
+                    {@const name = user.displayName || DEFAULT_DISPLAY_NAME}
+                    <button class="user" class:isSameArea={$activeShow && user.activeShow?.id === $activeShow?.id} title={name} style="background-color: {user.color};" onclick={() => goToUser(user)}>
+                        {#if name === DEFAULT_DISPLAY_NAME}
+                            <Icon id="profiles" size={0.9} white />
+                        {:else}
+                            {name.charAt(0)}
+                        {/if}
+                    </button>
+                {/each}
+            </div>
+        {/if}
+    </Capsule>
+
+    <span style="width: var(--navigation-width);justify-content: flex-end;" data-tauri-drag-region>
+        <span class="unsaved-dot" class:hidden={$saved} data-title={translateText("menu.unsaved")} role="none" />
         {#if !$outputDisplay && !physicalOutputWindows.length}
-            <div data-title={translateText("No 'physical' outputs available!")} style="position: absolute;top: 0;inset-inline-end: 0;height: 100%;width: 60px;" role="none" on:click={openOutputSettings} />
+            <div data-title={translateText("No 'physical' outputs available!")} style="position: absolute;top: 0;inset-inline-end: 0;height: 100%;width: 60px;" role="none" onclick={openOutputSettings}></div>
         {/if}
     </span>
 </div>
@@ -161,40 +190,44 @@
     .top {
         position: relative;
         display: flex;
+        align-items: center;
         justify-content: space-between;
-        z-index: 30;
-        min-height: 40px;
-        height: 40px;
+        gap: 6px;
+        /* por encima de las cabeceras sticky del contenido (ShowHeader z-index 200): si no, los menús desplegables quedan detrás */
+        z-index: 300;
+        min-height: 48px;
+        height: 48px;
 
-        box-shadow: 0 0 4px rgb(0 0 0 / 0.4);
-
-        /* disabled because it's causing unexpected behaviour in Windows 11 */
-        /* -webkit-app-region: drag; */
+        border-bottom: 1px solid var(--border-color, var(--primary-lighter));
     }
-    .top span {
+    .top > span {
+        display: flex;
+        align-items: center;
+    }
+
+    .spacer {
+        flex: 1;
+    }
+
+    .menu-anchor {
+        position: relative;
         display: flex;
     }
 
-    .top.drag {
-        -webkit-app-region: drag;
+    .macTitleSpace {
+        width: 80px;
+        flex-shrink: 0;
     }
 
-    .top.drag :global(button) {
-        -webkit-app-region: no-drag;
+    .unsaved-dot {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background-color: var(--red);
     }
-
-    /* .dragZone {
-        position: absolute;
-
-        display: flex;
-        justify-content: space-between;
-        background-color: var(--primary-darker);
-        width: 100%;
-        height: 3px;
-
-        z-index: 2;
-        -webkit-app-region: drag;
-    } */
+    .unsaved-dot.hidden {
+        visibility: hidden;
+    }
 
     div :global(button.display) {
         display: flex;
@@ -202,69 +235,13 @@
         min-width: 60px;
     }
 
-    .unsaved {
-        position: absolute;
-        left: 0;
-        height: 100%;
-        width: 5px;
-        background-color: var(--red);
-    }
-
-    /* .logo {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 0px 10px;
-        width: 100%;
-        gap: 10px;
-    } */
-
-    @media screen and (max-width: 580px) {
-        .top span:first-child {
-            display: none;
-        }
-    }
-
-    .click_again {
-        position: absolute;
-        bottom: 0;
-        inset-inline-end: 0;
-        transform: translateY(100%);
-
-        font-size: 1.1em;
-        padding: 4px 10px;
-        font-weight: normal;
-        background-color: var(--primary-darker);
-        color: var(--text);
-
-        border: 2px solid var(--secondary);
-        border-top: none;
-        border-inline-end: none;
-    }
-
-    /* USERS */
-
+    /* connected users: avatares dentro de la última cápsula */
     .users {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: calc(40px - 4px);
-
         display: flex;
         align-items: center;
-        /* gap: 2px; */
-        margin: 2px 0;
-        padding: 0 5px;
-
-        background-color: var(--primary-darker);
-        border: 1px solid var(--primary-lighter);
-        border-left: none;
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-
-        z-index: 31;
+        gap: 2px;
+        padding-inline: 2px;
     }
-
     .user {
         width: 22px;
         min-width: 22px;
@@ -281,11 +258,18 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        cursor: pointer;
     }
     .user:hover {
         filter: brightness(0.9);
     }
     .user.isSameArea {
         box-shadow: 0 0 0 2px var(--secondary);
+    }
+
+    @media screen and (max-width: 580px) {
+        .top > span:first-child {
+            display: none;
+        }
     }
 </style>

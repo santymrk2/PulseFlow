@@ -1,7 +1,7 @@
 <script lang="ts">
     import { triggerClickOnEnterSpace } from "../../utils/clickable"
     import { joinTime, secondsToTime } from "../helpers/time"
-    import Slider from "../inputs/Slider.svelte"
+    import Slider from "../../lib/components/ui/slider/slider.svelte"
     import { VideoPlayer } from "../media/video/videoPlayer"
 
     export let outputId: string | undefined = undefined

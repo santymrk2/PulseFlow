@@ -388,6 +388,7 @@
         "first_last": "Første og siste lysbilde"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Standard",
         "dark": "Mørkt",
         "light": "Lyst",
@@ -569,7 +570,7 @@
         "drawer_search_options": "Søkealternativer",
         "template_info": "Info om mal",
         "cleaning_utility": "Rengjøringsverktøy",
-        "initialize": "Velkommen til FreeShow",
+        "initialize": "Velkommen til PulseFlow",
         "unsaved": "Er du sikkert på at du vil avslutte?",
         "cancel": "Avbryt",
         "continue": "Fortsett",

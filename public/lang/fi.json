@@ -350,6 +350,7 @@
         "first_last": "Ensimmäisellä ja viimeisellä dialla"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Oletus",
         "dark": "Tumma",
         "light": "Vaalea",

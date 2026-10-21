@@ -2,6 +2,7 @@ import { get } from "svelte/store"
 import { OUTPUT, REMOTE, STAGE } from "../../types/Channels"
 import { AudioPlayer } from "../audio/audioPlayer"
 import { midiInListen } from "../components/actions/midi"
+import { sendOutputScenes } from "../components/helpers/sceneGraph"
 import { getAllActiveOutputIds, getAllNormalOutputs, updateSyncedOutputs } from "../components/helpers/output"
 import { loadShows } from "../components/helpers/setShow"
 import { getShowCacheId, syncCachedShows, updateCachedShow, updateCachedShows, updateShowsList } from "../components/helpers/show"
@@ -21,9 +22,6 @@ import {
     colorbars,
     customMessageCredits,
     customMetadata,
-    draw,
-    drawSettings,
-    drawTool,
     driveKeys,
     effects,
     events,
@@ -161,6 +159,17 @@ export function storeSubscriber() {
 
         send(OUTPUT, ["OVERLAYS"], data)
         send(REMOTE, ["OVERLAYS"], data)
+        // el Scene Graph de cada salida incluye los items de las overlays activas (F4.6)
+        sendOutputScenes(get(outputs))
+    })
+
+    // Timers/relojes (F4.7): el engine dibuja el valor que manda el frontend; al
+    // cambiar el valor del timer se reenvía la escena de cada salida.
+    activeTimers.subscribe(() => {
+        sendOutputScenes(get(outputs))
+    })
+    timers.subscribe(() => {
+        sendOutputScenes(get(outputs))
     })
     overlayCategories.subscribe(async (data) => {
         if (await hasNewerUpdate("LISTENER_OVERLAY_CATEGORIES", 50)) return
@@ -195,7 +204,8 @@ export function storeSubscriber() {
         // having more is probably better, but breaks some things including slide timeline updates
         // if (await hasNewerUpdate("LISTENER_OUTPUTS", 15)) return
 
-        send(OUTPUT, ["OUTPUTS"], data)
+        // scene graph for the native render engine (Rust)
+        sendOutputScenes(data)
         // used for stage mirror data
         send(OUTPUT, ["ALL_OUTPUTS"], data)
         send(REMOTE, ["AUDIO_ROUTING"], getFilteredAudioChannels())
@@ -227,6 +237,9 @@ export function storeSubscriber() {
 
         send(OUTPUT, ["STAGE"], data)
 
+        // la escena de cada salida stage depende de su layout (salida fuente)
+        sendOutputScenes()
+
         // STAGE
         data = arrayToObject(filterObjectArray(data, ["disabled", "name", "settings", "items"]).filter((a: any) => a.disabled === false))
         timedout(STAGE, { channel: "LAYOUT", data }, () =>
@@ -240,34 +253,6 @@ export function storeSubscriber() {
                 return currentData
             })
         )
-    })
-
-    draw.subscribe((data) => {
-        // if (await hasNewerUpdate("LISTENER_DRAW")) return
-
-        const activeOutputIds = getAllActiveOutputIds()
-        getAllNormalOutputs().forEach(({ id }) => {
-            if (activeOutputIds.includes(id)) send(OUTPUT, ["DRAW"], { id, data })
-            else send(OUTPUT, ["DRAW"], { id, data: null })
-        })
-    })
-    drawTool.subscribe((data) => {
-        // WIP changing tool while output is not active, will not update tool in output if set to active before changing tool again
-        const activeOutputIds = getAllActiveOutputIds()
-        getAllNormalOutputs().forEach(({ id }) => {
-            if (activeOutputIds.includes(id)) send(OUTPUT, ["DRAW_TOOL"], { id, data })
-            else send(OUTPUT, ["DRAW_TOOL"], { id, data: "focus" })
-        })
-    })
-    drawSettings.subscribe((data) => {
-        const activeOutputIds = getAllActiveOutputIds()
-        getAllNormalOutputs().forEach(({ id }) => {
-            if (activeOutputIds.includes(id)) send(OUTPUT, ["DRAW_SETTINGS"], data)
-            else {
-                send(OUTPUT, ["DRAW_TOOL"], { id, data: "focus" })
-                send(OUTPUT, ["DRAW"], { id, data: null })
-            }
-        })
     })
 
     transitionData.subscribe((data) => {
@@ -474,10 +459,6 @@ const initalOutputData = {
     OVERLAYS: "overlays",
     EVENTS: "events",
     GROUPS: "groups",
-
-    DRAW: { data: "draw" },
-    DRAW_TOOL: { data: "drawTool" },
-    DRAW_SETTINGS: "drawSettings",
 
     VISUALIZER_DATA: "visualizerData",
     MEDIA: "media",

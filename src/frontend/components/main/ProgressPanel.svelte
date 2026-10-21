@@ -1,7 +1,7 @@
 <script lang="ts">
     import { fade, slide } from "svelte/transition"
     import Icon from "../helpers/Icon.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import { mediaDownloads, pdfImports } from "../../stores"
     import { translateText } from "../../utils/language"
     import T from "../helpers/T.svelte"
@@ -72,7 +72,7 @@
             <div class="header">
                 <Icon id="download" size={0.9} white />
                 <span><T id="media.downloading" /></span>
-                <MaterialButton style="padding: 5px;" icon="close" on:click={dismiss} title="actions.close" white />
+                <Button style="padding: 5px;" icon="close" on:click={dismiss} title="actions.close" white />
             </div>
 
             {#each mediaEntries as [url, data] (url)}
@@ -124,7 +124,7 @@
         right: 12px;
         width: 320px;
 
-        box-shadow: 1px 1px 3px 2px rgb(0 0 0 / 0.2);
+        box-shadow: var(--shadow-float);
         border: 1px solid var(--primary-lighter);
         border-radius: 6px;
 
@@ -183,7 +183,7 @@
 
     .progress-fill {
         height: 100%;
-        background: linear-gradient(90deg, #8000f0 0%, var(--secondary) 100%);
+        background: var(--action);
         transition: width 0.3s ease;
         border-radius: 3px;
     }

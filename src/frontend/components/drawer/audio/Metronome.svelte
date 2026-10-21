@@ -5,13 +5,12 @@
     import { audioExtensions } from "../../../values/extensions"
     import Icon from "../../helpers/Icon.svelte"
     import { clone } from "../../helpers/array"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import MetronomeInputs from "./MetronomeInputs.svelte"
     import MetronomeVisualizer from "./MetronomeVisualizer.svelte"
@@ -55,22 +54,22 @@
 
 {#if options}
     <div class="settings">
-        <MaterialDropdown label="audio.click_sound" disabled={!paused} options={clickSounds} value={$special.clickSound || "metal"} on:change={(e) => updateSpecial("clickSound", e.detail)} />
+        <SelectField label="audio.click_sound" disabled={!paused} options={clickSounds} value={$special.clickSound || "metal"} on:change={(e) => updateSpecial("clickSound", e.detail)} />
         {#if $special.clickSound === "custom"}
             <InputRow>
-                <MaterialFilePicker label="tabs.audio (Hi)" icon="music" disabled={!paused} value={$special.clickSound_hi || ""} filter={{ name: "Audio files", extensions: audioExtensions }} on:change={(e) => updateSpecial("clickSound_hi", e.detail)} />
-                <MaterialFilePicker label="tabs.audio (Lo)" icon="music" disabled={!paused} value={$special.clickSound_lo || ""} filter={{ name: "Audio files", extensions: audioExtensions }} on:change={(e) => updateSpecial("clickSound_lo", e.detail)} />
+                <FileField label="tabs.audio (Hi)" icon="music" disabled={!paused} value={$special.clickSound_hi || ""} filter={{ name: "Audio files", extensions: audioExtensions }} on:change={(e) => updateSpecial("clickSound_hi", e.detail)} />
+                <FileField label="tabs.audio (Lo)" icon="music" disabled={!paused} value={$special.clickSound_lo || ""} filter={{ name: "Audio files", extensions: audioExtensions }} on:change={(e) => updateSpecial("clickSound_lo", e.detail)} />
             </InputRow>
         {/if}
         <InputRow>
-            <MaterialNumberInput label="media.volume (Hi)" value={Number(((values.accentVolume ?? 2) * 100).toFixed(0))} min={0} max={500} step={5} defaultValue={200} on:change={(e) => updateValue("accentVolume", e.detail / 100)} showSlider />
-            <MaterialNumberInput label="media.volume (Lo)" value={Number(((values.secondaryVolume ?? 1.75) * 100).toFixed(0))} min={0} max={500} step={5} defaultValue={175} on:change={(e) => updateValue("secondaryVolume", e.detail / 100)} showSlider />
+            <NumberField label="media.volume (Hi)" value={Number(((values.accentVolume ?? 2) * 100).toFixed(0))} min={0} max={500} step={5} defaultValue={200} on:change={(e) => updateValue("accentVolume", e.detail / 100)} showSlider />
+            <NumberField label="media.volume (Lo)" value={Number(((values.secondaryVolume ?? 1.75) * 100).toFixed(0))} min={0} max={500} step={5} defaultValue={175} on:change={(e) => updateValue("secondaryVolume", e.detail / 100)} showSlider />
         </InputRow>
     </div>
 {:else}
     <div class="settings" style="display: flex;gap: 10px;">
         <SelectElem id="metronome" data={{ tempo: values.tempo || 120, beats: values.beats || 4 }} draggable>
-            <Button style="width: 100%;height: 100%;justify-content: center;border-radius: 6px;" disabled={$outLocked} center title={translateText("audio.toggle_metronome")} on:click={playPause}>
+            <Button style="width: 100%;height: 100%;justify-content: center;border-radius: 6px;" disabled={$outLocked} title={translateText("audio.toggle_metronome")} on:click={playPause}>
                 <Icon id={paused ? "play" : "stop"} white={paused} size={5} />
             </Button>
         </SelectElem>
@@ -91,11 +90,11 @@
     <!-- TODO: last used values, click to play with preset values -->
 {/if}
 
-<FloatingInputs round>
-    <MaterialButton isActive={options} title="edit.options" on:click={() => (options = !options)}>
+<FloatingBar round>
+    <Button isActive={options} title="edit.options" on:click={() => (options = !options)}>
         <Icon size={1.1} id="options" white={!options} />
-    </MaterialButton>
-</FloatingInputs>
+    </Button>
+</FloatingBar>
 
 <style>
     .settings {

@@ -6,8 +6,8 @@
     import { translateText } from "../../../utils/language"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     let backupsList: { path: string; name: string; date: number; size: number; isDeleted?: boolean }[] = []
     onMount(async () => {
@@ -79,33 +79,33 @@
 </script>
 
 {#if $popupData.back}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => activePopup.set($popupData.back)} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => activePopup.set($popupData.back)} />
 {/if}
 
 <div class="list">
     {#each backupsList as backup}
         <InputRow>
-            <MaterialButton variant="outlined" title="settings.restore" style="width: 100%;" on:click={() => restore(backup)}>
+            <Button variant="outline" title="settings.restore" style="width: 100%;" on:click={() => restore(backup)}>
                 <div class="info">
                     <div class="name" class:deleted={backup.isDeleted || deletingPath === backup.path}>{backup.name.endsWith("_auto") ? translateText("settings.auto") : backup.name} <span style="opacity: 0.3;font-size: 0.7em;padding: 0 8px;">{sizeToString(backup.size)}</span></div>
                     <div class="date">{getDaysAgo(backup.date)} - {new Date(backup.date).toLocaleString()}</div>
                 </div>
-            </MaterialButton>
+            </Button>
 
             <!-- show delete button if backup is older than 30 days -->
             {#if backup.date < Date.now() - 86400000 * 30}
-                <MaterialButton variant="outlined" icon={deletingPath === backup.path ? "undo" : "delete"} title="actions.delete" disabled={backup.isDeleted} on:click={() => requestDeleteBackup(backup.path)} />
+                <Button variant="outline" icon={deletingPath === backup.path ? "undo" : "delete"} title="actions.delete" disabled={backup.isDeleted} on:click={() => requestDeleteBackup(backup.path)} />
             {/if}
         </InputRow>
     {/each}
 </div>
 
-<MaterialButton variant="outlined" on:click={restoreCustom}>
+<Button variant="outline" on:click={restoreCustom}>
     <Icon id="import" size={1.3} />
     <!-- <p><T id="settings.restore" /></p> -->
     <!-- <p><T id="actions.choose_custom" /></p> -->
     <p><T id="inputs.change_folder" /></p>
-</MaterialButton>
+</Button>
 
 <style>
     .list {

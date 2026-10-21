@@ -3,18 +3,16 @@
     import { sendMain } from "../../../IPC/main"
     import { activePopup, popupData, special } from "../../../stores"
     import T from "../../helpers/T.svelte"
-    import HRule from "../../input/HRule.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
     registerPopupSubmit(download)
 
     let changelog = ($popupData.changelog || "").replaceAll("\r\n", "<br>").replaceAll("-", "•")
-    let latestVersion = $popupData.latestVersion
 
     function download() {
-        const isBeta = latestVersion.includes("-beta")
-        sendMain(Main.URL, isBeta ? "https://github.com/ChurchApps/FreeShow/releases" : "https://freeshow.app/?download")
+        sendMain(Main.URL, "https://github.com/santymrk2/PulseFlow/releases")
 
         activePopup.set(null)
         popupData.set({})
@@ -29,9 +27,9 @@
     <HRule title="setup.or" />
 {/if}
 
-<MaterialButton variant="contained" icon="download" on:click={download}>
+<Button variant="default" icon="download" on:click={download}>
     <T id="about.download_latest" />
-</MaterialButton>
+</Button>
 
 <div class="changelog">
     <h3 style="color: var(--text);text-decoration: underline solid var(--secondary);"><T id="about.changes" /></h3>

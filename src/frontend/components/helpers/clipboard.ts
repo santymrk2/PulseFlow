@@ -55,7 +55,6 @@ import {
     styles,
     templateCategories,
     templates,
-    themes,
     timers,
     variables,
     videoMarkers
@@ -63,7 +62,7 @@ import {
 import { newToast, setStatus, triggerFunction } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { confirmCustom } from "../../utils/popup"
-import { copyFromTextField, cutFromTextField, isFormField } from "../../utils/shortcutsHelper"
+import { copyFromTextField, isFormField } from "../../utils/shortcutsHelper"
 import { removeSlide } from "../context/menuClick"
 import { deleteTimer } from "../drawer/timers/timers"
 import { updateSortedStageItems } from "../edit/scripts/itemHelpers"
@@ -168,7 +167,7 @@ export function paste(clip: Clipboard | null = null, extraData: any = {}, custom
 export function cut(clip: Clipboard | null = null) {
     const activeField = document.activeElement
     if (!clip && isFormField(activeField)) {
-        cutFromTextField(activeField)
+        copyFromTextField(activeField)
         return
     }
 
@@ -1047,12 +1046,6 @@ const deleteActions = {
             return a
         })
     },
-    theme: (data: any) => {
-        data.forEach(({ id }) => {
-            if (id === "default") return
-            history({ id: "UPDATE", newData: { id }, location: { page: "settings", id: "settings_theme" } })
-        })
-    },
     style: (data: any) => {
         data.forEach(({ id }) => {
             history({ id: "UPDATE", newData: { id }, location: { page: "settings", id: "settings_style" } })
@@ -1257,15 +1250,6 @@ const duplicateActions = {
             delete project.origin
             const id = uid()
             history({ id: "UPDATE", newData: { data: project, replace: { name: project.name + " 2" } }, oldData: { id }, location: { page: "show", id: "project" } })
-        })
-    },
-    theme: (data: any) => {
-        data.forEach(({ id }) => {
-            const theme = clone(get(themes)[id])
-            let name = theme.name
-            if (theme.default) name = translateText("themes." + name)
-
-            history({ id: "UPDATE", newData: { data: theme, replace: { default: false, name: name + " 2" } }, location: { page: "settings", id: "settings_theme" } })
         })
     },
     style: (data: any) => {

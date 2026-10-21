@@ -8,7 +8,7 @@
     import { clone } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
     import { getStageOutputId, getStageResolution } from "../helpers/output"
-    import HiddenInput from "../inputs/HiddenInput.svelte"
+    import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
     import Zoomed from "../slide/Zoomed.svelte"
     import SelectElem from "../system/SelectElem.svelte"
     import { getSlideTextItems, stageItemToItem } from "./stage"
@@ -68,7 +68,7 @@
                 <Zoomed background={layout.items.length ? "black" : "transparent"} style="width: 100%;" {resolution} id={stageOutputId} isStage disableStyle center bind:ratio>
                     {#each stageItems as item (item.id)}
                         {#if (item.type || item.enabled !== false) && (!item.conditions?.showItem && !item.bindings?.length ? true : shouldItemBeShown(stageItemToItem(item), item.type === "slide_text" ? getSlideTextItems(layout, item, $outputs || $allOutputs) : [], { type: "stage" }, conditionsUpdater))}
-                            <Stagebox id={item.id} {item} {ratio} {resolution} stageLayout={layout} disableStagePreview={true} />
+                            <Stagebox id={item.id} {item} {ratio} stageLayout={layout} disableStagePreview={true} />
                         {/if}
                     {/each}
                 </Zoomed>

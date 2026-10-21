@@ -1,10 +1,10 @@
 <script lang="ts">
     import { onMount } from "svelte"
     import { actions, activePopup, categories, popupData } from "../../../stores"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import Tip from "../Tip.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
 
     let selectedCategory = $popupData?.id
     onMount(() => {
@@ -37,8 +37,8 @@
 <Tip type="info" value="category.action_tip" bottom={20} />
 
 <InputRow>
-    <MaterialDropdown label="midi.start_action" options={actionOptions.map((a) => ({ label: a.name, value: a.id }))} value={currentAction} allowEmpty on:change={(e) => updateValue(e.detail)} />
+    <SelectField label="midi.start_action" options={actionOptions.map((a) => ({ label: a.name, value: a.id }))} value={currentAction} allowEmpty on:change={(e) => updateValue(e.detail)} />
     {#if currentAction && $actions[currentAction]}
-        <MaterialButton title="titlebar.edit" icon="edit" on:click={editAction} />
+        <Button title="titlebar.edit" icon="edit" on:click={editAction} />
     {/if}
 </InputRow>

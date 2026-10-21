@@ -4,8 +4,8 @@
     import { destroyMain, receiveMain, requestMain, sendMain } from "../../../IPC/main"
     import { activePage, activePopup, deletedShows, popupData, shows, showsCache } from "../../../stores"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import Loader from "../Loader.svelte"
 
@@ -89,18 +89,18 @@
             <!-- USED TO DELETE "BROKEN" SHOWS -->
             {#if allShowsInFolder.length > Object.keys($shows).length}
                 <InputRow>
-                    <MaterialButton style="width: 100%;" icon="delete" info={"" + (allShowsInFolder.length - Object.keys($shows).length)} on:click={deleteBrokenShows} red white>
+                    <Button style="width: 100%;" icon="delete" info={"" + (allShowsInFolder.length - Object.keys($shows).length)} on:click={deleteBrokenShows} red white>
                         <T id="actions.delete_shows_not_indexed" />
-                    </MaterialButton>
+                    </Button>
                 </InputRow>
             {/if}
 
             <!-- DELETE EMPTY SHOWS -->
             {#if emptyShows.length}
                 <InputRow arrow>
-                    <MaterialButton style="width: 100%;" icon="delete" info={"" + emptyShows.length} on:click={deleteEmptyShows} red white>
+                    <Button style="width: 100%;" icon="delete" info={"" + emptyShows.length} on:click={deleteEmptyShows} red white>
                         <T id="actions.delete_empty_shows" />
-                    </MaterialButton>
+                    </Button>
 
                     <div slot="menu">
                         <ul style="list-style-position: inside;margin-left: 20px;">
@@ -119,9 +119,9 @@
             <!-- REMOVE DUPLICATED SHOWS -->
             {#if duplicatedShows.length}
                 <InputRow>
-                    <MaterialButton style="width: 100%;" icon="launch" info={"" + duplicatedShows.length} on:click={deleteDuplicatedShows} white>
+                    <Button style="width: 100%;" icon="launch" info={"" + duplicatedShows.length} on:click={deleteDuplicatedShows} white>
                         <T id="popup.delete_duplicated_shows" />
-                    </MaterialButton>
+                    </Button>
                 </InputRow>
             {/if}
         </div>

@@ -1,147 +1,68 @@
 name: Release
+
+# Al mergear a main: si la versión de `src-tauri/tauri.conf.json` todavía no tiene release, se compilan los instaladores
+# (macOS Apple Silicon e Intel, Windows x64) y se publica `v<versión>` en GitHub Releases con ellos adjuntos.
+# Para sacar una versión nueva hay que subir `version` en tauri.conf.json: si la etiqueta ya existe no se publica nada.
 on:
-  push:
-    branches:
-      - "main"
-  workflow_dispatch:
+    push:
+        branches: [main]
+    workflow_dispatch:
+
+permissions:
+    contents: write
 
 jobs:
-  publish_windows:
-    name: "Publish Windows"
-    runs-on: windows-2022
+    meta:
+        name: Versión
+        runs-on: ubuntu-latest
+        outputs:
+            version: ${{ steps.v.outputs.version }}
+            publish: ${{ steps.v.outputs.publish }}
+            prerelease: ${{ steps.v.outputs.prerelease }}
+        steps:
+            - uses: actions/checkout@v5
 
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v5
+            - name: Leer versión y comprobar la etiqueta
+              id: v
+              env:
+                  GH_TOKEN: ${{ github.token }}
+              run: |
+                  version=$(jq -r .version src-tauri/tauri.conf.json)
+                  echo "version=$version" >> "$GITHUB_OUTPUT"
+                  case "$version" in *-*) echo "prerelease=true" >> "$GITHUB_OUTPUT" ;; *) echo "prerelease=false" >> "$GITHUB_OUTPUT" ;; esac
+                  if gh release view "v$version" >/dev/null 2>&1; then
+                      echo "publish=false" >> "$GITHUB_OUTPUT"
+                      echo "::notice::v$version ya tiene release: subí la versión en src-tauri/tauri.conf.json para publicar una nueva."
+                  else
+                      echo "publish=true" >> "$GITHUB_OUTPUT"
+                  fi
 
-      - name: Install Node.js and NPM
-        uses: actions/setup-node@v5
-        with:
-          node-version: 22
+    build:
+        name: Instaladores
+        needs: meta
+        if: needs.meta.outputs.publish == 'true'
+        uses: ./.github/workflows/build.yml
+        secrets: inherit
 
-      - name: Install dependencies
-        run: npm ci
+    publish:
+        name: Publicar release
+        needs: [meta, build]
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v5
 
-      - name: Build and release app
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          AZURE_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-          AZURE_CLIENT_ID: ${{ secrets.AZURE_CLIENT_ID }}
-          AZURE_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
-        run: npm run release
+            - name: Descargar instaladores
+              uses: actions/download-artifact@v4
+              with:
+                  path: dist
+                  pattern: pulseflow-*
 
-  publish_linux:
-    name: "Publish Linux x64"
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v5
-
-      - name: Install Node.js and NPM
-        uses: actions/setup-node@v5
-        with:
-          node-version: 22
-
-      - name: Install libraries
-        run:
-          |
-          sudo apt-get update
-          sudo apt-get install -y libfontconfig1-dev uuid-dev libltc-dev libegl1-mesa-dev libgles2-mesa-dev --fix-missing
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build and release app
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npm run release
-
-  # This needs it's own build
-  # https://github.com/ChurchApps/FreeShow/issues/562
-  publish_linux_arm:
-    name: "Publish Linux arm64"
-    runs-on: ubuntu-24.04-arm
-
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v5
-
-      - name: Install Node.js and NPM
-        uses: actions/setup-node@v5
-        with:
-          node-version: 22
-
-      - name: Install libraries
-        run:
-          |
-          sudo apt-get update
-          sudo apt-get install -y libfontconfig1-dev uuid-dev libltc-dev libegl1-mesa-dev libgles2-mesa-dev --fix-missing
-
-      # WIDEVINE
-      # - name: Use stock Electron on ARM64
-      #   run: npm run replace-electron
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install FPM
-        run:
-          |
-          sudo apt-get install ruby ruby-dev build-essential
-          sudo gem install --no-document fpm
-
-      # wait because this will only publish if the draft exists
-      - name: Sleep for 1.5 minute
-        run: sleep 90s
-        shell: bash
-
-      - name: Build and release app
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          USE_SYSTEM_FPM: true
-        run: npm run release:arm64
-
-  publish_mac:
-    name: "Publish MacOS"
-    runs-on: macos-latest
-
-    steps:
-      - name: Check out Git repository
-        uses: actions/checkout@v5
-
-      - name: Install Node.js and NPM
-        uses: actions/setup-node@v5
-        with:
-          node-version: 22
-
-      # Change Python version: https://github.com/nodejs/node-gyp/issues/2869
-      - name: Install Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.11"
-
-      # This probably does not make any difference.
-      - name: Install node-gyp
-        run: npm install -g node-gyp
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install dmg-license
-        run: npm i dmg-license
-
-      # for some reason the build command don't continue after the rollup build
-      - name: Sleep for 3 minutes
-        run: sleep 180
-        shell: bash
-
-      - name: Build and release app
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
-          APPLE_ID: ${{ secrets.APPLEID }}
-          APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLEIDPASS }}
-          APPLE_TEAM_ID: ${{ secrets.APPLETEAMID }}
-        run: npm run release
+            - name: Crear release
+              env:
+                  GH_TOKEN: ${{ github.token }}
+                  VERSION: ${{ needs.meta.outputs.version }}
+                  PRERELEASE: ${{ needs.meta.outputs.prerelease }}
+              run: |
+                  flag=""
+                  if [ "$PRERELEASE" = "true" ]; then flag="--prerelease"; fi
+                  gh release create "v$VERSION" $flag --target "$GITHUB_SHA" --title "PulseFlow $VERSION" --generate-notes dist/*/*

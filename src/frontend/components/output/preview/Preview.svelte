@@ -1,30 +1,20 @@
 <script lang="ts">
-    import { actions, activePage, activePopup, activeShow, activeTimers, contextActive, groups, guideActive, outLocked, outputs, overlayTimers, playingAudio, playingMetronome, resized, slideTimers, special } from "../../../stores"
-    import { DEFAULT_WIDTH, isDarkTheme } from "../../../utils/common"
+    import { actions, activePage, activePopup, activeShow, activeTimers, contextActive, groups, guideActive, openToolsTab, outLocked, outputs, overlayTimers, playingAudio, playingMetronome, slideTimers, special } from "../../../stores"
     import { formatSearch } from "../../../utils/search"
     import { getNormalizedKey, previewCtrlShortcuts, previewShortcuts } from "../../../utils/shortcuts"
     import { runAction } from "../../actions/actions"
     import AudioMeter from "../../drawer/audio/AudioMeter.svelte"
     import { getSlideText } from "../../edit/scripts/textStyle"
-    import Icon from "../../helpers/Icon.svelte"
-    import T from "../../helpers/T.svelte"
     import { getActiveOutputs, getFirstOutputIdWithBackground, isOutCleared, outputSlideHasContent, setOutput } from "../../helpers/output"
     import { getLayoutRef } from "../../helpers/show"
     import { getFewestOutputLines, getItemWithMostLines, playNextGroup, playPreviousGroup, updateOut } from "../../helpers/showActions"
     import { _show } from "../../helpers/shows"
     import { newSlideTimer } from "../../helpers/tick"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
     import ShowActions from "../ShowActions.svelte"
-    import Audio from "../tools/Audio.svelte"
     import MediaControls from "../tools/MediaControls.svelte"
-    import NextTimer from "../tools/NextTimer.svelte"
-    import Overlay from "../tools/Overlay.svelte"
     import Show from "../tools/Show.svelte"
-    import TimerControls from "../tools/TimerControls.svelte"
     import ClearButtons from "./ClearButtons.svelte"
     import MultiOutputs from "./MultiOutputs.svelte"
-    import IcecastStatus from "./IcecastStatus.svelte"
     import SpotifyController from "./SpotifyController.svelte"
 
     $: allActiveOutputs = getActiveOutputs($outputs, true, true, true)
@@ -209,9 +199,6 @@
         return null
     }
 
-    // slide timer
-    let timer: any = {}
-    $: timer = outputId && $slideTimers[outputId] ? $slideTimers[outputId] : {}
     $: Object.entries($outputs).forEach(([id, output]) => {
         if ((Object.keys($outputs)?.length > 1 && !output.enabled) || output.stageOutput) return
         if (!output.out?.transition || $slideTimers[id]?.timer) return
@@ -236,68 +223,48 @@
     $: linesPercentage = slideLines && outputLine !== null ? outputLine / slideLines : 0
     $: linesIndex = maxLines !== null ? Math.floor(maxLines * linesPercentage) : 0
 
-    // HIDE PREVIEW
-
-    let enablePreview = true
-
-    // hide preview in draw page
-    // $: enablePreview = ["show", "edit", "settings"].includes($activePage)
-    // $: if ($activePage === "draw") enablePreview = false
-
-    const light = !isDarkTheme()
-    $: isOptimized = $special.optimizedMode
-    $: isSplitted = $resized.rightPanel > DEFAULT_WIDTH * 1.8
+    $: bgOut = currentBgOutput?.out?.background
+    $: videoPlaying = !!bgOut && (bgOut.type === "video" || bgOut.type === "player")
 </script>
 
 <svelte:window on:keydown={keydown} />
 
 <div id="previewArea" class="main">
-    {#if enablePreview}
-        <div class="top">
-            <MaterialButton class="hide" icon="hide" style="z-index: 2;" title="preview._hide_preview" on:click={() => (enablePreview = false)} />
-            <!-- disable before hiding: disableTransitions={!enablePreview} -->
-            <MultiOutputs />
-            <div class="preview-meter">
-                <AudioMeter channelId="main" preview />
-            </div>
+    <div class="top">
+        <MultiOutputs />
+        <div class="preview-meter">
+            <AudioMeter channelId="main" preview />
         </div>
-    {:else}
-        <Button on:click={() => (enablePreview = true)} style="width: 100%;" center dark>
-            <Icon id="eye" right />
-            <T id="preview.show_preview" />
-        </Button>
-    {/if}
+    </div>
 
-    {#if enablePreview}
-        <div class="section" style="margin-bottom: 2px;" class:float={!isSplitted && $activePage !== "show" && $activePage !== "settings"} class:light class:isOptimized>
-            <ShowActions {currentOutput} {ref} {linesIndex} {maxLines} />
+    <div class="section" style="margin-bottom: 2px;">
+        <ShowActions {currentOutput} {ref} {linesIndex} {maxLines} />
+    </div>
+
+    {#if videoPlaying}
+        <div class="section transport">
+            <MediaControls currentOutput={currentBgOutput} outputId={backgroundOutputId} transport />
         </div>
     {/if}
 
     {#if $activePage === "show"}
-        <div class="section" style="margin-top: 2px;">
-            <ClearButtons bind:autoChange activeClear={updatedActiveClear} on:update={(e) => (activeClear = e.detail)} />
+        <div class="section flat">
+            <ClearButtons
+                bind:autoChange
+                activeClear={updatedActiveClear}
+                on:update={(e) => {
+                    activeClear = e.detail
+                    if (e.detail === "audio") openToolsTab.set("audio")
+                    else if (e.detail === "overlays") openToolsTab.set("overlays")
+                    else if (e.detail === "nextTimer") openToolsTab.set("timers")
+                }}
+            />
 
-            {#if updatedActiveClear === "background"}
-                <MediaControls currentOutput={currentBgOutput} outputId={backgroundOutputId} />
-            {:else if updatedActiveClear === "slide"}
+            {#if updatedActiveClear === "slide"}
                 <Show {currentOutput} {ref} {linesIndex} {maxLines} />
-            {:else if updatedActiveClear === "overlays"}
-                <Overlay {currentOutput} />
-            {:else if updatedActiveClear === "audio"}
-                <Audio />
-            {:else if updatedActiveClear === "nextTimer"}
-                {#if Object.keys($overlayTimers).length}
-                    <!-- WIP display overlay timer time -->
-                {:else if timer?.timer}
-                    <NextTimer {currentOutput} timer={timer?.timer ? timer : { time: 0, paused: true, timer: {} }} />
-                {:else if $activeTimers}
-                    <TimerControls />
-                {/if}
             {/if}
         </div>
 
-        <IcecastStatus />
         <SpotifyController />
     {/if}
 </div>
@@ -319,27 +286,6 @@
     border: none;
   } */
 
-    .top :global(.hide:not(.contained):not(.isActive):not(:disabled)) {
-        position: absolute;
-        top: 10px;
-        inset-inline-end: 16px;
-        z-index: 1;
-        background-color: rgb(0 0 0 / 0.3) !important;
-        border: 1px solid rgb(255 255 255 / 0.15) !important;
-        width: 40px;
-        height: 40px;
-        opacity: 0;
-        transition:
-            opacity 0.2s,
-            background-color 0.2s;
-    }
-    .top :global(.hide:not(.contained):not(.isActive):not(:disabled):hover) {
-        background-color: rgb(0 0 0 / 0.7) !important;
-    }
-    .top:hover > :global(.hide:not(.contained):not(.isActive):not(:disabled)) {
-        opacity: 1;
-    }
-
     .section {
         display: flex;
         flex-direction: column;
@@ -347,26 +293,22 @@
         position: relative;
 
         background-color: var(--primary-darker);
-        border: 1px solid var(--primary-lighter);
+        border: 1px solid var(--border-color, var(--primary-lighter));
         margin: 5px;
-        border-radius: 10px;
+        border-radius: var(--radius, 10px);
 
         overflow: hidden;
 
         transition: transform 0.2s ease;
     }
 
-    .section.float {
-        position: absolute;
-        width: calc(100% - 10px);
-        transform: translateY(calc(-100% - 9px));
-
-        --background: rgba(25, 25, 35, 0.6);
-        background-color: var(--background);
-        backdrop-filter: blur(3px);
-    }
-    .section.float.light {
-        --background: rgba(225, 225, 225, 0.6);
+    /* limpiar: franja plana, sin esquinas redondeadas ni borde exterior */
+    .section.flat {
+        margin: 5px 0 0;
+        border: 0;
+        border-top: 1px solid var(--border);
+        border-radius: 0;
+        background-color: transparent;
     }
 
     .preview-meter {

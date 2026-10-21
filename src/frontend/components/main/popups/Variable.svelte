@@ -5,13 +5,13 @@
     import { clone, moveToPos } from "../../helpers/array"
     import { createStore, updateStore } from "../../helpers/historyStores"
     import T from "../../helpers/T.svelte"
-    import HRule from "../../input/HRule.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     let chosenType = ""
     const types = [
@@ -249,7 +249,7 @@
 </script>
 
 {#if !existing && !chosenType}
-    <MaterialMultiChoice
+    <ChoiceGrid
         options={types}
         on:click={(e) => {
             chosenType = e.detail
@@ -258,34 +258,34 @@
     />
 {:else}
     {#if !existing}
-        <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />
+        <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />
     {/if}
 
-    <MaterialTextInput label="inputs.name" style="margin-bottom: 10px;" disabled={!created && !!currentVariable.name} value={currentVariable.name} on:change={(e) => updateValue(e.detail, "name")} autofocus={!currentVariable.name} on:keydown={nameKeydown} />
+    <TextField label="inputs.name" style="margin-bottom: 10px;" disabled={!created && !!currentVariable.name} value={currentVariable.name} on:change={(e) => updateValue(e.detail, "name")} autofocus={!currentVariable.name} on:keydown={nameKeydown} />
 
     {#if currentVariable.type === "number"}
-        <MaterialNumberInput label="variables.default_value" value={currentVariable.default || 0} step={1} {min} {max} on:change={(e) => updateValue(e.detail, "default")} />
+        <NumberField label="variables.default_value" value={currentVariable.default || 0} step={1} {min} {max} on:change={(e) => updateValue(e.detail, "default")} />
         <InputRow>
-            <MaterialNumberInput label="variables.minimum" value={currentVariable.minValue ?? minDefault} step={1} min={minAbsolute} max={maxAbsolute} on:change={(e) => updateValue(e.detail, "minValue")} />
-            <MaterialNumberInput label="variables.maximum" value={currentVariable.maxValue ?? maxDefault} step={1} min={minAbsolute} max={maxAbsolute} on:change={(e) => updateValue(e.detail, "maxValue")} />
+            <NumberField label="variables.minimum" value={currentVariable.minValue ?? minDefault} step={1} min={minAbsolute} max={maxAbsolute} on:change={(e) => updateValue(e.detail, "minValue")} />
+            <NumberField label="variables.maximum" value={currentVariable.maxValue ?? maxDefault} step={1} min={minAbsolute} max={maxAbsolute} on:change={(e) => updateValue(e.detail, "maxValue")} />
         </InputRow>
 
         <!-- WIP custom step sizes "1,8:2,10:2" ?? -->
     {:else if currentVariable.type === "random_number"}
-        <MaterialButton class="popup-options {showMoreRN ? 'active' : ''}" icon="options" iconSize={1.3} title={showMoreRN ? "actions.close" : "create_show.more_options"} on:click={() => (showMoreRN = !showMoreRN)} white />
+        <Button class="popup-options {showMoreRN ? 'active' : ''}" icon="options" iconSize={1.3} title={showMoreRN ? "actions.close" : "create_show.more_options"} on:click={() => (showMoreRN = !showMoreRN)} white />
 
         {#if showMoreRN}
-            <MaterialToggleSwitch label="edit.each_number_once" checked={currentVariable.eachNumberOnce} defaultValue={false} on:change={(e) => updateValue(e.detail, "eachNumberOnce")} />
+            <ToggleField label="edit.each_number_once" checked={currentVariable.eachNumberOnce} defaultValue={false} on:change={(e) => updateValue(e.detail, "eachNumberOnce")} />
 
             <InputRow>
-                <MaterialToggleSwitch label="popup.animate" checked={currentVariable.animate} defaultValue={false} style="flex: 1;" on:change={(e) => updateValue(e.detail, "animate")} />
+                <ToggleField label="popup.animate" checked={currentVariable.animate} defaultValue={false} style="flex: 1;" on:change={(e) => updateValue(e.detail, "animate")} />
                 {#if currentVariable.animate}
-                    <MaterialToggleSwitch label="edit.towards_result" checked={currentVariable.animateTowardsResult} defaultValue={false} style="flex: 1;" on:change={(e) => updateValue(e.detail, "animateTowardsResult")} />
+                    <ToggleField label="edit.towards_result" checked={currentVariable.animateTowardsResult} defaultValue={false} style="flex: 1;" on:change={(e) => updateValue(e.detail, "animateTowardsResult")} />
                 {/if}
             </InputRow>
             {#if currentVariable.animate}
                 <InputRow>
-                    <MaterialNumberInput label="transition.duration (s)" value={currentVariable.animationDuration ?? 3} step={0.1} min={0.1} max={10} defaultValue={3} on:change={(e) => updateValue(e.detail, "animationDuration")} />
+                    <NumberField label="transition.duration (s)" value={currentVariable.animationDuration ?? 3} step={0.1} min={0.1} max={10} defaultValue={3} on:change={(e) => updateValue(e.detail, "animationDuration")} />
                 </InputRow>
             {/if}
 
@@ -296,23 +296,23 @@
             <InputRow style="border-radius: 4px;overflow: hidden;">
                 {#if (currentVariable.sets?.length || 0) > 1}
                     <span style="background-color: var(--primary-darker);font-weight: bold;font-size: 0.8em;display: flex;align-items: center;padding: 0 10px;"><span style="color: var(--secondary);display: flex;align-items: center;">#</span>{i + 1}</span>
-                    <MaterialTextInput label="inputs.name" style="flex: 2;" value={set.name} on:change={(e) => updateSet(i, e.detail, "name")} autofocus={!!currentVariable.name && !set.name} />
+                    <TextField label="inputs.name" style="flex: 2;" value={set.name} on:change={(e) => updateSet(i, e.detail, "name")} autofocus={!!currentVariable.name && !set.name} />
                 {/if}
 
                 <!-- WIP no negative numbers at the moment -->
-                <MaterialNumberInput label="variables.minimum" style="flex: 1;" value={set.minValue ?? DEFAULT_SET.minValue} step={1} min={0} max={maxAbsolute} on:change={(e) => updateSet(i, e.detail, "minValue")} />
-                <MaterialNumberInput label="variables.maximum" style="flex: 1;" value={set.maxValue ?? DEFAULT_SET.maxValue} step={1} min={0} max={maxAbsolute} on:change={(e) => updateSet(i, e.detail, "maxValue")} />
+                <NumberField label="variables.minimum" style="flex: 1;" value={set.minValue ?? DEFAULT_SET.minValue} step={1} min={0} max={maxAbsolute} on:change={(e) => updateSet(i, e.detail, "minValue")} />
+                <NumberField label="variables.maximum" style="flex: 1;" value={set.maxValue ?? DEFAULT_SET.maxValue} step={1} min={0} max={maxAbsolute} on:change={(e) => updateSet(i, e.detail, "maxValue")} />
                 <!-- {#if i > 0 && i === (currentVariable.sets?.length || 0) - 1} -->
                 {#if (currentVariable.sets?.length || 1) > 1}
-                    <MaterialButton icon="duplicate" title="actions.duplicate" on:click={() => duplicateSet(i)} />
-                    <MaterialButton icon="delete" title="actions.delete" on:click={() => removeSet(i)} red />
+                    <Button icon="duplicate" title="actions.duplicate" on:click={() => duplicateSet(i)} />
+                    <Button icon="delete" title="actions.delete" on:click={() => removeSet(i)} red />
                 {/if}
             </InputRow>
         {/each}
 
         <!-- {#if (currentVariable.sets?.length || 0) < 2 || currentVariable.sets?.[currentVariable.sets?.length - 1]?.name} -->
-        <MaterialButton
-            variant="outlined"
+        <Button
+            variant="outline"
             icon="add"
             on:click={() => {
                 if (!currentVariable.sets) updateSet(0, DEFAULT_SET.minValue, "minValue")
@@ -320,7 +320,7 @@
             }}
         >
             <T id="variables.add_set" />
-        </MaterialButton>
+        </Button>
         <!-- {/if} -->
 
         {#if currentVariable.setLog?.length}
@@ -336,7 +336,7 @@
             </div>
         {/if}
     {:else if currentVariable.type === "text_set"}
-        <MaterialButton class="popup-options" icon="reset" iconSize={1.1} title="actions.reset" on:click={resetTextSetValues} white />
+        <Button class="popup-options" icon="reset" iconSize={1.1} title="actions.reset" on:click={resetTextSetValues} white />
 
         {#each currentVariable.textSets?.length ? currentVariable.textSets : [{}] as textSet, i}
             <div class="text_set" style={i === 0 ? "" : "margin-top: 10px;"} class:active={(currentVariable.textSets?.length ?? 1) > 1 && (currentVariable.activeTextSet ?? 0) === i}>
@@ -345,41 +345,41 @@
                 {#each currentVariable.textSetKeys ?? [""] as key, keyIndex}
                     <InputRow>
                         {#if i === 0}
-                            <MaterialTextInput label="inputs.name" disabled={!!(key && textSet?.[key]) || i > 0} value={key} on:input={(e) => updateTextSetVariableName(keyIndex, e)} on:keydown={textSetKeydown} />
+                            <TextField label="inputs.name" disabled={!!(key && textSet?.[key]) || i > 0} value={key} on:input={(e) => updateTextSetVariableName(keyIndex, e)} on:keydown={textSetKeydown} />
                         {:else}
                             <p style="width: 50%;display: flex;align-items: center;padding: 0 10px;border-bottom: 1px solid var(--primary-lighter);">{key}</p>
                         {/if}
 
-                        <MaterialTextInput label="variables.value" disabled={!key} value={textSet[key] || ""} on:change={(e) => updateTextSetValue(i, key, e)} />
+                        <TextField label="variables.value" disabled={!key} value={textSet[key] || ""} on:change={(e) => updateTextSetValue(i, key, e)} />
 
                         {#if (currentVariable.textSetKeys?.length ?? 1) > 1 && i === 0}
                             {#if keyIndex > 0}
-                                <MaterialButton icon="up" on:click={() => moveKeyUp(keyIndex)} />
+                                <Button icon="up" on:click={() => moveKeyUp(keyIndex)} />
                             {/if}
-                            <MaterialButton icon="delete" title="actions.delete" on:click={() => removeTextSetVariable(keyIndex)} />
+                            <Button icon="delete" title="actions.delete" on:click={() => removeTextSetVariable(keyIndex)} />
                         {/if}
                     </InputRow>
                 {/each}
 
                 {#if i === 0}
-                    <MaterialButton style="width: 100%;" icon="add" disabled={!currentVariable.textSetKeys?.length || currentVariable.textSetKeys.find((a) => !a) === ""} on:click={addTextSetVariable}>
+                    <Button style="width: 100%;" icon="add" disabled={!currentVariable.textSetKeys?.length || currentVariable.textSetKeys.find((a) => !a) === ""} on:click={addTextSetVariable}>
                         <T id="new.variable" />
-                    </MaterialButton>
+                    </Button>
                 {/if}
                 <!-- removed to clear up confusion in regards to the main variables being editable here -->
                 <!-- || (currentVariable.textSets?.length || 1) > 1 -->
                 {#if i > 0}
                     <div class="delete">
-                        <MaterialButton style="padding: 8px;" icon="up" on:click={() => moveTextSetUp(i)} />
-                        <MaterialButton style="padding: 8px;" icon="delete" title="actions.delete" on:click={() => removeTextSet(i)} />
+                        <Button style="padding: 8px;" icon="up" on:click={() => moveTextSetUp(i)} />
+                        <Button style="padding: 8px;" icon="delete" title="actions.delete" on:click={() => removeTextSet(i)} />
                     </div>
                 {/if}
             </div>
         {/each}
 
-        <MaterialButton variant="outlined" style="margin-top: 10px;width: 100%;" icon="add" disabled={!currentVariable.textSets?.length} on:click={addTextSet}>
+        <Button variant="outline" style="margin-top: 10px;width: 100%;" icon="add" disabled={!currentVariable.textSets?.length} on:click={addTextSet}>
             <T id="variables.add_set" />
-        </MaterialButton>
+        </Button>
     {/if}
 {/if}
 

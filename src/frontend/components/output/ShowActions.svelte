@@ -6,8 +6,8 @@
     import { refreshOut, setOutput } from "../helpers/output"
     import { OutputHelper } from "../helpers/OutputHelper"
     import { getLayoutRef } from "../helpers/show"
-    import { checkActionTrigger, updateOut } from "../helpers/showActions"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import { updateOut } from "../helpers/showActions"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let currentOutput: Output
     export let ref: (LayoutRef | { temp: boolean; items: any; id: string })[]
@@ -74,40 +74,38 @@
         if (!currentShow || !$showsCache[currentShow.id]?.settings) return
 
         const layout = $showsCache[currentShow.id].settings.activeLayout
-        const layoutRef = getLayoutRef(currentShow.id)
-        let firstEnabledIndex = layoutRef.findIndex((a) => !a.data.disabled)
-        if (firstEnabledIndex < 0) firstEnabledIndex = 0
-        const index = isEdit ? $activeEdit.slide || 0 : firstEnabledIndex
+        if (isEdit) setOutput("slide", { id: currentShow.id, layout, index: $activeEdit.slide })
+        else {
+            setOutput("slide", { id: currentShow.id, layout, index: 0 })
+        }
 
-        checkActionTrigger(layoutRef[index]?.data, index)
-        setOutput("slide", { id: currentShow.id, layout, index })
-
-        updateOut(currentShow.id, index, layoutRef, !e.altKey)
+        // ref || getLayoutRef()
+        updateOut("active", $activeEdit.slide || 0, getLayoutRef(), !e.altKey)
     }
 </script>
 
 <span class="group">
-    <MaterialButton title="preview._previous_slide [Arrow Left]" disabled={$outLocked || outSlide?.id === "temp" || (outSlide ? (outSlide.index || 0) < 1 && (linesIndex || 0) < 1 : !layoutLength)} on:click={() => OutputHelper.advanceOutputs("previous")}>
+    <Button title="preview._previous_slide [Arrow Left]" disabled={$outLocked || outSlide?.id === "temp" || (outSlide ? (outSlide.index || 0) < 1 && (linesIndex || 0) < 1 : !layoutLength)} on:click={() => OutputHelper.advanceOutputs("previous")}>
         <Icon id="previous" size={1.2} />
-    </MaterialButton>
-    <MaterialButton title="preview._next_slide [Arrow Right]" disabled={$outLocked || outSlide?.id === "temp" || (outSlide ? (outSlide.index || 0) + 1 >= length && (linesIndex || 0) + 1 >= (maxLines || 0) : !layoutLength)} on:click={() => OutputHelper.advanceOutputs("next")}>
+    </Button>
+    <Button title="preview._next_slide [Arrow Right]" disabled={$outLocked || outSlide?.id === "temp" || (outSlide ? (outSlide.index || 0) + 1 >= length && (linesIndex || 0) + 1 >= (maxLines || 0) : !layoutLength)} on:click={() => OutputHelper.advanceOutputs("next")}>
         <Icon id="next" size={1.2} />
-    </MaterialButton>
+    </Button>
 
     {#if shouldRefresh}
-        <MaterialButton title="preview._update [Ctrl+R]" disabled={$outLocked} on:click={() => refreshOut()}>
+        <Button title="preview._update [Ctrl+R]" disabled={$outLocked} on:click={() => refreshOut()}>
             <Icon id="refresh" size={1.1} />
-        </MaterialButton>
+        </Button>
     {:else}
-        <MaterialButton title="preview._start [Space]" disabled={$outLocked || !shouldPlay || ($activePage === "edit" && ($activeEdit.type === "template" || $activeEdit.type === "effect"))} on:click={playCurrent}>
+        <Button title="preview._start [Space]" disabled={$outLocked || !shouldPlay || ($activePage === "edit" && ($activeEdit.type === "template" || $activeEdit.type === "effect"))} on:click={playCurrent}>
             <Icon id="play" size={1.2} white />
-        </MaterialButton>
+        </Button>
     {/if}
 
-    <MaterialButton title={($outLocked ? "preview._unlock" : "preview._lock") + " [Ctrl+L]"} on:click={() => outLocked.set(!$outLocked)} red={$outLocked}>
+    <Button title={($outLocked ? "preview._unlock" : "preview._lock") + " [Ctrl+L]"} on:click={() => outLocked.set(!$outLocked)} red={$outLocked}>
         <Icon id={$outLocked ? "locked" : "unlocked"} size={1.1} white={$outLocked} />
-    </MaterialButton>
-    <MaterialButton
+    </Button>
+    <Button
         title="popup.transition"
         on:click={() => {
             popupData.set({})
@@ -115,7 +113,7 @@
         }}
     >
         <Icon size={1.2} id="transition" white={!!customTransition} />
-    </MaterialButton>
+    </Button>
 </span>
 
 <style>

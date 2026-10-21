@@ -3,12 +3,12 @@
     import { translateText } from "../../../utils/language"
     import { clone } from "../../helpers/array"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     let chosenType = ""
     const types = [
@@ -86,18 +86,17 @@
 </script>
 
 {#if !existing && !chosenType}
-    <MaterialMultiChoice
+    <ChoiceGrid
         options={types}
         on:click={(e) => {
             chosenType = e.detail
             updateValue(chosenType, "type")
         }}
-        gradient
     />
 {:else if !existing && !chosenInputType}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (chosenType = "")} />
 
-    <MaterialMultiChoice
+    <ChoiceGrid
         options={inputTypes[currentInput.type]}
         on:click={(e) => {
             chosenInputType = e.detail
@@ -106,7 +105,7 @@
     />
 {:else}
     {#if !existing}
-        <MaterialButton
+        <Button
             class="popup-back"
             icon="back"
             iconSize={1.3}
@@ -118,13 +117,13 @@
         />
     {/if}
 
-    <MaterialTextInput label={currentInput.type === "heading" ? "interaction.heading" : "interaction.question"} style={currentInput.type === "heading" ? "" : "margin-bottom: 10px;"} value={currentInput.question} on:change={(e) => updateValue(e.detail, "question")} autofocus={!currentInput.question} />
+    <TextField label={currentInput.type === "heading" ? "interaction.heading" : "interaction.question"} style={currentInput.type === "heading" ? "" : "margin-bottom: 10px;"} value={currentInput.question} on:change={(e) => updateValue(e.detail, "question")} autofocus={!currentInput.question} />
 
     {#if currentInput.type === "multi_choice"}
         <div class="options">
             {#each currentInput.options || [] as option, i}
                 <InputRow>
-                    <MaterialButton
+                    <Button
                         title={option?.isAnswer ? "interaction.mark_as_incorrect" : "interaction.mark_as_correct"}
                         icon={option?.isAnswer ? "check" : "close"}
                         iconSize={1.2}
@@ -139,7 +138,7 @@
                         }}
                     />
 
-                    <MaterialTextInput
+                    <TextField
                         label="interaction.option"
                         value={option?.value}
                         on:change={(e) => {
@@ -161,7 +160,7 @@
                         }}
                         autofocus={!!currentInput.question && !option?.value}
                     />
-                    <MaterialButton
+                    <Button
                         icon="delete"
                         title="actions.remove"
                         on:click={() => {
@@ -175,8 +174,8 @@
                 </InputRow>
             {/each}
 
-            <MaterialButton
-                variant="outlined"
+            <Button
+                variant="outline"
                 icon="add"
                 disabled={currentInput.options && currentInput.options.length > 0 && currentInput.options.some((a) => !a.value)}
                 on:click={() => {
@@ -188,23 +187,23 @@
                 }}
             >
                 <T id="interaction.add_option" />
-            </MaterialButton>
+            </Button>
 
             {#if currentInput.options && currentInput.options.length > 1}
-                <MaterialToggleSwitch label="variables.randomize" style="margin-top: 10px;" checked={currentInput.randomize} defaultValue={false} on:change={(e) => updateValue(e.detail, "randomize")} />
+                <ToggleField label="variables.randomize" style="margin-top: 10px;" checked={currentInput.randomize} defaultValue={false} on:change={(e) => updateValue(e.detail, "randomize")} />
             {/if}
         </div>
     {:else if currentInput.type === "text"}
         <!-- optional - for polls we don't need answers -->
-        <MaterialTextInput label="interaction.answer (interaction.optional)" value={currentInput.answer || ""} on:change={(e) => updateValue(e.detail, "answer")} />
+        <TextField label="interaction.answer (interaction.optional)" value={currentInput.answer || ""} on:change={(e) => updateValue(e.detail, "answer")} />
 
-        <MaterialToggleSwitch label="interaction.allow_multiple" checked={currentInput.allowMultiple} defaultValue={false} on:change={(e) => updateValue(e.detail, "allowMultiple")} />
+        <ToggleField label="interaction.allow_multiple" checked={currentInput.allowMultiple} defaultValue={false} on:change={(e) => updateValue(e.detail, "allowMultiple")} />
     {:else if currentInput.type === "number"}
-        <MaterialNumberInput label="interaction.answer (interaction.optional)" type="number" value={currentInput.answer ?? -1} min={currentInput.min ?? 0} max={currentInput.max ?? 1000} on:change={(e) => updateValue(e.detail, "answer")} />
+        <NumberField label="interaction.answer (interaction.optional)" type="number" value={currentInput.answer ?? -1} min={currentInput.min ?? 0} max={currentInput.max ?? 1000} on:change={(e) => updateValue(e.detail, "answer")} />
 
         <InputRow>
-            <MaterialNumberInput label="interaction.min" type="number" value={currentInput.min ?? 0} min={-10000000} on:change={(e) => updateValue(e.detail, "min")} />
-            <MaterialNumberInput label="interaction.max" type="number" value={currentInput.max ?? 1000} max={10000000} on:change={(e) => updateValue(e.detail, "max")} />
+            <NumberField label="interaction.min" type="number" value={currentInput.min ?? 0} min={-10000000} on:change={(e) => updateValue(e.detail, "min")} />
+            <NumberField label="interaction.max" type="number" value={currentInput.max ?? 1000} max={10000000} on:change={(e) => updateValue(e.detail, "max")} />
         </InputRow>
     {/if}
 {/if}

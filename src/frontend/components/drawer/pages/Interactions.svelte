@@ -6,18 +6,15 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import { clone, keysToID, sortByName } from "../../helpers/array"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import HiddenInput from "../../inputs/HiddenInput.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import HiddenInput from "../../../lib/components/ui/hidden-input/hidden-input.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import { formatTimeInteraction, getInteraction, initConnection, startInteraction, stopInteraction } from "./interactions"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-
-    export let searchValue: string
-    console.log(searchValue)
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
 
     function createNew() {
         const id = uid()
@@ -193,7 +190,7 @@
 
 {#if openedId}
     <div class="header">
-        <MaterialButton disabled={showOptions || showHistory || showPlayers} style="padding: 6px;" icon="back" title="actions.back" on:click={() => openedInteractionId.set("")} />
+        <Button disabled={showOptions || showHistory || showPlayers} style="padding: 6px;" icon="back" title="actions.back" on:click={() => openedInteractionId.set("")} />
 
         <p style="flex: 1;{openedInteraction?.name ? '' : 'font-style: italic;opacity: 0.7;'}">
             {openedInteraction?.name || translateText("main.unnamed")}
@@ -206,32 +203,32 @@
             {/if}
 
             <!-- players count -->
-            <MaterialButton style="padding: 6px;" icon="people" on:click={() => (showPlayers = !showPlayers)} white={!showPlayers}>
+            <Button style="padding: 6px;" icon="people" on:click={() => (showPlayers = !showPlayers)} white={!showPlayers}>
                 <span style="font-family: monospace; opacity: 0.8;">{Object.keys(clients).length}</span>
-            </MaterialButton>
+            </Button>
         {:else if !showOptions && openedInteraction?.history?.length}
             <!-- history -->
-            <MaterialButton style="padding: 6px;" icon="history" on:click={() => (showHistory = !showHistory)} white={!showHistory}>
+            <Button style="padding: 6px;" icon="history" on:click={() => (showHistory = !showHistory)} white={!showHistory}>
                 <span style="font-family: monospace; opacity: 0.8;">{openedInteraction.history.length}</span>
-            </MaterialButton>
+            </Button>
         {/if}
     </div>
 
     {#if showOptions}
         <div class="options">
-            <MaterialToggleSwitch label="interaction.require_name" checked={openedInteraction?.options?.requireName ?? true} defaultValue={true} on:change={(e) => setOption("requireName", e.detail)} />
+            <ToggleField label="interaction.require_name" checked={openedInteraction?.options?.requireName ?? true} defaultValue={true} on:change={(e) => setOption("requireName", e.detail)} />
             {#if openedInteraction?.options?.requireName === false}
-                <MaterialToggleSwitch label="interaction.random_names" checked={openedInteraction?.options?.randomNames ?? false} defaultValue={false} on:change={(e) => setOption("randomNames", e.detail)} />
+                <ToggleField label="interaction.random_names" checked={openedInteraction?.options?.randomNames ?? false} defaultValue={false} on:change={(e) => setOption("randomNames", e.detail)} />
             {/if}
 
-            <MaterialToggleSwitch label="interaction.all_at_once" checked={openedInteraction?.options?.allAtOnce ?? false} defaultValue={false} disabled={openedInteraction?.inputs?.length <= 1} on:change={(e) => setOption("allAtOnce", e.detail)} />
+            <ToggleField label="interaction.all_at_once" checked={openedInteraction?.options?.allAtOnce ?? false} defaultValue={false} disabled={openedInteraction?.inputs?.length <= 1} on:change={(e) => setOption("allAtOnce", e.detail)} />
 
             {#if !openedInteraction?.options?.allAtOnce}
-                <MaterialNumberInput label="interaction.max_time (conditions.seconds)" value={openedInteraction?.options?.maxTime ?? 0} defaultValue={0} on:change={(e) => setOption("maxTime", e.detail)} />
+                <NumberField label="interaction.max_time (conditions.seconds)" value={openedInteraction?.options?.maxTime ?? 0} defaultValue={0} on:change={(e) => setOption("maxTime", e.detail)} />
 
                 <InputRow>
-                    <MaterialDropdown label="interaction.score_system" value={openedInteraction?.options?.scoreSystem || "incremental"} options={scoreSystems} on:change={(e) => setOption("scoreSystem", e.detail)} />
-                    <MaterialNumberInput label="interaction.points" value={openedInteraction?.options?.scorePoints ?? defaultScorePoints} defaultValue={defaultScorePoints} on:change={(e) => setOption("scorePoints", e.detail)} />
+                    <SelectField label="interaction.score_system" value={openedInteraction?.options?.scoreSystem || "incremental"} options={scoreSystems} on:change={(e) => setOption("scoreSystem", e.detail)} />
+                    <NumberField label="interaction.points" value={openedInteraction?.options?.scorePoints ?? defaultScorePoints} defaultValue={defaultScorePoints} on:change={(e) => setOption("scorePoints", e.detail)} />
                 </InputRow>
             {/if}
         </div>
@@ -242,7 +239,7 @@
                     <p style="font-size: 0.8em;opacity: 0.7;margin-bottom: 8px;">{new Date(entry.time).toLocaleString()}</p>
 
                     {#if entry.leaderboard?.length}
-                        <div style="margin-bottom: 12px; padding: 8px; background-color: rgba(255, 255, 255, 0.05); border-radius: 4px;">
+                        <div style="margin-bottom: 12px; padding: 8px; background-color: var(--bg-hover); border-radius: 4px;">
                             <p style="font-weight: bold; font-size: 0.9em; margin-bottom: 6px; opacity: 0.9;">Leaderboard:</p>
                             <ol style="margin: 0; padding-left: 20px;">
                                 {#each entry.leaderboard as player}
@@ -290,9 +287,9 @@
                         <p style="flex: 1;">{client.name || `User #${i + 1}`}</p>
 
                         <!-- {#if hasScore} -->
-                        <MaterialNumberInput label="interaction.points" value={client.score ?? 0} style="width: 100px;" on:change={(e) => getInteraction(openedId)?.setScore(client.id, e.detail)} />
+                        <NumberField label="interaction.points" value={client.score ?? 0} style="width: 100px;" on:change={(e) => getInteraction(openedId)?.setScore(client.id, e.detail)} />
                         <!-- {/if} -->
-                        <MaterialButton style="padding: 4px;" red on:click={() => kick(client.id)}><T id="interaction.kick" /></MaterialButton>
+                        <Button style="padding: 4px;" red on:click={() => kick(client.id)}><T id="interaction.kick" /></Button>
                     </div>
                 {/each}
                 {#if Object.keys(clients).length === 0}
@@ -328,7 +325,7 @@
                         }}
                         role="none"
                     >
-                        <Icon id={input.type === "heading" ? "info" : input.type} size={1.5} gradient />
+                        <Icon id={input.type === "heading" ? "info" : input.type} size={1.5} />
                         {#if input.inputType && input.inputType !== "none"}
                             <Icon id={inputTypeIcons[input.inputType]} white />
                         {/if}
@@ -361,8 +358,8 @@
                             {/if}
                         {:else}
                             <span>
-                                <MaterialButton class="rearrange" disabled={i === openedInteraction?.inputs.length - 1} icon="down" title="actions.backward" style="padding: 8px;" on:click={() => rearrangeInputs("forward", i)} />
-                                <MaterialButton class="rearrange" disabled={i === 0} icon="up" title="actions.forward" style="padding: 8px;border-left: none !important;" on:click={() => rearrangeInputs("backward", i)} />
+                                <Button class="rearrange" disabled={i === openedInteraction?.inputs.length - 1} icon="down" title="actions.backward" style="padding: 8px;" on:click={() => rearrangeInputs("forward", i)} />
+                                <Button class="rearrange" disabled={i === 0} icon="up" title="actions.forward" style="padding: 8px;border-left: none !important;" on:click={() => rearrangeInputs("backward", i)} />
                             </span>
                         {/if}
                     </div>
@@ -391,15 +388,15 @@
             {/each}
 
             {#if !$activeInteractions.includes(openedId)}
-                <MaterialButton variant="outlined" icon="add" style="min-height: 45px;" on:click={addInput}>
+                <Button variant="outline" icon="add" style="min-height: 45px;" on:click={addInput}>
                     <T id="interaction.add_input" />
-                </MaterialButton>
+                </Button>
             {/if}
         </div>
 
         {#if $activeInteractions.includes(openedId)}
-            <FloatingInputs side="left">
-                <MaterialButton
+            <FloatingBar side="left">
+                <Button
                     icon="stop"
                     on:click={async () => {
                         await stopInteraction(openedId)
@@ -408,44 +405,44 @@
                     red
                 >
                     <T id="media.stop" />
-                </MaterialButton>
-            </FloatingInputs>
+                </Button>
+            </FloatingBar>
 
             {#if !openedInteraction?.options?.allAtOnce}
-                <FloatingInputs side="right">
+                <FloatingBar side="right">
                     <!-- go to next/previous index -->
-                    <MaterialButton disabled={inputIndex < ((openedInteraction?.inputs?.length || 0) < 2 ? 1 : 0)} title="media.previous" on:click={() => getInteraction(openedId)?.previous()}>
+                    <Button disabled={inputIndex < ((openedInteraction?.inputs?.length || 0) < 2 ? 1 : 0)} title="media.previous" on:click={() => getInteraction(openedId)?.previous()}>
                         <Icon size={1.3} id="previous" white />
-                    </MaterialButton>
+                    </Button>
 
                     {#if hasAnswer(openedInteraction?.inputs[inputIndex]) && (currentAnswer === null || currentAnswer === undefined || currentAnswer === "")}
                         <div class="divider" />
-                        <MaterialButton on:click={() => getInteraction(openedId)?.revealAnswer()}>
+                        <Button on:click={() => getInteraction(openedId)?.revealAnswer()}>
                             <!-- <Icon size={1.3} id="next" white /> -->
                             <T id="interaction.reveal_answer" />
-                        </MaterialButton>
+                        </Button>
                     {:else}
-                        <MaterialButton disabled={inputIndex === (openedInteraction?.inputs?.length || 0) - 1} title="media.next" on:click={() => getInteraction(openedId)?.next()}>
+                        <Button disabled={inputIndex === (openedInteraction?.inputs?.length || 0) - 1} title="media.next" on:click={() => getInteraction(openedId)?.next()}>
                             <Icon size={1.3} id="next" white />
-                        </MaterialButton>
+                        </Button>
                     {/if}
-                </FloatingInputs>
+                </FloatingBar>
             {/if}
         {:else}
-            <FloatingInputs side="left" gradient>
-                <MaterialButton icon="play" disabled={!(openedInteraction?.inputs?.length || 0)} on:click={start} white>
+            <FloatingBar side="left">
+                <Button icon="play" disabled={!(openedInteraction?.inputs?.length || 0)} on:click={start} white>
                     <T id="inputs.start" />
-                </MaterialButton>
-            </FloatingInputs>
+                </Button>
+            </FloatingBar>
         {/if}
     {/if}
 
     {#if !$activeInteractions.includes(openedId) && !showHistory}
-        <FloatingInputs round>
-            <MaterialButton isActive={showOptions} title="create_show.more_options" on:click={() => (showOptions = !showOptions)}>
+        <FloatingBar round>
+            <Button isActive={showOptions} title="create_show.more_options" on:click={() => (showOptions = !showOptions)}>
                 <Icon size={1.1} id="options" white={!showOptions} />
-            </MaterialButton>
-        </FloatingInputs>
+            </Button>
+        </FloatingBar>
     {/if}
 {:else}
     <div class="interactions">
@@ -468,8 +465,8 @@
         {/each}
     </div>
 
-    <FloatingInputs onlyOne>
-        <MaterialButton
+    <FloatingBar onlyOne>
+        <Button
             icon="add"
             title="new.interaction"
             on:click={() => {
@@ -479,8 +476,8 @@
             }}
         >
             {#if !$labelsDisabled}<T id="new.interaction" />{/if}
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 {/if}
 
 <style>
@@ -509,7 +506,7 @@
         font-weight: bold;
     }
     .interaction.active {
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: -2px;
     }
 
@@ -560,7 +557,7 @@
     }
 
     .input.active {
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: -2px;
     }
 

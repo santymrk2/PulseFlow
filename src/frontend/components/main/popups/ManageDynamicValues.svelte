@@ -3,15 +3,15 @@
     import { translateText } from "../../../utils/language"
     import { clone } from "../../helpers/array"
     import T from "../../helpers/T.svelte"
-    import HRule from "../../input/HRule.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
 
     const alwaysEnabledIds = ["time", "show", "$"]
     const toggleSections = ["time", "project", "show", "slide_text", "video", "audio", "meta", "timer", "rss", "txt", "$"]
@@ -188,7 +188,7 @@
         {@const alwaysEnabled = alwaysEnabledIds.includes(section)}
         {@const alwaysDisabled = (section === "rss" && !$special.dynamicRSS?.length) || (section === "txt" && !$special.dynamicTXT?.length)}
 
-        <MaterialCheckbox label={getTitle(section)} disabled={alwaysEnabled || alwaysDisabled} checked={alwaysDisabled ? false : alwaysEnabled || !hidden.includes(section)} on:change={() => toggleHidden(section)} />
+        <CheckboxField label={getTitle(section)} disabled={alwaysEnabled || alwaysDisabled} checked={alwaysDisabled ? false : alwaysEnabled || !hidden.includes(section)} on:change={() => toggleHidden(section)} />
     {/each}
 </div>
 
@@ -196,50 +196,50 @@
 
 {#each rssList as rss, i}
     <InputRow arrow>
-        <MaterialTextInput label="inputs.name" value={rss.name} disabled={!!(rss.name && rss.url)} on:change={(e) => setValue(e, i, "name")} />
+        <TextField label="inputs.name" value={rss.name} disabled={!!(rss.name && rss.url)} on:change={(e) => setValue(e, i, "name")} />
 
-        <MaterialButton icon="delete" title="actions.delete" on:click={() => deleteItem(i)} white />
+        <Button icon="delete" title="actions.delete" on:click={() => deleteItem(i)} white />
 
         <div slot="menu">
             <InputRow>
-                <MaterialTextInput style="width: 75%;" label="inputs.url" value={rss.url} on:change={(e) => setValue(e, i, "url")} />
-                <MaterialTextInput style="width: 25%;" label="meta.text_divider" value={rss.divider || " | "} on:change={(e) => setValue(e, i, "divider")} />
+                <TextField style="width: 75%;" label="inputs.url" value={rss.url} on:change={(e) => setValue(e, i, "url")} />
+                <TextField style="width: 25%;" label="meta.text_divider" value={rss.divider || " | "} on:change={(e) => setValue(e, i, "divider")} />
             </InputRow>
 
             <InputRow>
-                <MaterialDropdown style="width: 75%;" label="edit.interval" options={updateIntervalList} value={rss.updateInterval || "60"} on:change={(e) => setValue(e, i, "updateInterval")} />
-                <MaterialNumberInput style="width: 25%;" label="edit.count" value={rss.count || 5} min={1} max={1000} on:change={(e) => setValue(e, i, "count")} />
+                <SelectField style="width: 75%;" label="edit.interval" options={updateIntervalList} value={rss.updateInterval || "60"} on:change={(e) => setValue(e, i, "updateInterval")} />
+                <NumberField style="width: 25%;" label="edit.count" value={rss.count || 5} min={1} max={1000} on:change={(e) => setValue(e, i, "count")} />
             </InputRow>
         </div>
     </InputRow>
 {/each}
 
-<MaterialButton variant="outlined" icon="add" on:click={addRSS}>
+<Button variant="outline" icon="add" on:click={addRSS}>
     <T id="settings.add" />
-</MaterialButton>
+</Button>
 
 <HRule title="settings.txt" />
 
 {#each txtList as txt, i}
     <InputRow arrow>
-        <MaterialTextInput label="inputs.name" value={txt.name} disabled={!!(txt.name && txt.url)} on:change={(e) => setTxtValue(e, i, "name")} />
+        <TextField label="inputs.name" value={txt.name} disabled={!!(txt.name && txt.url)} on:change={(e) => setTxtValue(e, i, "name")} />
 
-        <MaterialButton icon="delete" title="actions.delete" on:click={() => deleteTxtItem(i)} white />
+        <Button icon="delete" title="actions.delete" on:click={() => deleteTxtItem(i)} white />
 
         <div slot="menu">
             <InputRow>
-                <MaterialTextInput style="flex: 1;" label="inputs.url" value={txt.url} on:change={(e) => setTxtValue(e, i, "url")} />
-                <MaterialFilePicker style="flex: 0;" label="" title="scripture.local" value="" filter={{ name: "Text files", extensions: ["txt"] }} icon="folder" on:change={(e) => setTxtValue(e, i, "url")} noLabel />
+                <TextField style="flex: 1;" label="inputs.url" value={txt.url} on:change={(e) => setTxtValue(e, i, "url")} />
+                <FileField style="flex: 0;" label="" title="scripture.local" value="" filter={{ name: "Text files", extensions: ["txt"] }} icon="folder" on:change={(e) => setTxtValue(e, i, "url")} noLabel />
             </InputRow>
 
             <InputRow>
-                <MaterialDropdown style="width: 75%;" label="edit.interval" options={txtUpdateIntervalList} value={txt.updateInterval || "3"} on:change={(e) => setTxtValue(e, i, "updateInterval")} />
-                <MaterialTextInput style="width: 25%;" label="meta.text_divider" value={txt.divider || "<br>"} on:change={(e) => setTxtValue(e, i, "divider")} />
+                <SelectField style="width: 75%;" label="edit.interval" options={txtUpdateIntervalList} value={txt.updateInterval || "3"} on:change={(e) => setTxtValue(e, i, "updateInterval")} />
+                <TextField style="width: 25%;" label="meta.text_divider" value={txt.divider || "<br>"} on:change={(e) => setTxtValue(e, i, "divider")} />
             </InputRow>
         </div>
     </InputRow>
 {/each}
 
-<MaterialButton variant="outlined" icon="add" on:click={addTXT}>
+<Button variant="outline" icon="add" on:click={addTXT}>
     <T id="settings.add" />
-</MaterialButton>
+</Button>

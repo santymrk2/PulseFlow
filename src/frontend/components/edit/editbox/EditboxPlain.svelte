@@ -11,7 +11,7 @@
     import { getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import { getStyles } from "../../helpers/style"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { isoLanguages } from "../../main/popups/localization/isoLanguages"
     import Movebox from "../../system/Movebox.svelte"
     import { isConditionMet } from "../scripts/itemHelpers"
@@ -187,7 +187,7 @@
     <!-- bindings -->
     {#if item?.bindings?.length}
         <div data-title={translateText("actions.remove_binding")} class="actionButton" style="zoom: {1 / ratio};left: 0;inset-inline-end: unset;">
-            <Button on:click={removeBindings} redHover>
+            <Button align="start" on:click={removeBindings} redHover>
                 <Icon id="bind" white />
             </Button>
             {#if item.bindings.length > 1}
@@ -207,7 +207,7 @@
     <!-- conditions -->
     {#if Object.values(item?.conditions || {}).length}
         <div data-title={translateText("actions.conditions")} class="actionButton" style="zoom: {1 / ratio};left: 0;inset-inline-end: unset;background-color: var(--{showItemState ? '' : 'dis'}connected);">
-            <Button on:click={() => removeItemValue("conditions")} redHover>
+            <Button align="start" on:click={() => removeItemValue("conditions")} redHover>
                 <Icon id="light" white />
             </Button>
         </div>
@@ -218,7 +218,7 @@
         {@const actionValue = item ? (action.direct ? item[action.id] : item.actions?.[action.id]) : null}
         {#if actionValue}
             <div data-title={action ? translateText(action.label) : ""} class="actionButton" style="zoom: {1 / ratio};left: 0;inset-inline-end: unset;">
-                <Button on:click={() => (action.direct ? removeItemValue(action.id) : removeAction(action.id))} redHover>
+                <Button align="start" on:click={() => (action.direct ? removeItemValue(action.id) : removeAction(action.id))} redHover>
                     <Icon id={action?.icon} white />
                 </Button>
                 {#if typeof actionValue === "number"}

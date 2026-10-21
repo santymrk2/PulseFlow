@@ -8,7 +8,7 @@
     import { getFileName, removeExtension } from "../../helpers/media"
     import T from "../../helpers/T.svelte"
     import { formatUrl, getOutputtedWebsites, sendWebsiteKey, toggleWebsiteMute, triggerWebsiteAction } from "../../helpers/websiteControls"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { VideoPlayer } from "../../media/video/videoPlayer"
     import VideoSlider from "../VideoSlider.svelte"
 
@@ -100,16 +100,16 @@
                 <p>{removeExtension(getFileName(path))}</p>
 
                 <span class="group">
-                    <Button center title={translateText(data.paused ? "media.play" : "media.pause")} disabled={$outLocked} on:click={() => playPause(path, outputId, data.paused)}>
+                    <Button title={translateText(data.paused ? "media.play" : "media.pause")} disabled={$outLocked} on:click={() => playPause(path, outputId, data.paused)}>
                         <Icon id={data.paused ? "play" : "pause"} white={data.paused} />
                     </Button>
 
                     <VideoSlider {outputId} {path} disabled={$outLocked} videoData={{ duration: data.duration, paused: data.paused, loop: data.loop }} videoTime={data.currentTime} />
 
-                    <Button center title={translateText("media._loop" + (data.loop ? ": settings.enabled" : ""))} on:click={() => toggleLoop(path, outputId)}>
+                    <Button title={translateText("media._loop" + (data.loop ? ": settings.enabled" : ""))} on:click={() => toggleLoop(path, outputId)}>
                         <Icon id="loop" white={!data.loop} />
                     </Button>
-                    <Button center title={translateText(data.muted === false ? "actions.mute" : "actions.unmute")} disabled={$outLocked} on:click={() => VideoPlayer.toggleMute(path, outputId)}>
+                    <Button title={translateText(data.muted === false ? "actions.mute" : "actions.unmute")} disabled={$outLocked} on:click={() => VideoPlayer.toggleMute(path, outputId)}>
                         <Icon id={data.muted === false ? "volume" : "muted"} white={data.muted !== false} />
                     </Button>
                 </span>
@@ -123,18 +123,18 @@
         <p title={website.src}>{formatUrl(website.src)}</p>
 
         <span class="group">
-            <Button center title={translateText("media.previous")} disabled={$outLocked} on:click={() => sendWebsiteKey(website.src, "Left")}>
+            <Button title={translateText("media.previous")} disabled={$outLocked} on:click={() => sendWebsiteKey(website.src, "Left")}>
                 <Icon id="previous" white />
             </Button>
-            <Button center title={translateText("media.next")} disabled={$outLocked} on:click={() => sendWebsiteKey(website.src, "Right")}>
+            <Button title={translateText("media.next")} disabled={$outLocked} on:click={() => sendWebsiteKey(website.src, "Right")}>
                 <Icon id="next" white />
             </Button>
 
-            <Button center title={translateText("preview.reload")} disabled={$outLocked} on:click={() => triggerWebsiteAction({ src: website.src, type: "reload" })}>
+            <Button title={translateText("preview.reload")} disabled={$outLocked} on:click={() => triggerWebsiteAction({ src: website.src, type: "reload" })}>
                 <Icon id="refresh" white />
             </Button>
 
-            <Button center title={translateText(mutedWebsites[website.src] ? "actions.unmute" : "actions.mute")} disabled={$outLocked} on:click={() => toggleMute(website.src)}>
+            <Button title={translateText(mutedWebsites[website.src] ? "actions.unmute" : "actions.mute")} disabled={$outLocked} on:click={() => toggleMute(website.src)}>
                 <Icon id={mutedWebsites[website.src] ? "muted" : "volume"} white={mutedWebsites[website.src]} />
             </Button>
         </span>
@@ -169,7 +169,7 @@
     }
     .websiteValues:focus,
     .websiteValues:focus-within {
-        outline: 2px solid var(--secondary);
+        outline: 1px solid var(--ring);
         outline-offset: -2px;
     }
 

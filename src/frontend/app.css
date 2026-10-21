@@ -1,0 +1,97 @@
+/*
+ * TailwindCSS v4 + shadcn-svelte entry for the FreeShow Svelte frontend.
+ *
+ * Preflight (Tailwind's global reset) is intentionally NOT imported: FreeShow
+ * already ships its own reset/theming in `public/global.css`, and it sets its
+ * theme as inline CSS variables on <html> (`--primary`, `--secondary`, …).
+ * We therefore:
+ *   1. import only the Tailwind theme + utilities layers, and
+ *   2. namespace the shadcn design tokens under `--shui-*` so they never
+ *      collide with FreeShow's own `--primary` / `--secondary` / `--accent`.
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+/*
+ * Sin el preflight de Tailwind el color de borde por defecto es `currentColor` (blanco): cualquier clase `border`
+ * dibujaba un recuadro blanco. Va en `base`, así `border-border` y los CSS de los componentes le siguen ganando.
+ */
+@layer base {
+    *,
+    ::before,
+    ::after {
+        border-color: var(--border-color, var(--primary-lighter));
+    }
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Los tokens shadcn se atan a las variables del tema activo de FreeShow (que
+ * <html> inyecta desde el tema elegido en Settings). Así los componentes de
+ * `lib/components/ui/` siguen el tema del usuario —oscuro o claro— sin duplicar
+ * la paleta: no hay bloque `.dark`, el "modo" lo decide el tema de FreeShow.
+ */
+:root {
+    --shui-radius: var(--radius, 6px);
+    --shui-background: var(--primary);
+    --shui-foreground: var(--text);
+    --shui-card: var(--bg-elevated);
+    --shui-card-foreground: var(--text);
+    --shui-popover: var(--bg-elevated);
+    --shui-popover-foreground: var(--text);
+    --shui-primary: var(--secondary);
+    --shui-primary-foreground: var(--secondary-text, #ffffff);
+    --shui-secondary: var(--primary-lighter);
+    --shui-secondary-foreground: var(--text);
+    --shui-muted: var(--primary-lighter);
+    --shui-muted-foreground: color-mix(in srgb, var(--text) 60%, transparent);
+    --shui-accent: var(--primary-lighter);
+    --shui-accent-foreground: var(--text);
+    --shui-destructive: var(--disconnected, #ef4444);
+    --shui-destructive-foreground: var(--secondary-text, #ffffff);
+    --shui-border: var(--border-color, var(--primary-lighter));
+    --shui-input: var(--border-color, var(--primary-lighter));
+    --shui-ring: var(--ring);
+}
+
+@theme inline {
+    /* escala de texto de docs/design/kit.md: 11 / 12 / 13 (base) / 15 / 20 px */
+    --text-2xs: 11px;
+    --text-2xs--line-height: 16px;
+    --text-xs: 12px;
+    --text-xs--line-height: 16px;
+    --text-sm: 13px;
+    --text-sm--line-height: 20px;
+    --text-md: 15px;
+    --text-md--line-height: 22px;
+    --text-lg: 20px;
+    --text-lg--line-height: 28px;
+
+    --color-background: var(--shui-background);
+    --color-foreground: var(--shui-foreground);
+    --color-card: var(--shui-card);
+    --color-card-foreground: var(--shui-card-foreground);
+    --color-popover: var(--shui-popover);
+    --color-popover-foreground: var(--shui-popover-foreground);
+    --color-primary: var(--shui-primary);
+    --color-primary-foreground: var(--shui-primary-foreground);
+    --color-secondary: var(--shui-secondary);
+    --color-secondary-foreground: var(--shui-secondary-foreground);
+    --color-muted: var(--shui-muted);
+    --color-muted-foreground: var(--shui-muted-foreground);
+    --color-accent: var(--shui-accent);
+    --color-accent-foreground: var(--shui-accent-foreground);
+    --color-destructive: var(--shui-destructive);
+    --color-destructive-foreground: var(--shui-destructive-foreground);
+    --color-border: var(--shui-border);
+    --color-input: var(--shui-input);
+    --color-ring: var(--shui-ring);
+
+    /* 4 px chips · 6 px controles · 8 px modales y popovers (docs/design/kit.md) */
+    --radius-sm: var(--radius-chip, 4px);
+    --radius-md: var(--shui-radius);
+    --radius-lg: var(--radius-modal, 8px);
+    --radius-xl: var(--radius-modal, 8px);
+}

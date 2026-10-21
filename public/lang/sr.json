@@ -237,6 +237,7 @@
         "first_last": "Prvi i poslednji slajd"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Podrazumevano",
         "dark": "Tamna",
         "light": "Svetla",
@@ -345,7 +346,7 @@
         "icon": "Ikoknice",
         "manage_icons": "Manage icons",
         "choose_camera": "Chooose camera",
-        "initialize": "Dobrodošli u FreeShow",
+        "initialize": "Dobrodošli u PulseFlow",
         "unsaved": "Promene nisu sačuvane! Svejedno izađi iz programa?",
         "cancel": "Odustani",
         "continue": "Nastavi",

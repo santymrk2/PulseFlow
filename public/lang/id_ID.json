@@ -350,6 +350,7 @@
         "first_last": "Slide pertama dan terakhir"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Semula",
         "dark": "Gelap",
         "light": "Terang",
@@ -513,7 +514,7 @@
         "effect_items": "Item efek",
         "timeline": "Timeline",
         "timecode": "Kode waktu",
-        "initialize": "Selamat datang di FreeShow",
+        "initialize": "Selamat datang di PulseFlow",
         "unsaved": "Apakah anda yakin ingin keluar?",
         "cancel": "Batal",
         "continue": "Lanjutkan",

@@ -8,9 +8,9 @@
     import { dynamicValueText, getDynamicIds, replaceDynamicValues } from "../../helpers/showActions"
     import { _show } from "../../helpers/shows"
     import T from "../../helpers/T.svelte"
-    import HRule from "../../input/HRule.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
@@ -234,12 +234,12 @@
     onDestroy(() => clearInterval(dynamicInterval))
 </script>
 
-<MaterialButton class="popup-reset" icon="edit" iconSize={1.1} title="create_show.more_options" on:click={() => activePopup.set("manage_dynamic_values")} white />
+<Button class="popup-reset" icon="edit" iconSize={1.1} title="create_show.more_options" on:click={() => activePopup.set("manage_dynamic_values")} white />
 
-<MaterialButton class="popup-options {showAll ? 'active' : ''}" icon={showAll ? "eye" : "hide"} iconSize={1.3} title={showAll ? "actions.close" : "create_show.more_options"} on:click={toggleShowAll} white />
+<Button class="popup-options {showAll ? 'active' : ''}" icon={showAll ? "eye" : "hide"} iconSize={1.3} title={showAll ? "actions.close" : "create_show.more_options"} on:click={toggleShowAll} white />
 
 {#key resetInput}
-    <MaterialTextInput label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
+    <TextField label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
 {/key}
 
 <div style="position: relative;height: 100%;width: calc(100vw - (var(--navigation-width) + 20px) * 2);overflow-y: auto;">
@@ -319,11 +319,11 @@
         outline-offset: 0;
     }
     .value:active {
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: 0;
     }
     .value:focus {
-        outline: 2px solid var(--secondary);
+        outline: 1px solid var(--ring);
         outline-offset: 0;
     }
 

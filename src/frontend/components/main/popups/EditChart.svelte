@@ -1,10 +1,10 @@
 <script lang="ts">
     import { popupData } from "../../../stores"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 
     const defaultColors = ["#3b82f6", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6", "#f43f5e", "#06b6d4", "#14b8a6"]
 
@@ -72,7 +72,7 @@
         <InputRow>
             <!-- <span>{rowIdx + 1}</span> -->
 
-            <MaterialTextInput
+            <TextField
                 label="inputs.name"
                 value={grid[rowIdx][0]}
                 on:input={(e) => {
@@ -80,7 +80,7 @@
                     grid = grid
                 }}
             />
-            <MaterialTextInput
+            <TextField
                 label="variables.value"
                 value={grid[rowIdx][1] || ""}
                 on:input={(e) => {
@@ -88,7 +88,7 @@
                     grid = grid
                 }}
             />
-            <MaterialColorInput
+            <ColorField
                 label="edit.color"
                 style="max-width: 150px;"
                 value={grid[rowIdx][2] || getDefaultColor(rowIdx, grid)}
@@ -99,11 +99,11 @@
                 noLabel
             />
 
-            <MaterialButton variant="outlined" icon="delete" disabled={grid.length <= 1} on:click={() => removeRow(rowIdx)} red />
+            <Button variant="outline" icon="delete" disabled={grid.length <= 1} on:click={() => removeRow(rowIdx)} red />
         </InputRow>
     {/each}
 
-    <MaterialButton variant="outlined" icon="add" on:click={addRow}>
+    <Button variant="outline" icon="add" on:click={addRow}>
         <T id="settings.add" />
-    </MaterialButton>
+    </Button>
 </div>

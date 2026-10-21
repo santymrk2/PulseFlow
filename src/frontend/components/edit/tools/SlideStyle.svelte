@@ -1,16 +1,16 @@
 <script lang="ts">
     import type { Item } from "../../../../types/Show"
-    import { activeDrawerTab, activeEdit, activePage, activeShow, showsCache, templates } from "../../../stores"
+    import { activeEdit, activePage, activeShow, showsCache, templates } from "../../../stores"
     import { mediaExtensions } from "../../../values/extensions"
     import { clone } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import { getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import ItemsList from "./ItemsList.svelte"
 
     $: slideId = getLayoutRef()[$activeEdit.slide || 0]?.id
@@ -45,7 +45,6 @@
     }
 
     function editTemplate(id: string) {
-        activeDrawerTab.set("templates")
         activeEdit.set({ type: "template", id, items: [] })
         activePage.set("edit")
     }
@@ -61,7 +60,7 @@
 
 <div class="tools">
     <div>
-        <MaterialColorInput
+        <ColorField
             label="edit.background_color"
             value={settings.color}
             on:input={(e) => {
@@ -75,7 +74,7 @@
 
         <!-- WIP TIP about layout background image -->
         <InputRow>
-            <MaterialFilePicker
+            <FileField
                 label="edit.background_media"
                 value={bgImage}
                 filter={{ name: "Media files", extensions: mediaExtensions }}
@@ -86,7 +85,7 @@
                 allowEmpty
             />
             {#if bgImage}
-                <MaterialButton title="titlebar.edit" icon="edit" on:click={editBackgroundImage} />
+                <Button title="titlebar.edit" icon="edit" on:click={editBackgroundImage} />
             {/if}
         </InputRow>
 
@@ -94,7 +93,7 @@
             <!-- {#if groupTemplate && !settings.template}
                 <span style="display: flex;align-items: center;padding: 0 10px;font-size: 0.8em;opacity: 0.7;"><T id="settings.overrided_value" /></span>
             {/if} -->
-            <MaterialPopupButton
+            <PopupField
                 label="show.slide_template"
                 value={settings.template}
                 name={$templates[settings.template || ""]?.name}
@@ -107,7 +106,7 @@
                 allowEmpty
             />
             {#if settings.template && $templates[settings.template]}
-                <MaterialButton title="titlebar.edit" icon="edit" on:click={() => editTemplate(settings.template || "")} />
+                <Button title="titlebar.edit" icon="edit" on:click={() => editTemplate(settings.template || "")} />
             {/if}
         </InputRow>
     </div>

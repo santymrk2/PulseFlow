@@ -1,6 +1,8 @@
 <script lang="ts">
     import type { Slide } from "../../../types/Show"
-    import { slidesOptions } from "../../stores"
+    import { outputs, previewOutputId, slidesOptions, styles } from "../../stores"
+    import { getResolution } from "../helpers/output"
+    import { referenceOutputId } from "../helpers/outputAspect"
 
     export let slide: Slide
     export let index: number
@@ -12,6 +14,9 @@
     $: viewMode = $slidesOptions.mode || "grid"
 
     $: name = slide?.group
+
+    // mismo tamaño que tendrá la diapositiva real (la del selector de la vista previa o la primera salida activa)
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId }, false, referenceOutputId($outputs, $previewOutputId))
 </script>
 
 <div class="main" class:active style="width: {viewMode === 'grid' || viewMode === 'simple' || viewMode === 'groups' ? 100 / columns : 100}%;" role="none" on:click>
@@ -23,7 +28,7 @@
         </div>
     {/if}
 
-    <div class="slide">
+    <div class="slide" style="aspect-ratio: {resolution.width} / {resolution.height};">
         <!-- <div class="loader">
             <Loader size={0.8} />
         </div> -->
@@ -55,7 +60,6 @@
 
     .slide {
         background-color: black;
-        aspect-ratio: 16 / 9;
 
         /* background-color: var(--primary-darkest); */
         z-index: 0;

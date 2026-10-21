@@ -38,7 +38,7 @@ export const contextMenuItems: { [key: string]: ContextMenuItem } = {
     zoomOut: { label: "actions.zoomOut", icon: "zoomOut" },
     // MAIN
     quit: { label: "main.quit", icon: "close", iconColor: "#ff5454" },
-    settings: { label: "menu.settings", icon: "settings", iconColor: "var(--secondary)" },
+    settings: { label: "menu.settings", icon: "settings", iconColor: "var(--secondary)", shortcuts: ["Ctrl+,"] },
     about: { label: "main.about", icon: "info" },
     shortcuts: { label: "popup.shortcuts", icon: "shortcut", shortcuts: ["Ctrl+?"] },
     rename: { label: "actions.rename", icon: "rename", iconColor: "#6effbe", shortcuts: ["F2"] },
@@ -54,6 +54,7 @@ export const contextMenuItems: { [key: string]: ContextMenuItem } = {
     enabledTabs: { label: "context.enabledTabs", items: ["LOAD_enabled_drawer_tabs"] },
     manage_show_tags: { label: "popup.manage_tags", icon: "edit", iconColor: "#97c7ff" },
     display_tags: { label: "context.display_tags", icon: "tag", iconColor: "#979aff" },
+    add_to_playlist: { label: "ui.add_to_playlist", icon: "add", items: ["LOAD_add_to_playlist"] },
     tag_set: { label: "context.setTag", icon: "tag", iconColor: "#979aff", items: ["LOAD_tag_set"] },
     tag_filter: { label: "context.filterByTags", icon: "tag", iconColor: "#979aff", items: ["LOAD_tag_filter"] },
     manage_media_tags: { label: "popup.manage_tags", icon: "edit", iconColor: "#97c7ff" },
@@ -86,7 +87,7 @@ export const contextMenuItems: { [key: string]: ContextMenuItem } = {
     // OUTPUTS
     force_output: { label: "context.force_outputs", icon: "outputs" },
     align_with_screen: { label: "context.align_with_screen", icon: "resize" },
-    choose_screen: { label: "popup.choose_screen", icon: "screen" },
+
     toggle_output: { label: "context.toggle_output", icon: "outputs" },
     move_to_front: { label: "context.move_to_front", icon: "toFront" },
     hide_from_preview: { label: "context.hide_from_preview", icon: "hide" },
@@ -101,7 +102,6 @@ export const contextMenuItems: { [key: string]: ContextMenuItem } = {
     create_show: { label: "new.show_convert", icon: "slide", iconColor: "var(--secondary)" },
     // newPrivateShow: { label: "new.private", icon: "private" },
     private: { label: "actions.toggle_private", icon: "private", iconColor: "#ff5454" },
-    unlink_pco: { label: "actions.unlink_pco", icon: "bind", iconColor: "#ff5454" },
     duplicate: { label: "actions.duplicate", icon: "duplicate", iconColor: "#97c7ff", shortcuts: ["Ctrl+D"] },
     make_unique: { label: "actions.make_unique", icon: "make_unique", iconColor: "#97c7ff" },
     mark_played: { label: "actions.mark_played", icon: "check", iconColor: "var(--text)" },
@@ -144,6 +144,7 @@ export const contextMenuItems: { [key: string]: ContextMenuItem } = {
     edit: { label: "menu.edit", icon: "edit", iconColor: "#97c7ff" },
     change_style: { label: "edit.style", icon: "styles", iconColor: "#97c7ff" },
     edit_style: { label: "menu.edit", icon: "edit", iconColor: "#97c7ff" },
+    change_look: { label: "looks.change_look", icon: "looks", iconColor: "#97c7ff" },
     recolor: { label: "actions.recolor", icon: "color", iconColor: "#6effbe" },
     actions: { label: "actions.slide_actions", icon: "actions", iconColor: "#d497ff", items: ["LOAD_actions"] },
     bind_to: { label: "actions.bind_to", icon: "bind", iconColor: "#d497ff", items: ["LOAD_bind_slide"] },
@@ -213,7 +214,6 @@ export const contextMenuItems: { [key: string]: ContextMenuItem } = {
     // STAGE
     move_connections: { label: "context.move_connections", icon: "up" },
     // SETTINGS
-    reset_theme: { label: "settings.reset_theme", icon: "reset", iconColor: "#ff6b54" },
     reset: { label: "actions.reset", icon: "reset", iconColor: "#ff6b54" }
 }
 
@@ -238,7 +238,7 @@ export const contextMenuGroups = {
 
 export const contextMenuLayouts: { [key: string]: string[] } = {
     // MENU
-    file: ["save", "import_more", "export_more", "SEPARATOR", "quit"],
+    file: ["save", "import_more", "export_more", "SEPARATOR", "settings", "SEPARATOR", "quit"],
     edit: ["undo", "redo", "history", "SEPARATOR", "cut", "copy", "paste", "delete", "SEPARATOR", "selectAll"], // , "cut"
     view: ["focus_mode", "fullscreen"], // , "resetZoom", "zoomIn", "zoomOut"
     help: ["quick_search", "shortcuts", "docs", "quick_start_guide", "about"],
@@ -252,10 +252,10 @@ export const contextMenuLayouts: { [key: string]: string[] } = {
     input: ["copy", "paste"],
 
     // TOP
-    output: ["force_output", "SEPARATOR", "align_with_screen", "choose_screen"], // , "SEPARATOR", "edit"
+    output: ["force_output", "SEPARATOR", "align_with_screen"], // , "SEPARATOR", "edit"
 
     // OUTPUTS
-    output_preview: ["GROUP_edit", "change_style", "edit_style", "SEPARATOR", "recording", "SEPARATOR", "live_prepare", "SEPARATOR", "test_pattern"],
+    output_preview: ["GROUP_edit", "change_style", "edit_style", "change_look", "SEPARATOR", "recording", "SEPARATOR", "live_prepare", "SEPARATOR", "test_pattern"],
     output_active_button: ["GROUP_edit", "toggle_output", "move_to_front", "SEPARATOR", "hide_from_preview"],
 
     // DRAWER
@@ -283,7 +283,7 @@ export const contextMenuLayouts: { [key: string]: string[] } = {
     // , "changeCategory" ? edit with rename & categories...
     // , "convertToOverlay"
     // , "SEPARATOR", "export"
-    drawer_show_button: ["GROUP_open", "tag_set", "tag_filter", "SEPARATOR", "rename", "duplicate", "delete"], // "GROUP_rename"
+    drawer_show_button: ["GROUP_open", "add_to_playlist", "tag_set", "tag_filter", "SEPARATOR", "rename", "duplicate", "delete"], // "GROUP_rename"
     drawer_show_button_readonly: ["tag_filter"],
     drawer_new_show: ["newShow"],
     // media / audio
@@ -351,7 +351,6 @@ export const contextMenuLayouts: { [key: string]: string[] } = {
     project_show: ["GROUP_rename_only", "remove", "SEPARATOR", "mark_played", "private"],
     project_show_placeholder: ["remove"],
     project_show_placeholder_template: ["GROUP_rename_only", "remove"],
-    pco_item: ["unlink_pco"],
     project_section: ["GROUP_recolor", "remove"],
     project_overlay: ["remove"],
     project_pdf: ["remove", "SEPARATOR", "mark_played"],
@@ -424,7 +423,6 @@ export const contextMenuLayouts: { [key: string]: string[] } = {
     event: ["GROUP_edit", "duplicate", "delete", "delete_all"],
 
     // SETTINGS
-    theme: ["GROUP_rename_only", "duplicate", "delete", "SEPARATOR", "export", "SEPARATOR", "reset_theme"], // "GROUP_rename"
     style: ["GROUP_rename_only", "duplicate", "delete", "SEPARATOR", "reset"], // "GROUP_rename"
     profile_tab: ["GROUP_rename_recolor", "duplicate", "delete", "SEPARATOR", "reset"], // "GROUP_rename_color"
     profile_tab_admin: [],

@@ -2,7 +2,8 @@
     import type { MediaStyle } from "../../../../types/Main"
     import type { BibleContent } from "../../../../types/Scripture"
     import type { Item } from "../../../../types/Show"
-    import { activeEdit, activePage, activeScripture, activeStyle, drawerTabsData, media, outputs, scriptureSettings, settingsTab, styles, templates } from "../../../stores"
+    import { activeEdit, activePage, activeScripture, activeStyle, drawerTabsData, media, outputs, scriptureSettings, styles, templates } from "../../../stores"
+    import { openSettings } from "../../settings/openSettings"
     import { setDefaultScriptureTemplates } from "../../../utils/createData"
     import { confirmCustom } from "../../../utils/popup"
     import { mediaExtensions } from "../../../values/extensions"
@@ -11,14 +12,14 @@
     import { history } from "../../helpers/history"
     import { getMediaStyle } from "../../helpers/media"
     import { getAllNormalOutputs, getFirstActiveOutput } from "../../helpers/output"
-    import InputRow from "../../input/InputRow.svelte"
-    import Link from "../../inputs/Link.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import Media from "../../output/layers/Media.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
@@ -124,8 +125,7 @@
     function editTemplate() {
         if (styleScriptureTemplate) {
             activeStyle.set(styleId)
-            settingsTab.set("styles")
-            activePage.set("settings")
+            openSettings("styles")
             return
         }
 
@@ -215,77 +215,77 @@
     <div class="settings border">
         {#if optionsOpen}
             <!-- Verse numbers -->
-            <MaterialToggleSwitch label="scripture.verse_numbers" style="width: 100%;" checked={$scriptureSettings.verseNumbers} on:change={(e) => update("verseNumbers", e.detail)} />
+            <ToggleField label="scripture.verse_numbers" style="width: 100%;" checked={$scriptureSettings.verseNumbers} on:change={(e) => update("verseNumbers", e.detail)} />
             <!-- DEPRECATED -->
-            <!-- <MaterialColorInput label="edit.color" value={$scriptureSettings.numberColor || "#919191"} defaultValue="#919191" on:change={(e) => update("numberColor", e.detail)} />
-                <MaterialNumberInput label="edit.size (%)" value={$scriptureSettings.numberSize || 50} defaultValue={50} on:change={(e) => update("numberSize", e.detail)} /> -->
+            <!-- <ColorField label="edit.color" value={$scriptureSettings.numberColor || "#919191"} defaultValue="#919191" on:change={(e) => update("numberColor", e.detail)} />
+                <NumberField label="edit.size (%)" value={$scriptureSettings.numberSize || 50} defaultValue={50} on:change={(e) => update("numberSize", e.detail)} /> -->
 
             <!-- {#if $scriptureSettings.versesOnIndividualLines || sorted.length > 1} -->
-            <MaterialToggleSwitch label="scripture.verses_on_individual_lines" checked={$scriptureSettings.versesOnIndividualLines} defaultValue={false} on:change={(e) => update("versesOnIndividualLines", e.detail)} />
+            <ToggleField label="scripture.verses_on_individual_lines" checked={$scriptureSettings.versesOnIndividualLines} defaultValue={false} on:change={(e) => update("versesOnIndividualLines", e.detail)} />
             <!-- {/if} -->
 
             <!-- Long verses -->
             <InputRow arrow={$scriptureSettings.splitLongVerses} bind:open={longVersesMenuOpened}>
-                <MaterialToggleSwitch label="scripture.divide_long_verses" style="width: 100%;" checked={$scriptureSettings.splitLongVerses} defaultValue={false} on:change={(e) => update("splitLongVerses", e.detail)} />
+                <ToggleField label="scripture.divide_long_verses" style="width: 100%;" checked={$scriptureSettings.splitLongVerses} defaultValue={false} on:change={(e) => update("splitLongVerses", e.detail)} />
 
                 <svelte:fragment slot="menu">
                     {#if $scriptureSettings.splitLongVerses}
-                        <MaterialToggleSwitch label="scripture.split_long_verses_suffix" checked={$scriptureSettings.splitLongVersesSuffix} defaultValue={false} on:change={(e) => update("splitLongVersesSuffix", e.detail)} />
+                        <ToggleField label="scripture.split_long_verses_suffix" checked={$scriptureSettings.splitLongVersesSuffix} defaultValue={false} on:change={(e) => update("splitLongVersesSuffix", e.detail)} />
                         <!-- we allow as low as 3 because of certain languages like Chinese -->
-                        <MaterialNumberInput label="edit.size" value={$scriptureSettings.longVersesChars || 100} defaultValue={100} min={3} on:change={(e) => update("longVersesChars", e.detail)} />
-                        <MaterialNumberInput label="scripture.tolerance" value={$scriptureSettings.longVersesTolerance || 0} defaultValue={0} min={0} max={100} on:change={(e) => update("longVersesTolerance", e.detail)} />
+                        <NumberField label="edit.size" value={$scriptureSettings.longVersesChars || 100} defaultValue={100} min={3} on:change={(e) => update("longVersesChars", e.detail)} />
+                        <NumberField label="scripture.tolerance" value={$scriptureSettings.longVersesTolerance || 0} defaultValue={0} min={0} max={100} on:change={(e) => update("longVersesTolerance", e.detail)} />
                     {/if}
                 </svelte:fragment>
             </InputRow>
 
             <!-- Red Jesus -->
             {#if $scriptureSettings.redJesus || containsJesusWords}
-                <MaterialToggleSwitch label="scripture.red_jesus" style="width: 100%;" checked={$scriptureSettings.redJesus} defaultValue={false} on:change={(e) => update("redJesus", e.detail)} />
+                <ToggleField label="scripture.red_jesus" style="width: 100%;" checked={$scriptureSettings.redJesus} defaultValue={false} on:change={(e) => update("redJesus", e.detail)} />
                 <!-- DEPRECATED -->
-                <MaterialColorInput label="edit.color" value={$scriptureSettings.jesusColor || "#FF4136"} defaultValue="#FF4136" on:change={(e) => update("jesusColor", e.detail)} />
+                <ColorField label="edit.color" value={$scriptureSettings.jesusColor || "#FF4136"} defaultValue="#FF4136" on:change={(e) => update("jesusColor", e.detail)} />
             {/if}
 
             <!-- Smart split -->
-            <MaterialToggleSwitch label="scripture.smart_split" style="margin-top: 10px;width: 100%;" checked={$scriptureSettings.smartSplit !== false} defaultValue={true} on:change={(e) => update("smartSplit", e.detail)} />
+            <ToggleField label="scripture.smart_split" style="margin-top: 10px;width: 100%;" checked={$scriptureSettings.smartSplit !== false} defaultValue={true} on:change={(e) => update("smartSplit", e.detail)} />
 
             {#if $scriptureSettings.smartSplit === false}
-                <MaterialNumberInput label="scripture.max_verses" value={$scriptureSettings.versesPerSlide} defaultValue={3} min={1} max={100} on:change={(e) => update("versesPerSlide", e.detail)} hideWhenZero />
+                <NumberField label="scripture.max_verses" value={$scriptureSettings.versesPerSlide} defaultValue={3} min={1} max={100} on:change={(e) => update("versesPerSlide", e.detail)} hideWhenZero />
             {/if}
         {:else}
             <!-- Template -->
             <InputRow style={templateBackground ? "" : "margin-bottom: 10px;"}>
-                <MaterialPopupButton id="scripture_drawer" label="info.template" disabled={!!styleScriptureTemplate} value={templateId} name={template?.name} popupId="select_template" icon="templates" on:change={(e) => update("template", e.detail)} allowEmpty={!isDefault} />
+                <PopupField id="scripture_drawer" label="info.template" disabled={!!styleScriptureTemplate} value={templateId} name={template?.name} popupId="select_template" icon="templates" on:change={(e) => update("template", e.detail)} allowEmpty={!isDefault} />
                 {#if (templateId && template) || styleScriptureTemplate}
-                    <MaterialButton title="titlebar.edit" icon="edit" on:click={editTemplate} />
+                    <Button title="titlebar.edit" icon="edit" on:click={editTemplate} />
                 {/if}
             </InputRow>
 
             <!-- Template Settings - Quick Edit -->
             {#if templateBackground}
                 <InputRow style="margin-bottom: 10px;border-left: 4px solid var(--primary-lighter);">
-                    <MaterialFilePicker label="edit.background_media" value={templateBackground} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => setTemplateSettings("backgroundPath", e.detail)} />
+                    <FileField label="edit.background_media" value={templateBackground} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => setTemplateSettings("backgroundPath", e.detail)} />
                 </InputRow>
             {/if}
 
             {#if useOldSystem || (styleScriptureTemplate ? useOldScriptureSystem(styleScriptureTemplate) : false)}
-                <p style="margin-bottom: 10px;font-size: 0.9rem;opacity: 0.7;white-space: normal;">
+                <p style="margin-bottom: 10px;font-size: var(--text-sm);opacity: 0.7;white-space: normal;">
                     You are using a template with no scripture values! - <Link url="https://freeshow.app/docs/scripture#template">Read more</Link>
                 </p>
             {/if}
             {#if useOldSystem}
-                <MaterialButton variant="outlined" style="margin-bottom: 10px;" on:click={convertToNew}>
+                <Button variant="outline" style="margin-bottom: 10px;" on:click={convertToNew}>
                     {#if usingDefault}
                         Convert template to new system
                     {:else}
                         Use default template
                     {/if}
-                </MaterialButton>
+                </Button>
             {/if}
 
             <!-- info={selectedVerses[0]?.length > 1 ? `${Math.ceil(selectedVerses[0].length / $scriptureSettings.versesPerSlide)}` : ""} -->
-            <MaterialButton variant="outlined" icon="slide" title="new.show_convert [Ctrl+N]" on:click={createScriptureShow}>
+            <Button variant="outline" icon="slide" title="new.show_convert [Ctrl+N]" on:click={createScriptureShow}>
                 <T id="new.show_convert" />
-            </MaterialButton>
+            </Button>
         {/if}
     </div>
 </div>

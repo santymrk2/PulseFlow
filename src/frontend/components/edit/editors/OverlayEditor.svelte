@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import { OUTPUT } from "../../../../types/Channels"
-    import { activeEdit, outputs, overlays, styles } from "../../../stores"
+    import { activeEdit, outputs, overlays, styles, previewOutputId } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { send } from "../../../utils/request"
     import Icon from "../../helpers/Icon.svelte"
@@ -10,8 +10,8 @@
     import { history } from "../../helpers/history"
     import { getResolution } from "../../helpers/output"
     import { getStyles } from "../../helpers/style"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialZoom from "../../inputs/MaterialZoom.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
     import { getStyleResolution } from "../../slide/getStyleResolution"
     import Center from "../../system/Center.svelte"
@@ -40,7 +40,7 @@
 
     let width = 0
     let height = 0
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     let ratio = 1
 
@@ -111,9 +111,9 @@
         {/if}
     </div>
 
-    <FloatingInputs side="left">
-        <MaterialZoom columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
-    </FloatingInputs>
+    <FloatingBar side="left">
+        <ZoomControl columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
+    </FloatingBar>
 </div>
 
 <style>

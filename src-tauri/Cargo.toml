@@ -1,0 +1,96 @@
+[package]
+name = "pulseflow"
+version = "0.1.0"
+description = "PulseFlow"
+authors = ["ChurchApps"]
+edition = "2024"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+# The `_lib` suffix may seem redundant but it is necessary
+# to make the lib name unique and wouldn't conflict with the bin name.
+# This seems to be only an issue on Windows, see https://github.com/rust-lang/cargo/issues/8519
+name = "pulseflow_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["protocol-asset", "unstable"] }
+tauri-plugin-opener = "2"
+tauri-plugin-dialog = "2"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["full"] }
+hostname = "0.4"
+image = { version = "0.25", default-features = false, features = ["png", "jpeg", "gif", "webp", "bmp", "tiff"] }
+base64 = "0.23"
+bytemuck = { version = "1", features = ["derive"] }
+kamadak-exif = "0.6"
+# Bloque 2/3: servidor REST + WebSockets internos (reemplazo de Express + socket.io)
+axum = { version = "0.8", features = ["ws", "json", "tokio"] }
+tower-http = { version = "0.6", features = ["fs", "cors"] }
+futures-util = "0.3"
+# Bloque 4: backups ZIP
+zip = { version = "2", default-features = false, features = ["deflate"] }
+chrono = "0.4"
+# Bloque 5: carga dinámica de librerías nativas (NDI / Blackmagic)
+libloading = "0.8"
+wgpu = "30.0.1"
+pollster = "1.0.1"
+# Cola de trabajos de I/O con capacidad acotada (backpressure) y MPMC sin Mutex.
+crossbeam-channel = "0.5"
+# Contexto GPU intercambiable: permite recrear el dispositivo tras perderlo (device loss).
+arc-swap = "1.7"
+glyphon = "0.12.0"
+cosmic-text = "0.19.0"
+log = "0.4"
+tauri-plugin-log = "2"
+
+# Sólo para tests: `tauri::test::mock_app()` permite invocar comandos sin GUI
+# (F3.1). La feature "test" no entra en el build normal de la app.
+[dev-dependencies]
+tauri = { version = "2", features = ["test"] }
+# F18.5: el benchmark nativo mide el CPU del proceso con getrusage
+libc = "0.2"
+
+
+# Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true
+
+# F18: video nativo en macOS. VideoToolbox/AVFoundation entregan `CVPixelBuffer` (IOSurface, NV12)
+# y `CVMetalTextureCache` los expone como `MTLTexture` sin pasar por la CPU; wgpu-hal los envuelve.
+# Las versiones de objc2-* deben coincidir con las que usa wgpu-hal 30 (objc2 0.6, objc2-metal 0.3).
+[target.'cfg(target_os = "macos")'.dependencies]
+objc2 = "0.6"
+objc2-av-foundation = { version = "0.3", default-features = false, features = ["std", "AVAsset", "AVAssetReader", "AVAssetReaderOutput", "AVAssetTrack", "AVMediaFormat", "objc2-core-media", "objc2-core-video"] }
+objc2-core-foundation = { version = "0.3", default-features = false, features = ["std", "CFBase", "CFDictionary", "CFNumber", "CFString"] }
+objc2-core-media = { version = "0.3", default-features = false, features = ["std", "CMBase", "CMSampleBuffer", "CMTime", "CMFormatDescription", "objc2-core-video"] }
+objc2-core-video = { version = "0.3", default-features = false, features = ["std", "objc2", "objc2-metal", "CVBase", "CVBuffer", "CVImageBuffer", "CVMetalTexture", "CVMetalTextureCache", "CVPixelBuffer", "CVReturn"] }
+objc2-foundation = { version = "0.3", default-features = false, features = ["std", "NSArray", "NSDictionary", "NSError", "NSObject", "NSString", "NSURL", "NSValue"] }
+objc2-metal = { version = "0.3", default-features = false, features = ["std", "MTLDevice", "MTLPixelFormat", "MTLResource", "MTLTexture"] }
+
+# F18.6: video nativo en Windows. Media Foundation decodifica a texturas D3D11 (NV12) que se comparten
+# con el Device DX12 de wgpu. La versión de `windows` tiene que ser la de wgpu-hal 30 (0.62).
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62", features = [
+    "Win32_Foundation",
+    "Win32_Security",
+    "Win32_Graphics_Direct3D",
+    "Win32_Graphics_Direct3D11",
+    "Win32_Graphics_Direct3D12",
+    "Win32_Graphics_Dxgi",
+    "Win32_Graphics_Dxgi_Common",
+    "Win32_Media_MediaFoundation",
+    "Win32_System_Com",
+    "Win32_System_Com_StructuredStorage",
+    "Win32_System_Variant",
+] }
+

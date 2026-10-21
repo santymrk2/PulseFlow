@@ -7,9 +7,8 @@
     import Icon from "../../helpers/Icon.svelte"
     import { getAllNormalOutputs } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import Button from "../../inputs/Button.svelte"
-    import Link from "../../inputs/Link.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
     import CanvaInfo from "./CanvaInfo.svelte"
     import InfoMetadata from "./InfoMetadata.svelte"
 
@@ -48,7 +47,7 @@
             <T id="error.video_unavailable" />
         </div>
 
-        <Button on:click={() => send(OUTPUT, ["CLOSE_AD"])} center dark>
+        <Button on:click={() => send(OUTPUT, ["CLOSE_AD"])}>
             <Icon id="close" right />
             <T id="inputs.close_ad" />
         </Button>
@@ -57,9 +56,9 @@
     {#if optionsOpen}
         <div class="scroll">
             {#if $providerConnections.canva}
-                <MaterialButton variant="outlined" icon="logout" on:click={canvaDisconnect}>
+                <Button variant="outline" icon="logout" on:click={canvaDisconnect}>
                     <T id="settings.disconnect_from" replace={["Canva"]} />
-                </MaterialButton>
+                </Button>
             {/if}
         </div>
     {:else}

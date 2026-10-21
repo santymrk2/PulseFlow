@@ -1,22 +1,21 @@
 <script lang="ts">
     import { getContext, onDestroy } from "svelte"
-    import type { Resolution } from "../../../types/Settings"
     import type { StageItem, StageLayout as TStageLayout } from "../../../types/Stage"
-    import { activePopup, activeStage, activeTimers, allOutputs, currentWindow, dictionary, media, outputs, outputSlideCache, refreshEditSlide, stageShows, timers, variables } from "../../stores"
+    import { activePopup, activeStage, activeTimers, allOutputs, dictionary, outputs, outputSlideCache, refreshEditSlide, stageShows, timers, variables } from "../../stores"
     import { startResizing } from "../../utils/cursor"
     import { translateText } from "../../utils/language"
     import { sendBackgroundToStage } from "../../utils/stageTalk"
-    import { videoExtensions } from "../../values/extensions"
     import EditboxLines from "../edit/editbox/EditboxLines.svelte"
     import autosize from "../edit/scripts/autosize"
     import { isConditionMet } from "../edit/scripts/itemHelpers"
     import { getItemText } from "../edit/scripts/textStyle"
     import Icon from "../helpers/Icon.svelte"
     import { getExtension, loadThumbnail, mediaSize } from "../helpers/media"
+    import { videoExtensions } from "../../values/extensions"
     import { getActiveOutputs, getStageResolution, percentageStylePos } from "../helpers/output"
     import { createCSSVariables, replaceDynamicValues } from "../helpers/showActions"
     import { getStyles } from "../helpers/style"
-    import Button from "../inputs/Button.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Media from "../output/layers/Media.svelte"
     import Output from "../output/Output.svelte"
     import SlideItems from "../slide/SlideItems.svelte"
@@ -35,7 +34,6 @@
     export let item: StageItem | undefined
     export let stageLayout: TStageLayout | null = null
     export let ratio: number
-    export let resolution: Resolution | undefined = undefined
     export let preview = false
     export let edit = false
     export let disableStagePreview = false
@@ -219,9 +217,9 @@
 
     // SLIDE
     $: sourceOutputId = currentShow?.settings?.output
-    $: outputStores = $currentWindow === "output" ? $allOutputs : $outputs
-    $: stageOutputId = sourceOutputId && outputStores[sourceOutputId] ? sourceOutputId : getActiveOutputs(outputStores, false, true, true)[0]
-    $: currentOutput = outputStores[stageOutputId] || {}
+    // la ventana webview de salida ya no existe: la UI siempre usa el store `outputs`
+    $: stageOutputId = sourceOutputId && $outputs[sourceOutputId] ? sourceOutputId : getActiveOutputs($outputs, false, true, true)[0]
+    $: currentOutput = $outputs[stageOutputId] || {}
     $: currentSlide = currentOutput.out?.slide || (slideOffset !== 0 ? $outputSlideCache[stageOutputId] || null : null)
 
     $: outputWindowId = item?.currentOutput?.source || stageOutputId
@@ -236,24 +234,16 @@
     async function getCurrentBackground() {
         if (item?.type ? !item.includeMedia : !id.includes("slide")) return
 
-        let currentOutputs = $currentWindow ? $allOutputs : $outputs
-        let bg = await sendBackgroundToStage(stageOutputId, currentOutputs, true)
+        // la ventana webview de salida ya no existe: la UI siempre usa el store `outputs`
+        let bg = await sendBackgroundToStage(stageOutputId, $outputs, true)
 
         // show thumbnails instead of playing videos when "Slide offset" is not 0
         if (bg && slideOffset !== 0) {
             for (const key of ["next", "next2"]) {
-                const item = bg[key]
-                const path = item?.path
+                const path = bg[key]?.path
                 if (typeof path !== "string" || !videoExtensions.includes(getExtension(path))) continue
-
-                const customThumbnail = item?.thumbnail || $media[path]?.contentFile?.thumbnail
-                if (customThumbnail) {
-                    bg[key] = { ...item, path: customThumbnail, filePath: customThumbnail }
-                    continue
-                }
-
                 const thumbnail = await loadThumbnail(path, mediaSize.big)
-                if (thumbnail && thumbnail !== path) bg[key] = { ...item, path: thumbnail, filePath: thumbnail }
+                if (thumbnail) bg[key] = { ...bg[key], path: thumbnail, filePath: thumbnail }
             }
         }
 
@@ -293,7 +283,7 @@
         })
     }
 
-    $: stageResolution = resolution || getStageResolution(stageOutputId, outputStores)
+    $: stageResolution = getStageResolution()
     $: customStyle = percentageStylePos(itemStyle, stageResolution)
 
     // pause video at middle
@@ -380,7 +370,6 @@
     class:outline={edit}
     class:selected={edit && $activeStage.items.includes(id)}
     class:isDisabledVariable
-    class:isOutput={!!$currentWindow}
     class:isShiftPressed
     style="{customStyle}{id.includes('slide') && !id.includes('tracker') ? '' : textStyle}{edit ? `outline: ${3 / ratio}px solid rgb(255 255 255 / 0.2);` : ''}--labelColor: {currentShow?.settings?.labelColor || '#d0a853'};{fixedWidth}{cssVariables}"
     on:mousedown={mousedown}
@@ -413,7 +402,7 @@
             <!-- conditions -->
             {#if Object.values(item.conditions || {}).length}
                 <div data-title={translateText("actions.conditions")} class="actionButton" style="zoom: {1 / ratio};left: 0;inset-inline-end: unset;background-color: var(--{showItemState ? '' : 'dis'}connected);">
-                    <Button on:click={removeConditions} redHover>
+                    <Button align="start" on:click={removeConditions} redHover>
                         <Icon id="light" white />
                     </Button>
                 </div>
@@ -425,9 +414,6 @@
         <div bind:this={alignElem} class="align" style="--align: {item.align};--text-align: {item.alignX || 'center'};{item.type !== 'slide_text' || item.keepStyle ? 'height: 100%;' : ''}">
             <span style="pointer-events: none;width: 100%;height: 100%;{item.type === 'current_output' ? 'position: relative;' : ''}">
                 {#if item.type === "current_output" || id.includes("current_output")}
-                    <!-- use PreviewCanvas only in remote StageShow -->
-                    <!-- {#if $currentWindow === "output" && !$special.optimizedMode} -->
-                    <!-- <PreviewCanvas capture={$previewBuffers[outputWindowId]} id={outputWindowId} fullscreen /> -->
                     {#if ($outputs[outputWindowId] || $allOutputs[outputWindowId])?.stageOutput}
                         {#if !disableStagePreview}
                             <StageLayout outputId={outputWindowId} stageId={($outputs[outputWindowId] || $allOutputs[outputWindowId])?.stageOutput} edit={false} disableStagePreview={true} />
@@ -448,7 +434,7 @@
                         {#if typeof slideBackground?.path === "string"}
                             <div class="image" style="position: absolute;left: 0;top: 0;width: 100%;height: 100%;">
                                 <!-- bind:video on:loaded={loaded} -->
-                                <Media outputId={outputWindowId} path={slideBackground.path} path2={slideBackground.filePath} mediaStyle={slideBackground.mediaStyle || {}} mirror pauseCenter={slideOffset !== 0} />
+                                <Media outputId={outputWindowId} path={slideBackground.path} path2={slideBackground.filePath} mediaStyle={slideBackground.mediaStyle || {}} mirror />
                             </div>
                         {/if}
                     {/if}
@@ -489,7 +475,7 @@
                             {/if}
                         {:else if id.includes("variables")}
                             {#if $variables[id.split("#")[1]]}
-                                <Variable id={id.split("#")[1]} style="font-size: {item.auto !== false ? autoSize : fontSize}px;" ref={{ type: "stage", id }} hideText={!!$currentWindow} />
+                                <Variable id={id.split("#")[1]} style="font-size: {item.auto !== false ? autoSize : fontSize}px;" ref={{ type: "stage", id }} hideText />
                             {/if}
                         {:else}
                             {id}
@@ -559,9 +545,6 @@
 
     .isDisabledVariable {
         opacity: 0.5;
-    }
-    .isDisabledVariable.isOutput {
-        display: none;
     }
 
     .label {

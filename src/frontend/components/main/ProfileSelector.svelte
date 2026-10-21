@@ -8,7 +8,7 @@
     import { keysToID, sortByName } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     $: isWindows = $os.platform === "win32"
 
@@ -47,24 +47,24 @@
 </script>
 
 <div class="profiles" style="top: {isWindows ? '25px' : '0'};height: {isWindows ? 'calc(100% - 25px)' : '100%'};">
-    <h1>FreeShow</h1>
+    <h1>PulseFlow</h1>
     <p style="opacity: 0.8;margin-bottom: 20px;"><T id="profile.choose_profile" /></p>
 
     <div class="flex">
         {#each profilesList as profile}
-            <MaterialButton title="profile.set_active: <b>{profile.name}</b>" style="padding: 1.8em;border: 1px solid rgb(255 255 255 / 0.1);" on:click={() => selectProfile(profile.id)}>
+            <Button title="profile.set_active: <b>{profile.name}</b>" style="padding: 1.8em;border: 1px solid var(--border);" on:click={() => selectProfile(profile.id)}>
                 <div class="profile">
                     <Icon id="profiles" size={8} style="fill: {profile.color || 'white'};" white />
                     <p>{profile.name}</p>
                 </div>
-            </MaterialButton>
+            </Button>
         {/each}
     </div>
 
-    <MaterialButton variant="outlined" title="profile.set_active: <b>profile.admin</b>" style="margin-top: 20px;" on:click={() => selectProfile("")}>
+    <Button variant="outline" title="profile.set_active: <b>profile.admin</b>" style="margin-top: 20px;" on:click={() => selectProfile("")}>
         <Icon id="admin" size={2} white />
         <p><T id="profile.admin" /></p>
-    </MaterialButton>
+    </Button>
 </div>
 
 <style>

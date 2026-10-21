@@ -1,7 +1,7 @@
 <script lang="ts">
     import { popupData } from "../../../stores"
     import { translateText } from "../../../utils/language"
-    import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
+    import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
 
     const styleTypes = [
         { id: "normal", name: translateText("settings.normal"), icon: "styles" },
@@ -13,4 +13,4 @@
     }
 </script>
 
-<MaterialMultiChoice options={styleTypes} on:click={(e) => selectStyle(e.detail)} />
+<ChoiceGrid options={styleTypes} on:click={(e) => selectStyle(e.detail)} />

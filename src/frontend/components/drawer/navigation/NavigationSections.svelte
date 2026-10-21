@@ -2,7 +2,7 @@
     import { onMount } from "svelte"
     import { activeActionTagFilter, activeDrawerTab, activeEdit, activeVariableTagFilter, activeTimerTagFilter, dictionary, drawerTabsData, labelsDisabled } from "../../../stores"
     import { translateText } from "../../../utils/language"
-    import MaterialDrawerTab from "../MaterialDrawerTab.svelte"
+    import DrawerTab from "../DrawerTab.svelte"
 
     // interface Button extends Category {
     //     label: string
@@ -102,7 +102,7 @@
                                 <hr />
                             </div>
                         {:else if !category.hidden}
-                            <MaterialDrawerTab {active} {category} on:rename />
+                            <DrawerTab {active} {category} on:rename />
                         {/if}
                     {/each}
                     <!-- {:else}
@@ -130,40 +130,30 @@
 </div>
 
 <style>
+    /* secciones planas separadas por una línea, sin tarjetas redondeadas (igual que el panel izquierdo) */
     .tabSection {
         display: flex;
         flex-direction: column;
-        gap: 5px;
-        padding: 8px 0;
+        padding: 0;
     }
 
     .section {
         position: relative;
 
-        background-color: var(--primary-darker);
-        border: 1px solid var(--primary-lighter);
-        margin: 0 5px;
-        border-radius: 10px;
-
         display: flex;
         flex-direction: column;
 
-        overflow: hidden;
-
-        /* align to left */
-        margin-left: 0;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-        border-left-width: 0;
+        border-bottom: 1px solid var(--border-color, var(--primary-lighter));
     }
 
     .title {
-        font-weight: 500;
-        padding: 4px 14px;
-        font-size: 0.8rem;
-        opacity: 0.8;
-        background: var(--primary-darkest);
-        border-bottom: 1px solid var(--primary-lighter);
+        font-weight: 600;
+        padding: 6px 12px 4px;
+        font-size: var(--text-2xs);
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.6;
+        color: var(--text);
     }
 
     hr {
@@ -179,7 +169,7 @@
         align-items: center;
     }
     .sepLabel {
-        font-size: 0.6rem;
+        font-size: var(--text-2xs);
         color: var(--text);
         opacity: 0.5;
         padding: 6px 14px;

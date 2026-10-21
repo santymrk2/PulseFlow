@@ -1,21 +1,28 @@
 // ----- FreeShow -----
 // Here are all the global app variables
+//
+// Organización (F9.2): el archivo se divide en dos grandes bloques —
+//   · TEMPORARY VARIABLES: estado de sesión que no se guarda en disco.
+//   · SAVED VARIABLES: estado que forma parte de la configuración/proyecto guardado.
+// Dentro de cada bloque los stores se agrupan por dominio, en el mismo orden en que
+// aparecen: general/activo, salidas (outputs), shows, calendario, audio, etc.
+// Los stores de salidas (`outputs`, `outputState`, `styles`, `looks`, `outputDisplay`,
+// `allOutputs`) ya están tipados; no agregar `any` nuevos ahí.
 
 import type { Bible } from "json-bible/lib/Bible"
 import type { ICommonTagsResult } from "music-metadata"
 import { type Writable, writable } from "svelte/store"
-import type { ContentProviderId } from "../electron/contentProviders/base/types"
-import type { TimecodeMode } from "../electron/timecode/timecode"
+import type { ContentProviderId } from "../types/ContentProvider"
+import type { TimecodeMode } from "../types/Timecode"
 import type { AiFeatureStatus } from "../types/ai/Ai"
 import type { AudioChannelData, AudioStream, MetronomeSettings, Playlist } from "../types/Audio"
 import type { AudioRoutingConfig } from "../types/AudioRouting"
 import type { Event } from "../types/Calendar"
-import type { Draw, DrawLine, DrawSettings, DrawTools } from "../types/Draw"
 import type { Effects } from "../types/Effects"
 import type { History, HistoryNew } from "../types/History"
 import type { ActiveEdit, Clipboard, Interaction, Media, MediaOptions, NumberObject, OS, Popups, Profiles, Selected, SlidesOptions, Variable } from "../types/Main"
 import type { Folders, Projects, ShowRef } from "../types/Projects"
-import type { Dictionary, Styles, Themes } from "../types/Settings"
+import type { Dictionary, Look, Styles, Themes } from "../types/Settings"
 import type { Action, CustomFont, Emitter, ID, Overlays, Scene, ShowGroups, ShowList, Shows, ShowType, SlideTimer, Tag, Templates, Timer, Transition, TrimmedShows } from "../types/Show"
 import type { ServerData } from "../types/Socket"
 import type { ActiveStage, StageLayouts } from "../types/Stage"
@@ -29,6 +36,7 @@ import type { WebsiteAction } from "./components/helpers/websiteControls"
 import type { PlayingVideoState, VideoAudioData } from "./components/media/video/videoPlayer"
 
 // ----- TEMPORARY VARIABLES -----
+// Estado de sesión: no se persiste en disco (se recalcula al arrancar).
 
 // GENERAL
 export const os: Writable<OS> = writable({ platform: "win32", name: "", arch: "" })
@@ -60,12 +68,19 @@ export const activeEdit: Writable<ActiveEdit> = writable({ items: [] })
 export const activeStage: Writable<ActiveStage> = writable({ id: null, items: [] })
 export const activeTimers: Writable<any[]> = writable([])
 export const activeRename: Writable<any> = writable(null)
-export const activeDrawerTab: Writable<DrawerTabIds> = writable("shows")
+export const activeDrawerTab: Writable<DrawerTabIds> = writable("media") // "shows" ya no se muestra en el cajón: los shows viven en LIBRARIES (columna izquierda)
+
+// Fuente de ÍTEMS en la columna izquierda: una library o una playlist (null = sin elegir).
+export const leftSource: Writable<{ type: "library" | "playlist"; id: string } | null> = writable(null)
 export const drawerOpenedInEdit: Writable<boolean> = writable(false)
 export const activeStyle: Writable<string> = writable("")
 export const selectedProfile: Writable<string | null> = writable(null)
 export const activeProfile: Writable<string | null> = writable(null)
 export const settingsTab: Writable<SettingsTabs> = writable("general")
+/** Configuración es un modal propio (no pasa por `activePopup`): así los popups que se abren desde sus pestañas quedan encima en vez de reemplazarla. */
+export const settingsOpen: Writable<boolean> = writable(false)
+/** Salida que se ve en la vista previa (una a la vez). Vacío = la primera disponible. No se guarda. */
+export const previewOutputId: Writable<string> = writable("")
 export const projectView: Writable<boolean> = writable(false)
 export const showRecentlyUsedProjects: Writable<boolean> = writable(true)
 export const globalGroupViewEnabled: Writable<boolean> = writable(false)
@@ -86,7 +101,6 @@ export const providerConnections: Writable<{ [key in ContentProviderId]?: boolea
 export const metronomeTimer: Writable<{ beat: number; timeToNext: number }> = writable({ beat: 0, timeToNext: 0 })
 export const mediaDownloads: Writable<Map<string, { progress: number; total: number; status: string; name?: string }>> = writable(new Map())
 export const rtmpStatus: Writable<{ [outputId: string]: RtmpStatus }> = writable({})
-export const icecastStatus: Writable<{ connected: boolean; connecting?: boolean; error?: string }> = writable({ connected: false })
 export const pdfImports: Writable<Map<string, { name: string; progress: number; total: number; status: "importing" | "complete" | "error"; message?: string }>> = writable(new Map())
 export const showChangeProfileMenu: Writable<boolean> = writable(false)
 export const cloudUsers: Writable<{ displayName: string; deviceId?: string; color: string; lastUpdate?: number; activePage?: string; activeShow?: ShowRef }[]> = writable([])
@@ -129,15 +143,10 @@ export const channelSidechainMultipliers: Writable<{ [channelId: string]: number
 export const isFadingOut: Writable<any> = writable(false)
 export const recordingChannels: Writable<{ [channelId: string]: boolean }> = writable({})
 
-// DRAW
-export const drawTool: Writable<DrawTools> = writable("focus")
-export const draw: Writable<null | Draw> = writable(null)
-export const paintCacheSlide: Writable<{ [key: string]: DrawLine[] }> = writable({})
-export const paintCache: Writable<DrawLine[]> = writable([])
-
 // OUTPUTS
 export const outputDisplay: Writable<boolean> = writable(false)
-export const outputState: Writable<{ id: string; active: boolean | "invisible" }[]> = writable([])
+export type OutputState = { id: string; active: boolean | "invisible" }
+export const outputState: Writable<OutputState[]> = writable([])
 export const currentOutputSettings: Writable<string | null> = writable(null)
 export const slideTimers: Writable<{ [key: string]: SlideTimer }> = writable({})
 export const outputCache: Writable<any> = writable(null)
@@ -227,6 +236,7 @@ export const sttTranscript: Writable<{ finalized: string; unprocessed: string }>
 export const sttTempDisabled: Writable<boolean> = writable(false)
 
 // ----- SAVED VARIABLES -----
+// Estado persistido: se guarda con el proyecto/configuración (main/settings).
 
 // HISTORY
 export const undoHistory: Writable<(History | HistoryNew)[]> = writable([])
@@ -317,9 +327,6 @@ export const calendars: Writable<{ [key: string]: any }> = writable({}) // {}
 export const events: Writable<{ [key: string]: Event }> = writable({}) // {}
 export const calendarAddShow: Writable<string> = writable("") // ""
 
-// DRAW
-export const drawSettings: Writable<DrawSettings> = writable({}) // {}
-
 // STAGE
 export const stageShows: Writable<StageLayouts> = writable({}) // {default}
 
@@ -378,9 +385,15 @@ export const theme: Writable<string> = writable("default") // "default"
 export const themes: Writable<{ [key: string]: Themes }> = writable({}) // {default}
 
 // STYLES
+// Estilos y looks de la salida: mapas `{ [styleId]: Styles }` / `{ [lookId]: Look }`.
+// `Styles` y `Look` ya son tipos propios, así que no hace falta `any` (F9.2).
 export const styles: Writable<{ [key: string]: Styles }> = writable({}) // {}
+export const stylesLegacyBackup: Writable<{ [key: string]: Styles }> = writable({})
+export const looks: Writable<{ [key: string]: Look }> = writable({}) // {}
+export const activeLook: Writable<string> = writable("default") // ""
 
 // OUTPUTS
+// Salidas de la app. `Outputs` es un mapa `{ [outputId]: Output }` (F9.2).
 export const outputs: Writable<Outputs> = writable({}) // {default}
 export const syncedOutputs: Writable<SyncedOutputs> = writable({}) // {}
 export const outLocked: Writable<boolean> = writable(false) // false
@@ -434,14 +447,13 @@ export const $ = {
     activeRename,
     activeDrawerTab,
     settingsTab,
+    settingsOpen,
+    previewOutputId,
     projectView,
     eventEdit,
     playingAudio,
     playingVideos,
     visualizerData,
-    drawTool,
-    draw,
-    paintCache,
     outputDisplay,
     currentOutputSettings,
     slideTimers,
@@ -478,7 +490,6 @@ export const $ = {
     templateCategories,
     templates,
     events,
-    drawSettings,
     stageShows,
     scriptures,
     scripturesCache,
@@ -502,6 +513,8 @@ export const $ = {
     themes,
     outputs,
     styles,
+    looks,
+    activeLook,
     customMetadata,
     customMessageCredits,
     slideTimelineSpeedMultiplier,

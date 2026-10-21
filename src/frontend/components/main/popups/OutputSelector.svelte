@@ -3,13 +3,14 @@
     import { OUTPUT } from "../../../../types/Channels"
     import { Main } from "../../../../types/IPC/Main"
     import { requestMain } from "../../../IPC/main"
-    import { activePage, activePopup, currentOutputSettings, outputs, settingsTab } from "../../../stores"
+    import { activePopup, currentOutputSettings, outputs } from "../../../stores"
+    import { openSettings } from "../../settings/openSettings"
     import { triggerClickOnEnterSpace } from "../../../utils/clickable"
     import { send } from "../../../utils/request"
     import { clone, keysToID } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { translateText } from "../../../utils/language"
     import PreviewOutput from "../../output/preview/PreviewOutput.svelte"
 
@@ -74,8 +75,7 @@
 
     function openOutput(outputId: string) {
         currentOutputSettings.set(outputId)
-        settingsTab.set("display_settings")
-        activePage.set("settings")
+        openSettings("display_settings")
         activePopup.set(null)
     }
 </script>
@@ -111,9 +111,9 @@
 </div>
 
 <div class="bottom">
-    <MaterialButton variant="outlined" on:click={identifyScreens} title="settings.identify_screens" style="padding: 12px;">
+    <Button variant="outline" on:click={identifyScreens} title="settings.identify_screens" style="padding: 12px;">
         <Icon id="search" size={1.4} white />
-    </MaterialButton>
+    </Button>
 </div>
 
 <style>

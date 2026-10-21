@@ -327,6 +327,7 @@
         "first_last": "Pirmoje ir paskutinėje skaidrėje"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Numatytasis",
         "dark": "Tamsus",
         "light": "Šviesus",
@@ -474,7 +475,7 @@
         "manage_tags": "Manage tags",
         "sync_categories": "Select categories to sync",
         "effect_items": "Effect items",
-        "initialize": "Jus sveikina FreeShow",
+        "initialize": "Jus sveikina PulseFlow",
         "unsaved": "Ar tikrai norite išeiti?",
         "cancel": "Atsisakyti",
         "continue": "Tęsti",

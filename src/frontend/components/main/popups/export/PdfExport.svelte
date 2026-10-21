@@ -3,11 +3,11 @@
     import { translateText } from "../../../../utils/language"
     import Pdf from "../../../export/Pdf.svelte"
     import T from "../../../helpers/T.svelte"
-    import MaterialButton from "../../../inputs/MaterialButton.svelte"
-    import MaterialCheckbox from "../../../inputs/MaterialCheckbox.svelte"
-    import MaterialColorInput from "../../../inputs/MaterialColorInput.svelte"
-    import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../../inputs/MaterialNumberInput.svelte"
+    import Button from "../../../../lib/components/ui/button/button.svelte"
+    import CheckboxField from "../../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
+    import ColorField from "../../../../lib/components/ui/color-field/color-field.svelte"
+    import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
+    import NumberField from "../../../../lib/components/ui/number-field/number-field.svelte"
 
     export let pdfOptions: any
     export let previewShow: Show | null
@@ -67,44 +67,44 @@
 <!-- min-width: 42vw; -->
 <div style="display: flex;gap: 15px;">
     <div class="options" style="flex: 0 0 300px;">
-        <MaterialDropdown label="clock.type" style="margin-bottom: 10px;" options={pdfTypeOptions} value={pdfOptions.type || "default"} on:change={(e) => (pdfOptions.type = e.detail)} />
+        <SelectField label="clock.type" style="margin-bottom: 10px;" options={pdfTypeOptions} value={pdfOptions.type || "default"} on:change={(e) => (pdfOptions.type = e.detail)} />
 
         <!-- {#if showCount > 1}
-            <MaterialCheckbox label="export.oneFile" style="margin-bottom: 10px;" checked={pdfOptions.oneFile} disabled={exportType === "project"} on:change={(e) => updatePdfOptions(e, "oneFile")} />
+            <CheckboxField label="export.oneFile" style="margin-bottom: 10px;" checked={pdfOptions.oneFile} disabled={exportType === "project"} on:change={(e) => updatePdfOptions(e, "oneFile")} />
         {/if} -->
 
-        <!-- <MaterialCheckbox label="export.title" checked={pdfOptions.title} on:change={(e) => updatePdfOptions(e, "title")} /> -->
+        <!-- <CheckboxField label="export.title" checked={pdfOptions.title} on:change={(e) => updatePdfOptions(e, "title")} /> -->
 
         {#if pdfOptions.type === "media"}
             <!-- no options needed -->
         {:else if pdfOptions.type !== "chordSheet"}
-            <MaterialCheckbox label="export.metadata" checked={pdfOptions.metadata} on:change={(e) => updatePdfOptions(e, "metadata")} />
-            <MaterialCheckbox label="export.page_numbers" checked={pdfOptions.pageNumbers} on:change={(e) => updatePdfOptions(e, "pageNumbers")} />
-            <MaterialCheckbox label="export.groups" checked={pdfOptions.groups} on:change={(e) => updatePdfOptions(e, "groups")} />
-            <MaterialCheckbox label="export.numbers" checked={pdfOptions.numbers} on:change={(e) => updatePdfOptions(e, "numbers")} />
+            <CheckboxField label="export.metadata" checked={pdfOptions.metadata} on:change={(e) => updatePdfOptions(e, "metadata")} />
+            <CheckboxField label="export.page_numbers" checked={pdfOptions.pageNumbers} on:change={(e) => updatePdfOptions(e, "pageNumbers")} />
+            <CheckboxField label="export.groups" checked={pdfOptions.groups} on:change={(e) => updatePdfOptions(e, "groups")} />
+            <CheckboxField label="export.numbers" checked={pdfOptions.numbers} on:change={(e) => updatePdfOptions(e, "numbers")} />
             {#if pdfOptions.type === "default" || pdfOptions.type === "text"}
-                <MaterialCheckbox label="tools.notes" checked={pdfOptions.notes} on:change={(e) => updatePdfOptions(e, "notes")} />
+                <CheckboxField label="tools.notes" checked={pdfOptions.notes} on:change={(e) => updatePdfOptions(e, "notes")} />
             {/if}
-            <MaterialCheckbox label="export.invert" disabled={pdfOptions.type === "text"} checked={pdfOptions.invert} on:change={(e) => updatePdfOptions(e, "invert")} />
+            <CheckboxField label="export.invert" disabled={pdfOptions.type === "text"} checked={pdfOptions.invert} on:change={(e) => updatePdfOptions(e, "invert")} />
 
-            <MaterialCheckbox label="export.original_text_size" style="margin-top: 10px;" disabled={pdfOptions.type === "slides"} checked={pdfOptions.originalTextSize !== false} on:change={(e) => updatePdfOptions(e, "originalTextSize")} />
-            <MaterialNumberInput label="settings.font_size" disabled={pdfOptions.type === "slides" || pdfOptions.originalTextSize !== false} value={pdfOptions.textSize} on:change={(e) => (pdfOptions.textSize = e.detail)} />
+            <CheckboxField label="export.original_text_size" style="margin-top: 10px;" disabled={pdfOptions.type === "slides"} checked={pdfOptions.originalTextSize !== false} on:change={(e) => updatePdfOptions(e, "originalTextSize")} />
+            <NumberField label="settings.font_size" disabled={pdfOptions.type === "slides" || pdfOptions.originalTextSize !== false} value={pdfOptions.textSize} on:change={(e) => (pdfOptions.textSize = e.detail)} />
 
             {#if pdfOptions.type !== "text"}
-                <MaterialNumberInput label="export.rows" style="margin-top: 10px;" value={pdfOptions.grid[1]} min={1} max={7} on:change={(e) => (pdfOptions.grid[1] = e.detail)} />
-                <MaterialNumberInput label="export.columns" disabled={pdfOptions.type !== "slides"} value={pdfOptions.grid[0]} min={1} max={6} on:change={(e) => (pdfOptions.grid[0] = e.detail)} />
+                <NumberField label="export.rows" style="margin-top: 10px;" value={pdfOptions.grid[1]} min={1} max={7} on:change={(e) => (pdfOptions.grid[1] = e.detail)} />
+                <NumberField label="export.columns" disabled={pdfOptions.type !== "slides"} value={pdfOptions.grid[0]} min={1} max={6} on:change={(e) => (pdfOptions.grid[0] = e.detail)} />
             {/if}
         {:else}
-            <MaterialNumberInput label="settings.font_size" value={pdfOptions.fontSize} min={8} max={24} on:change={(e) => (pdfOptions.fontSize = e.detail)} />
-            <MaterialNumberInput label="export.margin (mm)" value={pdfOptions.margin} min={5} max={50} on:change={(e) => (pdfOptions.margin = e.detail)} />
-            <MaterialNumberInput label="edit.line_spacing" value={pdfOptions.spacing * 10} min={1} max={30} on:change={(e) => (pdfOptions.spacing = e.detail / 10)} />
+            <NumberField label="settings.font_size" value={pdfOptions.fontSize} min={8} max={24} on:change={(e) => (pdfOptions.fontSize = e.detail)} />
+            <NumberField label="export.margin (mm)" value={pdfOptions.margin} min={5} max={50} on:change={(e) => (pdfOptions.margin = e.detail)} />
+            <NumberField label="edit.line_spacing" value={pdfOptions.spacing * 10} min={1} max={30} on:change={(e) => (pdfOptions.spacing = e.detail / 10)} />
 
-            <MaterialNumberInput label="export.columns" style="margin-top: 10px;" value={pdfOptions.columnsPerPage} min={1} max={3} on:change={(e) => (pdfOptions.columnsPerPage = e.detail)} />
+            <NumberField label="export.columns" style="margin-top: 10px;" value={pdfOptions.columnsPerPage} min={1} max={3} on:change={(e) => (pdfOptions.columnsPerPage = e.detail)} />
 
             <h5 style="margin: 10px 0;text-align: center;color: var(--text);"><T id="edit.chords" /></h5>
 
-            <MaterialNumberInput label="edit.font_size" value={pdfOptions.chordFontSize} min={6} max={20} on:change={(e) => (pdfOptions.chordFontSize = e.detail)} />
-            <MaterialColorInput label="edit.color" value={pdfOptions.chordColor || "#0066cc"} defaultValue="#0066cc" on:change={(e) => (pdfOptions.chordColor = e.detail)} on:input={(e) => (pdfOptions.chordColor = e.detail)} />
+            <NumberField label="edit.font_size" value={pdfOptions.chordFontSize} min={6} max={20} on:change={(e) => (pdfOptions.chordFontSize = e.detail)} />
+            <ColorField label="edit.color" value={pdfOptions.chordColor || "#0066cc"} defaultValue="#0066cc" on:change={(e) => (pdfOptions.chordColor = e.detail)} on:input={(e) => (pdfOptions.chordColor = e.detail)} />
         {/if}
     </div>
 
@@ -119,8 +119,8 @@
         </div>
         <div style="display: flex;flex-direction: column;height: 100%;background-color: var(--primary-darkest);">
             <!-- aspect-ratio: 1/1.4142; -->
-            <MaterialButton style="flex: 1;" icon="up" on:click={() => paper.scrollBy(0, -paper.offsetHeight + 9.6)} />
-            <MaterialButton style="flex: 1;" icon="down" on:click={() => paper.scrollBy(0, paper.offsetHeight - 7.001)} />
+            <Button style="flex: 1;" icon="up" on:click={() => paper.scrollBy(0, -paper.offsetHeight + 9.6)} />
+            <Button style="flex: 1;" icon="down" on:click={() => paper.scrollBy(0, paper.offsetHeight - 7.001)} />
         </div>
     </div>
 </div>

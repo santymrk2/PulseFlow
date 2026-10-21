@@ -1,20 +1,19 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte"
-    import { actionRevealUsed, actions, activePopup, ai, audioPlaylists, audioStreams, categories, effects, emitters, obsData, outputs, overlays, popupData, projects, scenes, shows, stageShows, styles, templates, timers, variables } from "../../stores"
+    import { actionRevealUsed, actions, activePopup, ai, audioPlaylists, audioStreams, categories, effects, emitters, looks, obsData, outputs, overlays, popupData, projects, scenes, shows, stageShows, styles, templates, timers, variables } from "../../stores"
     import { translateText } from "../../utils/language"
     import { formatSearch } from "../../utils/search"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
     import { clone } from "../helpers/array"
     import { _show } from "../helpers/shows"
-    import HRule from "../input/HRule.svelte"
-    import InputRow from "../input/InputRow.svelte"
-    import Button from "../inputs/Button.svelte"
-    import CombinedInput from "../inputs/CombinedInput.svelte"
-    import Dropdown from "../inputs/Dropdown.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
-    import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
-    import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
+    import HRule from "../../lib/components/ui/h-rule/h-rule.svelte"
+    import InputRow from "../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import CombinedInput from "../../lib/components/ui/combined-input/combined-input.svelte"
+    import Dropdown from "../../lib/components/ui/dropdown/dropdown.svelte"
+    import TextField from "../../lib/components/ui/text-field/text-field.svelte"
+    import ToggleField from "../../lib/components/ui/toggle-field/toggle-field.svelte"
     import { spotifyState } from "../output/preview/SpotifyManager"
     import { getGlobalGroupName } from "../show/tools/groups"
     import Center from "../system/Center.svelte"
@@ -55,6 +54,7 @@
         "start_slide_timers",
         "stop_timers",
         "change_output_style",
+        "set_look",
         "change_stage_output_layout",
         "send_midi",
         "run_action"
@@ -231,6 +231,7 @@
         if (id.includes("name")) return actionValue.value || ""
         if (id === "change_stage_output_layout") return `${actionValue.outputId ? ($outputs[actionValue.outputId]?.name || "—") + ": " : ""}${$stageShows[actionValue.stageLayoutId]?.name || ""}`
         if (id === "change_output_style") return `${actionValue.outputId ? ($outputs[actionValue.outputId]?.name || "—") + ": " : ""}${actionValue.styleId ? $styles[actionValue.styleId]?.name || "" : translateText("main.none")}`
+        if (id === "set_look") return actionValue.lookId ? $looks[actionValue.lookId]?.name || "" : translateText("main.none")
         if (id === "set_next_slide_timer") return Number(actionValue.value) + "s"
         if (id === "disable_slide") {
             const showName = actionValue.showId ? $shows[actionValue.showId]?.name || "—" : ""
@@ -249,16 +250,16 @@
 {#if list}
     {#if actionId && !pickAction && !full}
         <CombinedInput textWidth={38}>
-            <Button on:click={() => (pickAction = true)} style="width: 100%;" center dark>
+            <Button on:click={() => (pickAction = true)} style="width: 100%;">
                 <Icon id={actionData[actionId]?.icon || "actions"} right />
                 <p style="display: contents;">{findName(actionId)}</p>
             </Button>
         </CombinedInput>
     {:else}
-        <MaterialTextInput label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
+        <TextField label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
 
         {#if mode !== "slide"}
-            <MaterialButton
+            <Button
                 class="popup-options {!commonOnly ? 'active' : ''}"
                 icon={!commonOnly ? "eye" : "hide"}
                 iconSize={1.3}
@@ -283,10 +284,10 @@
 
                     <!-- disabled={$popupData.existing.includes(action.id)} -->
                     <!-- bold={action.common} -->
-                    <MaterialButton style="width: 100%;font-weight: normal;justify-content: start;padding: 5px 20px;gap: 12px;{searchValue.length && i === 0 ? 'background-color: var(--primary-lighter);' : ''}" showOutline={getActionTriggerId(actionId) === action.id} isActive={(existingActionsFiltered || $popupData.existing || []).map(getActionTriggerId).includes(action.id)} on:click={() => changeAction({ ...action, index: full ? undefined : 0 })}>
+                    <Button style="width: 100%;font-weight: normal;justify-content: start;padding: 5px 20px;gap: 12px;{searchValue.length && i === 0 ? 'background-color: var(--primary-lighter);' : ''}" showOutline={getActionTriggerId(actionId) === action.id} isActive={(existingActionsFiltered || $popupData.existing || []).map(getActionTriggerId).includes(action.id)} on:click={() => changeAction({ ...action, index: full ? undefined : 0 })}>
                         <Icon id={action.icon} />
                         <p>{action.name}</p>
-                    </MaterialButton>
+                    </Button>
                 {/each}
             </div>
         {:else}
@@ -308,11 +309,11 @@
             <div style="display: flex;align-items: center;gap: 3px;">
                 {#if actionId && existingActions.length > 1}
                     {#if actionNameIndex > 1}
-                        <MaterialButton style="padding: 8px;" icon="up" on:click={() => changeAction({ id: "move_up", index: actionNameIndex - 1 })} />
+                        <Button style="padding: 8px;" icon="up" on:click={() => changeAction({ id: "move_up", index: actionNameIndex - 1 })} />
                     {/if}
-                    <MaterialButton style="padding: 6.5px;" title="actions.remove" on:click={() => changeAction({ id: "remove", index: actionNameIndex - 1 })}>
+                    <Button style="padding: 6.5px;" title="actions.remove" on:click={() => changeAction({ id: "remove", index: actionNameIndex - 1 })}>
                         <Icon id="close" size={1.2} white />
-                    </MaterialButton>
+                    </Button>
                 {/if}
             </div>
         </div>
@@ -320,9 +321,8 @@
         <InputRow style="background-color: var(--primary-darker);" arrow={dataInputs && !dataOpened} bind:open={dataMenuOpened}>
             {#if !choosePopup}
                 <Dropdown activeId={actionId} value={findName(actionId) || "—"} options={[...(actionNameIndex ? [{ id: "remove", name: "—" }] : []), ...ACTIONS]} on:click={(e) => changeAction(e.detail)} />
-                <!-- <MaterialDropdown value={actionId} options={[...(actionNameIndex ? [{ value: "remove", label: "—" }] : []), ...ACTIONS]} on:change={(e) => changeAction(e.detail)} /> -->
             {:else}
-                <MaterialButton style="flex: 1;justify-content: start;{actionId ? 'font-weight: normal;' : ''}" title="actions.choose_action" on:click={() => dispatch("choose")}>
+                <Button style="flex: 1;justify-content: start;{actionId ? 'font-weight: normal;' : ''}" title="actions.choose_action" on:click={() => dispatch("choose")}>
                     <Icon id={findIcon(actionId)} style="margin-inline-start: 0.5em;" />
                     <p>
                         {#if actionId}
@@ -337,7 +337,7 @@
                             {getActionInfo(actionId)}
                         </span>
                     {/if}
-                </MaterialButton>
+                </Button>
             {/if}
         </InputRow>
     </div>
@@ -350,7 +350,7 @@
 {/if}
 
 {#if mode === "slide" && getActionTriggerId(actionId) === "run_action" && $categories[_show().get().category]?.action}
-    <MaterialToggleSwitch label="actions.override_category_action" checked={customData.overrideCategoryAction} defaultValue={false} on:change={(e) => changeAction({ id: actionId, customDataKey: "overrideCategoryAction", customDataValue: e.detail })} />
+    <ToggleField label="actions.override_category_action" checked={customData.overrideCategoryAction} defaultValue={false} on:change={(e) => changeAction({ id: actionId, customDataKey: "overrideCategoryAction", customDataValue: e.detail })} />
 {/if}
 
 <style>

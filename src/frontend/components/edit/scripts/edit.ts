@@ -3,6 +3,7 @@ import type { Popups } from "../../../../types/Main"
 import type { DrawerTabIds } from "../../../../types/Tabs"
 import { activeDrawerTab, activePage, activePopup, drawer, drawerTabsData } from "../../../stores"
 import { hexToRgb } from "../../helpers/color"
+import { openOverlayEditor, openThemeEditor } from "./libraryEditor"
 
 // COLOR
 
@@ -84,6 +85,11 @@ const drawerPages: { [key: string]: DrawerTabIds } = {
     scenes: "functions"
 }
 export function openDrawer(id: string, openPopup = false) {
+    // Plantillas, overlays y efectos ya no tienen pestaña en el cajón: se editan en el Theme editor / Overlay editor
+    if (id === "templates") return openThemeEditor()
+    if (id === "overlays") return openOverlayEditor()
+    if (id === "effects") return openOverlayEditor("effect")
+
     activePage.set("show")
 
     // set sub tab

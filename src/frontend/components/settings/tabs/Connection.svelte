@@ -1,26 +1,29 @@
 <script lang="ts">
     import { onMount } from "svelte"
-    import type { ContentProviderId } from "../../../../electron/contentProviders/base/types"
+    import type { ContentProviderId } from "../../../../types/ContentProvider"
     import { Main } from "../../../../types/IPC/Main"
     import { requestMain, sendMain } from "../../../IPC/main"
-    import { activePage, activePopup, activeShow, activeTriggerFunction, cloudSyncData, connections, contentProviderData, disabledServers, maxConnections, notFound, obsData, outputs, popupData, ports, projectTemplates, providerConnections, saved, serverData, special } from "../../../stores"
-    import { translateText } from "../../../utils/language"
+    import { activePage, activePopup, activeShow, activeTriggerFunction, cloudSyncData, connections, contentProviderData, disabledServers, maxConnections, notFound, obsData, outputs, popupData, ports, providerConnections, saved, serverData, special } from "../../../stores"
     import { startRemoteController, stopRemoteController } from "../../../utils/remoteController"
     import { contentProviderSync } from "../../../utils/startup"
-    import { keysToID, sortByName } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import { checkWindowCapture } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import Title from "../../input/Title.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Title from "../../../lib/components/ui/title/title.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import Tip from "../../main/Tip.svelte"
 
     let ip = "localhost"
+
+    // Hoisted so store auto-subscription happens at the component top level
+    // (Svelte 5 disallows `$store` inside `{@const}`).
+    let connectionsData: Record<string, any> = {}
+    $: connectionsData = $connections
 
     onMount(async () => {
         ip = ((await requestMain(Main.IP)) || ["localhost"])[0]
@@ -160,8 +163,6 @@
         saved.set(false)
     }
 
-    $: projectTemplateOptions = [{ value: "", label: translateText("main.none") }, ...sortByName(keysToID($projectTemplates)).map(({ id, name }) => ({ value: id, label: name }))]
-
     $: providerOriginOptions = [
         { value: "", label: "Ask when existing show is found" },
         { value: "local", label: "Always use local instance" },
@@ -221,10 +222,10 @@
 
 {#each servers as server}
     {@const disabled = server.id === "companion" ? $serverData?.companion?.enabled !== true : server.enabledByDefault ? $disabledServers[server.id] === true : $disabledServers[server.id] !== false}
-    {@const connections = Object.keys($connections[server.id.toUpperCase()] || {})?.length || 0}
+    {@const connections = Object.keys(connectionsData[server.id.toUpperCase()] || {})?.length || 0}
 
     <InputRow>
-        <MaterialButton
+        <Button
             style="flex: 1;justify-content: space-between;"
             {disabled}
             on:click={() => {
@@ -250,18 +251,18 @@
                     <Icon id="volume" />
                 </span>
             {/if}
-        </MaterialButton>
+        </Button>
 
         {#if server.id === "companion"}
-            <MaterialToggleSwitch label="" checked={$serverData?.companion?.enabled === true} on:change={toggleCompanion} />
+            <ToggleField label="" checked={$serverData?.companion?.enabled === true} on:change={toggleCompanion} />
         {:else}
-            <MaterialToggleSwitch label="" checked={server.enabledByDefault ? $disabledServers[server.id] !== true : $disabledServers[server.id] === false} on:change={(e) => toggleServer(e, server.id)} />
+            <ToggleField label="" checked={server.enabledByDefault ? $disabledServers[server.id] !== true : $disabledServers[server.id] === false} on:change={(e) => toggleServer(e, server.id)} />
         {/if}
     </InputRow>
 {/each}
 
 <InputRow>
-    <MaterialButton
+    <Button
         style="flex: 1;justify-content: space-between;"
         disabled={!$special.remoteController}
         on:click={() => {
@@ -274,87 +275,50 @@
 
             Remote Clicker
         </span>
-    </MaterialButton>
+    </Button>
 
-    <MaterialToggleSwitch label="" checked={$special.remoteController} on:change={(e) => toggleRemoteController(e.detail)} />
+    <ToggleField label="" checked={$special.remoteController} on:change={(e) => toggleRemoteController(e.detail)} />
 </InputRow>
 
-{#if !$providerConnections.planningcenter && (!$providerConnections.churchApps || cloudOnly.churchApps) && !$providerConnections.amazinglife && !$providerConnections.onstage}
+{#if (!$providerConnections.churchApps || cloudOnly.churchApps) && !$providerConnections.amazinglife && !$providerConnections.onstage}
     <!-- No provider connected - show connection options -->
     <Title label="settings.content_provider" icon="list" />
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("planningcenter")} style="flex: 1;" icon="login">
-            <T id="settings.connect_to" replace={["Planning Center"]} />
-        </MaterialButton>
-    </InputRow>
-
-    <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("churchApps")} style="flex: 1;" icon="login">
+        <Button on:click={() => contentProviderConnect("churchApps")} style="flex: 1;" icon="login">
             <T id="settings.connect_to" replace={["ChurchApps"]} />
-        </MaterialButton>
+        </Button>
     </InputRow>
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("amazinglife")} style="flex: 1;" icon="login">
+        <Button on:click={() => contentProviderConnect("amazinglife")} style="flex: 1;" icon="login">
             <T id="settings.connect_to" replace={["APlay"]} />
-        </MaterialButton>
+        </Button>
     </InputRow>
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("onstage")} style="flex: 1;" icon="login">
+        <Button on:click={() => contentProviderConnect("onstage")} style="flex: 1;" icon="login">
             <T id="settings.connect_to" replace={["OnStage"]} />
-        </MaterialButton>
+        </Button>
     </InputRow>
-{:else if $providerConnections.planningcenter}
-    <!-- Planning Center connected -->
-    <Title label="Content Provider: Planning Center" icon="list" />
-
-    <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("planningcenter")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
-            <T id="settings.disconnect_from" replace={["Planning Center"]} />
-        </MaterialButton>
-        <MaterialButton icon="cloud_sync" on:click={syncContentProvider}>
-            <T id="cloud.sync" />
-        </MaterialButton>
-        <MaterialButton on:click={() => sendMain(Main.URL, "https://planningcenter.com")} title="Planning Center" white>
-            <Icon id="launch" white />
-        </MaterialButton>
-    </InputRow>
-
-    <MaterialToggleSwitch label="settings.auto_sync_startup" checked={$contentProviderData.planningcenter?.autoSync !== false} on:change={(e) => updateProvider("planningcenter", "autoSync", e.detail)} />
-
-    {#if $contentProviderData.planningcenter?.autoSync !== false}
-        <InputRow>
-            <!-- <MaterialPopupButton label="popup.sync_folders" value="" name="" icon="folder" popupId="sync_folders" on:click={() => activePopup.set("sync_folders")} style="flex: 1;" /> -->
-            <MaterialButton icon="folder" on:click={() => activePopup.set("sync_folders")} style="flex: 1;">
-                <T id="popup.sync_folders" />
-            </MaterialButton>
-        </InputRow>
-    {/if}
-
-    <MaterialDropdown label="Song origin" options={providerOriginOptions} value={$contentProviderData.planningcenter?.songOrigin || ""} on:change={(e) => updateProvider("planningcenter", "songOrigin", e.detail)} />
-    {#if Object.keys($projectTemplates).length}
-        <MaterialDropdown label="actions.project_template" options={projectTemplateOptions} value={$contentProviderData.planningcenter?.projectTemplate || ""} on:change={(e) => updateProvider("planningcenter", "projectTemplate", e.detail)} />
-    {/if}
 {:else if $providerConnections.churchApps && !cloudOnly.churchApps}
     <!-- ChurchApps connected -->
     <Title label="Content Provider: ChurchApps" icon="list" />
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("churchApps")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
+        <Button on:click={() => contentProviderConnect("churchApps")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
             <T id="settings.disconnect_from" replace={["ChurchApps"]} />
-        </MaterialButton>
-        <MaterialButton icon="cloud_sync" on:click={syncContentProvider}>
+        </Button>
+        <Button icon="cloud_sync" on:click={syncContentProvider}>
             <T id="cloud.sync" />
-        </MaterialButton>
-        <MaterialButton title="<b>popup.sync_categories:</b> settings.sync_categories_tip" icon="options" on:click={() => activePopup.set("sync_categories")} />
-        <MaterialButton on:click={() => sendMain(Main.URL, "https://b1.church")} title="B1.Church" white>
+        </Button>
+        <Button title="<b>popup.sync_categories:</b> settings.sync_categories_tip" icon="options" on:click={() => activePopup.set("sync_categories")} />
+        <Button on:click={() => sendMain(Main.URL, "https://b1.church")} title="B1.Church" white>
             <Icon id="launch" white />
-        </MaterialButton>
+        </Button>
     </InputRow>
 
-    <MaterialDropdown label="Song origin" options={providerOriginOptions} value={$contentProviderData.churchApps?.songOrigin || ""} on:change={(e) => updateProvider("churchApps", "songOrigin", e.detail)} />
+    <SelectField label="Song origin" options={providerOriginOptions} value={$contentProviderData.churchApps?.songOrigin || ""} on:change={(e) => updateProvider("churchApps", "songOrigin", e.detail)} />
 
     {#if $cloudSyncData.enabled}
         <Tip type="warning" value="This is unrelated to the Cloud sync found in 'Files'. This is for the content manager / curriculum." top={20} />
@@ -364,44 +328,44 @@
     <Title label="Content Provider: APlay" icon="list" />
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("amazinglife")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
+        <Button on:click={() => contentProviderConnect("amazinglife")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
             <T id="settings.disconnect_from" replace={["APlay"]} />
-        </MaterialButton>
+        </Button>
         <!-- Nothing to sync yet -->
-        <!-- <MaterialButton icon="cloud_sync" on:click={syncContentProvider}>
+        <!-- <Button icon="cloud_sync" on:click={syncContentProvider}>
             <T id="cloud.sync" />
-        </MaterialButton> -->
+        </Button> -->
     </InputRow>
 {:else if $providerConnections.onstage}
     <!-- OnStage connected -->
     <Title label="Content Provider: OnStage" icon="list" />
 
     <InputRow>
-        <MaterialButton on:click={() => contentProviderConnect("onstage")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
+        <Button on:click={() => contentProviderConnect("onstage")} style="flex: 1;border-bottom: 2px solid var(--connected) !important;" icon="logout">
             <T id="settings.disconnect_from" replace={["OnStage"]} />
-        </MaterialButton>
-        <MaterialButton icon="cloud_sync" on:click={syncContentProvider}>
+        </Button>
+        <Button icon="cloud_sync" on:click={syncContentProvider}>
             <T id="cloud.sync" />
-        </MaterialButton>
-        <MaterialButton on:click={() => sendMain(Main.URL, "https://getonstage.app")} title="OnStage" white>
+        </Button>
+        <Button on:click={() => sendMain(Main.URL, "https://getonstage.app")} title="OnStage" white>
             <Icon id="launch" white />
-        </MaterialButton>
+        </Button>
     </InputRow>
 
-    <MaterialToggleSwitch label="settings.auto_sync_startup" checked={$contentProviderData.onstage?.autoSync !== false} on:change={(e) => updateProvider("onstage", "autoSync", e.detail)} />
+    <ToggleField label="settings.auto_sync_startup" checked={$contentProviderData.onstage?.autoSync !== false} on:change={(e) => updateProvider("onstage", "autoSync", e.detail)} />
 
     {#if onstageTeams.length > 1}
-        <MaterialDropdown label="Team" options={onstageTeamOptions} value={onstageCurrentTeamId} on:change={(e) => switchOnStageTeam(e.detail)} />
+        <SelectField label="Team" options={onstageTeamOptions} value={onstageCurrentTeamId} on:change={(e) => switchOnStageTeam(e.detail)} />
     {/if}
 
-    <MaterialDropdown label="Song origin" options={providerOriginOptions} value={$contentProviderData.onstage?.songOrigin || ""} on:change={(e) => updateProvider("onstage", "songOrigin", e.detail)} />
+    <SelectField label="Song origin" options={providerOriginOptions} value={$contentProviderData.onstage?.songOrigin || ""} on:change={(e) => updateProvider("onstage", "songOrigin", e.detail)} />
 {/if}
 
 <!-- OBS Studio Controller -->
 <Title label="OBS Studio" icon="record" />
 
 <InputRow arrow={$obsData.enabled}>
-    <MaterialToggleSwitch
+    <ToggleField
         label="OBS Studio Controller"
         style="width: 100%;"
         checked={$obsData.enabled}
@@ -413,8 +377,8 @@
     />
 
     <div slot="menu">
-        <MaterialTextInput label="IP" value={obsIP} defaultValue="localhost" placeholder="localhost" on:change={(e) => (obsIP = e.detail)} />
-        <MaterialNumberInput label="settings.port" value={obsPort} defaultValue={4455} placeholder="4455" on:change={(e) => (obsPort = e.detail)} />
+        <TextField label="IP" value={obsIP} defaultValue="localhost" placeholder="localhost" on:change={(e) => (obsIP = e.detail)} />
+        <NumberField label="settings.port" value={obsPort} defaultValue={4455} placeholder="4455" on:change={(e) => (obsPort = e.detail)} />
     </div>
 </InputRow>
 

@@ -7,10 +7,10 @@
     import { getItemText } from "../../edit/scripts/textStyle"
     import { clone } from "../../helpers/array"
     import { getLayoutRef } from "../../helpers/show"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialZoom from "../../inputs/MaterialZoom.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Stagebox from "../../stage/Stagebox.svelte"
     import ConditionsBox from "./ConditionsBox.svelte"
@@ -221,7 +221,7 @@
 </script>
 
 {#if itemOptions.length > 1}
-    <MaterialDropdown label="tools.item" style="margin-bottom: 10px;" options={itemOptions} value={itemIndex.toString()} on:change={updateItemIndex} />
+    <SelectField label="tools.item" style="margin-bottom: 10px;" options={itemOptions} value={itemIndex.toString()} on:change={updateItemIndex} />
 
     <div class="preview" style={showItemState ? "" : "opacity: 0.2;"}>
         <div class="slide">
@@ -263,14 +263,14 @@
                                     <div class="node and" class:trail={d > 0} class:isActive={checkConditionValue(content, currentItemText, isStage ? "stage" : "default", conditionsUpdater)}>
                                         {#if innerAnd?.length || a !== 0 || b !== 0 || c !== 0 || d !== 0}
                                             <div class="delete">
-                                                <MaterialButton variant="outlined" icon="delete" title="actions.delete" style="padding: 8px;border-radius: 50%;" on:click={() => deleteContent(a, b, c, d)} />
+                                                <Button variant="outline" icon="delete" title="actions.delete" style="padding: 8px;border-radius: 50%;" on:click={() => deleteContent(a, b, c, d)} />
                                             </div>
                                             <div class="copy">
-                                                <MaterialButton variant="outlined" showOutline={JSON.stringify(CONTENT) === JSON.stringify(clipboard)} icon="copy" title="actions.copy" style="padding: 8px;border-radius: 50%;" on:click={() => copyContent(CONTENT)} />
+                                                <Button variant="outline" showOutline={JSON.stringify(CONTENT) === JSON.stringify(clipboard)} icon="copy" title="actions.copy" style="padding: 8px;border-radius: 50%;" on:click={() => copyContent(CONTENT)} />
                                             </div>
                                         {:else if clipboard}
                                             <div class="delete paste">
-                                                <MaterialButton variant="outlined" icon="paste" title="actions.paste" style="padding: 8px;border-radius: 50%;" on:click={() => pasteContent(a, b, c, d)} />
+                                                <Button variant="outline" icon="paste" title="actions.paste" style="padding: 8px;border-radius: 50%;" on:click={() => pasteContent(a, b, c, d)} />
                                             </div>
                                         {/if}
 
@@ -280,9 +280,9 @@
 
                                 {#if addMore}
                                     <div class="buttons node and trail">
-                                        <MaterialButton variant="outlined" icon="add" title="settings.add" on:click={() => addContent(false, a, b, c)} />
+                                        <Button variant="outline" icon="add" title="settings.add" on:click={() => addContent(false, a, b, c)} />
                                         {#if clipboard}
-                                            <MaterialButton variant="outlined" icon="paste" title="actions.paste" on:click={() => addContent(true, a, b, c)} />
+                                            <Button variant="outline" icon="paste" title="actions.paste" on:click={() => addContent(true, a, b, c)} />
                                         {/if}
                                     </div>
                                 {/if}
@@ -291,9 +291,9 @@
 
                         {#if addMore}
                             <div class="buttons node or trail">
-                                <MaterialButton variant="outlined" icon="add" title="settings.add" on:click={() => addContent(false, a, b)} />
+                                <Button variant="outline" icon="add" title="settings.add" on:click={() => addContent(false, a, b)} />
                                 {#if clipboard}
-                                    <MaterialButton variant="outlined" icon="paste" title="actions.paste" on:click={() => addContent(true, a, b)} />
+                                    <Button variant="outline" icon="paste" title="actions.paste" on:click={() => addContent(true, a, b)} />
                                 {/if}
                             </div>
                         {/if}
@@ -302,9 +302,9 @@
 
                 {#if addMoreOuter}
                     <div class="buttons node and trail">
-                        <MaterialButton variant="outlined" icon="add" title="settings.add" on:click={() => addContent(false, a)} />
+                        <Button variant="outline" icon="add" title="settings.add" on:click={() => addContent(false, a)} />
                         {#if clipboard}
-                            <MaterialButton variant="outlined" icon="paste" title="actions.paste" on:click={() => addContent(true, a)} />
+                            <Button variant="outline" icon="paste" title="actions.paste" on:click={() => addContent(true, a)} />
                         {/if}
                     </div>
                 {/if}
@@ -313,17 +313,17 @@
 
         {#if addMoreOuter}
             <div class="buttons node or trail">
-                <MaterialButton variant="outlined" icon="add" title="settings.add" on:click={() => addContent(false)} />
+                <Button variant="outline" icon="add" title="settings.add" on:click={() => addContent(false)} />
                 {#if clipboard}
-                    <MaterialButton variant="outlined" icon="paste" title="actions.paste" on:click={() => addContent(true)} />
+                    <Button variant="outline" icon="paste" title="actions.paste" on:click={() => addContent(true)} />
                 {/if}
             </div>
         {/if}
     </div>
 
-    <FloatingInputs style={addMoreOuter ? "" : "border: none;"} round>
-        <MaterialZoom hidden={!addMoreOuter} columns={zoom} min={0.5} max={1.5} defaultValue={1} addValue={-0.1} on:change={(e) => (zoom = e.detail)} />
-    </FloatingInputs>
+    <FloatingBar style={addMoreOuter ? "" : "border: none;"} round>
+        <ZoomControl hidden={!addMoreOuter} columns={zoom} min={0.5} max={1.5} defaultValue={1} addValue={-0.1} on:change={(e) => (zoom = e.detail)} />
+    </FloatingBar>
 </div>
 
 <style>

@@ -2,7 +2,7 @@
     import { activePopup, saved } from "../../../stores"
     import { closeApp, save, saveComplete } from "../../../utils/save"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     const actions = {
         n: () => activePopup.set(null),
@@ -23,24 +23,24 @@
 <svelte:window on:keydown={keydown} />
 
 <div class="list">
-    <MaterialButton variant="outlined" style="width: 100%;" on:click={() => activePopup.set(null)}>
+    <Button variant="outline" style="width: 100%;" on:click={() => activePopup.set(null)}>
         <T id="popup.cancel" />
         <span>N</span>
-    </MaterialButton>
+    </Button>
     {#if $saved}
-        <MaterialButton variant="contained" style="margin-top: 8px;width: 100%;" on:click={() => saveComplete({ closeWhenFinished: true })}>
+        <Button variant="default" style="margin-top: 8px;width: 100%;" on:click={() => saveComplete({ closeWhenFinished: true })}>
             <T id="main.quit" />
             <span>Y</span>
-        </MaterialButton>
+        </Button>
     {:else}
-        <MaterialButton variant="outlined" style="width: 100%;" on:click={closeApp}>
+        <Button variant="outline" style="width: 100%;" on:click={closeApp}>
             <div style="opacity: 0.7;"><T id="popup.quit" /></div>
             <span>Q</span>
-        </MaterialButton>
-        <MaterialButton variant="contained" style="margin-top: 8px;width: 100%;" on:click={() => save(true)}>
+        </Button>
+        <Button variant="default" style="margin-top: 8px;width: 100%;" on:click={() => save(true)}>
             <T id="popup.save_quit" />
             <span>Y</span>
-        </MaterialButton>
+        </Button>
     {/if}
 </div>
 

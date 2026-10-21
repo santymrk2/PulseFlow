@@ -2,7 +2,7 @@ import { get } from "svelte/store"
 import { uid } from "uid"
 import type { Item, Slide, SlideData, Template } from "../../../types/Show"
 import { breakLongLines, removeItemValues } from "../../show/slides"
-import { activeEdit, activePage, activePopup, activeProject, activeShow, alertMessage, cachedShowsData, deletedShows, groups, notFound, projects, refreshEditSlide, renamedShows, shows, showsCache, templates } from "../../stores"
+import { activeEdit, activeLook, activePage, activePopup, activeProject, activeShow, alertMessage, cachedShowsData, deletedShows, groups, notFound, outputs, projects, refreshEditSlide, renamedShows, shows, showsCache, templates } from "../../stores"
 import { save } from "../../utils/save"
 import { EMPTY_SHOW_SLIDE } from "../../values/empty"
 import { customActionActivation } from "../actions/actions"
@@ -29,12 +29,26 @@ export const historyActions = ({ obj, undo = null }: any) => {
         SLIDES: () => handleSlides(obj, data, initializing),
         TEMPLATE: () => handleTemplate(obj, data, initializing),
         SHOW_LAYOUT: () => handleShowLayout(obj, data, initializing),
-        SHOW_ITEMS: () => handleShowItems(obj, data, initializing)
+        SHOW_ITEMS: () => handleShowItems(obj, data, initializing),
+        APPLY_LOOK: () => handleApplyLook(obj, data, initializing)
     }
 
     if (obj) console.info("HISTORY " + (initializing ? "INIT" : undo ? "UNDO" : "REDO") + ` [${obj.id}]:`, clone(obj))
 
     return actions
+}
+
+// APPLY_LOOK (F5.2/F10): aplicar un look ahora sólo cambia activeLook; el bridge
+// (helpers/looks.ts::startLookBridge) propaga el look a los punteros de outputs,
+// así que el updater sólo tiene que setear el store y "touchar" outputs para que
+// listeners.ts reenvíe las escenas al Scene Graph.
+function handleApplyLook(obj, data, initializing) {
+    if (initializing) obj.oldData = { lookId: get(activeLook) }
+
+    // undo/redo already swapped oldData/newData, so "data" is always the state to apply
+    activeLook.set(data.lookId || null)
+    // touch: shallow clone forces outputs subscribers (bridge + sendOutputScenes) to run
+    outputs.update((a) => ({ ...a }))
 }
 
 function handleUpdate(obj, data, initializing) {

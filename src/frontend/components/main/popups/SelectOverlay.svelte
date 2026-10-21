@@ -1,14 +1,14 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import { uid } from "uid"
-    import { activePopup, outputs, overlays, popupData, styles } from "../../../stores"
+    import { activePopup, outputs, overlays, popupData, styles, previewOutputId } from "../../../stores"
     import Card from "../../drawer/Card.svelte"
     import { keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import { getResolution } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
     import Center from "../../system/Center.svelte"
@@ -18,7 +18,7 @@
 
     let searchValue = ""
 
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     let allOverlays: any[] = []
     $: allOverlays = sortByName(keysToID($overlays)).filter((a) => !hide.includes(a.id))
@@ -76,11 +76,11 @@
     }
 </script>
 
-<MaterialButton class="popup-options" icon="add" iconSize={1.3} title="new.overlay" on:click={createNew} white />
+<Button class="popup-options" icon="add" iconSize={1.3} title="new.overlay" on:click={createNew} white />
 
 {#if allOverlays.length > 8}
     <div style="margin-bottom: 10px;">
-        <MaterialTextInput label="main.search" value={searchValue} on:input={(e) => (searchValue = e.detail || "")} autofocus />
+        <TextField label="main.search" value={searchValue} on:input={(e) => (searchValue = e.detail || "")} autofocus />
     </div>
 {/if}
 

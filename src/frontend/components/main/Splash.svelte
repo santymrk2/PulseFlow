@@ -1,11 +1,12 @@
 <script lang="ts">
     import { onMount } from "svelte"
     import { activePopup, activeProject, projects, projectView, quickSearchActive, showRecentlyUsedProjects, shows, special, version } from "../../stores"
+    import { translateText } from "../../utils/language"
     import { history } from "../helpers/history"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import Link from "../inputs/Link.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Link from "../../lib/components/ui/link/link.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Center from "../system/Center.svelte"
     import { getVOTD } from "./votd"
 
@@ -47,7 +48,10 @@
 </script>
 
 <Center class="context #splash">
-    <h1>FreeShow</h1>
+    <div class="brand">
+        <img class="brand-logo" src="./logo-pulseflow.png" alt="" draggable={false} />
+        <span class="brand-name">PulseFlow</span>
+    </div>
     <p style="opacity: 0.7;">v{$version}</p>
     {#if $special.splashText}
         <p style="padding-top: 30px">
@@ -78,30 +82,48 @@
     {/if}
 
     <span style="padding-top: 30px" class="buttons">
-        <MaterialButton icon="search" title="main.quick_search" on:click={() => quickSearchActive.set(true)}>
+        <Button variant="secondary" class="w-full justify-start" title={translateText("main.quick_search")} onclick={() => quickSearchActive.set(true)}>
+            <Icon id="search" size={1} />
             <T id="main.quick_search" />
-        </MaterialButton>
-        <MaterialButton icon="project" title="tooltip.project" on:click={createProject}>
+        </Button>
+        <Button variant="secondary" class="w-full justify-start" title={translateText("tooltip.project")} onclick={createProject}>
+            <Icon id="project" size={1} />
             <T id="new.project" />
-        </MaterialButton>
-        <MaterialButton
-            icon="add"
-            title="tooltip.show"
-            on:click={(e) => {
-                if (e.detail.ctrl) {
+        </Button>
+        <Button
+            variant="secondary"
+            class="w-full justify-start"
+            title={translateText("tooltip.show")}
+            onclick={(e) => {
+                if (e.ctrlKey) {
                     history({ id: "UPDATE", newData: { remember: { project: $activeProject } }, location: { page: "show", id: "show" } })
                 } else activePopup.set("show")
             }}
         >
+            <Icon id="add" size={1} />
             <T id="new.show" />
-        </MaterialButton>
+        </Button>
     </span>
 </Center>
 
 <style>
-    h1 {
-        font-size: 4em;
-        overflow: initial;
+    /* F12.9: logo de 48 px + nombre en --text, sin el título azul de texto */
+    .brand {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+    }
+    .brand-logo {
+        width: 48px;
+        height: 48px;
+        /* el PNG es negro sobre transparente: se pinta de blanco para el tema oscuro */
+        filter: brightness(0) invert(1);
+    }
+    .brand-name {
+        font-size: 18px;
+        font-weight: 600;
+        color: var(--text);
     }
 
     p {
@@ -132,18 +154,9 @@
     }
 
     @media screen and (max-height: 500px) {
-        h1 {
-            font-size: 3em;
-        }
-    }
-    @media screen and (max-height: 400px) {
-        h1 {
-            font-size: 2em;
-        }
-    }
-    @media screen and (max-width: 800px) {
-        h1 {
-            font-size: 2em;
+        .brand-logo {
+            width: 40px;
+            height: 40px;
         }
     }
 </style>

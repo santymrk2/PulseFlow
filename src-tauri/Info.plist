@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>NSCameraUsageDescription</key>
+    <string>PulseFlow puede usar la cámara para mostrar la cámara en vivo en las salidas.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>PulseFlow puede usar el micrófono para capturar audio en las salidas.</string>
+    <key>NSScreenCaptureUsageDescription</key>
+    <string>PulseFlow puede capturar la pantalla para las salidas de streaming.</string>
+</dict>
+</plist>

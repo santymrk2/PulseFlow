@@ -2,11 +2,11 @@
     import { customMetadata } from "../../../stores"
     import { initializeMetadata } from "../../helpers/show"
     import T from "../../helpers/T.svelte"
-    import HRule from "../../input/HRule.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
 
     $: defaultMetadata = Object.keys(initializeMetadata({}))
 
@@ -54,7 +54,7 @@
 
 <div>
     {#each defaultMetadata as key}
-        <MaterialCheckbox label="meta.{key}" checked={!hidden.includes(key)} on:change={() => toggleHidden(key)} />
+        <CheckboxField label="meta.{key}" checked={!hidden.includes(key)} on:change={() => toggleHidden(key)} />
     {/each}
 </div>
 
@@ -62,11 +62,11 @@
 
 {#each customMetadataValues as name}
     <InputRow>
-        <MaterialTextInput label="inputs.name" value={name} on:change={(e) => updateCustom(name, e)} autofocus={!name} />
-        <MaterialButton icon="delete" on:click={() => removeCustom(name)} white />
+        <TextField label="inputs.name" value={name} on:change={(e) => updateCustom(name, e)} autofocus={!name} />
+        <Button icon="delete" on:click={() => removeCustom(name)} white />
     </InputRow>
 {/each}
 
-<MaterialButton icon="add" variant="outlined" style="width: 100%;" disabled={emptyEntry} on:click={addCustom}>
+<Button icon="add" variant="outline" style="width: 100%;" disabled={emptyEntry} on:click={addCustom}>
     <T id="settings.add" />
-</MaterialButton>
+</Button>

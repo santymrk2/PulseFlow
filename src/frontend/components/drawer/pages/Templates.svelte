@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import type { Template } from "../../../../types/Show"
-    import { activeEdit, activePage, activePopup, activeShow, alertMessage, categories, labelsDisabled, mediaOptions, outputs, selected, showsCache, special, styles, templateApplied, templateCategories, templates } from "../../../stores"
+    import { activeEdit, activePage, activePopup, activeShow, alertMessage, categories, labelsDisabled, mediaOptions, outputs, selected, showsCache, special, styles, templateApplied, templateCategories, templates, previewOutputId } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { getAccess } from "../../../utils/profile"
     import { clone, keysToID, sortByName } from "../../helpers/array"
@@ -12,8 +12,8 @@
     import { getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Actions from "../../slide/Actions.svelte"
     import Center from "../../system/Center.svelte"
     import DropArea from "../../system/DropArea.svelte"
@@ -22,12 +22,15 @@
     import TemplateSlide from "./TemplateSlide.svelte"
 
     export let active: string | null
-    export let searchValue = ""
+    // Theme editor: lista de una columna en el panel izquierdo; un clic abre la plantilla para editarla (no la aplica al show)
+    export let columns: number | null = null
+    export let editOnClick = false
+    $: gridColumns = columns ?? $mediaOptions.columns
 
     const profile = getAccess("templates")
     $: readOnly = profile.global === "read" || profile[active || ""] === "read"
 
-    $: resolution = getResolution(null, { $outputs, $styles }) // $templates[active || ""]?.settings?.resolution
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId }) // $templates[active || ""]?.settings?.resolution
     let filteredTemplates: (Template & { id: string })[] = []
 
     $: activeTemplate = ($activeShow && $activeShow.type === undefined) || $activeShow?.type === "show" ? $showsCache[$activeShow.id]?.settings?.template : null
@@ -42,16 +45,14 @@
     }
 
     // search
-    $: if (searchValue !== undefined) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()]/g, "")
+    $: if (filteredTemplates) filterSearch()
     function filterSearch() {
         fullFilteredTemplates = clone(filteredTemplates)
-        if (searchValue.length > 1) fullFilteredTemplates = fullFilteredTemplates.filter((a) => filter(a.name).includes(filter(searchValue)))
     }
 
     let nextScrollTimeout: NodeJS.Timeout | null = null
     function wheel(e: any) {
-        if (!e.ctrlKey && !e.metaKey) return
+        if (columns !== null || (!e.ctrlKey && !e.metaKey)) return
         if (nextScrollTimeout) return
 
         mediaOptions.set({ ...$mediaOptions, columns: Math.max(2, Math.min(10, $mediaOptions.columns + (e.deltaY < 0 ? -100 : 100) / 100)) })
@@ -72,7 +73,7 @@
         if (timeout) clearTimeout(timeout)
     })
 
-    $: if (active || searchValue !== undefined) {
+    $: if (active) {
         loaded = false
         lazyLoader = 0
     }
@@ -109,6 +110,11 @@
     let alerted = false
     function templateClick(e: MouseEvent | null = null, templateId: string) {
         if (e?.target?.closest?.(".edit") || e?.target?.closest?.(".icons")) return
+        if (editOnClick) {
+            activeEdit.set({ type: "template", id: templateId, items: [] })
+            activePage.set("edit")
+            return
+        }
         if (!$activeShow || !isShowActive || e?.ctrlKey || e?.metaKey) return
 
         if ($showsCache[$activeShow.id]?.locked) {
@@ -185,29 +191,12 @@
             }
         }
     }
-
-    function keydown(e: KeyboardEvent) {
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest(".search")) {
-            let template = fullFilteredTemplates[0]
-            if (!template) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                templateClick(null, template.id)
-                return
-            }
-
-            // add to project (no need)
-        }
-    }
 </script>
-
-<svelte:window on:keydown={keydown} />
 
 <div style="position: relative;height: 100%;overflow-y: auto;" class="context #drawer_templates" on:wheel={wheel}>
     <DropArea id="templates">
         {#if fullFilteredTemplates.length}
-            <div class="grid" style="--width: {100 / $mediaOptions.columns}%;">
+            <div class="grid" style="--width: {100 / gridColumns}%;">
                 {#each fullFilteredTemplates as template, i (template.id)}
                     {@const isReadOnly = readOnly || profile[template.category || ""] === "read"}
 
@@ -216,7 +205,7 @@
                             {#if loaded || i < lazyLoader}
                                 <!-- icons -->
                                 {#if template.settings?.actions?.length}
-                                    <Actions columns={$mediaOptions.columns} templateId={template.id} actions={{ slideActions: template.settings?.actions }} />
+                                    <Actions columns={gridColumns} templateId={template.id} actions={{ slideActions: template.settings?.actions }} />
                                 {/if}
 
                                 <TemplateSlide templateId={template.id} {template} preview />
@@ -238,19 +227,19 @@
 </div>
 
 {#if templateWithNonExistentCategory}
-    <FloatingInputs side="left" onlyOne>
-        <MaterialButton on:click={createNonExistentCategories}>
-            <Icon id="autofill" gradient />
+    <FloatingBar side="left" onlyOne>
+        <Button on:click={createNonExistentCategories}>
+            <Icon id="autofill" />
             <T id="category.create_nonexistent" />
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 {/if}
 
-<FloatingInputs onlyOne>
-    <MaterialButton disabled={readOnly} icon="add" title="new.template" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "template" } })}>
+<FloatingBar onlyOne>
+    <Button disabled={readOnly} icon="add" title="new.template" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "template" } })}>
         {#if !$labelsDisabled}<T id="new.template" />{/if}
-    </MaterialButton>
-</FloatingInputs>
+    </Button>
+</FloatingBar>
 
 <style>
     .grid {

@@ -5,10 +5,10 @@
     import { audioEffectPresets } from "../../../../stores"
     import { translateText } from "../../../../utils/language"
     import { clone, keysToID } from "../../../helpers/array"
-    import InputRow from "../../../input/InputRow.svelte"
-    import MaterialButton from "../../../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
-    import MaterialTextInput from "../../../inputs/MaterialTextInput.svelte"
+    import InputRow from "../../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
+    import TextField from "../../../../lib/components/ui/text-field/text-field.svelte"
 
     export let effectKey: EffectType = "equalizer"
     export let channelId: string = "main"
@@ -178,12 +178,12 @@
 </script>
 
 <InputRow>
-    <MaterialDropdown label="audio.preset" value={selectedPreset} options={presetOptions} defaultValue="default" on:change={(e) => selectPreset(e.detail)} />
+    <SelectField label="audio.preset" value={selectedPreset} options={presetOptions} defaultValue="default" on:change={(e) => selectPreset(e.detail)} />
 
     {#if selectedPreset === "custom"}
-        <MaterialTextInput label="inputs.name" value={customName} on:change={(e) => (customName = e.detail)} />
-        <MaterialButton icon="save" title="actions.save" on:click={saveCustomPreset} />
+        <TextField label="inputs.name" value={customName} on:change={(e) => (customName = e.detail)} />
+        <Button icon="save" title="actions.save" on:click={saveCustomPreset} />
     {:else if selectedPreset !== "default"}
-        <MaterialButton icon="delete" title="actions.delete" on:click={deletePreset} white />
+        <Button icon="delete" title="actions.delete" on:click={deletePreset} white />
     {/if}
 </InputRow>

@@ -1,21 +1,23 @@
 import { get } from "svelte/store"
-import type { ContentProviderId } from "../../electron/contentProviders/base/types"
+import type { ContentProviderId } from "../../types/ContentProvider"
 import { OUTPUT, STARTUP } from "../../types/Channels"
 import { Main } from "../../types/IPC/Main"
 import { checkStartupActions } from "../components/actions/actions"
 import { syncIcsCalendars } from "../components/drawer/calendar/calendars"
 import { getTimeFromInterval } from "../components/helpers/time"
+import { startLookBridge } from "../components/helpers/looks"
+import { checkTimers, startEventTimer, startTimer } from "../components/helpers/timerTick"
 import { requestMain, requestMainMultiple, sendMain, sendMainMultiple } from "../IPC/main"
 import { cameraManager } from "../media/cameraManager"
-import { activePopup, activeProfile, alertMessage, cachePath, cloudSyncData, contentProviderData, currentWindow, dataPath, deviceId, driveKeys, isDev, loaded, loadedState, os, profiles, providerConnections, shows, special, version, windowState } from "../stores"
+import { activePopup, activeProfile, activeTimers, alertMessage, cachePath, closeAd, cloudSyncData, contentProviderData, currentWindow, dataPath, deviceId, disabledServers, driveKeys, events, isDev, language, loaded, loadedState, localeDirection, os, outputDisplay, profiles, providerConnections, shows, special, timers, version, windowState } from "../stores"
 import { startTracking } from "./analytics"
 import { setupCloudSync } from "./cloudSync"
-import { wait, waitUntilValueIsDefined } from "./common"
+import { toggleRemoteStream, wait, waitUntilValueIsDefined } from "./common"
 import { getDefaultElements } from "./createData"
 import { setLanguage } from "./language"
 import { storeSubscriber } from "./listeners"
 import { autoOpenLastUsedProfile, openProfileByName } from "./profile"
-import { receiveOUTPUTasOUTPUT, remoteListen, setupMainReceivers } from "./receivers"
+import { remoteListen, setupMainReceivers } from "./receivers"
 import { destroy, receive, send } from "./request"
 import { save, unsavedUpdater } from "./save"
 
@@ -42,10 +44,6 @@ export async function startup() {
             if (type) loaded.set(true)
 
             if (type === "pdf") return
-            if (type === "output") {
-                startupOutput()
-                return
-            }
 
             startupProfile = msg.autoProfile
 
@@ -55,6 +53,49 @@ export async function startup() {
     )
 
     window.api.send(STARTUP, { channel: "READY" })
+}
+
+let appEffectsInitialized = false
+
+/// Timers y listeners globales de la ventana principal (F9.1).
+/// Antes vivían como sentencias reactivas en `App.svelte`; acá se suscriben
+/// a los stores una sola vez (idempotente, igual que `startup`).
+export function startupAppEffects() {
+    if (appEffectsInitialized) return
+    appEffectsInitialized = true
+
+    // reloj de cuenta regresiva de los timers activos
+    activeTimers.subscribe((a) => {
+        if (a.length) startTimer()
+    })
+    timers.subscribe((t) => {
+        if (Object.keys(t).length) checkTimers()
+    })
+
+    // chequeo de eventos de acción agendados
+    events.subscribe((e) => {
+        if (Object.keys(e).length) startEventTimer()
+    })
+
+    // stream a OutputShow
+    loaded.subscribe(checkRemoteStream)
+    disabledServers.subscribe(checkRemoteStream)
+    outputDisplay.subscribe(checkRemoteStream)
+
+    // cierre del ad de YouTube
+    closeAd.subscribe(closeAdNow)
+
+    // dirección e idioma del documento
+    localeDirection.subscribe((dir) => document.documentElement.setAttribute("dir", dir))
+    language.subscribe((lang) => document.documentElement.setAttribute("lang", lang))
+}
+
+function checkRemoteStream() {
+    if ((get(loaded) && get(disabledServers).output_stream !== "") || !get(outputDisplay)) setTimeout(toggleRemoteStream, 1000)
+}
+
+function closeAdNow(close: boolean) {
+    if (close) setTimeout(() => closeAd.set(false), 10)
 }
 
 async function startupMain() {
@@ -71,6 +112,8 @@ async function startupMain() {
     else autoOpenLastUsedProfile()
 
     storeSubscriber()
+    // F10.2: el bridge mantiene los punteros de outputs sincronizados con el look activo
+    startLookBridge()
     remoteListen()
 
     const hasProfiles = Object.keys(get(profiles)).filter((a) => a !== "admin").length > 0
@@ -136,7 +179,7 @@ function autoBackup() {
 }
 
 const lastProviderSyncs: Partial<Record<ContentProviderId, number>> = {}
-export async function contentProviderSync(startup = false, remainingOnly = false) {
+export function contentProviderSync(startup = false, remainingOnly = false) {
     const isCloudSyncEnabled = get(cloudSyncData).enabled && get(cloudSyncData).id
 
     if (isCloudSyncEnabled && !remainingOnly) {
@@ -144,14 +187,7 @@ export async function contentProviderSync(startup = false, remainingOnly = false
         return
     }
 
-    // on startup, wait until data is loaded
-    if (!Object.keys(get(shows)).length) {
-        await waitUntilValueIsDefined(() => get(loadedState).includes("synced_settings"), 200, 8000) // same await in getStoredData
-        await waitUntilValueIsDefined(() => Object.keys(get(shows)).length, 50, 2000)
-    }
-
     const providers = [
-        { providerId: "planningcenter" as ContentProviderId, scope: "services", data: get(contentProviderData).planningcenter?.syncFolderIds || [], autoSync: get(contentProviderData).planningcenter?.autoSync !== false },
         { providerId: "churchApps" as ContentProviderId, scope: "plans", data: { shows: get(shows), categories: get(contentProviderData).churchApps?.syncCategories || [] } },
         { providerId: "amazinglife" as ContentProviderId, scope: "openid profile email" },
         { providerId: "onstage" as ContentProviderId, scope: "presenter", data: get(contentProviderData).onstage || {}, autoSync: get(contentProviderData).onstage?.autoSync !== false }
@@ -216,14 +252,4 @@ async function getStoredData() {
     sendMain(Main.SHOWS)
 
     getDefaultElements()
-}
-
-async function startupOutput() {
-    setLanguage() // this is only needed for the context menu (and stage display)
-    receive(OUTPUT, receiveOUTPUTasOUTPUT)
-
-    // wait a bit on slow computers
-    await wait(200)
-
-    send(OUTPUT, ["REQUEST_DATA_MAIN"])
 }

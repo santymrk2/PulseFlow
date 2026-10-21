@@ -6,9 +6,9 @@
     import { formatBytes } from "../../helpers/bytes"
     import { getExtension, getFileName, getMediaInfo, removeExtension } from "../../helpers/media"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import Center from "../../system/Center.svelte"
     import Clock from "../../system/Clock.svelte"
     import Date from "../../system/Date.svelte"
@@ -79,22 +79,22 @@
     <div class="scroll">
         {#if optionsOpen}
             <main style="overflow-x: hidden;padding: 10px;">
-                <MaterialToggleSwitch label="settings.clear_media_when_finished" checked={$special.clearMediaOnFinish ?? true} defaultValue={true} on:change={(e) => updateSpecial(e.detail, "clearMediaOnFinish", true)} />
-                <MaterialToggleSwitch label="settings.auto_locate_missing_media_files" checked={$special.autoLocateMedia ?? true} defaultValue={true} on:change={(e) => updateSpecial(e.detail, "autoLocateMedia", true)} />
+                <ToggleField label="settings.clear_media_when_finished" checked={$special.clearMediaOnFinish ?? true} defaultValue={true} on:change={(e) => updateSpecial(e.detail, "clearMediaOnFinish", true)} />
+                <ToggleField label="settings.auto_locate_missing_media_files" checked={$special.autoLocateMedia ?? true} defaultValue={true} on:change={(e) => updateSpecial(e.detail, "autoLocateMedia", true)} />
 
                 <!-- BUNDLE MEDIA FILES MANUALLY OR AUTOMATICALLY -->
                 {#if !$cloudSyncData.enabled && !$special.cloudSyncMediaFolder}
                     <InputRow>
-                        <MaterialButton title="media.bundle_media_files_tip" style="width: 100%;margin-top: 10px;" icon="image" on:click={bundleMediaFiles}>
+                        <Button title="media.bundle_media_files_tip" style="width: 100%;margin-top: 10px;" icon="image" on:click={bundleMediaFiles}>
                             <T id="media.bundle_media_files" />
-                        </MaterialButton>
+                        </Button>
                     </InputRow>
                 {/if}
 
                 <InputRow>
-                    <MaterialButton icon="launch" style="width: 100%;margin-top: 10px;" on:click={() => sendMain(Main.OPEN_CACHE)} white>
+                    <Button icon="launch" style="width: 100%;margin-top: 10px;" on:click={() => sendMain(Main.OPEN_CACHE)} white>
                         <T id="actions.open_cache_folder" />
-                    </MaterialButton>
+                    </Button>
                 </InputRow>
             </main>
         {:else if $activeShow?.type === "video" || $activeShow?.type === "image"}

@@ -6,8 +6,8 @@
     import { getAccess } from "../../utils/profile"
     import Icon from "../helpers/Icon.svelte"
     import { getLayoutRef } from "../helpers/show"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Splash from "../main/Splash.svelte"
     import Tabs from "../main/Tabs.svelte"
     import TextEditor from "../show/TextEditor.svelte"
@@ -81,11 +81,10 @@
         {:else if $activeEdit.type === "effect"}
             <EffectEditor />
 
-            <FloatingInputs gradient style="width: 50px;height: 50px;border: none;">
-                <MaterialButton
+            <FloatingBar>
+                <Button
                     class="addButton"
                     title="edit.add_items"
-                    style="width: 50px;height: 50px;"
                     on:click={() => {
                         activePopup.set("effect_items")
                         // const currentEffect = $effects[$activeEdit.id || ""] || {}
@@ -93,9 +92,9 @@
                         // if (!openedMenus[nextIndex]) openedMenus[nextIndex] = true
                     }}
                 >
-                    <Icon id="add" size={1.5} white />
-                </MaterialButton>
-            </FloatingInputs>
+                    <Icon id="add" size={1} white />
+                </Button>
+            </FloatingBar>
         {:else if $activeEdit.type === "media"}
             <MediaEditor />
         {:else if $activeEdit.type === "camera"}
@@ -109,7 +108,7 @@
                 <div class="darken">
                     <p style="text-align: center;font-size: 1.5em;display: block;background-color: black;padding: 10px;border-radius: 4px;">
                         Currently in use on another computer!<br />
-                        <MaterialButton variant="outlined" icon="check" on:click={() => (hideCloudConflict = true)} />
+                        <Button variant="outline" icon="check" on:click={() => (hideCloudConflict = true)} />
                     </p>
                 </div>
             {/if}

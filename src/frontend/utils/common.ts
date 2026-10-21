@@ -18,8 +18,9 @@ export const MENU_BAR_HEIGHT = 25 // main (ManuBar.svelte) - Windows
 export function isMainWindow() {
     return get(currentWindow) === null
 }
+/** @deprecated The output is always the native Rust engine (no webview output window), so this is always false. */
 export function isOutputWindow() {
-    return get(currentWindow) === "output"
+    return false
 }
 
 // create toast popup

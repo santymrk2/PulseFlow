@@ -3,11 +3,11 @@
     import { AudioPlayer } from "../../../audio/audioPlayer"
     import { dbToGain, gainToDb, MIN_DB } from "../../../audio/dBUtils"
     import { audioChannelsData, audioRouting, popupData, special } from "../../../stores"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     const popupInfo = $popupData
     const nodeId = popupInfo?.nodeId
@@ -77,23 +77,23 @@
 </script>
 
 {#if nodeId === "icecast"}
-    <MaterialToggleSwitch label="settings.enabled" checked={$special.icecast?.enabled ?? true} on:change={(e) => updateIcecast("enabled", e.detail)} />
+    <ToggleField label="settings.enabled" checked={$special.icecast?.enabled ?? true} on:change={(e) => updateIcecast("enabled", e.detail)} />
     <InputRow>
-        <MaterialTextInput label="IP" value={$special.icecast?.host || "localhost"} on:change={(e) => updateIcecast("host", e.detail)} />
-        <MaterialNumberInput label="settings.port" value={$special.icecast?.port ?? 8000} max={65535} min={1} step={1} on:change={(e) => updateIcecast("port", e.detail)} />
+        <TextField label="IP" value={$special.icecast?.host || "localhost"} on:change={(e) => updateIcecast("host", e.detail)} />
+        <NumberField label="settings.port" value={$special.icecast?.port ?? 8000} max={65535} min={1} step={1} on:change={(e) => updateIcecast("port", e.detail)} />
     </InputRow>
-    <MaterialTextInput label="Mountpoint" value={$special.icecast?.mount || "/stream.opus"} on:change={(e) => updateIcecast("mount", e.detail)} />
-    <MaterialTextInput label="remote.password" type="password" value={$special.icecast?.password ?? "hackme"} defaultValue="hackme" on:change={(e) => updateIcecast("password", e.detail)} />
+    <TextField label="Mountpoint" value={$special.icecast?.mount || "/stream.opus"} on:change={(e) => updateIcecast("mount", e.detail)} />
+    <TextField label="remote.password" type="password" value={$special.icecast?.password ?? "hackme"} defaultValue="hackme" on:change={(e) => updateIcecast("password", e.detail)} />
 {:else if isChannelNode}
     <!-- this is the same options we find in the audio drawer -->
     <InputRow>
-        <MaterialNumberInput label="media.volume (dB)" value={Number(dbValue.toFixed(1))} min={MIN_DB} max={6} step={0.5} defaultValue={0} on:change={(e) => updateChannelData("volume", dbToGain(e.detail))} showSlider />
-        <MaterialButton variant="outlined" icon={muted ? "muted" : "volume"} title="actions.{muted ? 'unmute' : 'mute'}" on:click={() => updateChannelData("isMuted", !muted)} red={muted} />
+        <NumberField label="media.volume (dB)" value={Number(dbValue.toFixed(1))} min={MIN_DB} max={6} step={0.5} defaultValue={0} on:change={(e) => updateChannelData("volume", dbToGain(e.detail))} showSlider />
+        <Button variant="outline" icon={muted ? "muted" : "volume"} title="actions.{muted ? 'unmute' : 'mute'}" on:click={() => updateChannelData("isMuted", !muted)} red={muted} />
     </InputRow>
 
-    <MaterialNumberInput label="audio.volume_fade_duration (ms)" value={fadeDuration} min={0} max={5000} step={50} defaultValue={250} on:change={(e) => updateChannelData("fadeDuration", e.detail)} showSlider />
+    <NumberField label="audio.volume_fade_duration (ms)" value={fadeDuration} min={0} max={5000} step={50} defaultValue={250} on:change={(e) => updateChannelData("fadeDuration", e.detail)} showSlider />
 
-    <MaterialNumberInput label="audio.delay (ms)" value={delayMs} min={0} max={5000} step={10} defaultValue={0} on:change={(e) => updateChannelData("delay", e.detail)} showSlider />
+    <NumberField label="audio.delay (ms)" value={delayMs} min={0} max={5000} step={10} defaultValue={0} on:change={(e) => updateChannelData("delay", e.detail)} showSlider />
 {:else if isMicNode}
-    <MaterialNumberInput label="audio.channels" value={micChannels} min={1} max={32} step={1} defaultValue={2} on:change={(e) => updateMicChannels(e.detail)} />
+    <NumberField label="audio.channels" value={micChannels} min={1} max={32} step={1} defaultValue={2} on:change={(e) => updateMicChannels(e.detail)} />
 {/if}

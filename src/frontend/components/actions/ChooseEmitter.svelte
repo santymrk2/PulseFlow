@@ -6,11 +6,11 @@
     import { getDynamicValue } from "../edit/scripts/itemHelpers"
     import { clone, keysToID, sortByName } from "../helpers/array"
     import T from "../helpers/T.svelte"
-    import DynamicList from "../input/DynamicList.svelte"
-    import InputRow from "../input/InputRow.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
-    import MaterialTextInput from "../inputs/MaterialTextInput.svelte"
+    import DynamicList from "../../lib/components/ui/dynamic-list/dynamic-list.svelte"
+    import InputRow from "../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
+    import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import type { API_emitter } from "./api"
     import { formatData } from "./emitters"
     import MidiValues from "./MidiValues.svelte"
@@ -98,7 +98,7 @@
 </script>
 
 <InputRow>
-    <MaterialDropdown
+    <SelectField
         label="emitters.emitter {emitter?.type ? `<span style='color: var(--text);opacity: 0.5;font-weight: normal;font-size: 0.8em;margin-left: 10px;'>${emitter.type.toUpperCase()}</span>` : ''}"
         options={emittersList}
         value={value.emitter}
@@ -126,7 +126,7 @@
         addNew="timer.create"
     />
     {#if value.emitter}
-        <MaterialButton title="titlebar.edit" icon="edit" on:click={editEmitter} />
+        <Button title="titlebar.edit" icon="edit" on:click={editEmitter} />
     {/if}
 </InputRow>
 
@@ -138,7 +138,7 @@
         </InputRow>
     {/if}
 
-    <MaterialDropdown label="emitters.message_template" options={templatesList} value={activeTemplate || "custom"} on:change={(e) => updateValue("template", e.detail)} />
+    <SelectField label="emitters.message_template" options={templatesList} value={activeTemplate || "custom"} on:change={(e) => updateValue("template", e.detail)} />
 
     {#if templateInputs.length}
         {#if emitter?.templates?.[activeTemplate]?.description}
@@ -152,7 +152,7 @@
             {#each templateInputs as input, i}
                 {@const stringValue = typeof (value.templateValues?.[i] || input).value === "string" ? (value.templateValues?.[i] || input).value : ""}
 
-                <MaterialTextInput label={input.name} disabled={!!input.value} placeholder={translateText("variables.value")} value={stringValue} on:change={(e) => setTemplateValue(i, e)} />
+                <TextField label={input.name} disabled={!!input.value} placeholder={translateText("variables.value")} value={stringValue} on:change={(e) => setTemplateValue(i, e)} />
             {/each}
         {/if}
     {:else if emitter?.type === "midi"}
@@ -160,15 +160,15 @@
     {:else}
         <DynamicList addDisabled={!!customTemplateInputs?.find((a) => !a.name && !a.value)} items={customTemplateInputs} let:item={input} on:add={createTemplateValue} on:delete={(e) => removeTemplateValue(e.detail)} allowOpen={false} nothingText={false}>
             <div style="display: flex;width: 100%;">
-                <MaterialTextInput label="inputs.name" value={input.name} on:change={(e) => setTemplateValue(input.id, e, "name")} style="width: 50%;" />
-                <MaterialTextInput label="variables.value" value={input.value} on:change={(e) => setTemplateValue(input.id, e, "value")} style="width: 50%;" />
+                <TextField label="inputs.name" value={input.name} on:change={(e) => setTemplateValue(input.id, e, "name")} style="width: 50%;" />
+                <TextField label="variables.value" value={input.value} on:change={(e) => setTemplateValue(input.id, e, "value")} style="width: 50%;" />
             </div>
         </DynamicList>
     {/if}
 
     <!-- extra DATA -->
     {#if emitter?.type === "osc"}
-        <MaterialTextInput label="emitters.data" value={value.data || ""} on:change={(e) => updateValue("data", e)} />
+        <TextField label="emitters.data" value={value.data || ""} on:change={(e) => updateValue("data", e)} />
     {/if}
 
     <InputRow style="background-color: var(--primary-darker);display: flex;align-items: center;justify-content: space-between;padding: 10px;">

@@ -1,10 +1,10 @@
 <script lang="ts">
-    import { activeEdit, outputs, scenes, styles } from "../../../stores"
+    import { activeEdit, outputs, scenes, styles, previewOutputId } from "../../../stores"
     import ScenePreview from "../../drawer/pages/ScenePreview.svelte"
     import { getResolution } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialZoom from "../../inputs/MaterialZoom.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
     import { getStyleResolution } from "../../slide/getStyleResolution"
     import Zoomed from "../../slide/Zoomed.svelte"
     import Center from "../../system/Center.svelte"
@@ -17,7 +17,7 @@
 
     let width = 0
     let height = 0
-    $: resolution = getResolution(null, { $outputs, $styles }, false, "", sceneStyleId)
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId }, false, "", sceneStyleId)
 
     let scrollElem: HTMLDivElement | undefined
     let zoom = 1
@@ -48,9 +48,9 @@
         {/if}
     </div>
 
-    <FloatingInputs side="left">
-        <MaterialZoom columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
-    </FloatingInputs>
+    <FloatingBar side="left">
+        <ZoomControl columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
+    </FloatingBar>
 </div>
 
 <style>

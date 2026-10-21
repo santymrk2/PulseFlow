@@ -350,6 +350,7 @@
         "first_last": "Prima e ultima diapositiva"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Predefinito",
         "dark": "Scuro",
         "light": "Chiaro",
@@ -513,7 +514,7 @@
         "effect_items": "Elementi effetto",
         "timeline": "Timeline",
         "timecode": "Timecode",
-        "initialize": "Benvenuto su FreeShow",
+        "initialize": "Benvenuto su PulseFlow",
         "unsaved": "Sei sicuro di voler uscire?",
         "cancel": "Cancella",
         "continue": "Continua",

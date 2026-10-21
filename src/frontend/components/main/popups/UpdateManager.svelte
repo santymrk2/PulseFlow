@@ -6,9 +6,9 @@
     import { getUpdateData } from "../../../utils/checkForUpdates"
     import Loader from "../Loader.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
     registerPopupSubmit(downloadLatest)
@@ -54,8 +54,7 @@
     function downloadLatest() {
         if (!hasUpdate || !latestVersion) return
 
-        const isBeta = latestVersion.includes("-beta")
-        sendMain(Main.URL, isBeta ? "https://github.com/ChurchApps/FreeShow/releases" : "https://freeshow.app/?download")
+        sendMain(Main.URL, "https://github.com/santymrk2/PulseFlow/releases")
     }
 
     onMount(checkUpdates)
@@ -66,13 +65,13 @@
 
 <div class="settings">
     <InputRow arrow={$alertUpdates}>
-        <MaterialToggleSwitch style="flex: 1;" label="settings.alert_updates" checked={$alertUpdates} defaultValue={true} on:change={(e) => alertUpdates.set(e.detail)} />
+        <ToggleField style="flex: 1;" label="settings.alert_updates" checked={$alertUpdates} defaultValue={true} on:change={(e) => alertUpdates.set(e.detail)} />
         <div slot="menu">
-            <MaterialToggleSwitch label="settings.alert_updates_beta" disabled={isBeta} checked={isBeta ? $alertUpdates : $special.betaVersionAlert} defaultValue={false} on:change={(e) => updateSpecial(e.detail, "betaVersionAlert")} />
+            <ToggleField label="settings.alert_updates_beta" disabled={isBeta} checked={isBeta ? $alertUpdates : $special.betaVersionAlert} defaultValue={false} on:change={(e) => updateSpecial(e.detail, "betaVersionAlert")} />
         </div>
     </InputRow>
 
-    <MaterialToggleSwitch label="settings.auto_updates" checked={$special.autoUpdates} on:change={(e) => updateSpecial(e.detail, "autoUpdates")} />
+    <ToggleField label="settings.auto_updates" checked={$special.autoUpdates} on:change={(e) => updateSpecial(e.detail, "autoUpdates")} />
 </div>
 
 {#if !loading && !versionsMatch && latestVersion}
@@ -84,9 +83,9 @@
 {/if}
 
 {#if hasUpdate}
-    <MaterialButton variant="contained" style="margin-top: 10px;" icon="download" on:click={downloadLatest}>
+    <Button variant="default" style="margin-top: 10px;" icon="download" on:click={downloadLatest}>
         <T id="about.download_latest" />
-    </MaterialButton>
+    </Button>
 {:else if !loading && !hasError}
     <div class="versions">
         <span class="label" style="color: var(--secondary);font-weight: bold;">✓</span>

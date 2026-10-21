@@ -1,8 +1,6 @@
 import { onDestroy, type ComponentType } from "svelte"
 import { get } from "svelte/store"
 import type { Popups } from "../../types/Main"
-import AiChat from "../ai/components/floating/AiChat.svelte"
-import AiModelManager from "../ai/components/popups/AiModelManager.svelte"
 import About from "../components/main/popups/About.svelte"
 import Action from "../components/main/popups/Action.svelte"
 import ActionHistory from "../components/main/popups/ActionHistory.svelte"
@@ -13,11 +11,11 @@ import AudioEffect from "../components/main/popups/AudioEffect.svelte"
 import AudioStream from "../components/main/popups/AudioStream.svelte"
 import CategoryAction from "../components/main/popups/CategoryAction.svelte"
 import ChangeIcon from "../components/main/popups/ChangeIcon.svelte"
-import ChangeOutputValues from "../components/main/popups/ChangeOutputValues.svelte"
+
 import ChooseChord from "../components/main/popups/ChooseChord.svelte"
 import ChooseMediaInput from "../components/main/popups/ChooseMediaInput.svelte"
 import ChooseOutput from "../components/main/popups/ChooseOutput.svelte"
-import ChooseScreen from "../components/main/popups/ChooseScreen.svelte"
+
 import ChooseStyle from "../components/main/popups/ChooseStyle.svelte"
 import ChurchAppsSyncCategories from "../components/main/popups/ChurchAppsSyncCategories.svelte"
 import CleaningUtility from "../components/main/popups/CleaningUtility.svelte"
@@ -37,7 +35,6 @@ import CustomText from "../components/main/popups/CustomText.svelte"
 import DeleteDuplicatedShows from "../components/main/popups/DeleteDuplicatedShows.svelte"
 import DeleteShow from "../components/main/popups/DeleteShow.svelte"
 import DisplayDuration from "../components/main/popups/DisplayDuration.svelte"
-import DrawerSearchOptions from "../components/main/popups/DrawerSearchOptions.svelte"
 import DynamicValues from "../components/main/popups/DynamicValues.svelte"
 import EditChart from "../components/main/popups/EditChart.svelte"
 import EditEvent from "../components/main/popups/EditEvent.svelte"
@@ -59,6 +56,9 @@ import ManageGroups from "../components/main/popups/ManageGroups.svelte"
 import ManageIcons from "../components/main/popups/ManageIcons.svelte"
 import ManageMetadata from "../components/main/popups/ManageMetadata.svelte"
 import ManageTags from "../components/main/popups/ManageTags.svelte"
+import Loader from "../components/main/Loader.svelte"
+import LooksWindow from "../components/looks/LooksWindow.svelte"
+import KitDemo from "../components/main/popups/KitDemo.svelte"
 import MaxLines from "../components/main/popups/MaxLines.svelte"
 import MediaFit from "../components/main/popups/MediaFit.svelte"
 import MetadataDisplay from "../components/main/popups/MetadataDisplay.svelte"
@@ -68,11 +68,11 @@ import NodeOptions from "../components/main/popups/NodeOptions.svelte"
 import NowPlaying from "../components/main/popups/NowPlaying.svelte"
 import OutputSelector from "../components/main/popups/OutputSelector.svelte"
 import OutputSetup from "../components/main/popups/OutputSetup.svelte"
-import PcoServicePicker from "../components/main/popups/PcoServicePicker.svelte"
 import RegexManager from "../components/main/popups/RegexManager.svelte"
 import Rename from "../components/main/popups/Rename.svelte"
 import ResetAll from "../components/main/popups/ResetAll.svelte"
 import Restore from "../components/main/popups/Restore.svelte"
+import SelectLook from "../components/main/popups/SelectLook.svelte"
 import SelectOverlay from "../components/main/popups/SelectOverlay.svelte"
 import SelectShow from "../components/main/popups/SelectShow.svelte"
 import SelectStageLayout from "../components/main/popups/SelectStageLayout.svelte"
@@ -82,7 +82,6 @@ import SetTime from "../components/main/popups/SetTime.svelte"
 import Shortcuts from "../components/main/popups/Shortcuts.svelte"
 import SlideMidi from "../components/main/popups/SlideMidi.svelte"
 import SlideShortcut from "../components/main/popups/SlideShortcut.svelte"
-import SyncFolders from "../components/main/popups/SyncFolders.svelte"
 import TemplateInfo from "../components/main/popups/TemplateInfo.svelte"
 import TemplateStyleOverrides from "../components/main/popups/TemplateStyleOverrides.svelte"
 import Timecode from "../components/main/popups/Timecode.svelte"
@@ -92,6 +91,9 @@ import Transition from "../components/main/popups/Transition.svelte"
 import Unsaved from "../components/main/popups/Unsaved.svelte"
 import UpdateManager from "../components/main/popups/UpdateManager.svelte"
 import Variable from "../components/main/popups/Variable.svelte"
+import ScreenConfig from "../components/screens/ScreenConfig.svelte"
+import AddShowsModal from "../components/show/left/AddShowsModal.svelte"
+import PlaylistOptionsModal from "../components/show/left/PlaylistOptionsModal.svelte"
 import { activePopup, popupData } from "../stores"
 
 export const popups: { [key in Popups]: ComponentType } = {
@@ -106,6 +108,7 @@ export const popups: { [key in Popups]: ComponentType } = {
     select_template: SelectTemplate,
     select_overlay: SelectOverlay,
     select_style: SelectStyle,
+    select_look: SelectLook,
     select_stage_layout: SelectStageLayout,
     delete_duplicated_shows: DeleteDuplicatedShows,
     icon: ChangeIcon,
@@ -141,11 +144,11 @@ export const popups: { [key in Popups]: ComponentType } = {
     create_collection: CreateCollection,
     edit_event: EditEvent,
     edit_chart: EditChart,
-    choose_screen: ChooseScreen,
+
     choose_output_input: ChooseOutput,
     choose_output_type: OutputSetup,
     choose_style: ChooseStyle,
-    change_output_values: ChangeOutputValues,
+
     output_selector: OutputSelector,
     set_time: SetTime,
     assign_shortcut: SlideShortcut,
@@ -178,14 +181,14 @@ export const popups: { [key in Popups]: ComponentType } = {
     effect_items: EffectItems,
     timeline: TimelineSettings,
     timecode: Timecode,
-    drawer_search_options: DrawerSearchOptions,
     template_info: TemplateInfo,
     cleaning_utility: CleaningUtility,
-    pco_picker: PcoServicePicker,
-    sync_folders: SyncFolders,
     node_options: NodeOptions,
-    ai_model_manager: AiModelManager,
-    ai_chat: AiChat
+    looks: LooksWindow,
+    screen_config: ScreenConfig,
+    add_shows: AddShowsModal,
+    playlist_options: PlaylistOptionsModal,
+    kit_demo: KitDemo
 }
 
 export function waitForPopupData(popupId: Popups): Promise<any> {

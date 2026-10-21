@@ -5,10 +5,10 @@
     import { destroyMain, receiveToMain, requestMain } from "../../IPC/main"
     import { popupData } from "../../stores"
     import T from "../helpers/T.svelte"
-    import InputRow from "../input/InputRow.svelte"
-    import MaterialDropdown from "../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../inputs/MaterialNumberInput.svelte"
-    import MaterialToggleSwitch from "../inputs/MaterialToggleSwitch.svelte"
+    import InputRow from "../../lib/components/ui/input-row/input-row.svelte"
+    import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
+    import NumberField from "../../lib/components/ui/number-field/number-field.svelte"
+    import ToggleField from "../../lib/components/ui/toggle-field/toggle-field.svelte"
     import type { API_midi } from "./api"
     import { defaultMidiActionChannels, midiToNote } from "./midi"
 
@@ -107,9 +107,9 @@
 
 {#if type !== "emitter"}
     {#if type === "input"}
-        <MaterialDropdown label="midi.input" value={midi.input || ""} options={inputs.map((a) => ({ value: a.name, label: a.name }))} on:change={(e) => setMidi("input", e.detail)} />
+        <SelectField label="midi.input" value={midi.input || ""} options={inputs.map((a) => ({ value: a.name, label: a.name }))} on:change={(e) => setMidi("input", e.detail)} />
     {:else}
-        <MaterialDropdown label="midi.output" value={midi.output || ""} options={outputs.map((a) => ({ value: a.name, label: a.name }))} on:change={(e) => setMidi("output", e.detail)} />
+        <SelectField label="midi.output" value={midi.output || ""} options={outputs.map((a) => ({ value: a.name, label: a.name }))} on:change={(e) => setMidi("output", e.detail)} />
     {/if}
 
     {#if type !== "output" && !simple}
@@ -118,22 +118,22 @@
 {/if}
 
 {#if hasActions && midi.type !== "control"}
-    <MaterialToggleSwitch label="midi.use_default_values" disabled={midi.defaultValues && !defaultMidiActionChannels[firstActionId]} checked={midi.defaultValues} on:change={toggleDefaultValues} />
+    <ToggleField label="midi.use_default_values" disabled={midi.defaultValues && !defaultMidiActionChannels[firstActionId]} checked={midi.defaultValues} on:change={toggleDefaultValues} />
 {/if}
 
 {#if !noActionOrDefaultValues}
-    <MaterialToggleSwitch label="midi.auto_values" checked={autoValues} on:change={toggleAutoValues} />
+    <ToggleField label="midi.auto_values" checked={autoValues} on:change={toggleAutoValues} />
 {/if}
 
 {#if type !== "emitter"}
-    <MaterialDropdown label="midi.type" disabled={noActionOrDefaultValues && type !== "output" && !playSlide} value={midi.type || "noteon"} options={types} on:change={(e) => setMidi("type", e.detail)} />
+    <SelectField label="midi.type" disabled={noActionOrDefaultValues && type !== "output" && !playSlide} value={midi.type || "noteon"} options={types} on:change={(e) => setMidi("type", e.detail)} />
 {/if}
 
 {#if midi.type === "control"}
-    <MaterialNumberInput label="midi.controller" value={midi.values?.controller || 0} max={127} on:change={(e) => setValues("controller", e.detail)} />
-    <MaterialNumberInput label="variables.value" value={midi.values?.value || 0} max={127} on:change={(e) => setValues("value", e.detail)} />
+    <NumberField label="midi.controller" value={midi.values?.controller || 0} max={127} on:change={(e) => setValues("controller", e.detail)} />
+    <NumberField label="variables.value" value={midi.values?.value || 0} max={127} on:change={(e) => setValues("value", e.detail)} />
 {:else}
-    <MaterialNumberInput label="midi.note <span style='color: var(--text);opacity: 0.5;font-weight: normal;font-size: 0.8em;margin-left: 10px;'>{midiToNote(midi.values?.note ?? 0)}</span>" disabled={noActionOrDefaultValues && type !== "output" && !playSlide} value={midi.values?.note || 0} max={127} on:change={(e) => setValues("note", e.detail)} />
+    <NumberField label="midi.note <span style='color: var(--text);opacity: 0.5;font-weight: normal;font-size: 0.8em;margin-left: 10px;'>{midiToNote(midi.values?.note ?? 0)}</span>" disabled={noActionOrDefaultValues && type !== "output" && !playSlide} value={midi.values?.note || 0} max={127} on:change={(e) => setValues("note", e.detail)} />
 
     {#if (!noActionOrDefaultValues && firstActionId?.includes("index_")) || type === "output" || type === "emitter" || playSlide}
         {#if type === "input"}
@@ -146,7 +146,7 @@
                 </p>
             </InputRow>
         {/if}
-        <MaterialNumberInput label="midi.velocity" value={midi.values?.velocity ?? (type === "input" ? -1 : 0)} min={type === "input" ? -1 : 0} max={127} on:change={(e) => setValues("velocity", e.detail)} />
+        <NumberField label="midi.velocity" value={midi.values?.velocity ?? (type === "input" ? -1 : 0)} min={type === "input" ? -1 : 0} max={127} on:change={(e) => setValues("velocity", e.detail)} />
     {/if}
 {/if}
-<MaterialNumberInput label="midi.channel" disabled={noActionOrDefaultValues && type !== "output" && !playSlide} value={midi.values?.channel ?? 1} min={1} max={16} on:change={(e) => setValues("channel", e.detail)} />
+<NumberField label="midi.channel" disabled={noActionOrDefaultValues && type !== "output" && !playSlide} value={midi.values?.channel ?? 1} min={1} max={16} on:change={(e) => setValues("channel", e.detail)} />

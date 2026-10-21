@@ -3,7 +3,7 @@
     import { activeEdit, activePopup, editMode, groups, showsCache, slideNotesActive, special, templates } from "../../stores"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import { _show } from "../helpers/shows"
     import { getLayoutRef } from "../helpers/show"
 
@@ -43,21 +43,21 @@
     {#if $editMode === "default"}
         <div class="right">
             {#if templateId}
-                <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;" title="formats.template: <b>{$templates[templateId]?.name || 'info.template'}</b>" on:click={() => activePopup.set("template_info")}>
+                <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;" title="formats.template: <b>{$templates[templateId]?.name || 'info.template'}</b>" on:click={() => activePopup.set("template_info")}>
                     <Icon size={0.8} id="templates" white />
-                </MaterialButton>
+                </Button>
             {/if}
 
             {#if !hideOptions}
-                <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;border-bottom-right-radius: 10px;{showDropdown ? '' : 'opacity: 0.8;'}" title="create_show.more_options" icon="more" on:click={() => (showDropdown = !showDropdown)} white={!showDropdown}>
+                <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;border-bottom-right-radius: 10px;{showDropdown ? '' : 'opacity: 0.8;'}" title="create_show.more_options" icon="more" on:click={() => (showDropdown = !showDropdown)} white={!showDropdown}>
                     <!-- prevent force "white" -->
                     <span style="display: none;"></span>
-                </MaterialButton>
+                </Button>
             {/if}
 
             {#if showDropdown && currentShow}
                 <div class="showDropdown" transition:fade={{ duration: 100 }} role="none" on:click={() => (showDropdown = false)}>
-                    <MaterialButton title="tooltip.notes" on:click={() => slideNotesActive.set(!$slideNotesActive)}>
+                    <Button title="tooltip.notes" on:click={() => slideNotesActive.set(!$slideNotesActive)}>
                         <Icon id="notes" white={!$slideNotesActive} />
 
                         {#if $slideNotesActive}
@@ -65,11 +65,11 @@
                         {/if}
 
                         <p><T id="items.slide_notes" /></p>
-                    </MaterialButton>
+                    </Button>
 
                     <div class="DIVIDER"></div>
 
-                    <MaterialButton title="timeline.toggle_timeline" on:click={() => special.update((a) => ({ ...a, slideTimelineActive: !a.slideTimelineActive }))}>
+                    <Button title="timeline.toggle_timeline" on:click={() => special.update((a) => ({ ...a, slideTimelineActive: !a.slideTimelineActive }))}>
                         <Icon id="timeline" white={!$special.slideTimelineActive} />
 
                         {#if $special.slideTimelineActive}
@@ -77,12 +77,12 @@
                         {/if}
 
                         <p><T id="timeline.toggle_timeline" /></p>
-                    </MaterialButton>
+                    </Button>
 
                     <!-- <div class="DIVIDER"></div> -->
 
                     <!-- lock slide group from here? -->
-                    <!-- <MaterialButton title="context.lockForChanges" on:click={toggleSlideGroupLock}>
+                    <!-- <Button title="context.lockForChanges" on:click={toggleSlideGroupLock}>
                     <Icon id="lock" white={!slide.locked} />
 
                     {#if slide.locked}
@@ -90,7 +90,7 @@
                     {/if}
 
                     <p><T id="context.lockForChanges" /></p>
-                </MaterialButton> -->
+                </Button> -->
                 </div>
             {/if}
         </div>
@@ -124,7 +124,6 @@
     }
     .header.shadow {
         background-color: rgb(0 0 10 / 0.12);
-        box-shadow: 0 2px 4px rgb(0 0 10 / 0.3);
     }
 
     .header .right {
@@ -163,7 +162,7 @@
         border: 1px solid var(--primary-lighter);
 
         z-index: 1;
-        box-shadow: 0 2px 5px rgb(0 0 0 / 0.3);
+        box-shadow: var(--shadow-float);
     }
 
     .showDropdown :global(button) {

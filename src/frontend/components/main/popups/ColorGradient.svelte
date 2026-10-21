@@ -4,12 +4,12 @@
     import { splitGradientValue } from "../../helpers/color"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialRadialPicker from "../../inputs/MaterialRadialPicker.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import RadialField from "../../../lib/components/ui/radial-field/radial-field.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
     registerPopupSubmit(change)
@@ -64,12 +64,12 @@
 <div class="preview" style="background: {newValue};"></div>
 
 <InputRow>
-    <MaterialDropdown label="sort.type" value={activeType} options={types} on:change={(e) => (activeType = e.detail)} />
+    <SelectField label="sort.type" value={activeType} options={types} on:change={(e) => (activeType = e.detail)} />
 
     {#if activeType === "radial-gradient"}
-        <MaterialDropdown label="color.shape" value={activeShape} options={shapes} on:change={(e) => (activeShape = e.detail)} />
+        <SelectField label="color.shape" value={activeShape} options={shapes} on:change={(e) => (activeShape = e.detail)} />
     {:else}
-        <MaterialRadialPicker label="color.angle" value={parsedValue.deg} on:change={(e) => (parsedValue.deg = e.detail)} />
+        <RadialField label="color.angle" value={parsedValue.deg} on:change={(e) => (parsedValue.deg = e.detail)} />
     {/if}
 </InputRow>
 
@@ -80,21 +80,21 @@
         {@const nextPos = parsedValue.colors[i + 1]?.pos || 100}
 
         <InputRow>
-            <MaterialColorInput style="min-width: 50%;" label="edit.color" value={colorPart.color} on:input={(e) => (colorPart.color = e.detail)} allowOpacity />
-            <MaterialNumberInput label="settings.position" value={pos} min={prevPos} max={nextPos} on:change={(e) => (colorPart.pos = e.detail)} currentProgress={pos} showSlider />
+            <ColorField style="min-width: 50%;" label="edit.color" value={colorPart.color} on:input={(e) => (colorPart.color = e.detail)} allowOpacity />
+            <NumberField label="settings.position" value={pos} min={prevPos} max={nextPos} on:change={(e) => (colorPart.pos = e.detail)} currentProgress={pos} showSlider />
             {#if i > 0}
-                <MaterialButton icon="up" on:click={() => moveUp(i)} />
+                <Button icon="up" on:click={() => moveUp(i)} />
             {/if}
             {#if parsedValue.colors.length > 2}
-                <MaterialButton title={translateText("actions.delete")} on:click={() => deleteColor(i)}>
+                <Button title={translateText("actions.delete")} on:click={() => deleteColor(i)}>
                     <Icon id="delete" white />
-                </MaterialButton>
+                </Button>
             {/if}
         </InputRow>
     {/each}
 
-    <MaterialButton
-        variant="outlined"
+    <Button
+        variant="outline"
         icon="add"
         style="width: 100%;"
         on:click={() => {
@@ -104,12 +104,12 @@
         white
     >
         <T id="settings.add" />
-    </MaterialButton>
+    </Button>
 </div>
 
-<MaterialButton variant="contained" icon="save" on:click={change} style="width: 100%;margin-top: 20px;">
+<Button variant="default" icon="save" on:click={change} style="width: 100%;margin-top: 20px;">
     <T id="actions.save" />
-</MaterialButton>
+</Button>
 
 <style>
     .preview {

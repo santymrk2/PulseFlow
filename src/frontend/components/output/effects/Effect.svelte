@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte"
     import type { Effect } from "../../../../types/Effects"
-    import { currentWindow, effects, hoveredEffectItem } from "../../../stores"
+    import { effects, hoveredEffectItem } from "../../../stores"
     import { clone, getChangedKeys } from "../../helpers/array"
     import { EffectRender } from "./effectRenderer"
 

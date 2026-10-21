@@ -381,6 +381,7 @@
         "first_last": "Első és utolsó dián"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Alapértelmezett",
         "dark": "Sötét",
         "light": "Világos",
@@ -556,7 +557,7 @@
         "drawer_search_options": "Keresési beállítások",
         "template_info": "Sabloninformációk",
         "cleaning_utility": "Tisztítóprogram",
-        "initialize": "Üdvözöljük a FreeShow-ban",
+        "initialize": "Üdvözöljük a PulseFlow-ban",
         "unsaved": "Biztosan ki szeretne léptni?",
         "cancel": "Mégsem",
         "continue": "Folytatás",

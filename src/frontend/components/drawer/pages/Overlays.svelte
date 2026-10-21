@@ -2,17 +2,17 @@
     import { onDestroy } from "svelte"
     import type { Overlay } from "../../../../types/Show"
     import { addProjectItem } from "../../../converters/project"
-    import { activeEdit, activePage, activeShow, labelsDisabled, mediaOptions, outLocked, outputs, overlayCategories, overlays, styles, timelineRecordingAction } from "../../../stores"
+    import { activeEdit, activePage, activeShow, labelsDisabled, mediaOptions, outputs, overlayCategories, overlays, styles, previewOutputId } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { getAccess } from "../../../utils/profile"
-    import { runAction } from "../../actions/actions"
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import Icon from "../../helpers/Icon.svelte"
-    import { findMatchingOut, getResolution, setOutput } from "../../helpers/output"
+    import { findMatchingOut, getResolution } from "../../helpers/output"
+    import { toggleOverlayOutput } from "../../helpers/overlayOutput"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
     import Center from "../../system/Center.svelte"
@@ -23,28 +23,29 @@
     import OverlayActions from "./OverlayActions.svelte"
 
     export let active: string | null
-    export let searchValue = ""
+    // Overlay editor: lista de una columna en el panel izquierdo; un clic abre el overlay para editarlo
+    export let columns: number | null = null
+    export let editOnClick = false
+    $: gridColumns = columns ?? $mediaOptions.columns
 
     const profile = getAccess("overlays")
     $: readOnly = profile.global === "read" || profile[active || ""] === "read"
 
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     let filteredOverlays: (Overlay & { id: string })[] = []
     $: filteredOverlays = sortByName(keysToID($overlays).filter((s) => (active === "all" && !$overlayCategories[s?.category || ""]?.isArchive) || active === s.category || (active === "unlabeled" && (s.category === null || !$overlayCategories[s.category]))))
 
     // search
-    $: if (filteredOverlays || searchValue !== undefined) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()]/g, "")
+    $: if (filteredOverlays) filterSearch()
     let fullFilteredOverlays: (Overlay & { id: string })[] = []
     function filterSearch() {
         fullFilteredOverlays = clone(filteredOverlays)
-        if (searchValue.length > 1) fullFilteredOverlays = fullFilteredOverlays.filter((a) => filter(a.name || "").includes(filter(searchValue)))
     }
 
     let nextScrollTimeout: NodeJS.Timeout | null = null
     function wheel(e: any) {
-        if (!e.ctrlKey && !e.metaKey) return
+        if (columns !== null || (!e.ctrlKey && !e.metaKey)) return
         if (nextScrollTimeout) return
 
         mediaOptions.set({ ...$mediaOptions, columns: Math.max(2, Math.min(10, $mediaOptions.columns + (e.deltaY < 0 ? -100 : 100) / 100)) })
@@ -65,7 +66,7 @@
         if (timeout) clearTimeout(timeout)
     })
 
-    $: if (active || searchValue !== undefined) {
+    $: if (active) {
         loaded = false
         lazyLoader = 0
     }
@@ -99,49 +100,27 @@
     }
 
     function overlayClick(e: any, id: string) {
-        if ($outLocked || e.ctrlKey || e.metaKey) return
+        if (e.ctrlKey || e.metaKey) return
         if (e.target?.closest?.(".edit") || e.target?.closest?.(".icons")) return
 
-        const isActive = findMatchingOut(id, $outputs) !== null
-
-        if (!isActive) {
-            // run actions - before starting overlay
-            if (Array.isArray($overlays[id]?.actions)) $overlays[id].actions.forEach((a) => runAction(a, { source: "overlay" }))
+        // Overlay editor: un clic abre el overlay para editarlo (no lo saca al aire)
+        if (editOnClick) {
+            activeEdit.set({ type: "overlay", id, items: [] })
+            activePage.set("edit")
+            return
         }
 
-        setOutput("overlays", id, true)
-
-        if (isActive) timelineRecordingAction.set({ id: "clear_overlay", data: { id } })
-        else timelineRecordingAction.set({ id: "id_select_overlay", data: { id } })
-    }
-
-    function keydown(e: KeyboardEvent) {
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest?.(".search")) {
-            let overlay = fullFilteredOverlays[0]
-            if (!overlay) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                overlayClick({}, overlay.id)
-                return
-            }
-
-            // add to project
-            const data = { id: overlay.id, name: overlay.name, type: "overlay" as const }
-            addProjectItem(data)
-        }
+        toggleOverlayOutput(id)
     }
 </script>
 
-<svelte:window on:keydown={keydown} />
-
 <div style="position: relative;height: 100%;overflow-y: auto;" class="context #drawer_overlays" on:wheel={wheel}>
     {#if active === "effects"}
-        <Effects {searchValue} />
+        <Effects />
     {:else}
         <DropArea id="overlays">
             {#if fullFilteredOverlays.length}
-                <div class="grid" style="--width: {100 / $mediaOptions.columns}%;">
+                <div class="grid" style="--width: {100 / gridColumns}%;">
                     {#each fullFilteredOverlays as overlay, i (overlay.id)}
                         {@const isReadOnly = readOnly || profile[overlay.category || ""] === "read"}
                         {@const isActive = findMatchingOut(overlay.id, $outputs) !== null}
@@ -168,7 +147,7 @@
                             >
                                 {#if loaded || i < lazyLoader}
                                     <!-- icons -->
-                                    <OverlayActions columns={$mediaOptions.columns} overlayId={overlay.id} />
+                                    <OverlayActions columns={gridColumns} overlayId={overlay.id} />
 
                                     <Zoomed {resolution} background={overlay.items.length ? "var(--primary);" : overlay.color || "var(--primary);"} checkered={!!overlay.items.length}>
                                         {#each overlay.items as item}
@@ -194,26 +173,26 @@
 </div>
 
 {#if overlayWithNonExistentCategory}
-    <FloatingInputs side="left" onlyOne>
-        <MaterialButton on:click={createNonExistentCategories}>
-            <Icon id="autofill" gradient />
+    <FloatingBar side="left" onlyOne>
+        <Button on:click={createNonExistentCategories}>
+            <Icon id="autofill" />
             <T id="category.create_nonexistent" />
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 {/if}
 
 {#if active === "effects"}
-    <FloatingInputs onlyOne>
-        <MaterialButton disabled={readOnly} icon="add" title="new.effect" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "effect" } })}>
+    <FloatingBar onlyOne>
+        <Button disabled={readOnly} icon="add" title="new.effect" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "effect" } })}>
             {#if !$labelsDisabled}<T id="new.effect" />{/if}
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 {:else}
-    <FloatingInputs onlyOne>
-        <MaterialButton disabled={readOnly} icon="add" title="new.overlay" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "overlay" } })}>
+    <FloatingBar onlyOne>
+        <Button disabled={readOnly} icon="add" title="new.overlay" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "overlay" } })}>
             {#if !$labelsDisabled}<T id="new.overlay" />{/if}
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 {/if}
 
 <style>
@@ -225,7 +204,7 @@
         place-content: flex-start;
 
         padding-bottom: 60px;
-        /* box-shadow: inset 0 -40px 25px -20px rgb(0 0 0 / 0.3); */
+        /* */
     }
 
     .grid :global(.selectElem) {

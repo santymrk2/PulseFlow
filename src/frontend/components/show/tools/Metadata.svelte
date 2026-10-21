@@ -4,9 +4,9 @@
     import { translateText } from "../../../utils/language"
     import { history } from "../../helpers/history"
     import { getCustomMetadata, initializeMetadata } from "../../helpers/show"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Tip from "../../main/Tip.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
 
     $: currentShow = $showsCache[$activeShow!.id]
     $: meta = currentShow.meta
@@ -88,11 +88,11 @@
             {@const autofillValue = shouldAutofill ? autofillValues[key]?.() || "" : ""}
             {@const numberStored = key === "number" && currentShow?.quickAccess?.number}
 
-            <MaterialTextInput {label} style={numberStored ? "border-bottom: 1px solid var(--secondary);" : ""} {value} autofill={autofillValue} on:change={(e) => changeValue(e.detail, key)} />
+            <TextField {label} style={numberStored ? "border-bottom: 1px solid var(--secondary);" : ""} {value} autofill={autofillValue} on:change={(e) => changeValue(e.detail, key)} />
         {/each}
 
         <!-- not visible as metadata (only in project) -->
-        <MaterialNumberInput label="transition.duration (s)" value={currentShow?.quickAccess?.duration} on:change={(e) => changeValue(e.detail, "duration")} hideWhenZero />
+        <NumberField label="transition.duration (s)" value={currentShow?.quickAccess?.duration} on:change={(e) => changeValue(e.detail, "duration")} hideWhenZero />
     </div>
 
     <Tip value="tips.display_metadata" style="margin: 0 10px;" bottom={10} />

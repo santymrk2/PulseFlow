@@ -1,14 +1,14 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import type { Scene } from "../../../../types/Show"
-    import { activeEdit, activePage, labelsDisabled, mediaOptions, outLocked, outputs, scenes, styles } from "../../../stores"
+    import { activeEdit, activePage, labelsDisabled, mediaOptions, outLocked, outputs, scenes, styles, previewOutputId } from "../../../stores"
     import { getAccess } from "../../../utils/profile"
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import { findMatchingOut, getResolution, startScene } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import DropArea from "../../system/DropArea.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
@@ -16,23 +16,19 @@
     import SceneActions from "./SceneActions.svelte"
     import ScenePreview from "./ScenePreview.svelte"
 
-    export let searchValue = ""
-
     const profile = getAccess("scenes")
     $: readOnly = profile.global === "read"
 
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     let filteredScenes: (Scene & { id: string })[] = []
     $: filteredScenes = sortByName(keysToID($scenes)).filter((s) => profile[s.id] !== "none")
 
     // search
-    $: if (filteredScenes || searchValue !== undefined) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()]/g, "")
+    $: if (filteredScenes) filterSearch()
     let fullFilteredScenes: (Scene & { id: string })[] = []
     function filterSearch() {
         fullFilteredScenes = clone(filteredScenes)
-        if (searchValue.length > 1) fullFilteredScenes = fullFilteredScenes.filter((a) => filter(a.name || "").includes(filter(searchValue)))
     }
 
     let nextScrollTimeout: NodeJS.Timeout | null = null
@@ -56,11 +52,6 @@
     onDestroy(() => {
         if (timeout) clearTimeout(timeout)
     })
-
-    $: if (searchValue !== undefined) {
-        loaded = false
-        lazyLoader = 0
-    }
 
     $: if (!loaded && fullFilteredScenes?.length) {
         if (lazyLoader >= fullFilteredScenes.length) {
@@ -127,11 +118,11 @@
     </DropArea>
 </div>
 
-<FloatingInputs onlyOne>
-    <MaterialButton disabled={readOnly} icon="add" title="new.scene" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "scene" } })}>
+<FloatingBar onlyOne>
+    <Button disabled={readOnly} icon="add" title="new.scene" on:click={() => history({ id: "UPDATE", location: { page: "drawer", id: "scene" } })}>
         {#if !$labelsDisabled}<T id="new.scene" />{/if}
-    </MaterialButton>
-</FloatingInputs>
+    </Button>
+</FloatingBar>
 
 <style>
     .grid {

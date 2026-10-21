@@ -2,9 +2,8 @@ import { get } from "svelte/store"
 import { uid } from "uid"
 import { REMOTE } from "../../../types/Channels"
 import { ShowObj } from "../../classes/Show"
-import { actions, activeDrawerTab, activeEdit, activeProject, activeRename, activeShow, activeStage, activeTagFilter, audioPlaylists, currentOutputSettings, dictionary, drawerTabsData, editingProjectTemplate, effects, events, focusMode, folders, globalTags, groups, interactions, notFound, openedFolders, overlays, playerVideos, profiles, projects, projectTemplates, projectView, scenes, shows, showsCache, special, stageShows, styles, theme, themes } from "../../stores"
+import { actions, activeDrawerTab, activeEdit, activeProject, activeRename, activeShow, activeStage, activeTagFilter, audioPlaylists, currentOutputSettings, dictionary, drawerTabsData, editingProjectTemplate, effects, events, focusMode, folders, globalTags, groups, interactions, looks, notFound, openedFolders, overlays, playerVideos, profiles, projects, projectTemplates, projectView, scenes, shows, showsCache, special, stageShows, styles, theme } from "../../stores"
 import { translateText } from "../../utils/language"
-import { updateThemeValues } from "../../utils/updateSettings"
 import { EMPTY_CATEGORY, EMPTY_EFFECT, EMPTY_EVENT, EMPTY_LAYOUT, EMPTY_PLAYER_VIDEO, EMPTY_PROJECT, EMPTY_PROJECT_FOLDER, EMPTY_SCENE, EMPTY_SECTION, EMPTY_SLIDE, EMPTY_STAGE, EMPTY_TAG } from "../../values/empty"
 import { getWeekNumber } from "../drawer/calendar/calendar"
 import { audioFolders, categories, mediaFolders, outputs, overlayCategories, templateCategories, templates } from "./../../stores"
@@ -517,50 +516,17 @@ export const _updaters = {
     },
     tag_key: { store: globalTags },
 
-    settings_theme: {
-        store: themes,
-        select: (id: string, data: any, initializing: boolean) => {
-            // TODO: remove default if name change; if (a[obj.location!.theme!].default) groupValue
-            if (data.key === "name" && get(themes)[id].default) {
-                themes.update((a) => {
-                    delete a[id].default
-                    return a
-                })
-            }
-
-            theme.set(id)
-
-            setTimeout(() => {
-                if (data.subkey) updateTransparentColors(id)
-                updateThemeValues(get(themes)[id])
-            }, 100)
-
-            if (!initializing || data.key) return
-            activeRename.set("theme_" + id)
-        },
-        deselect: (id: string, data: any) => {
-            if (!data.key && get(theme) === id) {
-                id = "default"
-                theme.set(id)
-            }
-
-            // if (data.key === "name" && get(themes)[id].default) {
-            //     data.default = true
-            // }
-
-            setTimeout(() => {
-                // setTheme({ ...data, data: data.previousValue })
-                if (data.subkey) updateTransparentColors(id)
-                updateThemeValues(get(themes)[id])
-            }, 100)
-        }
-    },
     settings_style: {
         store: styles,
         select: (id: string, data, initializing: boolean) => {
             if (!initializing || data.key) return
             activeRename.set("style_" + id)
         }
+    },
+    // F10.6: los looks editados en el modal se registran acá (deshacer)
+    settings_look: {
+        store: looks,
+        select: () => {}
     },
     settings_output: {
         store: outputs,
@@ -609,46 +575,6 @@ export const _updaters = {
         store: interactions,
         empty: { name: "", inputs: [] }
     }
-}
-
-function updateTransparentColors(id: string) {
-    themes.update((a) => {
-        Object.entries(a[id]?.colors || {}).forEach(([subId, color]: any) => {
-            if (!converts[subId]) return
-            const transparentColors: any[] = converts[subId]
-
-            transparentColors.forEach(({ id: colorId, opacity }: any) => {
-                const rgba = makeTransparent(color, opacity)
-
-                a[id].colors[colorId] = rgba
-            })
-        })
-
-        return a
-    })
-}
-const converts = {
-    secondary: [{ id: "secondary-opacity", opacity: 0.5 }],
-    text: [
-        { id: "hover", opacity: 0.05 },
-        { id: "focus", opacity: 0.1 }
-    ]
-}
-function makeTransparent(value: string, amount = 0.5) {
-    const rgb = hexToRgb(value)
-    if (!rgb) return null
-    const newValue = `rgb(${rgb.r} ${rgb.g} ${rgb.b} / ${amount})`
-    return newValue
-}
-function hexToRgb(hex: string) {
-    const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex)
-    return result
-        ? {
-              r: parseInt(result[1], 16),
-              g: parseInt(result[2], 16),
-              b: parseInt(result[3], 16)
-          }
-        : null
 }
 
 function replaceEmptyValues(object: any, replacer: any) {

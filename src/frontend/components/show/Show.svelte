@@ -5,7 +5,7 @@
     import NdiStream from "../drawer/live/NDIStream.svelte"
     import { createGlobalTimerFromLocalTimer } from "../drawer/timers/timers"
     import { setOutput } from "../helpers/output"
-    import HoverButton from "../inputs/HoverButton.svelte"
+    import HoverPlay from "../helpers/HoverPlay.svelte"
     import Splash from "../main/Splash.svelte"
     import Camera from "../output/Camera.svelte"
     import Layouts from "../slide/Layouts.svelte"
@@ -84,7 +84,7 @@
                 <!-- DEPRECATED -->
                 <PowerPointPreview {show} />
             {:else if show.type === "camera"}
-                <HoverButton
+                <HoverPlay
                     icon="play"
                     size={10}
                     on:click={() => {
@@ -92,9 +92,9 @@
                     }}
                 >
                     <Camera id={show.id} groupId={show.data?.groupId} class="media" preview />
-                </HoverButton>
+                </HoverPlay>
             {:else if show.type === "screen"}
-                <HoverButton
+                <HoverPlay
                     icon="play"
                     size={10}
                     on:click={() => {
@@ -102,9 +102,9 @@
                     }}
                 >
                     <Capture screen={{ id: show.id, name: show.name || "" }} streams={[]} background />
-                </HoverButton>
+                </HoverPlay>
             {:else if show.type === "ndi"}
-                <HoverButton
+                <HoverPlay
                     icon="play"
                     size={10}
                     on:click={() => {
@@ -112,7 +112,7 @@
                     }}
                 >
                     <NdiStream screen={{ id: show.id, name: show.name || "" }} background />
-                </HoverButton>
+                </HoverPlay>
             {:else if show.type === "folder"}
                 {#key show.id}
                     <FolderShow path={show.id} index={show.index || 0} />

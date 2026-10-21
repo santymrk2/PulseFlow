@@ -1,8 +1,8 @@
 <script lang="ts">
     import { popupData } from "../../../stores"
     import { translateText } from "../../../utils/language"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
     registerPopupSubmit(confirm)
@@ -32,18 +32,18 @@
 <div class="types">
     <div class="section">
         <p class="title">{translateText("settings.local_output")}</p>
-        <MaterialMultiChoice options={localTypes} value={localType} on:click={(e) => (localType = e.detail)} highlightFirst={false} canDeselect />
+        <ChoiceGrid options={localTypes} value={localType} on:click={(e) => (localType = e.detail)} highlightFirst={false} canDeselect />
     </div>
 
     <div class="section">
         <p class="title">{translateText("settings.network_output")}</p>
-        <MaterialMultiChoice options={networkTypes} value={networkType} on:click={(e) => (networkType = e.detail)} highlightFirst={false} canDeselect />
+        <ChoiceGrid options={networkTypes} value={networkType} on:click={(e) => (networkType = e.detail)} highlightFirst={false} canDeselect />
     </div>
 </div>
 
-<MaterialButton variant="contained" disabled={!localType && !networkType} style="margin-top: 20px;width: 100%;" on:click={confirm}>
+<Button variant="default" disabled={!localType && !networkType} style="margin-top: 20px;width: 100%;" on:click={confirm}>
     {translateText("popup.confirm")}
-</MaterialButton>
+</Button>
 
 <style>
     .types {

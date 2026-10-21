@@ -33,7 +33,7 @@
 
 <script lang="ts">
     import type { Cropping, Resolution } from "../../../types/Settings"
-    import { currentWindow, draw, outputs, styles } from "../../stores"
+    import { outputs, styles, previewOutputId } from "../../stores"
     import { DEFAULT_BOUNDS, getActiveOutputs, getOutputResolution, getResolution } from "../helpers/output"
 
     export let id = ""
@@ -49,7 +49,6 @@
     export let checkered = false
     export let border = false
     export let align = ""
-    export let drawZoom = 1
 
     export let outline = ""
     export let disabled = false
@@ -58,13 +57,14 @@
     export let aspectRatio = true
     export let hideOverflow = true
     export let customZoom = 1
+    // recorte por pantalla (sólo ventana de salida; en las previsualizaciones de la UI se ignora)
     export let cropping: Cropping | undefined = { top: 0, right: 0, bottom: 0, left: 0 }
     export let styleIdOverride = ""
-    export let resolution: Resolution = getResolution(null, { $outputs, $styles }, false, outputId, styleIdOverride)
+    export let resolution: Resolution = getResolution(null, { $outputs, $styles, $previewOutputId }, false, outputId, styleIdOverride)
     $: if (!isStage) resolution = getResolution(resolution, { $outputs, $styles }, false, outputId, styleIdOverride)
     $: outputRes = isStage ? resolution : getOutputResolution(outputId, $outputs)
 
-    $: stylesRatio = isStage ? resolution : getResolution(null, $styles, false, outputId, styleIdOverride)
+    $: stylesRatio = getResolution(null, $styles, false, outputId, styleIdOverride)
     $: styleAspectRatio = stylesRatio.width / stylesRatio.height
     const defaultRatio = DEFAULT_BOUNDS.width / DEFAULT_BOUNDS.height
 
@@ -84,8 +84,6 @@
 
     $: croppedStyle = getCropping(cropping, resolution, outputRes, outputResolutionAsRatio)
     function getCropping(cropping, res, outRes, isOutputResolutionAsRatio = false) {
-        if ($currentWindow !== "output") return ""
-
         let style = ""
         if (!cropping || mirror) return ""
 
@@ -144,11 +142,6 @@
 
     $: alignStyle = align ? ($$props.style?.includes("width") ? `align-items: ${align};` : `justify-content: ${align};`) : ""
 
-    // DRAW
-
-    $: drawX = $draw ? ($draw.x / outputRes.width - 0.5) * (drawZoom - 1) * -1 * 100 : 0
-    $: drawY = $draw ? ($draw.y / outputRes.height - 0.5) * (drawZoom - 1) * -1 * 100 : 0
-
     $: canOverflow = false // $special.textCanOverflow !== false
 </script>
 
@@ -179,7 +172,7 @@
         style="{$$props.style || ''}{typeof background === 'string' && background.includes('-gradient') ? `background-image: ${background};` : `background-color: ${background};`}transition: {backgroundDuration}ms background-color;{aspectRatio ? `aspect-ratio: ${resolution.width}/${resolution.height};${croppedStyle}` : ''};"
     >
         {#if zoom}
-            <span class="zoom" style="zoom: {ratio};{drawZoom === 1 ? '' : `transform: scale(${drawZoom});position: absolute;width: 100%;height: 100%;` + ($draw ? `inset-inline-start: ${drawX}%;top: ${drawY}%;` : '')}">
+            <span class="zoom" style="zoom: {ratio};">
                 <slot {ratio} />
             </span>
         {:else}

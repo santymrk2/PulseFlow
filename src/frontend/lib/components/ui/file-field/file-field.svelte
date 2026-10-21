@@ -1,0 +1,259 @@
+<script lang="ts">
+    import { createEventDispatcher, onDestroy, onMount } from "svelte"
+    import { uid } from "uid"
+    import { Main } from "../../../../../types/IPC/Main"
+    import { ToMain } from "../../../../../types/IPC/ToMain"
+    import { destroyMain, receiveToMain, sendMain } from "../../../../IPC/main"
+    import { translateText } from "../../../../utils/language"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import { getFileName } from "../../../../components/helpers/media"
+    import Button from "../button/button.svelte"
+
+    export let label: string
+    export let value: string | undefined
+    export let title = ""
+    export let filter: { name: string; extensions: string[] }
+    export let icon = ""
+    export let multiple = false
+
+    export let disabled = false
+    export let autoTrigger = false
+    export let noLabel = false
+    export let showThumbnail = false
+    export let allowEmpty = false
+
+    onMount(() => {
+        if (autoTrigger && !value) pickMedia()
+    })
+
+    function pickMedia() {
+        if (disabled) return
+
+        // filter: { name: "Text file", extensions: ["txt"], id: "txt" }
+        sendMain(Main.OPEN_FILE, { channel: "MEDIA", id: PICK_ID, filter, multiple })
+    }
+
+    const PICK_ID = uid()
+    const dispatch = createEventDispatcher()
+    let listenerId = receiveToMain(ToMain.OPEN_FILE2, (data) => {
+        if (data.id !== PICK_ID || data.channel !== "MEDIA" || !data.files?.length) return
+
+        dispatch("change", multiple ? data.files : data.files[0])
+    })
+    onDestroy(() => destroyMain(listenerId))
+
+    // SELECT
+
+    function handleKeydown(event: KeyboardEvent) {
+        if (disabled) return
+
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault()
+            pickMedia()
+            return
+        }
+    }
+</script>
+
+<div class="textfield {disabled ? 'disabled' : ''}" style={$$props.style || null} data-title={value || translateText(title || "edit.choose_media")}>
+    <div class="background" />
+
+    <div
+        class="input edit button-trigger"
+        role="button"
+        tabindex={disabled ? undefined : 0}
+        on:click={(e) => {
+            if (e.target?.closest(".remove")) return
+            pickMedia()
+        }}
+        on:keydown={handleKeydown}
+    >
+        <span class="selected-text">
+            {#if !noLabel}
+                {#if typeof value === "string" && value.startsWith("data:")}
+                    Embeded data
+                {:else if value}
+                    {getFileName(value)}
+                {/if}
+            {/if}
+        </span>
+
+        <div class="arrow" style={showThumbnail && value ? "height: 40px;" : ""}>
+            {#if showThumbnail && value}
+                <img src={value} alt="thumbnail" class="thumbnail" draggable="false" />
+            {:else if icon}
+                <Icon id={icon} white />
+            {:else}
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    {#if multiple}
+                        <path d="M0 0h24v24H0z" fill="none" /><path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z" />
+                    {:else}
+                        <path d="M0 0h24v24H0z" fill="none" /><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z" />
+                    {/if}
+                </svg>
+            {/if}
+        </div>
+    </div>
+
+    {#if !noLabel}
+        <label class:selected={value}>{@html translateText(label)}</label>
+    {/if}
+    <span class="underline" />
+
+    {#if allowEmpty && value}
+        <div class="remove" style={showThumbnail && value ? "right: 56px;" : ""}>
+            <Button on:click={() => dispatch("change", "")} title="clear.general" white>
+                <Icon id="close" white />
+            </Button>
+        </div>
+    {/if}
+</div>
+
+<style>
+    .textfield {
+        position: relative;
+        width: 100%;
+        color: var(--text);
+        user-select: none;
+
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+
+        height: 38px;
+    }
+
+    .background {
+        position: absolute;
+        inset: 0;
+        background-color: var(--primary-darkest);
+        border-start-start-radius: var(--radius, 4px);
+        border-start-end-radius: var(--radius, 4px);
+        z-index: 0;
+    }
+
+    .input {
+        height: 100%;
+    }
+
+    .textfield:not(:has(.dropdown)):not(:has(.remove:hover)):not(:disabled):hover .input {
+        background-color: var(--hover);
+    }
+
+    .button-trigger {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        padding: 16px 12px 2px;
+        font-size: var(--text-sm);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        outline: none;
+    }
+
+    .remove {
+        position: absolute;
+        top: 50%;
+        right: 46px;
+        transform: translateY(-50%);
+
+        z-index: 2;
+    }
+    .remove :global(button) {
+        padding: 0.75rem;
+    }
+
+    .selected-text {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .arrow {
+        transition: transform 0.2s ease;
+        color: var(--text);
+        transform: translateY(-0.4rem);
+
+        display: flex;
+        align-items: center;
+    }
+
+    label {
+        position: absolute;
+        left: 12px;
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
+        pointer-events: none;
+        z-index: 1;
+    }
+    label.selected {
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
+    }
+
+    .underline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 1.2px;
+        width: 100%;
+        background-color: var(--secondary);
+        transform: scaleX(0);
+        transition: transform 0.2s ease;
+        transform-origin: left;
+        z-index: 2;
+
+        pointer-events: none;
+    }
+
+    .textfield:not(:has(.remove:hover)):focus-within .underline {
+        transform: scaleX(1);
+    }
+    .textfield:focus-within label {
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
+    }
+
+    .disabled {
+        pointer-events: none;
+        opacity: 0.35;
+    }
+
+    .thumbnail {
+        width: 40px;
+        height: 40px;
+        border-radius: var(--radius, 4px);
+        object-fit: cover;
+    }
+
+    /* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+    .background,
+    .underline {
+        display: none;
+    }
+    .textfield:focus-within {
+        border-color: var(--border-strong);
+    }
+
+    .textfield:has(.remove :global(button)) .selected-text {
+        margin-inline-end: 36px;
+    }
+</style>

@@ -4,13 +4,10 @@
     import { connectToOBS } from "../../../utils/obsTalk"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import Link from "../../inputs/Link.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
-
-    export let searchValue: string
-    console.log(searchValue)
 
     let connected = false
     let scenes: string[] = []
@@ -262,9 +259,9 @@
             <ul class="obs-dock-list">
                 {#each scenes as scene}
                     <li style="width: 100%;display: flex;justify-content: flex-start;">
-                        <MaterialButton on:click={() => changeScene(scene)} id={scene === currentScene ? "active-scene-btn" : ""} class="obs-btn {scene === currentScene ? 'active-scene' : ''}">
+                        <Button on:click={() => changeScene(scene)} id={scene === currentScene ? "active-scene-btn" : ""} class="obs-btn {scene === currentScene ? 'active-scene' : ''}">
                             {scene}
-                        </MaterialButton>
+                        </Button>
                     </li>
                 {/each}
             </ul>
@@ -282,9 +279,9 @@
                             <span style="color: {source.sceneItemEnabled ? '#f1f3f5' : '#64748b'};font-size: 0.85em;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;max-width: 140px;" title={source.sourceName}>
                                 {source.sourceName}
                             </span>
-                            <MaterialButton on:click={() => toggleSource(source)} class="obs-btn-icon" title={source.sceneItemEnabled ? "Hide Layer" : "Show Layer"}>
+                            <Button on:click={() => toggleSource(source)} class="obs-btn-icon" title={source.sceneItemEnabled ? "Hide Layer" : "Show Layer"}>
                                 <Icon id={source.sceneItemEnabled ? "eye" : "hide"} style="opacity: {source.sceneItemEnabled ? 1 : 0.35};" white />
-                            </MaterialButton>
+                            </Button>
                         </li>
                     {/each}
                     {#if sources.length === 0}
@@ -306,9 +303,9 @@
                             <span style="color: {input.inputMuted ? '#64748b' : '#f1f3f5'};font-size: 0.85em;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;" title={input.inputName}>
                                 {input.inputName}
                             </span>
-                            <MaterialButton on:click={() => toggleMute(input)} class="obs-btn-icon" title={input.inputMuted ? "Unmute" : "Mute"}>
+                            <Button on:click={() => toggleMute(input)} class="obs-btn-icon" title={input.inputMuted ? "Unmute" : "Mute"}>
                                 <Icon id={input.inputMuted ? "volume_off" : "volume"} style="opacity: {input.inputMuted ? 0.7 : 1};" color={input.inputMuted ? "red" : ""} white />
-                            </MaterialButton>
+                            </Button>
                         </div>
                         <div style="width: 100%;display: flex;flex-direction: column;gap: 2px;margin-top: 4px;opacity: {input.inputMuted ? 0.3 : 1};">
                             {#each input.channels || [] as channel}
@@ -337,9 +334,9 @@
                 <ul class="obs-dock-list">
                     {#each transitions as transition}
                         <li style="width: 100%;display: flex;justify-content: flex-start;">
-                            <MaterialButton on:click={() => changeTransition(transition)} id={transition === currentTransition ? "active-transition-btn" : ""} class="obs-btn {transition === currentTransition ? 'active-scene' : ''}">
+                            <Button on:click={() => changeTransition(transition)} id={transition === currentTransition ? "active-transition-btn" : ""} class="obs-btn {transition === currentTransition ? 'active-scene' : ''}">
                                 {transition}
-                            </MaterialButton>
+                            </Button>
                         </li>
                     {/each}
                 </ul>
@@ -353,24 +350,24 @@
             </div>
             <div class="obs-dock-body">
                 <div class="obs-dock-row">
-                    <MaterialButton on:click={toggleStream} class="obs-btn obs-btn-control {isLive ? 'obs-btn-danger' : ''}">
+                    <Button on:click={toggleStream} class="obs-btn obs-btn-control {isLive ? 'obs-btn-danger' : ''}">
                         {isLive ? "Stop Streaming" : "Start Streaming"}
-                    </MaterialButton>
+                    </Button>
                 </div>
                 <div class="obs-dock-row">
-                    <MaterialButton on:click={toggleRecording} class="obs-btn obs-btn-control {isRecording ? 'obs-btn-danger' : ''}">
+                    <Button on:click={toggleRecording} class="obs-btn obs-btn-control {isRecording ? 'obs-btn-danger' : ''}">
                         {isRecording ? "Stop Recording" : "Start Recording"}
-                    </MaterialButton>
+                    </Button>
                 </div>
             </div>
         </div>
     </div>
 
-    <FloatingInputs round>
-        <MaterialButton isActive={showAll} title="create_show.more_options" on:click={() => (showAll = !showAll)}>
+    <FloatingBar round>
+        <Button isActive={showAll} title="create_show.more_options" on:click={() => (showAll = !showAll)}>
             <Icon id={showAll ? "eye" : "hide"} white={!showAll} />
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 {:else}
     <Center>
         <Link url="https://freeshow.app/docs/livestreaming#setting-up-obs-control-from-freeshow">
@@ -379,15 +376,15 @@
         </Link>
 
         {#if errorMsg}
-            <div style="margin-top: 20px;color: #ef4444;background: rgba(239, 68, 68, 0.1);border: 1px solid rgba(239, 68, 68, 0.2);padding: 0.75em 1.25em;border-radius: 6px;font-size: 0.9em;font-weight: 500;max-width: 340px;">
+            <div style="margin-top: 20px;color: var(--danger);background: rgba(239, 68, 68, 0.1);border: 1px solid rgba(239, 68, 68, 0.2);padding: 0.75em 1.25em;border-radius: 6px;font-size: 0.9em;font-weight: 500;max-width: 340px;">
                 {errorMsg}
             </div>
         {/if}
 
-        <MaterialButton variant="outlined" on:click={connect} style="margin-top: 20px;width: 100%;max-width: 250px;">
+        <Button variant="outline" on:click={connect} style="margin-top: 20px;width: 100%;max-width: 250px;">
             <Icon id="bind" white />
             <T id="settings.connect_to" replace={["OBS Studio"]} />
-        </MaterialButton>
+        </Button>
     </Center>
 {/if}
 
@@ -410,7 +407,7 @@
         min-width: 0;
         display: flex;
         flex-direction: column;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        box-shadow: var(--shadow-float);
     }
     .obs-dock-header {
         width: 100%;
@@ -509,12 +506,12 @@
         border-color: #3b82f6 !important;
     }
     /* :global(.obs-btn-success) {
-        background: #22c55e !important;
+        background: var(--success) !important;
         border-color: #16a34a !important;
     } */
     :global(.obs-btn-danger) {
-        background: #ef4444 !important;
-        border-color: #dc2626 !important;
+        background: var(--danger) !important;
+        border-color: var(--danger) !important;
     }
     :global(.obs-btn:not(.active-scene):hover) {
         background-color: #3d4454 !important;
@@ -523,10 +520,10 @@
     }
     /* :global(.obs-btn-success:hover) {
         background-color: #34d399 !important;
-        border-color: #10b981 !important;
+        border-color: var(--success) !important;
     } */
     :global(.obs-btn-danger:hover) {
         background-color: #f87171 !important;
-        border-color: #ef4444 !important;
+        border-color: var(--danger) !important;
     }
 </style>

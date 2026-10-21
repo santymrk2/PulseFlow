@@ -3,7 +3,7 @@
     import type { MediaStyle } from "../../../types/Main"
     import type { Item, Media, Show, Slide, SlideData } from "../../../types/Show"
     import { removeTagsAndContent } from "../../show/slides"
-    import { activeEdit, activePage, activeShow, activeTimers, editMode, effects, focusMode, fullColors, groups, media, outputs, overlays, playerVideos, refreshListBoxes, refreshSlideThumbnails, slideDeleteHighlight, slideNotesActive, slidesOptions, slideTimers, special, styles } from "../../stores"
+    import { activeEdit, activePage, activeShow, activeTimers, editMode, effects, focusMode, fullColors, groups, media, outputs, overlays, playerVideos, refreshListBoxes, refreshSlideThumbnails, slideDeleteHighlight, slideNotesActive, slidesOptions, slideTimers, special, styles, previewOutputId } from "../../stores"
     import { wait } from "../../utils/common"
     import { translateText } from "../../utils/language"
     import { getAccess } from "../../utils/profile"
@@ -15,6 +15,7 @@
     import { getContrast, hexToRgb, splitRgb } from "../helpers/color"
     import Icon from "../helpers/Icon.svelte"
     import { getMedia, getMediaCached, getMediaStyle, mediaSize } from "../helpers/media"
+    import { referenceOutputId } from "../helpers/outputAspect"
     import { allOutputsHasStyleTemplate, getActiveOutputs, getFirstActiveOutput, getResolution, getSlideFilter, setTemplateStyle } from "../helpers/output"
     import { getGroupName, isSlideLocked } from "../helpers/show"
     import { _show } from "../helpers/shows"
@@ -163,7 +164,9 @@
     }
 
     // slide?.settings?.resolution
-    $: resolution = getResolution(null, { $outputs, $styles })
+    // las diapositivas toman el tamaño de la salida que se ve en la vista previa (si es una audiencia); sin elegir, la primera activa
+    $: previewId = referenceOutputId($outputs, $previewOutputId)
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId }, false, previewId)
 
     $: currentOutput = getFirstActiveOutput($outputs)
     $: transparentOutput = !!currentOutput?.transparent
@@ -500,6 +503,8 @@
         /* border: 2px solid var(--primary-lighter); */
 
         /* border-radius: 4px; */
+        border-radius: var(--radius, 4px);
+        overflow: hidden;
     }
 
     /* .slide :global(.selectElem#slide) {
@@ -542,8 +547,8 @@
         z-index: 2;
     }
     .main.active {
-        /* outline: 3px solid var(--secondary); */
-        outline: 2px solid var(--secondary);
+        /* outline: 3px solid var(--text-muted); */
+        outline: 2px solid var(--text-muted);
         outline-offset: -1px;
         /* this z-index causes the button title to show behind! */
         /* z-index: 2; */

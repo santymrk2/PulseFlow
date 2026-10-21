@@ -378,6 +378,7 @@
         "first_last": "Primeiro e último slide"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Predefinido",
         "dark": "Escuro",
         "light": "Claro",
@@ -548,7 +549,7 @@
         "drawer_search_options": "Opções de pesquisa",
         "template_info": "Info do template",
         "cleaning_utility": "Utilitário de limpeza",
-        "initialize": "Bem-Vindo ao FreeShow",
+        "initialize": "Bem-Vindo ao PulseFlow",
         "unsaved": "Tem certeza que deseja sair?",
         "cancel": "Cancelar",
         "continue": "Continuar",

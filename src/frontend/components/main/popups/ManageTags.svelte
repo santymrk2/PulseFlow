@@ -6,10 +6,10 @@
     import { actionTags, activeActionTagFilter, activeMediaTagFilter, activePlayerTagFilter, activeTagFilter, activeTimerTagFilter, globalTags, mediaTags, playerTags, popupData, timerTags, variableTags } from "../../../stores"
     import { keysToID, sortByName } from "../../helpers/array"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
 
     const store = {
@@ -75,9 +75,9 @@
         {#key tags}
             {#each tags as tag}
                 <InputRow>
-                    <MaterialTextInput label="inputs.name" value={tag.name} on:change={(e) => updateKey(e.detail, tag.id, "name")} autofocus={!tag.name} />
-                    <MaterialColorInput label="edit.color" value={tag.color} style="min-width: 200px;max-width: 200px;" on:change={(e) => updateKey(e.detail, tag.id, "color")} noLabel />
-                    <MaterialButton icon="delete" title="actions.delete" on:click={() => deleteTag(tag.id)} white />
+                    <TextField label="inputs.name" value={tag.name} on:change={(e) => updateKey(e.detail, tag.id, "name")} autofocus={!tag.name} />
+                    <ColorField label="edit.color" value={tag.color} style="min-width: 200px;max-width: 200px;" on:change={(e) => updateKey(e.detail, tag.id, "color")} noLabel />
+                    <Button icon="delete" title="actions.delete" on:click={() => deleteTag(tag.id)} white />
                 </InputRow>
             {/each}
         {/key}
@@ -87,9 +87,9 @@
         </Center>
     {/if}
 
-    <MaterialButton variant="outlined" icon="add" style="margin-top: 20px;width: 100%;" disabled={emptyTag} on:click={createTag}>
+    <Button variant="outline" icon="add" style="margin-top: 20px;width: 100%;" disabled={emptyTag} on:click={createTag}>
         <T id="meta.new_tag" />
-    </MaterialButton>
+    </Button>
 </div>
 
 <style>

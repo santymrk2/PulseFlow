@@ -4,9 +4,9 @@
     import { AudioPlayer } from "../../../audio/audioPlayer"
     import { requestMain } from "../../../IPC/main"
     import { timecode } from "../../../stores"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
 
     const types = [
         { label: "Send", value: "send" },
@@ -66,29 +66,29 @@
 </script>
 
 <InputRow>
-    <MaterialDropdown label="sort.type" options={types} value={type} on:change={(e) => updateValue("type", e.detail)} />
+    <SelectField label="sort.type" options={types} value={type} on:change={(e) => updateValue("type", e.detail)} />
 
     {#if type === "send" || mode === "LTC"}
-        <MaterialDropdown label="settings.frame_rate" options={framerates} value={framerate.toString()} defaultValue="25" on:change={(e) => updateValue("framerate", Number(e.detail))} />
+        <SelectField label="settings.frame_rate" options={framerates} value={framerate.toString()} defaultValue="25" on:change={(e) => updateValue("framerate", Number(e.detail))} />
     {/if}
 </InputRow>
 
 <InputRow style="margin-top: 10px;">
-    <MaterialDropdown label="actions.mode" options={modes} value={mode} on:change={(e) => updateValue("mode", e.detail)} />
+    <SelectField label="actions.mode" options={modes} value={mode} on:change={(e) => updateValue("mode", e.detail)} />
 
     {#if mode === "LTC"}
         {#if type === "send"}
-            <MaterialDropdown label="audio.custom_output" options={audioOutputs} value={$timecode.audioOutput || ""} on:change={(e) => updateValue("audioOutput", e.detail)} allowEmpty />
+            <SelectField label="audio.custom_output" options={audioOutputs} value={$timecode.audioOutput || ""} on:change={(e) => updateValue("audioOutput", e.detail)} allowEmpty />
         {:else}
-            <MaterialDropdown label="live.microphones" options={audioInputs} value={$timecode.audioInput || ""} on:change={(e) => updateValue("audioInput", e.detail)} allowEmpty />
+            <SelectField label="live.microphones" options={audioInputs} value={$timecode.audioInput || ""} on:change={(e) => updateValue("audioInput", e.detail)} allowEmpty />
         {/if}
     {:else if mode === "MTC"}
         {#if type === "send"}
-            <MaterialDropdown label="midi.output" value={$timecode.midiOutput || ""} options={midiOutputs} on:change={(e) => updateValue("midiOutput", e.detail)} allowEmpty />
+            <SelectField label="midi.output" value={$timecode.midiOutput || ""} options={midiOutputs} on:change={(e) => updateValue("midiOutput", e.detail)} allowEmpty />
         {:else}
-            <MaterialDropdown label="midi.input" value={$timecode.midiInput || ""} options={midiInputs} on:change={(e) => updateValue("midiInput", e.detail)} allowEmpty />
+            <SelectField label="midi.input" value={$timecode.midiInput || ""} options={midiInputs} on:change={(e) => updateValue("midiInput", e.detail)} allowEmpty />
         {/if}
     {/if}
 </InputRow>
 
-<MaterialNumberInput label="edit.offset (ms)" value={offset} min={-60000} max={60000} step={100} defaultValue={0} on:change={(e) => updateValue("offset", e.detail)} />
+<NumberField label="edit.offset (ms)" value={offset} min={-60000} max={60000} step={100} defaultValue={0} on:change={(e) => updateValue("offset", e.detail)} />

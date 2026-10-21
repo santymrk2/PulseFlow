@@ -8,8 +8,8 @@
     import { hexToRgb } from "../helpers/color"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
-    import TextInput from "../inputs/TextInput.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import Input from "../../lib/components/ui/input/input.svelte"
     import Center from "../system/Center.svelte"
     import { quicksearch, quickSearchCategoryNames, selectQuicksearchValue, type SearchCategory } from "./quicksearch"
     import { getNormalizedKey } from "../../utils/shortcuts"
@@ -184,7 +184,7 @@
                     </div>
                 {/if}
 
-                <TextInput value={activeCategory ? actualSearchText : searchValue} placeholder={activeCategory ? `Search in ${activeCategory}...` : translateText("main.quick_search...")} autofocus autoselect on:input={search} style={activeCategory ? "padding-left: " + (90 + activeCategory.length * 8) + "px;" : "padding-left: 47px;"} />
+                <Input value={activeCategory ? actualSearchText : searchValue} placeholder={activeCategory ? `Search in ${activeCategory}...` : translateText("main.quick_search...")} autofocus autoselect on:input={search} style={activeCategory ? "padding-left: " + (90 + activeCategory.length * 8) + "px;" : "padding-left: 47px;"} />
             </div>
 
             {#if showValues && actualSearchText.length}
@@ -198,7 +198,7 @@
                             {/if}
 
                             <div id="qs-item-{i}">
-                                <MaterialButton style="color: {value.color || 'unset'};" icon={value.icon || value.type} title={value.name} isActive={i === selectedIndex} on:click={(e) => selectQuicksearchValue(value, e.detail.ctrl)} white>
+                                <Button style="color: {value.color || 'unset'};" icon={value.icon || value.type} title={value.name} isActive={i === selectedIndex} on:click={(e) => selectQuicksearchValue(value, e.detail.ctrl)} white>
                                     <div class="item-text">
                                         <p>
                                             {value.name}
@@ -215,7 +215,7 @@
                                             <p class="description">{@html highlightText(value.description, actualSearchText || searchValue)}</p>
                                         {/if}
                                     </div>
-                                </MaterialButton>
+                                </Button>
                             </div>
                         {/each}
                     </div>
@@ -260,9 +260,7 @@
         border-radius: 12px;
         padding: 12px;
 
-        box-shadow:
-            0 12px 40px rgb(0 0 0 / 0.6),
-            0 0 0 1px rgba(255, 255, 255, 0.05) inset;
+        box-shadow: var(--shadow-float);
         border: 1px solid var(--primary-lighter);
 
         --background: rgba(35, 35, 45, 0.8);
@@ -290,12 +288,12 @@
         font-size: 1.4em;
 
         border-radius: 8px;
-        background: rgba(255, 255, 255, 0.05);
+        background: var(--bg-hover);
         transition: background 0.2s ease;
     }
     .search :global(input):focus {
         outline: none;
-        background: rgba(255, 255, 255, 0.08);
+        background: var(--bg-selected);
     }
 
     .values {
@@ -369,11 +367,10 @@
         font-size: 0.9em;
         font-weight: 500;
 
-        background: rgb(255 255 255 / 0.1);
+        background: var(--bg-selected);
         border: 1px solid var(--focus);
         border-radius: 14px;
         padding: 4px 6px 4px 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
     .tag-text {
@@ -402,6 +399,6 @@
     }
     .tag-remove:hover {
         opacity: 1;
-        background: rgba(255, 255, 255, 0.1);
+        background: var(--bg-selected);
     }
 </style>

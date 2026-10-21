@@ -388,6 +388,7 @@
         "first_last": "První a poslední snímek "
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Základní",
         "dark": "Tmavý",
         "light": "Světlý",
@@ -569,8 +570,8 @@
         "drawer_search_options": "Možnosti vyhledávání",
         "template_info": "Informace šablony",
         "cleaning_utility": "Nástroj čištění",
-        "initialize": "Vítejte ve FreeShow",
-        "unsaved": "Opustit FreeShow?",
+        "initialize": "Vítejte ve PulseFlow",
+        "unsaved": "Opustit PulseFlow?",
         "cancel": "Storno",
         "continue": "Pokračovat",
         "restore": "Obnovit zálohu",

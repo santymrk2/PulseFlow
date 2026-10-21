@@ -1,7 +1,7 @@
 <script lang="ts">
     import { outLocked, outputs, overlays } from "../../../stores"
     import { findMatchingOut, getActiveOutputs, setOutput } from "../../helpers/output"
-    import HoverButton from "../../inputs/HoverButton.svelte"
+    import HoverPlay from "../../helpers/HoverPlay.svelte"
 
     import Overlay from "../../output/layers/Overlay.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
@@ -14,7 +14,7 @@
 </script>
 
 <div class="overlayPreview context #overlay_preview">
-    <HoverButton
+    <HoverPlay
         icon={isOutputted ? "clear" : "play"}
         size={isOutputted ? 8 : 10}
         on:click={() => {
@@ -24,7 +24,7 @@
         <Zoomed background="transparent" checkered center mirror>
             <Overlay overlay={$overlays[show.id]} id={show.id} {outputId} mirror transition={{ type: "none", duration: 0, easing: "" }} preview />
         </Zoomed>
-    </HoverButton>
+    </HoverPlay>
 </div>
 
 <style>

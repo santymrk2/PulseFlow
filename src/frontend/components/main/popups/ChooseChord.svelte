@@ -4,9 +4,9 @@
     import { chordTensions, chordTypes, keys, keysInverted, romanKeys } from "../../edit/values/chords"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     let chordData = {
         key: "C",
@@ -78,21 +78,21 @@
     $: keysList = (showInvertedChords ? keysInverted : keys).map((a) => (germanNotation ? (a === "B" ? "H" : a === "B♭" ? "B" : a) : a))
 </script>
 
-<MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
+<Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 
-<MaterialToggleSwitch label="actions.roman_keys" checked={chordData.romanKeysActive} on:change={(e) => (chordData.romanKeysActive = e.detail)} />
+<ToggleField label="actions.roman_keys" checked={chordData.romanKeysActive} on:change={(e) => (chordData.romanKeysActive = e.detail)} />
 {#if showMore}
-    <MaterialToggleSwitch label="German notation (H/B)" checked={germanNotation} on:change={(e) => updateSpecial("germanNotation", e.detail)} />
+    <ToggleField label="German notation (H/B)" checked={germanNotation} on:change={(e) => updateSpecial("germanNotation", e.detail)} />
 {/if}
 
-<MaterialTextInput label="actions.custom_key" value={chordData.custom} defaultValue="" on:input={(e) => (chordData.custom = e.detail)} />
+<TextField label="actions.custom_key" value={chordData.custom} defaultValue="" on:input={(e) => (chordData.custom = e.detail)} />
 
 <div class="chords" style="margin: 10px 0;">
     <div class="list">
         {#if chordData.romanKeysActive}
             <p><T id="actions.chord_key" /></p>
             {#each romanKeys as key}
-                <MaterialButton showOutline={chordData.romanKey === key} disabled={!!chordData.custom} on:click={() => updateData("romanKey", key)}>{key}</MaterialButton>
+                <Button showOutline={chordData.romanKey === key} disabled={!!chordData.custom} on:click={() => updateData("romanKey", key)}>{key}</Button>
             {/each}
         {:else}
             <p class="invert" on:mousedown={() => (showInvertedChords = !showInvertedChords)}>
@@ -100,7 +100,7 @@
                 <T id="actions.chord_key" />
             </p>
             {#each keysList as key}
-                <MaterialButton showOutline={chordData.key === key} disabled={!!chordData.custom} on:click={() => updateData("key", key)}>{key}</MaterialButton>
+                <Button showOutline={chordData.key === key} disabled={!!chordData.custom} on:click={() => updateData("key", key)}>{key}</Button>
             {/each}
         {/if}
     </div>
@@ -108,26 +108,26 @@
     <div class="list">
         <p><T id="actions.chord_type" /></p>
         {#each chordTypes as type}
-            <MaterialButton showOutline={chordData.type === type} disabled={!!chordData.custom} on:click={() => updateData("type", type)}>
+            <Button showOutline={chordData.type === type} disabled={!!chordData.custom} on:click={() => updateData("type", type)}>
                 {#if !type}
                     <span style="opacity: 0;">.</span>
                 {:else}
                     {type}
                 {/if}
-            </MaterialButton>
+            </Button>
         {/each}
     </div>
 
     <div class="list">
         <p><T id="actions.chord_tension" /></p>
         {#each chordTensions as tension}
-            <MaterialButton showOutline={chordData.tension === tension} disabled={!!chordData.custom} on:click={() => updateData("tension", tension)}>
+            <Button showOutline={chordData.tension === tension} disabled={!!chordData.custom} on:click={() => updateData("tension", tension)}>
                 {#if !tension}
                     <span style="opacity: 0;">.</span>
                 {:else}
                     {tension}
                 {/if}
-            </MaterialButton>
+            </Button>
         {/each}
     </div>
 
@@ -138,15 +138,15 @@
                 <T id="actions.chord_bass" />
             </p>
             {#each keysList as bass}
-                <MaterialButton showOutline={chordData.bass === bass} disabled={!!chordData.custom} on:click={() => updateData("bass", bass)}>{bass}</MaterialButton>
+                <Button showOutline={chordData.bass === bass} disabled={!!chordData.custom} on:click={() => updateData("bass", bass)}>{bass}</Button>
             {/each}
         </div>
     {/if}
 </div>
 
-<MaterialButton variant="outlined" on:click={selectChord}>
+<Button variant="outline" on:click={selectChord}>
     <T id="actions.select_chord" />: <span style="color: var(--secondary);font-weight: bold;">{combinedChord}</span>
-</MaterialButton>
+</Button>
 
 <style>
     .chords {

@@ -6,10 +6,10 @@
     import { loadShows } from "../../helpers/setShow"
     import T from "../../helpers/T.svelte"
     import { dateToString } from "../../helpers/time"
-    import HRule from "../../input/HRule.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialTextarea from "../../inputs/MaterialTextarea.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import TextareaField from "../../../lib/components/ui/textarea-field/textarea-field.svelte"
     import Center from "../../system/Center.svelte"
     import Loader from "../Loader.svelte"
 
@@ -191,7 +191,7 @@
 </script>
 
 {#if manualDeletion}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (manualDeletion = false)} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (manualDeletion = false)} />
 
     <div class="shows">
         {#each getIds(manualIndex, data) as showId, i}
@@ -204,41 +204,41 @@
                 </p>
 
                 {#if loadedTexts[i]}
-                    <MaterialTextarea label="edit.text" rows={5} value={loadedTexts[i]} disabled />
+                    <TextareaField label="edit.text" rows={5} value={loadedTexts[i]} disabled />
                 {/if}
 
-                <MaterialButton icon="delete" style="padding: 5px;" on:click={() => deleteAtIndex(i)} white red>
+                <Button icon="delete" style="padding: 5px;" on:click={() => deleteAtIndex(i)} white red>
                     <T id="actions.delete" />
-                </MaterialButton>
+                </Button>
             </div>
 
             <HRule />
         {/each}
     </div>
 
-    <MaterialButton variant="outlined" icon="forward" info="({manualIndex + 1}/{data.length})" on:click={next}>
+    <Button variant="outline" icon="forward" info="({manualIndex + 1}/{data.length})" on:click={next}>
         <T id="guide.skip" />
-    </MaterialButton>
+    </Button>
 {:else if loading}
     <Center style="overflow: hidden;">
         <Loader />
     </Center>
 {:else}
-    <MaterialButton variant="outlined" icon="launch" info="{data.length} ({data.map((d) => d.ids.length).reduce((a, b) => a + b, 0)})" on:click={deleteManual} white>
+    <Button variant="outline" icon="launch" info="{data.length} ({data.map((d) => d.ids.length).reduce((a, b) => a + b, 0)})" on:click={deleteManual} white>
         <T id="show.delete_manual" />
-    </MaterialButton>
+    </Button>
 
     <HRule />
 
     <div class="list">
-        <MaterialButton variant="outlined" icon="delete" on:click={deleteMatching} red white>
+        <Button variant="outline" icon="delete" on:click={deleteMatching} red white>
             <T id="show.delete_match" />
-        </MaterialButton>
+        </Button>
 
         <InputRow arrow>
-            <MaterialButton disabled={!oldest.length} variant="outlined" icon="delete" info={"" + oldest.length} style="width: 100%;" on:click={deleteOldest} red white>
+            <Button disabled={!oldest.length} variant="outline" icon="delete" info={"" + oldest.length} style="width: 100%;" on:click={deleteOldest} red white>
                 <T id="show.delete_keep_last_modified" />
-            </MaterialButton>
+            </Button>
 
             <div slot="menu">
                 <ul style="list-style-position: inside;margin-left: 20px;">
@@ -252,9 +252,9 @@
         </InputRow>
 
         <InputRow arrow>
-            <MaterialButton disabled={!newest.length} variant="outlined" icon="delete" info={"" + newest.length} style="width: 100%;" on:click={deleteNewest} red white>
+            <Button disabled={!newest.length} variant="outline" icon="delete" info={"" + newest.length} style="width: 100%;" on:click={deleteNewest} red white>
                 <T id="show.delete_keep_first_created" />
-            </MaterialButton>
+            </Button>
 
             <div slot="menu">
                 <ul style="list-style-position: inside;margin-left: 20px;">

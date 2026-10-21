@@ -1,7 +1,7 @@
 <script lang="ts">
     import Player from "@vimeo/player"
     import { createEventDispatcher, onDestroy } from "svelte"
-    import { currentWindow, focusMode, theme, themes } from "../../../stores"
+    import { focusMode, theme, themes } from "../../../stores"
 
     export let videoData = { paused: false, muted: true, loop: false, duration: 0 }
     export let videoTime = 0
@@ -12,8 +12,8 @@
 
     // export let startAt = 0
 
-    let shouldBeMuted = preview || $currentWindow !== "output" ? true : !!videoData.muted
-    $: if (videoData) shouldBeMuted = preview || $currentWindow !== "output" ? true : !!videoData.muted
+    // la ventana webview de salida ya no existe: el player siempre va en silencio
+    let shouldBeMuted = true
 
     const options = {
         autoplay: true,
@@ -85,12 +85,10 @@
             player.pause().catch((err) => console.warn("Vimeo pause error:", err))
         } else if (!videoData.paused && paused && !isPlayPending) {
             isPlayPending = true
-            player
-                .play()
-                .catch((err) => {
-                    console.warn("Vimeo play error:", err)
-                    isPlayPending = false
-                })
+            player.play().catch((err) => {
+                console.warn("Vimeo play error:", err)
+                isPlayPending = false
+            })
         }
 
         if (currentMuteState !== shouldBeMuted) {
@@ -130,10 +128,7 @@
 
         try {
             if (targetTime > 0) {
-                await Promise.race([
-                    player.setCurrentTime(targetTime),
-                    timeoutPromise(500)
-                ])
+                await Promise.race([player.setCurrentTime(targetTime), timeoutPromise(500)])
             }
         } catch (err) {
             console.warn("Vimeo setCurrentTime error:", err)

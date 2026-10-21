@@ -165,13 +165,13 @@
         if (softLoopVideo) softLoopVideo.playbackRate = playbackRate
     }
 
-    $: shouldLoop = item.loop !== false
+    let shouldLoop = item.loop !== false
 
     // Soft loop
 
     $: softLoopValue = $media[mediaPath]?.softLoop ?? 0
-    $: fromTime = item.fromTime ?? $media[mediaPath]?.fromTime ?? 0
-    $: toTime = item.toTime ?? $media[mediaPath]?.toTime ?? 0
+    $: fromTime = $media[mediaPath]?.fromTime ?? 0
+    $: toTime = $media[mediaPath]?.toTime ?? 0
 
     const softLoopSync = new SoftLoopSync()
     onDestroy(() => softLoopSync.destroy())
@@ -190,8 +190,7 @@
             {#if item.fit === "blur"}
                 <video bind:this={videoBlurElem} src={encodeFilePath(mediaPath)} style="{mediaStyleBlurString}{mediaStyleCombinedString}" muted autoplay loop={shouldLoop} />
             {/if}
-            {@const itemVol = item.volume ?? $media[mediaPath]?.volume ?? 1}
-            {@const mainVol = ($audioChannelsData.main?.volume ?? 1) * itemVol}
+            {@const mainVol = $audioChannelsData.main?.volume ?? 1}
             <video bind:this={videoElem} src={encodeFilePath(mediaPath)} style="{mediaStyleString}{mediaStyleCombinedString}" muted volume={mainVol} autoplay loop={shouldLoop}>
                 <track kind="captions" />
             </video>

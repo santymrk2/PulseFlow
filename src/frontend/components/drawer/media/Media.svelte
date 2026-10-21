@@ -1,21 +1,22 @@
 <script lang="ts">
     import { uid } from "uid"
-    import type { ContentProviderId } from "../../../../electron/contentProviders/base/types"
+    import type { ContentProviderId } from "../../../../types/ContentProvider"
     import { Main } from "../../../../types/IPC/Main"
     import type { ClickEvent, FileFolder } from "../../../../types/Main"
     import { requestMain } from "../../../IPC/main"
-    import { addProjectItem } from "../../../converters/project"
-    import { activeDrawerTab, activeEdit, activeFocus, activeMediaTagFilter, activePopup, activeShow, audioFolders, cloudSyncData, drawerTabsData, focusMode, labelsDisabled, media, mediaFolders, mediaOptions, openedMediaFolders, outLocked, outputs, popupData, providerConnections, selectAllMedia, selected, sorted, special, styles } from "../../../stores"
+    import { activeDrawerTab, activeEdit, activeFocus, activeMediaTagFilter, activePopup, activeShow, audioFolders, cloudSyncData, drawerTabsData, focusMode, labelsDisabled, media, mediaFolders, mediaOptions, openedMediaFolders, outLocked, outputs, popupData, providerConnections, selectAllMedia, selected, sorted, special } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import { clone, keysToID, sortFilenames } from "../../helpers/array"
     import { splitPath } from "../../helpers/get"
-    import { countFolderMediaItems, getExtension, getFileName, getMediaLayerType, getMediaStyle, getMediaType, isMediaExtension, removeExtension } from "../../helpers/media"
+    import { countFolderMediaItems, getExtension, getFileName, getMediaType, isMediaExtension, removeExtension } from "../../helpers/media"
     import { getFirstActiveOutput, setOutput } from "../../helpers/output"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialZoom from "../../inputs/MaterialZoom.svelte"
-    import { clearBackground, clearSlide } from "../../output/clear"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import Input from "../../../lib/components/ui/input/input.svelte"
+    import { translateText } from "../../../utils/language"
+    import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
+    import { clearBackground } from "../../output/clear"
     import Center from "../../system/Center.svelte"
     import VirtualList from "../VirtualList.svelte"
     import BMDStreams from "../live/BMDStreams.svelte"
@@ -35,7 +36,6 @@
     import { loadFromUnsplash } from "./unsplash"
 
     export let active: string | null
-    export let searchValue = ""
     export let streams: MediaStream[] = []
 
     const setView = (v: any) => mediaOptions.update((a) => ({ ...a, view: v }))
@@ -88,16 +88,15 @@
 
         let onlineFiles: any[] = []
         if (onlineTab === "pixabay") {
-            onlineFiles = await loadFromPixabay(searchValue || "landscape", activeView === "video")
+            onlineFiles = await loadFromPixabay(onlineQuery || "landscape", activeView === "video")
         } else if (onlineTab === "unsplash") {
-            onlineFiles = await loadFromUnsplash(searchValue || "landscape")
+            onlineFiles = await loadFromUnsplash(onlineQuery || "landscape")
         }
 
         hightlightActive()
 
         filteredFiles = clone(onlineFiles)
-        if (searchValue.length < 2) searchedFiles = clone(filteredFiles)
-        else filterSearch()
+        searchedFiles = clone(filteredFiles)
     }
 
     function setSubSubTab(id: string) {
@@ -143,8 +142,10 @@
     }
 
     let onlineTab = $drawerTabsData.media?.openedSubSubTab?.online || "youtube"
-    $: if (active === "online" && onlineTab === "pixabay" && (searchValue !== null || activeView)) loadFilesAsync()
-    $: if (active === "online" && onlineTab === "unsplash" && (searchValue !== null || activeView)) loadFilesAsync()
+    // consulta de las fuentes de imágenes online (Pixabay, Unsplash); se confirma con Enter para no pedir a la API por cada letra
+    let onlineQuery = ""
+    $: if (active === "online" && onlineTab === "pixabay" && (onlineQuery !== null || activeView)) loadFilesAsync()
+    $: if (active === "online" && onlineTab === "unsplash" && (onlineQuery !== null || activeView)) loadFilesAsync()
 
     let prevActive: null | string = null
     let prevTab = ""
@@ -210,11 +211,8 @@
     let allRelevantFiles: FileFolder[] = []
 
     let requesting = 0
-    let currentDepth = 0
     async function requestFiles(path: string | string[], depth: number = 0, captureFolderContent: boolean = false) {
         if (!path) return
-
-        currentDepth = depth
 
         if ($special.optimizedMode || $mediaOptions.mode !== "grid") {
             // depth = 0
@@ -268,14 +266,6 @@
             return
         }
 
-        if (searchValue.length > 1) {
-            foldersList = allRelevantFiles.filter((a) => a.isFolder)
-            filesList = allRelevantFiles.filter((a) => !a.isFolder)
-
-            filterFiles()
-            return
-        }
-
         const folder = allRelevantFiles.find((a) => a.isFolder && a.path === path)
         if (!folder) return
 
@@ -305,7 +295,6 @@
     // filter files
     $: activeView = $mediaOptions.view || "all"
     $: if (activeView || $activeMediaTagFilter || $sorted) filterFiles()
-    $: if (searchValue !== undefined) filterSearch()
 
     let filteredFiles: FileFolder[] = []
     function filterFiles() {
@@ -341,43 +330,13 @@
         }
 
         filteredFiles = clone(localFilteredFiles)
-        if (searchValue.length < 2) searchedFiles = clone(filteredFiles)
-        else filterSearch()
+        searchedFiles = clone(filteredFiles)
 
         // scroll to top
         scrollElem?.scrollTo(0, 0)
     }
 
-    // search
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~() ]/g, "")
-    let searchFilterActive = false
     let searchedFiles: FileFolder[] = []
-    async function filterSearch() {
-        if (searchFilterActive) return
-        searchFilterActive = true
-
-        if (searchValue.length === 1) {
-            searchFilterActive = false
-            return
-        }
-        if (searchValue.length < 2) {
-            if (active !== "all" && active !== "favourites") requestFiles(path, 0, true)
-            else searchedFiles = clone(filteredFiles)
-            searchFilterActive = false
-            return
-        }
-
-        if (active !== "all" && active !== "favourites" && currentDepth < 5) {
-            await requestFiles(path, 5)
-        }
-
-        searchedFiles = clone(filteredFiles).filter((a) => filter(a.name).includes(filter(searchValue)))
-
-        // scroll to top
-        document.querySelector("svelte-virtual-list-viewport")?.scrollTo(0, 0)
-
-        searchFilterActive = false
-    }
 
     $: fileCount = mediaFilesOnly.length
     const shortcuts = {
@@ -415,36 +374,6 @@
     function keydown(e: KeyboardEvent) {
         if (!fileCount) return
 
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest(".search")) {
-            // let file = mediaFilesOnly[0] // not updating
-            let file = searchedFiles.filter((a) => !a.isFolder)[0]
-            if (!file) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                const currentOutput = getFirstActiveOutput()
-                const outputStyle = $styles[currentOutput?.style || ""]
-                const mediaStyle = getMediaStyle($media[file.path], outputStyle)
-
-                const videoType = getMediaLayerType(file.path, mediaStyle)
-
-                // clear slide text
-                if (videoType === "foreground") clearSlide()
-
-                const type = getMediaType(getExtension(file.path))
-                setOutput("background", { path: file.path, ...mediaStyle, type, loop: false, muted: false })
-                return
-            }
-
-            // add to project
-            const data = { id: file.path, name: file.name, type: getMediaType(getExtension(file.name)) }
-            addProjectItem(data)
-
-            activeFile = searchedFiles.findIndex((a) => a.path === file.path)
-            if (activeFile < 0) activeFile = null
-            return
-        }
-
         if (e.target?.closest?.("input") || e.target?.closest?.(".edit") || $activeEdit.items.length) return
 
         if ((e.ctrlKey || e.metaKey) && shortcuts[e.key]) {
@@ -481,7 +410,6 @@
         path = folder.length > rootPath.length ? folder || rootPath : rootPath
     }
 
-    const slidesViews: any = { grid: "list", list: "grid" }
     // const nextActiveView = { all: "image", folder: "image", image: "video", video: "all" } // all: "folder"
     $: if (notFolders.includes(active || "") && activeView === "folder") setView("image")
 
@@ -508,59 +436,65 @@
 
 {#if active === "inputs"}
     <div class="tabs">
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "cameras"} on:click={() => setSubSubTab("cameras")}>
+        <Button style="flex: 1;" isActive={inputsTab === "cameras"} on:click={() => setSubSubTab("cameras")}>
             <Icon size={1.2} id="camera" white />
             <p><T id="live.cameras" /></p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "screens"} on:click={() => setSubSubTab("screens")}>
+        </Button>
+        <Button style="flex: 1;" isActive={inputsTab === "screens"} on:click={() => setSubSubTab("screens")}>
             <Icon size={1.2} id="screen" white />
             <p><T id="live.screens" /></p>
-        </MaterialButton>
-        <!-- <MaterialButton style="flex: 1;" isActive={inputsTab === "windows"} on:click={() => setSubSubTab("windows")}>
+        </Button>
+        <!-- <Button style="flex: 1;" isActive={inputsTab === "windows"} on:click={() => setSubSubTab("windows")}>
             <Icon size={1.2} id="window" white />
             <p><T id="live.windows" /></p>
-        </MaterialButton> -->
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "ndi"} on:click={() => setSubSubTab("ndi")}>
+        </Button> -->
+        <Button style="flex: 1;" isActive={inputsTab === "ndi"} on:click={() => setSubSubTab("ndi")}>
             <Icon size={1.1} id="ndi" white />
             <p>NDI</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "omt"} on:click={() => setSubSubTab("omt")}>
+        </Button>
+        <Button style="flex: 1;" isActive={inputsTab === "omt"} on:click={() => setSubSubTab("omt")}>
             <Icon size={1.2} id="omt" white />
             <p>OMT</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={inputsTab === "blackmagic"} on:click={() => setSubSubTab("blackmagic")}>
+        </Button>
+        <Button style="flex: 1;" isActive={inputsTab === "blackmagic"} on:click={() => setSubSubTab("blackmagic")}>
             <Icon size={1.2} id="blackmagic" white />
             <p>Blackmagic</p>
-        </MaterialButton>
+        </Button>
     </div>
 {:else if active === "online"}
     <div class="tabs">
-        <MaterialButton style="flex: 1;" isActive={onlineTab === "youtube"} on:click={() => setSubSubTab("youtube")}>
+        <Button style="flex: 1;" isActive={onlineTab === "youtube"} on:click={() => setSubSubTab("youtube")}>
             <Icon style={onlineTab === "youtube" ? "fill: #ff0000" : ""} size={1.2} id="youtube" white />
             <p>YouTube</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={onlineTab === "vimeo"} on:click={() => setSubSubTab("vimeo")}>
+        </Button>
+        <Button style="flex: 1;" isActive={onlineTab === "vimeo"} on:click={() => setSubSubTab("vimeo")}>
             <Icon style={onlineTab === "vimeo" ? "fill: #17d5ff" : ""} size={1.2} id="vimeo" white />
             <p>Vimeo</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={onlineTab === "pixabay"} on:click={() => setSubSubTab("pixabay")}>
+        </Button>
+        <Button style="flex: 1;" isActive={onlineTab === "pixabay"} on:click={() => setSubSubTab("pixabay")}>
             <Icon style={onlineTab === "pixabay" ? "fill: #00ab6b" : ""} size={1.2} id="pixabay" box={48} white />
             <p>Pixabay</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={onlineTab === "unsplash"} on:click={() => setSubSubTab("unsplash")}>
+        </Button>
+        <Button style="flex: 1;" isActive={onlineTab === "unsplash"} on:click={() => setSubSubTab("unsplash")}>
             <!-- #111111 -->
             <Icon style={onlineTab === "unsplash" ? "fill: #bbbbbb" : ""} size={1.2} id="unsplash" white />
             <p>Unsplash</p>
-        </MaterialButton>
-        <MaterialButton style="flex: 1;" isActive={onlineTab === "canva"} on:click={() => setSubSubTab("canva")}>
+        </Button>
+        <Button style="flex: 1;" isActive={onlineTab === "canva"} on:click={() => setSubSubTab("canva")}>
             {#if onlineTab === "canva"}
                 <CLogo />
             {:else}
                 <Icon size={1.2} id="canva" white />
             {/if}
             <p>Canva</p>
-        </MaterialButton>
+        </Button>
     </div>
+
+    {#if onlineTab === "pixabay" || onlineTab === "unsplash"}
+        <div class="onlineSearch">
+            <Input value={onlineQuery} placeholder={translateText("main.search")} on:change={(e) => (onlineQuery = (e.target as HTMLInputElement).value.trim())} />
+        </div>
+    {/if}
 {/if}
 
 <!-- MAIN -->
@@ -568,13 +502,13 @@
 <div class="scroll" style="flex: 1;overflow-y: auto;" bind:this={scrollElem}>
     <div class="grid" class:list={$mediaOptions.mode === "list"} style="height: 100%;">
         {#if isProviderSection && activeProviderId}
-            <ContentLibraryBrowser providerId={activeProviderId} columns={$mediaOptions.columns} {searchValue} />
+            <ContentLibraryBrowser providerId={activeProviderId} columns={$mediaOptions.columns} />
         {:else if active === "online" && (onlineTab === "youtube" || onlineTab === "vimeo")}
             <div class="gridgap context #player">
-                <PlayerVideos active={onlineTab} {searchValue} />
+                <PlayerVideos active={onlineTab} />
             </div>
         {:else if active === "online" && onlineTab === "canva"}
-            <Canva {searchValue} />
+            <Canva />
         {:else if active === "inputs"}
             <div class="gridgap">
                 {#if inputsTab === "cameras"}
@@ -582,7 +516,7 @@
                 {:else if inputsTab === "screens"}
                     <Screens bind:streams on:click={({ detail }) => clickInput(detail.event, detail.screen, "screen")} />
                     <div style="width: 100%;height: 10px;" />
-                    <Windows bind:streams {searchValue} on:click={({ detail }) => clickInput(detail.event, detail.screen, "screen")} />
+                    <Windows bind:streams on:click={({ detail }) => clickInput(detail.event, detail.screen, "screen")} />
                 {:else if inputsTab === "ndi"}
                     <NDIStreams on:click={({ detail }) => clickInput(detail.event, detail.screen, "ndi")} />
                 {:else if inputsTab === "omt"}
@@ -636,13 +570,11 @@
 <!-- NAV -->
 
 {#if isProviderSection}
-    <FloatingInputs onlyOne>
-        <MaterialZoom columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
-    </FloatingInputs>
+    <ZoomControl hidden columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
 {:else if active === "online"}
     {#if onlineTab === "youtube" || onlineTab === "vimeo"}
-        <FloatingInputs onlyOne>
-            <MaterialButton
+        <FloatingBar onlyOne>
+            <Button
                 title="groups.toggle_global_group"
                 on:click={() => {
                     popupData.set({ active: onlineTab })
@@ -651,46 +583,33 @@
             >
                 <Icon id="add" />
                 {#if !$labelsDisabled}<T id="settings.add" />{/if}
-            </MaterialButton>
-        </FloatingInputs>
+            </Button>
+        </FloatingBar>
     {:else if onlineTab !== "canva" || $providerConnections.canva}
-        <FloatingInputs>
+        <FloatingBar>
             {#if onlineTab === "pixabay"}
-                <MaterialButton title="media.image" on:click={() => setView("image")}>
+                <Button title="media.image" on:click={() => setView("image")}>
                     <Icon size={1.2} id="image" white={activeView === "video"} />
-                </MaterialButton>
-                <MaterialButton title="media.video" on:click={() => setView("video")}>
+                </Button>
+                <Button title="media.video" on:click={() => setView("video")}>
                     <Icon size={1.2} id="video" white={activeView !== "video"} />
-                </MaterialButton>
-
-                <div class="divider"></div>
+                </Button>
             {/if}
-
-            <MaterialButton
-                on:click={() =>
-                    mediaOptions.update((a) => {
-                        a.mode = slidesViews[$mediaOptions.mode]
-                        return a
-                    })}
-                title="show.{$mediaOptions.mode}"
-            >
-                <Icon size={1.3} id={$mediaOptions.mode} white />
-            </MaterialButton>
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 
-    <MaterialZoom hidden columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
+    <ZoomControl hidden columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
 {:else if active === "inputs"}
     <!-- nothing -->
 
-    <MaterialZoom hidden columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
+    <ZoomControl hidden columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
 {:else}
     {#if active !== "all" && active !== "favourites"}
         {#if rootPath !== path}
-            <FloatingInputs side="left">
-                <MaterialButton disabled={rootPath === path} title="actions.back" on:click={goBack}>
+            <FloatingBar side="left">
+                <Button disabled={rootPath === path} title="actions.back" on:click={goBack}>
                     <Icon id="back" white />
-                </MaterialButton>
+                </Button>
 
                 <div class="divider"></div>
 
@@ -702,40 +621,21 @@
                         <span style="opacity: 0.5;font-size: 0.9em;margin-inline-start: 10px;">{fileCount}</span>
                     {/if}
                 </p>
-            </FloatingInputs>
+            </FloatingBar>
         {:else if hasAudio.count}
-            <FloatingInputs side="left" onlyOne>
-                <MaterialButton on:click={hasAudio.exists ? openAudioFolder : createAudioFolder}>
-                    <Icon id="autofill" gradient />
+            <FloatingBar side="left" onlyOne>
+                <Button on:click={hasAudio.exists ? openAudioFolder : createAudioFolder}>
+                    <Icon id="autofill" />
                     <p>
                         <T id="audio.{hasAudio.exists ? 'open_audio_folder' : 'create_audio_folder'}" />
                         <span style="opacity: 0.5;font-size: 0.8em;margin-left: 5px;">{hasAudio.count}</span>
                     </p>
-                </MaterialButton>
-            </FloatingInputs>
+                </Button>
+            </FloatingBar>
         {/if}
     {/if}
 
-    <FloatingInputs>
-        <!-- {#if open}
-            <MaterialButton title="media.{activeView}" on:click={() => setView(nextActiveView[activeView])}>
-                <Icon size={1.2} id={activeView === "all" ? "media" : activeView} white={activeView === "all"} />
-            </MaterialButton>
-        {/if} -->
-
-        <MaterialZoom columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
-
-        <MaterialButton
-            on:click={() =>
-                mediaOptions.update((a) => {
-                    a.mode = slidesViews[$mediaOptions.mode]
-                    return a
-                })}
-            title="show.{$mediaOptions.mode}"
-        >
-            <Icon size={1.3} id={$mediaOptions.mode} white />
-        </MaterialButton>
-    </FloatingInputs>
+    <ZoomControl hidden columns={$mediaOptions.columns} defaultValue={5} on:change={(e) => mediaOptions.set({ ...$mediaOptions, columns: e.detail })} />
 {/if}
 
 <style>
@@ -744,6 +644,14 @@
         position: relative;
         background-color: var(--primary-darkest);
         align-items: stretch;
+    }
+
+    .onlineSearch {
+        padding: 6px 8px;
+        border-bottom: 1px solid var(--border);
+    }
+    .onlineSearch :global(input) {
+        width: 100%;
     }
 
     .tabs :global(button) {

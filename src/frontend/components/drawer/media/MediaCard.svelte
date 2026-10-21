@@ -1,6 +1,6 @@
 <script lang="ts">
     import { derived } from "svelte/store"
-    import type { ContentFile, ContentProviderId } from "../../../../electron/contentProviders/base/types"
+    import type { ContentFile, ContentProviderId } from "../../../../types/ContentProvider"
     import type { MediaStyle } from "../../../../types/Main"
     import type { ShowType } from "../../../../types/Show"
     import { addProjectItem } from "../../../converters/project"
@@ -10,7 +10,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { getMediaLayerType, getMediaStyle, getMediaType, loadThumbnail } from "../../helpers/media"
     import { findMatchingOut, getAllActiveOutputs, getFirstActiveOutput, setOutput } from "../../helpers/output"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { clearBackground, clearSlide } from "../../output/clear"
     import SelectElem from "../../system/SelectElem.svelte"
     import Card from "../Card.svelte"
@@ -233,7 +233,7 @@
             {#if isFavourite && active !== "favourites"}
                 <div style="max-width: 100%;">
                     <div class="button">
-                        <Button style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("favourite")}>
+                        <Button align="start" style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("favourite")}>
                             <Icon id="star" size={0.9} white />
                         </Button>
                     </div>
@@ -242,7 +242,7 @@
             {#if mediaStyle.videoType}
                 <div style="max-width: 100%;">
                     <div class="button">
-                        <Button style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("videoType")}>
+                        <Button align="start" style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("videoType")}>
                             <Icon id={`type_${mediaStyle.videoType}`} size={0.9} white />
                         </Button>
                     </div>
@@ -251,7 +251,7 @@
             {#if !!mediaStyle.filter?.length || $media[path]?.fit || mediaStyle.flipped || mediaStyle.flippedY || (mediaStyle.blend && mediaStyle.blend !== "normal") || Object.keys(mediaStyle.cropping || {}).length}
                 <div style="max-width: 100%;">
                     <div class="button">
-                        <Button style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("filters")}>
+                        <Button align="start" style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("filters")}>
                             <Icon id="filter" size={0.9} white />
                         </Button>
                     </div>
@@ -260,7 +260,7 @@
             {#if tags.length}
                 <div style="max-width: 100%;">
                     <div class="button">
-                        <Button style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("tags")}>
+                        <Button align="start" style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("tags")}>
                             <Icon id="tag" size={0.9} white />
                         </Button>
                     </div>

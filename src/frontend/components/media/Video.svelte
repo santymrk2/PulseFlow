@@ -18,7 +18,6 @@
     export let animationStyle = ""
     export let mirror = false
     export let fadingOut = false
-    export let pauseCenter = false
 
     let dispatch = createEventDispatcher()
 
@@ -36,7 +35,7 @@
     $: {
         unsubscribeSync?.()
         const targetPath = syncPath || path
-        if (!pauseCenter && targetPath && outputId) {
+        if (targetPath && outputId) {
             let lastSyncedTime: number | null = null
             unsubscribeSync = videoSync(targetPath, outputId, (data) => {
                 const isSoftLoop = !!(data.softLoop && data.softLoop > 0)
@@ -67,17 +66,6 @@
     function loaded() {
         hasLoaded = true
 
-        // Stage "next Slide text" preview
-        if (pauseCenter) {
-            if (video) {
-                const duration = video.duration || 0
-                if (duration > 0) video.currentTime = duration / 2
-                video.pause()
-            }
-            dispatch("loaded", true)
-            return
-        }
-
         // a mirror can mount while the video is already playing, so start directly at the current playing time, instead of waiting on videoSync
         const playingKey = `${syncPath || path}_${outputId}`
         const playingTime = mirror ? $playingVideoState[playingKey]?.currentTime || 0 : 0
@@ -87,7 +75,7 @@
     }
 
     // ensure that video state matches the store state
-    $: if (video && !pauseCenter) {
+    $: if (video) {
         const isFading = fadingOut || isFadingOutState
         if (!videoData.paused && video.paused && !video.error) {
             video.play().catch((err) => {

@@ -10,8 +10,8 @@
     import { getLayoutRef, isSlideLocked } from "../helpers/show"
     import { _show } from "../helpers/shows"
     import { getStyles } from "../helpers/style"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Tabs from "../main/Tabs.svelte"
     import Center from "../system/Center.svelte"
     import { getBoxStyle, getFilterStyle, getItemStyle, getSlideStyle, setBoxStyle, setFilterStyle, setItemStyle, setSlideStyle } from "./scripts/itemClipboard"
@@ -444,45 +444,45 @@
         {/if}
 
         {#if item || active === "slide" || active === "filters"}
-            <FloatingInputs>
+            <FloatingBar>
                 {#if copiedStyleDifferent}
-                    <MaterialButton icon="paste" title="actions.paste" on:click={() => pasteStyle()}>
+                    <Button icon="paste" title="actions.paste" on:click={() => pasteStyle()}>
                         <T id="actions.paste" />
-                    </MaterialButton>
+                    </Button>
 
                     <div class="divider"></div>
                 {/if}
                 {#if currentCopied && !copiedStyleDifferent}
                     {#if isShow}
                         {#if active === "filters"}
-                            <MaterialButton icon="down" title="actions.to_following" on:click={() => pasteStyle(false, true)}>
+                            <Button icon="down" title="actions.to_following" on:click={() => pasteStyle(false, true)}>
                                 <!-- <T id="actions.to_following" /> -->
-                            </MaterialButton>
+                            </Button>
 
                             <div class="divider"></div>
                         {/if}
-                        <MaterialButton icon="paste" title="actions.to_all" on:click={() => pasteStyle(true)}>
+                        <Button icon="paste" title="actions.to_all" on:click={() => pasteStyle(true)}>
                             <T id="actions.to_all" />
-                        </MaterialButton>
+                        </Button>
                     {/if}
                 {:else}
-                    <MaterialButton disabled={!currentItemStyle?.length} title="actions.copy" on:click={copyStyle}>
+                    <Button disabled={!currentItemStyle?.length} title="actions.copy" on:click={copyStyle}>
                         <Icon id="copy" white={copiedStyleDifferent} />
                         {#if !copiedStyleDifferent}<T id="actions.copy" />{/if}
-                    </MaterialButton>
+                    </Button>
                 {/if}
 
                 <div class="divider"></div>
 
                 <!-- && !copiedStyleDifferent -->
                 {#if currentCopied}
-                    <MaterialButton icon="clear" title="clear.general: formats.clipboard" on:click={clearClipboard}></MaterialButton>
+                    <Button icon="clear" title="clear.general: formats.clipboard" on:click={clearClipboard}></Button>
                 {:else}
-                    <MaterialButton icon="reset" title="actions.reset" on:click={reset}>
+                    <Button icon="reset" title="actions.reset" on:click={reset}>
                         <!-- {#if !isShow}<T id="actions.reset" />{/if} -->
-                    </MaterialButton>
+                    </Button>
                 {/if}
-            </FloatingInputs>
+            </FloatingBar>
         {/if}
 
         <!-- <span style="display: flex;flex-wrap: wrap;white-space: nowrap;">

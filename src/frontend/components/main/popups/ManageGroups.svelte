@@ -6,12 +6,12 @@
     import T from "../../helpers/T.svelte"
     import { clone, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     $: g = sortByName(
         Object.entries($groups)
@@ -79,24 +79,24 @@
     $: showMore = $groupsMoreOptionsEnabled
 </script>
 
-<MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => groupsMoreOptionsEnabled.set(!showMore)} white />
+<Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => groupsMoreOptionsEnabled.set(!showMore)} white />
 
 {#if showMore}
-    <MaterialButton class="popup-reset" icon="reset" iconSize={1.1} title="actions.reset" on:click={reset} white />
+    <Button class="popup-reset" icon="reset" iconSize={1.1} title="actions.reset" on:click={reset} white />
 {/if}
 
 <div style="min-width: calc(100vw - var(--navigation-width) * 2 - 51px);">
     {#if showMore}
-        <MaterialToggleSwitch label="settings.auto_group_numbers" checked={$groupNumbers} defaultValue={true} on:change={(e) => groupNumbers.set(e.detail)} />
-        <MaterialToggleSwitch style="margin-bottom: 10px;" label="settings.shortcuts_on_slides" checked={$special.groupShortcutPreview} defaultValue={false} on:change={(e) => updateSpecial("groupShortcutPreview", e.detail)} />
+        <ToggleField label="settings.auto_group_numbers" checked={$groupNumbers} defaultValue={true} on:change={(e) => groupNumbers.set(e.detail)} />
+        <ToggleField style="margin-bottom: 10px;" label="settings.shortcuts_on_slides" checked={$special.groupShortcutPreview} defaultValue={false} on:change={(e) => updateSpecial("groupShortcutPreview", e.detail)} />
     {/if}
 
     {#if g.length}
         {#each g as group}
             <InputRow>
-                <MaterialTextInput label="inputs.name" style="flex: 1;" value={group.name} on:change={(e) => changeGroup(e.detail, group.id)} />
-                <MaterialColorInput label="edit.color" noLabel style="flex: 0;min-width: 200px;" value={group.color} on:input={(e) => changeGroup(e.detail, group.id, "color")} />
-                <MaterialPopupButton
+                <TextField label="inputs.name" style="flex: 1;" value={group.name} on:change={(e) => changeGroup(e.detail, group.id)} />
+                <ColorField label="edit.color" noLabel style="flex: 0;min-width: 200px;" value={group.color} on:input={(e) => changeGroup(e.detail, group.id, "color")} />
+                <PopupField
                     label="groups.group_shortcut"
                     style="width: 28%;"
                     id={group.id}
@@ -114,7 +114,7 @@
                 />
                 <!-- template -->
                 {#if showMore}
-                    <MaterialPopupButton
+                    <PopupField
                         label="groups.group_template"
                         style="width: 22%;"
                         value={group.template}
@@ -130,7 +130,7 @@
                     />
                 {/if}
 
-                <MaterialButton
+                <Button
                     style="flex: 0;"
                     icon="delete"
                     title="actions.delete"
@@ -147,7 +147,7 @@
         </div>
     {/if}
 
-    <MaterialButton variant="outlined" style="width: 100%;" icon="add" on:click={addGroup}>
+    <Button variant="outline" style="width: 100%;" icon="add" on:click={addGroup}>
         <T id="settings.add" />
-    </MaterialButton>
+    </Button>
 </div>

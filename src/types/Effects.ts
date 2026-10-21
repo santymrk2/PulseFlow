@@ -226,7 +226,6 @@ export interface ConfettiItem extends EffectItem<"confetti"> {
     size: number
     count: number
     speed: number
-    loop?: boolean
     color?: string
 }
 

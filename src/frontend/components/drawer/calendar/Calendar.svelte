@@ -5,22 +5,14 @@
     import { removeDuplicates, sortByTime } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { MILLISECONDS_IN_A_DAY, copyDate, getDaysInMonth, getWeekNumber, isBetween, isSameDay } from "./calendar"
     import { isCalendarHidden } from "./calendars"
 
     export let active: string | null
-    export let searchValue = ""
 
-    // filter events based on search value
-    $: filteredEvents =
-        searchValue && searchValue.length >= 2
-            ? currentEvents.filter((event) => {
-                  const search = searchValue.toLowerCase()
-                  return event.name?.toLowerCase().includes(search) || event.notes?.toLowerCase().includes(search) || event.location?.toLowerCase().includes(search)
-              })
-            : [...currentEvents]
+    $: filteredEvents = [...currentEvents]
 
     $: sundayFirstDay = $special.firstDayOfWeek === "7"
 
@@ -252,19 +244,19 @@
     </div>
 </div>
 
-<FloatingInputs style="margin-left: 25px;" side="left">
-    <MaterialButton title="media.previous" on:click={() => previousMonth()}>
+<FloatingBar style="margin-left: 25px;" side="left">
+    <Button title="media.previous" on:click={() => previousMonth()}>
         <Icon id="previous" size={1.1} />
-    </MaterialButton>
-    <MaterialButton title="media.next" on:click={() => nextMonth()}>
+    </Button>
+    <Button title="media.next" on:click={() => nextMonth()}>
         <Icon id="next" size={1.1} />
-    </MaterialButton>
+    </Button>
 
     <div class="divider"></div>
 
-    <MaterialButton title="calendar.today" isActive={isPresentDay} on:click={setToPresentDay}>
+    <Button title="calendar.today" isActive={isPresentDay} on:click={setToPresentDay}>
         <Icon id="home" white={!isPresentDay} size={1.1} />
-    </MaterialButton>
+    </Button>
 
     <div class="divider"></div>
 
@@ -272,10 +264,10 @@
         {translateText("month." + (current.getMonth() + 1))}
         {current.getFullYear()}
     </span>
-</FloatingInputs>
+</FloatingBar>
 
-<FloatingInputs onlyOne>
-    <MaterialButton
+<FloatingBar onlyOne>
+    <Button
         on:click={() => {
             eventEdit.set(null)
             popupData.set({})
@@ -284,8 +276,8 @@
     >
         <Icon id="add" right={!$labelsDisabled} />
         {#if !$labelsDisabled}<T id="new.{active === 'action' ? 'event_action' : 'event'}" />{/if}
-    </MaterialButton>
-</FloatingInputs>
+    </Button>
+</FloatingBar>
 
 <style>
     .calendar {

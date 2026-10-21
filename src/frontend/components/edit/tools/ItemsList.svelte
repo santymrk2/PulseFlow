@@ -5,7 +5,7 @@
     import { clone } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import { getFileName } from "../../helpers/media"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { rearrangeItems } from "../scripts/itemHelpers"
     import { getItemText } from "../scripts/textStyle"
     import { itemBoxes } from "../values/boxes"
@@ -67,9 +67,9 @@
                 {@const type = getType(currentItem)}
                 <!-- TODO: context menu (delete / move to top/bottom / etc.) -->
 
-                <MaterialButton
+                <Button
                     id="#{index}"
-                    variant="outlined"
+                    variant="outline"
                     class="item_button"
                     style="width: 100%;justify-content: space-between;padding: 2px 8px;"
                     isActive={$activeEdit.items.includes(index)}
@@ -93,10 +93,10 @@
                         {#if getIdentifier[type]}<p style="margin-inline-start: 10px;max-width: 120px;opacity: 0.5;font-size: 0.8em;max-width: 40%;">{getIdentifier[type](currentItem)}</p>{/if}
                     </span>
                     <span>
-                        <MaterialButton disabled={i === allSlideItems.length - 1} icon="down" title="actions.backward" style="padding: 8px;" on:click={() => rearrangeItems("backward", index)} />
-                        <MaterialButton disabled={i === 0} icon="up" title="actions.forward" style="padding: 8px;" on:click={() => rearrangeItems("forward", index)} />
+                        <Button disabled={i === allSlideItems.length - 1} icon="down" title="actions.backward" style="padding: 8px;" on:click={() => rearrangeItems("backward", index)} />
+                        <Button disabled={i === 0} icon="up" title="actions.forward" style="padding: 8px;" on:click={() => rearrangeItems("forward", index)} />
                     </span>
-                </MaterialButton>
+                </Button>
             {/each}
         </div>
     </div>
@@ -115,7 +115,7 @@
     }
     .title p {
         font-weight: 500;
-        font-size: 0.8rem;
+        font-size: var(--text-xs);
         opacity: 0.8;
     }
 </style>

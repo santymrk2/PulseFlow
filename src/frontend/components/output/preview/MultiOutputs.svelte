@@ -1,6 +1,6 @@
 <script lang="ts">
-    import { onDestroy } from "svelte"
-    import { activePage, activeRecording, activeStyle, audioChannelsData, dictionary, outputs, rtmpStatus, selected, settingsTab, special, styles, templates, toggleOutputEnabled } from "../../../stores"
+    import { activeRecording, activeStyle, audioChannelsData, dictionary, outputs, previewOutputId, rtmpStatus, selected, styles, templates, toggleOutputEnabled } from "../../../stores"
+    import { openSettings } from "../../settings/openSettings"
     import { translateText } from "../../../utils/language"
     import AudioMeter from "../../drawer/audio/AudioMeter.svelte"
     import { stopMediaRecorder } from "../../drawer/live/recorder"
@@ -12,39 +12,18 @@
     import { getUnhealthyDestinations, hasStreamableDestination } from "../../helpers/rtmpDestinations"
     import { bindSlidesToOutput, getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import OutputPreviewLabel from "./OutputPreviewLabel.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import PreviewOutput from "./PreviewOutput.svelte"
 
     export let disableTransitions = false
 
     $: allEnabledOuts = sortObject(sortByName(keysToID($outputs).filter((a) => a.enabled)), "stageOutput")
-    $: outs = allEnabledOuts.length > 1 ? allEnabledOuts.filter((a) => !a.hideFromPreview) : allEnabledOuts
-    $: hiddenOuts = allEnabledOuts.length > 1 ? allEnabledOuts.filter((a) => a.hideFromPreview) : []
-
-    $: maxColumns = Math.max(1, outs.length)
-    $: gridColumns = allEnabledOuts.length > 1 ? Math.min($special.outputPreviewGrid || 2, maxColumns) : 1
-
-    let nextZoomTimeout: NodeJS.Timeout | null = null
-    function handleWheel(e: WheelEvent) {
-        if (!e.ctrlKey && !e.metaKey) return
-        if (allEnabledOuts.length <= 1) return
-        e.preventDefault()
-        if (nextZoomTimeout) return
-
-        const current = gridColumns
-        const direction = e.deltaY < 0 ? -1 : 1
-        const nextValue = Math.max(1, Math.min(maxColumns, current + direction))
-
-        if (nextValue !== ($special.outputPreviewGrid || 2)) {
-            special.update((s) => ({ ...s, outputPreviewGrid: nextValue }))
-        }
-
-        if (Math.abs(e.deltaY) >= 100) return
-        nextZoomTimeout = setTimeout(() => {
-            nextZoomTimeout = null
-        }, 300)
-    }
+    // una sola salida a la vez (F14.11); las ocultas de la vista previa no aparecen en el selector
+    $: pickable = allEnabledOuts.length > 1 ? allEnabledOuts.filter((a) => !a.hideFromPreview) : allEnabledOuts
+    $: shown = pickable.find((a) => a.id === $previewOutputId) || pickable[0] || allEnabledOuts[0]
+    $: outs = shown ? [shown] : []
+    $: pickerOptions = pickable.map((o) => ({ value: o.id, label: o.name || o.id }))
 
     let fullscreen = false
     let fullscreenId = ""
@@ -59,8 +38,7 @@
             const outputId = e.target.closest(".outputPreview")?.id
             const output = $outputs[outputId]
             activeStyle.set(output?.style || "")
-            settingsTab.set("styles")
-            activePage.set("settings")
+            openSettings("styles")
             return
         }
 
@@ -154,41 +132,6 @@
 
         bindSlidesToOutput(indexes, outputId)
     }
-
-    // Fullscreen stats ticker
-    let now = Date.now()
-    let statsInterval: NodeJS.Timeout | null = null
-
-    $: if (fullscreen) {
-        if (!statsInterval) {
-            now = Date.now()
-            statsInterval = setInterval(() => (now = Date.now()), 1000)
-        }
-    } else if (statsInterval) {
-        clearInterval(statsInterval)
-        statsInterval = null
-    }
-
-    onDestroy(() => {
-        if (statsInterval) clearInterval(statsInterval)
-    })
-
-    function formatDuration(ms = 0) {
-        const s = Math.floor(Math.max(0, ms) / 1000)
-        const h = Math.floor(s / 3600)
-        const m = Math.floor((s % 3600) / 60)
-        const sec = s % 60
-        const pad = (n: number) => n.toString().padStart(2, "0")
-        return h > 0 ? `${h}:${pad(m)}:${pad(sec)}` : `${pad(m)}:${pad(sec)}`
-    }
-
-    $: fullscreenOut = $outputs[fullscreenId]
-    $: isLive = fullscreenOut?.rtmp ? fullscreenOut?.rtmpData?.streaming : fullscreenOut?.webrtcData?.streaming
-    $: liveStartedAt = (fullscreenOut?.rtmp ? fullscreenOut?.rtmpData?.startedAt : fullscreenOut?.webrtcData?.startedAt) || 0
-    $: liveUnhealthy = fullscreenOut?.rtmp && isLive && getUnhealthyDestinations(fullscreenOut?.rtmpData, $rtmpStatus[fullscreenId])?.length
-
-    $: isRec = $activeRecording?.outputId === fullscreenId || ($activeRecording?.isOutput && !$activeRecording.outputId && outs[0]?.id === fullscreenId)
-    $: recStartedAt = $activeRecording?.startedAt || 0
 </script>
 
 <!-- aspect-ratio: {resolution?.width || 1920}/{resolution?.height || 1080}; -->
@@ -196,35 +139,11 @@
 <!-- role="button"
 tabindex="0"
 aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"} -->
-<div on:click={toggleFullscreen} on:wheel={handleWheel} class="multipleOutputs" class:multiple={outs.length > 1} class:fullscreen style={fullscreen ? "width: 100%;height: 100%;" : "width: calc(100% - 4px);"} role="none">
+<div on:click={toggleFullscreen} class="multipleOutputs" class:fullscreen style={fullscreen ? "width: 100%;height: 100%;" : "width: calc(100% - 4px);"} role="none">
     {#if fullscreen}
-        <MaterialButton class="hide" style="z-index: 2;opacity: 1;inset-inline-end: 10px;" title="actions.close" on:click={() => (fullscreen = false)}>
+        <Button class="hide" style="z-index: 2;opacity: 1;inset-inline-end: 10px;" title="actions.close" on:click={() => (fullscreen = false)}>
             <Icon id="close" size={1.2} white />
-        </MaterialButton>
-
-        {#if isLive || isRec}
-            <div class="fullscreen-stats">
-                {#if isLive}
-                    <div class="stat-badge" style="background-color: {liveUnhealthy ? '#ab8000' : '#b60707'};">
-                        <span class="stat-dot pulse"></span>
-                        <span>{translateText("output.is_live", $dictionary).toUpperCase()}</span>
-                        {#if liveStartedAt}
-                            <span class="stat-time">{formatDuration(now - liveStartedAt)}</span>
-                        {/if}
-                    </div>
-                {/if}
-
-                {#if isRec}
-                    <div class="stat-badge" style="background-color: #b60707;">
-                        <span class="stat-dot pulse"></span>
-                        <span>REC</span>
-                        {#if recStartedAt}
-                            <span class="stat-time">{formatDuration(now - recStartedAt)}</span>
-                        {/if}
-                    </div>
-                {/if}
-            </div>
-        {/if}
+        </Button>
 
         <span class="resolution">
             <p><b><T id="screen.width" />:</b> {resolution?.width || 0} <T id="screen.pixels" /></p>
@@ -233,14 +152,6 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
                 <p><b><T id="settings.aspect_ratio" />:</b> {Number((resolution.width / resolution.height).toFixed(2))} ({toFraction(resolution.width / resolution.height)})</p>
             {/if}
         </span>
-    {:else if hiddenOuts.length}
-        <div class="hiddenOutputTitles">
-            {#each hiddenOuts as output (output.id)}
-                <div style="flex: 1 1 {100 / gridColumns}%;min-width: 0;">
-                    <OutputPreviewLabel {output} outs={allEnabledOuts} />
-                </div>
-            {/each}
-        </div>
     {/if}
 
     {#each outs as output (output.id)}
@@ -250,13 +161,15 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
         {@const isMuted = $audioChannelsData[`channel_${output.id}`]?.isMuted}
         {@const isNetworkOutput = output.ndi || output.webrtc || output.rtmp}
 
-        <div id={output.id} class="outputPreview output_button context #output_preview" class:drop-target={!fullscreen && dragOverOutputId === output.id} on:dragover={(e) => handleDragOver(e, output.id)} on:dragleave={(e) => handleDragLeave(e, output.id)} on:drop={(e) => handleDrop(e, output.id)} style={fullscreen ? (fullscreenId === output.id ? "display: contents;" : "opacity: 0;position: absolute;") : outs.length > 1 ? `width: ${100 / gridColumns}%;` : "display: contents;"}>
+        <div id={output.id} class="outputPreview output_button context #output_preview" class:drop-target={!fullscreen && dragOverOutputId === output.id} on:dragover={(e) => handleDragOver(e, output.id)} on:dragleave={(e) => handleDragLeave(e, output.id)} on:drop={(e) => handleDrop(e, output.id)} style={fullscreen ? (fullscreenId === output.id ? "display: contents;" : "opacity: 0;position: absolute;") : "display: contents;"}>
             {#if !fullscreen && allEnabledOuts.length > 1}
-                <OutputPreviewLabel {output} outs={allEnabledOuts} />
+                <div class="outputBar">
+                    <SelectField label="screen_config.output" value={output.id} options={pickerOptions} on:change={(e) => previewOutputId.set(e.detail)} />
+                </div>
             {/if}
 
-            <div class="previewContainer" style={outs.length > 1 && !fullscreen ? `border: 2px solid ${output?.color};` : ""}>
-                <PreviewOutput outputId={output.id} {disableTransitions} disabled={outs.length > 1 && !fullscreen && !output?.active} {fullscreen} />
+            <div class="previewContainer">
+                <PreviewOutput outputId={output.id} {disableTransitions} disabled={allEnabledOuts.length > 1 && !fullscreen && !output?.active} {fullscreen} />
 
                 <!-- BADGES (LIVE / REC) -->
                 {#if !fullscreen}
@@ -267,27 +180,27 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
                             {@const unhealthy = isRtmp && isStreaming ? getUnhealthyDestinations(output.rtmpData, $rtmpStatus[output.id]) : []}
 
                             <div class="badge live" style="background-color: {isStreaming ? (unhealthy.length ? '#ab8000' : '#b60707') : 'var(--primary-darker)'};">
-                                <MaterialButton style="padding: 2px 3px;min-height: 0;" on:click={() => (isRtmp ? (output.rtmpData?.streaming ? stopRtmpStreaming(output.id, true) : startRtmpStreaming(output.id)) : output.webrtcData?.streaming ? stopStreaming(output.id, true) : startStreaming(output.id))} title={unhealthy.length ? `${unhealthy.join(", ")} not live` : isStreaming ? "output.stop_streaming" : "output.start_streaming"}>
+                                <Button style="padding: 2px 3px;min-height: 0;" on:click={() => (isRtmp ? (output.rtmpData?.streaming ? stopRtmpStreaming(output.id, true) : startRtmpStreaming(output.id)) : output.webrtcData?.streaming ? stopStreaming(output.id, true) : startStreaming(output.id))} title={unhealthy.length ? `${unhealthy.join(", ")} not live` : isStreaming ? "output.stop_streaming" : "output.start_streaming"}>
                                     {translateText(isStreaming ? "output.is_live" : "output.go_live", $dictionary)}
-                                </MaterialButton>
+                                </Button>
                             </div>
                         {/if}
 
                         {#if $activeRecording?.outputId === output.id || ($activeRecording?.isOutput && !$activeRecording.outputId && outs[0]?.id === output.id)}
                             <div class="badge rec" style="background-color: #b60707;">
-                                <MaterialButton style="padding: 2px 4px;min-height: 0;gap: 4px;" on:click={() => stopMediaRecorder()} title="actions.stop_recording">
+                                <Button style="padding: 2px 4px;min-height: 0;gap: 4px;" on:click={() => stopMediaRecorder()} title="actions.stop_recording">
                                     <Icon id="record" size={0.7} white />
                                     REC
-                                </MaterialButton>
+                                </Button>
                             </div>
                         {/if}
 
                         {#if output.out?.scene?.name}
                             <div class="badge scene" style="background-color: var(--primary-darker);">
-                                <MaterialButton style="padding: 2px 4px;min-height: 0;gap: 3px;max-width: 100%;" on:click={() => openDrawer("scenes")} title={output.out.scene.name}>
+                                <Button style="padding: 2px 4px;min-height: 0;gap: 3px;max-width: 100%;" on:click={() => openDrawer("scenes")} title={output.out.scene.name}>
                                     <Icon id="scene" size={0.7} white />
                                     <p>{output.out.scene.name}</p>
-                                </MaterialButton>
+                                </Button>
                             </div>
                         {/if}
                     </div>
@@ -345,11 +258,9 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
 </div>
 
 <style>
-    .hiddenOutputTitles {
-        display: flex;
-        flex-wrap: wrap;
+    .outputBar {
         width: 100%;
-        background-color: var(--primary-darker);
+        padding: 5px;
     }
 
     .multipleOutputs {
@@ -358,16 +269,7 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
         /* this is changed in electron v31 (chromium) */
         height: fit-content;
         /* height: 100%; */
-
-        /* width: calc(50% - 0.5px); */
-        /* margin-top: 1px;
-        gap: 1px; */
     }
-    /*
-    .multipleOutputs.multiple:not(.fullscreen) :global(.zoomed) {
-        width: 50% !important;
-    }
-    */
 
     .fullscreen {
         position: fixed;
@@ -378,40 +280,6 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
         transform: translate(-50%, -50%);
         /* border: 4px solid var(--secondary); */
         z-index: 5500;
-    }
-
-    /* fullscreen stats */
-    .fullscreen-stats {
-        position: absolute;
-        top: 10px;
-        inset-inline-start: 10px;
-        display: flex;
-        gap: 8px;
-        z-index: 30;
-        pointer-events: none;
-    }
-    .stat-badge {
-        display: inline-flex;
-        align-items: center;
-        gap: 6px;
-        padding: 4px 8px;
-        border-radius: 4px;
-        color: #fff;
-        font-size: 0.8em;
-        font-weight: 600;
-        letter-spacing: 0.5px;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-    }
-    .stat-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background-color: #fff;
-    }
-    .stat-time {
-        font-family: monospace;
-        font-size: 1.1em;
-        letter-spacing: 0.5px;
     }
 
     .resolution {

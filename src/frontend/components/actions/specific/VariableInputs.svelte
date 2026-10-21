@@ -4,10 +4,10 @@
     import { variables } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { sortByName } from "../../helpers/array"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
-    import InputRow from "../../input/InputRow.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
 
     export let value
 
@@ -77,11 +77,11 @@
     $: currentType = variable?.type
 </script>
 
-<MaterialDropdown label="items.variable" options={variableOptions} value={value?.id} on:change={(e) => updateValue("id", e.detail)} />
+<SelectField label="items.variable" options={variableOptions} value={value?.id} on:change={(e) => updateValue("id", e.detail)} />
 
 {#if value?.id}
     <InputRow>
-        <MaterialDropdown label="actions.mode" options={variableModes[currentType] || []} value={value?.key || defaultMode[currentType] || ""} on:change={(e) => updateValue("key", e.detail)} />
+        <SelectField label="actions.mode" options={variableModes[currentType] || []} value={value?.key || defaultMode[currentType] || ""} on:change={(e) => updateValue("key", e.detail)} />
 
         <!-- {#if variable?.type === "text_set"}
         <CombinedInput>
@@ -91,16 +91,16 @@
 
         {#if value?.key === "value" || variable?.type === "number"}
             {#if (variable?.type === "number" && value?.key !== "expression") || variable?.type === "text_set"}
-                <MaterialNumberInput label="variables.value" value={!isNaN(value?.value) ? value?.value || "1" : "1"} step={1} on:change={(e) => updateValue("value", e)} />
+                <NumberField label="variables.value" value={!isNaN(value?.value) ? value?.value || "1" : "1"} step={1} on:change={(e) => updateValue("value", e)} />
             {:else}
-                <MaterialTextInput label="variables.value" value={isNaN(value?.value) ? value?.value || "" : ""} placeholder={value?.key === "expression" ? "Use math & dynamic variable values" : ""} on:change={(e) => updateValue("value", e)} />
+                <TextField label="variables.value" value={isNaN(value?.value) ? value?.value || "" : ""} placeholder={value?.key === "expression" ? "Use math & dynamic variable values" : ""} on:change={(e) => updateValue("value", e)} />
             {/if}
         {:else if variable?.type === "text"}
-            <MaterialDropdown label="variables.value" options={stateOptions} value={typeof value?.value === "boolean" ? (value.value ? "on" : "off") : ""} on:change={textStateChange} />
+            <SelectField label="variables.value" options={stateOptions} value={typeof value?.value === "boolean" ? (value.value ? "on" : "off") : ""} on:change={textStateChange} />
         {:else if variable?.type === "text_set" && value?.key === "text_set"}
-            <MaterialDropdown label="variables.text_set" options={variable.textSetKeys?.map((name) => ({ value: name, label: name })) || []} value={variable.textSetKeys?.find((name) => name === value?.text_set) || ""} on:change={(e) => updateValue("text_set", e.detail)} />
-            <MaterialNumberInput label="variables.number" value={value?.text_set_number ?? 1} on:change={(e) => updateValue("text_set_number", e)} />
-            <MaterialTextInput label="variables.value" value={(value?.value || "").toString()} on:change={(e) => updateValue("value", e)} />
+            <SelectField label="variables.text_set" options={variable.textSetKeys?.map((name) => ({ value: name, label: name })) || []} value={variable.textSetKeys?.find((name) => name === value?.text_set) || ""} on:change={(e) => updateValue("text_set", e.detail)} />
+            <NumberField label="variables.number" value={value?.text_set_number ?? 1} on:change={(e) => updateValue("text_set_number", e)} />
+            <TextField label="variables.value" value={(value?.value || "").toString()} on:change={(e) => updateValue("value", e)} />
         {/if}
     </InputRow>
 {/if}

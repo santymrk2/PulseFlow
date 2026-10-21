@@ -146,7 +146,7 @@
         background-color: var(--hover);
     }
     .event:focus {
-        outline: 2px solid var(--secondary);
+        outline: 1px solid var(--ring);
         outline-offset: 2px;
     }
 
@@ -155,5 +155,7 @@
         color: var(--text);
         opacity: 0.9;
         white-space: nowrap;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
 </style>

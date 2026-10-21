@@ -6,14 +6,13 @@
     import Icon from "../../helpers/Icon.svelte"
     import { findMatchingOut, setOutput } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { clearBackground, clearSlide } from "../../output/clear"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import Card from "../Card.svelte"
 
     export let active: string
-    export let searchValue = ""
 
     $: videos = sortByName(
         Object.entries($playerVideos)
@@ -22,8 +21,7 @@
     )
 
     // search
-    $: if (videos || searchValue !== undefined || $activePlayerTagFilter) filterSearch()
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~()]/g, "")
+    $: if (videos || $activePlayerTagFilter) filterSearch()
     let fullFilteredVideos: (Category & { rid: string })[] = []
     function filterSearch() {
         fullFilteredVideos = clone(videos)
@@ -32,8 +30,6 @@
         if ($activePlayerTagFilter.length) {
             fullFilteredVideos = fullFilteredVideos.filter((a) => a.tags?.length && !$activePlayerTagFilter.find((tagId) => !a.tags!.includes(tagId)))
         }
-
-        if (searchValue.length > 1) fullFilteredVideos = fullFilteredVideos.filter((a) => filter(a.name).includes(searchValue))
     }
 
     let loaded: { [key: string]: boolean } = {}
@@ -109,7 +105,7 @@
                 {#if tags.length}
                     <div style="max-width: 100%;">
                         <div class="button">
-                            <Button style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("tags", video.rid)}>
+                            <Button align="start" style="padding: 3px;" redHover title={translateText("actions.remove")} on:click={() => removeStyle("tags", video.rid)}>
                                 <Icon id="tag" size={0.9} white />
                             </Button>
                         </div>

@@ -9,6 +9,7 @@
     import ContextChild from "./ContextChild.svelte"
     import ContextItem from "./ContextItem.svelte"
     import { contextMenuGroups, contextMenuItems, contextMenuLayouts } from "./contextMenus"
+    import { contextMenuMode } from "./nativeMenu"
     import { flattenMenuItems, handleKeydown as handleSearchKeydown, searchMenuItems, type FlatMenuItem } from "./contextMenuSearch"
     import { quickLoadItems } from "./loadItems"
     import { saveTextSelectionRange } from "./menuClick"
@@ -35,6 +36,11 @@
         if (!target || closingMenuTimeout) return
 
         let input = ["text", "textarea"].includes(target.type) && !target.closest?.(".numberInput")
+        if (contextMenuMode(input, $os.platform) === "native") {
+            closeContextMenu()
+            return
+        }
+        e.preventDefault()
         if ((!input && (target.closest?.(".contextMenu") || $activePopup)) || target.closest?.(".nocontext")) {
             closeContextMenu()
             return
@@ -260,16 +266,15 @@
     .contextMenu {
         position: fixed;
         min-width: 250px;
-        box-shadow: 1px 1px 3px 2px rgb(0 0 0 / 0.2);
+        box-shadow: var(--shadow-float);
         padding: 8px 0;
         z-index: 5001;
 
-        border-radius: 6px;
+        border-radius: var(--radius, 6px);
 
-        border: 1px solid var(--primary-lighter);
+        border: 1px solid var(--border-color, var(--primary-lighter));
 
-        --background: rgba(35, 35, 45, 0.97);
-        background-color: var(--background);
+        background-color: var(--primary-darker);
         backdrop-filter: blur(8px);
     }
 
@@ -282,7 +287,7 @@
         margin: 8px 0;
         height: 1px;
         border: none;
-        background-color: var(--primary-lighter);
+        background-color: var(--border-color, var(--primary-lighter));
     }
 
     .group {
@@ -290,13 +295,13 @@
         justify-content: space-between;
 
         /* margin: 10px 8px;
-        border: 1px solid rgb(255 255 255 / 0.07);
+        border: 1px solid var(--border);
         border-radius: 4px; */
 
         padding: 8px 0;
         margin: 8px 0;
-        border-top: 1px solid rgb(255 255 255 / 0.07);
-        border-bottom: 1px solid rgb(255 255 255 / 0.07);
+        border-top: 1px solid var(--border);
+        border-bottom: 1px solid var(--border);
     }
     .group.isFirst {
         margin-top: 0;
@@ -309,7 +314,7 @@
         border-bottom: none;
     }
     .group :global(div:not(:last-child)) {
-        border-right: 1px solid rgb(255 255 255 / 0.08);
+        border-right: 1px solid var(--border);
     }
 
     .search {

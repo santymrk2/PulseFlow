@@ -8,7 +8,7 @@ import { clearAudio } from "../../audio/audioFading"
 import { AudioPlayer } from "../../audio/audioPlayer"
 import { AudioPlaylist } from "../../audio/audioPlaylist"
 import { dbToGain } from "../../audio/dBUtils"
-import { activeDrawerTab, activeEdit, activePage, activeProject, activeRecording, activeShow, activeTimers, audioChannelsData, audioPlaylists, audioRouting, draw, drawSettings, drawTool, folders, groupNumbers, groups, media, openScripture, outLocked, outputs, overlays, pdfImports, playingAudio, playingMetronome, projects, refreshEditSlide, selected, shows, showsCache, sortedShowsList, special, styles, timers, variables } from "../../stores"
+import { activeDrawerTab, activeEdit, activePage, activeProject, activeRecording, activeShow, activeTimers, audioChannelsData, audioPlaylists, audioRouting, folders, groupNumbers, groups, media, openScripture, outLocked, outputs, overlays, pdfImports, playingAudio, playingMetronome, projects, refreshEditSlide, selected, shows, showsCache, sortedShowsList, special, styles, timers, variables } from "../../stores"
 import { newToast, triggerFunction } from "../../utils/common"
 import { send } from "../../utils/request"
 import { parseEngScriptureRefToNumbers, resolveScriptureReference } from "../drawer/bible/scripture"
@@ -26,11 +26,12 @@ import { loadShows, setShow } from "../helpers/setShow"
 import { getLabelId, getLayoutRef } from "../helpers/show"
 import { playNextGroup, selectProjectShow, updateOut } from "../helpers/showActions"
 import { _show } from "../helpers/shows"
+import { renderPdfPages } from "../../converters/pdfToImages"
 import { VideoPlayer } from "../media/video/videoPlayer"
 import { clearBackground, clearSlide } from "../output/clear"
 import { getPlainEditorText } from "../show/getTextEditor"
 import { getSlideGroups } from "../show/tools/groups"
-import type { API_add_to_project, API_create_project, API_disable_slide, API_draw_zoom, API_edit_timer, API_group, API_id_index, API_id_value, API_layout, API_media, API_output_lock, API_rearrange, API_scripture, API_seek, API_slide_index, API_toggle_id, API_toggle_specific, API_variable, API_volume } from "./api"
+import type { API_add_to_project, API_create_project, API_disable_slide, API_edit_timer, API_group, API_id_index, API_id_value, API_layout, API_media, API_output_lock, API_rearrange, API_scripture, API_seek, API_slide_index, API_toggle_id, API_toggle_specific, API_variable, API_volume } from "./api"
 
 export function selectShowById(id: string) {
     if (typeof id !== "string" || !id) return
@@ -1093,100 +1094,33 @@ export async function getPDFThumbnails({ path, data }: API_media) {
             .split(/[/\\]/)
             .pop()
             ?.replace(/\.pdf$/i, "") || "PDF"
-    const renderPhasePercent = 80
-    const totalPercent = 100
 
-    GlobalWorkerOptions.workerSrc = "./assets/pdf.worker.min.mjs"
-    const loadingTask = getDocument(encodeFilePath(path))
-    const pdfDoc = await loadingTask.promise
-    const pageCount = pdfDoc.numPages
+    // Resolución objetivo del lado mayor: width/height explícitos, o 2160 (4K).
+    const targetResolution = data?.width || data?.height || 2160
 
     pdfImports.update((imports) => {
         const updated = new Map(imports)
-        updated.set(path, { name, progress: 0, total: totalPercent, status: "importing" })
+        updated.set(path, { name, progress: 0, total: 100, status: "importing" })
         return updated
     })
 
-    const canvas = document.createElement("canvas")
-    const context = canvas.getContext("2d")
-    if (!context) return []
-
-    const pages: string[] = []
     try {
-        for (let i = 0; i < pageCount; i++) {
-            const page = await pdfDoc.getPage(i + 1)
-            const viewportAtScale1 = page.getViewport({ scale: 1 })
-
-            // Use provided width/height or target a high-quality default (e.g. 2160px for 4K-ready quality)
-            let scale
-            const maxDim = Math.max(viewportAtScale1.width, viewportAtScale1.height)
-            if (data?.width) {
-                scale = data.width / viewportAtScale1.width
-            } else if (data?.height) {
-                scale = data.height / viewportAtScale1.height
-            } else {
-                const targetRes = 2160
-                scale = targetRes / maxDim
-                // Clamp scale to reasonable bounds (1.0 = 72dpi, 4.5 = ~325dpi)
-                if (scale < 1.0) scale = 1.0
-                if (scale > 4.5) scale = 4.5
-            }
-
-            const viewport = page.getViewport({ scale })
-
-            canvas.height = viewport.height
-            canvas.width = viewport.width
-
-            await page.render({ canvas, canvasContext: context, viewport }).promise
-            const base64 = canvas.toDataURL("image/jpeg")
-            pages.push(base64)
-
-            const renderProgress = Math.round(((i + 1) / Math.max(1, pageCount)) * renderPhasePercent)
-            pdfImports.update((imports) => {
-                const updated = new Map(imports)
-                updated.set(path, { name, progress: renderProgress, total: totalPercent, status: "importing" })
-                return updated
-            })
-        }
-
+        const pages = await renderPdfPages(path, name, targetResolution)
         return { path, pages }
     } catch (error: any) {
         pdfImports.update((imports) => {
             const updated = new Map(imports)
             updated.set(path, {
                 name,
-                progress: Math.round((pages.length / Math.max(1, pageCount)) * renderPhasePercent),
-                total: totalPercent,
+                progress: 0,
+                total: 100,
                 status: "error",
                 message: `PDF processing failed: ${error?.message || "Unknown error"}`
             })
             return updated
         })
         throw error
-    } finally {
-        loadingTask.destroy()
     }
-}
-
-// DRAW
-
-export function changeDrawZoom(data: API_draw_zoom) {
-    const size = data.size || 100
-    drawSettings.update((a) => {
-        if (!a.zoom) a.zoom = {}
-        a.zoom.size = size
-        return a
-    })
-
-    if (size === 100) {
-        draw.set(null)
-        drawTool.set("focus")
-        return
-    }
-
-    // 0-100 %
-    draw.set({ x: 1920 * ((data.x ?? 50) / 100), y: 1080 * ((data.y ?? 50) / 100) })
-    drawTool.set("zoom")
 }
 
 // ADD

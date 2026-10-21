@@ -3,7 +3,7 @@
     import type { MediaStyle } from "../../../../types/Main"
     import type { Resolution } from "../../../../types/Settings"
     import type { MediaType, ShowType } from "../../../../types/Show"
-    import { outputs, styles } from "../../../stores"
+    import { outputs, styles, previewOutputId } from "../../../stores"
     import { videoExtensions } from "../../../values/extensions"
     import { cropImageToBase64, encodeFilePath, getExtension, isLocalFile } from "../../helpers/media"
     import { getResolution } from "../../helpers/output"
@@ -73,7 +73,7 @@
         if (videoExtensions.includes(extension)) type = "video"
     }
 
-    $: customResolution = resolution || getResolution(null, { $outputs, $styles })
+    $: customResolution = resolution || getResolution(null, { $outputs, $styles, $previewOutputId })
 
     $: if (mediaStyle.speed && videoElem) videoElem.playbackRate = Number(mediaStyle.speed || 0)
     $: if (type === "camera" && videoElem) {

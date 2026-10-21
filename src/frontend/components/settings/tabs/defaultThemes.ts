@@ -1,25 +1,28 @@
 import type { Themes } from "../../../../types/Settings"
 
 export const defaultThemes: { [key: string]: Themes } = {
+    // Tema por defecto "PulseFlow": los valores del tema `.dark` de la referencia
+    // (docs/design-reference/index.css) mapeados por valor según la tabla de F6.1.
     default: {
-        name: "default",
+        name: "PulseFlow",
         default: true,
         font: {
-            family: "",
-            size: "1em"
+            family: '"Geist Variable", system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif',
+            size: "13px"
         },
         colors: {
-            primary: "#242832",
-            "primary-lighter": "#2f3542",
-            "primary-darker": "#191923",
-            "primary-darkest": "#12121c",
-            text: "#f0f0ff",
-            textInvert: "#131313",
-            "secondary-text": "#f0f0ff",
-            secondary: "#F0008C",
-            "secondary-opacity": "rgba(240, 0, 140, 0.5)",
-            hover: "rgb(255 255 255 / 0.05)",
-            focus: "rgb(255 255 255 / 0.1)"
+            // monocromo (docs/design/kit.md); los mismos valores están en public/global.css
+            primary: "#0a0a0a", // --bg
+            "primary-lighter": "#1f1f1f", // gris 850
+            "primary-darker": "#0a0a0a", // = --bg: las zonas se separan con bordes, no con fondos
+            "primary-darkest": "#0a0a0a", // = --bg
+            text: "#ededed",
+            textInvert: "#0a0a0a",
+            "secondary-text": "#0a0a0a", // --action-text
+            secondary: "#ededed", // --action
+            "secondary-opacity": "rgb(255 255 255 / 0.1)", // --bg-selected
+            hover: "rgb(255 255 255 / 0.05)", // --bg-hover
+            focus: "rgb(255 255 255 / 0.08)" // --bg-active
         }
     },
     dark: {

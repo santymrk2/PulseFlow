@@ -2,4 +2,4 @@
     import Timers from "../../drawer/timers/Timers.svelte"
 </script>
 
-<Timers searchValue="" onlyPlaying />
+<Timers onlyPlaying />

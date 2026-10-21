@@ -3,8 +3,8 @@
     import { customIcons, customIconsColors } from "../../../values/customIcons"
     import { addItem } from "../../edit/scripts/itemHelpers"
     import Icon from "../../helpers/Icon.svelte"
-    import HRule from "../../input/HRule.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     const names = {
         category_shows: (icon: string) => categories.update((a) => changeIcon(a, icon)),
@@ -40,14 +40,14 @@
     }
 </script>
 
-<MaterialButton class="popup-options" icon="edit" iconSize={1.1} title="menu.edit" on:click={manageIcons} white />
+<Button class="popup-options" icon="edit" iconSize={1.1} title="menu.edit" on:click={manageIcons} white />
 
 <div class="grid" style={boxed ? "gap: 8px;" : ""}>
     {#each filteredIcons as icon}
         {#if !boxed || icon !== "empty"}
-            <MaterialButton style="padding: {boxed ? 0 : 6}px;{boxed ? '' : 'border: 1px solid var(--focus);'}" showOutline={activeIcon === icon} title={icon[0].toUpperCase() + icon.slice(1).replaceAll("_", " ")} on:click={() => click(icon)}>
+            <Button style="padding: {boxed ? 0 : 6}px;{boxed ? '' : 'border: 1px solid var(--focus);'}" showOutline={activeIcon === icon} title={icon[0].toUpperCase() + icon.slice(1).replaceAll("_", " ")} on:click={() => click(icon)}>
                 <Icon id={icon} size={2} custom white color={customIconsColors[icon]} {boxed} />
-            </MaterialButton>
+            </Button>
         {/if}
     {/each}
 </div>
@@ -57,9 +57,9 @@
 
     <div class="custom grid">
         {#each $customizedIcons.svg as icon}
-            <MaterialButton style="padding: 12px;" on:click={() => click(icon.id, icon.path)}>
+            <Button style="padding: 12px;" on:click={() => click(icon.id, icon.path)}>
                 {@html icon.path}
-            </MaterialButton>
+            </Button>
         {/each}
     </div>
 {/if}

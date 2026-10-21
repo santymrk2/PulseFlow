@@ -8,13 +8,10 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import { keysToID, sortByName } from "../../helpers/array"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
-
-    export let searchValue
 
     const profile = getAccess("actions")
     const readOnly = profile.global === "read"
@@ -26,7 +23,7 @@
 
     $: sortedActions = sortByName(keysToID($actions), "name", true).map(convertOldMidiToNewAction)
     $: filteredActionsTags = sortedActions.filter((a) => !$activeActionTagFilter.length || (a.tags?.length && !$activeActionTagFilter.some((tagId) => !a.tags?.includes(tagId)))).filter((a) => !a.tags?.some((tagId) => profile[tagId] === "none"))
-    $: filteredActionsSearch = searchValue.length > 1 ? filteredActionsTags.filter((a) => a.name.toLowerCase().includes(searchValue.toLowerCase())) : filteredActionsTags
+    $: filteredActionsSearch = filteredActionsTags
 
     // GRID VIEW
 
@@ -57,24 +54,7 @@
             return a
         })
     }
-
-    function keydown(e: KeyboardEvent) {
-        if (e.key === "Enter" && searchValue.length > 1 && e.target?.closest(".search")) {
-            let action = filteredActionsSearch[0]
-            if (!action) return
-
-            // play
-            if (e.ctrlKey || e.metaKey) {
-                runAction(action, { source: "click" })
-                return
-            }
-
-            // add to project (no need)
-        }
-    }
 </script>
-
-<svelte:window on:keydown={keydown} />
 
 <div class="context #actions{readOnly ? '_readonly' : ''}" style="position: relative;height: 100%;overflow-y: auto;display: flex;flex-direction: column;">
     {#if filteredActionsSearch.length}
@@ -85,9 +65,10 @@
                 <div class="action context #action{isReadOnly ? '_readonly' : ''}{showGrid ? ' grid-item' : ''}">
                     <SelectElem id="action" data={action} style={showGrid ? "display: block; width: 100%; height: 100%;" : "display: flex; flex: 1;"} draggable>
                         <Button
+                            align="start"
                             title="{translateText('media.play')}: <b>{action.name}</b>"
                             on:click={(e) => {
-                                if (e.ctrlKey || e.metaKey) return
+                                if (e.detail.ctrl) return
                                 if (action.shows?.length) {
                                     receivedMidi({ id: action.id, bypass: true })
                                     return
@@ -96,9 +77,8 @@
                                 runAction(action, { source: "click" })
                                 timelineRecordingAction.set({ id: "run_action", data: { id: action.id } })
                             }}
-                            outline={$runningActions.includes(action.id)}
+                            showOutline={$runningActions.includes(action.id)}
                             bold={false}
-                            dark
                             style={showGrid ? "width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 6px 4px 4px;" : ""}
                         >
                             <span style={showGrid ? "display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; gap: 6px;" : "display: flex;align-items: center;justify-content: space-between;width: 100%;"}>
@@ -186,18 +166,18 @@
 </div>
 
 {#if $activeActionTagFilter.length === 1}
-    <FloatingInputs side="left">
-        <MaterialButton on:click={toggleShowGrid} title="show.{showGrid ? 'grid' : 'list'}">
+    <FloatingBar side="left">
+        <Button on:click={toggleShowGrid} title="show.{showGrid ? 'grid' : 'list'}">
             <Icon size={1.3} id={showGrid ? "grid" : "list"} white />
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 {/if}
 
-<FloatingInputs onlyOne>
-    <MaterialButton disabled={readOnly} icon="add" title="new.action" on:click={newAction}>
+<FloatingBar onlyOne>
+    <Button disabled={readOnly} icon="add" title="new.action" on:click={newAction}>
         {#if !$labelsDisabled}<T id="new.action" />{/if}
-    </MaterialButton>
-</FloatingInputs>
+    </Button>
+</FloatingBar>
 
 <style>
     .actions {
@@ -283,7 +263,7 @@
     }
     .actions.grid :global(.action:hover) {
         background-color: rgb(0 0 20 / 0.14);
-        border-color: rgb(255 255 255 / 0.2);
+        border-color: var(--border-strong);
     }
     .actions.grid :global(.selectElem button) {
         background: transparent;
@@ -299,7 +279,7 @@
         cursor: pointer;
     }
     .actions.grid :global(.selectElem button:hover) {
-        background-color: rgb(255 255 255 / 0.03);
+        background-color: var(--bg-hover);
     }
 
     /* tags */

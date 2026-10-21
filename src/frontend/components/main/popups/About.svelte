@@ -1,8 +1,8 @@
 <script lang="ts">
     import { activePopup, version } from "../../../stores"
     import T from "../../helpers/T.svelte"
-    import Link from "../../inputs/Link.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     const assets: { name: string; url: string; title?: string }[] = [
         { name: "CMG Sans (Custom font)", url: "https://www.churchmotiongraphics.com/cmg-sans/" },
@@ -24,15 +24,15 @@
 
 <div style="text-align: center;">
     <div class="logo">
-        <img style="height: 35px;" src="./import-logos/freeshow.webp" alt="FreeShow-logo" draggable={false} />
-        <h1 style="color: var(--text);font-size: 1.7em;">FreeShow</h1>
+        <img style="height: 35px;" src="./import-logos/pulse.svg" alt="PulseFlow-logo" draggable={false} />
+        <h1 style="color: var(--text);font-size: 1.7em;">PulseFlow</h1>
     </div>
 
     <p style="font-size: 0.8em;margin-top: 2px;">
         <span style="opacity: 0.8;">v{$version}</span>
-        <MaterialButton variant="outlined" style="margin-left: 5px;display: inline-flex;min-height: 0;padding: 0 5px;vertical-align: baseline;" on:click={() => activePopup.set("update_manager")} white>
+        <Button variant="outline" style="margin-left: 5px;display: inline-flex;min-height: 0;padding: 0 5px;vertical-align: baseline;" on:click={() => activePopup.set("update_manager")} white>
             <T id="about.check_updates" />
-        </MaterialButton>
+        </Button>
     </p>
 
     <!-- <p>
@@ -45,24 +45,8 @@
 <div class="main">
     <div class="text">
         <div>
-            • <T id="about.more" />
-            <Link url="https://churchapps.org/">ChurchApps</Link>
-        </div>
-        <div>
             • <T id="about.report" />
-            <Link url="https://github.com/ChurchApps/FreeShow/issues">GitHub Issues</Link>
-        </div>
-        <div>
-            • <T id="about.translate" />
-            <Link url="https://app.transifex.com/nettbiter/freeshow/">Transifex</Link>
-        </div>
-        <!-- <div>
-            • <T id="about.mail" />
-            <Link url="mailto:dev@freeshow.app">dev@freeshow.app</Link>
-        </div> -->
-        <div>
-            • <T id="about.support" />!
-            <Link url="https://churchapps.org/partner#give">churchapps.org/partner</Link>
+            <Link url="https://github.com/santymrk2/PulseFlow/issues">GitHub Issues</Link>
         </div>
     </div>
 

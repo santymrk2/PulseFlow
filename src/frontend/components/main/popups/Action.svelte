@@ -17,13 +17,13 @@
     import { convertImagePathToIcon } from "../../helpers/media"
     import { getLayoutRef, updateCachedShows } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     $: id = $popupData.id || ""
     $: mode = $popupData.mode || ""
@@ -396,14 +396,14 @@
         <CreateAction mainId={id} actionId={action.triggers?.[0] || ""} existingActions={action.triggers || []} actionValue={action.actionValues?.[action.triggers?.[0] || ""] || {}} customData={action.customData?.[action.triggers?.[0] || ""] || {}} {mode} on:change={changeAction} list />
     {:else}
         {#if actionActivationSelector}
-            <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (actionActivationSelector = false)} />
+            <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (actionActivationSelector = false)} />
 
-            <MaterialButton class="popup-options {showCommonActivate ? 'active' : ''}" icon={showCommonActivate ? "eye" : "hide"} iconSize={1.3} title={showCommonActivate ? "actions.close" : "create_show.more_options"} on:click={() => (showCommonActivate = !showCommonActivate)} white />
+            <Button class="popup-options {showCommonActivate ? 'active' : ''}" icon={showCommonActivate ? "eye" : "hide"} iconSize={1.3} title={showCommonActivate ? "actions.close" : "create_show.more_options"} on:click={() => (showCommonActivate = !showCommonActivate)} white />
 
             <div class="buttons">
                 {#each customActionActivations as activation}
                     {#if activation.common || showCommonActivate}
-                        <MaterialButton
+                        <Button
                             style="width: 100%;font-weight: normal;justify-content: start;padding: 5px 20px;gap: 12px;"
                             showOutline={customActivation === activation.id}
                             isActive={customActivation === activation.id}
@@ -414,13 +414,13 @@
                         >
                             <Icon id={activation.icon} white />
                             <p>{translateText(activation.name)}</p>
-                        </MaterialButton>
+                        </Button>
                     {/if}
                 {/each}
             </div>
             <!-- <Dropdown options={customActivations} value={customActivations.find((a) => a.id === customActivation)?.name || "—"} on:click={(e) => updateValue("customActivation", e.detail.id)} /> -->
         {:else if actionSelector !== null}
-            <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (actionSelector = null)} />
+            <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (actionSelector = null)} />
 
             <CreateAction
                 mainId={id}
@@ -438,17 +438,17 @@
         {:else}
             <InputRow>
                 {#key hasNoName}
-                    <MaterialTextInput label="midi.name" value={action.name} on:change={(e) => updateValue("name", e)} autofocus={hasNoName} />
+                    <TextField label="midi.name" value={action.name} on:change={(e) => updateValue("name", e)} autofocus={hasNoName} />
                 {/key}
 
                 {#if showMore && !mode}
-                    <MaterialFilePicker label="items.icon" style="width: 120px;" value={action.customIcon} filter={{ name: "Image files", extensions: imageExtensions }} on:change={(e) => updateValue("customIcon", e.detail)} noLabel={action.customIcon} showThumbnail allowEmpty />
+                    <FileField label="items.icon" style="width: 120px;" value={action.customIcon} filter={{ name: "Image files", extensions: imageExtensions }} on:change={(e) => updateValue("customIcon", e.detail)} noLabel={action.customIcon} showThumbnail allowEmpty />
                 {/if}
             </InputRow>
         {/if}
 
         {#if !mode && !actionSelector && !actionActivationSelector}
-            <MaterialButton
+            <Button
                 class="popup-options {showMore ? 'active' : ''}"
                 icon="options"
                 iconSize={1.3}
@@ -463,7 +463,7 @@
 
         <!-- if not slide specific trigger action -->
         {#if showMore && !mode && !actionSelector && !actionActivationSelector}
-            <MaterialPopupButton
+            <PopupField
                 label="midi.activate_keypress"
                 disabled={!action.name}
                 style="margin-top: 10px;"
@@ -484,11 +484,11 @@
 
             <!-- only used to disable customActionActivation if any -->
             {#if customActivation || action.enabled === false}
-                <MaterialToggleSwitch label="settings.enabled" style="margin-top: 10px;" checked={action.enabled ?? true} defaultValue={true} on:change={(e) => updateValue("enabled", e.detail)} />
+                <ToggleField label="settings.enabled" style="margin-top: 10px;" checked={action.enabled ?? true} defaultValue={true} on:change={(e) => updateValue("enabled", e.detail)} />
             {/if}
 
             <InputRow arrow={customActionActivations.find((a) => a.id === customActivation)?.inputs}>
-                <MaterialPopupButton
+                <PopupField
                     label="actions.custom_activation"
                     disabled={!action.name}
                     name={customActionActivations.find((a) => a.id === customActivation)?.name || ""}
@@ -505,7 +505,7 @@
 
                 <div slot="menu">
                     {#if ["timer_end", "timer_start", "group_start"].includes(customActivation)}
-                        <MaterialDropdown label={specificActivations[customActivation]?.name} options={getSpecificActivation(customActivation)} value={specificActivation} on:change={(e) => updateValue("specificActivation", `${customActivation}__${e.detail}`)} />
+                        <SelectField label={specificActivations[customActivation]?.name} options={getSpecificActivation(customActivation)} value={specificActivation} on:change={(e) => updateValue("specificActivation", `${customActivation}__${e.detail}`)} />
                     {:else if customActivation === "midi_signal_received"}
                         <MidiValues value={clone(action.midi || actionMidi)} firstActionId={action.triggers?.[0]} on:change={(e) => updateValue("midi", e)} simple />
                     {/if}
@@ -535,8 +535,8 @@
                 {#if !action.triggers?.length || addTrigger}
                     <CreateAction actionId="" existingActions={action.triggers || []} on:change={changeAction} on:choose={() => (actionSelector = { id: "" })} {mode} choosePopup />
                 {:else}
-                    <MaterialButton
-                        variant="outlined"
+                    <Button
+                        variant="outline"
                         style="margin-top: 10px;width: 100%;"
                         icon="add"
                         on:click={() => {
@@ -545,7 +545,7 @@
                         }}
                     >
                         <T id="settings.add" />
-                    </MaterialButton>
+                    </Button>
                 {/if}
             </div>
         {/if}

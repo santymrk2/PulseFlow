@@ -1,7 +1,5 @@
 <script lang="ts">
     import { drawerTabsData } from "../../stores"
-    import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
     import Audio from "./audio/Audio.svelte"
     import Scripture from "./bible/Scripture.svelte"
     import Calendar from "./calendar/Calendar.svelte"
@@ -9,24 +7,13 @@
     import Actions from "./pages/Actions.svelte"
     import Interactions from "./pages/Interactions.svelte"
     import OBS from "./pages/OBS.svelte"
-    import Overlays from "./pages/Overlays.svelte"
     import Scenes from "./pages/Scenes.svelte"
     import Shows from "./pages/Shows.svelte"
-    import Templates from "./pages/Templates.svelte"
     import Variables from "./pages/Variables.svelte"
     import Timers from "./timers/Timers.svelte"
 
     export let id: string
-    export let searchValue: string
-    export let firstMatch: null | string
     $: active = $drawerTabsData[id]?.activeSubTab || null
-
-    // search active warning
-    let searchTab: string | null = null
-    $: if (searchValue) updateTab()
-    function updateTab() {
-        searchTab = id + active
-    }
 
     let streams: MediaStream[] = []
     $: if (id !== "media" || active) stopStreams()
@@ -42,42 +29,29 @@
 </script>
 
 <div class="main">
-    {#if searchValue && active !== "all" && searchTab !== id + active && id !== "scripture"}
-        <div class="warning">
-            <p style="padding: 6px 8px;"><T id="main.search_active" />: <span style="color: var(--secondary);font-weight: bold;">{searchValue}</span></p>
-            <MaterialButton icon="close" style="padding: 6px 16px;" on:click={() => (searchValue = "")}>
-                <p><T id="clear.search" /></p>
-            </MaterialButton>
-        </div>
-    {/if}
-
     {#if id === "shows"}
-        <Shows {active} {searchValue} bind:firstMatch />
+        <Shows {active} />
     {:else if id === "media"}
-        <Media {active} {searchValue} bind:streams />
+        <Media {active} bind:streams />
     {:else if id === "audio"}
-        <Audio {active} {searchValue} />
-    {:else if id === "overlays"}
-        <Overlays {active} {searchValue} />
-    {:else if id === "templates"}
-        <Templates {active} {searchValue} />
+        <Audio {active} />
     {:else if id === "scripture"}
-        <Scripture {active} bind:searchValue />
+        <Scripture {active} />
     {:else if id === "calendar"}
-        <Calendar {active} {searchValue} />
+        <Calendar {active} />
     {:else if id === "functions"}
         {#if active === "actions"}
-            <Actions {searchValue} />
+            <Actions />
         {:else if active === "timer"}
-            <Timers {searchValue} />
+            <Timers />
         {:else if active === "variables"}
-            <Variables {searchValue} />
+            <Variables />
         {:else if active === "scenes"}
-            <Scenes {searchValue} />
+            <Scenes />
         {:else if active === "interactions"}
-            <Interactions {searchValue} />
+            <Interactions />
         {:else if active === "obs"}
-            <OBS {searchValue} />
+            <OBS />
         {/if}
     {/if}
 </div>

@@ -78,7 +78,7 @@
 <div bind:this={elem} class="item" class:open class:highlighted on:click={click} tabindex={0} on:keydown={keydown} role="menuitem">
     <span style="display: flex;gap: 10px;justify-content: space-between;width: 100%;">
         <div class="left" style="display: flex;align-items: center;gap: 15px;">
-            {#if menu?.icon}<Icon style="opacity: 0.7;color: {(topBar ? '' : menu.iconColor) || 'var(--text)'};" id={menu.icon} white />{/if}
+            {#if menu?.icon}<Icon style="color: var(--text-muted);" id={menu.icon} white />{/if}
             {#key menu}
                 <T id={menu?.label || id} />
             {/key}
@@ -117,18 +117,20 @@
 
 <style>
     .item {
-        padding: 6px 16px;
+        min-height: 32px;
+        padding: 0 16px;
         display: flex;
         justify-content: space-between;
+        align-items: center;
     }
     .item:hover,
     .item.open {
-        background-color: rgb(0 0 0 / 0.2);
+        background-color: var(--hover, rgb(0 0 0 / 0.2));
     }
 
     .item.highlighted {
         background-color: rgb(0 0 0 / 0.2);
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: -2px;
     }
 
@@ -145,20 +147,17 @@
         overflow: auto;
         position: absolute;
         transform: translate(100%, -14px);
-        box-shadow:
-            2px 2px 3px rgb(0 0 0 / 0.2),
-            inset 4px 0 2px -3px rgb(20 0 0 / 0.15);
+        box-shadow: var(--shadow-float);
         padding: 8px 0;
         z-index: 5000;
 
-        border-radius: 6px;
+        border-radius: var(--radius, 6px);
         border-top-left-radius: 2px;
         border-bottom-left-radius: 2px;
 
-        border: 1px solid var(--primary-lighter);
-        /* border-left: none; */
+        border: 1px solid var(--border-color, var(--primary-lighter));
 
-        background-color: var(--background);
+        background-color: var(--primary-darker);
 
         /* this does not work here */
         /* backdrop-filter: blur(8px); */

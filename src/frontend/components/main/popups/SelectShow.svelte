@@ -5,8 +5,8 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
 
     $: sortedShows = $sortedShowsList
@@ -49,7 +49,7 @@
     let showPrivate = false
 </script>
 
-<MaterialTextInput label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
+<TextField label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
 
 <!-- probably not needed as private shows rarely need to be auto played (one could unprivate, add it, then make it private again) -->
 <!-- <CombinedInput>
@@ -65,10 +65,10 @@
             <Center size={1.2} faded><T id="empty.search" /></Center>
         {:else}
             <VirtualList items={searchedShows} let:item={show}>
-                <MaterialButton showOutline={active === show.id} style="width: 100%;font-weight: normal;justify-content: start;padding: 4px 12px;" on:click={() => selectShow(show)}>
+                <Button showOutline={active === show.id} style="width: 100%;font-weight: normal;justify-content: start;padding: 4px 12px;" on:click={() => selectShow(show)}>
                     {#if show.private}<Icon id="locked" right />{/if}
                     {show.name}
-                </MaterialButton>
+                </Button>
             </VirtualList>
         {/if}
     {:else}

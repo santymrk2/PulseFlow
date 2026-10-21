@@ -1,4 +1,4 @@
-import type { Cropping, Resolution } from "./Settings"
+import type { AspectRatio, Cropping, Resolution } from "./Settings"
 import type { OutBackground, OutScene, OutSlide, OutTransition } from "./Show"
 
 export interface Outputs {
@@ -9,6 +9,10 @@ export interface Output {
     id?: string
     hideFromPreview?: boolean
     stageOutput?: string
+    kind?: "audience" | "stage"
+    stageLayout?: string
+    screenType?: "single" | "mirror" | "edge_blend"
+    mirrorOf?: string
     enabled: boolean
     active: boolean
     name: string
@@ -20,6 +24,14 @@ export interface Output {
     screen: string | null
     alwaysOnTop?: boolean
     transparent?: boolean
+    display?: {
+        screen: string | null
+        bounds: { x: number; y: number; width: number; height: number }
+        boundsLocked?: boolean
+        alwaysOnTop?: boolean
+    }
+    target?: "full" | "custom"
+    aspectRatio?: AspectRatio
     ndi?: boolean
     ndiData?: any
     omt?: boolean
@@ -27,7 +39,7 @@ export interface Output {
     blackmagic?: boolean
     blackmagicData?: any
     webrtc?: boolean
-    webrtcData?: { url?: string; token?: string; streaming?: boolean; startedAt?: number; fps?: string | number; bitrate?: string | number }
+    webrtcData?: { url?: string; token?: string; streaming?: boolean; fps?: string | number; bitrate?: string | number }
     rtmp?: boolean
     rtmpData?: RtmpData
     forcedResolution?: Resolution
@@ -42,6 +54,35 @@ export interface SyncedOutputs {
     [id: string]: string
 }
 
+/**
+ * Pantalla de `GET_DISPLAYS` reenviada por el comando `IDENTIFY_SCREENS`
+ * (espejo de `IdentifyScreen` en `src-tauri/src/render/screens.rs`).
+ * La posición de la entrada en la lista (1-based) es el número que se muestra
+ * en el monitor durante 3 s.
+ */
+export interface IdentifyScreen {
+    /** Id del monitor en `GET_DISPLAYS` (estable desde F10.0c; se acepta el índice viejo) */
+    id?: string | number
+    label?: string
+    bounds?: { x: number; y: number; width: number; height: number }
+}
+
+/**
+ * Payload de `REMOVE_SCREEN` (espejo de `RemoveScreenPayload` en
+ * `src-tauri/src/commands/output.rs`): cierra la ventana de la salida y olvida su escena.
+ */
+export interface RemoveScreenPayload {
+    id: string
+}
+
+/**
+ * Payload de `RENDER_PREFETCH` (espejo de `PrefetchPayload` en `src-tauri/src/commands/output.rs`):
+ * rutas de imágenes que el engine debe tener listas en la GPU antes de que se muestren.
+ */
+export interface PrefetchPayload {
+    paths: string[]
+}
+
 // RTMP
 export interface RtmpDestination {
     id: string
@@ -51,7 +92,6 @@ export interface RtmpDestination {
 }
 export interface RtmpData {
     streaming?: boolean
-    startedAt?: number
     fps?: string | number
     bitrate?: string | number
     rateControl?: "cbr" | "vbr"
@@ -70,7 +110,7 @@ export interface RtmpStatus {
 }
 
 export interface OutData {
-    refresh?: number
+    refresh?: boolean
     background?: null | OutBackground
     slide?: null | OutSlide
     effects?: string[]

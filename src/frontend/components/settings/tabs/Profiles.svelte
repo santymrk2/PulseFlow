@@ -8,12 +8,12 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import Icon from "../../helpers/Icon.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialMultiButtons from "../../inputs/MaterialMultiButtons.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import SegmentedField from "../../../lib/components/ui/segmented-field/segmented-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import Center from "../../system/Center.svelte"
 
     // set id after deletion
@@ -216,9 +216,9 @@
 {#if !profileId || !profilesList.length}
     {#if profilesList.length && isAdmin}
         <!-- Admin settings -->
-        <MaterialTextInput label="remote.password" disabled={hasAdminPass} value={hasAdminPass ? "*****" : ""} defaultValue="" on:change={setAdminPassword} />
+        <TextField label="remote.password" disabled={hasAdminPass} value={hasAdminPass ? "*****" : ""} defaultValue="" on:change={setAdminPassword} />
 
-        <MaterialToggleSwitch label="profile.auto_open_last_used" checked={$profiles.admin?.autoOpenLastUsed || false} defaultValue={false} on:change={(e) => updateAdmin("autoOpenLastUsed", e.detail)} />
+        <ToggleField label="profile.auto_open_last_used" checked={$profiles.admin?.autoOpenLastUsed || false} defaultValue={false} on:change={(e) => updateAdmin("autoOpenLastUsed", e.detail)} />
     {/if}
 
     <Center style="height: 82%;opacity: 0.1;">
@@ -227,12 +227,12 @@
 {:else}
     {#each ACCESS_LISTS as a}
         <InputRow arrow={!!a.list?.length}>
-            <MaterialMultiButtons label={a.label} icon={a.icon} value={a.access.global || "write"} options={getSectionOptions(a.options, isAdmin)} on:click={(e) => updateAccess(a.id, "global", e.detail)} />
+            <SegmentedField label={a.label} icon={a.icon} value={a.access.global || "write"} options={getSectionOptions(a.options, isAdmin)} on:click={(e) => updateAccess(a.id, "global", e.detail)} />
 
             <div slot="menu">
                 {#each a.list as item}
                     <InputRow style={item["color"] && !item["icon"] ? `border-left: 2px solid ${item["color"]};` : ""}>
-                        <MaterialMultiButtons label={item.name} icon={item["icon"] || ""} iconColor={item["color"] || ""} value={getAccessLevel(a.access, item.id)} options={getInputs(a.access.global, a.id)} on:click={(e) => updateAccess(a.id, item.id, e.detail)} noLabels />
+                        <SegmentedField label={item.name} icon={item["icon"] || ""} iconColor={item["color"] || ""} value={getAccessLevel(a.access, item.id)} options={getInputs(a.access.global, a.id)} on:click={(e) => updateAccess(a.id, item.id, e.detail)} noLabels />
                     </InputRow>
                 {/each}
             </div>
@@ -241,9 +241,9 @@
 
     <!-- profile action -->
     <InputRow style="margin-top: 20px;">
-        <MaterialDropdown label="midi.start_action" options={actionOptions.map((a) => ({ label: a.name, value: a.id }))} value={currentAction} on:change={(e) => updateProfile("action", e.detail)} allowEmpty />
+        <SelectField label="midi.start_action" options={actionOptions.map((a) => ({ label: a.name, value: a.id }))} value={currentAction} on:change={(e) => updateProfile("action", e.detail)} allowEmpty />
         {#if currentAction && $actions[currentAction]}
-            <MaterialButton title="titlebar.edit" icon="edit" on:click={editAction} />
+            <Button title="titlebar.edit" icon="edit" on:click={editAction} />
         {/if}
     </InputRow>
 {/if}

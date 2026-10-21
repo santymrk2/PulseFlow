@@ -2,15 +2,16 @@
     import { uid } from "uid"
     import type { OutData } from "../../../../types/Output"
     import type { Styles } from "../../../../types/Settings"
-    import { activePage, activePopup, activeStyle, currentOutputSettings, outputs, popupData, settingsTab, styles } from "../../../stores"
+    import { activePopup, activeStyle, currentOutputSettings, outputs, popupData, styles } from "../../../stores"
+    import { openSettings } from "../../settings/openSettings"
     import Card from "../../drawer/Card.svelte"
     import { DEFAULT_ITEM_STYLE } from "../../edit/scripts/itemHelpers"
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import { getResolution } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import CombinedInput from "../../inputs/CombinedInput.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import CombinedInput from "../../../lib/components/ui/combined-input/combined-input.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Output from "../../output/Output.svelte"
     import { getStyleResolution } from "../../slide/getStyleResolution"
     import Center from "../../system/Center.svelte"
@@ -57,12 +58,11 @@
         history({ id: "UPDATE", newData: { data: { name: "" } }, oldData: { id: styleId }, location: { page: "settings", id: "settings_style" } })
         select(styleId)
         activeStyle.set(styleId)
-        settingsTab.set("styles")
-        activePage.set("settings")
+        openSettings("styles")
     }
 </script>
 
-<MaterialButton class="popup-options" icon="add" iconSize={1.3} title="new.style" on:click={createNew} white />
+<Button class="popup-options" icon="add" iconSize={1.3} title="new.style" on:click={createNew} white />
 
 <div style="position: relative;height: 100%;width: calc(100vw - (var(--navigation-width) + 20px) * 2);overflow-y: auto;">
     {#if outputStyles.length}
@@ -85,9 +85,9 @@
 
 {#if skip}
     <CombinedInput style="margin: 6px;margin-top: 10px;width: initial;">
-        <MaterialButton style="width: 100%;" icon="arrow_forward" on:click={() => activePopup.set(null)}>
+        <Button style="width: 100%;" icon="arrow_forward" on:click={() => activePopup.set(null)}>
             <T id="guide.skip" />
-        </MaterialButton>
+        </Button>
     </CombinedInput>
 {/if}
 

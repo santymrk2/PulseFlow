@@ -9,12 +9,12 @@
     import { customBibleData, getApiBiblesList } from "../../drawer/bible/scripture"
     import { clone, sortByName } from "../../helpers/array"
     import T from "../../helpers/T.svelte"
-    import HRule from "../../input/HRule.svelte"
-    import Link from "../../inputs/Link.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialCheckbox from "../../inputs/MaterialCheckbox.svelte"
-    import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import CheckboxField from "../../../lib/components/ui/checkbox-field/checkbox-field.svelte"
+    import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
     import Loader from "../Loader.svelte"
 
@@ -113,7 +113,7 @@
 </script>
 
 {#if importType}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (importType = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (importType = "")} />
 {/if}
 
 {#if importType === "api"}
@@ -124,12 +124,12 @@
             {translateText("captions.powered_by")} API.Bible & YouVersion
         </div>
 
-        <MaterialTextInput label="main.search" id="scriptureApiSearchInput" value="" on:input={search} autofocus />
+        <TextField label="main.search" id="scriptureApiSearchInput" value="" on:input={search} autofocus />
 
         <div class="list">
             {#if searchedRecommendedBibles.length}
                 {#each searchedRecommendedBibles as bible}
-                    <MaterialCheckbox label={bible.name} title="{bible.source === 'youversion' ? '[YouVersion] ' : ''}{bible.name}" data={bible.description} style={bible.source === "youversion" ? "border-left: 2px solid #4a3a30;" : bible.source === "api.bible" ? "border-left: 2px solid #253354;" : ""} checked={!!Object.values($scriptures).find((a) => a.id === bible.sourceKey)} on:change={() => toggleScripture(bible)} />
+                    <CheckboxField label={bible.name} title="{bible.source === 'youversion' ? '[YouVersion] ' : ''}{bible.name}" data={bible.description} style={bible.source === "youversion" ? "border-left: 2px solid #4a3a30;" : bible.source === "api.bible" ? "border-left: 2px solid #253354;" : ""} checked={!!Object.values($scriptures).find((a) => a.id === bible.sourceKey)} on:change={() => toggleScripture(bible)} />
                 {/each}
 
                 {#if searchedBibles.length}
@@ -140,7 +140,7 @@
             {#if bibles.length}
                 {#if searchedBibles.length}
                     {#each searchedBibles as bible}
-                        <MaterialCheckbox label={bible.name} title="{bible.source === 'youversion' ? '[YouVersion] ' : ''}{bible.name}" data={bible.description} style={bible.source === "youversion" ? "border-left: 2px solid #4a3a30;" : bible.source === "api.bible" ? "border-left: 2px solid #253354;" : ""} checked={!!Object.values($scriptures).find((a) => a.id === bible.sourceKey)} on:change={() => toggleScripture(bible)} />
+                        <CheckboxField label={bible.name} title="{bible.source === 'youversion' ? '[YouVersion] ' : ''}{bible.name}" data={bible.description} style={bible.source === "youversion" ? "border-left: 2px solid #4a3a30;" : bible.source === "api.bible" ? "border-left: 2px solid #253354;" : ""} checked={!!Object.values($scriptures).find((a) => a.id === bible.sourceKey)} on:change={() => toggleScripture(bible)} />
                     {/each}
                 {:else if !searchedRecommendedBibles.length}
                     <Center faded>
@@ -158,9 +158,9 @@
     {#if localBibles.length}
         <div class="existingBiblesList">
             {#each localBibles as localBible}
-                <MaterialButton variant="outlined" icon="import" style="justify-content: left;" on:click={() => importBible(localBible.path)} white>
+                <Button variant="outline" icon="import" style="justify-content: left;" on:click={() => importBible(localBible.path)} white>
                     {localBible.name}
-                </MaterialButton>
+                </Button>
             {/each}
         </div>
 
@@ -175,17 +175,17 @@
         </li>
         <li>
             <span style="font-size: 0.9em;font-weight: bold;">JSON</span>
-            <span style="font-size: 0.8em;opacity: 0.8;margin-left: 10px;">FreeShow</span>
+            <span style="font-size: 0.8em;opacity: 0.8;margin-left: 10px;">PulseFlow</span>
         </li>
     </ul>
 
     <p style="margin: 20px 0;opacity: 0.9;">Find some available <Link url="https://freeshow.app/resources#scriptures">Bible versions</Link>.</p>
 
-    <MaterialButton variant="outlined" icon="import" on:click={() => sendMain(Main.IMPORT, { channel: "BIBLE", format: { name: "Bible", extensions: ["xml", "xmm", "json", "fsb"] } })}>
+    <Button variant="outline" icon="import" on:click={() => sendMain(Main.IMPORT, { channel: "BIBLE", format: { name: "Bible", extensions: ["xml", "xmm", "json", "fsb"] } })}>
         <T id="scripture.local" />
-    </MaterialButton>
+    </Button>
 {:else}
-    <MaterialMultiChoice options={importTypes} on:click={(e) => (importType = e.detail)} />
+    <ChoiceGrid options={importTypes} on:click={(e) => (importType = e.detail)} />
 {/if}
 
 <style>

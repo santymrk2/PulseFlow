@@ -14,7 +14,7 @@
     import { createCSSVariables } from "../../helpers/showActions"
     import { getItemStyle, getStyles } from "../../helpers/style"
     import { getShapeGuideStyle } from "../scripts/shapeOutside"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import SlideItems from "../../slide/SlideItems.svelte"
     import EditboxCropping from "./EditboxCropping.svelte"
     import EditboxLines from "./EditboxLines.svelte"
@@ -43,6 +43,7 @@
 
     export let mouse: any = {}
     function mousedown(e: any) {
+        console.warn("SNAPDBG down", e.target?.className?.toString?.().slice(0, 40), index)
         if (e.target.closest(".chords") || e.target.closest(".editTools")) return
         if (!e.shiftKey && !e.target.closest(".line") && !e.target.closest(".square") && !e.target.closest(".rotate") && !e.target.closest(".radius") && !e.target.closest(".cropHandle") && !e.target.closest(".cropOverlay")) {
             openToolsTab.set("text")
@@ -55,18 +56,37 @@
         const isSelected = $activeEdit.items.includes(index)
 
         if (rightClick) {
-            if (!isSelected) activeEdit.update((ae) => { ae.items = [index]; return ae })
+            if (!isSelected)
+                activeEdit.update((ae) => {
+                    ae.items = [index]
+                    return ae
+                })
         } else if (e.shiftKey) {
-            if (!isSelected) activeEdit.update((ae) => { ae.items.push(index); return ae })
+            if (!isSelected)
+                activeEdit.update((ae) => {
+                    ae.items.push(index)
+                    return ae
+                })
         } else if (!isSelected) {
-            activeEdit.update((ae) => { ae.items = [index]; return ae })
+            activeEdit.update((ae) => {
+                ae.items = [index]
+                return ae
+            })
         } else if ($activeEdit.items.length > 1) {
-            const startX = e.clientX, startY = e.clientY
-            window.addEventListener("mouseup", (upEvent) => {
-                if (Math.hypot(upEvent.clientX - startX, upEvent.clientY - startY) < 4) {
-                    activeEdit.update((ae) => { ae.items = [index]; return ae })
-                }
-            }, { once: true })
+            const startX = e.clientX,
+                startY = e.clientY
+            window.addEventListener(
+                "mouseup",
+                (upEvent) => {
+                    if (Math.hypot(upEvent.clientX - startX, upEvent.clientY - startY) < 4) {
+                        activeEdit.update((ae) => {
+                            ae.items = [index]
+                            return ae
+                        })
+                    }
+                },
+                { once: true }
+            )
         }
 
         // deselect selected text
@@ -207,6 +227,11 @@
         deleteAction({ id: "item", data: { layout, slideId: ref.id } })
     }
 
+    // arrastrar texto seleccionado lo "levantaba" con el drag nativo del navegador (y lo soltaba en otro lado) en vez de mover el cuadro
+    function noTextDrag(e: DragEvent) {
+        if ((e.target as HTMLElement | null)?.closest?.(".edit")) e.preventDefault()
+    }
+
     function dblclick(e: MouseEvent) {
         cropElem?.handleDblclick(e)
     }
@@ -251,6 +276,7 @@
     data-index={index}
     on:mousedown={mousedown}
     on:dblclick={dblclick}
+    on:dragstart={noTextDrag}
 >
     {#if !plain}
         <EditboxPlain {item} {index} {ratio} hideMovebox={cropActive} />
@@ -278,7 +304,7 @@
     {#if mediaShouldBeBackground}
         <div class="tip">
             {translateText("edit.media_item_tip")}
-            <MaterialButton style="color: var(--secondary);" on:click={convertToBackground}>{translateText("edit.convert_to_background")}</MaterialButton>
+            <Button style="color: var(--secondary);" on:click={convertToBackground}>{translateText("edit.convert_to_background")}</Button>
         </div>
     {/if}
 </div>

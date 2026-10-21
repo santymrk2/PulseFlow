@@ -2,7 +2,7 @@
     import { activeTimers } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import Button from "../../inputs/Button.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
 
     let allPaused = false
     $: if ($activeTimers?.length > 1) checkPaused()
@@ -24,7 +24,7 @@
 
 <main>
     {#if $activeTimers?.length > 1}
-        <Button on:click={() => actionOnAllTimers("paused", !allPaused)} center dark>
+        <Button on:click={() => actionOnAllTimers("paused", !allPaused)}>
             <Icon id={allPaused ? "play" : "pause"} white={allPaused} size={1.2} right />
             {#key allPaused}
                 <T id={allPaused ? "media.play" : "actions.pause_timers"} />

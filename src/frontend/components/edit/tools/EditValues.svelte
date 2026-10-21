@@ -9,13 +9,13 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import { getFilters, getStyles } from "../../helpers/style"
-    import Input from "../../input/Input.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialFontDropdown from "../../inputs/MaterialFontDropdown.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
-    import MaterialTextarea from "../../inputs/MaterialTextarea.svelte"
+    import FormInput from "../../form/FormInput.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
+    import FontField from "../../../lib/components/ui/font-field/font-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
+    import TextareaField from "../../../lib/components/ui/textarea-field/textarea-field.svelte"
     import { getIsoLanguages } from "../../main/popups/localization/translation"
     import { SlideTimeline } from "../../timeline/SlideTimeline"
     import { parseShadowValue } from "../scripts/edit"
@@ -23,7 +23,6 @@
     import { getShapeOutsideStyle, parseShapeOutsideValue } from "../scripts/shapeOutside"
     import type { EditBoxSection, EditInput } from "../values/boxes"
     import { captionTranslateLanguages } from "../values/captionLanguages"
-    import { sectionColors } from "../values/item"
 
     export let sections: { [key: string]: EditBoxSection } = {}
     export let styles: { [key: string]: string } = {}
@@ -351,26 +350,26 @@
         <div class="section" style={expanded ? "margin-bottom: 3px;" : ""}>
             {#if id !== "default"}
                 <div class="title">
-                    <MaterialButton style="width: 100%;{hasChanged ? 'padding: 4px 12px;' : 'padding: 8px 12px;'}" disabled={hasChanged || section.alwaysOpen} on:click={() => toggleSection(id)}>
+                    <Button style="width: 100%;{hasChanged ? 'padding: 4px 12px;' : 'padding: 8px 12px;'}" disabled={hasChanged || section.alwaysOpen} on:click={() => toggleSection(id)}>
                         <span style="display: flex;gap: 8px;align-items: center;">
                             {#if id === "CSS"}
                                 <Icon id="code" white />
                                 <p>CSS</p>
                             {:else}
-                                <Icon {id} style="color: {sectionColors[id]};" white />
+                                <Icon {id} />
                                 <p>{translateText(section.name || "edit." + id)}</p>
                             {/if}
                         </span>
 
                         {#if hasChanged}
-                            <MaterialButton title="actions.reset" style="pointer-events: all;padding: 4px;" on:click={() => resetSection(id)}>
+                            <Button title="actions.reset" style="pointer-events: all;padding: 4px;" on:click={() => resetSection(id)}>
                                 <Icon id="reset" size={0.8} white />
-                            </MaterialButton>
+                            </Button>
                         {:else if !section.alwaysOpen}
                             <!-- paste / edit -->
                             <Icon id={section.expandAutoValue && !expanded ? "add" : "arrow_back_modern"} class="arrow {expanded ? 'open' : ''}" size={section.expandAutoValue && !expanded ? 0.9 : 0.6} style="opacity: 0.5;" white />
                         {/if}
-                    </MaterialButton>
+                    </Button>
                 </div>
             {/if}
 
@@ -384,23 +383,23 @@
                                 {@const hasTimelineAction = $special.slideTimelineActive && $activePage === "edit" && ($activeEdit.type || "show") === "show" && SlideTimeline.hasActionAtTime(input.key || "", type, $activeEdit?.items?.length ? $activeEdit.items : [0], timelineUpdater)}
 
                                 {#if input.type === "fontDropdown"}
-                                    <MaterialFontDropdown label={values.label} {value} style={values.style} fontStyleValue={input.styleValue} {customLocalFonts} on:change={(e) => changed(e, input)} on:fontStyle={(e) => changed(e, { ...input, key: "font" })} enableFontStyles />
+                                    <FontField label={values.label} {value} style={values.style} fontStyleValue={input.styleValue} {customLocalFonts} on:change={(e) => changed(e, input)} on:fontStyle={(e) => changed(e, { ...input, key: "font" })} enableFontStyles />
                                 {:else if input.type === "toggle"}
-                                    <MaterialButton style="min-width: 50px;flex: 1;" title={values.label} on:click={() => toggle(input)}>
+                                    <Button style="min-width: 50px;flex: 1;" title={values.label} on:click={() => toggle(input)}>
                                         <Icon id={values.icon} size={1.2} white />
                                         <div class="highlight" class:active={value.includes(input.value)}></div>
-                                    </MaterialButton>
+                                    </Button>
                                 {:else if input.type === "radio"}
-                                    <MaterialButton style="min-width: 50px;flex: 1;" title={values.label} on:click={() => radio(input)}>
+                                    <Button style="min-width: 50px;flex: 1;" title={values.label} on:click={() => radio(input)}>
                                         <Icon id={values.icon} size={1.2} white />
                                         <div class="highlight radio" class:active={value === input.value}></div>
-                                    </MaterialButton>
+                                    </Button>
                                 {:else if input.type === "textarea"}
-                                    <MaterialTextarea label={values.label} {value} on:change={(e) => changed(e, input, id)} />
+                                    <TextareaField label={values.label} {value} on:change={(e) => changed(e, input, id)} />
                                 {:else if input.type === "media"}
-                                    <MaterialFilePicker label={(value ? values.label : "") || "edit.choose_media"} {value} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => changed(e, input, id)} autoTrigger={$activeEdit.type !== "template"} allowEmpty />
+                                    <FileField label={(value ? values.label : "") || "edit.choose_media"} {value} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => changed(e, input, id)} autoTrigger={$activeEdit.type !== "template"} allowEmpty />
                                 {:else if input.type === "popup"}
-                                    <MaterialPopupButton {...values} {value} on:change={(e) => changed(e, input, id)} allowEmpty={values.allowEmpty !== false} />
+                                    <PopupField {...values} {value} on:change={(e) => changed(e, input, id)} allowEmpty={values.allowEmpty !== false} />
                                 {:else if input.type === "tip"}
                                     <p class="tip">
                                         {#if values.label}{translateText(values.label)}{/if}
@@ -408,7 +407,7 @@
                                         {#if input.values?.subtext.includes("<a href=")}<Icon id="launch" white />{/if}
                                     </p>
                                 {:else}
-                                    <Input input={{ type: input.type, ...values, value }} {hasTimelineAction} on:change={(e) => changed(e, input, id)} on:keyframe={(e) => changed(e, input, id, true)} />
+                                    <FormInput input={{ type: input.type, ...values, value }} {hasTimelineAction} on:change={(e) => changed(e, input, id)} on:keyframe={(e) => changed(e, input, id, true)} />
                                 {/if}
                             {/if}
                         {/each}
@@ -439,7 +438,7 @@
     }
     .title p {
         font-weight: 500;
-        font-size: 0.8rem;
+        font-size: var(--text-xs);
         opacity: 0.8;
     }
 
@@ -489,8 +488,6 @@
     }
     .highlight.active {
         background-color: var(--secondary);
-
-        box-shadow: 0 0 3px rgb(255 255 255 / 0.2);
     }
 
     /* tip */

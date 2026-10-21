@@ -1,18 +1,17 @@
 <script lang="ts">
     import { onMount } from "svelte"
-    import type { ContentFile, ContentLibraryCategory, ContentProviderId } from "../../../../electron/contentProviders/base/types"
+    import type { ContentFile, ContentLibraryCategory, ContentProviderId } from "../../../../types/ContentProvider"
     import { Main } from "../../../../types/IPC/Main"
     import { requestMain } from "../../../IPC/main"
     import { mediaOptions, openedMediaFolders } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import Media from "./MediaCard.svelte"
 
     export let providerId: ContentProviderId
     export let columns: number = 5
-    export let searchValue: string = ""
     export let currentCategory: ContentLibraryCategory | null = null
     export let getContentCategory: (item: ContentFileWithExtras) => ContentLibraryCategory | null = () => null
 
@@ -142,17 +141,16 @@
     // inline widths would override the stylesheet, so the list width has to be set here as well
     $: cardWidth = listMode ? "100%" : `calc(${100 / columns}% - 4px)`
 
-    const filter = (s: string) => s.toLowerCase().replace(/[.,\/#!?$%\^&\*;:{}=\-_`~() ]/g, "")
-    $: filteredCategories = searchValue.length > 1 ? categories.filter((cat) => filter(cat.name).includes(filter(searchValue))) : categories
-    $: filteredContent = searchValue.length > 1 ? content.filter((item) => filter(item.name || "").includes(filter(searchValue))) : content
+    $: filteredCategories = categories
+    $: filteredContent = content
 </script>
 
 <div class="content-library">
     {#if showBackButton}
-        <FloatingInputs side="left">
-            <MaterialButton title="actions.back" on:click={navigateBack}>
+        <FloatingBar side="left">
+            <Button title="actions.back" on:click={navigateBack}>
                 <Icon id="back" white />
-            </MaterialButton>
+            </Button>
 
             <div class="divider"></div>
 
@@ -160,7 +158,7 @@
                 <span style="opacity: 0.3;font-size: 0.9em;max-width: 500px;overflow: hidden;direction: rtl;">{currentPath.length ? "/" : ""}{currentPath.map((a) => a.name)?.join("/")}</span>
                 {currentCategory?.name || ""}
             </p>
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 
     {#if loading}

@@ -7,8 +7,8 @@
     import { getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import { joinTime, secondsToTime } from "../../helpers/time"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
     registerPopupSubmit(() => {
@@ -119,17 +119,17 @@
 </script>
 
 {#if allSlides}
-    <MaterialNumberInput style="margin-bottom: 10px;" label="timer.seconds" value={allTime} max={3600} on:change={(e) => (allTime = e.detail)} />
+    <NumberField style="margin-bottom: 10px;" label="timer.seconds" value={allTime} max={3600} on:change={(e) => (allTime = e.detail)} />
 
     <!-- reset if next timer applied, but not same on all slides ?? (set input to 0) -->
     {#if isProjectItem ? !allTime || allTime === value : totalTime && (appliedToSlides === allTime || allTime === 0)}
-        <MaterialButton variant="outlined" icon="reset" on:click={() => updateValue(undefined)}>
+        <Button variant="outline" icon="reset" on:click={() => updateValue(undefined)}>
             <T id="actions.reset" />
-        </MaterialButton>
+        </Button>
     {:else}
-        <MaterialButton variant="contained" icon="clock" disabled={allTime === 0} info={getTime(newTime)} on:click={() => updateValue(allTime)}>
+        <Button variant="default" icon="clock" disabled={allTime === 0} info={getTime(newTime)} on:click={() => updateValue(allTime)}>
             <T id="actions.to_all" />
-        </MaterialButton>
+        </Button>
     {/if}
 
     {#if totalTime}
@@ -138,5 +138,5 @@
         </p>
     {/if}
 {:else}
-    <MaterialNumberInput label="timer.seconds" {value} max={3600} on:change={updateValue} />
+    <NumberField label="timer.seconds" {value} max={3600} on:change={updateValue} />
 {/if}

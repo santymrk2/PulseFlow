@@ -2,10 +2,11 @@ import { get } from "svelte/store"
 import { uid } from "uid"
 import type { Project, ProjectShowRef } from "../../../types/Projects"
 import { similarity } from "../../converters/txt"
-import { activeEdit, activeProject, activeShow, projects, projectView, saved, showRecentlyUsedProjects, shows, showsCache } from "../../stores"
+import { activeEdit, activeProject, activeShow, leftSource, projects, projectView, saved, showRecentlyUsedProjects, shows, showsCache } from "../../stores"
 import { generateScriptureShowFromReference } from "../drawer/bible/scripture"
 import { keysToID, sortByTimeNew } from "../helpers/array"
 import { history } from "../helpers/history"
+import { appendShowRefs } from "./leftSource"
 
 export function openProject(id: string, openFirstItem: boolean = true) {
     projectView.set(false)
@@ -15,6 +16,7 @@ export function openProject(id: string, openFirstItem: boolean = true) {
 
     showRecentlyUsedProjects.set(false)
     activeProject.set(id)
+    leftSource.set({ type: "playlist", id })
     markProjectAsUsed(id)
 
     if (openFirstItem) openProjectItem(id)
@@ -154,17 +156,21 @@ async function textToProjectItems(text: string) {
     return items
 }
 
-export function isProjectLinked(project?: Project | null, projectId?: string, contentProviderDataVal?: any): boolean {
+export function isProjectLinked(project?: Project | null, projectId?: string): boolean {
     if (!project && !projectId) return false
     if (project?.origin) return true
 
     // pre 1.6.6 backwards compatibility for projects without "origin"
     const id = projectId || project?.id
-    if (id) {
-        if (id.startsWith("onstage_")) return true
-        const pcoPlans = contentProviderDataVal?.planningcenter?.availablePlans as { planId: string }[] | undefined
-        if (pcoPlans?.some((p) => p.planId === id)) return true
-    }
+    if (id?.startsWith("onstage_")) return true
 
     return false
+}
+
+/** Agrega shows al final de una playlist en un solo paso de historial (un Ctrl+Z los quita todos). */
+export function addShowsToProject(projectId: string, showIds: string[]) {
+    const project = get(projects)[projectId]
+    if (!project || !showIds.length) return
+
+    history({ id: "UPDATE", newData: { key: "shows", data: appendShowRefs(project.shows || [], showIds) }, oldData: { id: projectId }, location: { page: "show", id: "project_ref" } })
 }

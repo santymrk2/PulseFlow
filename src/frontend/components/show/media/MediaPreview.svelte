@@ -7,7 +7,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { getMedia, getMediaLayerType, getMediaStyle } from "../../helpers/media"
     import { getActiveOutputs, getCurrentStyle, setOutput } from "../../helpers/output"
-    import HoverButton from "../../inputs/HoverButton.svelte"
+    import HoverPlay from "../../helpers/HoverPlay.svelte"
     import { clearSlide } from "../../output/clear"
     import Center from "../../system/Center.svelte"
     import VideoShow from "../VideoShow.svelte"
@@ -60,7 +60,7 @@
             <VideoShow {mediaPath} {show} {mediaStyle} />
         {:else}
             <div id={mediaPath} class="media context #media_preview" style="flex: 1;overflow: hidden;">
-                <HoverButton
+                <HoverPlay
                     icon="play"
                     size={10}
                     on:click={() => {
@@ -76,7 +76,7 @@
                         <Image style={mediaStyleBlurString} src={mediaPath} alt="" />
                     {/if}
                     <Image style={mediaStyleString} src={mediaPath} alt={show.name || ""} />
-                </HoverButton>
+                </HoverPlay>
             </div>
         {/if}
     </div>

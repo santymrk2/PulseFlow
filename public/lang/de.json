@@ -350,6 +350,7 @@
         "first_last": "Erste und letzte Folie"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Standard",
         "dark": "Dunkel",
         "light": "Hell",
@@ -513,7 +514,7 @@
         "effect_items": "Effektelemente",
         "timeline": "Zeitleiste",
         "timecode": "Timecode",
-        "initialize": "Willkommen bei FreeShow",
+        "initialize": "Willkommen bei PulseFlow",
         "unsaved": "Programm beenden?",
         "cancel": "Abbrechen",
         "continue": "Weiter",

@@ -4,9 +4,9 @@
     import { activePopup, alertMessage } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialMultiChoice from "../../inputs/MaterialMultiChoice.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ChoiceGrid from "../../../lib/components/ui/choice-grid/choice-grid.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import { fetchAndImportIcs } from "../../drawer/calendar/calendars"
     import { newToast } from "../../../utils/common"
 
@@ -44,15 +44,15 @@
 </script>
 
 {#if importType}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (importType = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (importType = "")} />
 {/if}
 
 {#if importType === "url"}
     <div class="url-import">
-        <MaterialTextInput label="inputs.url (.ics)" value={url} on:input={(e) => (url = e.detail)} autofocus />
-        <MaterialButton variant="contained" icon="import" style="margin-top: 20px;width: 100%;" disabled={!url.trim() || isSubmitting} on:click={handleUrlImport}>
+        <TextField label="inputs.url (.ics)" value={url} on:input={(e) => (url = e.detail)} autofocus />
+        <Button variant="default" icon="import" style="margin-top: 20px;width: 100%;" disabled={!url.trim() || isSubmitting} on:click={handleUrlImport}>
             <T id="actions.import" />
-        </MaterialButton>
+        </Button>
     </div>
 {:else if importType === "local"}
     <p style="font-size: 1.1em;"><T id="scripture.supported_formats" /></p>
@@ -63,11 +63,11 @@
         </li>
     </ul>
 
-    <MaterialButton variant="outlined" icon="import" on:click={handleLocalImport} style="margin-top: 25px;width: 100%;">
+    <Button variant="outline" icon="import" on:click={handleLocalImport} style="margin-top: 25px;width: 100%;">
         <T id="actions.import" />
-    </MaterialButton>
+    </Button>
 {:else}
-    <MaterialMultiChoice options={importTypes} on:click={(e) => (importType = e.detail)} />
+    <ChoiceGrid options={importTypes} on:click={(e) => (importType = e.detail)} />
 {/if}
 
 <style>

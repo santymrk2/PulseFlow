@@ -13,10 +13,10 @@
     import { clone } from "../../../helpers/array"
     import { loadShows } from "../../../helpers/setShow"
     import T from "../../../helpers/T.svelte"
-    import HRule from "../../../input/HRule.svelte"
-    import MaterialButton from "../../../inputs/MaterialButton.svelte"
-    import MaterialMultiChoice from "../../../inputs/MaterialMultiChoice.svelte"
-    import MaterialToggleSwitch from "../../../inputs/MaterialToggleSwitch.svelte"
+    import HRule from "../../../../lib/components/ui/h-rule/h-rule.svelte"
+    import Button from "../../../../lib/components/ui/button/button.svelte"
+    import ChoiceGrid from "../../../../lib/components/ui/choice-grid/choice-grid.svelte"
+    import ToggleField from "../../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import Center from "../../../system/Center.svelte"
     import Loader from "../../Loader.svelte"
     import { convertShowSlidesToImages, exportFormats, exportTypes, getActiveShowId, getShowIdsFromType } from "./exportHelper"
@@ -171,15 +171,15 @@
 {#if !exportType}
     <p style="margin-bottom: 10px;"><T id="export.option_type" /></p>
 
-    <MaterialMultiChoice options={exportTypesList} on:click={(e) => (exportType = e.detail)} />
+    <ChoiceGrid options={exportTypesList} on:click={(e) => (exportType = e.detail)} />
 {:else if !exportFormat}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (exportType = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (exportType = "")} />
 
     <p style="margin-bottom: 10px;"><T id="export.option_format" /></p>
 
-    <MaterialMultiChoice options={filterFormats(exportFormats)} on:click={(e) => (exportFormat = e.detail)} />
+    <ChoiceGrid options={filterFormats(exportFormats)} on:click={(e) => (exportFormat = e.detail)} />
 {:else}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (exportFormat = "")} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => (exportFormat = "")} />
 
     <!-- margin-bottom: 10px; -->
     <div style="display: flex;">
@@ -193,7 +193,7 @@
         <HRule />
         <PdfExport bind:pdfOptions {previewShow} showCount={showIds.length} {exportType} />
     {:else if exportFormat === "project"}
-        <MaterialToggleSwitch label="export.include_media" style="margin-top: 20px;" checked={$special.projectIncludeMedia ?? true} defaultValue={true} on:change={(e) => setSpecial(e, "projectIncludeMedia")} />
+        <ToggleField label="export.include_media" style="margin-top: 20px;" checked={$special.projectIncludeMedia ?? true} defaultValue={true} on:change={(e) => setSpecial(e, "projectIncludeMedia")} />
     {/if}
 
     {#if loading}
@@ -202,7 +202,7 @@
         </Center>
     {/if}
 
-    <MaterialButton variant="contained" style="margin-top: 20px;" icon="export" info={showIds.length > 1 && exportFormat !== "project" && !(exportType === "project" && exportFormat === "pdf") ? showIds.length.toString() : ""} disabled={exportType === "project" ? !$projects[$activeProject || ""]?.shows?.length : !showIds.length && exportType !== "all_shows"} on:click={exportClick}>
+    <Button variant="default" style="margin-top: 20px;" icon="export" info={showIds.length > 1 && exportFormat !== "project" && !(exportType === "project" && exportFormat === "pdf") ? showIds.length.toString() : ""} disabled={exportType === "project" ? !$projects[$activeProject || ""]?.shows?.length : !showIds.length && exportType !== "all_shows"} on:click={exportClick}>
         <T id="export.export" />
-    </MaterialButton>
+    </Button>
 {/if}

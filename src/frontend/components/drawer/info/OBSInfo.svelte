@@ -230,7 +230,7 @@
                 </div>
                 <div style="display: flex;flex-direction: column;gap: 0.15em;">
                     <span style="color: #64748b;font-size: 0.65em;font-weight: 600;letter-spacing: 0.05em;text-transform: uppercase;">Duration</span>
-                    <span style="color: #ef4444;font-size: 0.95em;font-weight: 700;">{streamDuration}</span>
+                    <span style="color: var(--danger);font-size: 0.95em;font-weight: 700;">{streamDuration}</span>
                 </div>
                 <div style="display: flex;flex-direction: column;gap: 0.15em;">
                     <span style="color: #64748b;font-size: 0.65em;font-weight: 600;letter-spacing: 0.05em;text-transform: uppercase;">Data Sent</span>

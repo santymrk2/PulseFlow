@@ -1,11 +1,8 @@
-import { send } from "../../../utils/request"
-import { OUTPUT } from "../../../../types/Channels"
 import { websiteAction } from "../../../stores"
 
 export type PersistentWebviewOptions = {
     src: string
     zoom?: number
-    isOutput?: boolean
     outputId?: string
     onReady?: (webview: any, controller: WebviewController) => void
     onNavigate?: (url: string) => void
@@ -21,7 +18,6 @@ type AttachedSlot = {
     historyIndex: number
     isNavigating?: boolean
     isDomReady?: boolean
-    isMuted?: boolean
     options?: PersistentWebviewOptions
 }
 
@@ -59,10 +55,7 @@ export type WebviewController = {
     getCurrentUrl: () => string
 }
 
-export function attachPersistentWebview(
-    targetNode: HTMLElement,
-    options: PersistentWebviewOptions
-) {
+export function attachPersistentWebview(targetNode: HTMLElement, options: PersistentWebviewOptions) {
     let currentSrc = options.src
     if (!currentSrc) return
 
@@ -104,8 +97,7 @@ export function attachPersistentWebview(
                         webview.reload?.()
                     }
                 } else if (action.type === "mute") {
-                    if (slot) slot.isMuted = action.muted
-                    webview.setAudioMuted?.(!options.isOutput || action.muted)
+                    webview.setAudioMuted?.(true)
                 }
             } catch (err) {
                 console.debug("Website action failed:", err)
@@ -115,19 +107,8 @@ export function attachPersistentWebview(
 
         webview.addEventListener("dom-ready", () => {
             slot!.isDomReady = true
-            applyWebviewStyle(webview, options.zoom, options.isOutput, currentSrc, true, slot!.isMuted)
+            applyWebviewStyle(webview, options.zoom, currentSrc, true)
             slot!.options?.onReady?.(webview, controller)
-
-            if (options.isOutput && options.outputId) {
-                send(OUTPUT, ["FOCUS"], { id: options.outputId })
-                setTimeout(() => {
-                    try {
-                        webview.focus?.()
-                    } catch (err) {
-                        console.debug("Webview focus failed:", err)
-                    }
-                })
-            }
         })
 
         const handleNavigation = (newUrl: string) => {
@@ -213,7 +194,7 @@ export function attachPersistentWebview(
     slot.currentParent = targetNode
     targetNode.appendChild(slot.webview)
     if (slot.isDomReady) {
-        applyWebviewStyle(slot.webview, options.zoom, options.isOutput, currentSrc, true, slot.isMuted)
+        applyWebviewStyle(slot.webview, options.zoom, currentSrc, true)
     }
     // Always notify the mounting component of the webview and controller
     options.onReady?.(slot.webview, controller)
@@ -228,7 +209,7 @@ export function attachPersistentWebview(
                 detach()
                 inner = attachPersistentWebview(targetNode, newOptions)
             } else {
-                applyWebviewStyle(slot!.webview, newOptions.zoom, newOptions.isOutput, currentSrc, slot!.isDomReady, slot!.isMuted)
+                applyWebviewStyle(slot!.webview, newOptions.zoom, currentSrc, slot!.isDomReady)
             }
         },
         destroy() {
@@ -244,22 +225,21 @@ export function attachPersistentWebview(
             }
             slot.currentParent = getHiddenContainer()
             getHiddenContainer().appendChild(slot.webview)
-            if (options.isOutput) {
-                try {
-                    slot.webview.setAudioMuted?.(true)
-                } catch (e) {
-                    console.debug(e)
-                }
+            try {
+                slot.webview.setAudioMuted?.(true)
+            } catch (e) {
+                console.debug(e)
             }
             cleanupOldWebviews()
         }
     }
 }
 
-function applyWebviewStyle(webview: any, zoom = 100, isOutput = false, src = "", isDomReady = false, isMuted = false) {
+function applyWebviewStyle(webview: any, zoom = 100, src = "", isDomReady = false) {
     if (!webview) return
     try {
-        webview.setAudioMuted?.(!isOutput || isMuted)
+        // la salida webview ya no existe: los sitios siempre van en silencio en la UI
+        webview.setAudioMuted?.(true)
 
         const factor = (parseFloat(zoom?.toString() || "100") || 100) / 100
         webview.setZoomFactor?.(factor)

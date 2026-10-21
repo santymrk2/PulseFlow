@@ -378,6 +378,7 @@
         "first_last": "Первый и последний слайд"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "По умолчанию",
         "dark": "Темная",
         "light": "Светлая",
@@ -548,7 +549,7 @@
         "drawer_search_options": "Настройки поиска",
         "template_info": "Информация о шаблоне",
         "cleaning_utility": "Утилита очистки",
-        "initialize": "Добро пожаловать в FreeShow",
+        "initialize": "Добро пожаловать в PulseFlow",
         "unsaved": "Вы уверены, что хотите выйти?",
         "cancel": "Отмена",
         "continue": "Продолжить",

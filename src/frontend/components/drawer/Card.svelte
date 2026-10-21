@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Resolution } from "../../../types/Settings"
-    import { mediaOptions, outputs, styles } from "../../stores"
+    import { mediaOptions, outputs, styles, previewOutputId } from "../../stores"
     import { triggerClickOnEnterSpace } from "../../utils/clickable"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
@@ -25,7 +25,7 @@
     export let showApplyOnHover = false
     export let checkered = false
     export let mode: "grid" | "list" | "lyrics" = "grid"
-    export let resolution: Resolution = getResolution(null, { $outputs, $styles })
+    export let resolution: Resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
     $: resolution = getResolution(resolution, { $outputs, $styles })
     $: mainWidth = width || (mode === "grid" ? 100 / $mediaOptions.columns : 100)
 </script>
@@ -78,7 +78,7 @@
     .hover.overlay {
         opacity: 0;
         /* transition: 0.1s opacity; */
-        background-color: rgb(255 255 255 / 0.05);
+        background-color: var(--bg-hover);
         position: absolute;
         top: 0;
         left: 0;
@@ -122,10 +122,10 @@
         z-index: 1;
     }
     .main.active {
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: -1px;
         z-index: 2;
-        /* outline: 3px solid var(--secondary);
+        /* outline: 3px solid var(--text-muted);
     outline-offset: -2px;
     outline-offset: -5px; */
     }

@@ -3,7 +3,7 @@
         "welcome": "Vitajte",
         "quit": "Ukončiť",
         "docs": "Dokumentácia",
-        "about": "O FreeShow",
+        "about": "O PulseFlow",
         "unnamed": "Bez názvu",
         "drop": "Pusti sem",
         "search": "Hľadať",
@@ -317,6 +317,7 @@
         "first_last": "Prvý a posledný snímok"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Predvolená",
         "dark": "Tmavá",
         "light": "Svetlá",
@@ -458,7 +459,7 @@
         "manage_metadata": "Spravovať metadáta",
         "choose_camera": "Zvoľte kameru",
         "manage_tags": "Spravovať značky",
-        "initialize": "Vitajte vo FreeShow",
+        "initialize": "Vitajte vo PulseFlow",
         "unsaved": "Naozaj si prajete skončiť?",
         "cancel": "Zrušiť",
         "continue": "Pokračovať",

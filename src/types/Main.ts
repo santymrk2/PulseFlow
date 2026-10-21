@@ -1,11 +1,56 @@
 import type { Stats } from "fs"
-import type { dataFolderNames } from "../electron/utils/files"
 import type { Cropping } from "./Settings"
+
+/** Rectángulo en píxeles (reemplaza a `Electron.Rectangle`). */
+export interface Rectangle {
+    x: number
+    y: number
+    width: number
+    height: number
+}
+
+/** Monitor/pantalla (reemplaza a `Display` de `electron`). */
+export interface Display {
+    // F10.0c: id estable (nombre del monitor + índice), bounds en lógicos.
+    id: string
+    label: string
+    /** Rectángulo del monitor en píxeles lógicos. */
+    bounds: Rectangle
+    /** Área útil (aquí igual a `bounds`). */
+    workArea: Rectangle
+    /** Resolución física real del monitor (sin escalar). */
+    physicalSize: { width: number; height: number }
+    /** Tamaño lógico (`bounds.width`/`height`). */
+    size: { width: number; height: number }
+    scaleFactor: number
+    /** Es el monitor principal del sistema. */
+    primary: boolean
+    rotation?: number
+    internal?: boolean
+}
+
+/**
+ * Nombres de carpetas de datos (movidos desde `src/electron/utils/files.ts`).
+ */
+export const dataFolderNames = {
+    shows: "Shows",
+    backups: "Backups",
+    scriptures: "Bibles",
+    onlineMedia: "Online",
+    media: "Media",
+    exports: "Exports",
+    imports: "Imports",
+    lessons: "Lessons",
+    recordings: "Recordings",
+    audio: "Audio",
+    userData: "Config",
+    cloud: "Cloud"
+}
 
 export interface Config {
     loaded: boolean
     maximized: boolean
-    bounds: Electron.Rectangle
+    bounds: Rectangle
     dataPath: string | null
     disableHardwareAcceleration: boolean | null
     graphicsDevice: string | null
@@ -403,6 +448,7 @@ export type Popups =
     | "select_show"
     | "select_template"
     | "select_style"
+    | "select_look"
     | "select_overlay"
     | "select_stage_layout"
     | "delete_duplicated_shows"
@@ -438,12 +484,10 @@ export type Popups =
     | "edit_event"
     | "edit_chart"
     | "choose_chord"
-    | "choose_screen"
     | "choose_media_input"
     | "choose_output_input"
     | "choose_output_type"
     | "choose_style"
-    | "change_output_values"
     | "output_selector"
     | "set_time"
     | "assign_shortcut"
@@ -476,14 +520,14 @@ export type Popups =
     | "effect_items"
     | "timeline"
     | "timecode"
-    | "drawer_search_options"
     | "template_info"
     | "cleaning_utility"
-    | "pco_picker"
-    | "sync_folders"
     | "node_options"
-    | "ai_model_manager"
-    | "ai_chat"
+    | "looks"
+    | "screen_config"
+    | "add_shows"
+    | "playlist_options"
+    | "kit_demo"
 
 export type DefaultProjectNames = "date" | "today" | "sunday" | "week" | "custom" | "blank"
 

@@ -1,5 +1,4 @@
 <script lang="ts">
-    import { onMount } from "svelte"
     // import VirtualList from "@sveltejs/svelte-virtual-list"
     // import VirtualList from "./VirtualList2.svelte"
     import type { ShowList } from "../../../../types/Show"
@@ -7,26 +6,22 @@
     import { activeEdit, activeFocus, activePopup, activeProfile, activeProject, activeShow, activeTagFilter, categories, drawer, focusedArea, focusMode, labelsDisabled, shows, sorted, sortedShowsList } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { getAccess } from "../../../utils/profile"
-    import { formatSearch, showSearch } from "../../../utils/search"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import { clone } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import { updateShowsList } from "../../helpers/show"
     import { dateToString } from "../../helpers/time"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import ShowButton from "../../inputs/ShowButton.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ShowButton from "../../show/ShowButton.svelte"
     import Autoscroll from "../../system/Autoscroll.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import VirtualList from "../VirtualList.svelte"
 
     export let active: string | null
-    export let searchValue: string
 
-    $: query = searchValue.trim()
-    $: isSearching = formatSearch(query).trim().length > 1
     $: showsSorted = $sortedShowsList
 
     // // don't update unless it's changed
@@ -49,31 +44,13 @@
               ? showsSorted.filter((a) => a.locked)
               : showsSorted.filter((s) => profile[s?.category || ""] !== "none" && (active === s.category || (active === "unlabeled" && (s.category === null || !$categories[s.category]))))
 
-    export let firstMatch: null | any = null
-
     $: drawerIsClosed = $drawer.height <= 40
     let shouldUpdate = false
     // update when drawer is opened if it has changes
-    $: if (shouldUpdate && !drawerIsClosed) search()
+    $: if (shouldUpdate && !drawerIsClosed) update()
 
-    // reduce lag by only refreshing full list when not typing for 100 ms
-    let isTyping: NodeJS.Timeout | null = null
-    $: largeList = filteredStored.length > 300
-    $: if (searchValue && largeList) typing()
-    function typing() {
-        if (isTyping) clearTimeout(isTyping)
-        isTyping = setTimeout(() => {
-            isTyping = null
-            search()
-        }, 100)
-    }
-
-    // let scrolledToTop = ""
-    let createFromSearch = false
-    let lastQuery = ""
-    $: if (query !== undefined || filteredStored || $activeTagFilter) search()
-    function search() {
-        if (isTyping) return
+    $: if (filteredStored || $activeTagFilter) update()
+    function update() {
         // don't update if drawer is closed
         // updates to this lags the editor when moving/resizing items, if many shows in list
         if (drawerIsClosed) {
@@ -82,42 +59,7 @@
         }
         shouldUpdate = false
 
-        const queryChanged = query !== lastQuery
-        lastQuery = query
-
-        if (isSearching) {
-            filteredShows = showSearch(query, filterByTags(filteredStored, $activeTagFilter))
-
-            // a new query starts the keyboard selection over at the top result
-            if (queryChanged) clearSearchSelection()
-            else if ($activeShow?.data?.searchInput && !filteredShows.some((a) => a.id === $activeShow?.id)) clearSearchSelection()
-
-            firstMatch = filteredShows[0] || null
-
-            // if nothing matches (or match confidence is very low on long search)
-            if (!showLoading && (!filteredShows.length || (active === "all" && query.length > 5 && (firstMatch?.match || 0) < 48))) {
-                firstMatch = "SEARCH_CREATE"
-                createFromSearch = true
-            } else {
-                createFromSearch = false
-            }
-
-            // scroll to top
-            if (queryChanged) setTimeout(() => document.querySelector(".drawer svelte-virtual-list-viewport")?.scrollTo(0, 0))
-        } else {
-            filteredShows = filterByTags(clone(filteredStored), $activeTagFilter)
-            firstMatch = null
-            createFromSearch = false
-            clearSearchSelection()
-        }
-    }
-
-    function clearSearchSelection() {
-        if (!$activeShow?.data?.searchInput) return
-        activeShow.update((a) => {
-            delete a!.data
-            return a
-        })
+        filteredShows = filterByTags(clone(filteredStored), $activeTagFilter)
     }
 
     function filterByTags(shows, tags: string[]) {
@@ -128,27 +70,7 @@
         })
     }
 
-    let showLoading = false
     function keydown(e: KeyboardEvent) {
-        if (e.target?.closest?.(".drawer_search")) {
-            // get preview of shows
-            if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-                e.preventDefault()
-                createFromSearch = false
-                let currentIndex = filteredShows.findIndex((a) => a.id === $activeShow?.id)
-                let newIndex = 0
-                if (currentIndex < 0) newIndex = e.key === "ArrowDown" ? 0 : filteredShows.length - 1
-                else newIndex = e.key === "ArrowDown" ? currentIndex + 1 : currentIndex - 1
-                if (newIndex < 0 || newIndex >= filteredShows.length) return
-
-                activeShow.set({ id: filteredShows[newIndex].id, type: "show", data: { searchInput: true } })
-
-                showLoading = true
-                setTimeout(() => (showLoading = false), 500)
-            }
-            return
-        }
-
         if (e.target?.closest?.("input") || e.target?.closest?.(".edit") || (!e.ctrlKey && !e.metaKey) || !filteredShows?.length) return
         if ($activeEdit.items.length) return
 
@@ -229,13 +151,6 @@
             return a
         })
     }
-
-    let activeIsSearch = true
-    onMount(() => {
-        const searchInput = document.querySelector(".drawer")?.querySelector(".search")
-        searchInput?.addEventListener("focus", () => (activeIsSearch = true))
-        searchInput?.addEventListener("blur", () => (activeIsSearch = false))
-    })
 </script>
 
 <svelte:window on:keydown={keydown} />
@@ -243,42 +158,31 @@
 <Autoscroll style="overflow-y: auto;flex: 1;">
     <!-- bind:this={listElem} -->
     <div class="column {readOnly ? '' : 'context #drawer_show'}" on:mouseup={() => focusedArea.set("show_drawer")}>
-        {#if createFromSearch && isSearching && activeIsSearch}
-            <div class="warning">
-                <!-- role="none" on:click={createNew} -->
-                <p style="padding: 6px 8px;"><T id="show.enter_create" />: <span style="color: var(--secondary);font-weight: bold;">{query[0]?.toUpperCase() + query.slice(1)}</span></p>
-            </div>
-        {/if}
-
         {#if filteredShows.length}
             <div class="sort-header" role="group">
                 {#each sortHeaders as header}
                     {@const direction = sortType === header.asc ? "asc" : sortType === header.desc ? "desc" : ""}
                     {@const isActive = direction !== ""}
 
-                    <MaterialButton style="{header.style}justify-content: {header.id === 'name' ? 'flex-start' : 'center'};" {isActive} on:click={() => toggleSort(header.id)} title={header.label}>
+                    <Button style="{header.style}justify-content: {header.id === 'name' ? 'flex-start' : 'center'};" {isActive} on:click={() => toggleSort(header.id)} title={header.label}>
                         <p>{header.label}</p>
                         {#if direction}
                             <span class="sort-indicator">
                                 <Icon id={direction === "asc" ? "arrow_down" : "arrow_up"} size={1.3} white />
                             </span>
                         {/if}
-                    </MaterialButton>
+                    </Button>
                 {/each}
             </div>
 
             <!-- reload list when changing category -->
             {#key active}
-                <VirtualList items={filteredShows} let:item={show} activeIndex={!isSearching || $activeShow?.data?.searchInput ? filteredShows.findIndex((a) => a.id === $activeShow?.id) : -1}>
+                <VirtualList items={filteredShows} let:item={show} activeIndex={filteredShows.findIndex((a) => a.id === $activeShow?.id)}>
                     <SelectElem id="show_drawer" data={{ id: show.id }} shiftRange={filteredShows} draggable>
-                        {#if !isSearching || show.match}
-                            <ShowButton id={show.id} {show} data={dateToString(show.timestamps?.[sortType.replace("_old", "")] || show.timestamps?.modified || show.timestamps?.created || "", true)} class="#drawer_show_button" match={show.match || null} searchValue={query} isFirst={firstMatch?.id === show.id && activeIsSearch} />
-                        {/if}
+                        <ShowButton id={show.id} {show} data={dateToString(show.timestamps?.[sortType.replace("_old", "")] || show.timestamps?.modified || show.timestamps?.created || "", true)} class="#drawer_show_button" />
                     </SelectElem>
                 </VirtualList>
             {/key}
-        {:else if isSearching}
-            <Center size={1.2} faded><T id="empty.search" /></Center>
         {:else}
             <Center size={1.2} faded><T id="empty.shows" /></Center>
         {/if}
@@ -286,28 +190,28 @@
 </Autoscroll>
 
 {#if showWithNonExistentCategory}
-    <FloatingInputs side="left" onlyOne>
-        <MaterialButton on:click={createNonExistentCategories}>
-            <Icon id="autofill" gradient />
+    <FloatingBar side="left" onlyOne>
+        <Button on:click={createNonExistentCategories}>
+            <Icon id="autofill" />
             <T id="category.create_nonexistent" />
-        </MaterialButton>
-    </FloatingInputs>
-{:else if active === "all" && !searchValue && filteredShows.length < 20}
-    <FloatingInputs side="left" onlyOne>
-        <MaterialButton variant="outlined" title="actions.import [Ctrl+I]" on:click={() => activePopup.set("import")}>
+        </Button>
+    </FloatingBar>
+{:else if active === "all" && filteredShows.length < 20}
+    <FloatingBar side="left" onlyOne>
+        <Button variant="outline" title="actions.import [Ctrl+I]" on:click={() => activePopup.set("import")}>
             <Icon id="import" />
             <T id="actions.import" />
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 {/if}
 
-<FloatingInputs onlyOne gradient>
+<FloatingBar onlyOne>
     <div role="none" class="overflow-interact" on:click={(e) => createShow(e, true)}>
-        <MaterialButton icon="add" class="context #drawer_new_show" title="tooltip.show [Ctrl+N]" disabled={readOnly} on:click={createShow} white>
+        <Button icon="add" class="context #drawer_new_show" title="tooltip.show [Ctrl+N]" disabled={readOnly} on:click={createShow} white>
             {#if !$labelsDisabled}<T id="new.show" />{/if}
-        </MaterialButton>
+        </Button>
     </div>
-</FloatingInputs>
+</FloatingBar>
 
 <style>
     .column {
@@ -343,7 +247,7 @@
         height: 28px;
         border-radius: 4px;
         background-color: var(--primary-darker);
-        /* box-shadow: 0 3px 8px rgb(0 0 0 / 0.2); */
+        /* */
         border-bottom: 1px solid var(--primary-lighter);
     }
 
@@ -360,7 +264,7 @@
     }
 
     .sort-indicator {
-        font-size: 0.85rem;
+        font-size: var(--text-xs);
         line-height: 1;
         position: absolute;
         top: 0;

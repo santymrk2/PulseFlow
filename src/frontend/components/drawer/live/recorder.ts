@@ -29,8 +29,6 @@ export function createMediaRecorder(stream: MediaStream, options?: { onCleanup?:
     activeLabel = options?.label || ""
     recordedChunks = []
 
-    activeRecording.update((a) => (a ? { ...a, startedAt: a.startedAt || Date.now() } : { startedAt: Date.now() }))
-
     newToast("toast.recording_started")
     mediaRecorder = new MediaRecorder(stream, { mimeType: getMimeType() })
     mediaRecorder.ondataavailable = (e) => {
@@ -76,7 +74,7 @@ export function stopMediaRecorder(): Promise<void> {
 export function getRecordingFileName(label = "", extension = "webm"): string {
     const formattedLabel = label ? `${label.replace(/[\\/:*?"<>|]/g, "_")}_` : ""
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)
-    return `FreeShow_${formattedLabel}${timestamp}.${extension}`
+    return `PulseFlow_${formattedLabel}${timestamp}.${extension}`
 }
 
 async function handleStop() {

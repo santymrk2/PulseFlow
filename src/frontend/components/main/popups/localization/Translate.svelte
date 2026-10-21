@@ -4,9 +4,9 @@
     import Icon from "../../../helpers/Icon.svelte"
     import { _show } from "../../../helpers/shows"
     import T from "../../../helpers/T.svelte"
-    import InputRow from "../../../input/InputRow.svelte"
-    import MaterialButton from "../../../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../../../inputs/MaterialDropdown.svelte"
+    import InputRow from "../../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../../lib/components/ui/select-field/select-field.svelte"
     import { isoLanguages } from "./isoLanguages"
     import { getIsoLanguages, removeTranslationFromShow, translateShow } from "./translation"
     import { registerPopupSubmit } from "../../../../utils/popup"
@@ -66,9 +66,9 @@
 </script>
 
 <div class="main">
-    <MaterialDropdown label="settings.language" options={languageList} value={$special.translationLanguage} on:change={updateLanguage} flags />
+    <SelectField label="settings.language" options={languageList} value={$special.translationLanguage} on:change={updateLanguage} flags />
 
-    <MaterialButton variant="contained" style="margin-top: 20px;width: 100%;" disabled={!$special.translationLanguage} on:click={convert}>
+    <Button variant="default" style="margin-top: 20px;width: 100%;" disabled={!$special.translationLanguage} on:click={convert}>
         <Icon size={1.1} id="translate" white />
 
         {#if translatedLangs.includes($special.translationLanguage)}
@@ -78,24 +78,24 @@
         {:else}
             <T id="localization.translate" />
         {/if}
-    </MaterialButton>
+    </Button>
 
     {#if translatedLangs.length}
         <div class="list">
             {#each translatedLangs as lang}
                 <InputRow>
                     <p style="flex: 1;">{isoLanguages.find((a) => a.code === lang)?.name || lang}</p>
-                    <MaterialButton title="settings.remove" on:click={() => remove(lang)}>
+                    <Button title="settings.remove" on:click={() => remove(lang)}>
                         <Icon id="close" size={1.3} white />
-                    </MaterialButton>
+                    </Button>
                 </InputRow>
             {/each}
         </div>
 
-        <MaterialButton variant="outlined" style="width: 100%;" on:click={() => remove()}>
+        <Button variant="outline" style="width: 100%;" on:click={() => remove()}>
             <Icon size={1.1} id="close" />
             <T id="localization.remove" />
-        </MaterialButton>
+        </Button>
     {/if}
 </div>
 

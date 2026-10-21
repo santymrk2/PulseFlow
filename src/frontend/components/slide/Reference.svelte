@@ -9,7 +9,7 @@
     import { setDrawerTabData } from "../helpers/historyHelpers"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let showId: string
     export let show: Show
@@ -89,19 +89,19 @@
 
         <div class="divider" />
 
-        <MaterialButton on:click={updateCalendar} style="white-space: nowrap;min-width: 100px;">
+        <Button on:click={updateCalendar} style="white-space: nowrap;min-width: 100px;">
             <Icon id="calendar" />
             {#if !$labelsDisabled}<T id="show.update" />{/if}
-        </MaterialButton>
+        </Button>
     {:else if show?.reference?.type === "scripture"}
         <p data-title={data.version || ""}><T id="tabs.scripture" />: {data.version || ""}</p>
 
         <div class="divider" />
 
-        <MaterialButton on:click={openTab} style="white-space: nowrap;min-width: 100px;">
+        <Button on:click={openTab} style="white-space: nowrap;min-width: 100px;">
             <Icon id="scripture" />
             {#if !$labelsDisabled}<T id="main.open" />{/if}
-        </MaterialButton>
+        </Button>
     {:else if show?.reference?.type === "lessons"}
         <p>
             {#if data.studyName}
@@ -114,10 +114,10 @@
 
         <div class="divider" />
 
-        <MaterialButton title="Open Lessons.church Website" on:click={() => openURL("https://lessons.church")} style="white-space: nowrap;min-width: 150px;">
+        <Button title="Open Lessons.church Website" on:click={() => openURL("https://lessons.church")} style="white-space: nowrap;min-width: 150px;">
             <Icon id="book" />
             Lessons.church
-        </MaterialButton>
+        </Button>
     {:else if show?.reference?.type === "canva"}
         <p>
             Canva: {data.presentationName || show.name || ""}
@@ -125,9 +125,9 @@
 
         <div class="divider" />
 
-        <MaterialButton title="show.update" icon="refresh" disabled={syncingCanva} on:click={refreshCanva}>
+        <Button title="show.update" icon="refresh" disabled={syncingCanva} on:click={refreshCanva}>
             <T id="show.update" />
-        </MaterialButton>
+        </Button>
     {:else if show?.reference?.type === "interaction"}
         <p>
             <T id="tabs.interactions" />: {data.name || ""}
@@ -135,10 +135,10 @@
 
         <div class="divider" />
 
-        <MaterialButton title="main.open" on:click={openInteraction}>
+        <Button title="main.open" on:click={openInteraction}>
             <Icon id="game" />
             {#if !$labelsDisabled}<T id="main.open" />{/if}
-        </MaterialButton>
+        </Button>
     {/if}
 </div>
 

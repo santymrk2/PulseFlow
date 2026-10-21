@@ -378,6 +378,7 @@
         "first_last": "첫 번째 및 마지막 슬라이드"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "기본",
         "dark": "어둡게",
         "light": "밝게",
@@ -544,7 +545,7 @@
         "timecode": "타임코드",
         "drawer_search_options": "검색 선택사항",
         "template_info": "템플릿 정보",
-        "initialize": "FreeShow에 오신 것을 환영합니다",
+        "initialize": "PulseFlow에 오신 것을 환영합니다",
         "unsaved": "정말 종료하시겠습니까?",
         "cancel": "취소",
         "continue": "계속",

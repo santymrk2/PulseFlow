@@ -2,19 +2,22 @@
     import { fade } from "svelte/transition"
     import { Main } from "../../../types/IPC/Main"
     import { sendMain } from "../../IPC/main"
-    import { activePopup, autoOpenedTimeline, openToolsTab, outputs, showNotesActive, shows, showsCache, special, styles, templates } from "../../stores"
+    import { activeEdit, activePage, activePopup, autoOpenedTimeline, openToolsTab, outputs, showNotesActive, shows, showsCache, special, styles, templates } from "../../stores"
     import { translateText } from "../../utils/language"
+    import { history } from "../helpers/history"
     import Icon from "../helpers/Icon.svelte"
     import { allOutputsHasStyleTemplate, getFirstActiveOutput } from "../helpers/output"
     import { removeTemplatesFromShow } from "../helpers/show"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     export let showId: string
     export let hideOptions = false
 
     $: currentShow = $showsCache[showId]
     $: layouts = currentShow?.layouts
+    $: activeLayout = currentShow?.settings?.activeLayout || ""
+    $: slideCount = currentShow?.layouts?.[activeLayout]?.slides?.length ?? 0
 
     let notes: { text: string; id: string; title: string; icon: string; tab: string } | null = null
     $: if (layouts || currentShow) updateNotes()
@@ -85,6 +88,7 @@
 
 <div class="header" class:shadow={listScrollY > 0}>
     <div class="name-notes" data-title={currentShow?.name}>
+        <Icon id="layout" size={0.9} white right />
         <div class="name">
             {#if currentShow?.name}
                 {currentShow.name}
@@ -92,6 +96,14 @@
                 <span style="opacity: 0.5;font-style: italic;"><T id="main.unnamed" /></span>
             {/if}
         </div>
+
+        {#if layouts && activeLayout}
+            <span class="layout">· {currentShow?.layouts?.[activeLayout]?.name || activeLayout}</span>
+        {/if}
+
+        {#if currentShow}
+            <span class="layout count">· {translateText(slideCount === 1 ? "ui.slide" : "ui.slides", null, [String(slideCount)])}</span>
+        {/if}
 
         {#if notes}
             <span class="notes" role="none" data-title={translateText(notes.title)} on:click={(e) => openTab(e, notes?.tab || "")}>
@@ -102,33 +114,51 @@
     </div>
 
     <div class="right">
+        {#if currentShow}
+            <Button
+                variant="ghost"
+                size="sm"
+                title="new.slide"
+                on:click={() => {
+                    if (currentShow?.locked) return
+                    history({ id: "SLIDES" })
+                    activeEdit.set({ type: "show", slide: 0, items: [] })
+                    activePage.set("edit")
+                }}
+                disabled={!!currentShow?.locked}
+            >
+                <Icon id="add" size={0.9} white right />
+                <T id="new.slide" />
+            </Button>
+        {/if}
+
         <!-- template icon -->
         {#if enableStylePreview}
-            <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;" title="formats.template: <b>{$templates[outputStyleTemplate]?.name || ''}</b>" on:click={() => activePopup.set("template_info")}>
+            <Button variant="ghost" size="icon" title="formats.template: <b>{$templates[outputStyleTemplate]?.name || ''}</b>" on:click={() => activePopup.set("template_info")}>
                 <Icon size={0.8} id="styles" white />
-            </MaterialButton>
+            </Button>
         {:else if enableShowTemplate}
-            <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;" class="context #show_template" title="formats.template: <b>{$templates[showTemplateId]?.name || 'info.template'}</b>" on:click={() => activePopup.set("template_info")}>
+            <Button variant="ghost" size="icon" class="context #show_template" title="formats.template: <b>{$templates[showTemplateId]?.name || 'info.template'}</b>" on:click={() => activePopup.set("template_info")}>
                 <Icon size={0.8} id="templates" white />
-            </MaterialButton>
+            </Button>
         {/if}
 
         <!-- zoom icon ? -->
-        <!-- <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;" title="actions.zoom" on:click={() => }>
+        <!-- <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;" title="actions.zoom" on:click={() => }>
             <Icon size={0.9} id="zoomIn" white />
-        </MaterialButton> -->
+        </Button> -->
 
         {#if !hideOptions}
             <!-- show more -->
-            <MaterialButton style="width: 32px;height: 100%;padding: 0.3em 0.5em;border-bottom-right-radius: 10px;{showDropdown ? '' : 'opacity: 0.8;'}" title="create_show.more_options" icon="more" on:click={() => (showDropdown = !showDropdown)} white={!showDropdown}>
+            <Button variant="ghost" size="icon" isActive={showDropdown} title="create_show.more_options" icon="more" on:click={() => (showDropdown = !showDropdown)} white={!showDropdown}>
                 <!-- prevent force "white" -->
                 <span style="display: none;"></span>
-            </MaterialButton>
+            </Button>
         {/if}
 
         {#if showDropdown && currentShow}
             <div class="showDropdown" transition:fade={{ duration: 100 }} role="none" on:click={() => (showDropdown = false)}>
-                <MaterialButton title="tooltip.notes" on:click={() => showNotesActive.set(!$showNotesActive)}>
+                <Button title="tooltip.notes" on:click={() => showNotesActive.set(!$showNotesActive)}>
                     <Icon id="notes" white={!$showNotesActive} />
 
                     {#if $showNotesActive}
@@ -136,11 +166,11 @@
                     {/if}
 
                     <p><T id="tools.notes" /></p>
-                </MaterialButton>
+                </Button>
 
                 <div class="DIVIDER"></div>
 
-                <MaterialButton
+                <Button
                     title="timeline.toggle_timeline"
                     on:click={() => {
                         special.update((a) => ({ ...a, timelineActive: !a.timelineActive }))
@@ -154,11 +184,11 @@
                     {/if}
 
                     <p><T id="timeline.toggle_timeline" /></p>
-                </MaterialButton>
+                </Button>
 
                 <div class="DIVIDER"></div>
 
-                <MaterialButton title="context.lockForChanges" on:click={toggleShowLock}>
+                <Button title="context.lockForChanges" on:click={toggleShowLock}>
                     <Icon id="lock" white={!currentShow.locked} />
 
                     {#if currentShow.locked}
@@ -166,7 +196,7 @@
                     {/if}
 
                     <p><T id="context.lockForChanges" /></p>
-                </MaterialButton>
+                </Button>
             </div>
         {/if}
     </div>
@@ -181,14 +211,14 @@
         left: 0;
         width: 100%;
 
-        padding: 0.2em;
-        padding-left: 0.8em;
+        padding: 0.2em 0.8em;
         font-weight: 600;
 
-        height: 30px;
+        height: 44px;
 
         display: flex;
         align-items: center;
+        gap: 0.5em;
 
         backdrop-filter: blur(10px);
 
@@ -202,13 +232,15 @@
     }
     .header.shadow {
         background-color: rgb(0 0 10 / 0.12);
-        box-shadow: 0 2px 4px rgb(0 0 10 / 0.3);
     }
 
     .header .right {
+        position: relative;
         height: 100%;
 
         display: flex;
+        align-items: center;
+        gap: 2px;
         flex-shrink: 0;
         margin-left: auto;
     }
@@ -227,8 +259,18 @@
 
     .name-notes .name {
         flex-shrink: 0;
-        max-width: 90%;
+        max-width: 60%;
 
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .name-notes .layout {
+        flex-shrink: 0;
+        opacity: 0.5;
+        font-size: 0.85em;
+        font-weight: normal;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -282,8 +324,8 @@
 
     .showDropdown {
         position: absolute;
-        top: 31px;
-        right: 5px;
+        top: calc(100% - 2px);
+        right: 0;
         overflow: hidden;
 
         display: flex;
@@ -298,8 +340,8 @@
 
         border: 1px solid var(--primary-lighter);
 
-        z-index: 1;
-        box-shadow: 0 2px 5px rgb(0 0 0 / 0.3);
+        z-index: 5;
+        box-shadow: var(--shadow-float);
     }
 
     .showDropdown :global(button) {

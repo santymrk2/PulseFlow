@@ -1,0 +1,273 @@
+<script lang="ts">
+    import { createEventDispatcher } from "svelte"
+    import { translateText } from "../../../../utils/language"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import Button from "../button/button.svelte"
+    import { dictionary } from "../../../../stores"
+    import { pasteText } from "../../../../components/helpers/caretHelper"
+
+    export let value: string
+    export let type = "text"
+    export let defaultValue: string | null = null
+    export let autofill = ""
+    export let label: string
+
+    export let id = ""
+    export let title = ""
+    export let placeholder = ""
+
+    export let center = false
+    export let disabled = false
+    export let autofocus = false
+    export let autoselect = false
+    export let pasteBtn = false
+
+    const dispatch = createEventDispatcher()
+
+    function select(elem: HTMLInputElement) {
+        if (autoselect) elem.select()
+    }
+
+    function blurOnEnter(elem: HTMLInputElement) {
+        const handler = (e: KeyboardEvent) => {
+            if (e.key === "Enter") setTimeout(() => elem?.blur())
+        }
+
+        elem.addEventListener("keydown", handler)
+
+        return {
+            destroy() {
+                elem.removeEventListener("keydown", handler)
+            }
+        }
+    }
+
+    function input(e: Event) {
+        value = (e.target as HTMLInputElement).value
+        dispatch("input", value)
+    }
+
+    function change(e: Event) {
+        const value = (e.target as HTMLInputElement).value
+        dispatch("change", value)
+    }
+
+    function updateValue(value: string | null) {
+        dispatch("change", value)
+        dispatch("input", value)
+    }
+
+    // RESET
+
+    let resetFromValue: string | null = null
+    function reset() {
+        resetFromValue = value
+        updateValue(defaultValue)
+        setTimeout(() => {
+            resetFromValue = null
+        }, 3000)
+    }
+
+    function undoReset() {
+        updateValue(resetFromValue)
+        resetFromValue = null
+    }
+
+    let showText = false
+</script>
+
+<div class="textfield {center ? 'centered' : ''} {disabled ? 'disabled' : ''}" data-title={translateText(title)} style={$$props.style || null}>
+    <div class="background" />
+
+    {#if type === "password" && !showText}
+        <input bind:value type="password" {id} {placeholder} {disabled} {autofocus} use:select use:blurOnEnter class="input edit" on:input={input} on:change={change} on:keydown />
+    {:else}
+        <input bind:value type="text" {id} {placeholder} {disabled} {autofocus} use:select use:blurOnEnter class="input edit" on:input={input} on:change={change} on:keydown />
+    {/if}
+
+    <label for={id}>{@html translateText(label, $dictionary)}</label>
+
+    <span class="underline" />
+
+    <div class="remove">
+        {#if autofill}
+            <Button on:click={() => updateValue(autofill)} title="meta.autofill" white>
+                <Icon id="autofill" white />
+            </Button>
+        {/if}
+
+        {#if defaultValue !== null}
+            {#if value !== defaultValue}
+                <Button on:click={reset} title="actions.reset" white>
+                    <Icon id="reset" white />
+                </Button>
+            {:else if resetFromValue !== null}
+                <Button on:click={undoReset} title="actions.undo" white>
+                    <Icon id="undo" white />
+                </Button>
+            {/if}
+        {/if}
+
+        {#if type === "password" && (!pasteBtn || value)}
+            <Button
+                on:click={(e) => {
+                    showText = !showText
+                    const input = e.detail.target?.closest(".textfield")?.querySelector("input")
+                    if (input) input.focus()
+                }}
+                title={showText ? "" : ""}
+                white
+            >
+                <Icon id={showText ? "eye" : "hide"} white />
+            </Button>
+        {:else if pasteBtn && !value && !disabled}
+            <Button
+                on:click={(e) => {
+                    const textInput = e.detail.target?.closest(".textfield")?.querySelector("input")
+                    pasteText(textInput)
+                    if (textInput) textInput.focus()
+                }}
+                title="actions.paste"
+                white
+            >
+                <Icon id="paste" white />
+            </Button>
+        {/if}
+    </div>
+</div>
+
+<style>
+    .textfield {
+        position: relative;
+        width: 100%;
+        color: var(--text);
+
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+
+        height: 38px;
+    }
+
+    .textfield.centered {
+        text-align: center;
+    }
+
+    .background {
+        position: absolute;
+        inset: 0;
+        background-color: var(--primary-darkest);
+        border-start-start-radius: var(--radius, 4px);
+        border-start-end-radius: var(--radius, 4px);
+        z-index: 0;
+    }
+
+    .input {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        border: none;
+        outline: none;
+        background: transparent;
+        font-size: var(--text-sm);
+        padding: 16px 12px 2px;
+        color: var(--text);
+        font-family: inherit;
+    }
+
+    .input::placeholder {
+        color: var(--text);
+        opacity: 0.3;
+
+        transition: 0.1s opacity ease;
+    }
+    .input:not(:focus)::placeholder {
+        opacity: 0;
+    }
+
+    .input:disabled {
+        color: var(--text);
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    /* Label base */
+    label {
+        position: absolute;
+        left: 12px;
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    /* Float label if focused or has content */
+    .input:focus + label,
+    .input:not(:placeholder-shown) + label {
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
+    }
+
+    /* Underline animation on focus */
+    .underline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 1.2px;
+        width: 100%;
+        background-color: var(--secondary);
+        transform: scaleX(0);
+        transition: transform 0.2s ease;
+        transform-origin: left;
+        z-index: 2;
+    }
+
+    .input:focus ~ .underline {
+        transform: scaleX(1);
+    }
+
+    .textfield.disabled label {
+        color: var(--text);
+        opacity: 0.35;
+    }
+    .textfield.disabled .underline {
+        color: var(--text);
+        opacity: 0.3;
+    }
+
+    .textfield:not(:has(.input:focus)):not(:has(.remove:hover)) .input:not(:disabled):hover {
+        background-color: var(--hover);
+    }
+
+    .remove {
+        position: absolute;
+        top: 50%;
+        right: 4px;
+        transform: translateY(-50%);
+
+        display: flex;
+        align-items: center;
+        z-index: 2;
+    }
+    .remove :global(button) {
+        padding: 0.75rem;
+    }
+
+    /* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+    .background,
+    .underline {
+        display: none;
+    }
+    .textfield:focus-within {
+        border-color: var(--border-strong);
+    }
+
+    .textfield:has(.remove :global(button)) .input {
+        padding-inline-end: 40px;
+    }
+</style>

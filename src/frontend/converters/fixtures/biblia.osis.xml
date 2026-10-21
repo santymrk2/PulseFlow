@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osis>
+  <osisText osisIDWork="RVR">
+    <div type="book" osisID="John" name="Juan" abbr="Jn">
+      <chapter osisID="John.3">
+        <verse osisID="John.3.16">Porque de tal manera amó Dios al mundo</verse>
+        <verse osisID="John.3.17">Porque no envió Dios a su Hijo al mundo</verse>
+      </chapter>
+    </div>
+  </osisText>
+</osis>

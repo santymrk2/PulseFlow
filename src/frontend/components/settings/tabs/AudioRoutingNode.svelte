@@ -4,8 +4,8 @@
     import { translateText } from "../../../utils/language"
     import AudioMeter from "../../drawer/audio/AudioMeter.svelte"
     import Icon from "../../helpers/Icon.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     export let id: string
     export let name: string
@@ -159,7 +159,7 @@
 
     <div class="card-content">
         {#if hasSubNodes && type !== "output_window" && type !== "network"}
-            <MaterialButton variant="outlined" icon={isExpanded ? "expand" : "next"} style="padding: 5px;" on:click={onToggleExpand} />
+            <Button variant="outline" icon={isExpanded ? "expand" : "next"} style="padding: 5px;" on:click={onToggleExpand} />
         {/if}
 
         {#if isChannel}
@@ -185,7 +185,7 @@
         {/if}
 
         {#if type === "mic" && isSubNode}
-            <MaterialToggleSwitch
+            <ToggleField
                 label=""
                 checked={!!$playingAudio[id]}
                 on:change={() => {
@@ -197,7 +197,7 @@
         {/if}
 
         {#if type === "icecast" && $special.icecast?.enabled !== undefined}
-            <MaterialToggleSwitch
+            <ToggleField
                 label=""
                 checked={$special.icecast?.enabled ?? true}
                 on:change={() => {
@@ -212,16 +212,16 @@
         {/if}
 
         <!-- {#if type === "metronome"}
-            <MaterialToggleSwitch label="" checked={$playingMetronome} on:change={toggleMetronome} small />
+            <ToggleField label="" checked={$playingMetronome} on:change={toggleMetronome} small />
         {/if} -->
 
         {#if type === "desktop_audio"}
-            <MaterialToggleSwitch label="" checked={isEnabled} on:change={(e) => onToggleEnabled?.(e.detail)} small />
+            <ToggleField label="" checked={isEnabled} on:change={(e) => onToggleEnabled?.(e.detail)} small />
         {/if}
 
         {#if type === "icecast" || isChannel || (type === "mic" && isSubNode)}
-            <MaterialButton
-                variant="outlined"
+            <Button
+                variant="outline"
                 icon="options"
                 style="padding: 5px;"
                 title="popup.node_options"
@@ -284,7 +284,7 @@
         width: 100%;
         box-sizing: border-box;
         background: var(--primary-darker, rgba(30, 30, 40, 0.9));
-        border: 1px solid rgba(255, 255, 255, 0.15);
+        border: 1px solid var(--border-strong);
         border-radius: 8px;
         padding: 10px 14px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -394,11 +394,11 @@
         left: -7px;
         top: calc(50% + 5px);
         border-radius: 4px;
-        background: #f59e0b;
+        background: var(--warning);
     }
 
     .port-sidechain:hover {
-        background: #fbbf24;
+        background: var(--warning);
     }
 
     .port-out {

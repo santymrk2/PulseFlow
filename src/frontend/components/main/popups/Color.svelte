@@ -5,8 +5,8 @@
     import { getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import { setCalendarColor } from "../../drawer/calendar/calendars"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
 
     let value = "#FFFFFF"
     let allowEmpty = $selected.id === "show" || $selected.id === "audio_channel" // || $selected.id === "slide"
@@ -131,6 +131,6 @@
     }
 </script>
 
-<MaterialButton class="popup-options" icon="edit" iconSize={1.1} title="menu.edit" on:click={() => activePopup.set("manage_colors")} white />
+<Button class="popup-options" icon="edit" iconSize={1.1} title="menu.edit" on:click={() => activePopup.set("manage_colors")} white />
 
-<MaterialColorInput label="" {value} on:input={update} {allowEmpty} alwaysVisible />
+<ColorField label="" {value} on:input={update} {allowEmpty} alwaysVisible />

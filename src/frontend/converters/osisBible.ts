@@ -32,7 +32,9 @@ async function XMLtoObject(xml: string) {
     const bible = xml2json(xml, true)?.osis?.osisText || {}
     let books: Book[] = []
 
-    bible.div?.forEach((book, bookIndex) => {
+    // con un solo libro el XML trae un único <div> (un objeto, no un array)
+    const bookDivs: any[] = Array.isArray(bible.div) ? bible.div : bible.div ? [bible.div] : []
+    bookDivs.forEach((book, bookIndex) => {
         if (!book) return
 
         const bookId = book["@osisID"]

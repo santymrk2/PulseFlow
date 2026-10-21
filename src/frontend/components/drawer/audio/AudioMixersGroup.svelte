@@ -2,7 +2,7 @@
     import { audioChannelsData } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import Icon from "../../helpers/Icon.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import AudioChannelMixer from "./AudioChannelMixer.svelte"
 
     export let icon: string
@@ -31,20 +31,20 @@
 
 <div class="section">
     <div class="title">
-        <MaterialButton style="width: 100%;{hasChanged ? 'padding: 4px 12px;' : 'padding: 8px 12px;'}" disabled={hasChanged} on:click={() => toggleSection()}>
+        <Button style="width: 100%;{hasChanged ? 'padding: 4px 12px;' : 'padding: 8px 12px;'}" disabled={hasChanged} on:click={() => toggleSection()}>
             <span style="display: flex;gap: 8px;align-items: center;">
                 <Icon id={icon} white />
                 <p>{translateText(label)}</p>
             </span>
 
             {#if hasChanged}
-                <MaterialButton title="actions.reset" style="pointer-events: all;padding: 4px;" on:click={() => resetSection()}>
+                <Button title="actions.reset" style="pointer-events: all;padding: 4px;" on:click={() => resetSection()}>
                     <Icon id="reset" size={0.8} white />
-                </MaterialButton>
+                </Button>
             {:else}
                 <Icon id="arrow_back_modern" class="arrow {expanded ? 'open' : ''}" size={0.6} style="opacity: 0.5;" white />
             {/if}
-        </MaterialButton>
+        </Button>
     </div>
 
     {#if expanded}
@@ -67,7 +67,7 @@
     }
     .title p {
         font-weight: 500;
-        font-size: 0.8rem;
+        font-size: var(--text-xs);
         opacity: 0.8;
     }
 

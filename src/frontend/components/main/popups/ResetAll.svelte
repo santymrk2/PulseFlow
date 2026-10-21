@@ -2,10 +2,10 @@
     import { Main } from "../../../../types/IPC/Main"
     import type { SaveData } from "../../../../types/Save"
     import { sendMain } from "../../../IPC/main"
-    import { activeEdit, activePage, activePopup, activeShow, deletedShows, drawSettings, renamedShows, scripturesCache } from "../../../stores"
+    import { activeEdit, activePage, activePopup, activeShow, deletedShows, renamedShows, scripturesCache } from "../../../stores"
     import { save } from "../../../utils/save"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { clearAll } from "../../output/clear"
 
     function reset() {
@@ -43,7 +43,6 @@
         // media cache is not deleted
 
         clearAll()
-        drawSettings.set({})
 
         // showsCache.set({})
         scripturesCache.set({})
@@ -61,6 +60,6 @@
 <p><T id="popup.reset_all_confirm" /></p>
 <p style="font-size: 0.9em;opacity: 0.7;"><T id="popup.reset_all_action" /></p>
 
-<MaterialButton variant="outlined" class="red" style="margin-top: 20px;" icon="close" on:click={reset} white red>
+<Button variant="outline" class="red" style="margin-top: 20px;" icon="close" on:click={reset} white red>
     <T id="popup.continue" />
-</MaterialButton>
+</Button>

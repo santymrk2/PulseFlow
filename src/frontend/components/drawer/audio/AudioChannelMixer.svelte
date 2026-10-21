@@ -3,9 +3,9 @@
     import { AudioPlayer } from "../../../audio/audioPlayer"
     import { dbToGain, gainToDb, gainToSlider, MAX_DB, MIN_DB, sliderToGain } from "../../../audio/dBUtils"
     import { activeAudioEffects, audioChannelsData, recordingChannels } from "../../../stores"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import NumberInput from "../../inputs/NumberInput.svelte"
-    import Slider from "../../inputs/Slider.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import Stepper from "../../../lib/components/ui/stepper/stepper.svelte"
+    import Slider from "../../../lib/components/ui/slider/slider.svelte"
     import AudioMeter from "./AudioMeter.svelte"
 
     export let channelId: string
@@ -50,8 +50,6 @@
 </script>
 
 <section class="context #audio_channel_mixer" id={channelId}>
-    <!-- <MaterialNumberInput style="width: 100px;" label="media.volume (%)" value={volumeValue * 100} min={0} max={allowGaining ? 125 : 100} on:change={(e) => setVolume(e.detail / 100)} showSlider /> -->
-
     <div class="output" class:inactive style="--color: {color || 'var(--secondary)'};">
         <div class="label" style="margin-right: 7px;">
             <!-- {translateText("media.volume")} -->
@@ -60,15 +58,15 @@
         </div>
 
         <div class="input" style="position: relative;">
-            <NumberInput style="width: 65px;" value={dbValue} decimals={1} fixed={1} min={MIN_DB} max={allowGaining ? 6 : 0} step={0.5} on:change={setVolumeFromDb} buttons={false} />
+            <Stepper style="width: 65px;" value={dbValue} decimals={1} fixed={1} min={MIN_DB} max={allowGaining ? 6 : 0} step={0.5} on:change={setVolumeFromDb} buttons={false} />
             <span style="position: absolute;right: 0;bottom: 5px;transform: translateX(-5px);pointer-events: none;color: var(--color);font-weight: bold;font-size: 0.7em;">dB</span>
         </div>
 
-        <MaterialButton variant="outlined" style="padding: 8px;" icon={muted ? "muted" : "volume"} title="actions.{muted ? 'unmute' : 'mute'}" red={muted} on:click={() => updateData("isMuted", !muted)} />
+        <Button variant="outline" style="padding: 8px;" icon={muted ? "muted" : "volume"} title="actions.{muted ? 'unmute' : 'mute'}" red={muted} on:click={() => updateData("isMuted", !muted)} />
 
-        <MaterialButton variant="outlined" style="padding: 8px;" icon={isRecording ? "stop" : "record"} title="actions.{isRecording ? 'stop_recording' : 'start_recording'}" red={isRecording} on:click={() => toggleChannelRecording(channelId, label)} />
+        <Button variant="outline" style="padding: 8px;" icon={isRecording ? "stop" : "record"} title="actions.{isRecording ? 'stop_recording' : 'start_recording'}" red={isRecording} on:click={() => toggleChannelRecording(channelId, label)} />
 
-        <MaterialButton variant="outlined" style="padding: 8px;" icon="equalizer" title="tabs.effects" on:click={() => activeAudioEffects.set(channelId)} />
+        <Button variant="outline" style="padding: 8px;" icon="equalizer" title="tabs.effects" on:click={() => activeAudioEffects.set(channelId)} />
     </div>
 
     <!-- <p style="font-size: 1em;margin: 10px;{volumeValue === 1 || volumeValue === 0 ? 'color: var(--secondary);' : ''}">{(volumeValue * 100).toFixed()}<span style="color: var(--text);">%</span></p> -->

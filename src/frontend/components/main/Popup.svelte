@@ -8,7 +8,7 @@
     import { clearPopupSubmit, popups } from "../../utils/popup"
     import { disablePopupClose } from "../../utils/shortcuts"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     function mousedown(e: any) {
         // same logic for Escape in shortcuts.ts
@@ -44,45 +44,50 @@
     }
 
     $: isOptimized = $special.optimizedMode
+
+    // modales de pantalla completa: traen su propia base (main/Modal.svelte), sin la tarjeta de este popup
+    const FULL_MODALS: Popups[] = ["looks", "screen_config", "add_shows", "playlist_options"]
 </script>
 
 {#if popupId !== null}
     {#key popupId}
-        <div style={isWindows ? `height: calc(100% - ${MENU_BAR_HEIGHT}px);` : null} class="popup" class:isOptimized transition:fade={{ duration: isOptimized ? 20 : 100 }} on:mousedown={mousedown}>
-            <div class="card" transition:scale={{ duration: isOptimized ? 50 : 200 }}>
-                {#if popupId !== "alert"}
-                    <div class="headerContent" style="border-bottom: 1px solid var(--primary-lighter);{scrolled ? 'box-shadow: 2px 2px 4px 5px rgb(0 0 0 / 0.1);' : ''}">
-                        <div class="headerMargin">
-                            {#key popupId}
-                                <!-- margin-top: -5px; -->
-                                <h2 style="font-size: 1.3em;margin-top: -2px;">
-                                    {#if $popupData?.popupTitle}
-                                        {translateText($popupData.popupTitle)}
-                                    {:else if popupId === "new_update"}
-                                        <T id="about.new_update" />: <span style="color: var(--secondary);">v{$popupData.latestVersion}</span>
-                                    {:else if popupId === "pco_picker"}
-                                        Planning Center
-                                    {:else if popupId === "audio_effect" && $popupData?.effect}
-                                        <T id={EFFECTS_LIST.find((a) => a.id === $popupData.effect)?.label || "popup.audio_effect"} />
-                                    {:else}
-                                        <T id="popup.{popupId}" />
-                                    {/if}
-                                </h2>
-                            {/key}
+        {#if FULL_MODALS.includes(popupId)}
+            <svelte:component this={popups[popupId]} />
+        {:else}
+            <div style={isWindows ? `height: calc(100% - ${MENU_BAR_HEIGHT}px);` : null} class="popup" class:isOptimized transition:fade={{ duration: isOptimized ? 20 : 100 }} on:mousedown={mousedown}>
+                <div class="card" transition:scale={{ duration: isOptimized ? 50 : 200 }}>
+                    {#if popupId !== "alert"}
+                        <div class="headerContent" style="border-bottom: 1px solid var(--border-color, var(--primary-lighter));{scrolled ? 'box-shadow: 2px 2px 4px 5px rgb(0 0 0 / 0.1);' : ''}">
+                            <div class="headerMargin">
+                                {#key popupId}
+                                    <!-- margin-top: -5px; -->
+                                    <h2 style="font-size: 15px;font-weight: 600;">
+                                        {#if $popupData?.popupTitle}
+                                            {translateText($popupData.popupTitle)}
+                                        {:else if popupId === "new_update"}
+                                            <T id="about.new_update" />: <span style="color: var(--secondary);">v{$popupData.latestVersion}</span>
+                                        {:else if popupId === "audio_effect" && $popupData?.effect}
+                                            <T id={EFFECTS_LIST.find((a) => a.id === $popupData.effect)?.label || "popup.audio_effect"} />
+                                        {:else}
+                                            <T id="popup.{popupId}" />
+                                        {/if}
+                                    </h2>
+                                {/key}
 
-                            {#if !disablePopupClose.includes(popupId)}
-                                <MaterialButton class="popup-close" icon="close" iconSize={1.3} title="actions.close [esc]" on:click={() => activePopup.set(null)} />
-                            {/if}
+                                {#if !disablePopupClose.includes(popupId)}
+                                    <Button class="popup-close" icon="close" iconSize={1.3} title="actions.close [esc]" on:click={() => activePopup.set(null)} />
+                                {/if}
+                            </div>
                         </div>
-                    </div>
-                {/if}
-                <div class="scroll" style="--top-height: {isWindows ? MENU_BAR_HEIGHT : 0}px;" on:scroll={scroll}>
-                    <div class="body">
-                        <svelte:component this={popups[popupId]} />
+                    {/if}
+                    <div class="scroll" style="--top-height: {isWindows ? MENU_BAR_HEIGHT : 0}px;" on:scroll={scroll}>
+                        <div class="body">
+                            <svelte:component this={popups[popupId]} />
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        {/if}
     {/key}
 {/if}
 
@@ -93,16 +98,16 @@
 
     .popup {
         position: absolute;
-        background-color: rgb(0 0 0 / 0.55);
+        background-color: var(--backdrop);
         /* pointer-events: none; */
         width: 100%;
         height: 100%;
         padding: 20px var(--navigation-width);
         z-index: 5000;
 
-        backdrop-filter: blur(4px);
+        backdrop-filter: blur(2px);
 
-        font-size: 1.2em;
+        font-size: 1em;
 
         display: flex;
         align-items: center;
@@ -125,12 +130,9 @@
 
     .card {
         position: relative;
-        background-color: var(--primary);
+        background-color: var(--bg-elevated);
 
-        /* background-color: rgba(41, 44, 54, 0.8);
-        backdrop-filter: blur(4px); */
-
-        border-radius: 10px;
+        border-radius: var(--radius-modal, 8px);
 
         /* overflow-y: auto; */
         /* overflow-x: hidden; */
@@ -140,8 +142,8 @@
         max-width: 100%;
         max-height: 100%;
 
-        border: 2px solid var(--primary-lighter);
-        box-shadow: 0 0 5px 5px rgb(0 0 0 / 0.2);
+        border: 1px solid var(--border-strong);
+        box-shadow: var(--shadow-float);
     }
 
     .headerContent {
@@ -152,10 +154,10 @@
 
         transition: 0.2s box-shadow ease;
 
-        min-height: 56px;
+        min-height: 44px;
     }
     .headerMargin {
-        margin: 10px 20px;
+        margin: 0 16px;
         position: relative;
         width: 100%;
 
@@ -173,7 +175,7 @@
     .body {
         display: flex;
         flex-direction: column;
-        margin: 20px;
+        margin: 16px;
         min-width: 38vw;
     }
 
@@ -186,7 +188,7 @@
         top: 0;
         height: 100%;
         padding: 0.4em !important;
-        border-radius: 4px;
+        border-radius: var(--radius, 4px);
         aspect-ratio: 1;
         justify-content: center;
 

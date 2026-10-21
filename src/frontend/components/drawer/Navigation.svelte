@@ -1,15 +1,14 @@
 <script lang="ts">
+    import type { DrawerTabIds } from "../../../types/Tabs"
     import DropArea from "../system/DropArea.svelte"
     import AudioTabs from "./navigation/AudioTabs.svelte"
     import CalendarTabs from "./navigation/CalendarTabs.svelte"
     import FunctionsTabs from "./navigation/FunctionsTabs.svelte"
     import MediaTabs from "./navigation/MediaTabs.svelte"
-    import OverlaysTabs from "./navigation/OverlaysTabs.svelte"
     import ScriptureTabs from "./navigation/ScriptureTabs.svelte"
     import ShowsTabs from "./navigation/ShowsTabs.svelte"
-    import TemplatesTabs from "./navigation/TemplatesTabs.svelte"
 
-    export let id: "shows" | "media" | "overlays" | "audio" | "effects" | "scripture" | "calendar" | "functions" | "templates" | "timers"
+    export let id: DrawerTabIds
 </script>
 
 <div class="main">
@@ -28,10 +27,6 @@
                     <MediaTabs />
                 {:else if id === "audio"}
                     <AudioTabs />
-                {:else if id === "overlays"}
-                    <OverlaysTabs />
-                {:else if id === "templates"}
-                    <TemplatesTabs />
                 {/if}
             </DropArea>
         {/if}
@@ -46,6 +41,12 @@
         flex: 1;
         overflow-y: auto;
         overflow-x: hidden;
+    }
+
+    /* F11.2 — aire alrededor de la lista de categorías */
+    .categories {
+        gap: 2px;
+        padding: 4px;
     }
 
     /* .categories :global(button) {

@@ -12,7 +12,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { countFolderMediaItems } from "../../helpers/media"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import NavigationSections from "./NavigationSections.svelte"
 
     const profile = getAccess("audio")
@@ -122,15 +122,15 @@
 
 <NavigationSections {sections} active={activeSubTab} on:rename={updateName}>
     <div slot="section_3" style="padding: 8px;{playlists ? 'padding-top: 12px;' : ''}">
-        <MaterialButton style="width: 100%;" title="new.playlist" variant="outlined" disabled={readOnly} on:click={createPlaylist} small>
+        <Button style="width: 100%;" title="new.playlist" variant="outline" disabled={readOnly} on:click={createPlaylist} size="xs">
             <Icon id="add" size={$labelsDisabled ? 0.9 : 1} white={$labelsDisabled} />
             {#if !$labelsDisabled}<T id="new.playlist" />{/if}
-        </MaterialButton>
+        </Button>
     </div>
     <div slot="section_4" style="padding: 8px;{foldersList.length ? 'padding-top: 12px;' : ''}">
-        <MaterialButton style="width: 100%;" title="new.system_folder" variant="outlined" disabled={readOnly} on:click={addFolder} small>
+        <Button style="width: 100%;" title="new.system_folder" variant="outline" disabled={readOnly} on:click={addFolder} size="xs">
             <Icon id="add" size={$labelsDisabled ? 0.9 : 1} white={$labelsDisabled} />
             {#if !$labelsDisabled}<T id="new.system_folder" />{/if}
-        </MaterialButton>
+        </Button>
     </div>
 </NavigationSections>

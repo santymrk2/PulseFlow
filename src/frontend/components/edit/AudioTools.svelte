@@ -3,8 +3,8 @@
     import { activeEdit, activeShow, media } from "../../stores"
     import { clone } from "../helpers/array"
     import { removeStore, updateStore } from "../helpers/update"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import EditValues from "./tools/EditValues.svelte"
     import { setBoxInputValue } from "./values/boxes"
     import { audioSections } from "./values/media"
@@ -73,9 +73,9 @@
         <EditValues sections={currentAudioSections} item={currentMedia} on:change={valueChanged} />
     </div>
 
-    <FloatingInputs>
-        <MaterialButton icon="reset" title="actions.reset" on:click={reset} />
-    </FloatingInputs>
+    <FloatingBar>
+        <Button icon="reset" title="actions.reset" on:click={reset} />
+    </FloatingBar>
 </div>
 
 <style>

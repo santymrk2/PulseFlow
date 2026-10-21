@@ -237,6 +237,7 @@
         "first_last": "Перший і останній слайд"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "За замовчуванням",
         "dark": "Темний",
         "light": "Світла",
@@ -345,7 +346,7 @@
         "icon": "Значки",
         "manage_icons": "Керувати значками",
         "choose_camera": "Виберіть камеру",
-        "initialize": "Ласкаво просимо до FreeShow",
+        "initialize": "Ласкаво просимо до PulseFlow",
         "unsaved": "Ви ще не зберегли! Ви впевнені, що хочете вийти?",
         "cancel": "Скасувати",
         "continue": "Продовжити",

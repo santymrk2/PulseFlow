@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy, onMount } from "svelte"
     import type { Item } from "../../../types/Show"
-    import { currentWindow, slidesOptions } from "../../stores"
+    import { slidesOptions } from "../../stores"
     import MetronomeVisualizer from "../drawer/audio/MetronomeVisualizer.svelte"
     import BMDStream from "../drawer/live/BMDStream.svelte"
     import Cam from "../drawer/live/Cam.svelte"
@@ -92,7 +92,7 @@
 {#if item.type === "media"}
     <MediaItem {item} {outputId} slideRef={{ ...ref, slideIndex }} preview={preview || isStage} {miniPreview} {edit} {cropPreviewMode} />
 {:else if item.type === "web"}
-    <Website src={item.web?.src || ""} navigation={!edit && !item.web?.noNavigation} zoom={item.web?.zoom} clickable={!edit && $currentWindow === "output"} {outputId} {ratio} disablePreview={isTemplatePreview || (ref?.type === "overlay" && !outputId && miniPreview)} />
+    <Website src={item.web?.src || ""} zoom={item.web?.zoom} {outputId} disablePreview={isTemplatePreview || (ref?.type === "overlay" && !outputId && miniPreview)} />
 {:else if item.type === "timer"}
     <Timer {item} id={item.timer?.id || item.timerId || ""} {today} style={noAutoSize ? "" : `font-size: ${edit ? autoSize : fontSize}px;`} {edit} />
 {:else if item.type === "clock"}
@@ -141,7 +141,7 @@
     <MetronomeVisualizer isItem />
 {:else if item.type === "variable"}
     <!-- moved to textbox in 1.3.3 -->
-    <Variable {item} style={variableStyleString} ref={{ ...ref, slideIndex }} hideText={edit ? false : (ref.type === "stage" && !!$currentWindow) || preview} {edit} />
+    <Variable {item} style={variableStyleString} ref={{ ...ref, slideIndex }} hideText={edit ? false : preview} {edit} />
 {:else if item.type === "chart"}
     <Chart {item} ref={{ ...ref, slideIndex }} />
 {:else if item.type === "table"}

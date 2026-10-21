@@ -12,10 +12,10 @@
     import { getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import Tabs from "../Tabs.svelte"
 
     let currentValue = $popupData.active || ""
@@ -283,10 +283,10 @@
     let showMore = false
 </script>
 
-<MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
+<Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 
 {#if showMore}
-    <MaterialButton class="popup-reset" icon="reset" iconSize={1.1} title="actions.reset" on:click={reset} white />
+    <Button class="popup-reset" icon="reset" iconSize={1.1} title="actions.reset" on:click={reset} white />
 {/if}
 
 <!-- ITEM (TEXT) / MEDIA -->
@@ -299,9 +299,9 @@
 {#if enableSpecific}
     <Tabs tabs={selectedType === "media" ? specificTabsMedia : specificTabs} bind:active={selectedSpecific} style="font-weight: normal;" />
 {:else if showMore}
-    <MaterialButton variant="outlined" style="font-weight: normal;" on:click={() => (enableSpecific = true)}>
+    <Button variant="outline" style="font-weight: normal;" on:click={() => (enableSpecific = true)}>
         <T id="transition.specific" />
-    </MaterialButton>
+    </Button>
 {/if}
 
 <!-- TYPE -->
@@ -309,28 +309,28 @@
 <div class="types">
     {#each transitionTypes as type}
         {@const isActive = type.id === currentTransition.type}
-        <MaterialButton showOutline={isActive} {isActive} style={type.id === "none" ? "font-style: italic;" : ""} on:click={() => changeTransition(selectedType, "type", type.id)}>
+        <Button showOutline={isActive} {isActive} style={type.id === "none" ? "font-style: italic;" : ""} on:click={() => changeTransition(selectedType, "type", type.id)}>
             <svg viewBox="0 0 100 100" width="{iconSize}pt" height="{iconSize}pt">
                 {@html icons[type.id]}
             </svg>
             <T id={type.name} />
-        </MaterialButton>
+        </Button>
     {/each}
 </div>
 
 {#if currentTransition.type === "slide"}
-    <MaterialDropdown label="transition.direction" style="margin-bottom: 10px;" options={slideTypes} value={correctedSlideDirection} on:change={(e) => changeTransition(selectedType, "custom", { ...(currentTransition.custom || {}), direction: getCorrectedDirection(e.detail) })} />
+    <SelectField label="transition.direction" style="margin-bottom: 10px;" options={slideTypes} value={correctedSlideDirection} on:change={(e) => changeTransition(selectedType, "custom", { ...(currentTransition.custom || {}), direction: getCorrectedDirection(e.detail) })} />
 {/if}
 
 <InputRow>
     <!-- defaultValue={selectedType === "media" ? 0.8 : 0.5} -->
-    <MaterialNumberInput label="transition.duration" disabled={isDisabled} value={durationValue / 1000} max={20} step={0.1} on:change={(e) => changeTransition(selectedType, "duration", e.detail * 1000)} />
+    <NumberField label="transition.duration" disabled={isDisabled} value={durationValue / 1000} max={20} step={0.1} on:change={(e) => changeTransition(selectedType, "duration", e.detail * 1000)} />
     <!-- defaultValue="sine" -->
-    <MaterialDropdown label="transition.easing" disabled={isDisabled} options={easings.map((a) => ({ ...a, label: translateText(a.label) }))} value={easingValue} on:change={(e) => changeTransition(selectedType, "easing", e.detail)} />
+    <SelectField label="transition.easing" disabled={isDisabled} options={easings.map((a) => ({ ...a, label: translateText(a.label) }))} value={easingValue} on:change={(e) => changeTransition(selectedType, "easing", e.detail)} />
 </InputRow>
 
 {#if showMore && selectedType === "text"}
-    <MaterialNumberInput label="transition.fade_in_offset (%)" disabled={isDisabled} value={currentTransition?.fadeInOffset ?? 50} defaultValue={50} max={100} step={10} on:change={(e) => changeTransition(selectedType, "fadeInOffset", e.detail)} />
+    <NumberField label="transition.fade_in_offset (%)" disabled={isDisabled} value={currentTransition?.fadeInOffset ?? 50} defaultValue={50} max={100} step={10} on:change={(e) => changeTransition(selectedType, "fadeInOffset", e.detail)} />
 {/if}
 
 <style>

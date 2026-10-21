@@ -6,7 +6,7 @@
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
     import { _show } from "../helpers/shows"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Resizeable from "../system/Resizeable.svelte"
     import Notes from "./tools/Notes.svelte"
 
@@ -64,9 +64,9 @@
             <Notes on:edit={edit} value={note} autofocus />
         </div>
 
-        <MaterialButton title="actions.close" on:click={() => ($showNotesActive = false)} style="position: absolute;top: 9px;right: 4.5px;opacity: 0.8;padding: 8px;" white>
+        <Button title="actions.close" on:click={() => ($showNotesActive = false)} style="position: absolute;top: 9px;right: 4.5px;opacity: 0.8;padding: 8px;" white>
             <Icon id={note ? "remove" : "close"} white />
-        </MaterialButton>
+        </Button>
     </Resizeable>
 {:else if note}
     <span class="notes" role="none" data-title={translateText("tools.notes")} on:click={(e) => notesClick(e)}>

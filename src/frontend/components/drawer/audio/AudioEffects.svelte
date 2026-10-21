@@ -4,8 +4,7 @@
     import { translateText } from "../../../utils/language"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
 
     $: channelId = $activeAudioEffects || "main"
@@ -43,7 +42,7 @@
 </script>
 
 <!-- header (go back) -->
-<Button on:click={() => activeAudioEffects.set("")} center dark>
+<Button on:click={() => activeAudioEffects.set("")}>
     <Icon id="back" right />
     <T id="actions.back" />
 </Button>
@@ -75,15 +74,15 @@
             <!-- stopPropagation prevents popup from opening -->
             <div class="effect-actions" role="none" on:click|stopPropagation={() => {}}>
                 <!-- rearrange -->
-                <MaterialButton disabled={i === stack.length - 1} title="actions.backward" style="padding: 6px;" on:click={() => handleDown(i)}>
+                <Button disabled={i === stack.length - 1} title="actions.backward" style="padding: 6px;" on:click={() => handleDown(i)}>
                     <Icon id="down" size={0.8} white />
-                </MaterialButton>
-                <MaterialButton disabled={i === 0} title="actions.forward" style="padding: 6px;" on:click={() => handleUp(i)}>
+                </Button>
+                <Button disabled={i === 0} title="actions.forward" style="padding: 6px;" on:click={() => handleUp(i)}>
                     <Icon id="up" size={0.8} white />
-                </MaterialButton>
+                </Button>
 
                 <!-- power button -->
-                <MaterialButton style="padding: 3px;margin: 4px;min-height: initial;border: 1px solid var(--primary-lighter);background-color: {isEnabled ? 'var(--connected)' : 'var(--primary-lighter)'} !important;" title="actions.{isEnabled ? 'disable' : 'enable'}" on:click={() => handleToggle(effectItem)}></MaterialButton>
+                <Button style="padding: 3px;margin: 4px;min-height: initial;border: 1px solid var(--primary-lighter);background-color: {isEnabled ? 'var(--connected)' : 'var(--primary-lighter)'} !important;" title="actions.{isEnabled ? 'disable' : 'enable'}" on:click={() => handleToggle(effectItem)}></Button>
             </div>
         </div>
     {/each}
@@ -97,10 +96,10 @@
 
 <!-- Add Effect Button -->
 <div class="add-section">
-    <MaterialButton variant="outlined" style="width: 100%;padding: 8px;" on:click={openAddPopup}>
+    <Button variant="outline" style="width: 100%;padding: 8px;" on:click={openAddPopup}>
         <Icon id="add" size={0.9} />
         <span><T id="new.effect" /></span>
-    </MaterialButton>
+    </Button>
 </div>
 
 <style>

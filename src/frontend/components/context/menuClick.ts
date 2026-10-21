@@ -20,6 +20,7 @@ import {
     activeDrawerTab,
     activeEdit,
     activeFocus,
+    activeLook,
     activeMediaTagFilter,
     activePage,
     activePlayerTagFilter,
@@ -73,7 +74,6 @@ import {
     scenes,
     scriptures,
     selected,
-    settingsTab,
     showRecentlyUsedProjects,
     shows,
     showsCache,
@@ -84,18 +84,17 @@ import {
     styles,
     templateCategories,
     templates,
-    themes,
     timers,
     toggleOutputEnabled,
     variables
 } from "../../stores"
+import { openSettings } from "../settings/openSettings"
 import { escapeRegExp, hideDisplay, isOutputWindow, newToast, triggerFunction, wait } from "../../utils/common"
 import { setExampleEffects, setExampleOverlays, setExampleTemplates } from "../../utils/createData"
 import { translateText } from "../../utils/language"
 import { confirmCustom } from "../../utils/popup"
 import { send } from "../../utils/request"
 import { initializeClosing, save } from "../../utils/save"
-import { updateThemeValues } from "../../utils/updateSettings"
 import { getActionTriggerId } from "../actions/actions"
 import { moveStageConnection } from "../actions/apiHelper"
 import { midiInListen } from "../actions/midi"
@@ -116,8 +115,8 @@ import { bindSlidesToOutput, checkName, formatToFileName, getLayoutRef, openShow
 import { sendMidi } from "../helpers/showActions"
 import { _show } from "../helpers/shows"
 import { getMenuTagId, openTagManager, toggleSelectionTags, toggleTagFilter } from "../helpers/tags"
+import { addShowsToProject } from "../show/project"
 import { clearSlide } from "../output/clear"
-import { defaultThemes } from "../settings/tabs/defaultThemes"
 import { activeProject } from "./../../stores"
 import type { ContextMenuItem } from "./contextMenus"
 
@@ -145,11 +144,7 @@ const clickActions = {
     save: () => save(),
     import_more: () => activePopup.set("import"),
     export_more: () => activePopup.set("export"),
-    settings: () => {
-        if (get(activePage) === "stage") settingsTab.set("connection")
-        else if (get(activePage) === "settings") settingsTab.set("general")
-        activePage.set("settings")
-    },
+    settings: () => openSettings(get(activePage) === "stage" ? "connection" : undefined),
     quit: () => initializeClosing(),
     // view
     focus_mode: () => {
@@ -261,7 +256,7 @@ const clickActions = {
         if (!id) return
         const data = obj.sel?.data?.[0] || {}
 
-        const renameById = ["show_drawer", "project", "folder", "stage", "theme", "style", "output", "tag", "profile", "interaction"]
+        const renameById = ["show_drawer", "project", "folder", "stage", "style", "output", "tag", "profile", "interaction"]
         const renameByIdDirect = ["overlay", "template", "player", "layout", "effect", "scene"]
 
         if (renameById.includes(id)) activeRename.set(id + "_" + data.id)
@@ -541,6 +536,10 @@ const clickActions = {
     // TAGS
     manage_show_tags: () => {
         openTagManager("show")
+    },
+    add_to_playlist: (obj: ObjData) => {
+        const showIds: string[] = (obj.sel?.data || []).map(({ id }) => id).filter((id: string) => get(shows)[id])
+        addShowsToProject(getMenuTagId(obj.menu), showIds)
     },
     tag_set: (obj: ObjData) => {
         const tagId = getMenuTagId(obj.menu)
@@ -869,10 +868,7 @@ const clickActions = {
     // output
     force_output: () => toggleOutputs(null, { force: true }),
     align_with_screen: () => send(OUTPUT, ["ALIGN_WITH_SCREEN"]),
-    choose_screen: () => {
-        popupData.set({ activateOutput: true })
-        activePopup.set("choose_screen")
-    },
+
     toggle_output: (obj: ObjData) => {
         const id = obj.contextElem?.id || ""
         toggleOutput(id)
@@ -1044,16 +1040,6 @@ const clickActions = {
             return
         }
 
-        if (obj.sel?.id === "theme") {
-            obj.sel.data.forEach(({ id }) => {
-                const theme = clone(get(themes)[id])
-                if (!theme) return
-
-                send(EXPORT, ["THEME"], { content: theme })
-            })
-            return
-        }
-
         if (obj.sel?.id === "action") {
             obj.sel.data.forEach(({ id }) => {
                 const action = clone(get(actions)[id])
@@ -1117,23 +1103,6 @@ const clickActions = {
                 if (!a[b.id]) return
                 if (a[b.id].private) delete a[b.id].private
                 else a[b.id].private = true
-            })
-            return a
-        })
-    },
-    unlink_pco: (obj: ObjData) => {
-        if (!obj.sel) return
-
-        showsCache.update((a) => {
-            obj.sel!.data.forEach((b) => {
-                if (!a[b.id]) return
-                delete a[b.id].quickAccess.pcoLink
-            })
-            return a
-        })
-        shows.update((a) => {
-            obj.sel!.data.forEach((b) => {
-                delete a[b.id].quickAccess.pcoLink
             })
             return a
         })
@@ -1371,8 +1340,7 @@ const clickActions = {
             activePopup.set("edit_event")
         } else if (obj.contextElem?.classList.value.includes("output_button")) {
             currentOutputSettings.set(obj.contextElem.id)
-            settingsTab.set("display_settings")
-            activePage.set("settings")
+            openSettings("display_settings")
         } else if (obj.contextElem?.classList.value.includes("#edit_custom_action")) {
             activePopup.set("custom_action")
         }
@@ -1410,9 +1378,12 @@ const clickActions = {
             }
         })
 
-        // activeStyle.set(output.style)
-        // settingsTab.set("styles")
         activePopup.set("select_style")
+    },
+    change_look: () => {
+        // el popup SelectLook aplica el look al elegirlo
+        popupData.set({ active: get(activeLook) })
+        activePopup.set("select_look")
     },
     edit_style: (obj: ObjData) => {
         const outputId = obj.contextElem?.id || ""
@@ -1428,12 +1399,9 @@ const clickActions = {
         if (!output.style) return
 
         activeStyle.set(output.style)
-        settingsTab.set("styles")
-        activePage.set("settings")
+        openSettings("styles")
     },
     manage_groups: () => {
-        // settingsTab.set("general")
-        // activePage.set("settings")
         activePopup.set("manage_groups")
     },
     manage_metadata: () => {
@@ -2108,16 +2076,6 @@ const clickActions = {
     trim: (obj: ObjData) => format("trim", obj),
 
     // settings
-    reset_theme: (obj: ObjData) => {
-        obj.sel?.data.forEach(({ id }) => {
-            const oldTheme = get(themes)[id]
-            const defaultTheme = defaultThemes[id] || defaultThemes.default
-            const data = { ...defaultTheme, default: oldTheme.default || false, name: oldTheme.name }
-
-            history({ id: "UPDATE", newData: { data }, oldData: { id }, location: { page: "settings", id: "settings_theme" } })
-            updateThemeValues(get(themes)[id])
-        })
-    },
     reset: (obj: ObjData) => {
         if (obj.sel?.id === "style") {
             const defaultStyle = { name: translateText("example.default") }

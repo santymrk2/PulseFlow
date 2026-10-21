@@ -12,11 +12,11 @@
     import { addVideoMarker, enableSubtitle, encodeFilePath, getExtension, getFileName, getMediaLayerType, removeExtension } from "../helpers/media"
     import { getFirstActiveOutput, setOutput } from "../helpers/output"
     import { joinTime, secondsToTime } from "../helpers/time"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
-    import HiddenInput from "../inputs/HiddenInput.svelte"
-    import HoverButton from "../inputs/HoverButton.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
-    import MediaPicker from "../inputs/MediaPicker.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
+    import HoverPlay from "../helpers/HoverPlay.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import MediaPicker from "./MediaPicker.svelte"
     import { SoftLoopSync } from "../media/video/softLoop"
     import { syncVideoToAudio, videoSync } from "../media/video/videoSync"
     import VideoSlider from "../output/VideoSlider.svelte"
@@ -361,7 +361,7 @@
 {#key mediaPath || showId}
     <div id={mediaPath || showId} class="media context #media{type === 'player' ? '_player' : ''}_preview" style="flex: 1;overflow: hidden;">
         <!-- TODO: info about: CTRL click to play at current pos -->
-        <HoverButton hide={playingInOutput} icon="play" size={10} on:click={(e) => playVideo(e.ctrlKey || e.metaKey ? videoTime : 0)}>
+        <HoverPlay hide={playingInOutput} icon="play" size={10} on:click={(e) => playVideo(e.ctrlKey || e.metaKey ? videoTime : 0)}>
             {#if type === "player"}
                 <Player id={showId} {outputId} preview bind:videoData bind:videoTime />
             {:else if mediaPath}
@@ -382,37 +382,37 @@
                     <video style="{mediaStyleString} position: absolute;top: 0;left: 0;transition: 0.2s opacity;opacity: {effectiveSoftLoopOpacity};pointer-events: none;" bind:this={softLoopVideo} src={encodeFilePath(mediaPath)} muted loop={videoData.loop} />
                 {/if}
             {/if}
-        </HoverButton>
+        </HoverPlay>
     </div>
 {/key}
 
 {#if !$focusMode}
     {#if !playingInOutput && !manageSubtitles && !timeMarkersEnabled}
-        <FloatingInputs side="left">
-            <MaterialButton title={"media._loop" + (shouldLoop ? ": settings.enabled" : "")} on:click={toggleLoop}>
+        <FloatingBar side="left">
+            <Button title={"media._loop" + (shouldLoop ? ": settings.enabled" : "")} on:click={toggleLoop}>
                 <Icon id="loop" size={1.2} white={!shouldLoop} />
-            </MaterialButton>
+            </Button>
 
             <!-- <div class="divider" /> -->
 
-            <MaterialButton title={!shouldBeMuted ? "actions.mute" : "actions.unmute"} disabled={$outLocked} on:click={toggleMute}>
+            <Button title={!shouldBeMuted ? "actions.mute" : "actions.unmute"} disabled={$outLocked} on:click={toggleMute}>
                 <Icon id={!shouldBeMuted ? "volume" : "muted"} size={1.2} white={shouldBeMuted} />
-            </MaterialButton>
-        </FloatingInputs>
+            </Button>
+        </FloatingBar>
     {/if}
 
     {#if playingInOutput ? tracks.length : manageSubtitles}
-        <FloatingInputs side="left" style={playingInOutput ? `margin-bottom: ${$videoMarkers[showId]?.length ? 100 : 50}px;` : "max-width: 50%;"}>
+        <FloatingBar side="left" style={playingInOutput ? `margin-bottom: ${$videoMarkers[showId]?.length ? 100 : 50}px;` : "max-width: 50%;"}>
             {#if tracks.length}
                 <div class="scroll">
                     {#each tracks as track, i}
-                        <MaterialButton id={i.toString()} style="font-weight: normal;" isActive={subtitle === track.lang} class="context #video_subtitle{track.embedded ? '_embedded' : ''}" on:click={(e) => setActiveSubtitle(e, track.lang)}>
+                        <Button id={i.toString()} style="font-weight: normal;" isActive={subtitle === track.lang} class="context #video_subtitle{track.embedded ? '_embedded' : ''}" on:click={(e) => setActiveSubtitle(e, track.lang)}>
                             {#if playingInOutput}
                                 <p style="padding: 5px;">{track.name}</p>
                             {:else}
                                 <HiddenInput value={track.name} id={"subtitle_" + i} on:edit={changeSubtitleName} bind:edit />
                             {/if}
-                        </MaterialButton>
+                        </Button>
                     {/each}
                 </div>
             {/if}
@@ -426,17 +426,16 @@
                     <!-- <Icon id="captions" right={!tracks.length} />
                     {#if !tracks.length}<T id="actions.manage_subtitles" />{/if} -->
                 </MediaPicker>
-                <!-- <MaterialFilePicker label="scripture.local" style="flex: 1;" icon="add" value="" filter={{ name: "Video Text Track", extensions: ["vtt", "srt"] }} on:change={subtitlePicked} /> -->
             {/if}
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 
     {#if playingInOutput ? $videoMarkers[showId]?.length : timeMarkersEnabled}
-        <FloatingInputs side="left" style={playingInOutput || manageSubtitles ? "margin-bottom: 50px;" : "max-width: 50%;"}>
+        <FloatingBar side="left" style={playingInOutput || manageSubtitles ? "margin-bottom: 50px;" : "max-width: 50%;"}>
             {#if $videoMarkers[showId]?.length}
                 <div class="scroll">
                     {#each $videoMarkers[showId] as marker, i}
-                        <MaterialButton
+                        <Button
                             id={i}
                             style="font-weight: normal;"
                             class="context #video_marker"
@@ -450,7 +449,7 @@
                                 <HiddenInput value={marker.name} id={"marker_" + i} on:edit={changeName} bind:edit />
                                 <span style="opacity: 0.7;">{joinTime(secondsToTime(marker.time))}</span>
                             </p>
-                        </MaterialButton>
+                        </Button>
                     {/each}
                 </div>
             {/if}
@@ -458,19 +457,19 @@
             {#if !playingInOutput}
                 <div class="diviver" />
 
-                <MaterialButton icon="add" title="actions.add_time_marker" on:click={addMarker}>
+                <Button icon="add" title="actions.add_time_marker" on:click={addMarker}>
                     {#if !$videoMarkers[showId]?.length}<T id="actions.add_time_marker" />{/if}
-                </MaterialButton>
+                </Button>
             {/if}
-        </FloatingInputs>
+        </FloatingBar>
     {/if}
 
     {#if playingInOutput}
         <MediaControls {currentOutput} {outputId} big />
     {:else}
-        <FloatingInputs arrow={type === "video" || type === "player"} let:open>
+        <FloatingBar arrow={type === "video" || type === "player"} let:open>
             <div slot="menu" style="display: flex;min-width: 500px;">
-                <MaterialButton
+                <Button
                     title={videoData.paused ? "media.play" : "media.pause"}
                     on:click={() => {
                         autoPause = false
@@ -478,18 +477,18 @@
                     }}
                 >
                     <Icon id={videoData.paused ? "play" : "pause"} white={videoData.paused} />
-                </MaterialButton>
+                </Button>
 
                 <VideoSlider {outputId} path={mediaPath} bind:videoData bind:videoTime />
 
-                <MaterialButton title={videoData.muted ? "actions.unmute" : "actions.mute"} on:click={() => (videoData.muted = !videoData.muted)}>
+                <Button title={videoData.muted ? "actions.unmute" : "actions.mute"} on:click={() => (videoData.muted = !videoData.muted)}>
                     <Icon id={videoData.muted ? "muted" : "volume"} white={videoData.muted} />
-                </MaterialButton>
+                </Button>
 
                 <div class="divider"></div>
             </div>
 
-            <MaterialButton
+            <Button
                 isActive={manageSubtitles}
                 title="actions.manage_subtitles"
                 on:click={() => {
@@ -498,13 +497,13 @@
                 }}
             >
                 <Icon id="captions" white={!tracks.length} size={1.2} />
-            </MaterialButton>
+            </Button>
 
             {#if open}
                 <div class="divider"></div>
             {/if}
 
-            <MaterialButton
+            <Button
                 isActive={timeMarkersEnabled}
                 title="actions.toggle_time_marker"
                 on:click={() => {
@@ -513,8 +512,8 @@
                 }}
             >
                 <Icon id="timeMarker" white={!$videoMarkers[showId]?.length} size={1.2} />
-            </MaterialButton>
-        </FloatingInputs>
+            </Button>
+        </FloatingBar>
     {/if}
 {/if}
 

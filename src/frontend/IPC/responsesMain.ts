@@ -1,10 +1,9 @@
 import { get } from "svelte/store"
-import type { ContentProviderId } from "../../electron/contentProviders/base/types"
+import type { ContentProviderId } from "../../types/ContentProvider"
 import type { ToMainSendPayloads } from "../../types/IPC/ToMain"
 import { ToMain } from "../../types/IPC/ToMain"
 import type { Project } from "../../types/Projects"
 import type { Show, Slide } from "../../types/Show"
-import { Transcript } from "../ai/stt/transcript"
 import { API_ACTIONS, triggerAction } from "../components/actions/api"
 import { receivedMidi } from "../components/actions/midi"
 import { menuClick } from "../components/context/menuClick"
@@ -28,12 +27,13 @@ import { convertCSV } from "../converters/csv"
 import { convertEasyslides } from "../converters/easyslides"
 import { convertEasyWorship } from "../converters/easyworship"
 import { createImageShow } from "../converters/imageShow"
-import { createCategory, importAction, importOverlay, importShow, importSpecific, importStage, importTemplate, setTempShows } from "../converters/importHelpers"
+import { createCategory, importAction, importOverlay, importShow, importStage, importTemplate, setTempShows } from "../converters/importHelpers"
 import { convertLessonsPresentation } from "../converters/lessonsChurch"
 import { convertMediaShout } from "../converters/mediashout"
 import { convertOpenLP } from "../converters/openlp"
 import { convertOpenSong } from "../converters/opensong"
 import { convertPowerpoint } from "../converters/powerpoint/powerpointImporter"
+import { pdfToImageShow } from "../converters/pdfToImages"
 import { addToProject, importProject, updateRecentlyAddedFiles } from "../converters/project"
 import { convertProPresenter } from "../converters/propresenter"
 import { convertQuelea } from "../converters/quelea"
@@ -58,7 +58,6 @@ import {
     driveKeys,
     events,
     folders,
-    icecastStatus,
     lessonsLoaded,
     media,
     mediaDownloads,
@@ -74,13 +73,13 @@ import {
     recentFiles,
     redoHistory,
     rtmpStatus,
+    settingsOpen,
     shows,
     showsCache,
     spellcheck,
     stageShows,
     templates,
     textCache,
-    theme,
     themes,
     timers,
     undoHistory,
@@ -94,10 +93,9 @@ import { translateText } from "../utils/language"
 import { confirmCustom } from "../utils/popup"
 import { initializeClosing, saveComplete } from "../utils/save"
 import { invalidateSearchIndex } from "../utils/searchFast"
-import { updateSettings, updateSyncedSettings, updateThemeValues } from "../utils/updateSettings"
+import { updateSettings, updateSyncedSettings } from "../utils/updateSettings"
 import type { MainReturnPayloads } from "./../../types/IPC/Main"
 import { Main } from "./../../types/IPC/Main"
-import { sendMain } from "./main"
 
 type MainHandler<ID extends Main | ToMain> = (data: ID extends keyof ToMainSendPayloads ? ToMainSendPayloads[ID] : ID extends keyof MainReturnPayloads ? Awaited<MainReturnPayloads[ID]> : undefined) => void
 export type MainResponses = {
@@ -140,10 +138,9 @@ export const mainResponses: MainResponses = {
     [Main.EVENTS]: (a) => events.set(a),
     [Main.MEDIA]: (a) => media.set(a),
     [Main.THEMES]: (a) => {
-        themes.set(Object.keys(a).length ? a : clone(defaultThemes))
-
-        // update if themes are loaded after settings
-        if (get(theme) !== "default") updateThemeValues(get(themes)[get(theme)])
+        // El tema es fijo (PulseFlow): siempre los valores de defaultThemes.default,
+        // aunque el archivo guardado tenga una versión vieja o otros temas.
+        themes.set({ ...a, default: clone(defaultThemes.default) })
     },
     [Main.DRIVE_API_KEY]: (a) => driveKeys.set(a),
     [Main.HISTORY]: (a) => {
@@ -167,7 +164,7 @@ export const mainResponses: MainResponses = {
             const outputIds = getActiveOutputs(get(outputs), false, true)
             currentOutputSettings.set(outputIds[0])
             popupData.set({ activateOutput: true })
-            activePopup.set("choose_screen")
+            activePopup.set("screen_config")
             return
         }
 
@@ -207,7 +204,7 @@ export const mainResponses: MainResponses = {
 
         shows.set(a)
 
-        if (get(activePopup) || get(activePage) !== "settings") return
+        if (get(activePopup) || !get(settingsOpen)) return
         alertMessage.set("<h3>Updated shows</h3><br>● Old shows: " + oldCount + "<br>● New shows: " + newCount)
         activePopup.set("alert")
     },
@@ -243,7 +240,6 @@ export const mainResponses: MainResponses = {
     [ToMain.LESSONS_DONE]: (data) => lessonsLoaded.set({ ...get(lessonsLoaded), [data.showId]: data.status }),
     [ToMain.IMAGES_TO_SHOW]: (data) => createImageShow(data),
     [ToMain.RTMP_STATUS]: (data) => rtmpStatus.update((a) => ({ ...a, [data.outputId]: data.destinations })),
-    [ToMain.ICECAST_STATUS]: (data) => icecastStatus.set(data),
     [ToMain.MEDIA_DOWNLOAD_PROGRESS]: (data) => {
         mediaDownloads.update((downloads) => {
             const newDownloads = new Map(downloads)
@@ -357,19 +353,14 @@ export const mainResponses: MainResponses = {
     [ToMain.PROVIDER_PROJECTS]: async (data) => {
         if (!data.projects) return
 
-        // Planning Center items are seperated into multiple categories based on the type: Songs (default) & Regular items (generic)
-        if (data.providerId === "planningcenter" && data.shows.some((a) => a.category === "planning_center_generic")) {
-            createCategory("Planning Center (Generic)", "presentation")
-        }
-
         // CREATE CATEGORY
         createCategory(data.categoryName)
 
         const replaceIds: { [key: string]: string } = {}
         const allShows = keysToID(get(shows))
         const songOrigin = get(contentProviderData)[data.providerId]?.songOrigin
-        const linkKey = data.providerId === "planningcenter" ? "pcoLink" : data.providerId === "churchApps" ? "chumsLink" : data.providerId === "amazinglife" ? "alLink" : data.providerId === "onstage" ? "onstageLink" : ""
-        const origin = data.providerId === "planningcenter" ? "pco" : data.providerId
+        const linkKey = data.providerId === "churchApps" ? "chumsLink" : data.providerId === "amazinglife" ? "alLink" : data.providerId === "onstage" ? "onstageLink" : ""
+        const origin = data.providerId
 
         function updateExistingShow(showId: string) {
             shows.update((a) => {
@@ -412,7 +403,7 @@ export const mainResponses: MainResponses = {
                 }
             }
 
-            const providerName = data.providerId === "planningcenter" ? "Planning Center" : data.providerId === "churchApps" ? "ChurchApps" : data.providerId === "onstage" ? "OnStage" : "the cloud"
+            const providerName = data.providerId === "churchApps" ? "ChurchApps" : data.providerId === "onstage" ? "OnStage" : "the cloud"
 
             // first find any shows linked to the id
             const linkedShow = linkKey ? allShows.find(({ quickAccess, id: showId }) => quickAccess?.[linkKey] === id || showId === id) : null
@@ -482,19 +473,19 @@ export const mainResponses: MainResponses = {
             if (!templateId) return projectBase
 
             let templateItems = clone(get(projectTemplates)[templateId]?.shows || [])
-            let pcoItems = clone(projectBase.shows || [])
+            let syncedItems = clone(projectBase.shows || [])
 
             // project template first, then append the synced items (first to any placeholders, then to the end)
             templateItems = templateItems.map((item) => {
                 if (item.type === "show_placeholder") {
-                    const show = pcoItems.shift()
+                    const show = syncedItems.shift()
                     if (show) return show
                 }
 
                 return item
             })
 
-            projectBase.shows = [...templateItems, ...pcoItems]
+            projectBase.shows = [...templateItems, ...syncedItems]
             return projectBase
         }
 
@@ -529,16 +520,6 @@ export const mainResponses: MainResponses = {
             activeProject.set(nextProjectId)
             projectView.set(false)
         }
-
-        // store available PCO plans for Live timer setup
-        if (data.providerId === "planningcenter" && data.pcoPlans?.length) {
-            contentProviderData.update((a) => {
-                if (!a.planningcenter) a.planningcenter = {}
-                const existing = a.planningcenter.availablePlans || []
-                a.planningcenter.availablePlans = [...existing.filter((e) => !data.pcoPlans!.some((i) => i.planId === e.planId)), ...data.pcoPlans!]
-                return a
-            })
-        }
     },
     [ToMain.OPEN_FOLDER2]: (a) => {
         const receiveFOLDER = {
@@ -556,7 +537,7 @@ export const mainResponses: MainResponses = {
             // Media
             pdf: () => {
                 const paths = mainData as string[]
-                paths.forEach((path) => sendMain(Main.PDF_TO_IMAGE, { filePath: path }))
+                paths.forEach((path) => pdfToImageShow(path))
 
                 // remove any PDFs with the same name from the Recommended project items list
                 const importedNames = paths.map((p) => removeExtension(getFileName(p)).toLowerCase())
@@ -583,7 +564,6 @@ export const mainResponses: MainResponses = {
             freeshow_project: () => importProject(data),
             freeshow_template: () => importTemplate(data),
             freeshow_overlay: () => importOverlay(data),
-            freeshow_theme: () => importSpecific(data, themes),
             freeshow_action: () => importAction(data),
             freeshow_stage: () => importStage(data),
             // Text
@@ -620,7 +600,7 @@ export const mainResponses: MainResponses = {
     [Main.TIMECODE_STATUS]: (data) => updateTimelineStatus(data!),
     [Main.TIMECODE_AUDIO_DATA]: (data) => processTimecodeFrame(data!),
 
-    // AI
-    [ToMain.AI_STATUS]: (data) => aiSttStatus.set(data),
-    [ToMain.AI_TRANSCRIPT]: (data) => Transcript.push(data)
+    // AI (disabled)
+    [ToMain.AI_STATUS]: () => {},
+    [ToMain.AI_TRANSCRIPT]: () => {}
 }

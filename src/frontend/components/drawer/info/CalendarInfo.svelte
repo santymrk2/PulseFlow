@@ -4,9 +4,9 @@
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
     import { joinTimeBig } from "../../helpers/time"
-    import Button from "../../inputs/Button.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
     import CalendarsManagement from "../calendar/CalendarsManagement.svelte"
     import CreateCalendarShow from "../calendar/CreateCalendarShow.svelte"
     import Day from "../calendar/Day.svelte"
@@ -43,11 +43,11 @@
 
 {#if optionsOpen}
     <main style="flex: 1;overflow-x: hidden;padding: 10px;">
-        <MaterialDropdown label="calendar.first_day" options={firstWeekDayOptions} value={$special.firstDayOfWeek || "1"} on:change={(e) => updateSpecial(e.detail, "firstDayOfWeek")} />
+        <SelectField label="calendar.first_day" options={firstWeekDayOptions} value={$special.firstDayOfWeek || "1"} on:change={(e) => updateSpecial(e.detail, "firstDayOfWeek")} />
 
         {#if type === "event"}
             <!-- create show options -->
-            <MaterialPopupButton label="calendar.add_slides_from_show" style="margin-top: 5px;" value={$calendarAddShow} name={$shows[$calendarAddShow]?.name || "—"} popupId="select_show" icon="showIcon" data={{ action: "select_show", location: "calendar" }} on:change={(e) => calendarAddShow.set(e.detail)} allowEmpty />
+            <PopupField label="calendar.add_slides_from_show" style="margin-top: 5px;" value={$calendarAddShow} name={$shows[$calendarAddShow]?.name || "—"} popupId="select_show" icon="showIcon" data={{ action: "select_show", location: "calendar" }} on:change={(e) => calendarAddShow.set(e.detail)} allowEmpty />
 
             <CalendarsManagement />
         {/if}
@@ -62,7 +62,7 @@
     <Day {type} />
 
     {#if $nextActionEventStart.timeLeft}
-        <Button on:click={() => nextActionEventPaused.set(!$nextActionEventPaused)} title={translateText($nextActionEventPaused ? "actions.start_timer" : "media.pause")} dark>
+        <Button align="start" on:click={() => nextActionEventPaused.set(!$nextActionEventPaused)} title={translateText($nextActionEventPaused ? "actions.start_timer" : "media.pause")}>
             <Icon id={$nextActionEventPaused ? "play" : "pause"} white={$nextActionEventPaused} right />
             {#if $nextActionEventPaused}
                 <T id="actions.start_timer" />

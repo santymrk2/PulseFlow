@@ -7,8 +7,8 @@
     import { getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
 
     registerPopupSubmit(rename)
@@ -234,8 +234,8 @@
     </ul>
 {/if}
 
-<MaterialTextInput label="inputs.name" value={groupName} on:input={(e) => (groupName = e.detail)} on:change={(e) => (groupName = e.detail)} autoselect />
+<TextField label="inputs.name" value={groupName} on:input={(e) => (groupName = e.detail)} on:change={(e) => (groupName = e.detail)} autoselect />
 
-<MaterialButton variant="contained" style="margin-top: 20px;" icon="edit" on:click={rename}>
+<Button variant="default" style="margin-top: 20px;" icon="edit" on:click={rename}>
     <T id="actions.rename" />
-</MaterialButton>
+</Button>

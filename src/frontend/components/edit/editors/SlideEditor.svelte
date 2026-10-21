@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onMount } from "svelte"
     import type { MediaStyle } from "../../../../types/Main"
-    import { activeEdit, activePopup, activeShow, alertMessage, editMode, focusMode, media, outputs, overlays, playerVideos, resized, showsCache, slideNotesActive, special, styles } from "../../../stores"
+    import { activeEdit, activePopup, activeShow, alertMessage, editMode, focusMode, media, outputs, overlays, playerVideos, resized, showsCache, slideNotesActive, special, styles, previewOutputId } from "../../../stores"
     import { transposeText } from "../../../utils/chordTranspose"
     import { DEFAULT_WIDTH } from "../../../utils/common"
     import { translateText } from "../../../utils/language"
@@ -16,9 +16,9 @@
     import { getLayoutRef, isSlideLocked } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import { getStyles } from "../../helpers/style"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialZoom from "../../inputs/MaterialZoom.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
     import { formatText } from "../../show/formatTextEditor"
     import { getPlainEditorText } from "../../show/getTextEditor"
     import Notes from "../../show/tools/Notes.svelte"
@@ -57,7 +57,7 @@
     let width = 0
     let height = 0
     // Slide?.settings?.resolution
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     let ratio = 1
 
@@ -400,9 +400,9 @@
                 <Notes on:edit={edit} value={note} autofocus />
             </div>
 
-            <MaterialButton title="actions.close" on:click={() => ($slideNotesActive = false)} style="position: absolute;top: 9px;right: 4.5px;opacity: 0.8;padding: 8px;" white>
+            <Button title="actions.close" on:click={() => ($slideNotesActive = false)} style="position: absolute;top: 9px;right: 4.5px;opacity: 0.8;padding: 8px;" white>
                 <Icon id={note ? "remove" : "close"} white />
-            </MaterialButton>
+            </Button>
         </Resizeable>
     {:else if notesVisible}
         <div class="notes" role="none" data-title={translateText("tools.notes")} on:click={() => slideNotesActive.set(true)}>
@@ -412,39 +412,39 @@
     {/if}
 
     {#if !$focusMode && !isLocked && !$slideNotesActive && !$special.slideTimelineActive}
-        <FloatingInputs side="left" bottom={notesVisible ? bottomHeight : 10} onlyOne={$editMode !== "chords" && hasBackground}>
+        <FloatingBar side="left" bottom={notesVisible ? bottomHeight : 10} onlyOne={$editMode !== "chords" && hasBackground}>
             {#if $editMode === "chords"}
-                <MaterialButton on:click={transposeUp} title="edit.transpose_up">
+                <Button on:click={transposeUp} title="edit.transpose_up">
                     <Icon id="arrow_up" size={1.3} white />
-                </MaterialButton>
-                <MaterialButton on:click={transposeDown} title="edit.transpose_down">
+                </Button>
+                <Button on:click={transposeDown} title="edit.transpose_down">
                     <Icon id="arrow_down" size={1.3} white />
-                </MaterialButton>
+                </Button>
 
                 <div class="divider"></div>
 
-                <MaterialButton isActive={!chordsAction} on:click={setDefaultChordsAction}>
+                <Button isActive={!chordsAction} on:click={setDefaultChordsAction}>
                     <p><T id="popup.choose_chord" /></p>
-                </MaterialButton>
+                </Button>
 
                 {#each usedChords as chord}
-                    <MaterialButton isActive={chordsAction === chord} on:click={() => (chordsAction = chord)}>
+                    <Button isActive={chordsAction === chord} on:click={() => (chordsAction = chord)}>
                         {chord}
-                    </MaterialButton>
+                    </Button>
                 {/each}
             {:else if hasBackground}
-                <MaterialButton on:click={convertBackgroundToMedia}>
-                    <Icon id="autofill" gradient />
+                <Button on:click={convertBackgroundToMedia}>
+                    <Icon id="autofill" />
                     <T id="edit.convert_to_media_item" />
-                </MaterialButton>
+                </Button>
             {/if}
 
-            <MaterialZoom hidden={$editMode === "chords" || hasBackground} columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
-        </FloatingInputs>
+            <ZoomControl hidden={$editMode === "chords" || hasBackground} columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
+        </FloatingBar>
     {/if}
 
     {#if $special.slideTimelineActive}
-        <MaterialZoom hidden columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
+        <ZoomControl hidden columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
 
         <Resizeable id="slide_timeline" side="bottom" maxWidth={DEFAULT_WIDTH} minWidth={40}>
             {#key currentShowId + "-" + $activeEdit.slide}

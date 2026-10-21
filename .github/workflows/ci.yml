@@ -1,40 +1,89 @@
 name: CI
 
-# Manual activation for now (run from the Actions tab); can be wired to pull_request later.
+# F13.1: corre solo en cada pull request y en cada push a las ramas de trabajo; sigue disponible a mano.
 on:
+    pull_request:
+    push:
+        branches: [main, feature/tauri-rust-migration]
     workflow_dispatch:
 
 jobs:
-    checks:
-        name: Format & type-check
+    frontend:
+        name: Frontend (formato de lo cambiado, presupuesto, tests, build)
         runs-on: ubuntu-latest
         steps:
             - name: Check out Git repository
               uses: actions/checkout@v5
-
-            - name: Install Node.js and NPM
-              uses: actions/setup-node@v5
               with:
-                  node-version: 22
+                  # el diff contra la base necesita el historial
+                  fetch-depth: 0
 
-            - name: Install libraries
-              run: |
-                  sudo apt-get update
-                  sudo apt-get install -y libfontconfig1-dev uuid-dev libltc-dev --fix-missing
+            - name: Install Bun
+              uses: oven-sh/setup-bun@v2
 
             - name: Install dependencies
-              run: npm ci
+              run: bun install --frozen-lockfile
 
-            # Formatting and svelte type-check currently have a pre-existing backlog, so they are
-            # reported but non-blocking for now. Flip continue-on-error off once the backlog is cleared.
-            - name: Check formatting
-              run: npm run test:format
-              continue-on-error: true
+            # Bloqueante, pero sólo sobre los archivos de src/ que este cambio toca: el backlog de
+            # formato heredado no frena a nadie, lo que se toca tiene que quedar formateado.
+            - name: Check formatting (changed files)
+              run: scripts/prettier-changed.sh "${{ github.event.pull_request.base.sha || github.event.before }}"
 
-            - name: Type-check (svelte)
-              run: npm run test:svelte
-              continue-on-error: true
+            # Trinquete de calidad (F13.2): errores de svelte-check, `any` y colores literales no pueden subir.
+            # Reemplaza al svelte-check no bloqueante de antes.
+            - name: Quality budget
+              run: bun run test:budget
+
+            - name: Unit tests
+              run: bun run test:unit
 
             # Blocking gate: a broken build fails this run.
             - name: Build
-              run: npm run build
+              run: bun run build
+
+    rust:
+        name: Rust (cargo check + tests)
+        # El runner de macOS tiene 3 núcleos y la compilación en frío del workspace
+        # tarda más de 15 minutos: sin desactivar debuginfo e incremental el job no
+        # llega a terminar (y un job cancelado tampoco guarda el caché, así que
+        # vuelve a arrancar en frío: nunca sale del bucle).
+        env:
+            CARGO_PROFILE_DEV_DEBUG: "0"
+            CARGO_PROFILE_TEST_DEBUG: "0"
+            CARGO_INCREMENTAL: "0"
+        strategy:
+            fail-fast: false
+            matrix:
+                os: [macos-latest, windows-latest]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - name: Check out Git repository
+              uses: actions/checkout@v5
+
+            - name: Install Rust
+              uses: dtolnay/rust-toolchain@stable
+
+            - name: Cache cargo
+              uses: Swatinem/rust-cache@v2
+              with:
+                  workspaces: src-tauri
+
+            # Tauri valida que existan los sidecars declarados en tauri.conf.json (externalBin).
+            # shell: bash para que funcione igual en el runner de Windows (Git Bash);
+            # en Windows los binarios llevan extensión .exe.
+            - name: Stub sidecars
+              shell: bash
+              run: |
+                  mkdir -p src-tauri/binaries
+                  TRIPLE=$(rustc -vV | sed -n 's/host: //p')
+                  EXT=""
+                  if [[ "$TRIPLE" == *windows* ]]; then EXT=".exe"; fi
+                  touch "src-tauri/binaries/ffmpeg-$TRIPLE$EXT" "src-tauri/binaries/ffprobe-$TRIPLE$EXT"
+
+            - name: Cargo check
+              working-directory: src-tauri
+              run: cargo check --locked
+
+            - name: Cargo test
+              working-directory: src-tauri
+              run: cargo test --lib --locked

@@ -1,7 +1,7 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import { uid } from "uid"
-    import type { ContentProviderId } from "../../../../electron/contentProviders/base/types"
+    import type { ContentProviderId } from "../../../../types/ContentProvider"
     import { Main } from "../../../../types/IPC/Main"
     import { ToMain } from "../../../../types/IPC/ToMain"
     import { destroyMain, receiveToMain, requestMain, sendMain } from "../../../IPC/main"
@@ -12,7 +12,7 @@
     import Icon from "../../helpers/Icon.svelte"
     import { countFolderMediaItems } from "../../helpers/media"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import NavigationSections from "./NavigationSections.svelte"
 
     const profile = getAccess("media")
@@ -102,16 +102,16 @@
 <NavigationSections {sections} active={activeSubTab} on:rename={updateName}>
     <div slot="section_2" style="{!curriculumProviders.length ? 'padding: 8px;' : ''}{foldersList.length && !curriculumProviders.length ? 'padding-top: 12px;' : ''}">
         {#if !curriculumProviders.length}
-            <MaterialButton style="width: 100%;" title="new.system_folder" variant="outlined" disabled={readOnly} on:click={addFolder} small>
+            <Button style="width: 100%;" title="new.system_folder" variant="outline" disabled={readOnly} on:click={addFolder} size="xs">
                 <Icon id="add" size={$labelsDisabled ? 0.9 : 1} white={$labelsDisabled} />
                 {#if !$labelsDisabled}<T id="new.system_folder" />{/if}
-            </MaterialButton>
+            </Button>
         {/if}
     </div>
     <div slot="section_3" style="padding: 8px;{foldersList.length ? 'padding-top: 12px;' : ''}">
-        <MaterialButton style="width: 100%;" title="new.system_folder" variant="outlined" disabled={readOnly} on:click={addFolder} small>
+        <Button style="width: 100%;" title="new.system_folder" variant="outline" disabled={readOnly} on:click={addFolder} size="xs">
             <Icon id="add" size={$labelsDisabled ? 0.9 : 1} white={$labelsDisabled} />
             {#if !$labelsDisabled}<T id="new.system_folder" />{/if}
-        </MaterialButton>
+        </Button>
     </div>
 </NavigationSections>

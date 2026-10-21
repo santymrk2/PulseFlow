@@ -13,7 +13,7 @@
     import { checkActionTrigger, getFewestOutputLines, getFewestOutputLinesReveal, getItemWithMostLines, updateOut } from "../helpers/showActions"
     import { _show } from "../helpers/shows"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import Loader from "../main/Loader.svelte"
     import SkeletonSlide from "../slide/SkeletonSlide.svelte"
     import Slide from "../slide/Slide.svelte"
@@ -142,6 +142,9 @@
 
             setOutput("slide", { id: showId, layout: activeLayout, index, line, revealCount, itemClickReveal })
             updateOut(showId, index, slideRef, !e.altKey)
+
+            // force update output if index is the same as previous
+            if (activeSlides[index]) refreshOut()
         })
 
         // set to active in focus mode
@@ -531,9 +534,9 @@
                             <Center absolute>
                                 <span style="opacity: 0.5;font-size: 2em;margin-bottom: 10px;"><T id="empty.slides" /></span>
 
-                                <MaterialButton variant="outlined" disabled={isLocked} icon="add" title="tooltip.project" style="justify-content: start;padding: 8px 14px;" on:click={createSlide}>
+                                <Button variant="outline" disabled={isLocked} icon="add" title="tooltip.project" style="justify-content: start;padding: 8px 14px;" on:click={createSlide}>
                                     <T id="new.slide" />
-                                </MaterialButton>
+                                </Button>
                             </Center>
                         {/if}
                     </div>
@@ -548,5 +551,6 @@
         display: flex;
         flex-wrap: wrap;
         padding: 5px;
+        gap: 12px;
     }
 </style>

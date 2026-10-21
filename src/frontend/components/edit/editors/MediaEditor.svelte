@@ -1,11 +1,11 @@
 <script lang="ts">
     import type { MediaStyle } from "../../../../types/Main"
-    import { activeEdit, activeShow, media, outputs, playingVideoState, styles } from "../../../stores"
+    import { activeEdit, activeShow, media, outputs, playingVideoState, styles, previewOutputId } from "../../../stores"
     import Icon from "../../helpers/Icon.svelte"
     import { getExtension, getMedia, getMediaStyle, getMediaType } from "../../helpers/media"
     import { getCurrentStyle, getFirstActiveOutput, getResolution } from "../../helpers/output"
-    import FloatingInputs from "../../input/FloatingInputs.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import { VideoPlayer } from "../../media/video/videoPlayer"
     import Media from "../../output/layers/Media.svelte"
     import VideoSlider from "../../output/VideoSlider.svelte"
@@ -39,7 +39,7 @@
 
     let width = 0
     let height = 0
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
     $: widthOrHeight = getStyleResolution(resolution, width, height, "fit")
 
     $: extension = getExtension(mediaPath)
@@ -63,10 +63,10 @@
     </Zoomed>
 
     {#if type === "video"}
-        <FloatingInputs side="center" style="width: 60%;">
-            <MaterialButton title={videoData.paused ? "media.play" : "media.pause"} on:click={() => (videoData.paused = !videoData.paused)}>
+        <FloatingBar side="center" style="width: 60%;">
+            <Button title={videoData.paused ? "media.play" : "media.pause"} on:click={() => (videoData.paused = !videoData.paused)}>
                 <Icon id={videoData.paused ? "play" : "pause"} white={videoData.paused} size={1.3} />
-            </MaterialButton>
+            </Button>
 
             <div class="divider" />
 
@@ -74,10 +74,10 @@
 
             <div class="divider" />
 
-            <MaterialButton title="media._loop" disabled>
+            <Button title="media._loop" disabled>
                 <Icon id="loop" size={1.2} />
-            </MaterialButton>
-        </FloatingInputs>
+            </Button>
+        </FloatingBar>
     {/if}
 </div>
 

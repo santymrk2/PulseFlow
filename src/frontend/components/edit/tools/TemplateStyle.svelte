@@ -6,14 +6,14 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import Icon from "../../helpers/Icon.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialColorInput from "../../inputs/MaterialColorInput.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialFilePicker from "../../inputs/MaterialFilePicker.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialPopupButton from "../../inputs/MaterialPopupButton.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import ColorField from "../../../lib/components/ui/color-field/color-field.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import FileField from "../../../lib/components/ui/file-field/file-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import PopupField from "../../../lib/components/ui/popup-field/popup-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import ItemsList from "./ItemsList.svelte"
 
     $: templateId = $activeEdit?.id || ""
@@ -61,11 +61,11 @@
 
 <div class="tools">
     <div>
-        <MaterialDropdown label="actions.mode" options={modes} value={mode} defaultValue="default" on:change={(e) => setValue(e.detail, "mode")} />
+        <SelectField label="actions.mode" options={modes} value={mode} defaultValue="default" on:change={(e) => setValue(e.detail, "mode")} />
     </div>
 
     <div>
-        <MaterialColorInput
+        <ColorField
             label="edit.background_color"
             value={settings.backgroundColor}
             on:input={(e) => {
@@ -78,8 +78,8 @@
         />
 
         <InputRow>
-            <MaterialFilePicker label="edit.background_media" value={settings.backgroundPath} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => setValue(e, "backgroundPath")} allowEmpty />
-            <!-- {#if settings.backgroundPath}<MaterialButton title="titlebar.edit" icon="edit" on:click={editBackgroundImage} />{/if} -->
+            <FileField label="edit.background_media" value={settings.backgroundPath} filter={{ name: "Media files", extensions: mediaExtensions }} on:change={(e) => setValue(e, "backgroundPath")} allowEmpty />
+            <!-- {#if settings.backgroundPath}<Button title="titlebar.edit" icon="edit" on:click={editBackgroundImage} />{/if} -->
         </InputRow>
     </div>
 
@@ -92,8 +92,8 @@
                 </span>
             </div>
 
-            <MaterialNumberInput label="edit.max_lines_per_slide" value={settings?.maxLinesPerSlide || 0} max={100} on:change={(e) => setValue(e, "maxLinesPerSlide")} />
-            <MaterialNumberInput label="edit.break_long_lines_tip" value={settings?.breakLongLines || 0} max={100} on:change={(e) => setValue(e, "breakLongLines")} />
+            <NumberField label="edit.max_lines_per_slide" value={settings?.maxLinesPerSlide || 0} max={100} on:change={(e) => setValue(e, "maxLinesPerSlide")} />
+            <NumberField label="edit.break_long_lines_tip" value={settings?.breakLongLines || 0} max={100} on:change={(e) => setValue(e, "breakLongLines")} />
         </div>
     {/if}
 
@@ -105,10 +105,10 @@
             </span>
         </div>
 
-        <MaterialDropdown label="edit.overlay_content" options={overlayList} value={settings.overlayId || ""} on:change={(e) => setValue(e.detail, "overlayId")} allowEmpty />
+        <SelectField label="edit.overlay_content" options={overlayList} value={settings.overlayId || ""} on:change={(e) => setValue(e.detail, "overlayId")} allowEmpty />
 
         <InputRow>
-            <MaterialPopupButton
+            <PopupField
                 label="edit.different_first_template"
                 value={settings.firstSlideTemplate}
                 name={$templates[settings.firstSlideTemplate || ""]?.name}
@@ -122,16 +122,16 @@
                 allowEmpty
             />
             <!-- {#if settings.firstSlideTemplate && $templates[settings.firstSlideTemplate]}
-                    <MaterialButton title="titlebar.edit" icon="edit" on:click={() => editTemplate(settings.firstSlideTemplate || "")} />
+                    <Button title="titlebar.edit" icon="edit" on:click={() => editTemplate(settings.firstSlideTemplate || "")} />
                 {/if} -->
         </InputRow>
 
         {#if settings.firstSlideTemplate}
-            <MaterialToggleSwitch label="settings.always_place_empty_slide_first" checked={settings.createFirstSlide} defaultValue={false} on:change={(e) => setValue(e.detail, "createFirstSlide")} />
+            <ToggleField label="settings.always_place_empty_slide_first" checked={settings.createFirstSlide} defaultValue={false} on:change={(e) => setValue(e.detail, "createFirstSlide")} />
         {/if}
 
         <!-- <InputRow>
-            <MaterialPopupButton
+            <PopupField
                 label="edit.different_last_template"
                 value={settings.lastSlideTemplate}
                 name={$templates[settings.lastSlideTemplate || ""]?.name}
@@ -145,8 +145,8 @@
             />
         </InputRow> -->
 
-        <MaterialButton
-            variant="outlined"
+        <Button
+            variant="outline"
             icon="text"
             style="width: 100%;"
             on:click={() => {
@@ -155,7 +155,7 @@
             }}
         >
             {translateText("popup.template_style_overrides")}
-        </MaterialButton>
+        </Button>
     </div>
 
     <ItemsList bind:allSlideItems />
@@ -182,7 +182,7 @@
     }
     .title p {
         font-weight: 500;
-        font-size: 0.8rem;
+        font-size: var(--text-xs);
         opacity: 0.8;
     }
 </style>

@@ -8,12 +8,12 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import Link from "../../inputs/Link.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import Link from "../../../lib/components/ui/link/link.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import { startRemoteController, stopRemoteController } from "../../../utils/remoteController"
     import Tip from "../Tip.svelte"
 
@@ -132,38 +132,38 @@
 </script>
 
 {#if remoteController}
-    <MaterialButton class="popup-options" icon="reset" iconSize={1.1} title="actions.reset" on:click={() => setRemoteId()} white />
+    <Button class="popup-options" icon="reset" iconSize={1.1} title="actions.reset" on:click={() => setRemoteId()} white />
 {:else}
-    <MaterialButton class="popup-options {options ? 'active' : ''}" icon="options" iconSize={1.3} title={options ? "actions.close" : "create_show.more_options"} on:click={() => (options = !options)} white />
+    <Button class="popup-options {options ? 'active' : ''}" icon="options" iconSize={1.3} title={options ? "actions.close" : "create_show.more_options"} on:click={() => (options = !options)} white />
 
-    <MaterialButton class="popup-reset" icon="help" iconSize={1.1} title="titlebar.help" on:click={() => sendMain(Main.URL, "https://freeshow.app/docs/connecting")} white />
+    <Button class="popup-reset" icon="help" iconSize={1.1} title="titlebar.help" on:click={() => sendMain(Main.URL, "https://freeshow.app/docs/connecting")} white />
 {/if}
 
 {#if options}
     <div class="reserved" class:isReserved>
-        <MaterialNumberInput label="settings.port" value={port} defaultValue={RESERVED_PORTS[id]?.[0]} min={1025} max={65535} on:change={(e) => updatePort(e)} />
+        <NumberField label="settings.port" value={port} defaultValue={RESERVED_PORTS[id]?.[0]} min={1025} max={65535} on:change={(e) => updatePort(e)} />
     </div>
 
     {#if id === "remote"}
-        <MaterialTextInput label="remote.password" value={$serverData?.remote?.password || ""} on:change={(e) => updateData(e.detail || "", "password")} />
+        <TextField label="remote.password" value={$serverData?.remote?.password || ""} on:change={(e) => updateData(e.detail || "", "password")} />
     {:else if id === "companion"}
-        <MaterialTextInput label="remote.password" value={$serverData?.companion?.password || ""} on:change={(e) => updateData(e.detail || "", "password")} />
+        <TextField label="remote.password" value={$serverData?.companion?.password || ""} on:change={(e) => updateData(e.detail || "", "password")} />
     {:else if id === "output_stream"}
         <!-- {#if enableOutputSelector} -->
-        <MaterialDropdown label="midi.output" options={outputsList} value={$serverData?.output_stream?.outputId || ""} on:change={(e) => updateData(e.detail, "outputId")} allowEmpty />
+        <SelectField label="midi.output" options={outputsList} value={$serverData?.output_stream?.outputId || ""} on:change={(e) => updateData(e.detail, "outputId")} allowEmpty />
         <!-- {/if} -->
 
         <!-- WIP disable for now until it's working again -->
         {#if $serverData?.output_stream?.sendAudio}
-            <MaterialToggleSwitch label="preview.audio" checked={$serverData?.output_stream?.sendAudio} defaultValue={false} on:change={toggleAudio} />
+            <ToggleField label="preview.audio" checked={$serverData?.output_stream?.sendAudio} defaultValue={false} on:change={toggleAudio} />
         {/if}
     {/if}
 
     {#if id !== "companion"}
         <hr />
 
-        <MaterialNumberInput label="settings.max_connections" value={$maxConnections} max={100} on:change={(e) => maxConnections.set(e.detail)} />
-        <MaterialToggleSwitch label="settings.use_hostname" checked={$special.connectionHostname} defaultValue={false} on:change={(e) => updateSpecial("connectionHostname", e.detail)} />
+        <NumberField label="settings.max_connections" value={$maxConnections} max={100} on:change={(e) => maxConnections.set(e.detail)} />
+        <ToggleField label="settings.use_hostname" checked={$special.connectionHostname} defaultValue={false} on:change={(e) => updateSpecial("connectionHostname", e.detail)} />
     {/if}
 {:else}
     <div on:mouseup={mouseup}>

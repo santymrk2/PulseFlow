@@ -10,8 +10,8 @@
     import { actionData } from "../actions/actionData"
     import { clone } from "../helpers/array"
     import Icon from "../helpers/Icon.svelte"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import { ShowTimeline } from "./ShowTimeline"
     import TimelineEasing from "./TimelineEasing.svelte"
     import { formatTime, getActionsAtPosition, getProjectShowDurations, getTickInterval, getTimelineSections, parseTime, TIMELINE_SECTION_GAP, TIMELINE_SECTION_HEIGHT, TIMELINE_SECTION_TOP, timelineSections, timelineZoom } from "./timeline"
@@ -703,23 +703,23 @@
     {#if isClosed}
         <div class="closed">
             {#if disablePlayback}
-                <MaterialButton style="min-width: 40px;padding: 10px;" title={isPlaying ? "media.stop" : "media.play"} on:click={() => (isPlaying ? player.pause() : player.play())}>
+                <Button style="min-width: 40px;padding: 10px;" title={isPlaying ? "media.stop" : "media.play"} on:click={() => (isPlaying ? player.pause() : player.play())}>
                     <Icon id={isPlaying ? "stop" : "microphone"} white={!isPlaying} />
-                </MaterialButton>
+                </Button>
             {:else}
-                <MaterialButton style="min-width: 40px;padding: 10px;" title={isPlaying ? "media.pause" : "media.play"} on:click={() => (isPlaying ? player.pause() : player.play())}>
+                <Button style="min-width: 40px;padding: 10px;" title={isPlaying ? "media.pause" : "media.play"} on:click={() => (isPlaying ? player.pause() : player.play())}>
                     <Icon id={isPlaying ? "pause" : "play"} white={!isPlaying} />
-                </MaterialButton>
+                </Button>
 
-                <MaterialButton style="min-width: 40px;padding: 10px;" disabled={currentTime === 0} title="media.stop" on:click={() => player.stop()}>
+                <Button style="min-width: 40px;padding: 10px;" disabled={currentTime === 0} title="media.stop" on:click={() => player.stop()}>
                     <Icon id="stop" white={!isPlaying} />
-                </MaterialButton>
+                </Button>
             {/if}
 
             {#if (type === "show" && !actions.length) || isRecording}
-                <MaterialButton style="min-width: 40px;padding: 10px;" title="actions.{isRecording ? 'stop_recording' : 'start_recording'}" on:click={toggleRecording} red={isRecording}>
+                <Button style="min-width: 40px;padding: 10px;" title="actions.{isRecording ? 'stop_recording' : 'start_recording'}" on:click={toggleRecording} red={isRecording}>
                     <Icon id="record" white />
-                </MaterialButton>
+                </Button>
             {/if}
 
             <div class="time-display" style="display: flex;align-items: center;width: auto;">{timeString}</div>
@@ -757,9 +757,9 @@
                 </div>
             </div>
 
-            <MaterialButton style="min-width: 40px;padding: 10px;" title="main.open" on:click={() => resized.update((a) => ({ ...a, [(type === "project" ? "project_" : type === "slide" ? "slide_" : "") + "timeline"]: DEFAULT_WIDTH }))}>
+            <Button style="min-width: 40px;padding: 10px;" title="main.open" on:click={() => resized.update((a) => ({ ...a, [(type === "project" ? "project_" : type === "slide" ? "slide_" : "") + "timeline"]: DEFAULT_WIDTH }))}>
                 <Icon id="up" white />
-            </MaterialButton>
+            </Button>
         </div>
     {:else}
         <!-- {#if type === "project" && projectShowTimelines.length}
@@ -809,9 +809,9 @@
                                 <span class="track-name">{translateText(actions[0]?.name)}</span>
 
                                 <!-- easing -->
-                                <MaterialButton title="timeline.toggle_curve_editor" style="padding: 8px;margin-left: 30px;position: absolute;right: 5px;background-color: var(--primary-darker);" isActive={easingActive === i} on:click={() => (easingActive = easingActive === null || easingActive !== i ? i : null)}>
+                                <Button title="timeline.toggle_curve_editor" style="padding: 8px;margin-left: 30px;position: absolute;right: 5px;background-color: var(--primary-darker);" isActive={easingActive === i} on:click={() => (easingActive = easingActive === null || easingActive !== i ? i : null)}>
                                     <Icon id="easing" white />
-                                </MaterialButton>
+                                </Button>
                             </div>
                         {/each}
                     {:else}
@@ -912,53 +912,53 @@
         </div>
 
         {#if easingActive === null || type !== "slide"}
-            <FloatingInputs side="left" style="margin-bottom: 8px;margin-left: 120px;">
+            <FloatingBar side="left" style="margin-bottom: 8px;margin-left: 120px;">
                 {#if disablePlayback}
-                    <MaterialButton style="min-width: 40px;padding: 10px;" title={isPlaying ? "media.stop" : "media.play"} on:click={() => (isPlaying ? player.pause() : player.play())}>
+                    <Button style="min-width: 40px;padding: 10px;" title={isPlaying ? "media.stop" : "media.play"} on:click={() => (isPlaying ? player.pause() : player.play())}>
                         <Icon id={isPlaying ? "stop" : "microphone"} white={!isPlaying} />
-                    </MaterialButton>
+                    </Button>
                 {:else}
-                    <MaterialButton title={isPlaying ? "media.pause" : "media.play"} on:click={() => (isPlaying ? player.pause() : player.play())}>
+                    <Button title={isPlaying ? "media.pause" : "media.play"} on:click={() => (isPlaying ? player.pause() : player.play())}>
                         <Icon size={1.3} id={isPlaying ? "pause" : "play"} white={!isPlaying} />
-                    </MaterialButton>
+                    </Button>
 
-                    <MaterialButton disabled={currentTime === 0} title="media.stop" on:click={() => player.stop()}>
+                    <Button disabled={currentTime === 0} title="media.stop" on:click={() => player.stop()}>
                         <Icon size={1.3} id="stop" white={!isPlaying} />
-                    </MaterialButton>
+                    </Button>
                 {/if}
 
                 {#if type === "show"}
                     <div class="divider"></div>
 
-                    <MaterialButton disabled={isPlaying && !isRecording} title="actions.{isRecording ? 'stop_recording' : 'start_recording'}" on:click={toggleRecording} red={isRecording}>
+                    <Button disabled={isPlaying && !isRecording} title="actions.{isRecording ? 'stop_recording' : 'start_recording'}" on:click={toggleRecording} red={isRecording}>
                         <Icon size={1.3} id="record" white />
-                    </MaterialButton>
+                    </Button>
                 {:else if type === "slide"}
                     <div class="divider"></div>
 
-                    <MaterialButton title={translateText("media._loop" + (shouldLoop ? ": settings.enabled" : ""), $dictionary) || "Loop"} on:click={() => (shouldLoop = timeline.toggleLoop())} active={shouldLoop}>
+                    <Button title={translateText("media._loop" + (shouldLoop ? ": settings.enabled" : ""), $dictionary) || "Loop"} on:click={() => (shouldLoop = timeline.toggleLoop())} active={shouldLoop}>
                         <Icon size={1.1} id="loop" white={!shouldLoop} />
-                    </MaterialButton>
+                    </Button>
                 {/if}
 
                 <!-- <div class="divider" />
 
-            <MaterialButton icon="focus" title="actions.resetZoom" on:click={resetView} /> -->
-            </FloatingInputs>
+            <Button icon="focus" title="actions.resetZoom" on:click={resetView} /> -->
+            </FloatingBar>
         {/if}
 
         {#if type === "project"}
-            <FloatingInputs style="margin-bottom: 8px;">
-                <MaterialButton title="popup.timecode" on:click={() => activePopup.set("timecode")}>
+            <FloatingBar style="margin-bottom: 8px;">
+                <Button title="popup.timecode" on:click={() => activePopup.set("timecode")}>
                     <Icon id="clock" white />
-                </MaterialButton>
+                </Button>
 
                 <div class="divider"></div>
 
-                <MaterialButton title="popup.timeline" on:click={() => activePopup.set("timeline")}>
+                <Button title="popup.timeline" on:click={() => activePopup.set("timeline")}>
                     <Icon id="options" white />
-                </MaterialButton>
-            </FloatingInputs>
+                </Button>
+            </FloatingBar>
         {/if}
     {/if}
 </div>
@@ -980,11 +980,12 @@
         outline: none;
         background: inherit;
 
-        font-family: monospace;
         font-size: 1.25em;
         font-weight: bold;
         color: var(--text);
         text-align: center;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
     .time-display:focus {
         border-color: var(--focus);
@@ -1013,7 +1014,7 @@
         overflow: hidden;
         position: relative;
         background: var(--primary-darker);
-        border-right: 1px solid rgba(255, 255, 255, 0.1);
+        border-right: 1px solid var(--border);
         z-index: 10;
     }
     .timeline-track-wrapper {
@@ -1045,11 +1046,11 @@
         position: absolute;
         top: 0;
         bottom: 0;
-        border-left: 1px solid rgba(255, 255, 255, 0.03);
+        border-left: 1px solid var(--border);
     }
 
     .grid-line.minor {
-        border-left: 1px solid rgba(255, 255, 255, 0.01);
+        border-left: 1px solid var(--border);
     }
 
     .ruler {
@@ -1068,7 +1069,7 @@
 
     .tick.minor {
         bottom: auto;
-        border-left: 1px solid rgba(255, 255, 255, 0.2);
+        border-left: 1px solid var(--border-strong);
     }
 
     .tick-label {
@@ -1098,8 +1099,8 @@
         align-items: center;
         padding-left: 10px;
         /* background: rgba(0, 0, 0, 0.6); */
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        border-top: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid var(--border);
+        border-top: 1px solid var(--border);
         pointer-events: auto; /* Allow interaction if needed */
 
         display: flex;
@@ -1262,7 +1263,7 @@
 
     .selection-box {
         position: absolute;
-        background-color: rgba(255, 255, 255, 0.1);
+        background-color: var(--bg-selected);
         border: 1px solid rgba(255, 255, 255, 0.4);
         pointer-events: none;
         z-index: 100;
@@ -1307,7 +1308,7 @@
         gap: 8px;
         padding: 8px;
         background-color: var(--primary-darker);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        border-bottom: 1px solid var(--border);
     }
 
     /* .header .tag {

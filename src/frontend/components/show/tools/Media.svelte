@@ -5,7 +5,7 @@
     import { requestMain } from "../../../IPC/main"
     import { AudioMicrophone } from "../../../audio/audioMicrophone"
     import { AudioPlayer } from "../../../audio/audioPlayer"
-    import { activePopup, activeShow, alertMessage, media, outLocked, outputs, overlays, playingAudio, showsCache, styles } from "../../../stores"
+    import { activePopup, activeShow, alertMessage, media, outLocked, outputs, overlays, playingAudio, showsCache, styles, previewOutputId } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { getAccess } from "../../../utils/profile"
     import { actionData } from "../../actions/actionData"
@@ -17,8 +17,8 @@
     import { encodeFilePath, getExtension, getMedia, getMediaStyle, getMediaType, isMediaExtension, mediaSize } from "../../helpers/media"
     import { findMatchingOut, getActiveOutputs, getCurrentStyle, getResolution, setOutput } from "../../helpers/output"
     import { _show } from "../../helpers/shows"
-    import Button from "../../inputs/Button.svelte"
-    import HoverButton from "../../inputs/HoverButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import HoverPlay from "../../helpers/HoverPlay.svelte"
     import Textbox from "../../slide/Textbox.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
     import Center from "../../system/Center.svelte"
@@ -28,7 +28,7 @@
 
     $: outputId = getActiveOutputs($outputs, false, true, true)[0]
     $: outputStyle = getCurrentStyle($styles, $outputs[outputId]?.style)
-    $: resolution = getResolution(null, { $outputs, $styles })
+    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     let layoutBackgrounds: string[] = []
     let layoutOverlays: string[] = []
@@ -203,7 +203,7 @@
 
                 <SelectElem id="media" data={{ ...background, path: media.path || background.path }} draggable>
                     <div class="media_item item context #show_media" class:active={findMatchingOut(media.path || "", $outputs)}>
-                        <HoverButton
+                        <HoverPlay
                             style="flex: 2;height: 50px;max-width: 100px;"
                             icon="play"
                             size={3}
@@ -218,7 +218,7 @@
                             }}
                         >
                             <MediaLoader name={background.name} path={media.path} thumbnailPath={media.thumbnail} type={background.type} {mediaStyle} />
-                        </HoverButton>
+                        </HoverPlay>
 
                         <p data-title={encodeFilePath(media.path || background.path || "")}>{background.name}</p>
 
@@ -227,10 +227,10 @@
                         {/if}
 
                         {#if background.type === "video"}
-                            <Button style="flex: 0;padding: 14px 5px;" center title={translateText("media._loop" + (background.loop !== false ? ": settings.enabled" : ""))} on:click={() => setBG(background.id || "", "loop", background.loop === false)} dark>
+                            <Button style="flex: 0;padding: 14px 5px;" title={translateText("media._loop" + (background.loop !== false ? ": settings.enabled" : ""))} on:click={() => setBG(background.id || "", "loop", background.loop === false)}>
                                 <Icon id="loop" white={background.loop === false} size={1.2} />
                             </Button>
-                            <Button style="flex: 0;padding: 14px 5px;" center title={translateText(background.muted !== false ? "actions.unmute" : "actions.mute")} on:click={() => setBG(background.id || "", "muted", background.muted === false)} dark>
+                            <Button style="flex: 0;padding: 14px 5px;" title={translateText(background.muted !== false ? "actions.unmute" : "actions.mute")} on:click={() => setBG(background.id || "", "muted", background.muted === false)}>
                                 <Icon id={background.muted !== false ? "muted" : "volume"} white={background.muted !== false} size={1.2} />
                             </Button>
                         {/if}
@@ -247,7 +247,7 @@
 
                     <SelectElem id="media" data={{ ...background, type }} draggable>
                         <div class="media_item item context #show_media" class:active={findMatchingOut(background.path, $outputs)}>
-                            <HoverButton
+                            <HoverPlay
                                 style="flex: 2;height: 50px;max-width: 100px;"
                                 icon="play"
                                 size={3}
@@ -258,7 +258,7 @@
                                 }}
                             >
                                 <MediaLoader name={background.name} path={background.path} {type} {mediaStyle} />
-                            </HoverButton>
+                            </HoverPlay>
                             <p data-title={background.path}>{background.name}</p>
                         </div>
                     </SelectElem>
@@ -271,7 +271,7 @@
             {#each showOverlays as overlay}
                 <SelectElem id="overlay" data={overlay.id} draggable>
                     <div class="media_item item context #show_overlay" class:active={findMatchingOut(overlay.id, $outputs) !== null}>
-                        <HoverButton
+                        <HoverPlay
                             style="flex: 2;height: 50px;max-width: 100px;"
                             icon={findMatchingOut(overlay.id, $outputs) !== null ? "clear" : "play"}
                             size={3}
@@ -289,7 +289,7 @@
                                     <Textbox {item} ref={{ type: "overlay", id: overlay.id }} preview miniPreview />
                                 {/each}
                             </Zoomed>
-                        </HoverButton>
+                        </HoverPlay>
 
                         <p data-title={overlay.name}>{overlay.name}</p>
 
@@ -307,12 +307,13 @@
                 {@const outline = !!$playingAudio[file.path || ""]}
                 <SelectElem id="audio" data={{ path: file.path, name: file.name }} draggable>
                     <Button
+                        align="start"
                         class="context #show_audio"
                         on:click={() => {
                             if ($outLocked) return
                             AudioPlayer.start(file.path || "", { name: file.name || "" })
                         }}
-                        {outline}
+                        showOutline={outline}
                         style="padding: 8px;width: 100%;"
                         title={file.path}
                         bold={false}
@@ -334,7 +335,7 @@
                 {@const muted = !$playingAudio[mic.id]}
 
                 <SelectElem id="microphone" data={{ id: mic.id, type: "microphone", name: mic.name }} draggable>
-                    <Button style="padding: 8px;width: 100%;" bold={false} on:click={() => AudioMicrophone.start(mic.id, { name: mic.name }, { pauseIfPlaying: true })}>
+                    <Button align="start" style="padding: 8px;width: 100%;" bold={false} on:click={() => AudioMicrophone.start(mic.id, { name: mic.name }, { pauseIfPlaying: true })}>
                         <Icon id="microphone" white={muted} right />
                         <p style="width: 100%;text-align: start;">{mic.name}</p>
 
@@ -356,7 +357,7 @@
 
                 <SelectElem id="action" data={action} draggable>
                     <!-- class="context #action" -->
-                    <Button on:click={() => runAction(action, { source: "click" })} style="padding: 8px;width: 100%;" title={action.name} bold={false}>
+                    <Button align="start" on:click={() => runAction(action, { source: "click" })} style="padding: 8px;width: 100%;" title={action.name} bold={false}>
                         <Icon id={customData.icon || "actions"} size={1.1} style="margin-inline-start: 0.5em;" right />
                         {#key customData.name}
                             <p>
@@ -432,7 +433,7 @@
     } */
 
     .item.active {
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: -2px;
     }
 

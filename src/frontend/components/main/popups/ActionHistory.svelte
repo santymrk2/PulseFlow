@@ -2,7 +2,7 @@
     import { actionHistory } from "../../../stores"
     import T from "../../helpers/T.svelte"
     import { getDateAndTimeString, timeAgo } from "../../helpers/time"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
 
     function clearHistory() {
@@ -10,7 +10,7 @@
     }
 </script>
 
-<MaterialButton class="popup-options" icon="delete" title="actions.clear_history" disabled={!$actionHistory.length} on:click={clearHistory} white />
+<Button class="popup-options" icon="delete" title="actions.clear_history" disabled={!$actionHistory.length} on:click={clearHistory} white />
 
 <main class="history">
     {#if $actionHistory.length}
@@ -70,6 +70,8 @@
         opacity: 0.5;
         font-size: 0.8em;
         font-style: italic;
+        font-family: var(--font-mono);
+        font-variant-numeric: tabular-nums;
     }
 
     .source-badge {

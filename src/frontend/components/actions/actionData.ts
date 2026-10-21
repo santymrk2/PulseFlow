@@ -7,7 +7,6 @@ export const actionData = {
     index_select_project_item: { name: "actions.index_select_project_item", icon: "project", input: "index", incompatible: ["next_project_item", "previous_project_item"] },
     name_start_project_item: { name: "actions.name_start_project_item", icon: "project", input: "strval" },
     mark_active_as_played: { name: "actions.mark_played", icon: "check", input: "toggle" },
-    unmark_all_as_played: { name: "actions.unmark_all_as_played", icon: "check" },
 
     // SHOWS
     id_select_show: { SECTION: "guide_title.show", name: "actions.id_select_show", icon: "showIcon", input: "start_show" },
@@ -63,6 +62,7 @@ export const actionData = {
     toggle_output: { canAddMultiple: true, name: "actions.toggle_output_window", icon: "outputs", input: "toggle_output", incompatible: ["toggle_output_windows"] },
     // id_select_output_style: { name: "actions.id_select_output_style", icon: "styles", input: "id" },
     change_output_style: { slideId: "outputStyle", common: true, canAddMultiple: true, name: "actions.change_output_style", icon: "styles", input: "change_output_style" },
+    set_look: { common: true, canAddMultiple: true, name: "actions.set_look", icon: "looks", input: "set_look" },
     change_transition: { name: "actions.change_transition", icon: "transition", input: "transition" },
 
     // STAGE
@@ -100,8 +100,6 @@ export const actionData = {
 
     // FUNCTIONS
     change_variable: { SECTION: "tabs.functions", common: true, canAddMultiple: true, name: "actions.change_variable", icon: "variable", input: "variable" },
-
-    change_draw_zoom: { SECTION: "menu.draw", name: "actions.change_draw_zoom", icon: "zoom", input: "draw_zoom" },
 
     // EMIT
     // send_midi: { SECTION: "actions.emit_data", canAddMultiple: true, slideId: "sendMidi", name: "actions.send_midi", icon: "music", input: "midi" },

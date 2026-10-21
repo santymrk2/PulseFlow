@@ -1,7 +1,7 @@
-import { writable, get } from "svelte/store"
+import { get } from "svelte/store"
 import { uid } from "uid"
 import { gainToDb, MIN_DB } from "../../audio/dBUtils"
-import { actionHistory, actions, audioPlaylists, audioRouting, audioStreams, outputs, runningActions, scenes, shows, stageShows, styles } from "../../stores"
+import { actionHistory, actions, audioPlaylists, audioRouting, audioStreams, looks, outputs, runningActions, scenes, shows, stageShows, styles } from "../../stores"
 import { newToast, wait } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { getShowBPM } from "../drawer/audio/metronome"
@@ -17,21 +17,8 @@ import { API_ACTIONS } from "./api"
 import { sortByClosestMatch } from "./apiHelper"
 import { convertOldMidiToNewAction } from "./midi"
 
-export const actionTimeouts = writable(0)
-const activeActionWaiters = new Set<() => void>()
-
-export function stopAllActionTimeouts() {
-    activeActionWaiters.forEach((cancel) => cancel())
-    activeActionWaiters.clear()
-    actionTimeouts.set(0)
-    runningActions.set([])
-}
-
 export function runActionId(id: string, source = "action") {
-    const action = get(actions)[id]
-    if (!action) return
-
-    runAction({ ...action, id }, { source })
+    runAction(get(actions)[id], { source })
 }
 
 export function runActionByName(name: string, source = "action") {
@@ -70,9 +57,7 @@ export async function runAction(action, { midiIndex = -1, slideIndex = -1, sourc
     // set to active
     runningActions.set([...get(runningActions), action.id])
 
-    let stopped = false
     for (const actionId of actionTriggers) {
-        if (stopped) break
         await runTrigger(actionId)
     }
 
@@ -93,20 +78,7 @@ export async function runAction(action, { midiIndex = -1, slideIndex = -1, sourc
         actionId = getActionTriggerId(actionId)
 
         if (actionId === "wait") {
-            await new Promise<void>((resolve) => {
-                let timeoutId: NodeJS.Timeout | null = null
-                const finish = (cancelled = false) => {
-                    if (timeoutId) clearTimeout(timeoutId)
-                    if (cancelled) stopped = true
-                    activeActionWaiters.delete(cancel)
-                    actionTimeouts.set(activeActionWaiters.size)
-                    resolve()
-                }
-                const cancel = () => finish(true)
-                timeoutId = setTimeout(finish, (triggerData.number || 0) * 1000)
-                activeActionWaiters.add(cancel)
-                actionTimeouts.set(activeActionWaiters.size)
-            })
+            await wait((triggerData.number || 0) * 1000)
             return
         }
 
@@ -283,6 +255,10 @@ export function getActionName(actionId: string, actionValue: any): string {
 
     if (actionId === "change_output_style") {
         return get(styles)[actionValue.outputStyle]?.name || ""
+    }
+
+    if (actionId === "set_look") {
+        return get(looks)[actionValue.lookId]?.name || ""
     }
 
     if (actionId === "start_metronome") {

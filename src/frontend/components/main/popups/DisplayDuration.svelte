@@ -1,6 +1,6 @@
 <script lang="ts">
     import { drawerTabsData, effects, overlays, selected } from "../../../stores"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
 
     const subTab = $drawerTabsData.overlays?.activeSubTab
     const isEffect = subTab === "effects"
@@ -25,4 +25,4 @@
     }
 </script>
 
-<MaterialNumberInput label="timer.seconds" value={currentValue} max={3600} on:change={updateValue} />
+<NumberField label="timer.seconds" value={currentValue} max={3600} on:change={updateValue} />

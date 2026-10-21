@@ -1,0 +1,219 @@
+//! Valores por defecto de las tiendas (equivalente a `src/electron/data/defaults.ts`).
+//!
+//! Se mantienen como `serde_json::Value` (JSON) porque son estructuras muy
+//! anidadas y heterogéneas; conservan exactamente las mismas claves que en TS.
+
+use serde_json::{json, Value};
+
+/// `defaultConfig` de TS.
+pub fn default_config() -> Value {
+    json!({
+        "loaded": false,
+        "maximized": true,
+        "bounds": { "width": 800, "height": 600, "x": 0, "y": 0 },
+        "dataPath": null,
+        "disableHardwareAcceleration": null,
+        "graphicsDevice": null
+    })
+}
+
+/// `defaultSettings` de TS.
+pub fn default_settings() -> Value {
+    json!({
+        "initialized": false,
+        "outLocked": false,
+        "outputs": {
+            "default": {
+                "enabled": true,
+                "active": true,
+                "name": "Primary",
+                "color": "#F0008C",
+                "bounds": { "x": 0, "y": 0, "width": 1920, "height": 1080 },
+                "screen": null,
+                "style": "default",
+                "show": {}
+            }
+        },
+        "sorted": {},
+        "openedFolders": ["default"],
+        "activeProject": null,
+        "alertUpdates": true,
+        "autoOutput": false,
+        "autosave": "15min",
+        "timeFormat": "24",
+        "ports": { "remote": 5510, "stage": 5511 },
+        "disabledServers": {},
+        "serverData": {},
+        "maxConnections": 10,
+        "mediaFolders": {},
+        "audioFolders": {},
+        "resized": {
+            "leftPanel": 290,
+            "rightPanel": 290,
+            "leftPanelDrawer": 290,
+            "rightPanelDrawer": 290
+        },
+        "slidesOptions": { "columns": 4, "mode": "grid" },
+        "mediaOptions": { "columns": 5, "mode": "grid" },
+        "drawerTabsData": {},
+        "drawer": { "height": 300, "stored": null },
+        "language": null,
+        "customFonts": [],
+        "labelsDisabled": false,
+        "groupNumbers": true,
+        "fullColors": false,
+        "formatNewShow": false,
+        "lockedOverlays": {},
+        "activeScenes": {},
+        "splitLines": 0,
+        "theme": "default",
+        "transitionData": {
+            "text": { "type": "fade", "duration": 500, "easing": "sine" },
+            "media": { "type": "fade", "duration": 800, "easing": "sine" }
+        },
+        "audioRouting": {},
+        "audioChannelsData": {},
+        "cloudSyncData": {},
+        "driveData": { "mainFolderId": null, "disabled": false, "initializeMethod": null, "disableUpload": false },
+        "calendarAddShow": "",
+        "metronome": {},
+        "audioEffects": {},
+        "audioEffectPresets": {},
+        "effectsLibrary": [],
+        "special": {},
+        "timeline": {},
+        "timecode": {},
+        "contentProviderData": {
+            "churchApps": { "syncCategories": ["song"] }
+        },
+        "obsData": {},
+        "ai": {}
+    })
+}
+
+/// `defaultSyncedSettings` de TS.
+pub fn default_synced_settings() -> Value {
+    json!({
+        "categories": {
+            "general": { "name": "category.general", "icon": "folder", "default": true }
+        },
+        "drawSettings": {},
+        "overlayCategories": {
+            "offers": { "name": "category.offers", "icon": "cash", "default": true },
+            "notice": { "name": "category.notice", "icon": "info", "default": true },
+            "visuals": { "name": "category.visuals", "icon": "star", "default": true }
+        },
+        "templateCategories": {
+            "song": { "name": "category.song", "icon": "song", "default": true },
+            "presentation": { "name": "category.presentation", "icon": "presentation", "default": true },
+            "scripture": { "name": "category.scripture", "icon": "scripture", "default": true }
+        },
+        // F3.2: la salida por defecto (`settings.outputs.default.style`) apunta al
+        // estilo "default". Si no existe, Settings → Outputs muestra "Unnamed"
+        // (el selector resuelve `styles[id]?.name`). Un estilo sin claves de
+        // render equivale a `{}` en el engine, así que no cambia el dibujo.
+        "styles": { "default": { "name": "Default" } },
+        "profiles": {},
+        "timers": { "default": { "name": "05:00", "type": "counter", "start": 300, "end": 0 } },
+        "variables": { "default": { "name": "Counter", "type": "number" } },
+        "scenes": {},
+        "interactions": {},
+        "audioStreams": {},
+        "audioPlaylists": {},
+        "scriptures": {
+            "kjv": { "name": "King James (Authorised) Version", "api": true, "id": "de4e12af7f28f599-02", "copyright": "PUBLIC DOMAIN except in the United Kingdom, where a Crown Copyright applies to printing the KJV. See http://www.cambridge.org/about-us/who-we-are/queens-printers-patent" },
+            "asv": { "name": "The Holy Bible, American Standard Version", "api": true, "id": "06125adad2d5898a-01", "copyright": "PUBLIC DOMAIN" },
+            "web": { "name": "World English Bible", "api": true, "id": "9879dbb7cfe39e4d-04", "copyright": "PUBLIC DOMAIN" },
+            "wmb": { "name": "World Messianic Bible", "api": true, "id": "f72b840c855f362c-04", "copyright": "PUBLIC DOMAIN" },
+            "bsb": { "name": "Berean Study Bible", "api": true, "id": "bba9f40183526463-01", "copyright": "The Holy Bible, Berean Standard Bible, BSB is produced in cooperation with Bible Hub, Discovery Bible, OpenBible.com, and the Berean Bible Translation Committee. This text of God's Word has been dedicated to the public domain" }
+        },
+        "scriptureSettings": {
+            "template": "scripture",
+            "versesPerSlide": 3,
+            "verseNumbers": true,
+            "showVersion": false,
+            "showVerse": true,
+            "referenceDivider": ":"
+        },
+        "groups": {
+            "break": { "name": "break", "default": true, "color": "#f5255e" },
+            "bridge": { "name": "bridge", "default": true, "color": "#f52598", "shortcut": "B" },
+            "chorus": { "name": "chorus", "default": true, "color": "#f525d2", "shortcut": "C" },
+            "intro": { "name": "intro", "default": true, "color": "#d525f5" },
+            "outro": { "name": "outro", "default": true, "color": "#a525f5" },
+            "pre_chorus": { "name": "pre_chorus", "default": true, "color": "#8825f5" },
+            "tag": { "name": "tag", "default": true, "color": "#7525f5" },
+            "verse": { "name": "verse", "default": true, "color": "#5825f5", "shortcut": "V" }
+        },
+        "midiIn": {},
+        "emitters": {},
+        "playerVideos": {
+            "chosen": { "name": "The Chosen Trailer", "type": "youtube", "id": "X-AJdKty74M" },
+            "story": { "name": "The Jesus Story", "type": "youtube", "id": "2Yvs-Pz8KK0" },
+            "legacy": { "name": "The Legacy of Adam", "type": "youtube", "id": "aPgbA6rVhWs" },
+            "gospel": { "name": "The Gospel Film", "type": "youtube", "id": "mIeRU12STNw" },
+            "jesus": { "name": "Jesus, Only Jesus", "type": "vimeo", "id": "426363743" },
+            "messiah": { "name": "Messiah", "type": "vimeo", "id": "144160599" }
+        },
+        "videoMarkers": {},
+        "calendars": {},
+        "mediaTags": {},
+        "playerTags": {},
+        "actionTags": {},
+        "variableTags": {},
+        "timerTags": {},
+        "customizedIcons": { "disabled": [], "svg": [] },
+        "globalTags": {},
+        "globalRegexes": {},
+        "customMetadata": { "disabled": [], "custom": [] },
+        "effects": {},
+        "deletedDefaults": {},
+        "syncedOutputs": {}
+    })
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// F3.2: cada estilo referenciado por una salida por defecto debe existir
+    /// en `default_synced_settings().styles` y tener nombre; si no, la
+    /// Settings → Outputs muestra "Unnamed" en una instalación limpia.
+    #[test]
+    fn las_salidas_por_defecto_referencian_estilos_validos() {
+        let synced = default_synced_settings();
+        let settings = default_settings();
+        let styles = synced["styles"]
+            .as_object()
+            .expect("styles por defecto es un objeto");
+        let outputs = settings["outputs"]
+            .as_object()
+            .expect("outputs por defecto es un objeto");
+
+        assert!(!outputs.is_empty(), "debe haber al menos una salida por defecto");
+
+        for (output_id, output) in outputs {
+            let style_id = output["style"].as_str().unwrap_or("");
+            assert!(
+                styles.contains_key(style_id),
+                "la salida {output_id} referencia el estilo {style_id:?}, que no existe"
+            );
+            assert!(
+                !styles[style_id]["name"].as_str().unwrap_or("").is_empty(),
+                "el estilo {style_id:?} necesita un nombre visible"
+            );
+        }
+    }
+
+    /// Una instalación limpia arranca con una sola library, "General" (sin las
+    /// categorías de FreeShow). El id debe coincidir con `DEFAULT_LIBRARY_ID` del frontend.
+    #[test]
+    fn la_unica_library_por_defecto_es_general() {
+        let synced = default_synced_settings();
+        let categories = synced["categories"].as_object().expect("categories es un objeto");
+
+        assert_eq!(categories.len(), 1, "sólo una library por defecto");
+        assert_eq!(categories["general"]["name"], "category.general");
+        assert_eq!(categories["general"]["default"], true);
+    }
+}

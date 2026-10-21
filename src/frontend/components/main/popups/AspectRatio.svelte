@@ -2,12 +2,12 @@
     import { activePopup, popupData } from "../../../stores"
     import { triggerClickOnEnterSpace } from "../../../utils/clickable"
     import { translateText } from "../../../utils/language"
-    import HRule from "../../input/HRule.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialNumberInput from "../../inputs/MaterialNumberInput.svelte"
-    import MaterialToggleSwitch from "../../inputs/MaterialToggleSwitch.svelte"
+    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
+    import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
 
     // https://blog.depositphotos.com/common-aspect-ratios.html
     const ratios = [
@@ -55,16 +55,16 @@
     let showMore = false
 </script>
 
-<MaterialButton class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
+<Button class="popup-options {showMore ? 'active' : ''}" icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} on:click={() => (showMore = !showMore)} white />
 
 <div class="grid">
     {#each ratios as [width, height]}
         {@const isActive = !active.outputResolutionAsRatio && active.width === width && active.height === height}
-        <MaterialButton disabled={active.outputResolutionAsRatio} showOutline={isActive} {isActive} on:click={() => setAspectRatio({ ...active, width, height })}>
+        <Button disabled={active.outputResolutionAsRatio} showOutline={isActive} {isActive} on:click={() => setAspectRatio({ ...active, width, height })}>
             <div class="box" style="padding: 0;aspect-ratio: {width}/{height};">
                 <p>{width}:{height}</p>
             </div>
-        </MaterialButton>
+        </Button>
     {/each}
 </div>
 
@@ -72,8 +72,8 @@
     <div style="display: flex;justify-content: space-between;margin-top: 20px;">
         <div style="width: 200px;" data-title={translateText("actions.custom_key")}>
             <InputRow>
-                <MaterialNumberInput disabled={active.outputResolutionAsRatio} label="screen.width" value={active.width || 16} min={1} max={100} on:change={(e) => setAspectRatio({ width: e.detail, height: active.height || 9 })} />
-                <MaterialNumberInput disabled={active.outputResolutionAsRatio} label="screen.height" value={active.height || 9} min={1} max={100} on:change={(e) => setAspectRatio({ height: e.detail, width: active.width || 16 })} />
+                <NumberField disabled={active.outputResolutionAsRatio} label="screen.width" value={active.width || 16} min={1} max={100} on:change={(e) => setAspectRatio({ width: e.detail, height: active.height || 9 })} />
+                <NumberField disabled={active.outputResolutionAsRatio} label="screen.height" value={active.height || 9} min={1} max={100} on:change={(e) => setAspectRatio({ height: e.detail, width: active.width || 16 })} />
             </InputRow>
         </div>
 
@@ -85,16 +85,16 @@
             </div>
         {/if}
 
-        <MaterialDropdown style="width: 200px;" label="edit.position" disabled={active.outputResolutionAsRatio} options={alignOptions} value={active.alignPosition || "center"} on:change={(e) => setAspectRatio({ ...active, alignPosition: e.detail })} />
+        <SelectField style="width: 200px;" label="edit.position" disabled={active.outputResolutionAsRatio} options={alignOptions} value={active.alignPosition || "center"} on:change={(e) => setAspectRatio({ ...active, alignPosition: e.detail })} />
     </div>
 {/if}
 
-<MaterialToggleSwitch style="margin-top: {showMore ? 10 : 20}px;" label="settings.output_resolution_ratio" checked={active.outputResolutionAsRatio} defaultValue={false} on:change={(e) => setAspectRatio({ ...active, outputResolutionAsRatio: e.detail })} />
+<ToggleField style="margin-top: {showMore ? 10 : 20}px;" label="settings.output_resolution_ratio" checked={active.outputResolutionAsRatio} defaultValue={false} on:change={(e) => setAspectRatio({ ...active, outputResolutionAsRatio: e.detail })} />
 
 {#if showMore}
     <HRule />
 
-    <MaterialNumberInput label="settings.font_size_ratio" value={active.fontSizeRatio ?? 100} min={10} max={500} step={10} on:change={(e) => setAspectRatio({ ...active, fontSizeRatio: e.detail })} />
+    <NumberField label="settings.font_size_ratio" value={active.fontSizeRatio ?? 100} min={10} max={500} step={10} on:change={(e) => setAspectRatio({ ...active, fontSizeRatio: e.detail })} />
 {/if}
 
 <style>
@@ -146,6 +146,6 @@
     .preview .box {
         /* always active */
         outline-offset: -2px;
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
     }
 </style>

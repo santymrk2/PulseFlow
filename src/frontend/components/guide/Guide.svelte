@@ -5,7 +5,7 @@
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import Button from "../inputs/Button.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
     import { guideSteps } from "./guideSteps"
 
     let steps = guideSteps
@@ -94,15 +94,15 @@
 
             <div id="guideButtons">
                 {#if stepIndex === 0}
-                    <Button on:click={() => guideActive.set(false)}>
+                    <Button align="start" on:click={() => guideActive.set(false)}>
                         <T id="guide.skip" />
                     </Button>
                 {:else if steps[stepIndex + 1]}
-                    <Button on:click={() => stepIndex--} title={translateText("media.previous")}>
+                    <Button align="start" on:click={() => stepIndex--} title={translateText("media.previous")}>
                         <Icon id="back" size={1.5} white />
                     </Button>
                 {/if}
-                <Button on:click={() => (steps[stepIndex + 1] ? stepIndex++ : guideActive.set(false))} title={translateText(steps[stepIndex + 1] ? "media.next" : "actions.done")}>
+                <Button align="start" on:click={() => (steps[stepIndex + 1] ? stepIndex++ : guideActive.set(false))} title={translateText(steps[stepIndex + 1] ? "media.next" : "actions.done")}>
                     <Icon id={steps[stepIndex + 1] ? "arrow_forward" : "check"} size={1.5} white={!!steps[stepIndex + 1]} />
                 </Button>
             </div>

@@ -350,6 +350,7 @@
         "first_last": "Första och sista sliden"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Default",
         "dark": "Mörk",
         "light": "Ljus",
@@ -513,7 +514,7 @@
         "effect_items": "effektföremål",
         "timeline": "Tidslinje",
         "timecode": "Tidskod",
-        "initialize": "Välkommen till FreeShow",
+        "initialize": "Välkommen till PulseFlow",
         "unsaved": "Är du säker att du vill sluta",
         "cancel": "Ångra",
         "continue": "Fortsätt",

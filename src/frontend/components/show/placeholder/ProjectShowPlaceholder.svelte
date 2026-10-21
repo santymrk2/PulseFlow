@@ -2,7 +2,7 @@
     import { activePopup, activeProject, activeShow, popupData, projects } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { history } from "../../helpers/history"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Center from "../../system/Center.svelte"
     import DropArea from "../../system/DropArea.svelte"
 
@@ -36,9 +36,9 @@
 <DropArea id="project" hoverTimeout={150}>
     <Center>
         {#if project}
-            <MaterialButton variant="contained" icon="slide" style="font-size: 1.1em;" on:click={replace}>
+            <Button variant="default" icon="slide" style="font-size: 1.1em;" on:click={replace}>
                 {translateText("popup.select_show")}
-            </MaterialButton>
+            </Button>
         {:else}
             <p style="opacity: 0.6;">{translateText("empty.project_select")}</p>
         {/if}

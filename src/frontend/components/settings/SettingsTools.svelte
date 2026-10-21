@@ -2,9 +2,9 @@
     import { Main } from "../../../types/IPC/Main"
     import type { Popups } from "../../../types/Main"
     import { sendMain } from "../../IPC/main"
-    import { activePopup, ai, dataPath, outputs, popupData, settingsTab } from "../../stores"
+    import { activePopup, ai, dataPath, popupData, settingsTab } from "../../stores"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     $: openedTab = $settingsTab
 
@@ -28,53 +28,37 @@
 
 {#if openedTab === "general"}
     <div class="bottom">
-        <MaterialButton variant="outlined" icon="info" on:click={() => open("manage_metadata")} small>
+        <Button variant="outline" icon="info" on:click={() => open("manage_metadata")} size="xs">
             <T id="popup.manage_metadata" />
-        </MaterialButton>
-        <MaterialButton variant="outlined" icon="dynamic" on:click={() => open("manage_dynamic_values")} small>
+        </Button>
+        <Button variant="outline" icon="dynamic" on:click={() => open("manage_dynamic_values")} size="xs">
             <T id="popup.manage_dynamic_values" />
-        </MaterialButton>
-        <MaterialButton variant="outlined" icon="emitter" on:click={() => open("manage_emitters")} small>
+        </Button>
+        <Button variant="outline" icon="emitter" on:click={() => open("manage_emitters")} size="xs">
             <T id="popup.manage_emitters" />
-        </MaterialButton>
-        <MaterialButton variant="outlined" icon="text" on:click={() => open("manage_fonts")} small>
+        </Button>
+        <Button variant="outline" icon="text" on:click={() => open("manage_fonts")} size="xs">
             <T id="popup.manage_fonts" />
-        </MaterialButton>
-        <MaterialButton variant="outlined" icon="star" on:click={() => open("manage_icons")} small>
+        </Button>
+        <Button variant="outline" icon="star" on:click={() => open("manage_icons")} size="xs">
             <T id="popup.manage_icons" />
-        </MaterialButton>
-        <MaterialButton variant="outlined" icon="color" on:click={() => open("manage_colors")} small>
+        </Button>
+        <Button variant="outline" icon="color" on:click={() => open("manage_colors")} size="xs">
             <T id="popup.manage_colors" />
-        </MaterialButton>
+        </Button>
     </div>
-{:else if openedTab === "display_settings"}
-    <div class="bottom">
-        {#if Object.values($outputs).filter((o) => !o.invisible).length > 1}
-            <MaterialButton variant="outlined" icon="screen" on:click={() => open("output_selector")} small>
-                <T id="popup.output_selector" />
-            </MaterialButton>
-        {/if}
-    </div>
-{:else if openedTab === "ai"}
-    {#if $ai.enabled}
-        <div class="bottom">
-            <MaterialButton variant="outlined" icon="ai" on:click={() => open("ai_model_manager")} small>
-                <T id="popup.ai_model_manager" />
-            </MaterialButton>
-        </div>
-    {/if}
 {:else if openedTab === "other"}
     <div class="bottom">
-        <MaterialButton variant="outlined" icon="document" on:click={openLog} small>
+        <Button variant="outline" icon="document" on:click={openLog} size="xs">
             <T id="actions.open_error_log" />
-        </MaterialButton>
-        <MaterialButton variant="outlined" icon="folder" on:click={openAppData} small>
+        </Button>
+        <Button variant="outline" icon="folder" on:click={openAppData} size="xs">
             <T id="actions.open_app_data_folder" />
-        </MaterialButton>
+        </Button>
         <!-- in settings>Files we can press "Open in system" on the user data folder, so we don't need this! - but it makes sense to have it next to "Open app data folder" -->
-        <MaterialButton variant="outlined" icon="folder" on:click={openUserData} small>
+        <Button variant="outline" icon="folder" on:click={openUserData} size="xs">
             <T id="actions.open_user_data_folder" />
-        </MaterialButton>
+        </Button>
     </div>
 {/if}
 

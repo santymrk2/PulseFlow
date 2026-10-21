@@ -46,6 +46,7 @@
     import { translateText } from "../../utils/language"
     import { closeContextMenu } from "../../utils/shortcuts"
     import { keysToID } from "../helpers/array"
+    import { isSettingsDisabled } from "../settings/openSettings"
     import Icon from "../helpers/Icon.svelte"
     import { getExtension, getMediaType } from "../helpers/media"
     import { getLayoutRef, getSlideHighlightIndexes } from "../helpers/show"
@@ -67,6 +68,7 @@
     let customTitle: string = ""
 
     const conditions = {
+        settings: () => (disabled = isSettingsDisabled()),
         // slide views
         view_grid: () => ($slidesOptions.mode === "grid" ? (enabled = true) : ""),
         view_simple: () => ($slidesOptions.mode === "simple" ? (enabled = true) : ""),
@@ -537,7 +539,7 @@
 <div on:click={contextItemClick} on:mouseenter={() => updateHighlight(true)} on:mouseleave={() => updateHighlight(false)} class:enabled class:disabled class:hide class:highlighted class:group data-title={translateText(menu?.tooltip || "")} style="color: {menu?.color || 'unset'};font-weight: {menu?.color ? '500' : 'normal'};{menu?.style || ''}" tabindex={0} on:keydown={keydown} role="menuitem">
     <span class="item" data-title={group && !menu?.tooltip ? `${shortcut}` : customTitle || ""}>
         <!-- white={menu.icon !== "edit"} -->
-        {#if menu?.icon}<Icon style="opacity: 0.7;color: {(topBar ? '' : menu.iconColor) || 'var(--text)'};" id={menu.icon} size={group ? 1.4 : 1} white />{/if}
+        {#if menu?.icon}<Icon style="color: var(--text-muted);" id={menu.icon} size={group ? 1.4 : 1} white />{/if}
         {#if enabled === true}<Icon id="check" style="fill: var(--text);" size={0.7} white />{/if}
         <p style="display: flex;align-items: center;gap: 5px;{customStyle}">
             {#if menu?.translate === false}
@@ -569,11 +571,12 @@
         align-items: center;
         justify-content: space-between;
         gap: 10px;
-        padding: 6px 16px;
+        min-height: 32px;
+        padding: 0 16px;
         cursor: pointer;
     }
     div:hover:not(.disabled) {
-        background-color: rgb(0 0 0 / 0.2);
+        background-color: var(--hover, rgb(0 0 0 / 0.2));
     }
 
     div.disabled {
@@ -593,7 +596,7 @@
 
     .enabled {
         color: var(--secondary);
-        background-color: rgb(255 255 255 / 0.05);
+        background-color: var(--bg-hover);
     }
 
     .hide {
@@ -602,7 +605,7 @@
 
     .highlighted {
         background-color: rgb(0 0 0 / 0.2);
-        outline: 2px solid var(--secondary);
+        outline: 2px solid var(--text-muted);
         outline-offset: -2px;
     }
 

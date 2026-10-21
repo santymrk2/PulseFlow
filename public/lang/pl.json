@@ -381,6 +381,7 @@
         "first_last": "Pierwszy i ostatni slajd"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "Domyślny",
         "dark": "Ciemny",
         "light": "Jasny",

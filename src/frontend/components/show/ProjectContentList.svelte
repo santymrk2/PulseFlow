@@ -4,22 +4,18 @@
     import type { ProjectShowRef, Tree } from "../../../types/Projects"
     import type { ShowType } from "../../../types/Show"
     import { addProjectItem, addToProject, updateRecentlyAddedFiles } from "../../converters/project"
-    import { actions, activeFocus, activePopup, activeProject, activeShow, contextActive, drawer, drawerTabsData, editingProjectTemplate, focusMode, fullColors, playerVideos, popupData, projects, projectTemplates, projectView, recentFiles, selected, shows, special } from "../../stores"
-    import { triggerFunction } from "../../utils/common"
+    import { actions, activeFocus, activeProject, activeShow, contextActive, drawer, editingProjectTemplate, focusMode, fullColors, playerVideos, projects, projectTemplates, recentFiles, selected, special } from "../../stores"
     import { getAccess } from "../../utils/profile"
     import { getActionIcon } from "../actions/actions"
     import { getTimeUntilClock } from "../drawer/timers/timers"
-    import { openDrawer } from "../edit/scripts/edit"
     import { clone } from "../helpers/array"
     import { brightenDarkColor, fadeColor, getContrast } from "../helpers/color"
-    import { history } from "../helpers/history"
     import Icon from "../helpers/Icon.svelte"
     import { getExtension, getFileName, getMediaType, removeExtension } from "../helpers/media"
     import T from "../helpers/T.svelte"
     import { joinTimeBig } from "../helpers/time"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
-    import ShowButton from "../inputs/ShowButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import ShowButton from "./ShowButton.svelte"
     import Autoscroll from "../system/Autoscroll.svelte"
     import Center from "../system/Center.svelte"
     import DropArea from "../system/DropArea.svelte"
@@ -83,24 +79,10 @@
         return type
     }
 
-    function addSection() {
-        let activeShowIndex = $activeShow?.index !== undefined ? $activeShow?.index + 1 : null
-        let index: number = activeShowIndex ?? projectItemsList.length ?? 0
-        history({ id: "UPDATE", newData: { key: "shows", index }, oldData: { id: projectId }, location: { page: "show", id: "section" + (isTemplate ? "_template" : "") } })
-    }
-
-    function addShowPlaceholder() {
-        let activeShowIndex = $activeShow?.index !== undefined ? $activeShow?.index + 1 : null
-        let index: number = activeShowIndex ?? projectItemsList.length ?? 0
-        history({ id: "UPDATE", newData: { key: "shows", index }, oldData: { id: projectId }, location: { page: "show", id: "project_show_placeholder" } })
-    }
-
     $: activeProjectParent = $activeProject ? currentProject?.parent || "" : ""
     $: projectReadOnly = readOnly || profile[activeProjectParent] === "read" || tree.find((a) => a.id === activeProjectParent)?.readOnly
 
     $: projectItemsList = currentProject?.shows || []
-
-    $: lessVisibleSection = projectItemsList.length > 10 || projectItemsList.length < 1 || projectItemsList.some((a) => a.type === "section")
 
     let shouldPasteText = false
     $: if (currentProject && !currentProject.shows?.length && !isTemplate) checkClipboard()
@@ -157,10 +139,6 @@
     //     activePopup.set("show")
     //     openDrawer("shows")
     // }
-    function openSearch(page: string) {
-        openDrawer(page)
-        triggerFunction("drawer_search")
-    }
 
     onMount(() => {
         // convert section times in title to actual times
@@ -243,25 +221,9 @@
         contextActive.set(false)
     }
 
-    let addMenuOpen = false
-
-    function mousedown(e: any) {
-        if (!e.target.closest(".addMenu") && !e.target.closest(".addButton")) addMenuOpen = false
-    }
-
-    function handleKeydown(e: KeyboardEvent) {
-        if (addMenuOpen && e.key === "Escape") {
-            addMenuOpen = false
-            e.preventDefault()
-            e.stopPropagation()
-        }
-    }
-
     $: activeIndex = $focusMode ? $activeFocus.index : $activeShow?.index
     $: activeId = $focusMode ? $activeFocus.id : $activeShow?.id
 </script>
-
-<svelte:window on:mousedown={mousedown} on:keydown|capture={handleKeydown} />
 
 <div id="projectArea" class="list {projectReadOnly ? '' : 'context #project'}">
     <Autoscroll {offset} bind:scrollElem timeout={150}>
@@ -275,10 +237,7 @@
                         {#each splittedItemsList.items as show, i}
                             {@const index = show.index}
                             {@const triggerAction = show.data?.settings?.triggerAction || $special.sectionTriggerAction}
-                            {@const pcoLink = !!$shows[show.id]?.quickAccess?.pcoLink}
                             {@const isFirst = i === 0}
-                            {@const isLast = i === splittedItemsList.items.length - 1}
-                            {@const borderRadiusStyle = `${isFirst ? "border-top-right-radius: 10px;" : ""}${isLast ? "border-bottom-right-radius: 10px;" : ""}`}
                             {@const sectionTime = show.data?.time ? getTimeUntilClock(show.data.time, today) : 0}
                             {@const isActive = show.type === "section" ? ($focusMode ? $activeFocus.id === show.id : $activeShow?.id === show.id) : false}
                             {@const isLocked = show.type === "section" && currentProject?.sectionsLocked}
@@ -290,10 +249,10 @@
                             {:else}
                                 <SelectElem id="show" dropAbove={isFirst} triggerOnHover data={{ ...show, name: show.name || removeExtension(getFileName(show.id)), index }} {fileOver} borders={show.type === "show_placeholder" ? "all" : "edges"} trigger="column" draggable={!isLocked} selectable={!isLocked}>
                                     {#if show.type === "section"}
-                                        <MaterialButton
+                                        <Button
                                             {isActive}
                                             class="section {projectReadOnly || isLocked ? '' : `context #project_section ${show.color ? 'color-border' : ''}`}"
-                                            style="{borderRadiusStyle}justify-content: left;background-color: var(--primary-darkest);border-top: 1px solid var(--primary-lighter);padding: 0.1em 1em;{$fullColors ? `background-color: ${show.color || 'var(--primary-darker)'} !important;color: ${getContrast(show.color || '')};` : `background-color: ${fadeColor(show.color || '', 0.2)} !important;color: ${show.color ? brightenDarkColor(show.color) : ''};`}"
+                                            style="justify-content: left;background-color: var(--primary-darkest);border-top: 1px solid var(--primary-lighter);padding: 0.1em 1em;{$fullColors ? `background-color: ${show.color || 'var(--primary-darker)'} !important;color: ${getContrast(show.color || '')};` : `background-color: ${fadeColor(show.color || '', 0.2)} !important;color: ${show.color ? brightenDarkColor(show.color) : ''};`}"
                                             on:click={(e) => {
                                                 if (e.detail.ctrl) return
                                                 if ($focusMode) activeFocus.set({ id: show.id, index, type: show.type })
@@ -338,9 +297,9 @@
                                                     <Icon id="add" size={0.8} white />
                                                 </span>
                                             {/if}
-                                        </MaterialButton>
+                                        </Button>
                                     {:else}
-                                        <ShowButton id={show.id} {show} {index} class={projectReadOnly ? "" : `context #${pcoLink ? "pco_item__" : ""}project_${getContextMenuId(show.type)}`} style={borderRadiusStyle} icon isProject />
+                                        <ShowButton id={show.id} {show} {index} class={projectReadOnly ? "" : `context #project_${getContextMenuId(show.type)}`} icon isProject />
                                     {/if}
                                 </SelectElem>
                             {/if}
@@ -353,7 +312,7 @@
                     <div class="section" style="margin-top: 80px;border-top: 1px solid var(--primary-lighter);background-color: var(--primary-darkest);padding: 2px 18px;display: flex;justify-content: space-between;align-items: center;">
                         <T id="media.recommended" />
 
-                        <MaterialButton
+                        <Button
                             class="show"
                             style="padding: 0.2em;border-radius: 2px;border-left: none;min-height: unset;"
                             on:click={() => {
@@ -367,22 +326,19 @@
                             tab
                         >
                             <Icon id="clear" size={0.9} white />
-                        </MaterialButton>
+                        </Button>
                     </div>
 
                     <div class="recommended">
                         <div class="listSection">
-                            {#each recommended as path, i}
+                            {#each recommended as path}
                                 {@const name = getFileName(path)}
                                 {@const type = getMediaType(getExtension(name))}
-                                {@const isFirst = i === 0}
-                                {@const isLast = i === recommended.length - 1}
-                                {@const borderRadiusStyle = `${isFirst ? "border-top-right-radius: 10px;" : ""}${isLast ? "border-bottom-right-radius: 10px;" : ""}`}
                                 {@const icon = type === "audio" ? "music" : type}
 
-                                <MaterialButton
+                                <Button
                                     class="show context #recent_file__project"
-                                    style="justify-content: space-between;padding: 0.35em 0.8em;font-weight: normal;{borderRadiusStyle}"
+                                    style="justify-content: space-between;padding: 0.35em 0.8em;font-weight: normal;"
                                     on:click={() => {
                                         // convert to image? - probably better not to, this can be done via import
                                         // if (type === "pdf") sendMain(Main.PDF_TO_IMAGE, { filePath: path })
@@ -396,7 +352,7 @@
                                         <p style="min-height: 10px;">{removeExtension(name)}</p>
                                     </span>
                                     <Icon id="add" size={0.9} white right />
-                                </MaterialButton>
+                                </Button>
                             {/each}
                         </div>
                     </div>
@@ -407,10 +363,10 @@
 
                     {#if shouldPasteText}
                         <span style="padding-top: 20px" class="buttons">
-                            <MaterialButton variant="outlined" title="actions.import: formats.clipboard" on:click={clipboardToProject}>
+                            <Button variant="outline" title="actions.import: formats.clipboard" on:click={clipboardToProject}>
                                 <Icon id="paste" white />
                                 <T id="formats.clipboard" />
-                            </MaterialButton>
+                            </Button>
                         </span>
                     {/if}
                 </Center>
@@ -426,90 +382,6 @@
     {/if}
 </div>
 
-{#if projectId && !$projectView && !$focusMode && !recentlyUsedList.length && !projectReadOnly}
-    {#if addMenuOpen}
-        <!-- new show, new media, new PDF/PPT?, new scripture, new section -->
-        <div class="addMenu" transition:fade={{ duration: 80 }} role="none" on:click={() => (addMenuOpen = false)}>
-            <!-- createShow -->
-            <MaterialButton variant="outlined" icon="slide" title="tooltip.show" on:click={() => openSearch("shows")}>
-                <div class="label">
-                    <p><T id="formats.show" /></p>
-                    <!-- <p class="description" data-title={translateText("tabs.shows_info")}><T id="tabs.shows_info" /></p> -->
-                </div>
-
-                <div class="actionType">
-                    <Icon id="search" size={0.7} white />
-                </div>
-            </MaterialButton>
-
-            {#if isTemplate}
-                <MaterialButton variant="outlined" icon="slide" title="new.placeholder" on:click={addShowPlaceholder} white>
-                    <div class="label">
-                        <p><T id="new.placeholder" /></p>
-                    </div>
-                </MaterialButton>
-            {/if}
-
-            {#if $drawerTabsData.scripture?.enabled !== false}
-                <MaterialButton variant="outlined" icon="scripture" title="new.scripture" on:click={() => openSearch("scripture")} white>
-                    <div class="label">
-                        <p><T id="tabs.scripture" /></p>
-                    </div>
-
-                    <div class="actionType">
-                        <Icon id="search" size={0.7} white />
-                    </div>
-                </MaterialButton>
-            {/if}
-
-            <!-- WIP popup -->
-            <!-- images/videos, (audio), YouTube, webpages? -->
-            <MaterialButton variant="outlined" icon="image" title="guide_description.media" on:click={() => openSearch("media")} white>
-                <div class="label">
-                    <p><T id="items.media" /></p>
-                </div>
-
-                <div class="actionType">
-                    <Icon id="search" size={0.7} white />
-                </div>
-            </MaterialButton>
-
-            <div class="group-spacer" />
-
-            <MaterialButton
-                variant="outlined"
-                icon="import"
-                title="popup.import"
-                on:click={() => {
-                    popupData.set({ mode: "project" })
-                    activePopup.set("import")
-                }}
-                white
-            >
-                <div class="label">
-                    <p><T id="popup.import" /></p>
-                </div>
-            </MaterialButton>
-
-            <div class="group-spacer" />
-
-            <MaterialButton variant="outlined" icon="section" title="new.section" disabled={currentProject?.sectionsLocked} on:click={addSection} white={lessVisibleSection}>
-                <div class="label">
-                    <p><T id="new.section" /></p>
-                    <!-- <p class="description" data-title={translateText("tabs.sections_info")}><T id="tabs.sections_info" /></p> -->
-                </div>
-            </MaterialButton>
-        </div>
-    {/if}
-
-    <FloatingInputs gradient style="width: 50px;height: 50px;border: none;">
-        <!-- {addMenuOpen ? 'border-color: white;' : ''} -->
-        <MaterialButton class="addButton" title={addMenuOpen ? "actions.close" : "context.addToProject"} style="width: 50px;height: 50px;" on:click={() => (addMenuOpen = !addMenuOpen)} on:dblclick={() => (addMenuOpen ? null : addSection())}>
-            <Icon id="add" size={1.5} style={addMenuOpen ? "transform: rotate(135deg);" : ""} white />
-        </MaterialButton>
-    </FloatingInputs>
-{/if}
-
 <style>
     .list {
         position: relative;
@@ -522,22 +394,12 @@
         flex: 1;
     }
 
+    /* pila plana, como LIBRARIES: sin tarjeta, márgenes ni esquinas redondeadas */
     .listSection {
         display: flex;
         flex-direction: column;
 
-        margin: 8px 0;
-        margin-right: 5px;
-
-        background-color: var(--primary-darker);
-
         --border-color: var(--primary-lighter);
-        border: 1px solid var(--border-color);
-        border-left: 0;
-
-        border-radius: 10px;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
     }
 
     .list#projectArea :global(.droparea) {
@@ -547,6 +409,20 @@
 
     .listSection :global(button) {
         outline-offset: -2px;
+    }
+
+    /* filas planas de 28px: hover y activa como en LIBRARIES */
+    .listSection :global(button.tab) {
+        min-height: 28px;
+        border-radius: 0 !important;
+        border-left: 2px solid transparent !important;
+    }
+    .listSection :global(button.tab:not(.isActive)):hover {
+        background-color: var(--hover, var(--bg-hover)) !important;
+    }
+    .listSection :global(button.tab.isActive) {
+        background-color: var(--secondary-opacity) !important;
+        border-left-color: var(--secondary) !important;
     }
 
     .list :global(.section) {
@@ -604,82 +480,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-    }
-
-    /* add menu */
-
-    .addMenu {
-        position: absolute;
-        bottom: 70px; /* 10px + 50px + 10px */
-        right: 12px;
-
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-
-        max-height: calc(100% - 100px);
-        overflow-y: auto;
-        overflow-x: hidden;
-
-        background: rgba(0, 0, 0, 0.15);
-        backdrop-filter: blur(15px);
-        border-radius: 25px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        padding: 6px;
-        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-    }
-
-    .addMenu :global(button) {
-        justify-content: start;
-        padding: 10px 16px;
-
-        border-radius: 50px;
-
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-
-        /* for overflow shrinking */
-        min-height: 35px;
-    }
-
-    /* remove blur from individual buttons to avoid double blur */
-    .addMenu :global(button .surface) {
-        backdrop-filter: none !important;
-        background: rgba(255, 255, 255, 0.03) !important;
-    }
-
-    .group-spacer {
-        height: 6px;
-    }
-
-    .addMenu .label {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-
-        align-items: flex-start;
-    }
-    /* .addMenu .description {
-        font-size: 0.8em;
-        opacity: 0.7;
-
-        max-width: 180px;
-    } */
-
-    .actionType {
-        position: absolute;
-        top: 50%;
-        right: 14px;
-        transform: translateY(-50%);
-
-        display: flex;
-        align-items: center;
-
-        opacity: 0.2;
-    }
-
-    /* +/x rotate animation */
-    :global(.addButton svg) {
-        transition: transform 0.2s ease !important;
     }
 
     .recommended {

@@ -3,9 +3,9 @@
     import { sendMain } from "../../../IPC/main"
     import { special } from "../../../stores"
     import T from "../../helpers/T.svelte"
-    import InputRow from "../../input/InputRow.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialTextarea from "../../inputs/MaterialTextarea.svelte"
+    import InputRow from "../../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import TextareaField from "../../../lib/components/ui/textarea-field/textarea-field.svelte"
 
     function openFile() {
         sendMain(Main.OPEN_NOW_PLAYING)
@@ -70,7 +70,7 @@
     }
 </script>
 
-<MaterialButton class="popup-options" icon="launch" iconSize={1.1} title="main.system_open" on:click={openFile} white />
+<Button class="popup-options" icon="launch" iconSize={1.1} title="main.system_open" on:click={openFile} white />
 
 <InputRow arrow open={true}>
     <div class="title">
@@ -92,7 +92,7 @@
 <div style="height: 20px;"></div>
 
 <!-- label="actions.format" -->
-<MaterialTextarea label="NowPlaying.txt" value={format} rows={8} on:change={(e) => updateSpecial("nowPlayingFormat", e.detail)} />
+<TextareaField label="NowPlaying.txt" value={format} rows={8} on:change={(e) => updateSpecial("nowPlayingFormat", e.detail)} />
 
 <style>
     .title {

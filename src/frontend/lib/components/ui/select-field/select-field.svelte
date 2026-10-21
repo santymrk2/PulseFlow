@@ -1,0 +1,687 @@
+<script lang="ts">
+    import { createEventDispatcher, onMount } from "svelte"
+    import type { DropdownOptions } from "../../../../../types/Input"
+    import { dictionary } from "../../../../stores"
+    import { translateText } from "../../../../utils/language"
+    import { portal } from "../../../../utils/portal"
+    import { formatSearch } from "../../../../utils/search"
+    import VirtualList from "../../../../components/drawer/VirtualList.svelte"
+    import { newDropdown } from "../../../../components/edit/scripts/edit"
+    import Icon from "../../../../components/helpers/Icon.svelte"
+    import InputRow from "../input-row/input-row.svelte"
+    import Button from "../button/button.svelte"
+    import TextField from "../text-field/text-field.svelte"
+
+    export let label: string
+    export let value: string
+    export let defaultValue: string | null = null
+    export let options: DropdownOptions
+
+    export let id = ""
+    export let disabled = false
+    export let allowEmpty = false
+    export let flags = false
+    export let onlyArrow = false
+
+    export let addNew: string | null = null
+    export let allowDeleting = false
+
+    const dispatch = createEventDispatcher()
+    let open = false
+    let dropdownEl: HTMLDivElement
+    // let triggerEl: HTMLDivElement;
+    let highlightedIndex = -1
+
+    function toggleDropdown(force?: boolean) {
+        if (disabled) return
+        addNewTextbox = false
+
+        open = typeof force === "boolean" && value ? force : !open
+        if (open) positionMenu()
+
+        if (open && value) highlightedIndex = options.findIndex((o) => o.value === value)
+        else highlightedIndex = -1
+    }
+
+    // POSICIÓN: el menú va en el <body> con posición fija (no lo recorta ningún panel) y se abre hacia arriba si abajo no entra
+    let maxHeight = 320
+    let menuPos = ""
+    function positionMenu() {
+        if (!dropdownEl) return
+        const rect = dropdownEl.getBoundingClientRect()
+        const spaceBelow = window.innerHeight - rect.bottom - 12
+        const spaceAbove = rect.top - 12
+        const openUp = spaceBelow < 180 && spaceAbove > spaceBelow
+        maxHeight = Math.max(120, Math.min(320, openUp ? spaceAbove : spaceBelow))
+        const width = onlyArrow ? 220 : rect.width
+        const left = onlyArrow ? Math.max(8, rect.right - width) : rect.left
+        menuPos = `left:${left}px;min-width:${width}px;max-height:${maxHeight}px;` + (openUp ? `bottom:${window.innerHeight - rect.top + 4}px;` : `top:${rect.bottom + 4}px;`)
+    }
+
+    // SELECT
+
+    function selectOption(e: any, optionValue: string) {
+        if (e?.target?.closest(".delete-button")) return
+
+        value = optionValue
+        open = false
+        dispatch("change", value)
+    }
+
+    function handleClickOutside(event: MouseEvent) {
+        if ((event.target as Element)?.closest?.(".select-menu")) return
+        if (dropdownEl && !dropdownEl.contains(event.target as Node) && !event.composedPath().includes(dropdownEl)) {
+            open = false
+            addNewTextbox = false
+        }
+    }
+
+    let searchValue = ""
+    $: if (open) searchValue = ""
+    function handleKeydown(event: KeyboardEvent) {
+        if (disabled) return
+
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault()
+            if (searchValue && event.key === " ") return
+
+            if (open && highlightedIndex >= 0) {
+                selectOption(null, options[highlightedIndex].value)
+            } else {
+                toggleDropdown(true)
+            }
+            return
+        } else if (event.key === "ArrowDown") {
+            event.preventDefault()
+            if (!open) toggleDropdown(true)
+            else {
+                // loops back around when reached end
+                highlightedIndex = (highlightedIndex + 1) % options.length
+                scrollToHighlighted()
+            }
+            return
+        } else if (event.key === "ArrowUp") {
+            event.preventDefault()
+            if (!open) toggleDropdown(true)
+            else {
+                // loops back around when reached end
+                highlightedIndex = (highlightedIndex - 1 + options.length) % options.length
+                scrollToHighlighted()
+            }
+            return
+        } else if (event.key === "Escape") {
+            open = false
+            return
+        }
+
+        if (!open) return
+
+        event.preventDefault()
+        if (event.key === "Backspace") {
+            searchValue = ""
+            highlightedIndex = options.findIndex((o) => o.value === value)
+            scrollToHighlighted()
+        } else if (event.key.length === 1) {
+            searchValue = formatSearch(searchValue + event.key, true)
+
+            let activeIndex = options.findIndex((a) => formatSearch(a.label, true).startsWith(searchValue))
+            if (activeIndex < 0) activeIndex = options.findIndex((a) => formatSearch(a.label, true).includes(searchValue))
+            if (activeIndex < 0) return
+
+            // enter to select
+            highlightedIndex = activeIndex
+
+            scrollToHighlighted()
+        }
+    }
+
+    let nextScrollTimeout: NodeJS.Timeout | null = null
+    function handleScrolling(e: any) {
+        const ctrl = e.ctrlKey || e.metaKey
+        if (disabled || nextScrollTimeout || !ctrl) return
+        e.preventDefault()
+
+        let index = options.findIndex((a) => a.value === value)
+        if (e.deltaY > 0) {
+            // scroll down
+            index = Math.min(options.length - 1, index + 1)
+        } else {
+            // scroll up
+            if (index === 0 && allowEmpty && value) {
+                dispatch("change", "")
+                return
+            }
+            if (index < 1) return
+
+            index = index - 1
+        }
+
+        const newValue = options[index].value
+        if (value === newValue) return
+
+        dispatch("change", newValue)
+
+        // slow down trackpad scrolling
+        // don't start timeout if scrolling with mouse
+        if (e.deltaY >= 100 || e.deltaY <= -100) return
+        nextScrollTimeout = setTimeout(() => {
+            nextScrollTimeout = null
+        }, 500)
+    }
+
+    // scroll
+
+    let scrollElem: HTMLUListElement | null = null
+    $: if (open && !useVirtualList) setTimeout(scrollToHighlighted)
+    function scrollToHighlighted() {
+        if (highlightedIndex < 0 && allowEmpty) return scrollElem?.scrollTo(0, 0)
+
+        if (!scrollElem || highlightedIndex < 0) return
+        if (scrollElem.offsetHeight >= scrollElem.scrollHeight) return
+
+        const activeElem = scrollElem?.querySelectorAll("li")?.[highlightedIndex === 0 ? 0 : highlightedIndex - 1]
+        if (!activeElem) return
+
+        scrollElem.scrollTo(0, activeElem.offsetTop)
+    }
+
+    // blur focus
+
+    // relatedTarget is null, even in dropdown
+    // function handleFocusOut(event: FocusEvent) {
+    //     if (!dropdownEl.contains(event.relatedTarget as Node)) {
+    //         open = false
+    //         addNewTextbox = false
+    //     }
+    // }
+
+    onMount(() => {
+        document.addEventListener("click", handleClickOutside)
+        window.addEventListener("resize", reposition)
+        window.addEventListener("scroll", reposition, true)
+        // document.addEventListener("focusout", handleFocusOut, true)
+
+        return () => {
+            document.removeEventListener("click", handleClickOutside)
+            window.removeEventListener("resize", reposition)
+            window.removeEventListener("scroll", reposition, true)
+            // document.removeEventListener("focusout", handleFocusOut, true)
+        }
+    })
+
+    function reposition(e?: Event) {
+        if (!open) return
+        // el scroll de la propia lista no mueve el menú
+        if ((e?.target as Element | undefined)?.closest?.(".select-menu")) return
+        positionMenu()
+    }
+
+    $: selected = options.find((o) => o.value === value)
+    $: useVirtualList = options.length > 100
+
+    // RESET
+
+    let resetFromValue = ""
+    function reset() {
+        resetFromValue = value
+        dispatch("change", defaultValue)
+        setTimeout(() => {
+            resetFromValue = ""
+        }, 3000)
+    }
+
+    function undoReset() {
+        dispatch("change", resetFromValue)
+        resetFromValue = ""
+    }
+
+    // CREATE NEW
+
+    let addNewTextbox = false
+    function createNew() {
+        if (newDropdown[addNew!]) return newDropdown[addNew!]()
+
+        open = false
+        addNewTextbox = true
+    }
+    let newValue = ""
+    function createNewEvent() {
+        dispatch("new", newValue)
+        addNewTextbox = false
+        newValue = ""
+    }
+
+    function keydown(e: any) {
+        if (e.key === "Enter") {
+            e.preventDefault()
+            newValue = e.target?.value || ""
+            createNewEvent()
+        }
+    }
+
+    $: hasValue = !!value || (value === "" && options[0]?.value === "")
+    // el botón de borrar/restablecer va sobre el campo: se reserva su ancho para que no pise el texto
+    $: hasRemove = (allowEmpty && hasValue) || (defaultValue !== null && (value !== defaultValue || !!resetFromValue))
+</script>
+
+<div class="textfield {disabled ? 'disabled' : ''}" style={$$props.style || null} class:flags class:onlyArrow class:hasRemove bind:this={dropdownEl}>
+    <div class="background" />
+
+    <div
+        class="input edit dropdown-trigger"
+        data-title="{translateText(label)}{selected ? `: <b>${selected.label || '—'}</b>` : ''}"
+        role="button"
+        tabindex={disabled ? undefined : 0}
+        on:click={(e) => {
+            if (e.target?.closest(".remove")) return
+            toggleDropdown()
+        }}
+        on:keydown={handleKeydown}
+        on:wheel={handleScrolling}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+    >
+        {#if !onlyArrow}
+            <span class="selected-text" style={selected?.style ?? null}>
+                {#if selected?.icon}<Icon id={selected.icon} style="margin-right: 5px;" color={selected?.iconColor} boxed={!!selected?.iconColor} white />{/if}
+                {#if selected?.prefix}<span class="prefix">{selected.prefix}</span>{/if}
+                <!-- show value if options list has not loaded yet (e.g. fonts) -->
+                {#if selected?.value !== undefined}{selected?.label || "—"}{:else if value}{value}{/if}
+            </span>
+        {/if}
+        <svg class="arrow {open ? 'open' : ''}" width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" />
+        </svg>
+    </div>
+
+    {#if !onlyArrow}
+        <label for={id} class:selected={hasValue}>{@html translateText(label, $dictionary)}</label>
+    {/if}
+    <span class="underline" />
+
+    {#if allowEmpty && hasValue}
+        <div class="remove">
+            <Button on:click={() => selectOption(null, "")} title="clear.general" white>
+                <Icon id="close" white />
+            </Button>
+        </div>
+    {/if}
+    {#if defaultValue !== null}
+        <div class="remove">
+            {#if value !== defaultValue}
+                <Button on:click={reset} title="actions.reset" white>
+                    <Icon id="reset" white />
+                </Button>
+            {:else if resetFromValue}
+                <Button on:click={undoReset} title="actions.undo" white>
+                    <Icon id="undo" white />
+                </Button>
+            {/if}
+        </div>
+    {/if}
+
+    {#if open}
+        {#if useVirtualList}
+            <div class="dropdown select-menu virtual" style={menuPos} use:portal>
+                <VirtualList items={options} height="{maxHeight}px" activeIndex={highlightedIndex} let:item={option}>
+                    <li style="{option.data ? 'justify-content: space-between;' : ''}{option.style || ''}" role="option" aria-selected={option.value === value} class:selected={option.value === value} class:highlighted={options.indexOf(option) === highlightedIndex} on:click={(e) => selectOption(e, option.value)}>
+                        {#if option.icon}<Icon id={option.icon} style="margin-right: 5px;" color={option.iconColor} boxed={!!option.iconColor} white />{/if}
+
+                        {#if option.prefix}<span class="prefix">{option.prefix}</span>{/if}
+                        {option.label || "—"}
+
+                        {#if option.data}
+                            <div class="data" data-title={option.data}>{option.data}</div>
+                        {/if}
+
+                        {#if allowDeleting && option.value !== value}
+                            <Button
+                                title="actions.delete"
+                                class="delete-button"
+                                style="position: absolute;right: 2px;width: 40px;"
+                                icon="delete"
+                                on:click={() => {
+                                    dispatch("delete", option.value)
+                                }}
+                                red
+                            />
+                        {/if}
+                    </li>
+                </VirtualList>
+
+                {#if addNew}
+                    <div class="add-new-button">
+                        <li style="font-style: italic;opacity: 0.9;" role="option" on:click={createNew}>
+                            <Icon id="add" />
+                            {translateText(addNew)}
+                        </li>
+                    </div>
+                {/if}
+            </div>
+        {:else}
+            <ul style={menuPos} class="dropdown select-menu" role="listbox" tabindex="-1" bind:this={scrollElem} use:portal>
+                {#if allowEmpty}
+                    <li style="opacity: 0.5;font-style: italic;" role="option" aria-selected={!value} class:selected={!value} class:highlighted={highlightedIndex < 0} on:click={() => selectOption(null, "")}>
+                        {translateText("main.none")}
+                    </li>
+                {/if}
+
+                {#each options as option, i}
+                    <li style="{option.data ? 'justify-content: space-between;' : ''}{option.style || ''}" role="option" aria-selected={option.value === value} class:selected={option.value === value} class:highlighted={i === highlightedIndex} on:click={(e) => selectOption(e, option.value)}>
+                        {#if option.icon}<Icon id={option.icon} style="margin-right: 5px;" color={option.iconColor} boxed={!!option.iconColor} white />{/if}
+
+                        {#if option.prefix}<span class="prefix">{option.prefix}</span>{/if}
+                        {option.label || "—"}
+
+                        {#if option.data}
+                            <div class="data" data-title={option.data}>{option.data}</div>
+                        {/if}
+
+                        {#if allowDeleting && option.value !== value}
+                            <Button
+                                title="actions.delete"
+                                class="delete-button"
+                                style="position: absolute;right: 2px;width: 40px;"
+                                icon="delete"
+                                on:click={() => {
+                                    dispatch("delete", option.value)
+                                }}
+                                red
+                            />
+                        {/if}
+                    </li>
+                {/each}
+
+                {#if addNew}
+                    <li style="font-style: italic;opacity: 0.9;" role="option" on:click={createNew}>
+                        <Icon id="add" />
+                        {translateText(addNew)}
+                    </li>
+                {/if}
+            </ul>
+        {/if}
+
+        {#if searchValue}
+            <div class="search">{searchValue}</div>
+        {/if}
+    {/if}
+
+    {#if addNew && addNewTextbox}
+        <div class="dropdown inline">
+            <InputRow>
+                <TextField label="inputs.name" value={newValue} autofocus on:input={(e) => (newValue = e.detail)} on:keydown={keydown} />
+                <Button disabled={!newValue.length} title={addNew} on:click={createNewEvent}>
+                    <Icon id="check" size={1.2} white />
+                </Button>
+            </InputRow>
+        </div>
+    {/if}
+</div>
+
+<style>
+    .textfield {
+        position: relative;
+        width: 100%;
+        color: var(--text);
+        user-select: none;
+
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+
+        height: 38px;
+    }
+
+    .textfield.flags {
+        font-family:
+            "NotoColorEmojiLimited",
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            Roboto,
+            Oxygen-Sans,
+            Ubuntu,
+            Cantarell,
+            "Helvetica Neue",
+            sans-serif !important;
+    }
+
+    .textfield.onlyArrow {
+        width: 50px;
+    }
+
+    .background {
+        position: absolute;
+        inset: 0;
+        background-color: var(--primary-darkest);
+        border-start-start-radius: var(--radius, 4px);
+        border-start-end-radius: var(--radius, 4px);
+        z-index: 0;
+    }
+
+    .textfield:not(:has(.dropdown)):not(:has(.remove:hover)):not(:disabled):hover .input {
+        background-color: var(--hover);
+    }
+
+    .dropdown-trigger {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        padding: 16px 12px 2px;
+        font-size: var(--text-sm);
+        color: var(--text);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        background: transparent;
+        border: none;
+        outline: none;
+    }
+
+    .remove {
+        position: absolute;
+        top: 50%;
+        right: 32px;
+        transform: translateY(-50%);
+
+        z-index: 2;
+    }
+    .textfield.hasRemove .selected-text {
+        margin-inline-end: 36px;
+    }
+    .remove :global(button) {
+        padding: 0.75rem;
+    }
+
+    .selected-text {
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+
+        display: flex;
+        align-items: center;
+    }
+
+    .arrow {
+        transition: transform 0.2s ease;
+        color: var(--text);
+        transform: translateY(-0.4rem);
+    }
+    .arrow.open {
+        transform: translateY(-0.4rem) rotate(180deg);
+    }
+
+    label {
+        position: absolute;
+        left: 12px;
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
+        pointer-events: none;
+        z-index: 1;
+    }
+    label.selected {
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
+    }
+
+    .prefix {
+        padding-right: 5px;
+    }
+
+    .underline {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        height: 1.2px;
+        width: 100%;
+        background-color: var(--secondary);
+        transform: scaleX(0);
+        transition: transform 0.2s ease;
+        transform-origin: left;
+        z-index: 2;
+
+        pointer-events: none;
+    }
+
+    .textfield:not(:has(.remove:hover)):focus-within .underline {
+        transform: scaleX(1);
+    }
+    .textfield:focus-within label {
+        top: 4px;
+        font-size: var(--text-2xs);
+        color: var(--text-subtle);
+        font-weight: 500;
+        opacity: 1;
+    }
+
+    /* menú desplegable: superficie y filas como el `Menu` del kit (shadcn): borde de 1 px, filas de 28 px, ✓ en la elegida */
+    .dropdown {
+        position: fixed;
+        z-index: 9999;
+        list-style: none;
+        margin: 0;
+        padding: 4px;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        background-color: var(--bg-elevated);
+        color: var(--text);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-float);
+
+        /* los .popup ponen 1.2em, se vuelve al tamaño del kit */
+        font-size: var(--text-sm);
+
+        animation: dropdownFlyFade 80ms cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    .dropdown.inline {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        margin-top: 4px;
+        z-index: 10;
+    }
+
+    @keyframes dropdownFlyFade {
+        from {
+            opacity: 0;
+            transform: translateY(-4px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    /* virtual */
+    .dropdown.virtual {
+        overflow-y: hidden;
+        padding: 0;
+    }
+    .dropdown :global(svelte-virtual-list-viewport) {
+        background-color: var(--bg-elevated);
+    }
+    .add-new-button {
+        border-top: 1px solid var(--border);
+        padding-top: 4px;
+    }
+
+    .dropdown li {
+        position: relative;
+        min-height: 28px;
+        padding: 0 8px;
+        border-radius: calc(var(--radius) - 2px);
+        cursor: pointer;
+        color: var(--text);
+        white-space: nowrap;
+        transition: background 0.12s;
+
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .dropdown li:hover,
+    .dropdown li.highlighted {
+        background-color: var(--bg-hover);
+    }
+    .dropdown li.selected {
+        background-color: var(--bg-active);
+    }
+    .dropdown li.selected::after {
+        content: "✓";
+        margin-inline-start: auto;
+        padding-inline-start: 8px;
+        font-size: 0.85em;
+        opacity: 0.8;
+    }
+
+    .dropdown .data {
+        color: var(--text);
+        opacity: 0.5;
+        font-size: 0.8em;
+
+        max-width: 40%;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    .disabled {
+        pointer-events: none;
+        opacity: 0.35;
+    }
+
+    .search {
+        position: absolute;
+        right: 12px;
+        top: calc(100% + 6px);
+
+        background-color: var(--primary-darkest);
+        color: var(--text);
+        border: 1px solid var(--border-color, var(--primary-lighter));
+
+        opacity: 0.8;
+        padding: 10px;
+        border-radius: var(--radius, 4px);
+
+        z-index: 10;
+    }
+
+    /* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+    .background,
+    .underline {
+        display: none;
+    }
+    .textfield:focus-within {
+        border-color: var(--border-strong);
+    }
+</style>

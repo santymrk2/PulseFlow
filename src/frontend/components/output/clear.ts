@@ -2,7 +2,7 @@ import { get } from "svelte/store"
 import type { OutSlide } from "../../../types/Show"
 import { clearAudio } from "../../audio/audioFading"
 import { AudioPlayer } from "../../audio/audioPlayer"
-import { activeEdit, activePage, activePopup, activeStage, contextActive, customMessageCredits, drawSettings, focusMode, outLocked, outputCache, outputs, outputSlideCache, overlays, overlayTimers, playingAudio, playingMetronome, selected, slideTimers, topContextActive } from "../../stores"
+import { activeEdit, activePage, activePopup, activeStage, contextActive, customMessageCredits, focusMode, outLocked, outputCache, outputs, outputSlideCache, overlays, overlayTimers, playingAudio, playingMetronome, selected, slideTimers, topContextActive } from "../../stores"
 import { customActionActivation } from "../actions/actions"
 import { startMetronome } from "../drawer/audio/metronome"
 import { clone } from "../helpers/array"
@@ -175,14 +175,6 @@ export function clearTimers(specificOutputId = "", clearOverlayTimers = true) {
                 clearOverlayTimer(a.outputId, a.overlayId)
             }
         })
-    })
-}
-
-export function clearDrawing() {
-    drawSettings.update((a) => {
-        if (!a.paint) return a
-        a.paint.clear = true
-        return a
     })
 }
 

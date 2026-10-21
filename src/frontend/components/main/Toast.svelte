@@ -76,6 +76,6 @@
         /* line-break: anywhere; */
         overflow-x: auto;
 
-        box-shadow: -2px -2px 5px rgb(0 0 0 / 0.2);
+        box-shadow: var(--shadow-float);
     }
 </style>

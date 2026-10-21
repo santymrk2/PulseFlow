@@ -5,7 +5,7 @@
     import { customIcons, customIconsColors } from "../../../values/customIcons"
     import Icon from "../../helpers/Icon.svelte"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
     import Tip from "../Tip.svelte"
 
     let colors = true
@@ -55,7 +55,7 @@
 </script>
 
 {#if back}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => activePopup.set(back)} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => activePopup.set(back)} />
 {/if}
 
 <Tip value="actions.click_disable" bottom={20} />
@@ -64,22 +64,22 @@
     {#each Object.keys(customIcons) as icon}
         {@const color = colors && customIconsColors[icon] ? "color: " + customIconsColors[icon] + ";" : ""}
         {@const disabled = $customizedIcons.disabled.includes(icon)}
-        <MaterialButton style="padding: 8px;" on:click={() => click(icon)} title={disabled ? "actions.enable" : "actions.disable"}>
+        <Button style="padding: 8px;" on:click={() => click(icon)} title={disabled ? "actions.enable" : "actions.disable"}>
             <Icon id={icon} size={2} custom white style={disabled ? "opacity: 0.2;" : color} />
-        </MaterialButton>
+        </Button>
     {/each}
 
-    <MaterialButton variant="outlined" style="width: 100%;margin: 10px 0;" on:click={importSVG} center dark>
+    <Button variant="outline" style="width: 100%;margin: 10px 0;" on:click={importSVG} center dark>
         <Icon id="copy" size={1.2} />
         <T id="actions.svg_clipboard" />
-    </MaterialButton>
+    </Button>
 
     {#if $customizedIcons.svg.length}
         <div class="custom grid">
             {#each $customizedIcons.svg as icon}
-                <MaterialButton style="padding: 12px;" on:click={() => deleteCustom(icon.id)} title="actions.delete">
+                <Button style="padding: 12px;" on:click={() => deleteCustom(icon.id)} title="actions.delete">
                     {@html icon.path}
-                </MaterialButton>
+                </Button>
             {/each}
         </div>
     {/if}

@@ -7,6 +7,7 @@ import type { Resolution, Styles } from "../../../types/Settings"
 import type { Item, Layout, LayoutRef, Media, OutSlide, Show, Slide, SlideData, Template, TemplateSettings, Transition } from "../../../types/Show"
 import { AudioAnalyser } from "../../audio/audioAnalyser"
 import { requestMain, sendMain } from "../../IPC/main"
+import { invokeCommand } from "../../IPC/tauri"
 import {
     actions,
     activeFocus,
@@ -46,7 +47,8 @@ import {
     theme,
     themes,
     transitionData,
-    usageLog
+    usageLog,
+    previewOutputId
 } from "../../stores"
 import { trackScriptureUsage } from "../../utils/analytics"
 import { isMainWindow, isOutputWindow, newToast } from "../../utils/common"
@@ -62,6 +64,7 @@ import type { EditInput } from "../edit/values/boxes"
 import { VideoPlayer } from "../media/video/videoPlayer"
 import { clearBackground, clearSlide } from "../output/clear"
 import { areObjectsEqual, clone, keysToID, removeDuplicates, sortByName, sortObject } from "./array"
+import { referenceOutputId, resolveOutputAspect } from "./outputAspect"
 import { getExtension, getFileName, getMediaLayerType, getMediaType, removeExtension } from "./media"
 import { createDestination, hasStreamableDestination } from "./rtmpDestinations"
 import { getLayoutRef } from "./show"
@@ -129,7 +132,11 @@ export function toggleOutputs(outputIds: string[] | null = null, options: { forc
 
     const autoPosition = options.force ? false : sortedOutputList.length === 1 && !sortedOutputList[0].forcedResolution?.width
 
-    send(OUTPUT, ["TOGGLE_OUTPUTS"], { outputs: sortedOutputList, state, autoStartup: options.autoStartup, autoPosition })
+    // F7.3: abrir/cerrar salidas es operación crítica → invokeCommand devuelve el
+    // error al call site en lugar de dejarlo sólo en la consola de la terminal.
+    void invokeCommand("TOGGLE_OUTPUTS", { outputs: sortedOutputList, state, autoStartup: options.autoStartup, autoPosition }).then((result) => {
+        if (!result.ok) console.error("[outputs] TOGGLE_OUTPUTS falló:", result.error)
+    })
 }
 
 export function toggleOutput(id: string) {
@@ -295,22 +302,6 @@ export function setOutput(type: string, data: any, toggle = false, outputId = ""
                 }
             }
 
-            if (type === "slide") {
-                const previousSlide = a[id].out?.slide || null
-                const sameSlideOutput =
-                    !!previousSlide &&
-                    !!outData &&
-                    previousSlide.id === outData.id &&
-                    previousSlide.layout === outData.layout &&
-                    previousSlide.index === outData.index &&
-                    previousSlide.page === outData.page &&
-                    previousSlide.type === outData.type
-
-                if (sameSlideOutput) {
-                    a[id].out!.refresh = Number(a[id].out!.refresh || 0) + 1
-                }
-            }
-
             a[id].out![type] = clone(outData)
 
             // save locked overlays / outputted scenes for relaunch
@@ -389,7 +380,7 @@ function checkAudio(type: string, data: any, allOutputIds: string[], outs: strin
 
         // start new video items
         newItems.forEach((item: any) => {
-            VideoPlayer.start(item.src, { loop: item.loop !== false, muted: item.muted, startAt: item.startAt || item.fromTime || 0, fromTime: item.fromTime, toTime: item.toTime, volume: item.volume, type: "item" }, allOutputIds)
+            VideoPlayer.start(item.src, { loop: item.loop !== false, muted: item.muted, startAt: item.startAt || 0, type: "item" }, allOutputIds)
         })
     }
 }
@@ -753,14 +744,20 @@ export function allOutputsHasStyleTemplate(isScripture: boolean = false) {
     })
 }
 
-export function refreshOut() {
+export function refreshOut(refresh = true) {
     outputs.update((a) => {
         getAllActiveOutputs().forEach(({ id }) => {
             if (!a[id]) return
-            a[id].out = { ...a[id].out, refresh: Number(a[id].out?.refresh || 0) + 1 }
+            a[id].out = { ...a[id].out, refresh }
         })
         return a
     })
+
+    if (refresh) {
+        setTimeout(() => {
+            refreshOut(false)
+        }, 100)
+    }
 }
 
 // outputs is just for updates
@@ -825,28 +822,16 @@ export function outputSlideHasContent(output) {
 export function getResolution(initial: Resolution | undefined | null = null, _updater: any = null, _getSlideRes = false, outputId = "", styleIdOverride = ""): Resolution {
     if (initial?.width) return initial
 
-    if (!outputId) outputId = getFirstActiveOutput()?.id || ""
+    // sin salida indicada: la elegida en el selector de la vista previa (si es una audiencia) o la primera activa
+    if (!outputId) outputId = referenceOutputId(get(outputs), get(previewOutputId)) || getFirstActiveOutput()?.id || ""
     const currentOutput = get(outputs)[outputId]
-
-    if (currentOutput?.stageOutput) return currentOutput.bounds ?? DEFAULT_BOUNDS
 
     const styleId = styleIdOverride || currentOutput?.style || ""
     const style = styleId ? get(styles)[styleId] || null : null
     const styleRatio: any = style?.aspectRatio || style?.resolution
 
-    // cropping affects aspect ratio if "outputResolutionAsRatio"
-    if (styleRatio?.outputResolutionAsRatio) {
-        const bounds = currentOutput?.bounds ?? DEFAULT_BOUNDS
-        const cropping = currentOutput?.cropping || style?.cropping
-        const cropWidth = (Number(cropping?.left) || 0) + (Number(cropping?.right) || 0)
-        const cropHeight = (Number(cropping?.top) || 0) + (Number(cropping?.bottom) || 0)
-        return {
-            width: Math.max(1, bounds.width - cropWidth),
-            height: Math.max(1, bounds.height - cropHeight)
-        }
-    }
-
-    return styleRatio || { width: 16, height: 9 }
+    // la relación sale de la Pantalla (o, en datos viejos, del estilo); sin ninguna, del tamaño real de la salida
+    return resolveOutputAspect({ output: currentOutput, styleRatio: styleRatio ? { ...styleRatio, cropping: style?.cropping } : null, defaultBounds: DEFAULT_BOUNDS })
 }
 
 // this will get the first available stage output
@@ -871,7 +856,8 @@ export function getOutputResolution(outputId: string, _updater = get(outputs), s
     const cropping = currentOutput?.cropping || currentStyle?.cropping
     const cropKey = cropping ? `${cropping.top || 0}_${cropping.right || 0}_${cropping.bottom || 0}_${cropping.left || 0}` : ""
     const styleRatioKey = styleRatioVal ? `${styleRatioVal.width}x${styleRatioVal.height}_${styleRatioVal.outputResolutionAsRatio ? 1 : 0}_${cropKey}` : ""
-    const cacheKey = `${outputId}_${scaled}_${effectiveStyleId}_${styleRatioKey}_${currentOutput?.bounds?.width || 0}_${currentOutput?.bounds?.height || 0}`
+    const outputRatioKey = currentOutput?.aspectRatio ? `${currentOutput.aspectRatio.width}x${currentOutput.aspectRatio.height}` : ""
+    const cacheKey = `${outputId}_${scaled}_${effectiveStyleId}_${styleRatioKey}_${outputRatioKey}_${currentOutput?.bounds?.width || 0}_${currentOutput?.bounds?.height || 0}`
     const cached = outputResolutionCache.get(cacheKey)
     if (cached) return { ...cached }
 
@@ -1030,7 +1016,6 @@ export function updateOutputWebrtcData(outputId: string, key: string, value: any
     if (!output) return null
 
     const newData = { ...(output.webrtcData || {}), [key]: value }
-    if (key === "streaming") newData.startedAt = value ? Date.now() : undefined
 
     if (key === "streaming" && (!output.webrtc || !output.webrtcData?.url)) return null
 
@@ -1071,9 +1056,6 @@ export function updateOutputRtmpData(outputId: string, key: string, value: any) 
     if (!output) return null
 
     const newData = { ...(output.rtmpData || {}), [key]: value }
-    if (key === "streaming") {
-        newData.startedAt = value ? Date.now() : undefined
-    }
 
     if (key === "streaming" && (!output.rtmp || !hasStreamableDestination(newData))) return null
 
@@ -1168,7 +1150,7 @@ export async function checkFFmpeg(): Promise<boolean> {
     const res = await requestMain(Main.FFMPEG_CHECK)
     if (res?.installed) return true
 
-    if (await confirmCustom("To create an RTMP output, FreeShow needs to download and install FFmpeg. Do you want to proceed?")) {
+    if (await confirmCustom("To create an RTMP output, PulseFlow needs to download and install FFmpeg. Do you want to proceed?")) {
         const downloadRes = await requestMain(Main.FFMPEG_DOWNLOAD)
         if (downloadRes?.success) {
             newToast("FFmpeg installed successfully!")

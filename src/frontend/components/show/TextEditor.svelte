@@ -7,9 +7,9 @@
     import { translateText } from "../../utils/language"
     import { getNormalizedKey } from "../../utils/shortcuts"
     import Icon from "../helpers/Icon.svelte"
-    import FloatingInputs from "../input/FloatingInputs.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
-    import MaterialZoom from "../inputs/MaterialZoom.svelte"
+    import FloatingBar from "../../lib/components/ui/floating-bar/floating-bar.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import ZoomControl from "../../lib/components/ui/zoom-control/zoom-control.svelte"
     import { formatText } from "./formatTextEditor"
     import { getPlainEditorText } from "./getTextEditor"
     import HighlightedNotes from "./tools/HighlightedNotes.svelte"
@@ -62,31 +62,31 @@
 
 <HighlightedNotes class="context #editbox_text" disabled={isLocked} style="padding: 30px;padding-bottom: 60px;scroll-padding-bottom: 60px;font-size: {$textEditZoom / 8}em;" placeholder={getQuickExample()} value={text} on:change={(e) => formatText(e.detail, "", itemIndex)} on:keydown={keydown} />
 
-<FloatingInputs side="left">
+<FloatingBar side="left">
     {#if showHasChords && itemIndex === 0}
-        <MaterialButton on:click={transposeUp} title="edit.transpose_up">
+        <Button on:click={transposeUp} title="edit.transpose_up">
             <Icon id="arrow_up" size={1.3} white />
-        </MaterialButton>
-        <MaterialButton on:click={transposeDown} title="edit.transpose_down">
+        </Button>
+        <Button on:click={transposeDown} title="edit.transpose_down">
             <Icon id="arrow_down" size={1.3} white />
-        </MaterialButton>
+        </Button>
     {/if}
 
-    <MaterialZoom hidden={showHasChords && itemIndex === 0} columns={$textEditZoom / 10} min={0.5} max={2} defaultValue={1} addValue={-0.1} on:change={(e) => textEditZoom.set(e.detail * 10)} />
-</FloatingInputs>
+    <ZoomControl hidden={showHasChords && itemIndex === 0} columns={$textEditZoom / 10} min={0.5} max={2} defaultValue={1} addValue={-0.1} on:change={(e) => textEditZoom.set(e.detail * 10)} />
+</FloatingBar>
 
 {#if maxTextboxes > 1}
-    <FloatingInputs side="right">
-        <MaterialButton disabled={itemIndex <= 0} on:click={decreaseItemIndex} title="media.previous">
+    <FloatingBar side="right">
+        <Button disabled={itemIndex <= 0} on:click={decreaseItemIndex} title="media.previous">
             <Icon id="remove" size={1.1} white />
-        </MaterialButton>
-        <MaterialButton on:click={() => (itemIndex = 0)} title={itemIndex > 0 ? "actions.reset" : ""} style="min-width: 45px;">
+        </Button>
+        <Button on:click={() => (itemIndex = 0)} title={itemIndex > 0 ? "actions.reset" : ""} style="min-width: 45px;">
             <span style="font-size: 0.85em;opacity: 0.8;font-weight: 500;">
                 {itemIndex === 0 ? translateText("category.all") : `#${itemIndex}`}
             </span>
-        </MaterialButton>
-        <MaterialButton disabled={itemIndex >= maxTextboxes} on:click={increaseItemIndex} title="media.next">
+        </Button>
+        <Button disabled={itemIndex >= maxTextboxes} on:click={increaseItemIndex} title="media.next">
             <Icon id="add" size={1.1} white />
-        </MaterialButton>
-    </FloatingInputs>
+        </Button>
+    </FloatingBar>
 {/if}

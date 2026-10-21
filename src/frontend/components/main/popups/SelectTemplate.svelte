@@ -1,6 +1,6 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
-    import { activePopup, activeStyle, drawerTabsData, outputs, popupData, scriptures, styles, templates } from "../../../stores"
+    import { activePopup, activeStyle, drawerTabsData, outputs, popupData, scriptures, styles, templates, previewOutputId } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { formatSearch } from "../../../utils/search"
     import Card from "../../drawer/Card.svelte"
@@ -8,9 +8,9 @@
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { getResolution } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
-    import MaterialButton from "../../inputs/MaterialButton.svelte"
-    import MaterialDropdown from "../../inputs/MaterialDropdown.svelte"
-    import MaterialTextInput from "../../inputs/MaterialTextInput.svelte"
+    import Button from "../../../lib/components/ui/button/button.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
+    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
     import Center from "../../system/Center.svelte"
     import Icon from "../../helpers/Icon.svelte"
     import { registerPopupSubmit } from "../../../utils/popup"
@@ -89,7 +89,7 @@
         })
     }
 
-    let resolution = getResolution(null, { $outputs, $styles })
+    let resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
 
     $: normalTemplates = searchedTemplates.filter((a) => a.category !== "scripture")
     $: scriptureTemplates = searchedTemplates.filter((a) => a.category === "scripture")
@@ -114,10 +114,13 @@
             loaded = true
         } else {
             if (timeout) clearTimeout(timeout)
-            timeout = setTimeout(() => {
-                const batch = lazyLoader === 0 ? 4 : Math.min(32, lazyLoader * 2)
-                lazyLoader += batch
-            }, lazyLoader === 0 ? 60 : 30)
+            timeout = setTimeout(
+                () => {
+                    const batch = lazyLoader === 0 ? 4 : Math.min(32, lazyLoader * 2)
+                    lazyLoader += batch
+                },
+                lazyLoader === 0 ? 60 : 30
+            )
         }
     }
 
@@ -147,13 +150,13 @@
 </script>
 
 {#if revert}
-    <MaterialButton class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => activePopup.set(revert)} />
+    <Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={() => activePopup.set(revert)} />
 {/if}
 
-<MaterialTextInput label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
+<TextField label="main.search" value="" on:input={(e) => search(e.detail)} autofocus />
 
 {#if customTypes}
-    <MaterialDropdown label="scripture.translations" options={types} value={selectedType} on:change={(e) => (selectedType = e.detail)} />
+    <SelectField label="scripture.translations" options={types} value={selectedType} on:change={(e) => (selectedType = e.detail)} />
 {/if}
 
 <div style="position: relative;height: 100%;width: calc(100vw - (var(--navigation-width) + 20px) * 2);margin-top: 10px;overflow-y: auto;">

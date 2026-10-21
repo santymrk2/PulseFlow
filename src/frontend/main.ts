@@ -1,10 +1,19 @@
 // ----- FreeShow -----
 // Svelte app entry point
 
-import * as Sentry from "@sentry/electron/renderer"
-import "svelte"
+import * as Sentry from "@sentry/browser"
+import { mount } from "svelte"
 import App from "./App.svelte"
+import "./app.css"
+import "@fontsource-variable/geist"
+import "@fontsource-variable/geist-mono"
+import { setupTauriApi } from "./IPC/tauri"
+import { initMenuActions } from "./utils/shortcuts"
 import { ERROR_FILTER } from "./utils/common"
+
+// set up the Tauri IPC bridge (replaces the Electron preload's window.api)
+setupTauriApi()
+initMenuActions()
 
 // error reporting (production only)
 // if autoErrorReporting is false, electron reporting will not start and this will fail with an error which is expected
@@ -20,6 +29,6 @@ if (import.meta.env.PROD) {
     })
 }
 
-const app = new App({ target: document.body })
+const app = mount(App, { target: document.body })
 
 export default app

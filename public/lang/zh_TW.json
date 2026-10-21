@@ -345,6 +345,7 @@
         "first_last": "第一張與最後一張"
     },
     "themes": {
+        "PulseFlow": "PulseFlow",
         "default": "預設",
         "dark": "深色",
         "light": "淺色",
@@ -508,7 +509,7 @@
         "effect_items": "特效項目",
         "timeline": "時間軸",
         "timecode": "時間碼",
-        "initialize": "歡迎使用 FreeShow",
+        "initialize": "歡迎使用 PulseFlow",
         "unsaved": "您確定要結束嗎？",
         "cancel": "取消",
         "continue": "繼續",

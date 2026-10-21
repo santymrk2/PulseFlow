@@ -1,15 +1,16 @@
 <script lang="ts">
     import { onDestroy } from "svelte"
     import type { TabsObj } from "../../../types/Tabs"
-    import { activeEdit, activePage, activePopup, activeStyle, overlays, popupData, scenes, selected, settingsTab, styles } from "../../stores"
+    import { activeEdit, activePopup, activeStyle, overlays, popupData, scenes, selected, styles } from "../../stores"
+    import { openSettings } from "../settings/openSettings"
     import { translateText } from "../../utils/language"
     import { clone } from "../helpers/array"
     import { history } from "../helpers/history"
     import Icon from "../helpers/Icon.svelte"
     import { updateActiveSceneOutputs } from "../helpers/output"
-    import InputRow from "../input/InputRow.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
-    import MaterialPopupButton from "../inputs/MaterialPopupButton.svelte"
+    import InputRow from "../../lib/components/ui/input-row/input-row.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
+    import PopupField from "../../lib/components/ui/popup-field/popup-field.svelte"
     import Tabs from "../main/Tabs.svelte"
 
     let tabs: TabsObj = {
@@ -24,8 +25,7 @@
     $: styleId = content?.style || ""
     function editStyle() {
         activeStyle.set(styleId)
-        settingsTab.set("styles")
-        activePage.set("settings")
+        openSettings("styles")
     }
 
     function updateContent(key: string, data: any, shouldOverride = false) {
@@ -122,14 +122,14 @@
 
     <div class="content">
         <!-- Choose media input -->
-        <MaterialPopupButton label="popup.choose_media_input" value={content.media} name={content.media?.name || content.media?.id || ""} icon={content.media?.type || "camera"} popupId="choose_media_input" on:change={(e) => updateContent("media", e.detail || null)} allowEmpty />
+        <PopupField label="popup.choose_media_input" value={content.media} name={content.media?.name || content.media?.id || ""} icon={content.media?.type || "camera"} popupId="choose_media_input" on:change={(e) => updateContent("media", e.detail || null)} allowEmpty />
 
         <!-- Output style -->
         <InputRow style="margin-top: 5px;">
-            <!-- <MaterialPopupButton label="actions.id_select_output_style" value={styleId || "empty"} name={styleId ? $styles[styleId]?.name || "" : "main.empty"} icon="styles" popupId="select_style" on:change={(e) => updateContent("style", e.detail || "")} allowEmpty={!!styleId} /> -->
-            <MaterialPopupButton label="actions.id_select_output_style" value={styleId} name={$styles[styleId]?.name || ""} icon="styles" popupId="select_style" on:change={(e) => updateContent("style", e.detail || "")} allowEmpty />
+            <!-- <PopupField label="actions.id_select_output_style" value={styleId || "empty"} name={styleId ? $styles[styleId]?.name || "" : "main.empty"} icon="styles" popupId="select_style" on:change={(e) => updateContent("style", e.detail || "")} allowEmpty={!!styleId} /> -->
+            <PopupField label="actions.id_select_output_style" value={styleId} name={$styles[styleId]?.name || ""} icon="styles" popupId="select_style" on:change={(e) => updateContent("style", e.detail || "")} allowEmpty />
             {#if $styles[styleId]}
-                <MaterialButton title="titlebar.edit" icon="edit" on:click={editStyle} />
+                <Button title="titlebar.edit" icon="edit" on:click={editStyle} />
             {/if}
         </InputRow>
 
@@ -167,18 +167,18 @@
                         </div>
 
                         {#if index < overlaysList.length - 1}
-                            <MaterialButton class="down" icon="down" on:click={() => moveOverlay(index, 1)} />
+                            <Button class="down" icon="down" on:click={() => moveOverlay(index, 1)} />
                         {/if}
                         {#if index > 0}
-                            <MaterialButton class="up" icon="up" on:click={() => moveOverlay(index, -1)} />
+                            <Button class="up" icon="up" on:click={() => moveOverlay(index, -1)} />
                         {/if}
                     </div>
                 {/each}
             </div>
 
-            <MaterialButton variant="outlined" icon="add" style="width: 100%;" on:click={openAddOverlay}>
+            <Button variant="outline" icon="add" style="width: 100%;" on:click={openAddOverlay}>
                 {translateText("edit.overlay_content")}
-            </MaterialButton>
+            </Button>
         </div>
     </div>
 </div>
@@ -245,7 +245,7 @@
     }
     .title p {
         font-weight: 500;
-        font-size: 0.8rem;
+        font-size: var(--text-xs);
         opacity: 0.8;
     }
 </style>

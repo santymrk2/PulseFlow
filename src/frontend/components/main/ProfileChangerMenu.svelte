@@ -3,7 +3,7 @@
     import { activeProfile, profiles } from "../../stores"
     import Icon from "../helpers/Icon.svelte"
     import T from "../helpers/T.svelte"
-    import MaterialButton from "../inputs/MaterialButton.svelte"
+    import Button from "../../lib/components/ui/button/button.svelte"
 
     const isAdmin = !$activeProfile
     const currentProfile = isAdmin ? "" : $profiles[$activeProfile]?.name || ""
@@ -21,9 +21,9 @@
         </span>
     </p>
 
-    <MaterialButton variant="outlined" on:click={() => activeProfile.set(null)}>
+    <Button variant="outline" on:click={() => activeProfile.set(null)}>
         <T id="profile.change_profile" />
-    </MaterialButton>
+    </Button>
 </div>
 
 <style>
@@ -37,7 +37,7 @@
         padding: 0.5em 1.2em;
 
         border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        box-shadow: var(--shadow-float);
 
         display: flex;
         gap: 1.2em;
