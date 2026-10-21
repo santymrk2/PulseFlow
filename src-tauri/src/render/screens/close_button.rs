@@ -7,6 +7,22 @@
 
 use crate::render::types::TextBlock;
 
+/// Posición del cursor dentro de la superficie, en píxeles. Tauri entrega `cursor_position()` en puntos lógicos en
+/// macOS y en píxeles físicos en Windows, mientras que `inner_position()` es siempre físico: mezclarlos desplaza el
+/// cursor en cualquier monitor con escala distinta de 1.
+pub(super) fn cursor_local(
+    cursor: (f64, f64),
+    inner: (i32, i32),
+    scale: f64,
+    cursor_in_points: bool,
+) -> (f32, f32) {
+    let k = if cursor_in_points { scale } else { 1.0 };
+    (
+        (cursor.0 * k - inner.0 as f64) as f32,
+        (cursor.1 * k - inner.1 as f64) as f32,
+    )
+}
+
 /// Rectángulo del botón en píxeles de la superficie: `(x, y, lado)`.
 pub(super) fn button_rect(height: u32) -> (f32, f32, f32) {
     let side = (height as f32 * 0.06).clamp(40.0, 96.0);
@@ -80,6 +96,19 @@ pub(super) fn left_button_down() -> bool {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn macos_cursor_in_points_is_scaled_to_the_surface_pixels() {
+        // Reportado en un monitor retina (escala 2): cursor (900, 1550) pts, ventana en (248, 1080) pts = (496, 2160) px.
+        let (x, y) = cursor_local((900.0, 1550.0), (496, 2160), 2.0, true);
+        assert_eq!((x, y), (1304.0, 940.0));
+    }
+
+    #[test]
+    fn windows_cursor_is_already_physical() {
+        let (x, y) = cursor_local((900.0, 1550.0), (500, 1000), 1.5, false);
+        assert_eq!((x, y), (400.0, 550.0));
+    }
 
     #[test]
     fn button_sits_bottom_left_and_inside_the_surface() {

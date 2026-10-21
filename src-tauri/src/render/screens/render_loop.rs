@@ -59,8 +59,8 @@ pub(super) fn spawn_render_loop(
                 let frame_start = Instant::now();
                 let (cursor_inside, cursor_on_button, clicked) = {
                     let down = close_button::left_button_down();
-                    let local = match (window.cursor_position(), window.inner_position()) {
-                        (Ok(c), Ok(o)) => Some(((c.x - o.x as f64) as f32, (c.y - o.y as f64) as f32)),
+                    let local = match (window.cursor_position(), window.inner_position(), window.scale_factor()) {
+                        (Ok(c), Ok(o), Ok(scale)) => Some(close_button::cursor_local((c.x, c.y), (o.x, o.y), scale, cfg!(target_os = "macos"))),
                         _ => None,
                     };
                     let state = local
