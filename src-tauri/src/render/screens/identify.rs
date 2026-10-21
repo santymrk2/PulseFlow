@@ -72,7 +72,7 @@ pub fn identify_screens(app: &AppHandle, entries: &[IdentifyScreen]) -> AppResul
     for (number, monitor_index) in targets {
         let Some(monitor) = monitors.get(monitor_index) else { continue };
         if let Err(err) = open_identify_window(app, &number, monitor) {
-            eprintln!("[identify] no se pudo abrir la ventana del monitor {monitor_index}: {err}");
+            log::warn!("[identify] no se pudo abrir la ventana del monitor {monitor_index}: {err}");
         }
     }
     Ok(())

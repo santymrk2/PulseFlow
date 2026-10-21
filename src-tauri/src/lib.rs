@@ -20,11 +20,31 @@ pub mod utils;
 
 use tauri::Manager;
 
+/// Plugin de registro: archivo `pulseflow.log` en `app_log_dir`, 2 MB por archivo y 5 archivos como máximo.
+fn logging_plugin() -> tauri::plugin::TauriPlugin<tauri::Wry> {
+    use tauri_plugin_log::{RotationStrategy, Target, TargetKind};
+
+    let mut targets = vec![Target::new(TargetKind::LogDir { file_name: Some("pulseflow".to_string()) })];
+    if cfg!(debug_assertions) {
+        targets.push(Target::new(TargetKind::Stdout));
+    }
+
+    tauri_plugin_log::Builder::new()
+        .targets(targets)
+        .level(if cfg!(debug_assertions) { log::LevelFilter::Debug } else { log::LevelFilter::Info })
+        .max_file_size(2_000_000)
+        .rotation_strategy(RotationStrategy::KeepSome(5))
+        .build()
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     let result = tauri::Builder::default()
         .plugin(tauri_plugin_opener::init())
         .plugin(tauri_plugin_dialog::init())
+        // F13.3: registro a archivo en `app_log_dir` (rotación por tamaño, 5 archivos). Nivel `info` en
+        // release y `debug` en desarrollo; en desarrollo además sale por la terminal.
+        .plugin(logging_plugin())
         .setup(|app| {
             // Inicializar el gestor de tiendas con el directorio de config de la app.
             let config_dir = app.path().app_config_dir()?;
@@ -160,6 +180,7 @@ pub fn run() {
 
     // Regla del proyecto: no usar `.expect()` en producción; reportar y salir.
     if let Err(err) = result {
+        // única salida directa que queda: si el arranque falla, el plugin de registro puede no existir todavía
         eprintln!("PulseFlow no pudo iniciarse: {err}");
         std::process::exit(1);
     }

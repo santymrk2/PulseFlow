@@ -417,11 +417,12 @@ pub fn OPEN_FOLDER_PATH(app: AppHandle, data: String) -> AppResult<()> {
     Ok(())
 }
 
-/// `OPEN_LOG`: revela el archivo de registro de errores.
+/// `OPEN_LOG`: abre la carpeta de registros (`app_log_dir`, ver `logging_plugin` en `lib.rs`).
 #[tauri::command]
 pub fn OPEN_LOG(app: AppHandle) -> AppResult<()> {
-    let path = config_dir(&app)?.join("error_log.json");
-    open_in_system(&app, &path.to_string_lossy(), false);
+    let folder = app.path().app_log_dir()?;
+    std::fs::create_dir_all(&folder)?;
+    open_in_system(&app, &folder.to_string_lossy(), true);
     Ok(())
 }
 

@@ -174,7 +174,7 @@ pub fn start(
 
         tauri::async_runtime::spawn(async move {
             if let Err(err) = serve_room(shared, port, dir, shutdown_rx).await {
-                eprintln!("[server] {err}");
+                log::warn!("[server] {err}");
             }
         });
     }

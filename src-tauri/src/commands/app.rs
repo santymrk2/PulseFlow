@@ -39,14 +39,26 @@ pub fn GET_OS() -> AppResult<OS> {
     })
 }
 
-/// Log del frontend (equivale a `Main.LOG`): imprime en la terminal de Tauri.
-/// En desarrollo, `IPC/tauri.ts` reenvía aquí `console.warn`/`console.error`
-/// del webview para poder verlos sin abrir el inspector.
+/// Nivel y texto de una línea que manda el frontend (`"ERROR: …"`, `"WARN: …"`); sin prefijo es `info`.
+fn parse_webview_line(text: &str) -> (log::Level, &str) {
+    for (prefix, level) in [("ERROR: ", log::Level::Error), ("WARN: ", log::Level::Warn)] {
+        if text.len() >= prefix.len() && text.is_char_boundary(prefix.len()) && text[..prefix.len()].eq_ignore_ascii_case(prefix) {
+            return (level, &text[prefix.len()..]);
+        }
+    }
+    (log::Level::Info, text)
+}
+
+/// Log del frontend (equivale a `Main.LOG`): `IPC/tauri.ts` reenvía aquí `console.warn`/`console.error`
+/// y los errores sin capturar del webview, que quedan en el archivo de registro con su nivel (F13.3).
 #[tauri::command]
 pub fn LOG(data: Option<serde_json::Value>) {
     match data {
-        Some(serde_json::Value::String(text)) => eprintln!("[webview] {text}"),
-        Some(value) => eprintln!("[webview] {value}"),
+        Some(serde_json::Value::String(text)) => {
+            let (level, message) = parse_webview_line(&text);
+            log::log!(target: "webview", level, "{message}");
+        }
+        Some(value) => log::info!(target: "webview", "{value}"),
         None => {}
     }
 }
@@ -83,3 +95,23 @@ pub fn IP() -> Vec<String> {
     }
     ips
 }
+
+#[cfg(test)]
+mod log_tests {
+    use super::*;
+    use log::Level;
+
+    #[test]
+    fn the_webview_level_prefix_picks_the_log_level() {
+        assert_eq!(parse_webview_line("ERROR: algo se rompió"), (Level::Error, "algo se rompió"));
+        assert_eq!(parse_webview_line("WARN: cuidado"), (Level::Warn, "cuidado"));
+        assert_eq!(parse_webview_line("error: en minúsculas"), (Level::Error, "en minúsculas"));
+    }
+
+    #[test]
+    fn a_line_without_prefix_is_info_and_keeps_its_text() {
+        assert_eq!(parse_webview_line("sin prefijo"), (Level::Info, "sin prefijo"));
+        assert_eq!(parse_webview_line("ERRORES: no es un nivel"), (Level::Info, "ERRORES: no es un nivel"));
+    }
+}
+

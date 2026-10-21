@@ -165,7 +165,7 @@ const warnedIpcCommands = new Set<string>()
 // usuario habilitó `localStorage.pulseflowIpcDebug = "1"`. Sin esa clave no se
 // imprime nada (ni en desarrollo), así la terminal queda limpia al usar la app.
 // Si la clave está activa, además se reenvía el warn a la terminal vía `LOG`
-// (`forwardConsoleToTerminal`).
+// (`forwardConsoleToLog`).
 function ipcDebugWarn(label: string, name: string) {
     const key = `${label}:${name}`
     if (warnedIpcCommands.has(key)) return
@@ -297,10 +297,11 @@ function showFilePath(file: File): string {
     return (file as any)?.path || ""
 }
 
-// En desarrollo, reenvía `console.warn`/`console.error` del webview a la terminal
-// de Tauri (comando `LOG`), para ver los errores del frontend sin el inspector.
-function forwardConsoleToTerminal() {
-    if (!isTauri || !import.meta.env.DEV) return
+// Reenvía `console.warn`/`console.error` y los errores sin capturar del webview al registro de la app
+// (comando `LOG`, F13.3): quedan en el archivo de `app_log_dir` con su nivel, también en release, y en
+// desarrollo salen por la terminal de Tauri, así se ven sin abrir el inspector.
+function forwardConsoleToLog() {
+    if (!isTauri) return
 
     const stringify = (value: any) => {
         if (value instanceof Error) return value.stack || value.message
@@ -326,5 +327,5 @@ function forwardConsoleToTerminal() {
 
 export function setupTauriApi() {
     window.api = { send, receive, removeListener, getListeners, showFilePath }
-    forwardConsoleToTerminal()
+    forwardConsoleToLog()
 }

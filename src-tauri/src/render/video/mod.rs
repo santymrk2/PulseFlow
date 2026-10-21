@@ -64,7 +64,7 @@ pub fn start(app: &AppHandle, path: &str, sink: Arc<dyn FrameSink>) -> AppResult
     if prefers_native(path) {
         match start_native(app, path, Arc::clone(&sink)) {
             Ok(decoder) => return Ok(decoder),
-            Err(err) => eprintln!("[VideoEngine] decodificador nativo no disponible para {path}, uso ffmpeg: {err}"),
+            Err(err) => log::warn!("[VideoEngine] decodificador nativo no disponible para {path}, uso ffmpeg: {err}"),
         }
     }
     Ok(Box::new(ffmpeg::FfmpegDecoder::start(app, path, sink)?))

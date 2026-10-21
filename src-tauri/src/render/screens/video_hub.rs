@@ -22,7 +22,7 @@ pub(super) fn sync_video(app: &AppHandle, handle: &mut ScreenHandle, background:
 
     if let Some(path) = wanted {
         if video_hub_acquire(app, &path, &handle.label).is_err() {
-            eprintln!("[screens] no se pudo reproducir el video {path}");
+            log::warn!("[screens] no se pudo reproducir el video {path}");
         } else {
             handle.video = Some(path);
         }

@@ -24,6 +24,7 @@ bytemuck = { version = "1", features = ["derive"] }
 pollster = "1.0.1"
 image = { version = "0.25", default-features = false, features = ["png"] }
 tokio = { version = "1", features = ["sync"] }
+log = "0.4"
 
 [target.'cfg(windows)'.dependencies]
 windows = { version = "0.62", features = [

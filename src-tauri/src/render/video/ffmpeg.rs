@@ -133,7 +133,7 @@ impl FfmpegDecoder {
 
                 // Si el stream por hardware murió a mitad de camino, reintentar en software.
                 if end == SessionEnd::Error && running_thread.load(Ordering::Relaxed) {
-                    eprintln!("[VideoEngine] decodificación por hardware falló a mitad de camino, reintentando en software: {video_path}");
+                    log::warn!("[VideoEngine] decodificación por hardware falló a mitad de camino, reintentando en software: {video_path}");
                     session.run(None);
                 }
             })
@@ -177,7 +177,7 @@ impl Session<'_> {
         let mut process = match Command::new(self.ffmpeg).args(&args).stdout(Stdio::piped()).stderr(Stdio::null()).spawn() {
             Ok(process) => process,
             Err(e) => {
-                eprintln!("[VideoEngine] no se pudo iniciar ffmpeg ({hwaccel:?}): {e}");
+                log::warn!("[VideoEngine] no se pudo iniciar ffmpeg ({hwaccel:?}): {e}");
                 return SessionEnd::Error;
             }
         };
@@ -191,7 +191,7 @@ impl Session<'_> {
         let end = match stdout {
             Some(stdout) => self.read_frames(stdout, hwaccel),
             None => {
-                eprintln!("[VideoEngine] ffmpeg no expuso stdout ({hwaccel:?}) en {}", self.path);
+                log::warn!("[VideoEngine] ffmpeg no expuso stdout ({hwaccel:?}) en {}", self.path);
                 SessionEnd::Error
             }
         };
@@ -214,7 +214,7 @@ impl Session<'_> {
             if let Err(e) = stdout.read_exact(&mut buffer) {
                 // EOF o error de lectura: reportar y salir (si no fue un stop).
                 if self.running.load(Ordering::Relaxed) {
-                    eprintln!("[VideoEngine] fin del stream ({hwaccel:?}) en {}: {e}", self.path);
+                    log::warn!("[VideoEngine] fin del stream ({hwaccel:?}) en {}: {e}", self.path);
                     return SessionEnd::Error;
                 }
                 break;

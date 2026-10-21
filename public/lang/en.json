@@ -846,7 +846,7 @@
         "delete_empty_shows": "Delete empty shows",
         "export_usage_log": "Export usage log",
         "reset_usage_log": "Reset usage log",
-        "open_log_file": "Open log file",
+        "open_log_file": "Open log folder",
         "open_error_log": "Open error log",
         "open_cache_folder": "Open cache folder",
         "open_app_data_folder": "Open app data folder",

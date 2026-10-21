@@ -155,7 +155,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
 
             match import_pixel_buffer(&gpu, &cache, &pixel_buffer) {
                 Ok(frame) => sink.push(DecodedFrame { pts: total, pixels: FramePixels::Native(frame) }),
-                Err(err) => eprintln!("[VideoEngine] frame nativo descartado en {path}: {err}"),
+                Err(err) => log::warn!("[VideoEngine] frame nativo descartado en {path}: {err}"),
             }
             if total > last_total {
                 frame_duration = total - last_total;
@@ -182,7 +182,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
             break;
         } else {
             failures += 1;
-            eprintln!("[VideoEngine] el lector nativo terminó con estado {status:?} en {path} ({failures}/{MAX_REOPEN_FAILURES})");
+            log::warn!("[VideoEngine] el lector nativo terminó con estado {status:?} en {path} ({failures}/{MAX_REOPEN_FAILURES})");
             if failures >= MAX_REOPEN_FAILURES {
                 break;
             }
@@ -191,7 +191,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
         match Source::open(path) {
             Ok(next) => source = next,
             Err(err) => {
-                eprintln!("[VideoEngine] no se pudo reabrir {path}: {err}");
+                log::warn!("[VideoEngine] no se pudo reabrir {path}: {err}");
                 break;
             }
         }
@@ -340,7 +340,7 @@ mod tests {
         let (cpu, wall) = (process_cpu() - cpu_before, wall_before.elapsed());
 
         let frames = sink.0.lock().expect("lock").len();
-        println!("nativo: {frames} frames en {wall:.2?} de reloj; CPU {cpu:.2?} ({:.0} % de un núcleo)", cpu.as_secs_f64() / wall.as_secs_f64() * 100.0);
+        log::info!("nativo: {frames} frames en {wall:.2?} de reloj; CPU {cpu:.2?} ({:.0} % de un núcleo)", cpu.as_secs_f64() / wall.as_secs_f64() * 100.0);
     }
 }
 

@@ -153,7 +153,7 @@ impl LayerArena {
     /// Escribe `uniforms` en una entrada nueva y devuelve su offset dinámico.
     pub(crate) fn push(&mut self, queue: &Queue, uniforms: &LayerUniforms) -> Option<u32> {
         if self.cursor >= MAX_LAYERS_PER_FRAME {
-            eprintln!("[media] más de {MAX_LAYERS_PER_FRAME} capas en un frame: se omite el resto");
+            log::warn!("[media] más de {MAX_LAYERS_PER_FRAME} capas en un frame: se omite el resto");
             return None;
         }
         let offset = self.cursor * self.stride;
@@ -343,7 +343,7 @@ impl MediaStore {
                 jobs.remove(key);
             }
             Err(err) => {
-                eprintln!("[media] {err}");
+                log::warn!("[media] {err}");
                 jobs.insert(key.to_string(), Job::Failed(err.to_string(), std::time::Instant::now()));
             }
         }

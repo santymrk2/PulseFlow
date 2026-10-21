@@ -845,7 +845,7 @@
         "delete_empty_shows": "Eliminar presentaciones vacías",
         "export_usage_log": "Exportar el registro de uso",
         "reset_usage_log": "Reiniciar el registro de uso",
-        "open_log_file": "Abrir archivo de registro",
+        "open_log_file": "Abrir carpeta de registros",
         "open_error_log": "Abrir registro de errores",
         "open_cache_folder": "Abrir carpeta de caché",
         "open_app_data_folder": "Abrir carpeta de datos de la aplicación",

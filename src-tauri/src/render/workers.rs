@@ -31,11 +31,11 @@ fn pool() -> &'static Pool {
                 let Ok(job) = job else { break };
                 // un job que hace panic no puede matar al trabajador
                 if catch_unwind(AssertUnwindSafe(job)).is_err() {
-                    eprintln!("[workers] un job de I/O terminó en panic");
+                    log::warn!("[workers] un job de I/O terminó en panic");
                 }
             });
             if let Err(e) = spawned {
-                eprintln!("[workers] no se pudo iniciar el trabajador {index}: {e}");
+                log::warn!("[workers] no se pudo iniciar el trabajador {index}: {e}");
             }
         }
         Pool { sender }
@@ -45,7 +45,7 @@ fn pool() -> &'static Pool {
 /// Ejecuta `job` en un hilo del pool y devuelve de inmediato.
 pub fn submit(job: impl FnOnce() + Send + 'static) {
     if pool().sender.send(Box::new(job)).is_err() {
-        eprintln!("[workers] el pool de I/O no está disponible");
+        log::warn!("[workers] el pool de I/O no está disponible");
     }
 }
 

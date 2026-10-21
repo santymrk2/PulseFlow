@@ -172,7 +172,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
         // SAFETY: los punteros de salida son locales y válidos durante la llamada.
         let read = unsafe { source.reader.ReadSample(FIRST_VIDEO_STREAM, 0, None, Some(&mut flags), Some(&mut timestamp), Some(&mut sample)) };
         if let Err(e) = read {
-            eprintln!("[VideoEngine] error de lectura nativo en {path}: {e}");
+            log::warn!("[VideoEngine] error de lectura nativo en {path}: {e}");
             break;
         }
 
@@ -180,7 +180,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
             // fin del archivo: dar la vuelta con el PTS acumulado
             offset = last_total + frame_duration;
             if let Err(e) = source.rewind() {
-                eprintln!("[VideoEngine] no se pudo reiniciar {path}: {e}");
+                log::warn!("[VideoEngine] no se pudo reiniciar {path}: {e}");
                 break;
             }
             continue;
@@ -211,7 +211,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
         };
         match frame {
             Ok(frame) => sink.push(DecodedFrame { pts: total, pixels: FramePixels::Native(frame) }),
-            Err(err) => eprintln!("[VideoEngine] frame nativo descartado en {path}: {err}"),
+            Err(err) => log::warn!("[VideoEngine] frame nativo descartado en {path}: {err}"),
         }
 
         if total > last_total {

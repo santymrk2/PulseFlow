@@ -1165,16 +1165,8 @@ toque en F14 puede romper algo sin que nadie se entere.
   *Aceptación:* agregar un `as any` hace fallar `bun run test:budget`; borrarlo lo hace pasar.
   Valores iniciales anotados en el json (56 / 2535 / 910 al 2026-10-20, re-medir).
 
-- [ ] **F13.3 Log a archivo.**
-  *Archivos:* `src-tauri/Cargo.toml` (`tauri-plugin-log`, oficial y liviano), `lib.rs`,
-  los archivos con `println!`/`eprintln!`, `src/frontend/IPC/tauri.ts`, pestaña "Otros" de
-  Configuración.
-  *Pasos:* registrar el plugin con salida a `app_log_dir` (rotación por tamaño, 5 archivos),
-  nivel `info` en release y `debug` en dev. Reemplazar `println!`/`eprintln!` por `log::`.
-  En el frontend, enviar `console.error` y los `unhandledrejection` al log. Botón
-  "Abrir carpeta de registros" en Configuración → Otros.
-  *Aceptación:* en macOS, abrir un medio inexistente deja una línea con fecha, nivel y
-  ruta en el archivo de log; el botón abre la carpeta. Sin `println!` fuera de tests.
+- [x] **F13.3 Log a archivo.** (2026-10-20) `tauri-plugin-log` a `app_log_dir` (`pulseflow.log`, 2 MB por archivo, 5 archivos; `info` en release, `debug` en dev con salida también por la terminal). Todos los `println!`/`eprintln!` de producción pasaron a `log::` (se mantiene **uno** a propósito en `lib.rs`: si el arranque falla el plugin puede no existir todavía). El comando `LOG` respeta el nivel (`ERROR:`/`WARN:`, con test) y el frontend reenvía `console.warn`/`console.error` y los errores sin capturar **siempre**, no sólo en dev. `OPEN_LOG` abre la carpeta de registros y el botón de Configuración dice "Abrir carpeta de registros". **Sin verificar en la app real** (falta: abrir un medio inexistente y ver la línea con fecha, nivel y ruta en el archivo).
+  *No hecho:* `requestMain` aún no registra el timeout (va con F15.2).
 
 - [ ] **F13.4 Prueba en hardware real (usuario).** Ejecutar F2.8 y F8.3 en una Mac y en
   una PC con Windows, con 2 monitores. Es requisito para dar por sólida la salida; los
