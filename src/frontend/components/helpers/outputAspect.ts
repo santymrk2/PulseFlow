@@ -53,3 +53,11 @@ export function referenceOutputId(outputs: { [id: string]: AspectOutput }, previ
     const picked = previewId ? outputs[previewId] : undefined
     return picked && !picked.stageOutput && picked.kind !== "stage" ? previewId : ""
 }
+
+/** Alineación del contenido que se envía al engine (F21.2): sólo "start" o "end"; el centro es el valor por defecto y no se manda. */
+export function contentAlign(...candidates: (string | null | undefined)[]): "start" | "end" | undefined {
+    for (const value of candidates) {
+        if (value === "start" || value === "end") return value
+    }
+    return undefined
+}

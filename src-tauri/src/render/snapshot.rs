@@ -10,6 +10,7 @@ use std::sync::Arc;
 
 use crate::error::{AppError, AppResult};
 
+use super::frame::fit_content_rect;
 use super::media::MediaStore;
 use super::scene::ScenePayload;
 use super::text::TextEngine;
@@ -119,6 +120,11 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
             multiview_mask: None,
         });
 
+        // F21.2: el contenido se encuadra dentro de la captura según la resolución y `align` de la escena
+        let frame_rect = fit_content_rect(scene.content_frame(), width, height);
+        frame_rect.apply_to(&mut render_pass);
+        let (frame_w, frame_h) = (frame_rect.width, frame_rect.height);
+
         // Capas de imagen: fondo (si lo hay) e items de medio de la slide (F4.5).
         // Los videos no se decodifican fuera del bucle de render.
         let background = scene.background_media();
@@ -144,8 +150,8 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
                         &mut arena,
                         &mut render_pass,
                         &texture,
-                        width,
-                        height,
+                        frame_w,
+                        frame_h,
                         bg.opacity,
                         bg.aspect_mode,
                     );
@@ -159,7 +165,7 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
                 }
                 let texture = store.load_image(&item.path)?;
                 let scale = match item.design_width {
-                    Some(dw) if dw > 0.0 => width as f32 / dw,
+                    Some(dw) if dw > 0.0 => frame_w as f32 / dw,
                     _ => 1.0,
                 };
                 pipeline.render_rect(
@@ -167,8 +173,8 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
                     &mut arena,
                     &mut render_pass,
                     &texture,
-                    width,
-                    height,
+                    frame_w,
+                    frame_h,
                     [
                         item.x * scale,
                         item.y * scale,
@@ -187,7 +193,7 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
                 }
                 let texture = store.load_image(&item.path)?;
                 let scale = match item.design_width {
-                    Some(dw) if dw > 0.0 => width as f32 / dw,
+                    Some(dw) if dw > 0.0 => frame_w as f32 / dw,
                     _ => 1.0,
                 };
                 pipeline.render_rect(
@@ -195,8 +201,8 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
                     &mut arena,
                     &mut render_pass,
                     &texture,
-                    width,
-                    height,
+                    frame_w,
+                    frame_h,
                     [
                         item.x * scale,
                         item.y * scale,
@@ -213,14 +219,14 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
         let blocks = scene.text_blocks();
         if !blocks.is_empty() {
             let mut text_engine = TextEngine::new(&device, &queue, SNAPSHOT_FORMAT);
-            text_engine.render(&device, &queue, &mut render_pass, width, height, &blocks)?;
+            text_engine.render(&device, &queue, &mut render_pass, frame_w, frame_h, &blocks)?;
         }
 
         // Capa 5: texto de los overlays (F4.6).
         let overlay_blocks = scene.overlay_text_blocks();
         if !overlay_blocks.is_empty() {
             let mut text_engine = TextEngine::new(&device, &queue, SNAPSHOT_FORMAT);
-            text_engine.render(&device, &queue, &mut render_pass, width, height, &overlay_blocks)?;
+            text_engine.render(&device, &queue, &mut render_pass, frame_w, frame_h, &overlay_blocks)?;
         }
     }
 
@@ -411,6 +417,7 @@ mod tests {
             transition: None,
             plain_text: String::new(),
             next_text: None,
+            align: Default::default(),
         };
 
         let rgba = render_snapshot_rgba(&scene, 320, 180).expect("render del snapshot");
@@ -427,5 +434,39 @@ mod tests {
         let blocks = scene.text_blocks();
         assert_eq!(blocks.len(), 1);
         assert!(matches!(scene.items[0], SceneItem::Text(SceneTextItem { .. })));
+    }
+
+    /// F21.2: una escena 4:3 en una captura 16:9 se encuadra (barras negras) y respeta `align`.
+    #[test]
+    fn la_escena_se_encuadra_en_la_captura_segun_su_alineacion() {
+        let dir = std::env::temp_dir().join("pulseflow-snapshot-encuadre");
+        std::fs::create_dir_all(&dir).expect("carpeta temporal");
+        let red = dir.join("rojo.png");
+        image::RgbaImage::from_pixel(8, 8, image::Rgba([255, 0, 0, 255])).save(&red).expect("imagen roja");
+
+        let render = |align: &str| {
+            let scene: ScenePayload = serde_json::from_value(json!({
+                "outputId": "encuadre", "width": 640, "height": 480, "align": align,
+                "background": { "path": red.to_string_lossy(), "type": "image", "fit": "fill" }
+            }))
+            .expect("escena válida");
+            render_snapshot_rgba(&scene, 640, 360).expect("render del snapshot")
+        };
+        let pixel = |rgba: &[u8], x: usize, y: usize| [rgba[(y * 640 + x) * 4], rgba[(y * 640 + x) * 4 + 1], rgba[(y * 640 + x) * 4 + 2]];
+        let (red_px, black_px) = ([255u8, 0, 0], [0u8, 0, 0]);
+
+        // contenido 480×360 dentro de 640×360: sobran 160 px
+        let center = render("center");
+        assert_eq!(pixel(&center, 20, 180), black_px, "centro: barra izquierda");
+        assert_eq!(pixel(&center, 320, 180), red_px, "centro: contenido");
+        assert_eq!(pixel(&center, 620, 180), black_px, "centro: barra derecha");
+
+        let start = render("start");
+        assert_eq!(pixel(&start, 20, 180), red_px, "inicio: contenido pegado a la izquierda");
+        assert_eq!(pixel(&start, 600, 180), black_px, "inicio: toda la barra a la derecha");
+
+        let end = render("end");
+        assert_eq!(pixel(&end, 20, 180), black_px, "final: toda la barra a la izquierda");
+        assert_eq!(pixel(&end, 620, 180), red_px, "final: contenido pegado a la derecha");
     }
 }

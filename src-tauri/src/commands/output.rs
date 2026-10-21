@@ -287,6 +287,7 @@ pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
         data.background_media(),
         data.overlay_text_blocks(),
         data.overlay_media_items(),
+        data.content_frame(),
     )?;
 
     Ok(())

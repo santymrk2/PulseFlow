@@ -54,6 +54,11 @@ export interface SceneGraph {
     plainText: string
     /** Texto de la slide siguiente, si la hay (stage display) */
     nextText?: string
+    /**
+     * Dónde se ubica la escena dentro de la ventana cuando su proporción (`width × height`) no coincide
+     * con la de la salida: "start" (arriba/izquierda) o "end" (abajo/derecha). Si falta, centrada.
+     */
+    align?: "start" | "end"
 }
 
 export interface SceneBackground {

@@ -155,6 +155,8 @@ pub struct ScreenScene {
     pub overlay_media: Vec<MediaItem>,
     pub overlays: Vec<OverlayItem>,
     pub stage: StageData,
+    /// Resolución lógica y alineación de la escena de audiencia (F21.2): el contenido se encuadra en la ventana.
+    pub content: Option<super::frame::ContentFrame>,
 }
 
 /// Petición de transición pendiente de una pantalla. La escribe el hilo que aplica

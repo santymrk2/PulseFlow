@@ -37,6 +37,7 @@
 //! arma `sceneGraphPayload.ts`, único lugar que enumera las claves— y los deserializa
 //! `render/scene_contract.rs` con estos tipos.
 
+use super::frame::{ContentAlign, ContentFrame};
 use super::types::{BackgroundMedia, MediaItem, TextBlock, TextSpan};
 use crate::error::{AppError, AppResult};
 use serde::{Deserialize, Serialize};
@@ -71,6 +72,10 @@ pub struct ScenePayload {
     pub plain_text: String,
     /// Texto de la slide siguiente, si la hay (lo usa el Stage Display).
     pub next_text: Option<String>,
+    /// Dónde se ubica la escena dentro de la ventana cuando su proporción no coincide (F21.2).
+    /// Si falta, centro.
+    #[serde(default)]
+    pub align: ContentAlign,
 }
 
 impl Default for ScenePayload {
@@ -89,6 +94,7 @@ impl Default for ScenePayload {
             transition: None,
             plain_text: String::new(),
             next_text: None,
+            align: ContentAlign::default(),
         }
     }
 }
@@ -339,6 +345,15 @@ impl ScenePayload {
                 _ => 0,
             },
         })
+    }
+
+    /// Encuadre del contenido: la resolución lógica de la escena y su alineación. `None` para el
+    /// stage (usa toda la ventana) o si la escena no trae una resolución utilizable.
+    pub fn content_frame(&self) -> Option<ContentFrame> {
+        if self.stage || !(self.width > 0.0 && self.height > 0.0) {
+            return None;
+        }
+        Some(ContentFrame { width: self.width, height: self.height, align: self.align })
     }
 
     /// Rutas de todas las **imágenes** de la escena (fondo, items de la slide y de los overlays), sin
@@ -594,5 +609,24 @@ mod tests {
 
         assert!(ScenePayload::default().image_paths().is_empty());
     }
-}
 
+    /// F21.2: la resolución de la escena y su alineación llegan al engine para encuadrar el contenido.
+    #[test]
+    fn content_frame_comes_from_the_scene_size_and_align() {
+        let aligned: ScenePayload = serde_json::from_value(json!({ "outputId": "o", "width": 1440, "height": 1080, "align": "start" })).expect("payload válido");
+        let frame = aligned.content_frame().expect("hay resolución");
+        assert_eq!((frame.width, frame.height), (1440.0, 1080.0));
+        assert_eq!(frame.align, crate::render::frame::ContentAlign::Start);
+
+        let default: ScenePayload = serde_json::from_value(json!({ "outputId": "o", "width": 1920, "height": 1080 })).expect("payload válido");
+        assert_eq!(default.content_frame().expect("hay resolución").align, crate::render::frame::ContentAlign::Center, "sin `align` es centro");
+    }
+
+    #[test]
+    fn content_frame_is_none_without_a_usable_size_or_for_stage() {
+        assert!(ScenePayload::default().content_frame().is_none(), "sin resolución");
+
+        let stage: ScenePayload = serde_json::from_value(json!({ "outputId": "o", "stage": true, "width": 1920, "height": 1080 })).expect("payload válido");
+        assert!(stage.content_frame().is_none(), "el stage usa toda la ventana");
+    }
+}

@@ -15,6 +15,7 @@ pub fn set_audience_scene(
     background: Option<BackgroundMedia>,
     overlay_text: Vec<TextBlock>,
     overlay_media: Vec<MediaItem>,
+    content: Option<crate::render::frame::ContentFrame>,
 ) -> AppResult<()> {
     let state = manager(app)?;
     // El frontend reenvía la escena ante cualquier cambio de `outputs`, no sólo al
@@ -28,6 +29,7 @@ pub fn set_audience_scene(
             || current.background != background
             || current.overlay_text != overlay_text
             || current.overlay_media != overlay_media
+            || current.content != content
     };
 
     set_scene_text(app, id, text)?;
@@ -39,6 +41,7 @@ pub fn set_audience_scene(
         let mut scene = scene.write_safe();
         scene.overlay_text = overlay_text;
         scene.overlay_media = overlay_media;
+        scene.content = content;
     }
 
     if changed {

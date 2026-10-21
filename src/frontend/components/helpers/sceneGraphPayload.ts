@@ -24,6 +24,8 @@ export interface SceneGraphParts {
     transition: SceneTransition | null
     plainText: string
     nextText?: string
+    /** Alineación del encuadre (F21.2); sin valor, centrada. */
+    align?: "start" | "end"
 }
 
 /** Arma el payload con las claves exactas del contrato y la versión actual. */
@@ -39,7 +41,8 @@ export function sceneGraphPayload(parts: SceneGraphParts): SceneGraph {
         overlays: parts.overlays,
         transition: parts.transition,
         plainText: parts.plainText,
-        nextText: parts.nextText
+        nextText: parts.nextText,
+        align: parts.align
     })
 }
 

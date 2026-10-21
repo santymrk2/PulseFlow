@@ -29,6 +29,7 @@ import { getCurrentTimerValue } from "../drawer/timers/timers"
 import { defaultLayers, getCurrentStyle, getOutputLines, getOutputResolution, getOutputTransitions, getStyleTemplate, percentageStylePos, setTemplateStyle } from "./output"
 import { _show } from "./shows"
 import { replaceDynamicValues } from "./showActions"
+import { contentAlign } from "./outputAspect"
 import { imagePathsOf } from "./sceneMedia"
 import { applyTextTransform, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
 import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
@@ -419,7 +420,9 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
         items,
         overlays: buildOverlayItems(outputId, output, layers, resolution),
         transition: getTransition(output, currentStyle, !!showSlide),
-        plainText: plainText.trim()
+        plainText: plainText.trim(),
+        // si la relación de aspecto no coincide con la ventana, el engine encuadra el contenido
+        align: contentAlign(output.aspectRatio?.alignPosition, (currentStyle?.aspectRatio as { alignPosition?: string } | undefined)?.alignPosition)
     })
 }
 

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest"
-import { referenceOutputId, resolveOutputAspect } from "./outputAspect"
+import { contentAlign, referenceOutputId, resolveOutputAspect } from "./outputAspect"
 
 const DEFAULT_BOUNDS = { width: 1920, height: 1080 }
 const macbook = { width: 1512, height: 982 }
@@ -60,5 +60,19 @@ describe("referenceOutputId", () => {
         expect(referenceOutputId(outputs, "borrada")).toBe("")
         expect(referenceOutputId(outputs, "stage")).toBe("")
         expect(referenceOutputId(outputs, "kindStage")).toBe("")
+    })
+})
+
+describe("contentAlign", () => {
+    test("devuelve la primera alineación válida que no sea el centro", () => {
+        expect(contentAlign("end")).toBe("end")
+        expect(contentAlign(undefined, "start")).toBe("start")
+        expect(contentAlign("start", "end")).toBe("start")
+    })
+
+    test("el centro y los valores desconocidos no se envían (el engine centra por defecto)", () => {
+        expect(contentAlign("center")).toBeUndefined()
+        expect(contentAlign("diagonal", null, "")).toBeUndefined()
+        expect(contentAlign()).toBeUndefined()
     })
 })

@@ -171,3 +171,15 @@ describe("sceneGraphPayload (contrato F4.2)", () => {
         })
     })
 })
+
+describe("align del encuadre (F21.2)", () => {
+    const base = { outputId: "a", stage: false, width: 1440, height: 1080, background: null, items: [], overlays: [], transition: null, plainText: "" }
+
+    it("viaja en el payload cuando la escena lo pide", () => {
+        expect(sceneGraphPayload({ ...base, align: "end" }).align).toBe("end")
+    })
+
+    it("se omite cuando no hay alineación (no cambia los fixtures del contrato)", () => {
+        expect("align" in sceneGraphPayload(base)).toBe(false)
+    })
+})

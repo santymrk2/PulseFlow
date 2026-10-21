@@ -132,7 +132,11 @@ pub(super) fn spawn_render_loop(
                     });
 
                     let current = scene.read_safe().clone();
-                    let (w, h) = (config.width, config.height);
+                    // F21.2: el contenido se encuadra en la ventana (barras negras + `alignPosition`) cuando la
+                    // proporción de la escena no coincide con la de la salida
+                    let frame_rect = crate::render::frame::fit_content_rect(current.content, config.width, config.height);
+                    frame_rect.apply_to(&mut pass);
+                    let (w, h) = (frame_rect.width, frame_rect.height);
 
                     let blocks = match kind {
                         ScreenKind::Audience => {

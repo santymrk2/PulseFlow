@@ -9,6 +9,7 @@
 //! texto, media, video y transiciones en sus propios módulos.
 
 pub mod clock;
+pub mod frame;
 pub mod gpu;
 pub mod media;
 pub mod scene;
