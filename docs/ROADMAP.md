@@ -1605,13 +1605,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   hacen `log::warn!` con la ruta. Las limpiezas de temporales quedan con un comentario.
   *Aceptación:* ningún `let _ =` sobre I/O de datos del usuario sin log o propagación.
 
-- [ ] **F15.2 Contrato de IPC.**
-  *Archivos:* `src/frontend/IPC/main.ts`, nuevo test en `src/frontend/IPC/`.
-  *Pasos:* `requestMain` hace `log` (F13.3) con el nombre del canal cuando vence el
-  timeout. Test que compara los canales `Main.*` que usa el frontend con los comandos
-  registrados en `src-tauri/src/lib.rs` y falla si aparece un canal nuevo sin comando
-  (lista de excepciones explícita).
-  *Aceptación:* agregar un `requestMain` a un canal inexistente hace fallar el test.
+- [x] **F15.2 Contrato de IPC.** (2026-10-21) `src/frontend/IPC/ipcContract.test.ts` (+ `ipcContract.ts`): todo canal `Main.*` que el frontend usa tiene que tener comando en `lib.rs`, estar en `POSTPONED_COMMANDS` o figurar en la lista explícita `KNOWN_WITHOUT_COMMAND` (hoy vacía); también falla si esa lista tiene entradas viejas. Probado: un `Main.AI_AUDIO_DATA` nuevo lo hace fallar y quitarlo lo hace pasar. `requestMain` registra siempre el timeout con el nombre del canal (va al log de F13.3).
 
 - [x] **F15.3 Partir `render/screens.rs`.** (2026-10-20: `screens/` con `mod`, `monitors`, `lifecycle`, `identify`, `scene_state`, `video_hub`, `render_loop` y `tests`; 76/76 tests, mayor archivo 369 líneas.)
   *Pasos:* separar por responsabilidad (ciclo de vida de ventanas, monitores y

@@ -4,8 +4,6 @@ import { ToMain } from "../../types/IPC/ToMain"
 import type { MainReceiveValue, MainReturnPayloads } from "./../../types/IPC/Main"
 import { MAIN, Main, type MainSendValue } from "./../../types/IPC/Main"
 import { mainResponses } from "./responsesMain"
-import { isDev } from "../stores"
-import { get } from "svelte/store"
 
 // @ts-ignore // T extends keyof typeof Main
 export function requestMainMultiple<T extends Main>(object: { [K in T]: (data: MainReturnPayloads[K] | undefined) => void }) {
@@ -38,7 +36,8 @@ export async function requestMain<ID extends Main, R = Awaited<MainReturnPayload
             if (settled) return
             settled = true
 
-            if (get(isDev)) console.error(`IPC Message Timed Out: ${id}`)
+            // va al registro con el nombre del canal (F13.3/F15.2): un canal sin respuesta no puede fallar en silencio
+            console.error(`IPC Message Timed Out: ${id} (${waitingTimeout} ms)`)
             cleanup()
             resolve(undefined)
         }, waitingTimeout)
