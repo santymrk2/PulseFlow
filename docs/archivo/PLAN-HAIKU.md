@@ -459,7 +459,7 @@ En una sesión de Claude Code (en la nube) con el modelo Haiku, sobre este repos
 la rama `feature/tauri-rust-migration`, con este mensaje:
 
 ```
-Leé AGENTS.md y docs/PLAN-HAIKU.md completos. Ejecutá las tareas H0 a H9 en orden,
+Leé AGENTS.md y docs/archivo/PLAN-HAIKU.md completos. Ejecutá las tareas H0 a H9 en orden,
 una por vez, siguiendo al pie de la letra las reglas del plan (chequeos antes de cada
 commit, commit con el mensaje indicado y push a feature/tauri-rust-migration después
 de cada tarea). No toques nada fuera de lo que pide cada tarea. Si una tarea no se

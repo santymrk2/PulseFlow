@@ -114,7 +114,7 @@ Comunes a los cuatro (pegar primero, después la línea del carril):
 
 ```
 Leé completos: AGENTS.md, docs/ROADMAP.md (fases F10 y F11),
-docs/design/pantallas-y-looks.md y docs/PLAN-NOCHE.md. Vas a trabajar toda la noche
+docs/design/pantallas-y-looks.md y docs/archivo/PLAN-NOCHE.md. Vas a trabajar toda la noche
 sin supervisión siguiendo las "Reglas de la noche" de PLAN-NOCHE.md. Estás en el
 carril indicado abajo: trabajás SOLO en esta carpeta y en tu rama actual, y sólo
 tocás los archivos que la tabla de carriles dice que son tuyos (más los compartidos

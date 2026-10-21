@@ -58,4 +58,4 @@ valores `.dark` de la referencia (`defaultThemes.ts`), fuente Geist empaquetada
 shadcn-svelte generados en `src/frontend/lib/components/ui/` (su regla de uso
 está en el README de esa carpeta: sólo pantallas nuevas).
 
-Pendiente de verificación visual: `docs/VERIFICAR-F6.md`.
+Pendiente de verificación visual: `docs/archivo/VERIFICAR-F6.md`.

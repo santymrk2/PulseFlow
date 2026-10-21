@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ----- PulseFlow -----
-# Corre un carril del plan de noche (docs/PLAN-NOCHE.md) con `opencode run` y lo
+# Corre un carril del plan de noche (docs/archivo/PLAN-NOCHE.md) con `opencode run` y lo
 # relanza solo cuando el agente se corta (límite del modelo, error, fin de sesión),
 # hasta que el informe del carril termine con una línea "TERMINADO".
 #
@@ -20,12 +20,12 @@ set -u
 
 DIR="${1:?carpeta del carril}"
 INFORME="${2:?ruta del informe, relativa a la carpeta}"
-CARRIL="${3:?línea del carril (ver docs/PLAN-NOCHE.md)}"
+CARRIL="${3:?línea del carril (ver docs/archivo/PLAN-NOCHE.md)}"
 MODELO="${MODELO:-opencode/big-pickle}"
 ESPERA="${ESPERA:-600}"
 MAX="${MAX:-60}"
 
-PROMPT="Leé completos: AGENTS.md, docs/ROADMAP.md (fases F10 y F11), docs/design/pantallas-y-looks.md y docs/PLAN-NOCHE.md. Vas a trabajar sin supervisión siguiendo las \"Reglas de la noche\" de PLAN-NOCHE.md. Estás en el carril indicado abajo: trabajás SOLO en esta carpeta y en tu rama actual, y sólo tocás los archivos que la tabla de carriles dice que son tuyos (más los compartidos con sus reglas). Para usar la app, respetá el lock de \"Compartir la app\". Puede que este carril ya se haya empezado en una sesión anterior que se cortó: antes de hacer nada, mirá git status, git log, los checkboxes de docs/ROADMAP.md y tu informe para saber qué ya está hecho, commiteá lo que haya quedado sin commitear si está bien, y retomá desde ahí. Cuando termines TODAS las tareas de tu carril, escribí el resumen final en tu informe, agregá al final una línea que diga exactamente TERMINADO, commiteá y pusheá. ${CARRIL}"
+PROMPT="Leé completos: AGENTS.md, docs/ROADMAP.md (fases F10 y F11), docs/design/pantallas-y-looks.md y docs/archivo/PLAN-NOCHE.md. Vas a trabajar sin supervisión siguiendo las \"Reglas de la noche\" de PLAN-NOCHE.md. Estás en el carril indicado abajo: trabajás SOLO en esta carpeta y en tu rama actual, y sólo tocás los archivos que la tabla de carriles dice que son tuyos (más los compartidos con sus reglas). Para usar la app, respetá el lock de \"Compartir la app\". Puede que este carril ya se haya empezado en una sesión anterior que se cortó: antes de hacer nada, mirá git status, git log, los checkboxes de docs/ROADMAP.md y tu informe para saber qué ya está hecho, commiteá lo que haya quedado sin commitear si está bien, y retomá desde ahí. Cuando termines TODAS las tareas de tu carril, escribí el resumen final en tu informe, agregá al final una línea que diga exactamente TERMINADO, commiteá y pusheá. ${CARRIL}"
 
 cd "$DIR" || { echo "No existe la carpeta $DIR"; exit 1; }
 

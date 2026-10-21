@@ -261,7 +261,7 @@ Responden `undefined` inmediato vía F7.2. Nombre real de cada canal:
 - **Config del navegador** (2): `SPELLCHECK`, `AUTO_UPDATE` (updater de Electron).
 - **Media / descargas** (7): `DOWNLOAD_LESSONS_MEDIA`, `MEDIA_DOWNLOAD`,
   `MEDIA_IS_DOWNLOADED`, `MEDIA_FOLDER_COPY`, `GET_SIMILAR`, `CHECK_MEDIA_LICENSE`,
-  `CAPTURE_SLIDE` (requiere el engine de render; ver `docs/VERIFICAR-F7.md`).
+  `CAPTURE_SLIDE` (requiere el engine de render; ver `docs/archivo/VERIFICAR-F7.md`).
 - **PPT/slideshow externo** (4): `PPT_TO_PDF`, `SLIDESHOW_GET_APPS`, `START_SLIDESHOW`,
   `PRESENTATION_CONTROL`.
 - **MIDI realtime / timecode** (5): `SEND_MIDI` (stubeado en `commands/midi.rs`, requiere

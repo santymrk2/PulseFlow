@@ -59,10 +59,10 @@ cargo test 59/59, svelte-check **58 errores** (nueva referencia), build OK.
 | Qué | Dónde | Estado |
 | --- | --- | --- |
 | F4.6 overlays | integrado | **Hecho** (2026-10-19): capa propia dibujada en el engine (fondo → medios slide → texto slide → medios overlay → texto overlay), fixture `audience-overlays.json`, golden `overlays.png`. |
-| F6.2–F6.5 diseño | integrado | **Hecho** (2026-10-19): checkboxes marcados. Queda sólo la verificación visual del usuario (capturas) según `docs/VERIFICAR-F6.md`. |
+| F6.2–F6.5 diseño | integrado | **Hecho** (2026-10-19): checkboxes marcados. Queda sólo la verificación visual del usuario (capturas) según `docs/archivo/VERIFICAR-F6.md`. |
 | F7.4 canales Main | integrado | **Completo** (2026-10-19): incluye `PDF_TO_IMAGE` real (F7.5, opción (a): pdf.js en el webview + guardado en Rust). |
 | F8.1–F8.2 video | integrado (2026-10-19) | **Hecho**: ciclo de vida de ffmpeg (stop/EOF/error/fallback HW→SW) y un decodificador por archivo compartido entre pantallas (`video_hub`). Traído de `feature/video`; su F7.5 propio (`294a2594`, vía `SAVE_IMAGE`) se descartó a favor del de esta rama (`fab5d003`). |
-| `wip/f7` (`af2a2a8`) | rama `wip/f7` | **Descartar**: es `cargo fmt` sobre todo el crate, sin cambios funcionales. Sus notas ya están en `docs/VERIFICAR-F7.md`. |
+| `wip/f7` (`af2a2a8`) | rama `wip/f7` | **Descartar**: es `cargo fmt` sobre todo el crate, sin cambios funcionales. Sus notas ya están en `docs/archivo/VERIFICAR-F7.md`. |
 | `f6-pulseflow`, `feature/diseno`, `feature/ipc`, `wip/f4`, `wip/f7` | ramas remotas | Ya integradas o descartadas; se pueden borrar. `feature/ipc` trae un F4.6 duplicado (`d834310`) que **no** se integró: el bueno es `1f9f932`. |
 | F5 Looks | integrado (`3e5cc0c`) | **Completo** (2026-10-19): F5.2–F5.5 hechos (`75de6427`, `ed9fc8d5`, `25aae601`, commit de F5.5). |
 
@@ -592,7 +592,7 @@ el port se hace **por valores**, no renombrando variables ni copiando componente
   `var(--radius)` / `var(--border-color)`; la topbar pasó a 48px; los componentes
   shadcn-svelte quedaron en `src/frontend/lib/components/ui/` (sólo pantallas nuevas).
   *Aceptación:* la verificación visual (capturas Show/Edit/Settings/Stage) quedó para
-  el usuario en `docs/VERIFICAR-F6.md`.)
+  el usuario en `docs/archivo/VERIFICAR-F6.md`.)
 
   *(Detalle original de cada tarea, a título de referencia:)*
 
@@ -621,7 +621,7 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   registrados en `lib.rs` → 76 canales sin comando, clasificados en `PLAN.md`
   sección "Inventario de canales Main sin comando Rust (F7.1)": 13
   *implementar* (P1–P13), 47 *posponer*, 5 *saltear* por dependencia pesada o
-  permisos (anotados en `docs/VERIFICAR-F7.md`) y 11 *eliminar del frontend*
+  permisos (anotados en `docs/archivo/VERIFICAR-F7.md`) y 11 *eliminar del frontend*
   con cero envíos demostrados. `BACKUP` no figura: `BACKUPS`/`DELETE_BACKUP`/
   `RESTORE` ya existen en `commands/backup.rs`.) Tabla en `PLAN.md` de los ~95 canales sin
   comando Rust: *implementar* / *eliminar del frontend* / *posponer*, con la pantalla
@@ -1611,12 +1611,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
 
 - [x] **F15.4 Tests de dominio del frontend.** (2026-10-21, **parcial**) 13 tests de conversores de importación con archivos reales de ejemplo en `converters/fixtures/` (ChordPro, OpenLP/OpenLyrics, OpenSong y su Biblia, Quelea, EasySlides, SoftProjector, SongBeamer, VerseVIEW, texto plano, CSV, Biblia Zefania y OSIS: 19 casos), con `testEnv.ts` (globales del navegador, `linkedom` como `DOMParser`, orden de carga que evita un ciclo de imports) y `converterTestKit.ts`. **Encontraron dos bugs reales, ya corregidos:** EasySlides ignoraba en silencio un archivo con **una sola canción** y el importador OSIS fallaba con un archivo de **un solo libro** (ambos esperaban un array y el XML trae un objeto cuando hay un único hijo). Más los tests de `outputAspect` (F21). **Sin cubrir:** VideoPsalm, MediaShout, EasyWorship, ProPresenter, Lessons.church, proyecto, calendario, Beblia, Canva y PDF/imágenes (los binarios y los formatos que no pude reproducir con un archivo real quedan para cuando haya muestras). `anyCount` del trinquete ya no cuenta los `*.test.ts`.
 
-- [ ] **F15.5 Ordenar la documentación.**
-  *Pasos:* mover a `docs/archivo/` los planes y verificaciones ya cerrados
-  (`PLAN-HAIKU`, `PLAN-NOCHE`, `VERIFICAR-F6`, `VERIFICAR-F7`); borrar
-  `docs/drafts/render_screens.rs` si `rg` no lo referencia; índice corto en
-  `docs/README.md`.
-  *Aceptación:* en `docs/` sólo queda lo vigente, y cada archivo aparece en el índice.
+- [x] **F15.5 Ordenar la documentación.** (2026-10-21) `PLAN-HAIKU`, `PLAN-NOCHE`, `VERIFICAR-F6` y `VERIFICAR-F7` pasaron a `docs/archivo/` (se actualizaron las referencias en `PLAN.md`, los README de `design-reference/`, `scripts/carril.sh` y este roadmap); se borró `docs/drafts/render_screens.rs` (ningún `rg` lo referenciaba); nuevo índice `docs/README.md` con todo lo vigente.
 
 ---
 

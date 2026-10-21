@@ -1,7 +1,7 @@
 # Capturas — F6 (diseño)
 
 Carpeta destino de las capturas antes/después pedidas por el ROADMAP (F6.2).
-Los pasos exactos para tomarlas están en [`docs/VERIFICAR-F6.md`](../../VERIFICAR-F6.md),
+Los pasos exactos para tomarlas están en [`docs/archivo/VERIFICAR-F6.md`](../../archivo/VERIFICAR-F6.md),
 sección "F6.2". No se commitean desde el agente: las toma quien ejecute la
 verificación visual y las deja en esta carpeta.
 
