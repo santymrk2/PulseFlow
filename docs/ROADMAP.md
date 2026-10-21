@@ -1178,7 +1178,7 @@ toque en F14 puede romper algo sin que nadie se entere.
   moría. El manifiesto de Common-Controls v6 lo incrustaba `tauri-build` en el `.res`, que `embed-resource` enlaza
   únicamente con `cargo:rustc-link-arg-bins` (o sea, sólo al binario). Ahora **sólo en Windows/MSVC** `build.rs` llama
   a `tauri_build::try_build(...new_without_app_manifest())` y emite `cargo:rustc-link-arg=/MANIFEST:EMBED` y
-  `/MANIFESTINPUT=windows-app-manifest.xml`, que llegan al link de **todos** los objetivos: el binario conserva la
+  `/MANIFESTINPUT:windows-app-manifest.xml`, que llegan al link de **todos** los objetivos: el binario conserva la
   misma declaración (copia textual de la que usa tauri) y el harness la recibe también. `new_without_app_manifest()`
   es obligatorio: si no, `.res` y linker ponen dos `RT_MANIFEST` y el enlace falla con LNK1123.
   *Archivos:* `src-tauri/build.rs`, nuevo `src-tauri/windows-app-manifest.xml`, `.github/workflows/ci.yml`

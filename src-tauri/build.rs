@@ -36,6 +36,7 @@ fn main() {
         let manifest = PathBuf::from(manifest_dir).join("windows-app-manifest.xml");
         println!("cargo:rerun-if-changed={}", manifest.display());
         println!("cargo:rustc-link-arg=/MANIFEST:EMBED");
-        println!("cargo:rustc-link-arg=/MANIFESTINPUT={}", manifest.display());
+        // link.exe usa ':' como separador de opción; con '=' lo descarta con LNK4044.
+        println!("cargo:rustc-link-arg=/MANIFESTINPUT:{}", manifest.display());
     }
 }
