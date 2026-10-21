@@ -115,7 +115,7 @@
     {#if !sceneCleared}
         <span class="group" style="border-bottom: 1px solid var(--primary-darker);">
             <div class="combinedButton">
-                <Button style="padding: 0.3em 0.8em;" disabled={$outLocked} title={$outLocked ? "" : "clear.scene"} on:click={() => clear("scene")} red>
+                <Button style="padding: 0.3em 0.8em;" disabled={$outLocked} title={$outLocked ? "" : "clear.scene"} on:click={() => clear("scene")}>
                     <Icon id="scene" size={1.1} white />
                     <T id="clear.scene" />
                 </Button>
@@ -130,7 +130,7 @@
                 {#if !$labelsDisabled}<T id="preview.restore_output" />{/if}
             </Button>
         {:else}
-            <Button style="padding: 0.42em 0.8em;" class="clearAll" disabled={$outLocked || allCleared} title="clear.all [esc]" on:click={() => clearAll(true)} red>
+            <Button style="padding: 0.42em 0.8em;" class="clearAll" disabled={$outLocked || allCleared} title="clear.all [esc]" on:click={() => clearAll(true)}>
                 {#if $isTimelinePlaying}<span class="faded" data-title={translateText("popup.timeline")}><Icon id="timeline" white /></span>{/if}
                 <Icon id="clear" size={1.2} white />
                 {#if !$labelsDisabled}<T id="clear.all" />{/if}
@@ -141,7 +141,7 @@
     <span class="group">
         {#if outputContent?.type !== "pdf" && outputContent?.type !== "ppt"}
             <div class="combinedButton">
-                <Button style="padding: 0.3em 0.6em;{styleBackground ? 'opacity: 0.5;cursor: default;' : ''}" disabled={($outLocked || backgroundCleared) && !styleBackground} title={$outLocked || backgroundCleared ? "" : "clear.background [F1]"} on:click={() => clear("background")} red>
+                <Button style="padding: 0.3em 0.6em;{styleBackground ? 'opacity: 0.5;cursor: default;' : ''}" disabled={($outLocked || backgroundCleared) && !styleBackground} title={$outLocked || backgroundCleared ? "" : "clear.background [F1]"} on:click={() => clear("background")}>
                     <Icon id="image" size={1.2} white />
                 </Button>
                 {#if !allCleared}
@@ -156,7 +156,7 @@
 
         {#if getMediaLayerType(outBackground.path || "", backgroundData) !== "foreground" || !slideCleared}
             <div class="combinedButton">
-                <Button style="padding: 0.3em 0.6em;" disabled={$outLocked || slideCleared} title="clear.slide  [F2]" on:click={() => clear("slide")} red>
+                <Button style="padding: 0.3em 0.6em;" disabled={$outLocked || slideCleared} title="clear.slide  [F2]" on:click={() => clear("slide")}>
                     <!-- PDFs are visually the background layer as it is toggled by the style "Background" layer, but it behaves as a slide in the code -->
                     <!-- display recording icon here if a slide recoring is playing -->
                     <Icon id={isScripture ? "scripture" : outputContent?.type === "pdf" ? "image" : "slide"} size={1.2} white />
@@ -172,7 +172,7 @@
         {/if}
 
         <div class="combinedButton">
-            <Button style="padding: 0.3em 0.6em;{lockedOverlay ? 'opacity: 0.5;cursor: default;' : ''}" disabled={$outLocked || (overlayCleared && effectsCleared)} title={lockedOverlay ? "" : "clear.overlays [F3]"} on:click={() => clear("overlays")} red>
+            <Button style="padding: 0.3em 0.6em;{lockedOverlay ? 'opacity: 0.5;cursor: default;' : ''}" disabled={$outLocked || (overlayCleared && effectsCleared)} title={lockedOverlay ? "" : "clear.overlays [F3]"} on:click={() => clear("overlays")}>
                 <Icon id="overlays" size={1.2} white />
             </Button>
             {#if !allCleared}
@@ -185,7 +185,7 @@
         </div>
 
         <div class="combinedButton">
-            <Button style="padding: 0.3em 0.6em;" disabled={$outLocked || audioCleared} title="clear.audio [F4]" on:click={() => clear("audio")} red>
+            <Button style="padding: 0.3em 0.6em;" disabled={$outLocked || audioCleared} title="clear.audio [F4]" on:click={() => clear("audio")}>
                 <Icon id={audioIcon} size={1.2} white />
             </Button>
             {#if !allCleared}
@@ -199,7 +199,7 @@
 
         {#if outputContent?.type !== "pdf"}
             <div class="combinedButton">
-                <Button style="padding: 0.3em 0.6em;{isTimer ? 'opacity: 0.9;' : ''}" disabled={$outLocked || (slideTimerCleared && activeClear !== "nextTimer")} title="{isTimer ? 'actions.stop_timers' : `clear.${Object.keys($overlayTimers).length ? 'timer' : 'nextTimer'}`}{presentationControllersKeysDisabled() ? ' [F5]' : ''}" on:click={() => (isTimer ? activeTimers.set([]) : clear("nextTimer"))} red>
+                <Button style="padding: 0.3em 0.6em;{isTimer ? 'opacity: 0.9;' : ''}" disabled={$outLocked || (slideTimerCleared && activeClear !== "nextTimer")} title="{isTimer ? 'actions.stop_timers' : `clear.${Object.keys($overlayTimers).length ? 'timer' : 'nextTimer'}`}{presentationControllersKeysDisabled() ? ' [F5]' : ''}" on:click={() => (isTimer ? activeTimers.set([]) : clear("nextTimer"))}>
                     <Icon id={isTimer ? "timer" : "clock"} size={1.2} white />
                 </Button>
                 {#if !allCleared}
@@ -239,17 +239,34 @@
     }
     .group :global(button) {
         flex-grow: 1;
-        /* height: 40px; */
 
         border-radius: 0;
     }
+    /* neutros: llenos cuando hay algo para limpiar (al tocarlos se limpia), vacíos y atenuados cuando no */
+    .clear :global(button) {
+        color: var(--text);
+    }
     .clear :global(button:disabled) {
-        background-color: var(--primary) !important;
+        background-color: transparent !important;
+    }
+    .combinedButton > :global(button:first-child:not(:disabled)),
+    .clear :global(.clearAll:not(:disabled)) {
+        background-color: var(--bg-active);
+    }
+    .combinedButton > :global(button:first-child:not(:disabled):hover),
+    .clear :global(.clearAll:not(:disabled):hover) {
+        background-color: var(--bg-selected);
+    }
+    .group {
+        border-top: 1px solid var(--border);
+    }
+    .group > .combinedButton + .combinedButton {
+        border-inline-start: 1px solid var(--border);
     }
     .group :global(button.isActive) {
         border: none !important;
-        border-right: 1px solid var(--primary-lighter) !important;
-        border-left: 1px solid var(--primary-lighter) !important;
+        border-right: 1px solid var(--border) !important;
+        border-left: 1px solid var(--border) !important;
     }
 
     .combinedButton {

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { actions, activeLook, activePage, activePopup, activeShow, activeTimers, contextActive, groups, guideActive, looks, openToolsTab, outLocked, outputs, overlayTimers, playingAudio, playingMetronome, slideTimers, special } from "../../../stores"
+    import { actions, activePage, activePopup, activeShow, activeTimers, contextActive, groups, guideActive, openToolsTab, outLocked, outputs, overlayTimers, playingAudio, playingMetronome, slideTimers, special } from "../../../stores"
     import { formatSearch } from "../../../utils/search"
     import { getNormalizedKey, previewCtrlShortcuts, previewShortcuts } from "../../../utils/shortcuts"
     import { runAction } from "../../actions/actions"
@@ -7,11 +7,9 @@
     import { getSlideText } from "../../edit/scripts/textStyle"
     import { getActiveOutputs, getFirstOutputIdWithBackground, isOutCleared, outputSlideHasContent, setOutput } from "../../helpers/output"
     import { getLayoutRef } from "../../helpers/show"
-    import { applyLook } from "../../helpers/looks"
     import { getFewestOutputLines, getItemWithMostLines, playNextGroup, playPreviousGroup, updateOut } from "../../helpers/showActions"
     import { _show } from "../../helpers/shows"
     import { newSlideTimer } from "../../helpers/tick"
-    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import ShowActions from "../ShowActions.svelte"
     import MediaControls from "../tools/MediaControls.svelte"
     import Show from "../tools/Show.svelte"
@@ -225,10 +223,8 @@
     $: linesPercentage = slideLines && outputLine !== null ? outputLine / slideLines : 0
     $: linesIndex = maxLines !== null ? Math.floor(maxLines * linesPercentage) : 0
 
-    // LOOKS (F5.4): selector de look en el panel de salida
     $: bgOut = currentBgOutput?.out?.background
     $: videoPlaying = !!bgOut && (bgOut.type === "video" || bgOut.type === "player")
-    $: lookOptions = Object.entries($looks).map(([id, look]) => ({ value: id, label: look.name }))
 </script>
 
 <svelte:window on:keydown={keydown} />
@@ -249,14 +245,10 @@
         <div class="section transport">
             <MediaControls currentOutput={currentBgOutput} outputId={backgroundOutputId} transport />
         </div>
-    {:else if lookOptions.length > 1}
-        <div style="margin: 0 5px;">
-            <SelectField label="looks.looks" value={$activeLook} options={lookOptions} on:change={(e) => applyLook(e.detail)} />
-        </div>
     {/if}
 
     {#if $activePage === "show"}
-        <div class="section" style="margin-top: 2px;">
+        <div class="section flat">
             <ClearButtons
                 bind:autoChange
                 activeClear={updatedActiveClear}
@@ -308,6 +300,15 @@
         overflow: hidden;
 
         transition: transform 0.2s ease;
+    }
+
+    /* limpiar: franja plana, sin esquinas redondeadas ni borde exterior */
+    .section.flat {
+        margin: 5px 0 0;
+        border: 0;
+        border-top: 1px solid var(--border);
+        border-radius: 0;
+        background-color: transparent;
     }
 
     .preview-meter {
