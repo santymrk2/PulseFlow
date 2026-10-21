@@ -69,6 +69,9 @@ export const activeStage: Writable<ActiveStage> = writable({ id: null, items: []
 export const activeTimers: Writable<any[]> = writable([])
 export const activeRename: Writable<any> = writable(null)
 export const activeDrawerTab: Writable<DrawerTabIds> = writable("shows")
+
+// Fuente de ÍTEMS en la columna izquierda: una library o una playlist (null = sin elegir).
+export const leftSource: Writable<{ type: "library" | "playlist"; id: string } | null> = writable(null)
 export const drawerOpenedInEdit: Writable<boolean> = writable(false)
 export const activeStyle: Writable<string> = writable("")
 export const selectedProfile: Writable<string | null> = writable(null)
