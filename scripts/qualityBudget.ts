@@ -39,10 +39,16 @@ export function measureSources(files: { path: string; text: string }[], excluded
     return { anyCount, hexColors, rgbColors }
 }
 
-/** Errores de la línea final de `svelte-check` (`… COMPLETED 535 FILES 41 ERRORS …`). `null` si no aparece. */
+/**
+ * Errores de `svelte-check`: la línea `… COMPLETED 535 FILES 41 ERRORS …` de la salida `machine` o el
+ * resumen `svelte-check found 41 errors and …` de la salida `human`. `null` si no aparece ninguno
+ * (o sea: si svelte-check no llegó a terminar y la medida no se pudo tomar).
+ */
 export function parseSvelteCheckErrors(output: string): number | null {
-    const match = output.match(/COMPLETED\s+\d+\s+FILES\s+(\d+)\s+ERRORS/)
-    return match ? Number(match[1]) : null
+    const completed = output.match(/COMPLETED\s+\d+\s+FILES\s+(\d+)\s+ERRORS/)
+    if (completed) return Number(completed[1])
+    const found = output.match(/svelte-check found (\d+) errors?/)
+    return found ? Number(found[1]) : null
 }
 
 /** Compara lo medido con el presupuesto: sube = falla; baja = se informa para actualizar el json. */

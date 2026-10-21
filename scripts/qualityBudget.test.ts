@@ -37,10 +37,14 @@ describe("measureSources", () => {
 })
 
 describe("parseSvelteCheckErrors", () => {
-    test("lee la línea COMPLETED de svelte-check", () => {
+    test("lee la línea COMPLETED de svelte-check (salida machine)", () => {
         expect(parseSvelteCheckErrors("1792 COMPLETED 535 FILES 41 ERRORS 312 WARNINGS 140 FILES_WITH_PROBLEMS")).toBe(41)
     })
-    test("sin línea COMPLETED devuelve null (no se puede medir)", () => {
+    test("lee el resumen de la salida human", () => {
+        expect(parseSvelteCheckErrors("svelte-check found 40 errors and 306 warnings in 138 files")).toBe(40)
+        expect(parseSvelteCheckErrors("svelte-check found 1 error and 0 warnings")).toBe(1)
+    })
+    test("sin resumen devuelve null (no se puede medir)", () => {
         expect(parseSvelteCheckErrors("algo roto")).toBeNull()
     })
 })

@@ -22,7 +22,9 @@ for (const path of new Glob("src/**/*.{ts,svelte}").scanSync(".")) {
     files.push({ path, text: readFileSync(path, "utf8") })
 }
 
-const check = Bun.spawnSync(["bunx", "svelte-check", "--ignore", "docs"], { stdout: "pipe", stderr: "pipe" })
+// La salida `machine` termina con `COMPLETED <archivos> FILES <errores> ERRORS …`: es la única
+// con un resumen estable para medir (la `human` dice `svelte-check found N errors…`).
+const check = Bun.spawnSync(["bunx", "svelte-check", "--ignore", "docs", "--output", "machine"], { stdout: "pipe", stderr: "pipe" })
 const svelteCheckErrors = parseSvelteCheckErrors(check.stdout.toString() + check.stderr.toString())
 
 const current: Measures = { svelteCheckErrors, ...measureSources(files, excludedColorPaths) }
