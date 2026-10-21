@@ -226,6 +226,11 @@
         deleteAction({ id: "item", data: { layout, slideId: ref.id } })
     }
 
+    // arrastrar texto seleccionado lo "levantaba" con el drag nativo del navegador (y lo soltaba en otro lado) en vez de mover el cuadro
+    function noTextDrag(e: DragEvent) {
+        if ((e.target as HTMLElement | null)?.closest?.(".edit")) e.preventDefault()
+    }
+
     function dblclick(e: MouseEvent) {
         cropElem?.handleDblclick(e)
     }
@@ -270,6 +275,7 @@
     data-index={index}
     on:mousedown={mousedown}
     on:dblclick={dblclick}
+    on:dragstart={noTextDrag}
 >
     {#if !plain}
         <EditboxPlain {item} {index} {ratio} hideMovebox={cropActive} />

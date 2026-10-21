@@ -6,6 +6,7 @@ export interface AddItem {
     label: string
     title?: string
     suffix?: string
+    data?: string
     isLarge?: boolean
     children?: AddItem[]
 }
