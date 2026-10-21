@@ -6,7 +6,7 @@ import { AudioRoutingManager } from "../audio/routing/audioRoutingManager"
 import { loadJsonBible } from "../components/drawer/bible/scripture"
 import { clone, keysToID, removeDeleted } from "../components/helpers/array"
 import { getThumbnailPath, mediaSize } from "../components/helpers/media"
-import { getFirstActiveOutput, setOutput } from "../components/helpers/output"
+import { getFirstActiveOutput, setOutput, getResolution } from "../components/helpers/output"
 import { loadShows } from "../components/helpers/setShow"
 import { getLayoutRef } from "../components/helpers/show"
 import { updateOut } from "../components/helpers/showActions"
@@ -127,7 +127,7 @@ export const receiveREMOTE: any = {
         } else if (out?.id === "temp") {
             msg.data = out
         } else {
-            const styleRes = currentOutput?.style ? get(styles)[currentOutput?.style]?.aspectRatio || get(styles)[currentOutput?.style]?.resolution : null
+            const styleRes = currentOutput?.id ? getResolution(null, null, false, currentOutput.id) : null
             msg.data = { slide: out ? out.index : null, layout: out?.layout || null, styleRes }
             // && out.id !== oldOutSlide
             if (out && out.id !== "temp") {
@@ -360,7 +360,7 @@ export async function initializeRemote(id: string) {
 
     // Get current output state
     const currentOutput = getFirstActiveOutput()
-    const styleRes = currentOutput?.style ? get(styles)[currentOutput?.style]?.aspectRatio || get(styles)[currentOutput?.style]?.resolution : null
+    const styleRes = currentOutput?.id ? getResolution(null, null, false, currentOutput.id) : null
 
     const outSlide = currentOutput?.out?.slide
     const out: any = {

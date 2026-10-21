@@ -1702,6 +1702,14 @@ Sin documento de plan aparte (el usuario pidió ejecutar directo).
 
 ---
 
+## F21 — Tamaño de las diapositivas = tamaño de la salida
+
+- [x] **F21.1** (2026-10-20). **Causa:** el tamaño de las diapositivas (`getResolution`) salía sólo de `styles[output.style].aspectRatio`; tras F10 la relación de aspecto vive en la Pantalla (`output.aspectRatio`, que edita `ScreenDetail`) y el puente de Looks (`buildLookStyle`) genera estilos sin relación, así que todo caía en 16:9 sin importar la pantalla. **Arreglo:** `helpers/outputAspect.ts` (`resolveOutputAspect`, con tests): relación de la Pantalla → `outputResolutionAsRatio` del estilo → relación vieja del estilo → **tamaño real de la salida ("Original")**; `getResolution`, la clave de caché de `getOutputResolution` y `remoteTalk.ts` lo usan. `Slide.svelte` y `SkeletonSlide.svelte` toman la salida elegida en el selector de la vista previa (`referenceOutputId`) y el esqueleto ya no tiene 16/9 fijo. **Sin verificar en la app real.**
+- [ ] **F21.2 Encuadre en el engine nativo.** Si la Pantalla fija una relación **distinta** de la ventana (p. ej. 16:9 en un proyector 4:3), el engine escala por ancho (`design_width`) y no encuadra: no hay letterbox ni `alignPosition` (que el render HTML viejo sí respetaba). Con "Original" coincide siempre. Pendiente.
+- [ ] **F21.3** Las demás vistas que dibujan diapositivas (plantillas, overlays, editores) siguen tomando la *primera salida activa* en vez de la del selector de vista previa.
+
+---
+
 ## Deuda registrada (sin tarea)
 
 - **Cliente `src/server/controller`** todavía tiene la interfaz de Dibujo (Focus, Zoom,
