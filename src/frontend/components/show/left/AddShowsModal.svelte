@@ -9,13 +9,17 @@
     import { getAccess } from "../../../utils/profile"
     import { keysToID, sortObject } from "../../helpers/array"
     import Modal from "../../main/Modal.svelte"
-    import { filterShows, showsOfLibrary, toggleId, UNLABELED_LIBRARY_ID } from "../leftSource"
+    import { filterShows, isHiddenLegacyLibrary, showsOfLibrary, toggleId, UNLABELED_LIBRARY_ID } from "../leftSource"
     import { addShowsToProject } from "../project"
 
     $: playlistId = $leftSource?.type === "playlist" ? $leftSource.id : null
     $: profile = $activeProfile ? getAccess("shows") : {}
 
-    $: all = keysToID($categories).filter((a) => profile[a.id] !== "none")
+    $: counts = $sortedShowsList.reduce<Record<string, number>>((result, show) => {
+        if (show?.category) result[show.category] = (result[show.category] || 0) + 1
+        return result
+    }, {})
+    $: all = keysToID($categories).filter((a) => profile[a.id] !== "none" && !isHiddenLegacyLibrary(a.id, counts, null))
     $: libraries = [
         ...sortObject(
             all.filter((a) => !a.isArchive),
@@ -72,7 +76,7 @@
                         .slice(0, 3)
                         .join(", ")}{selected.length > 3 ? "…" : ""}</span
                 >
-                <Button variant="outline" onclick={() => activePopup.set(null)}>{translateText("actions.cancel")}</Button>
+                <Button variant="outline" onclick={() => activePopup.set(null)}>{translateText("popup.cancel")}</Button>
                 <Button disabled={!selected.length || !playlistId || !$projects[playlistId]} onclick={confirm}>{translateText("ui.add_count", null, [String(selected.length)])}</Button>
             </footer>
         </div>

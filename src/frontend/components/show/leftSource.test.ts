@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest"
-import { appendShowRefs, filterShows, isSourceValid, resolveInitialSource, showsOfLibrary, toggleId } from "./leftSource"
+import { appendShowRefs, filterShows, isHiddenLegacyLibrary, isSourceValid, resolveInitialSource, showsOfLibrary, toggleId } from "./leftSource"
 
 const ids = { playlists: ["p1", "p2"], libraries: ["general", "songs"] }
 
@@ -88,5 +88,20 @@ describe("showsOfLibrary", () => {
     })
     test("una biblioteca vacía devuelve lista vacía", () => {
         expect(showsOfLibrary(shows, "vacia", { ...categories, vacia: {} }, {})).toEqual([])
+    })
+})
+
+describe("isHiddenLegacyLibrary", () => {
+    test("Scripture se oculta siempre, aunque tenga shows", () => {
+        expect(isHiddenLegacyLibrary("scripture", { scripture: 3 }, null)).toBe(true)
+    })
+    test("Songs y Presentations de fábrica se ocultan sólo si están vacías", () => {
+        expect(isHiddenLegacyLibrary("song", {}, null)).toBe(true)
+        expect(isHiddenLegacyLibrary("presentation", {}, null)).toBe(true)
+        expect(isHiddenLegacyLibrary("song", { song: 2 }, null)).toBe(false)
+    })
+    test("una biblioteca propia o la elegida nunca se oculta", () => {
+        expect(isHiddenLegacyLibrary("general", {}, null)).toBe(false)
+        expect(isHiddenLegacyLibrary("scripture", {}, "scripture")).toBe(false)
     })
 })

@@ -56,3 +56,15 @@ export function showsOfLibrary<T extends { category?: string | null; private?: b
         return show.category === libraryId
     })
 }
+
+const LEGACY_LIBRARIES_HIDDEN_WHEN_EMPTY = ["song", "presentation"]
+
+/**
+ * Bibliotecas heredadas de FreeShow que no se muestran: "Scripture" (las Biblias se abren desde su pestaña) y las de
+ * fábrica "Songs"/"Presentations" mientras estén vacías. La biblioteca elegida nunca se oculta.
+ */
+export function isHiddenLegacyLibrary(id: string, counts: Record<string, number>, activeId: string | null): boolean {
+    if (id === activeId) return false
+    if (id === "scripture") return true
+    return LEGACY_LIBRARIES_HIDDEN_WHEN_EMPTY.includes(id) && !counts[id]
+}
