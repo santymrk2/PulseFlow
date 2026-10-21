@@ -68,7 +68,7 @@ export const activeEdit: Writable<ActiveEdit> = writable({ items: [] })
 export const activeStage: Writable<ActiveStage> = writable({ id: null, items: [] })
 export const activeTimers: Writable<any[]> = writable([])
 export const activeRename: Writable<any> = writable(null)
-export const activeDrawerTab: Writable<DrawerTabIds> = writable("shows")
+export const activeDrawerTab: Writable<DrawerTabIds> = writable("media") // "shows" ya no se muestra en el cajón: los shows viven en LIBRARIES (columna izquierda)
 
 // Fuente de ÍTEMS en la columna izquierda: una library o una playlist (null = sin elegir).
 export const leftSource: Writable<{ type: "library" | "playlist"; id: string } | null> = writable(null)

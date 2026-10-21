@@ -50,7 +50,7 @@
 
     {#if library}
         <div class="flex h-full flex-col">
-            <div class="shrink-0 border-b border-border p-2">
+            <div class="library-search shrink-0 border-b border-border p-2">
                 <Input value={query} placeholder={translateText("ui.search_shows")} on:input={(e) => (query = (e.target as HTMLInputElement).value)} />
             </div>
             <div class="min-h-0 flex-1">

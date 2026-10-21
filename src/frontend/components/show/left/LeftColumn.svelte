@@ -2,6 +2,7 @@
     // Columna izquierda de la página Show: LIBRARIES · PLAYLISTS · ÍTEMS.
     // Resuelve la fuente de ÍTEMS (nunca queda sin una si hay algo que mostrar) y reparte el
     // alto con dos divisores arrastrables que se recuerdan.
+    import { onMount, tick } from "svelte"
     import { activeProject, categories, drawerTabsData, leftSource, loaded, projects, projectView, resized } from "../../../stores"
     import { keysToID, sortByName } from "../../helpers/array"
     import { isSourceValid, resolveInitialSource, UNLABELED_LIBRARY_ID } from "../leftSource"
@@ -34,6 +35,21 @@
         }
         leftSource.set(next)
     }
+
+    // Ctrl+1: pasar a una biblioteca (si no hay una elegida) y enfocar el buscador de ÍTEMS
+    async function focusLibrarySearch() {
+        if ($leftSource?.type !== "library") {
+            const library = resolveInitialSource({ last: null, playlists: [], libraries: libraryIds })
+            if (library) leftSource.set(library)
+        }
+        await tick()
+        column?.querySelector<HTMLInputElement>(".library-search input")?.focus()
+    }
+
+    onMount(() => {
+        window.addEventListener("focus-library-search", focusLibrarySearch)
+        return () => window.removeEventListener("focus-library-search", focusLibrarySearch)
+    })
 
     // --- divisores ---
     let column: HTMLElement | undefined

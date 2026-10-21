@@ -119,6 +119,9 @@
         if (mouse) stopResizing()
     })
 
+    // la vista de shows ya no vive en el cajón (LIBRARIES, columna izquierda): cualquier pedido de "shows" abre Media
+    $: if ($activeDrawerTab === "shows") activeDrawerTab.set("media")
+
     $: activeTab = $activeDrawerTab
     function openDrawerTab(tab: { id: string; name: string; icon: string }) {
         const newId = tab.id as DrawerTabIds
@@ -193,7 +196,7 @@
                 {#if tab.id !== "shows" && $drawerTabsData[tab.id]?.enabled !== false && getAccess(tab.id).global !== "none" && (!$focusMode || !hiddenInFocusMode.includes(tab.id))}
                     <!-- overflow: unset; -->
                     <Button id={tab.id} style="border-radius: var(--radius) var(--radius) 0 0;border-bottom: 2px solid var(--primary);padding: 0 0.75em;height: 100%;" class="context #drawer_top" title="<b>{tab.name.split('.')[0]}.{tab.name.split('.')[1]}</b>{tab.title ? `\n${tab.title}` : ''} [Ctrl+{i + 1}]" isActive={activeTab === tab.id} on:click={() => openDrawerTab(tab)} on:dblclick={closeDrawer}>
-                        <Icon id={tab.icon} size={1} white={activeTab === tab.id} />
+                        <span class="tabLabel">{translateText(tab.name)}</span>
                     </Button>
                 {/if}
             {/each}
@@ -327,5 +330,10 @@
         flex: 1;
     }
 
-    /* labels were removed in F11.2 — tabs are icon-only */
+    /* pestañas con texto (reemplaza las sólo-ícono de F11.2); con poco ancho la tira se desplaza */
+    .tabLabel {
+        font-size: var(--text-sm);
+        font-weight: 500;
+        white-space: nowrap;
+    }
 </style>

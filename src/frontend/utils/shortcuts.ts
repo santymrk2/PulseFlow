@@ -211,6 +211,12 @@ export function keydown(e: KeyboardEvent) {
             const tabId = drawerMenus[Number(e.key) - 1]
             if (getAccess(tabId).global === "none") return
 
+            // Ctrl+1 era la pestaña Shows: ahora lleva al buscador de la biblioteca (ÍTEMS)
+            if (tabId === "shows") {
+                window.dispatchEvent(new CustomEvent("focus-library-search"))
+                return
+            }
+
             activeDrawerTab.set(tabId)
             // open drawer
             if (get(drawer).height < 300) drawer.set({ height: get(drawer).stored || 300, stored: null })
