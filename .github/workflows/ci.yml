@@ -43,6 +43,14 @@ jobs:
 
     rust:
         name: Rust (cargo check + tests)
+        # El runner de macOS tiene 3 núcleos y la compilación en frío del workspace
+        # tarda más de 15 minutos: sin desactivar debuginfo e incremental el job no
+        # llega a terminar (y un job cancelado tampoco guarda el caché, así que
+        # vuelve a arrancar en frío: nunca sale del bucle).
+        env:
+            CARGO_PROFILE_DEV_DEBUG: "0"
+            CARGO_PROFILE_TEST_DEBUG: "0"
+            CARGO_INCREMENTAL: "0"
         strategy:
             fail-fast: false
             matrix:

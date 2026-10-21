@@ -1184,6 +1184,19 @@ toque en F14 puede romper algo sin que nadie se entere.
   *Archivos:* `src-tauri/build.rs`, nuevo `src-tauri/windows-app-manifest.xml`, `.github/workflows/ci.yml`
   (se elimina el paso temporal de diagnóstico de imports).
   *Aceptación:* el job de Windows deja de fallar y `cargo test --lib` pasa completo.
+  *Resultado:* el binario de tests arranca y el job Windows pasa (161 passed / 1 failed, y ese
+  fallo era el test de PDF asumiendo separador POSIX, corregido en el mismo F13.5).
+
+- [x] **F13.6 El job de Rust en macOS termina a tiempo.** (2026-10-21) El job macOS se cortaba
+  pasados ~15 minutos, siempre en la compilación en frío del workspace (3 núcleos en el runner).
+  Y como un job cancelado **no guarda la entrada de caché** de `rust-cache`, el siguiente volvía
+  a compilar todo desde cero: el bucle no se rompía solo. En `ci.yml`, el job Rust ahora corre
+  con `CARGO_PROFILE_DEV_DEBUG=0`, `CARGO_PROFILE_TEST_DEBUG=0` y `CARGO_INCREMENTAL=0`
+  (debuginfo e incremental no aportan en CI y sí cuestan tiempo de compilación). Verificado con
+  `cargo check` y `cargo test --lib` en local usando las mismas variables.
+  *Nota:* no se identificó quién cancelaba los jobs (una re-ejecución de sólo ese job salió
+  cancelada **estando todavía en cola**); el cambio hace que el job termine holgado.
+  *Archivo:* `.github/workflows/ci.yml`.
 
 ---
 
