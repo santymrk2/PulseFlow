@@ -6,38 +6,17 @@
     import Tipbar from "./components/main/Tipbar.svelte"
     import Top from "./components/main/Top.svelte"
     import Preview from "./components/output/preview/Preview.svelte"
-    import LibraryAddMenu from "./components/show/LibraryAddMenu.svelte"
-    import Projects from "./components/show/Projects.svelte"
-    import ProjectContentList from "./components/show/ProjectContentList.svelte"
     import Show from "./components/show/Show.svelte"
+    import LeftColumn from "./components/show/left/LeftColumn.svelte"
     import ShowTools from "./components/show/ShowTools.svelte"
     import StageLayouts from "./components/stage/StageLayouts.svelte"
     import Resizeable from "./components/system/Resizeable.svelte"
     import Timeline from "./components/timeline/Timeline.svelte"
     import { DEFAULT_WIDTH } from "./utils/common"
-    import { activeDrawerTab, activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, categories, currentWindow, drawer, drawerTabsData, editMode, focusMode, loaded, os, projectView, projects, resized, showChangeProfileMenu, showsCache, special } from "./stores"
-    import { getAccess } from "./utils/profile"
-    import Icon from "./components/helpers/Icon.svelte"
-    import ListRow from "./lib/components/ui/list-row/list-row.svelte"
-    import SectionHeader from "./lib/components/ui/section-header/section-header.svelte"
-    import { translateText } from "./utils/language"
+    import { activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, currentWindow, editMode, focusMode, loaded, os, projectView, resized, showChangeProfileMenu, showsCache, special } from "./stores"
 
     $: page = $activePage
-    $: projectActive = !$projectView && $activeProject !== null
-    $: itemCount = projectActive && $activeProject ? ($projects[$activeProject]?.shows?.length ?? 0) : 0
     $: isWindows = !$currentWindow && $os.platform === "win32"
-
-    function openLibraryCategory(categoryId: string) {
-        activeDrawerTab.set("shows")
-        drawerTabsData.update((a) => {
-            if (!a.shows) a.shows = { activeSubTab: categoryId, enabled: true }
-            else a.shows.activeSubTab = categoryId
-            return a
-        })
-        if ($drawer.height <= 40) {
-            drawer.set({ height: $drawer.stored ?? 300, stored: null })
-        }
-    }
 
     let previousId = ""
     $: if ($activeShow?.id !== previousId) showOpened()
@@ -59,47 +38,7 @@
             <div class="left">
                 {#if page === "show"}
                     {#key $activeProfile}
-                        <div class="librarySection">
-                            <SectionHeader>
-                                {translateText("ui.library")}
-                                {#snippet actions()}
-                                    <LibraryAddMenu />
-                                {/snippet}
-                            </SectionHeader>
-                            {#each Object.entries($categories || {}) as [id, cat]}
-                                {#if !cat?.isArchive && $activeProfile ? getAccess(id).global !== "none" : true}
-                                    <ListRow onclick={() => openLibraryCategory(id)}>
-                                        {#snippet icon()}
-                                            <Icon id={cat?.icon || "folder"} white size={0.9} />
-                                        {/snippet}
-                                        {cat?.name?.includes(".") ? translateText(cat.name) : cat?.name || id}
-                                    </ListRow>
-                                {/if}
-                            {/each}
-                        </div>
-
-                        <SectionHeader>{translateText("ui.playlist")}</SectionHeader>
-                        <Projects />
-
-                        {#if projectActive}
-                            <SectionHeader>{translateText("ui.items", null, [String(itemCount)])}</SectionHeader>
-                            <ProjectContentList tree={[]} recentlyUsedList={[]} />
-                        {/if}
-
-                        <div class="librarySection">
-                            <SectionHeader>{translateText("ui.media")}</SectionHeader>
-                            <ListRow
-                                onclick={() => {
-                                    activeDrawerTab.set("media")
-                                    if ($drawer.height <= 40) drawer.set({ height: $drawer.stored ?? 300, stored: null })
-                                }}
-                            >
-                                {#snippet icon()}
-                                    <Icon id="media" white size={0.9} />
-                                {/snippet}
-                                {translateText("ui.media")}
-                            </ListRow>
-                        </div>
+                        <LeftColumn />
                     {/key}
                 {:else if page === "edit"}
                     <Navigation />
@@ -229,12 +168,5 @@
     .right.row :global(.textfield .picker) {
         left: unset !important;
         right: 0;
-    }
-    /* F11.10 — secciones de la columna izquierda */
-    .librarySection {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-        padding: 4px;
     }
 </style>

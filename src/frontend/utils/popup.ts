@@ -92,6 +92,7 @@ import Unsaved from "../components/main/popups/Unsaved.svelte"
 import UpdateManager from "../components/main/popups/UpdateManager.svelte"
 import Variable from "../components/main/popups/Variable.svelte"
 import ScreenConfig from "../components/screens/ScreenConfig.svelte"
+import AddShowsModal from "../components/show/left/AddShowsModal.svelte"
 import { activePopup, popupData } from "../stores"
 
 export const popups: { [key in Popups]: ComponentType } = {
@@ -184,6 +185,7 @@ export const popups: { [key in Popups]: ComponentType } = {
     node_options: NodeOptions,
     looks: LooksWindow,
     screen_config: ScreenConfig,
+    add_shows: AddShowsModal,
     kit_demo: KitDemo
 }
 

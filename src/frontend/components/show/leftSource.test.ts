@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest"
-import { appendShowRefs, filterShows, isSourceValid, resolveInitialSource, toggleId } from "./leftSource"
+import { appendShowRefs, filterShows, isSourceValid, resolveInitialSource, showsOfLibrary, toggleId } from "./leftSource"
 
 const ids = { playlists: ["p1", "p2"], libraries: ["general", "songs"] }
 
@@ -63,5 +63,30 @@ describe("appendShowRefs", () => {
             { id: "x", type: "show" }
         ])
         expect(current).toHaveLength(1)
+    })
+})
+
+describe("showsOfLibrary", () => {
+    const categories = { general: {}, songs: {} }
+    const shows = [
+        { id: "1", category: "general" },
+        { id: "2", category: "songs" },
+        { id: "3", category: null },
+        { id: "4", category: "borrada" },
+        { id: "5", category: "general", private: true }
+    ]
+    const ids = (list: { id: string }[]) => list.map((show) => show.id)
+
+    test("lista los shows de esa biblioteca y deja afuera los privados", () => {
+        expect(ids(showsOfLibrary(shows, "general", categories, {}))).toEqual(["1"])
+    })
+    test('"unlabeled" junta los shows sin categoría o con una categoría que ya no existe', () => {
+        expect(ids(showsOfLibrary(shows, "unlabeled", categories, {}))).toEqual(["3", "4"])
+    })
+    test("una biblioteca sin acceso no lista nada", () => {
+        expect(showsOfLibrary(shows, "general", categories, { general: "none" })).toEqual([])
+    })
+    test("una biblioteca vacía devuelve lista vacía", () => {
+        expect(showsOfLibrary(shows, "vacia", { ...categories, vacia: {} }, {})).toEqual([])
     })
 })

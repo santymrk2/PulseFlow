@@ -14,6 +14,9 @@
 
     export let tree: Tree[]
     export let readOnly = false
+    // playlist marcada como activa; sin valor se usa `$activeProject` (como siempre)
+    export let selectedId: string | null | undefined = undefined
+    $: activeId = selectedId === undefined ? $activeProject : selectedId
 
     let visibleArchives: string[] = []
 
@@ -125,10 +128,10 @@
     ///
 
     let pathToActive = ""
-    $: if ($activeProject || tree) updateActivePath()
+    $: if (activeId || tree) updateActivePath()
     function updateActivePath() {
         let paths: string[] = []
-        let currentParent = $projects[$activeProject!]?.parent
+        let currentParent = $projects[activeId!]?.parent
 
         let loopstop = 0
         while ((currentParent || "/") !== "/" && loopstop < 80) {
@@ -171,7 +174,7 @@
                                             {/if}
                                         </Button>
                                     {:else if project.id && shown && isArchivedShown}
-                                        <Button style="width: 100%;padding: 0.08rem 0.65rem;font-weight: normal;" title="actions.id_select_project: <b>{project.name}</b>" on:click={(e) => open(e, project.id)} class="context #project_button{isReadOnly ? '_readonly' : ''}" isActive={$activeProject === project.id} tab>
+                                        <Button style="width: 100%;padding: 0.08rem 0.65rem;font-weight: normal;" title="actions.id_select_project: <b>{project.name}</b>" on:click={(e) => open(e, project.id)} class="context #project_button{isReadOnly ? '_readonly' : ''}" isActive={activeId === project.id} tab>
                                             <Icon id={isProjectLinked($projects[project.id], project.id) ? "cloud" : "project"} white={$projects[project.id]?.archived} />
                                             <HiddenInput value={project.name} id={"project_" + project.id} on:edit={(e) => rename(project.id, e.detail.value)} bind:edit={editActive} allowEdit={!isReadOnly} />
                                         </Button>

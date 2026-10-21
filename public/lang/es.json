@@ -1909,7 +1909,17 @@
                 "present": "Proyectar",
         "slide": "$1 diapositiva",
         "slides": "$1 diapositivas",
-        "filter": "Filtro"
+        "filter": "Filtro",
+        "libraries": "Bibliotecas",
+        "playlists": "Playlists",
+        "items_title": "Ítems",
+        "search_shows": "Buscar show…",
+        "add_shows": "Agregar shows",
+        "add_count": "Agregar $1",
+        "no_results": "Sin resultados",
+        "new_library": "Nueva biblioteca",
+        "new_playlist": "Nueva playlist",
+        "add_to_playlist": "Agregar a playlist"
     },
     "screen_config": {
         "assigned": "Asignado",

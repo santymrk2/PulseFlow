@@ -1910,7 +1910,17 @@
                 "present": "Present",
         "slide": "$1 slide",
         "slides": "$1 slides",
-        "filter": "Filter"
+        "filter": "Filter",
+        "libraries": "Libraries",
+        "playlists": "Playlists",
+        "items_title": "Items",
+        "search_shows": "Search show…",
+        "add_shows": "Add shows",
+        "add_count": "Add $1",
+        "no_results": "No results",
+        "new_library": "New library",
+        "new_playlist": "New playlist",
+        "add_to_playlist": "Add to playlist"
     },
     "screen_config": {
         "assigned": "Assigned",

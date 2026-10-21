@@ -43,3 +43,16 @@ export function toggleId(selected: readonly string[], id: string): string[] {
 export function appendShowRefs(current: readonly ProjectShowRef[], ids: readonly string[]): ProjectShowRef[] {
     return [...current, ...ids.map((id): ProjectShowRef => ({ id, type: "show" }))]
 }
+
+/** Id de la biblioteca virtual de los shows sin categoría (o con una que ya no existe). */
+export const UNLABELED_LIBRARY_ID = "unlabeled"
+
+/** Shows visibles de una biblioteca: sin privados y respetando el acceso del perfil. */
+export function showsOfLibrary<T extends { category?: string | null; private?: boolean }>(shows: readonly T[], libraryId: string, categories: Record<string, unknown>, profile: Record<string, string | undefined>): T[] {
+    return shows.filter((show) => {
+        if (!show || show.private) return false
+        if (profile[show.category || ""] === "none") return false
+        if (libraryId === UNLABELED_LIBRARY_ID) return !show.category || !categories[show.category]
+        return show.category === libraryId
+    })
+}

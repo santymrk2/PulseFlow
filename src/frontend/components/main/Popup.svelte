@@ -46,7 +46,7 @@
     $: isOptimized = $special.optimizedMode
 
     // modales de pantalla completa: traen su propia base (main/Modal.svelte), sin la tarjeta de este popup
-    const FULL_MODALS: Popups[] = ["looks", "screen_config"]
+    const FULL_MODALS: Popups[] = ["looks", "screen_config", "add_shows"]
 </script>
 
 {#if popupId !== null}
