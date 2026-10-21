@@ -18,6 +18,7 @@ import { listen, type UnlistenFn } from "@tauri-apps/api/event"
 import { OUTPUT } from "../../types/Channels"
 import { Main } from "../../types/IPC/Main"
 import { newToast, setStatus } from "../utils/common"
+import { pickerEvent } from "./pickerEvents"
 
 type Receiver = (args: any, listenedId?: string) => void
 
@@ -253,7 +254,12 @@ async function send(channel: string, data?: any, id?: string) {
     }
 
     invoke(command, { data: payload })
-        .then((result) => dispatch(channel, { channel: command, data: result }, id))
+        .then((result) => {
+            dispatch(channel, { channel: command, data: result }, id)
+
+            const picked = pickerEvent(command, payload, result)
+            if (picked) dispatch(channel, picked)
+        })
         .catch((error) => {
             // Muchos canales (servidores, salidas, etc.) aún no tienen comando en el
             // backend; se registran como advertencia en lugar de colapsar.
