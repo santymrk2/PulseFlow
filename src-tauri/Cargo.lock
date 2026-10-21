@@ -3372,6 +3372,7 @@ dependencies = [
  "hostname",
  "image",
  "kamadak-exif",
+ "libc",
  "libloading 0.8.9",
  "objc2",
  "objc2-av-foundation",

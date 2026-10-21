@@ -13,7 +13,7 @@ mod ffmpeg;
 #[cfg(target_os = "macos")]
 pub mod metal_import;
 #[cfg(target_os = "macos")]
-mod avf;
+pub(crate) mod avf;
 pub mod nv12;
 
 use crate::error::AppResult;

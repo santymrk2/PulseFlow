@@ -296,4 +296,64 @@ mod tests {
         decoder.stop();
         assert!(started.elapsed() < Duration::from_millis(500), "stop tardó {:?}", started.elapsed());
     }
+
+    /// Guarda el primer frame nativo que llega.
+    #[derive(Default)]
+    struct First(Mutex<Option<super::super::nv12::Nv12Frame>>);
+
+    impl FrameSink for First {
+        fn push(&self, frame: DecodedFrame<'_>) {
+            if let FramePixels::Native(native) = frame.pixels {
+                self.0.lock().expect("lock").get_or_insert(native);
+            }
+        }
+    }
+
+    #[test]
+    fn native_frame_renders_red() {
+        use crate::render::test_util::{assert_near, render_center};
+
+        let sink = Arc::new(First::default());
+        let mut decoder = start(FIXTURE, sink.clone()).expect("abrir el fixture");
+        let started = Instant::now();
+        while sink.0.lock().expect("lock").is_none() && started.elapsed() < Duration::from_secs(5) {
+            std::thread::sleep(Duration::from_millis(10));
+        }
+        decoder.stop();
+
+        let frame = sink.0.lock().expect("lock").take().expect("llegó un frame nativo");
+        assert!(!frame.is_cpu_backed(), "las texturas respaldan memoria del decodificador");
+        assert_near(render_center(&frame), [255, 0, 0], "rojo decodificado por AVFoundation");
+    }
+
+    /// CPU (usuario + sistema) consumido por este proceso hasta ahora.
+    fn process_cpu() -> Duration {
+        // SAFETY: `getrusage` escribe en una estructura propia y válida.
+        let usage = unsafe {
+            let mut usage: libc::rusage = std::mem::zeroed();
+            assert_eq!(libc::getrusage(libc::RUSAGE_SELF, &mut usage), 0);
+            usage
+        };
+        let tv = |t: libc::timeval| Duration::new(t.tv_sec as u64, t.tv_usec as u32 * 1000);
+        tv(usage.ru_utime) + tv(usage.ru_stime)
+    }
+
+    /// Medición manual (F18.5): `PULSEFLOW_BENCH_VIDEO=/ruta/4k.mp4 cargo test --lib bench_native -- --ignored --nocapture`.
+    /// Decodifica e importa a wgpu durante 10 s a tiempo real y reporta el CPU del proceso.
+    #[test]
+    #[ignore = "medición manual: necesita PULSEFLOW_BENCH_VIDEO"]
+    fn bench_native_playback() {
+        let path = std::env::var("PULSEFLOW_BENCH_VIDEO").expect("definir PULSEFLOW_BENCH_VIDEO con un video largo");
+        let sink = Arc::new(Collect::default());
+
+        let (cpu_before, wall_before) = (process_cpu(), Instant::now());
+        let mut decoder = start(&path, sink.clone()).expect("abrir el video");
+        std::thread::sleep(Duration::from_secs(10));
+        decoder.stop();
+        let (cpu, wall) = (process_cpu() - cpu_before, wall_before.elapsed());
+
+        let frames = sink.0.lock().expect("lock").len();
+        println!("nativo: {frames} frames en {wall:.2?} de reloj; CPU {cpu:.2?} ({:.0} % de un núcleo)", cpu.as_secs_f64() / wall.as_secs_f64() * 100.0);
+    }
 }
+

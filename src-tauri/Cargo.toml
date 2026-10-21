@@ -48,6 +48,8 @@ cosmic-text = "0.19.0"
 # (F3.1). La feature "test" no entra en el build normal de la app.
 [dev-dependencies]
 tauri = { version = "2", features = ["test"] }
+# F18.5: el benchmark nativo mide el CPU del proceso con getrusage
+libc = "0.2"
 
 
 # Read the optimization guideline for more details: https://tauri.app/concept/size/#cargo-configuration

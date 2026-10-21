@@ -304,3 +304,27 @@ fn video_frames_are_uploaded_once_per_frame_not_once_per_subscriber() {
     store.remove_video("fondo.mp4");
     assert!(store.get_video("fondo.mp4").is_none());
 }
+
+/// El camino nativo no sube ni un byte desde la CPU: el frame publicado respalda la memoria del decodificador.
+#[cfg(target_os = "macos")]
+#[test]
+fn native_path_does_not_copy_pixels() {
+    use std::time::{Duration, Instant};
+
+    let store = super::super::media::MediaStore::new(super::super::gpu::shared().expect("GPU"));
+    let sink = Arc::new(HubSink { store: Arc::clone(&store), key: "fondo.mp4".to_string() });
+    let fixture = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/video/solid_red_64.mp4");
+    let mut decoder = crate::render::video::avf::start(fixture, sink).expect("abrir el fixture");
+
+    let started = Instant::now();
+    while store.get_video("fondo.mp4").is_none() && started.elapsed() < Duration::from_secs(5) {
+        std::thread::sleep(Duration::from_millis(10));
+    }
+    std::thread::sleep(Duration::from_millis(200)); // unos cuantos frames más
+    decoder.stop();
+
+    let frame = store.get_video("fondo.mp4").expect("hay un frame publicado");
+    assert!(!frame.is_cpu_backed(), "el frame nativo no es una copia en texturas propias");
+    assert_eq!(store.uploads(), 0, "ninguna subida desde la CPU");
+}
+
