@@ -117,6 +117,8 @@
     .brand-logo {
         width: 48px;
         height: 48px;
+        /* el PNG es negro sobre transparente: se pinta de blanco para el tema oscuro */
+        filter: brightness(0) invert(1);
     }
     .brand-name {
         font-size: 18px;

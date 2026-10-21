@@ -149,6 +149,8 @@
     $: if ($activeShow?.type === undefined || $activeShow?.type === "show") previousShow.set(JSON.stringify($activeShow))
 
     $: tabs = keysToID(drawerTabs)
+    // Templates ya no es una pestaña del cajón (vive en el Theme editor): una pestaña guardada que ya no existe vuelve a Media
+    $: if (!(drawerTabs as Record<string, unknown>)[$activeDrawerTab]) activeDrawerTab.set("media")
 
     const hiddenInFocusMode = ["templates", "calendar"]
 

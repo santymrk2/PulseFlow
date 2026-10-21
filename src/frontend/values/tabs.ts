@@ -7,8 +7,6 @@ export const drawerTabs = {
     media: { name: "tabs.media", icon: "media", title: "" },
     audio: { name: "tabs.audio", icon: "audio", title: "" },
     overlays: { name: "tabs.overlays", icon: "overlays", title: "" },
-    templates: { name: "tabs.templates", icon: "templates", title: "" },
-
     scripture: { name: "tabs.scripture", icon: "scripture", title: "" },
     calendar: { name: "tabs.calendar", icon: "calendar", title: "" },
 

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, outputDisplay, outputState, outputs, profiles, quickSearchActive, saved, shows, activeDrawerTab, drawer, looks, activeLook, activePopup } from "../../stores"
+    import { activeEdit, activePage, activeProfile, activeProject, activeShow, cloudUsers, outputDisplay, outputState, outputs, profiles, quickSearchActive, saved, shows, activeDrawerTab, drawer, looks, activeLook, activePopup, templates, drawerTabsData } from "../../stores"
     import { getCloudUsers } from "../../utils/cloudSync"
     import { translateText } from "../../utils/language"
     import Icon from "../helpers/Icon.svelte"
@@ -48,9 +48,14 @@
 
     // --- F11.1 helpers ---
 
-    function openTemplatesDrawer() {
-        activeDrawerTab.set("templates")
-        if ($drawer.height < 300) drawer.set({ height: $drawer.stored || DEFAULT_DRAWER_HEIGHT, stored: null })
+    // Theme editor: la página Edit con una plantilla abierta (la de la categoría elegida, o la primera que haya)
+    function openThemeEditor() {
+        const all = Object.entries($templates).filter(([, a]) => a && a.settings?.mode !== "text")
+        const category = $drawerTabsData.templates?.activeSubTab || "all"
+        const inCategory = all.find(([, a]) => category === "all" || a.category === category)
+        const id = ($activeEdit.type === "template" ? $activeEdit.id : "") || (inCategory || all[0])?.[0] || ""
+        activeEdit.set({ type: "template", id, items: [] })
+        activePage.set("edit")
     }
 
     function openScriptureDrawer() {
@@ -136,7 +141,7 @@
             </Button>
             <Menu open={moreOpen} onclose={() => (moreOpen = false)}>
                 <MenuItem onclick={() => runMore(() => activePage.set("stage"))}>{translateText("menu.stage_editor")}</MenuItem>
-                <MenuItem onclick={() => runMore(openTemplatesDrawer)}>{translateText("menu.theme_editor")}</MenuItem>
+                <MenuItem onclick={() => runMore(openThemeEditor)}>{translateText("menu.theme_editor")}</MenuItem>
                 <MenuItem onclick={() => runMore(openOverlaysDrawer)}>{translateText("menu.overlay_editor")}</MenuItem>
             </Menu>
         </div>

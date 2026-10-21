@@ -3,6 +3,7 @@
     import type { DropdownOptions } from "../../../../../types/Input"
     import { dictionary } from "../../../../stores"
     import { translateText } from "../../../../utils/language"
+    import { portal } from "../../../../utils/portal"
     import { formatSearch } from "../../../../utils/search"
     import VirtualList from "../../../../components/drawer/VirtualList.svelte"
     import { newDropdown } from "../../../../components/edit/scripts/edit"
@@ -36,54 +37,25 @@
         addNewTextbox = false
 
         open = typeof force === "boolean" && value ? force : !open
-        if (open) setTimeout(() => calculateMaxHeight())
+        if (open) positionMenu()
 
         if (open && value) highlightedIndex = options.findIndex((o) => o.value === value)
         else highlightedIndex = -1
     }
 
-    // AUTO HEIGHT
-
-    let maxHeight = 350
-    function calculateMaxHeight(isExpanded: boolean = false) {
+    // POSICIÓN: el menú va en el <body> con posición fija (no lo recorta ningún panel) y se abre hacia arriba si abajo no entra
+    let maxHeight = 320
+    let menuPos = ""
+    function positionMenu() {
         if (!dropdownEl) return
-
-        const triggerRect = dropdownEl.getBoundingClientRect()
-        scrollParent = getScrollParent(dropdownEl)
-        if (!scrollParent) return
-
-        const parentRect = scrollParent.getBoundingClientRect()
-        const availableSpace = parentRect.bottom - triggerRect.bottom
-
-        maxHeight = Math.min(400, Math.max(100, availableSpace - 20))
-
-        const popup = dropdownEl.closest(".popup")
-        if (!isExpanded && maxHeight < 160 && popup) {
-            let card = popup.querySelector(".card") as HTMLElement
-            if (card?.querySelector(".scroll")) card = card.querySelector(".scroll") as HTMLElement
-            if (card) card.style.paddingBottom = `160px`
-            calculateMaxHeight(true)
-        }
-    }
-
-    $: if (open === false) removeExtraPadding()
-    function removeExtraPadding() {
-        let card = dropdownEl?.closest(".popup")?.querySelector(".card") as HTMLElement
-        if (card?.querySelector(".scroll")) card = card.querySelector(".scroll") as HTMLElement
-        if (card) card.style.paddingBottom = ""
-    }
-
-    let scrollParent: HTMLElement | null = null
-    function getScrollParent(element: HTMLElement | null): HTMLElement | null {
-        while (element) {
-            const style = getComputedStyle(element)
-            const overflowY = style.overflowY
-            if (overflowY === "auto" || overflowY === "scroll") {
-                return element
-            }
-            element = element.parentElement
-        }
-        return document.documentElement
+        const rect = dropdownEl.getBoundingClientRect()
+        const spaceBelow = window.innerHeight - rect.bottom - 12
+        const spaceAbove = rect.top - 12
+        const openUp = spaceBelow < 180 && spaceAbove > spaceBelow
+        maxHeight = Math.max(120, Math.min(320, openUp ? spaceAbove : spaceBelow))
+        const width = onlyArrow ? 220 : rect.width
+        const left = onlyArrow ? Math.max(8, rect.right - width) : rect.left
+        menuPos = `left:${left}px;min-width:${width}px;max-height:${maxHeight}px;` + (openUp ? `bottom:${window.innerHeight - rect.top + 4}px;` : `top:${rect.bottom + 4}px;`)
     }
 
     // SELECT
@@ -97,6 +69,7 @@
     }
 
     function handleClickOutside(event: MouseEvent) {
+        if ((event.target as Element)?.closest?.(".select-menu")) return
         if (dropdownEl && !dropdownEl.contains(event.target as Node) && !event.composedPath().includes(dropdownEl)) {
             open = false
             addNewTextbox = false
@@ -224,13 +197,24 @@
 
     onMount(() => {
         document.addEventListener("click", handleClickOutside)
+        window.addEventListener("resize", reposition)
+        window.addEventListener("scroll", reposition, true)
         // document.addEventListener("focusout", handleFocusOut, true)
 
         return () => {
             document.removeEventListener("click", handleClickOutside)
+            window.removeEventListener("resize", reposition)
+            window.removeEventListener("scroll", reposition, true)
             // document.removeEventListener("focusout", handleFocusOut, true)
         }
     })
+
+    function reposition(e?: Event) {
+        if (!open) return
+        // el scroll de la propia lista no mueve el menú
+        if ((e?.target as Element | undefined)?.closest?.(".select-menu")) return
+        positionMenu()
+    }
 
     $: selected = options.find((o) => o.value === value)
     $: useVirtualList = options.length > 100
@@ -338,7 +322,7 @@
 
     {#if open}
         {#if useVirtualList}
-            <div class="dropdown virtual" style="max-height: {maxHeight}px">
+            <div class="dropdown select-menu virtual" style={menuPos} use:portal>
                 <VirtualList items={options} height="{maxHeight}px" activeIndex={highlightedIndex} let:item={option}>
                     <li style="{option.data ? 'justify-content: space-between;' : ''}{option.style || ''}" role="option" aria-selected={option.value === value} class:selected={option.value === value} class:highlighted={options.indexOf(option) === highlightedIndex} on:click={(e) => selectOption(e, option.value)}>
                         {#if option.icon}<Icon id={option.icon} style="margin-right: 5px;" color={option.iconColor} boxed={!!option.iconColor} white />{/if}
@@ -375,7 +359,7 @@
                 {/if}
             </div>
         {:else}
-            <ul style="max-height: {maxHeight}px" class="dropdown" role="listbox" tabindex="-1" bind:this={scrollElem}>
+            <ul style={menuPos} class="dropdown select-menu" role="listbox" tabindex="-1" bind:this={scrollElem} use:portal>
                 {#if allowEmpty}
                     <li style="opacity: 0.5;font-style: italic;" role="option" aria-selected={!value} class:selected={!value} class:highlighted={highlightedIndex < 0} on:click={() => selectOption(null, "")}>
                         {translateText("main.none")}
@@ -423,7 +407,7 @@
     {/if}
 
     {#if addNew && addNewTextbox}
-        <div class="dropdown">
+        <div class="dropdown inline">
             <InputRow>
                 <TextField label="inputs.name" value={newValue} autofocus on:input={(e) => (newValue = e.detail)} on:keydown={keydown} />
                 <Button disabled={!newValue.length} title={addNew} on:click={createNewEvent}>
@@ -577,36 +561,40 @@
         opacity: 1;
     }
 
+    /* menú desplegable: superficie y filas como el `Menu` del kit (shadcn): borde de 1 px, filas de 28 px, ✓ en la elegida */
     .dropdown {
+        position: fixed;
+        z-index: 9999;
+        list-style: none;
+        margin: 0;
+        padding: 4px;
+        overflow-y: auto;
+        overflow-x: hidden;
+
+        background-color: var(--bg-elevated);
+        color: var(--text);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-float);
+
+        /* los .popup ponen 1.2em, se vuelve al tamaño del kit */
+        font-size: var(--text-sm);
+
+        animation: dropdownFlyFade 80ms cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    .dropdown.inline {
         position: absolute;
         top: 100%;
         left: 0;
         right: 0;
-        background-color: var(--primary-darkest);
-        /* border: 1px solid var(--secondary); */
-        border-end-start-radius: var(--radius, 4px);
-        border-end-end-radius: var(--radius, 4px);
+        margin-top: 4px;
         z-index: 10;
-        list-style: none;
-        margin: 0;
-        padding: 0.25rem 0;
-        max-height: 350px;
-        overflow-y: auto;
-        overflow-x: hidden;
-        box-shadow: var(--shadow-float);
-
-        /* .popup size is set to 1.2em, reset that */
-        font-size: initial;
-
-        border-bottom: 1px solid var(--primary-lighter);
-
-        animation: dropdownFlyFade 80ms cubic-bezier(0.33, 1, 0.68, 1);
     }
 
     @keyframes dropdownFlyFade {
         from {
             opacity: 0;
-            transform: translateY(-8px);
+            transform: translateY(-4px);
         }
         to {
             opacity: 1;
@@ -620,37 +608,40 @@
         padding: 0;
     }
     .dropdown :global(svelte-virtual-list-viewport) {
-        background-color: var(--primary-darkest);
+        background-color: var(--bg-elevated);
     }
     .add-new-button {
-        border-top: 1px solid var(--primary-lighter);
-        padding-top: 0.25rem;
-    }
-
-    .onlyArrow .dropdown {
-        --left: 160px;
-        left: calc(0 - var(--left));
-        width: calc(var(--left) + 48px);
+        border-top: 1px solid var(--border);
+        padding-top: 4px;
     }
 
     .dropdown li {
-        padding: 0.5rem 0.75rem;
+        position: relative;
+        min-height: 28px;
+        padding: 0 8px;
+        border-radius: calc(var(--radius) - 2px);
         cursor: pointer;
         color: var(--text);
-        transition: background 0.2s;
+        white-space: nowrap;
+        transition: background 0.12s;
 
         display: flex;
         align-items: center;
-        gap: 5px;
-
-        /* line-height: 1.5em; */
+        gap: 6px;
     }
     .dropdown li:hover,
     .dropdown li.highlighted {
-        background-color: var(--hover);
+        background-color: var(--bg-hover);
     }
     .dropdown li.selected {
-        color: var(--secondary);
+        background-color: var(--bg-active);
+    }
+    .dropdown li.selected::after {
+        content: "✓";
+        margin-inline-start: auto;
+        padding-inline-start: 8px;
+        font-size: 0.85em;
+        opacity: 0.8;
     }
 
     .dropdown .data {

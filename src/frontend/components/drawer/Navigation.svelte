@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { DrawerTabIds } from "../../../types/Tabs"
     import DropArea from "../system/DropArea.svelte"
     import AudioTabs from "./navigation/AudioTabs.svelte"
     import CalendarTabs from "./navigation/CalendarTabs.svelte"
@@ -7,9 +8,8 @@
     import OverlaysTabs from "./navigation/OverlaysTabs.svelte"
     import ScriptureTabs from "./navigation/ScriptureTabs.svelte"
     import ShowsTabs from "./navigation/ShowsTabs.svelte"
-    import TemplatesTabs from "./navigation/TemplatesTabs.svelte"
 
-    export let id: "shows" | "media" | "overlays" | "audio" | "effects" | "scripture" | "calendar" | "functions" | "templates" | "timers"
+    export let id: DrawerTabIds
 </script>
 
 <div class="main">
@@ -30,8 +30,6 @@
                     <AudioTabs />
                 {:else if id === "overlays"}
                     <OverlaysTabs />
-                {:else if id === "templates"}
-                    <TemplatesTabs />
                 {/if}
             </DropArea>
         {/if}

@@ -10,7 +10,6 @@
     import Overlays from "./pages/Overlays.svelte"
     import Scenes from "./pages/Scenes.svelte"
     import Shows from "./pages/Shows.svelte"
-    import Templates from "./pages/Templates.svelte"
     import Variables from "./pages/Variables.svelte"
     import Timers from "./timers/Timers.svelte"
 
@@ -39,8 +38,6 @@
         <Audio {active} />
     {:else if id === "overlays"}
         <Overlays {active} />
-    {:else if id === "templates"}
-        <Templates {active} />
     {:else if id === "scripture"}
         <Scripture {active} />
     {:else if id === "calendar"}

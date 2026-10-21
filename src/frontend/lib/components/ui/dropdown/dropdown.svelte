@@ -127,12 +127,9 @@
             sans-serif !important;
     }
 
+    /* misma superficie y filas que el `Menu` y el `SelectField` del kit (borde de 1 px, filas de 28 px) */
     div {
-        /* width: fit-content;
-    min-width: 200px; */
-        background-color: var(--primary-darker);
         color: var(--text);
-        /* position: relative; */
     }
 
     div.disabled {
@@ -142,14 +139,15 @@
     .dropdown {
         max-height: 300px;
         overflow: auto;
-        /* position: absolute;
-    width: 100%; */
         position: fixed;
         display: flex;
         flex-direction: column;
-        border: 2px solid var(--border-color, var(--primary-lighter));
-        transform: translateY(-1px);
-        /* transform: translateX(-25%); */
+        padding: 4px;
+        background-color: var(--bg-elevated);
+        border: 1px solid var(--border-strong);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow-float);
+        font-size: var(--text-sm);
         z-index: 10;
     }
 
@@ -176,13 +174,14 @@
 
     button,
     span {
-        display: table;
+        display: flex;
+        align-items: center;
         width: 100%;
-        padding: 8px 12px;
+        min-height: 28px;
+        padding: 0 8px;
         background-color: transparent;
         font-family: inherit;
-        /* text-transform: uppercase; */
-        font-size: 1em;
+        font-size: var(--text-sm);
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -190,24 +189,24 @@
         position: relative;
     }
 
-    button {
-        /* width: 200px; */
-        color: var(--text);
-        border: 2px solid var(--border-color, var(--primary-lighter));
-        /* font-weight: bold; */
-        text-align: start;
+    span {
+        border-radius: calc(var(--radius) - 2px);
+        cursor: pointer;
+    }
 
-        display: flex;
-        align-items: center;
+    button {
+        color: var(--text);
+        border: 1px solid var(--border);
+        border-radius: var(--radius);
+        text-align: start;
     }
 
     button:hover:not(.disabled button),
     span:hover:not(.disabled span) {
-        background-color: var(--hover);
+        background-color: var(--bg-hover);
     }
     span.active {
-        background-color: var(--focus);
-        color: var(--secondary);
+        background-color: var(--bg-active);
     }
 
     .dropdown .extra {

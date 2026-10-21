@@ -8,6 +8,7 @@
     import Preview from "./components/output/preview/Preview.svelte"
     import Show from "./components/show/Show.svelte"
     import LeftColumn from "./components/show/left/LeftColumn.svelte"
+    import ThemeNavigation from "./components/edit/ThemeNavigation.svelte"
     import ShowTools from "./components/show/ShowTools.svelte"
     import StageLayouts from "./components/stage/StageLayouts.svelte"
     import Resizeable from "./components/system/Resizeable.svelte"
@@ -41,7 +42,11 @@
                         <LeftColumn />
                     {/key}
                 {:else if page === "edit"}
-                    <Navigation />
+                    {#if $activeEdit.type === "template"}
+                        <ThemeNavigation />
+                    {:else}
+                        <Navigation />
+                    {/if}
                 {:else if page === "stage"}
                     <StageLayouts />
                 {/if}

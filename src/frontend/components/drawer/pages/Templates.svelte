@@ -22,6 +22,10 @@
     import TemplateSlide from "./TemplateSlide.svelte"
 
     export let active: string | null
+    // Theme editor: lista de una columna en el panel izquierdo; un clic abre la plantilla para editarla (no la aplica al show)
+    export let columns: number | null = null
+    export let editOnClick = false
+    $: gridColumns = columns ?? $mediaOptions.columns
 
     const profile = getAccess("templates")
     $: readOnly = profile.global === "read" || profile[active || ""] === "read"
@@ -48,7 +52,7 @@
 
     let nextScrollTimeout: NodeJS.Timeout | null = null
     function wheel(e: any) {
-        if (!e.ctrlKey && !e.metaKey) return
+        if (columns !== null || (!e.ctrlKey && !e.metaKey)) return
         if (nextScrollTimeout) return
 
         mediaOptions.set({ ...$mediaOptions, columns: Math.max(2, Math.min(10, $mediaOptions.columns + (e.deltaY < 0 ? -100 : 100) / 100)) })
@@ -106,6 +110,11 @@
     let alerted = false
     function templateClick(e: MouseEvent | null = null, templateId: string) {
         if (e?.target?.closest?.(".edit") || e?.target?.closest?.(".icons")) return
+        if (editOnClick) {
+            activeEdit.set({ type: "template", id: templateId, items: [] })
+            activePage.set("edit")
+            return
+        }
         if (!$activeShow || !isShowActive || e?.ctrlKey || e?.metaKey) return
 
         if ($showsCache[$activeShow.id]?.locked) {
@@ -187,7 +196,7 @@
 <div style="position: relative;height: 100%;overflow-y: auto;" class="context #drawer_templates" on:wheel={wheel}>
     <DropArea id="templates">
         {#if fullFilteredTemplates.length}
-            <div class="grid" style="--width: {100 / $mediaOptions.columns}%;">
+            <div class="grid" style="--width: {100 / gridColumns}%;">
                 {#each fullFilteredTemplates as template, i (template.id)}
                     {@const isReadOnly = readOnly || profile[template.category || ""] === "read"}
 
@@ -196,7 +205,7 @@
                             {#if loaded || i < lazyLoader}
                                 <!-- icons -->
                                 {#if template.settings?.actions?.length}
-                                    <Actions columns={$mediaOptions.columns} templateId={template.id} actions={{ slideActions: template.settings?.actions }} />
+                                    <Actions columns={gridColumns} templateId={template.id} actions={{ slideActions: template.settings?.actions }} />
                                 {/if}
 
                                 <TemplateSlide templateId={template.id} {template} preview />

@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Item } from "../../../../types/Show"
-    import { activeDrawerTab, activeEdit, activePage, activeShow, showsCache, templates } from "../../../stores"
+    import { activeEdit, activePage, activeShow, showsCache, templates } from "../../../stores"
     import { mediaExtensions } from "../../../values/extensions"
     import { clone } from "../../helpers/array"
     import { history } from "../../helpers/history"
@@ -45,7 +45,6 @@
     }
 
     function editTemplate(id: string) {
-        activeDrawerTab.set("templates")
         activeEdit.set({ type: "template", id, items: [] })
         activePage.set("edit")
     }
