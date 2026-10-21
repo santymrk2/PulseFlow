@@ -28,6 +28,10 @@ mod scene_contract;
 #[cfg(test)]
 mod golden;
 
+// Ayudas compartidas por los tests que leen texturas de vuelta.
+#[cfg(test)]
+pub(crate) mod test_util;
+
 pub use screens::{
     close_all_screens, close_screen, emit_output_state, identify_screens, open_ids, open_screen,
     remove_screen, reposition_screen, set_audience_scene, set_scene_background, set_scene_media, set_scene_text,

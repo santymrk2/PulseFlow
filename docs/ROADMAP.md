@@ -1665,6 +1665,22 @@ Plan: `docs/superpowers/plans/2026-10-20-gpu-compartida-zero-copy-workers.md`.
 
 ---
 
+## F18 — Video zero-copy nativo · F19 — Workers de I/O
+
+Plan: `docs/superpowers/plans/2026-10-20-gpu-compartida-zero-copy-workers.md`. Diseño: `docs/design/zero-copy.md`.
+
+- [x] **F18.1 Spike de importación nativa.** macOS verificado: `CVPixelBuffer` NV12 → `CVMetalTextureCache` → `wgpu::Texture` sin copiar (`render/video/metal_import.rs`, test que lee de vuelta los planos). Diseño de Windows documentado, sin verificar.
+- [ ] **F18.2** Pipeline NV12 → RGB en el shader.
+- [ ] **F18.3** Trait `VideoDecoder`, ffmpeg en NV12, PTS en cada frame y `ShowClock`.
+- [ ] **F18.4** Decodificador nativo macOS (AVFoundation).
+- [ ] **F18.5** Importación Metal sin copias cableada al render + medición.
+- [ ] **F18.6** Media Foundation + D3D12 en Windows (**sin verificar en Windows**).
+- [ ] **F19.1** Workers de carga de imágenes sobre la GPU compartida.
+- [ ] **F19.2** Precarga al aplicar la escena y de las slides siguientes (`RENDER_PREFETCH`).
+- [ ] **F19.3** Miniaturas fuera del hilo de comandos y cierre.
+
+---
+
 ## F20 — Columna izquierda: LIBRARIES · PLAYLISTS · ÍTEMS
 
 Diseño: `docs/superpowers/specs/2026-10-20-columna-izquierda-library-playlist-items-design.md`.

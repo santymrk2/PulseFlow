@@ -22,6 +22,10 @@ use tauri::AppHandle;
 use crate::error::{AppError, AppResult};
 use crate::utils::ffmpeg;
 
+pub mod nv12;
+#[cfg(target_os = "macos")]
+pub mod metal_import;
+
 /// Fin de una sesión de decodificación.
 #[derive(PartialEq, Eq)]
 enum SessionEnd {
