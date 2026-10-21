@@ -1687,7 +1687,8 @@ Sin documento de plan aparte (el usuario pidió ejecutar directo).
 - [x] **F22.7** Menú **Archivo** (Importar… ⌘I, Exportar… ⌘E) en la barra nativa de macOS (`menu.rs`; en Windows ya existía en `MenuBar`). "Exportar" sale del ⋯ de ÍTEMS. Verificado en pantalla.
 - [x] **F22.8** PLAYLISTS, ÍTEMS y las secciones del cajón pasan a pilas planas como LIBRARIES (filas de 28px, nombre + cantidad a la derecha, activa con barra de acento), sin tarjetas redondeadas, márgenes ni fondos. Verificado en pantalla.
 - [x] **F22.9** Sin el + flotante del panel izquierdo (con su menú de agregar); Audiencia/Stage rojas apagadas y verdes en vivo; el selector de salida del preview usa SelectField, sin puntito, sin color debajo y sin poder apagar la pantalla desde ahí (se borra `OutputPreviewLabel.svelte`).
-- [ ] **F22.10 Verificación (usuario).** Probar en la app real: ✕ en pantalla de audiencia/stage (Mac y Windows), menú superior en Windows, agregar carpeta y medios, barra de video, cabecera del show y botones con borde blanco que queden.
+- [x] **F22.10** Sin el selector de looks bajo el preview; los botones de limpiar (y "Limpiar todo") son neutros, rellenos cuando hay algo para limpiar y atenuados si no; la franja de limpiar pierde el borde exterior y las esquinas redondeadas. Verificado en pantalla.
+- [ ] **F22.11 Verificación (usuario).** Probar en la app real: ✕ en pantalla de audiencia/stage (Mac y Windows), menú superior en Windows, agregar carpeta y medios, barra de video, cabecera del show y botones con borde blanco que queden.
 
 ---
 
