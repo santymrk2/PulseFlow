@@ -1680,7 +1680,7 @@ Plan: `docs/superpowers/plans/2026-10-20-gpu-compartida-zero-copy-workers.md`. D
 - [x] **F18.6** Media Foundation + D3D12 en Windows (`video/mf.rs`, `video/d3d_import.rs`, `video/pacing.rs`). **Implementado y type-checkeado, NO ejecutado en Windows**: `scripts/check-windows-video.sh` compila los archivos reales para `x86_64-pc-windows-msvc` con `-D warnings` (la app completa no se puede compilar para Windows desde macOS: falta `llvm-rc`). La ejecución real (decodificar, copiar GPU→GPU, abrir el recurso en DX12, sincronizar) queda en F13.4. `GpuContext` pide `TEXTURE_FORMAT_NV12` si el adaptador lo soporta; si no, o si algo falla, `video::start` cae a ffmpeg.
 - [x] **F19.1** Workers de carga de imágenes sobre la GPU compartida (`render/workers.rs`: pool de ½ núcleos, 2–8 hilos, resiste panics; `MediaStore::request_image` → `MediaState::{Loading, Ready, Failed}`, un decode por ruta, rechaza imágenes de más de 16384 px por lado leyendo sólo el encabezado). El bucle de render ya no decodifica: la capa aparece en el primer frame tras cargarse.
 - [x] **F19.2** Precarga: `RENDER_SCENE` pide a los workers todas las imágenes de la escena (`ScenePayload::image_paths`) y el frontend manda `RENDER_PREFETCH` con las imágenes de las 2 slides siguientes (`sceneGraph.ts` + `sceneMedia.ts`; contrato `PrefetchPayload` en Rust y `src/types/Output.ts`, tope de 64 rutas). Best-effort y sin inicializar la GPU si todavía no hay pantallas.
-- [ ] **F19.3** Miniaturas fuera del hilo de comandos y cierre.
+- [x] **F19.3** Miniaturas fuera del hilo de comandos y cierre (`docs/informes/f19.md`): `GET_THUMBNAIL`, `DOES_MEDIA_EXIST` y `READ_EXIF` pasan por `workers::run`; las imágenes fallidas se reintentan a los 30 s. Sin verificar en la app real.
 
 ---
 

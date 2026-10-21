@@ -49,6 +49,17 @@ pub fn submit(job: impl FnOnce() + Send + 'static) {
     }
 }
 
+/// Ejecuta `job` en el pool y espera su resultado **sin bloquear el hilo** que lo pide: pensado para
+/// comandos `async` de Tauri, que no pueden hacer trabajo pesado (decodificar, redimensionar, leer
+/// disco) dentro de su cuerpo porque ocuparían un hilo del runtime. `None` si el job hizo panic.
+pub async fn run<T: Send + 'static>(job: impl FnOnce() -> T + Send + 'static) -> Option<T> {
+    let (sender, receiver) = tokio::sync::oneshot::channel();
+    submit(move || {
+        let _ = sender.send(job());
+    });
+    receiver.await.ok()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -97,5 +108,40 @@ mod tests {
         for _ in 0..16 {
             rx.recv_timeout(Duration::from_secs(5)).expect("el pool sigue vivo");
         }
+    }
+
+    #[test]
+    fn run_returns_the_job_result_without_blocking_the_async_runtime() {
+        let runtime = tokio::runtime::Builder::new_current_thread().enable_time().build().expect("runtime");
+        runtime.block_on(async {
+            // un "latido" que sólo avanza si el runtime async sigue libre mientras el job duerme
+            let ticks = Arc::new(AtomicUsize::new(0));
+            let ticker = {
+                let ticks = Arc::clone(&ticks);
+                tokio::spawn(async move {
+                    loop {
+                        tokio::time::sleep(Duration::from_millis(10)).await;
+                        ticks.fetch_add(1, Ordering::SeqCst);
+                    }
+                })
+            };
+
+            let value = run(|| {
+                std::thread::sleep(Duration::from_millis(300));
+                42
+            })
+            .await;
+            ticker.abort();
+
+            assert_eq!(value, Some(42));
+            assert!(ticks.load(Ordering::SeqCst) >= 10, "el runtime se bloqueó: {} latidos", ticks.load(Ordering::SeqCst));
+        });
+    }
+
+    #[test]
+    fn run_gives_none_when_the_job_panics() {
+        let runtime = tokio::runtime::Builder::new_current_thread().build().expect("runtime");
+        let value: Option<u32> = runtime.block_on(run(|| panic!("job que falla a propósito")));
+        assert_eq!(value, None);
     }
 }

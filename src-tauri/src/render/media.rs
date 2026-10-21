@@ -175,8 +175,12 @@ pub enum MediaState {
 /// Pedido en curso o fallido de una imagen (las listas viven en `MediaStore::jobs`).
 enum Job {
     Loading,
-    Failed(String),
+    /// Motivo y cuándo falló: pasado el enfriamiento se reintenta (el archivo pudo terminar de copiarse).
+    Failed(String, std::time::Instant),
 }
+
+/// Cuánto se espera antes de reintentar una imagen que falló.
+const FAILED_RETRY_AFTER: std::time::Duration = std::time::Duration::from_secs(30);
 
 /// Cuántas rutas acepta un pedido de precarga (lo que sobra se descarta).
 pub const MAX_PREFETCH: usize = 64;
@@ -195,6 +199,7 @@ pub struct MediaStore {
     nv12_pipelines: Mutex<HashMap<TextureFormat, Arc<Nv12Pipeline>>>,
     /// Imágenes pedidas a los workers: cargando o fallidas (las listas salen de `textures`).
     jobs: Mutex<HashMap<String, Job>>,
+    retry_after: std::time::Duration,
     /// Decodificaciones iniciadas (sólo tests: comprueba que se pidan una sola vez).
     #[cfg(test)]
     decodes: std::sync::atomic::AtomicUsize,
@@ -205,6 +210,10 @@ pub struct MediaStore {
 
 impl MediaStore {
     pub fn new(gpu: Arc<GpuContext>) -> Arc<Self> {
+        Self::new_with_retry(gpu, FAILED_RETRY_AFTER)
+    }
+
+    pub(crate) fn new_with_retry(gpu: Arc<GpuContext>, retry_after: std::time::Duration) -> Arc<Self> {
         let layouts = LayerLayouts::new(&gpu.device);
         Arc::new(Self {
             gpu,
@@ -214,6 +223,7 @@ impl MediaStore {
             pipelines: Mutex::new(HashMap::new()),
             nv12_pipelines: Mutex::new(HashMap::new()),
             jobs: Mutex::new(HashMap::new()),
+            retry_after,
             #[cfg(test)]
             decodes: std::sync::atomic::AtomicUsize::new(0),
             #[cfg(test)]
@@ -290,8 +300,9 @@ impl MediaStore {
             }
             match jobs.get(&key) {
                 Some(Job::Loading) => return MediaState::Loading,
-                Some(Job::Failed(reason)) => return MediaState::Failed(reason.clone()),
-                None => {
+                Some(Job::Failed(reason, failed_at)) if failed_at.elapsed() < self.retry_after => return MediaState::Failed(reason.clone()),
+                // falló hace rato (o nunca se pidió): se vuelve a intentar
+                Some(Job::Failed(..)) | None => {
                     jobs.insert(key.clone(), Job::Loading);
                 }
             }
@@ -333,7 +344,7 @@ impl MediaStore {
             }
             Err(err) => {
                 eprintln!("[media] {err}");
-                jobs.insert(key.to_string(), Job::Failed(err.to_string()));
+                jobs.insert(key.to_string(), Job::Failed(err.to_string(), std::time::Instant::now()));
             }
         }
     }
@@ -832,5 +843,23 @@ mod tests {
         let paths: Vec<String> = (0..200).map(|i| format!("/no/existe/{i}.png")).collect();
         assert_eq!(store.prefetch(paths.iter().map(String::as_str)), MAX_PREFETCH);
     }
-}
 
+    #[test]
+    fn a_failed_image_is_retried_after_the_cooldown() {
+        let store = MediaStore::new_with_retry(super::super::gpu::shared().expect("GPU disponible"), std::time::Duration::from_millis(80));
+        let dir = std::env::temp_dir().join("pulseflow-media-tests");
+        std::fs::create_dir_all(&dir).expect("carpeta temporal");
+        let path = dir.join("aparece-despues.png");
+        let _ = std::fs::remove_file(&path);
+
+        // todavía no existe: falla y queda en Failed durante el enfriamiento
+        assert!(matches!(wait_until_settled(&store, &path), MediaState::Failed(_)));
+        assert!(matches!(store.request_image(&path), MediaState::Failed(_)));
+
+        // el archivo termina de copiarse; pasado el enfriamiento se vuelve a intentar sola
+        image::RgbaImage::from_pixel(8, 8, image::Rgba([9, 9, 9, 255])).save(&path).expect("guardar PNG");
+        std::thread::sleep(std::time::Duration::from_millis(120));
+        assert!(matches!(wait_until_settled(&store, &path), MediaState::Ready(_)));
+        assert_eq!(store.decodes(), 2);
+    }
+}

@@ -114,49 +114,57 @@ pub struct DoesMediaExistResult {
     pub creation_time: Option<u64>,
 }
 
-/// `DOES_MEDIA_EXIST`: comprueba que el archivo exista y que su cache siga vigente.
-#[tauri::command]
-pub fn DOES_MEDIA_EXIST(app: AppHandle, data: DoesMediaExistData) -> AppResult<DoesMediaExistResult> {
-    let folder = thumbnail_folder(&app)?;
+/// Lógica de `DOES_MEDIA_EXIST` (sin Tauri, para poder testearla): comprueba que el archivo exista
+/// y que su cache de miniaturas siga vigente.
+fn does_media_exist(folder: &Path, data: DoesMediaExistData) -> DoesMediaExistResult {
     let path = PathBuf::from(&data.path);
 
     let meta = match fs::metadata(&path) {
         Ok(m) => m,
         Err(_) => {
-            delete_thumbnails(&folder, &data.path);
-            return Ok(DoesMediaExistResult {
+            delete_thumbnails(folder, &data.path);
+            return DoesMediaExistResult {
                 path: data.path,
                 exists: false,
                 creation_time: None,
-            });
+            };
         }
     };
 
     if data.no_cache.unwrap_or(false) {
-        return Ok(DoesMediaExistResult {
+        return DoesMediaExistResult {
             path: data.path,
             exists: true,
             creation_time: None,
-        });
+        };
     }
 
     let creation_time = ctime_ms(&meta);
     if let (Some(expected), Some(actual)) = (data.creation_time, creation_time) {
         if expected as u64 != actual {
-            delete_thumbnails(&folder, &data.path);
-            return Ok(DoesMediaExistResult {
+            delete_thumbnails(folder, &data.path);
+            return DoesMediaExistResult {
                 path: data.path,
                 exists: false,
                 creation_time: None,
-            });
+            };
         }
     }
 
-    Ok(DoesMediaExistResult {
+    DoesMediaExistResult {
         path: data.path,
         exists: true,
         creation_time,
-    })
+    }
+}
+
+/// `DOES_MEDIA_EXIST`: va al pool de I/O (puede tocar un disco de red lento) y no al hilo principal.
+#[tauri::command]
+pub async fn DOES_MEDIA_EXIST(app: AppHandle, data: DoesMediaExistData) -> AppResult<DoesMediaExistResult> {
+    let folder = thumbnail_folder(&app)?;
+    crate::render::workers::run(move || does_media_exist(&folder, data))
+        .await
+        .ok_or_else(|| AppError::new("DOES_MEDIA_EXIST: el worker de I/O no respondió"))
 }
 
 // ---------------------------------------------------------------------------
@@ -219,7 +227,9 @@ pub async fn GET_THUMBNAIL(app: AppHandle, data: GetThumbnailData) -> AppResult<
         .unwrap_or_default();
 
     let generated = if GENERATABLE_EXTENSIONS.contains(&extension.as_str()) {
-        generate_image_thumbnail(input_path, &output_path, size).is_ok()
+        // decodificar y redimensionar es CPU pesado: va al pool, no al cuerpo del comando
+        let (from, to) = (input_path.to_path_buf(), output_path.clone());
+        crate::render::workers::run(move || generate_image_thumbnail(&from, &to, size)).await.is_some_and(|result| result.is_ok())
     } else if FFMPEG_VIDEO_EXTENSIONS.contains(&extension.as_str()) {
         generate_ffmpeg_thumbnail(&app, input_path, &output_path, size)
             .await
@@ -637,11 +647,13 @@ pub struct ReadExifResult {
     pub exif: Option<Value>,
 }
 
-/// `READ_EXIF`: metadatos EXIF de una imagen.
+/// `READ_EXIF`: metadatos EXIF de una imagen (leídos en el pool de I/O).
 #[tauri::command]
-pub fn READ_EXIF(data: ReadExifData) -> AppResult<ReadExifResult> {
-    let exif = read_exif(&data.id).ok().flatten();
-    Ok(ReadExifResult { id: data.id, exif })
+pub async fn READ_EXIF(data: ReadExifData) -> AppResult<ReadExifResult> {
+    let id = data.id;
+    let path = id.clone();
+    let exif = crate::render::workers::run(move || read_exif(&path).ok().flatten()).await.flatten();
+    Ok(ReadExifResult { id, exif })
 }
 
 fn read_exif(path: &str) -> AppResult<Option<Value>> {
@@ -699,3 +711,71 @@ fn read_exif(path: &str) -> AppResult<Option<Value>> {
     }
     Ok(Some(Value::Object(root)))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn temp_dir(name: &str) -> PathBuf {
+        let dir = std::env::temp_dir().join(format!("pulseflow-media-cmd-{name}"));
+        let _ = fs::remove_dir_all(&dir);
+        fs::create_dir_all(&dir).expect("carpeta temporal");
+        dir
+    }
+
+    fn exist_data(path: &str) -> DoesMediaExistData {
+        DoesMediaExistData { path: path.to_string(), creation_time: None, no_cache: None }
+    }
+
+    #[test]
+    fn a_missing_file_does_not_exist_and_loses_its_thumbnails() {
+        let folder = temp_dir("missing");
+        let input = "/no/existe/foto.png";
+        let thumbnail = thumbnail_path(&folder, input, 500);
+        fs::write(&thumbnail, b"png").expect("miniatura vieja");
+
+        let result = does_media_exist(&folder, exist_data(input));
+
+        assert!(!result.exists);
+        assert!(!thumbnail.exists(), "se borra la miniatura de un archivo que ya no está");
+    }
+
+    #[test]
+    fn an_existing_file_exists() {
+        let folder = temp_dir("present");
+        let file = folder.join("foto.png");
+        fs::write(&file, b"x").expect("archivo");
+
+        let result = does_media_exist(&folder, exist_data(file.to_str().expect("ruta")));
+        assert!(result.exists);
+    }
+
+    #[test]
+    fn a_changed_creation_time_invalidates_the_cache() {
+        let folder = temp_dir("changed");
+        let file = folder.join("foto.png");
+        fs::write(&file, b"x").expect("archivo");
+        let path = file.to_str().expect("ruta");
+        let thumbnail = thumbnail_path(&folder, path, 500);
+        fs::write(&thumbnail, b"png").expect("miniatura");
+
+        let data = DoesMediaExistData { path: path.to_string(), creation_time: Some(1), no_cache: None };
+        let result = does_media_exist(&folder, data);
+
+        assert!(!result.exists, "el archivo cambió desde que se cacheó");
+        assert!(!thumbnail.exists());
+    }
+
+    #[test]
+    fn image_thumbnail_is_resized_to_the_requested_width() {
+        let folder = temp_dir("thumb");
+        let (input, output) = (folder.join("grande.png"), folder.join("chica.png"));
+        image::RgbaImage::from_pixel(200, 100, image::Rgba([1, 2, 3, 255])).save(&input).expect("imagen");
+
+        generate_image_thumbnail(&input, &output, 50).expect("miniatura");
+
+        let thumbnail = image::open(&output).expect("abrir la miniatura");
+        assert_eq!((thumbnail.width(), thumbnail.height()), (50, 25));
+    }
+}
+

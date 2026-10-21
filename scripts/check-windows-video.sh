@@ -23,6 +23,7 @@ wgpu = "30.0.1"
 bytemuck = { version = "1", features = ["derive"] }
 pollster = "1.0.1"
 image = { version = "0.25", default-features = false, features = ["png"] }
+tokio = { version = "1", features = ["sync"] }
 
 [target.'cfg(windows)'.dependencies]
 windows = { version = "0.62", features = [
@@ -40,7 +41,7 @@ pub mod error {
     impl std::fmt::Display for AppError { fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result { write!(f, "{}", self.message) } }
     pub type AppResult<T> = Result<T, AppError>;
 }
-pub mod render { pub mod sync; pub mod gpu; pub mod media; pub mod video; }
+pub mod render { pub mod sync; pub mod gpu; pub mod media; pub mod video; pub mod workers; }
 RS
 
 cat > "$WORK/src/render/video/mod.rs" <<'RS'
@@ -58,7 +59,7 @@ pub trait FrameSink: Send + Sync { fn push(&self, frame: DecodedFrame<'_>); }
 pub trait VideoDecoder: Send { fn stop(&mut self); }
 RS
 
-for f in sync gpu media; do ln -s "$SRC/render/$f.rs" "$WORK/src/render/$f.rs"; done
+for f in sync gpu media workers; do ln -s "$SRC/render/$f.rs" "$WORK/src/render/$f.rs"; done
 ln -s "$SRC/render/shaders" "$WORK/src/render/shaders"
 for f in nv12 d3d_import mf pacing; do ln -s "$SRC/render/video/$f.rs" "$WORK/src/render/video/$f.rs"; done
 
