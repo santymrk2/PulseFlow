@@ -710,12 +710,13 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   tocaba ~170 usos en todo el frontend (fuera del alcance de esta tarea).
 - [x] **F9.3** Eliminar ramas `$currentWindow === "output"` (lista en `PLAN.md`) una por
   componente, verificando cada una en la app.
-- [ ] **F9.4** Branding pendiente: `Splash.svelte`, `ImportScripture.svelte`, logo de
-  `Top.svelte`/`About.svelte` (`public/import-logos/freeshow.webp`) e íconos de la app
-  cuando haya logo de PulseFlow. (Texto "FreeShow" → "PulseFlow" ya reemplazado en
-  `Splash.svelte` e `ImportScripture.svelte`; logo e íconos siguen pendientes.)
-  *Bloqueada (2026-10-21):* no hay un logo de PulseFlow en el repo (`docs/brand/` no lo tiene); hace falta el
-  archivo (SVG o PNG de alta resolución) para generar los íconos con `tauri icon` y reemplazar los `freeshow.*`.
+- [x] **F9.4** Branding: `Splash.svelte`, `ImportScripture.svelte`, `Top.svelte`/`About.svelte`
+  e íconos de la app. Hecho 2026-10-21: íconos de `src-tauri/icons/` regenerados desde
+  `docs/brand/app-icon-1024.png`, `Splash`/`About` usan el logo de PulseFlow y las
+  páginas de servidor (`stage`, `remote/Auth`) pasan de `freeshow.webp` a
+  `logo-pulseflow.png`. `freeshow.webp` queda sólo en `Import.svelte`, donde es el logo
+  legítimo del importador de formato FreeShow. (Una nota previa decía "no hay logo":
+  era falsa, `docs/brand/` sí lo tiene.)
 
 ---
 
