@@ -9,6 +9,7 @@
     import { getAccess } from "../../../utils/profile"
     import { keysToID, sortObject } from "../../helpers/array"
     import { history } from "../../helpers/history"
+    import DropArea from "../../system/DropArea.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import LeftPanel from "./LeftPanel.svelte"
 
@@ -68,24 +69,26 @@
         <Button variant="ghost" size="icon-sm" icon="add" iconSize={0.9} title="ui.new_library" disabled={readOnly} onclick={newLibrary} />
     {/snippet}
 
-    {#each libraries as library (library.id)}
-        {@const isReadOnly = readOnly || profile[library.id] === "read"}
-        <SelectElem id="category_shows" data={library.id} selectable trigger="column" borders="center" style="width: 100%;">
-            <button type="button" class="library-row context #category_shows_button{isReadOnly ? '_readonly' : ''}" class:active={activeLibrary === library.id} aria-current={activeLibrary === library.id ? "true" : undefined} onclick={() => select(library.id)}>
-                <span class="name">
-                    <HiddenInput value={label(library.name)} id="category_shows_{library.id}" on:edit={(e) => rename(library.id, e.detail.value)} allowEdit={!isReadOnly} />
-                </span>
-                <span class="count">{counts[library.id] || 0}</span>
-            </button>
-        </SelectElem>
-    {/each}
+    <DropArea id="navigation" selectChildren>
+        {#each libraries as library (library.id)}
+            {@const isReadOnly = readOnly || profile[library.id] === "read"}
+            <SelectElem id="category_shows" data={library.id} selectable trigger="column" borders="center" style="width: 100%;">
+                <button type="button" class="library-row context #category_shows_button{isReadOnly ? '_readonly' : ''}" class:active={activeLibrary === library.id} aria-current={activeLibrary === library.id ? "true" : undefined} onclick={() => select(library.id)}>
+                    <span class="name">
+                        <HiddenInput value={label(library.name)} id="category_shows_{library.id}" on:edit={(e) => rename(library.id, e.detail.value)} allowEdit={!isReadOnly} />
+                    </span>
+                    <span class="count">{counts[library.id] || 0}</span>
+                </button>
+            </SelectElem>
+        {/each}
 
-    {#if showUnlabeled}
-        <button type="button" class="library-row" class:active={activeLibrary === UNLABELED} onclick={() => select(UNLABELED)}>
-            <span class="name">{translateText("category.unlabeled")}</span>
-            <span class="count">{counts[UNLABELED] || 0}</span>
-        </button>
-    {/if}
+        {#if showUnlabeled}
+            <button type="button" class="library-row" class:active={activeLibrary === UNLABELED} onclick={() => select(UNLABELED)}>
+                <span class="name">{translateText("category.unlabeled")}</span>
+                <span class="count">{counts[UNLABELED] || 0}</span>
+            </button>
+        {/if}
+    </DropArea>
 </LeftPanel>
 
 <style>

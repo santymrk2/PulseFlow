@@ -115,6 +115,7 @@ import { bindSlidesToOutput, checkName, formatToFileName, getLayoutRef, openShow
 import { sendMidi } from "../helpers/showActions"
 import { _show } from "../helpers/shows"
 import { getMenuTagId, openTagManager, toggleSelectionTags, toggleTagFilter } from "../helpers/tags"
+import { addShowsToProject } from "../show/project"
 import { clearSlide } from "../output/clear"
 import { activeProject } from "./../../stores"
 import type { ContextMenuItem } from "./contextMenus"
@@ -535,6 +536,10 @@ const clickActions = {
     // TAGS
     manage_show_tags: () => {
         openTagManager("show")
+    },
+    add_to_playlist: (obj: ObjData) => {
+        const showIds: string[] = (obj.sel?.data || []).map(({ id }) => id).filter((id: string) => get(shows)[id])
+        addShowsToProject(getMenuTagId(obj.menu), showIds)
     },
     tag_set: (obj: ObjData) => {
         const tagId = getMenuTagId(obj.menu)

@@ -54,6 +54,7 @@ export const contextMenuItems: { [key: string]: ContextMenuItem } = {
     enabledTabs: { label: "context.enabledTabs", items: ["LOAD_enabled_drawer_tabs"] },
     manage_show_tags: { label: "popup.manage_tags", icon: "edit", iconColor: "#97c7ff" },
     display_tags: { label: "context.display_tags", icon: "tag", iconColor: "#979aff" },
+    add_to_playlist: { label: "ui.add_to_playlist", icon: "add", items: ["LOAD_add_to_playlist"] },
     tag_set: { label: "context.setTag", icon: "tag", iconColor: "#979aff", items: ["LOAD_tag_set"] },
     tag_filter: { label: "context.filterByTags", icon: "tag", iconColor: "#979aff", items: ["LOAD_tag_filter"] },
     manage_media_tags: { label: "popup.manage_tags", icon: "edit", iconColor: "#97c7ff" },
@@ -282,7 +283,7 @@ export const contextMenuLayouts: { [key: string]: string[] } = {
     // , "changeCategory" ? edit with rename & categories...
     // , "convertToOverlay"
     // , "SEPARATOR", "export"
-    drawer_show_button: ["GROUP_open", "tag_set", "tag_filter", "SEPARATOR", "rename", "duplicate", "delete"], // "GROUP_rename"
+    drawer_show_button: ["GROUP_open", "add_to_playlist", "tag_set", "tag_filter", "SEPARATOR", "rename", "duplicate", "delete"], // "GROUP_rename"
     drawer_show_button_readonly: ["tag_filter"],
     drawer_new_show: ["newShow"],
     // media / audio

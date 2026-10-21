@@ -21,6 +21,8 @@ import { addStageItem } from "../stage/stage"
 import { clone, removeDuplicates } from "./array"
 import { projectDropFolders } from "./drop"
 import { history, historyAwait } from "./history"
+import { appendShowRefs } from "../show/leftSource"
+
 import { downloadOnlineMedia, getExtension, getFileName, getMediaLayerType, getMediaStyle, getMediaType, removeExtension } from "./media"
 import { addToPos, getIndexes, mover } from "./mover"
 import { getLayoutRef } from "./show"
@@ -77,6 +79,19 @@ export const dropActions = {
         return history
     },
     projects: ({ drag, drop }: Data, h: History) => {
+        // un show arrastrado desde la lista de una biblioteca a una playlist: se agrega al final
+        if ((drag.id === "show_drawer" || drag.id === "show") && drop.data?.type === "project") {
+            const target = get(projects)[drop.data.id]
+            const showIds: string[] = drag.data.map(({ id }) => id).filter((id: string) => get(shows)[id])
+            if (!target || !showIds.length) return
+
+            h.id = "UPDATE"
+            h.location = { page: "show", id: "project_ref" }
+            h.oldData = { id: drop.data.id }
+            h.newData = { key: "shows", data: appendShowRefs(target.shows || [], showIds) }
+            return h
+        }
+
         if (drag.id !== "folder" && drag.id !== "project") return
         if (drop.data.type && drop.data.type !== "folder" && drop.data.type !== "project") return
 

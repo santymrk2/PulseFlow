@@ -1,6 +1,6 @@
 import { get } from "svelte/store"
 import type { Media } from "../../../types/Show"
-import { actions, actionTags, activeActionTagFilter, activeEdit, activeMediaTagFilter, activePlayerTagFilter, activeTagFilter, activeTimerTagFilter, activeVariableTagFilter, contextData, drawerTabsData, effects, globalTags, groups, media, mediaOptions, mediaTags, outputs, overlays, playerTags, playerVideos, scenes, selected, shows, sorted, timers, timerTags, variables, variableTags } from "../../stores"
+import { actions, actionTags, activeActionTagFilter, activeEdit, activeMediaTagFilter, activePlayerTagFilter, activeTagFilter, activeTimerTagFilter, activeVariableTagFilter, contextData, drawerTabsData, effects, globalTags, groups, media, mediaOptions, mediaTags, outputs, overlays, playerTags, playerVideos, projects, scenes, selected, shows, sorted, timers, timerTags, variables, variableTags } from "../../stores"
 import { translateText } from "../../utils/language"
 import { isGroupHidden } from "../../utils/profile"
 import { drawerTabs } from "../../values/tabs"
@@ -28,6 +28,12 @@ const loadActions = {
 
         return items
     },
+
+    // "Agregar a playlist": una entrada por playlist
+    add_to_playlist: () =>
+        sortByName(keysToID(get(projects)))
+            .filter((a) => !a.deleted)
+            .map((a) => ({ id: a.id, label: a.name, icon: "project" })),
 
     // TAGS
     tag_set: () => {
