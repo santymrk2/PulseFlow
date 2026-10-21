@@ -42,6 +42,12 @@ pub struct Nv12Frame {
 }
 
 impl Nv12Frame {
+    /// Frame cuyas vistas ya vienen armadas (una textura NV12 con vistas por plano, en Windows).
+    #[allow(clippy::too_many_arguments)]
+    pub fn from_views(y: wgpu::Texture, uv: wgpu::Texture, y_view: wgpu::TextureView, uv_view: wgpu::TextureView, width: u32, height: u32, matrix: YuvMatrix, full_range: bool, keepalive: Option<Box<dyn Any + Send + Sync>>) -> Self {
+        Self { y, uv, y_view, uv_view, width, height, matrix, full_range, _keepalive: keepalive }
+    }
+
     /// `true` si las texturas son propias (planos subidos desde la CPU) y se pueden reescribir en el lugar.
     pub fn is_cpu_backed(&self) -> bool {
         self._keepalive.is_none()

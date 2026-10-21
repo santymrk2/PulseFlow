@@ -41,6 +41,8 @@ impl GpuContext {
 
         let (device, queue) = pollster::block_on(adapter.request_device(&wgpu::DeviceDescriptor {
             label: Some("PulseFlow Shared Device"),
+            // NV12 como textura de wgpu (planos por vista): lo usa el video nativo de Windows (F18.6)
+            required_features: adapter.features() & wgpu::Features::TEXTURE_FORMAT_NV12,
             ..Default::default()
         }))
         .map_err(|e| AppError::new(format!("Error inicializando el dispositivo WGPU: {e}")))?;

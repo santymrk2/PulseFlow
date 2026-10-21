@@ -1179,6 +1179,9 @@ toque en F14 puede romper algo sin que nadie se entere.
 - [ ] **F13.4 Prueba en hardware real (usuario).** Ejecutar F2.8 y F8.3 en una Mac y en
   una PC con Windows, con 2 monitores. Es requisito para dar por sólida la salida; los
   resultados se anotan en `docs/VERIFICAR.md`.
+  *Agregado por F18.6:* en Windows, reproducir un `.mp4` 4K en la audiencia y confirmar (a) que se ve, (b) en los logs
+  que no aparece "decodificador nativo no disponible" (si aparece, cayó a ffmpeg y el motivo está ahí), (c) CPU y
+  frame-time con el benchmark de `docs/informes/f18.md`, (d) 60 s sin artefactos al rotar el anillo de texturas.
 
 ---
 
@@ -1674,7 +1677,7 @@ Plan: `docs/superpowers/plans/2026-10-20-gpu-compartida-zero-copy-workers.md`. D
 - [x] **F18.3** Trait `VideoDecoder`/`FrameSink`, `video/ffmpeg.rs` en NV12 con **PTS** en cada frame (contador global: no se reinicia al dar la vuelta del loop) y `render/clock.rs` (`ShowClock` + `WallClock`, sin consumidores todavía). `MediaStore` guarda un frame NV12 por video (`get_video`, `update_video_nv12_cpu`, `set_video_native`); el render lo dibuja con `Nv12Pipeline`. Cambio de comportamiento: el video ya no se estira a 16:9, se escala a 1920×1080 conservando la proporción. Probado con el ffmpeg real (frames NV12 del tamaño exacto).
 - [x] **F18.4** Decodificador nativo macOS (`video/avf.rs`: `AVAssetReader` con VideoToolbox, NV12 + IOSurface + `CVMetalTextureCache`). Pacing por PTS, loop continuo con PTS acumulado, reapertura ante errores del lector y fallback a ffmpeg si no abre el archivo. Fixture `tests/fixtures/video/solid_red_64.mp4`. Tests: frames nativos 64×64, loop, archivo corrupto/inexistente, stop < 500 ms.
 - [x] **F18.5** Importación Metal sin copias cableada al render + medición (`docs/informes/f18.md`). Tests: un frame nativo se ve rojo; el camino nativo hace 0 subidas desde la CPU. **Medición en M4, 4K H.264, 10 s:** ffmpeg→RGBA 1080p ≈ 80 % de un núcleo, ffmpeg→NV12 ≈ 57 %, nativo 4K ≈ 5 % (una corrida; sin Windows).
-- [ ] **F18.6** Media Foundation + D3D12 en Windows (**sin verificar en Windows**).
+- [x] **F18.6** Media Foundation + D3D12 en Windows (`video/mf.rs`, `video/d3d_import.rs`, `video/pacing.rs`). **Implementado y type-checkeado, NO ejecutado en Windows**: `scripts/check-windows-video.sh` compila los archivos reales para `x86_64-pc-windows-msvc` con `-D warnings` (la app completa no se puede compilar para Windows desde macOS: falta `llvm-rc`). La ejecución real (decodificar, copiar GPU→GPU, abrir el recurso en DX12, sincronizar) queda en F13.4. `GpuContext` pide `TEXTURE_FORMAT_NV12` si el adaptador lo soporta; si no, o si algo falla, `video::start` cae a ffmpeg.
 - [ ] **F19.1** Workers de carga de imágenes sobre la GPU compartida.
 - [ ] **F19.2** Precarga al aplicar la escena y de las slides siguientes (`RENDER_PREFETCH`).
 - [ ] **F19.3** Miniaturas fuera del hilo de comandos y cierre.

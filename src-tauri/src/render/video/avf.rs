@@ -4,6 +4,7 @@
 //! sin copiarlos (`metal_import`). Abre `.mp4`, `.mov` y `.m4v`; lo demás cae a ffmpeg.
 
 use super::metal_import::{import_pixel_buffer, MetalTextureCache};
+use super::pacing::Pacer;
 use super::{DecodedFrame, FramePixels, FrameSink, VideoDecoder};
 use crate::error::{AppError, AppResult};
 use crate::render::gpu;
@@ -16,10 +17,8 @@ use objc2_foundation::{NSDictionary, NSNumber, NSString, NSURL};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{mpsc, Arc};
 use std::thread::{self, JoinHandle};
-use std::time::{Duration, Instant};
+use std::time::Duration;
 
-/// Cuánto puede atrasarse un frame antes de que se reajuste el reloj de reproducción.
-const MAX_LATENESS: Duration = Duration::from_millis(200);
 /// Duración supuesta de un frame cuando el stream no permite estimarla (≈ 30 fps).
 const FALLBACK_FRAME_DURATION: Duration = Duration::from_millis(33);
 /// Reaperturas seguidas fallidas antes de rendirse.
@@ -136,8 +135,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
 
     // Línea de tiempo continua: `offset` suma la duración de las vueltas anteriores del loop.
     let mut offset = Duration::ZERO;
-    let mut base: Option<Duration> = None;
-    let mut clock_start = Instant::now();
+    let mut pacer = Pacer::new();
     let (mut last_total, mut frame_duration) = (Duration::ZERO, FALLBACK_FRAME_DURATION);
     let (mut frames, mut failures) = (0u64, 0u32);
 
@@ -150,20 +148,9 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
             let pixel_buffer = unsafe { sample.image_buffer() }?;
 
             let total = offset + pts;
-            let base_time = *base.get_or_insert(total);
-            let target = clock_start + total.saturating_sub(base_time);
-
-            // esperar al instante del frame, atendiendo el stop
-            while running.load(Ordering::Relaxed) && Instant::now() < target {
-                thread::sleep(target.saturating_duration_since(Instant::now()).min(Duration::from_millis(10)));
-            }
-            if !running.load(Ordering::Relaxed) {
+            // esperar al instante del frame (si se pidió detener, se descarta)
+            if !pacer.wait(total, running) {
                 return Some(());
-            }
-            // muy atrasado (p. ej. tras una pausa): se reajusta el reloj en vez de acelerar para alcanzarlo
-            let late = Instant::now().saturating_duration_since(target);
-            if late > MAX_LATENESS {
-                clock_start += late;
             }
 
             match import_pixel_buffer(&gpu, &cache, &pixel_buffer) {

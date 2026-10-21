@@ -25,9 +25,10 @@ CbCr: `RG8Unorm`) → `wgpu::hal::metal::Device::texture_from_raw` → `Device::
 - Límites: sólo NV12 de 8 bits. 10 bits (P010/HDR), 4:2:2 y 4:4:4 se rechazan y caen al camino ffmpeg. La matriz
   de color se elige por alto (≥720 → BT.709, si no BT.601); falta leer los adjuntos de color del buffer.
 
-## Windows — diseño, sin verificar
+## Windows — implementado y compilado, sin ejecutar
 
-No se puede probar desde la Mac de desarrollo. Camino elegido:
+Se implementó (`video/mf.rs`, `video/d3d_import.rs`) y se compila contra `x86_64-pc-windows-msvc` con
+`scripts/check-windows-video.sh`, pero no se pudo ejecutar desde la Mac de desarrollo. Camino:
 
 1. **Decodificar** con Media Foundation: `IMFSourceReader` con un `IMFDXGIDeviceManager` sobre un `ID3D11Device`
    creado con `D3D11_CREATE_DEVICE_VIDEO_SUPPORT`, `MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS` y salida NV12.
@@ -42,7 +43,8 @@ No se puede probar desde la Mac de desarrollo. Camino elegido:
    vistas por plano (`TextureAspect::Plane0` como `R8Unorm`, `Plane1` como `Rg8Unorm`).
 5. El backend de wgpu en Windows está fijado a **DX12** (`GpuContext`): el interop D3D11→D3D12 lo exige.
 
-Riesgos: que `TEXTURE_FORMAT_NV12` falte en algún adaptador (→ fallback a ffmpeg), vistas de plano en wgpu 30 y
+Riesgos (sin comprobar): el anillo de 3 texturas no protege de un render atascado más de 2 frames; el `Flush` +
+evento bloquea el hilo del decodificador hasta que termina la copia; que `TEXTURE_FORMAT_NV12` falte en algún adaptador (→ fallback a ffmpeg), vistas de plano en wgpu 30 y
 GPUs con varios adaptadores (el decodificador y wgpu tienen que usar el mismo). Verificación pendiente en F13.4.
 
 ## Contenedores

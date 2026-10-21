@@ -10,8 +10,13 @@
 //! Ciclo de vida (F8.1): `stop()` termina el decodificador y une su hilo.
 
 mod ffmpeg;
+mod pacing;
 #[cfg(target_os = "macos")]
 pub mod metal_import;
+#[cfg(windows)]
+mod d3d_import;
+#[cfg(windows)]
+mod mf;
 #[cfg(target_os = "macos")]
 pub(crate) mod avf;
 pub mod nv12;
@@ -71,8 +76,14 @@ fn start_native(_app: &AppHandle, path: &str, sink: Arc<dyn FrameSink>) -> AppRe
     Ok(Box::new(avf::start(path, sink)?))
 }
 
-/// Windows (Media Foundation) llega en F18.6; hasta entonces todo va por ffmpeg.
-#[cfg(not(target_os = "macos"))]
+/// Windows: Media Foundation + D3D11 → D3D12 (F18.6).
+#[cfg(windows)]
+fn start_native(_app: &AppHandle, path: &str, sink: Arc<dyn FrameSink>) -> AppResult<Box<dyn VideoDecoder>> {
+    Ok(Box::new(mf::start(path, sink)?))
+}
+
+/// Sin decodificador nativo en otras plataformas (no se distribuyen).
+#[cfg(not(any(target_os = "macos", windows)))]
 fn start_native(_app: &AppHandle, _path: &str, _sink: Arc<dyn FrameSink>) -> AppResult<Box<dyn VideoDecoder>> {
     Err(crate::error::AppError::new("sin decodificador nativo en esta plataforma"))
 }
