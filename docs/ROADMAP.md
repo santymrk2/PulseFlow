@@ -1599,11 +1599,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
 
 ## F15 — Robustez y orden
 
-- [ ] **F15.1 Errores silenciosos en Rust.**
-  *Pasos:* clasificar los 96 `let _ =`. Los que escriben, copian o borran datos del
-  usuario (ej. `commands/files.rs:840`) devuelven `AppResult` o, si es *best-effort*,
-  hacen `log::warn!` con la ruta. Las limpiezas de temporales quedan con un comentario.
-  *Aceptación:* ningún `let _ =` sobre I/O de datos del usuario sin log o propagación.
+- [x] **F15.1 Errores silenciosos en Rust.** (2026-10-21) Se clasificaron los `let _ =` de producción. **Datos del usuario, arreglados:** `utils::files::delete_file` devolvía `Ok` siempre (ahora ignora sólo "no existe" y devuelve el resto con la ruta; 3 tests) y `DELETE_SHOWS` + la limpieza de shows no indexados sólo informan como borrado lo que se borró; copia de medios (`files.rs`), guardado de medios importados (`import.rs`, ya no reescribe la ruta si no se guardó), renombrado de shows, creación de la carpeta de datos, borrado de backups y `SAVE_IMAGE` (propaga el error de crear la carpeta) ahora hacen `log::warn!` con las rutas o propagan. **Best-effort de interfaz** (abrir URL/carpeta/revelar en el explorador): `log::warn!`. **Se dejan, con comentario:** limpiezas de temporales y de la caché de miniaturas (regenerable), `emit`/`send` hacia ventanas o canales cerrados, apagado de las librerías NDI/Blackmagic y todo lo de `#[cfg(test)]`.
 
 - [x] **F15.2 Contrato de IPC.** (2026-10-21) `src/frontend/IPC/ipcContract.test.ts` (+ `ipcContract.ts`): todo canal `Main.*` que el frontend usa tiene que tener comando en `lib.rs`, estar en `POSTPONED_COMMANDS` o figurar en la lista explícita `KNOWN_WITHOUT_COMMAND` (hoy vacía); también falla si esa lista tiene entradas viejas. Probado: un `Main.AI_AUDIO_DATA` nuevo lo hace fallar y quitarlo lo hace pasar. `requestMain` registra siempre el timeout con el nombre del canal (va al log de F13.3).
 

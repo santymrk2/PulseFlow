@@ -179,8 +179,13 @@ fn read_zip_project<R: tauri::Runtime>(
                 continue;
             };
             let new_name = format!("{}_{}", file_path_hash_code(&decoded), base_name);
-            let _ = std::fs::create_dir_all(&media_folder);
-            let _ = std::fs::write(Path::new(&media_folder).join(&new_name), file_bytes);
+            let target = Path::new(&media_folder).join(&new_name);
+            // si el medio no se pudo guardar, la ruta del contenido no se reescribe (apuntaría a un archivo que no existe)
+            if let Err(err) = std::fs::create_dir_all(&media_folder).and_then(|()| std::fs::write(&target, file_bytes)) {
+                log::warn!("No se pudo guardar el medio importado {}: {err}", target.display());
+                cursor = url_end;
+                continue;
+            }
             let rel_path = format!("../Media/{}", new_name);
             content.replace_range(url_start..url_end, &rel_path);
             cursor = url_start + rel_path.len();

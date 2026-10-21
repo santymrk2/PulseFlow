@@ -58,6 +58,7 @@ fn thumbnail_path(folder: &Path, input: &str, size: u32) -> PathBuf {
 
 fn delete_thumbnails(folder: &Path, input: &str) {
     for size in THUMBNAIL_SIZES {
+        // la miniatura es caché regenerable: si no se borra se reemplaza en la próxima lectura
         let _ = fs::remove_file(thumbnail_path(folder, input, size));
     }
 }
@@ -217,6 +218,7 @@ pub async fn GET_THUMBNAIL(app: AppHandle, data: GetThumbnailData) -> AppResult<
             });
         }
         // La fuente es más nueva: se descarta la miniatura antigua.
+        // miniatura vieja: se sobrescribe al generar la nueva
         let _ = fs::remove_file(&output_path);
     }
 

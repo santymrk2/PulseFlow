@@ -70,7 +70,9 @@ pub fn URL(app: AppHandle, data: String) -> AppResult<()> {
     if data.trim().is_empty() {
         return Ok(());
     }
-    let _ = app.opener().open_url(data, None::<&str>);
+    if let Err(err) = app.opener().open_url(&data, None::<&str>) {
+        log::warn!("No se pudo abrir {data}: {err}");
+    }
     Ok(())
 }
 

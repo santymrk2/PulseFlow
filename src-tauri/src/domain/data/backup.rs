@@ -169,10 +169,11 @@ pub fn delete_backup(stores: &StoreManager, path: &str) {
         Path::new(&backups_folder).join(path)
     };
 
-    if full.is_dir() {
-        let _ = std::fs::remove_dir_all(&full);
-    } else {
-        let _ = std::fs::remove_file(&full);
+    let removed = if full.is_dir() { std::fs::remove_dir_all(&full) } else { std::fs::remove_file(&full) };
+    match removed {
+        Ok(()) => {}
+        Err(err) if err.kind() == std::io::ErrorKind::NotFound => {}
+        Err(err) => log::warn!("No se pudo borrar el backup {}: {err}", full.display()),
     }
 }
 

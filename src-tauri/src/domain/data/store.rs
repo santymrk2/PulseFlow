@@ -158,7 +158,9 @@ impl StoreManager {
         if let Some(sub) = subfolder {
             p = p.join(sub);
         }
-        let _ = std::fs::create_dir_all(&p);
+        if let Err(err) = std::fs::create_dir_all(&p) {
+            log::warn!("No se pudo crear la carpeta de datos {}: {err}", p.display());
+        }
         p.to_string_lossy().into_owned()
     }
 

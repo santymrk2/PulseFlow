@@ -73,6 +73,7 @@ pub fn write_file<P: AsRef<Path>>(path: P, content: &str) -> AppResult<()> {
     let tmp = p.with_file_name(tmp_name);
 
     if let Err(err) = fs::write(&tmp, content.as_bytes()) {
+        // limpieza del temporal: el error de la escritura es el que se devuelve
         let _ = fs::remove_file(&tmp);
         return Err(AppError::new(format!(
             "No se pudo escribir {}: {err}",
@@ -81,6 +82,7 @@ pub fn write_file<P: AsRef<Path>>(path: P, content: &str) -> AppResult<()> {
     }
 
     if let Err(err) = fs::rename(&tmp, p) {
+        // limpieza del temporal: el error del renombrado es el que se devuelve
         let _ = fs::remove_file(&tmp);
         return Err(AppError::new(format!(
             "No se pudo guardar {}: {err}",
@@ -105,11 +107,16 @@ pub fn read_folder<P: AsRef<Path>>(path: P) -> AppResult<Vec<String>> {
     Ok(entries)
 }
 
-/// Elimina un archivo.
+/// Elimina un archivo. Que ya no exista no es un error (el resultado buscado es el mismo); cualquier
+/// otro fallo (permisos, archivo en uso) se devuelve con la ruta: antes se tragaba y el usuario creía
+/// que el archivo se había borrado.
 pub fn delete_file<P: AsRef<Path>>(path: P) -> AppResult<()> {
     let p = path.as_ref();
-    let _ = fs::remove_file(p);
-    Ok(())
+    match fs::remove_file(p) {
+        Ok(()) => Ok(()),
+        Err(err) if err.kind() == std::io::ErrorKind::NotFound => Ok(()),
+        Err(err) => Err(AppError::new(format!("No se pudo borrar {}: {err}", p.display()))),
+    }
 }
 
 /// Crea un directorio recursivamente y devuelve la ruta.
@@ -132,6 +139,7 @@ pub fn is_writable<P: AsRef<Path>>(path: P) -> bool {
         let tmp = p.join(".__tauri_app_writable_check__");
         match fs::write(&tmp, b"ok") {
             Ok(_) => {
+                // archivo de prueba de escritura: si no se borra no pasa nada
                 let _ = fs::remove_file(tmp);
                 true
             }
@@ -360,4 +368,33 @@ mod tests {
 
         let _ = fs::remove_dir_all(&dir);
     }
+
+    #[test]
+    fn delete_file_removes_an_existing_file() {
+        let dir = temp_dir("delete-existing");
+        let file = dir.join("show.show");
+        fs::write(&file, b"x").expect("archivo");
+
+        delete_file(&file).expect("borrar");
+        assert!(!file.exists());
+    }
+
+    #[test]
+    fn delete_file_treats_a_missing_file_as_already_deleted() {
+        let dir = temp_dir("delete-missing");
+        assert!(delete_file(dir.join("no-existe.show")).is_ok());
+    }
+
+    #[test]
+    fn delete_file_reports_a_real_failure_with_the_path() {
+        let dir = temp_dir("delete-fails");
+        // una carpeta no se borra con `remove_file`: error real que antes se tragaba
+        let folder = dir.join("carpeta.show");
+        fs::create_dir(&folder).expect("carpeta");
+
+        let err = delete_file(&folder).expect_err("tiene que fallar");
+        assert!(err.message().contains("carpeta.show"), "el error nombra la ruta: {}", err.message());
+        assert!(folder.exists());
+    }
 }
+

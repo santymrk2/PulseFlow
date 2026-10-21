@@ -128,7 +128,9 @@ pub fn spawn_backup(app: AppHandle, plan: BackupPlan) {
                 backup::prune_auto_backups(&stores, false);
             }
         } else {
-            let _ = app.opener().open_path(path, None::<&str>);
+            if let Err(err) = app.opener().open_path(&path, None::<&str>) {
+                log::warn!("No se pudo abrir {path}: {err}");
+            }
         }
     });
 }

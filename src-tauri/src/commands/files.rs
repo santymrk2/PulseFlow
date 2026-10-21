@@ -400,7 +400,9 @@ fn open_in_system(app: &AppHandle, file_path: &str, open_folder: bool) {
             return;
         }
     }
-    let _ = app.opener().reveal_item_in_dir(file_path);
+    if let Err(err) = app.opener().reveal_item_in_dir(file_path) {
+        log::warn!("No se pudo mostrar {file_path} en el explorador: {err}");
+    }
 }
 
 /// `SYSTEM_OPEN`: revela una ruta en el explorador del sistema.
@@ -838,7 +840,10 @@ pub async fn BUNDLE_MEDIA_FILES(
         if new_path.is_file() {
             continue;
         }
-        let _ = tokio::fs::copy(source, &new_path).await;
+        // una copia que falla no frena las demás, pero queda registrada con las rutas
+        if let Err(err) = tokio::fs::copy(source, &new_path).await {
+            log::warn!("No se pudo copiar {} → {}: {err}", source.display(), new_path.display());
+        }
     }
 
     if data.open_folder {
@@ -874,7 +879,7 @@ pub struct SaveImageData {
 pub fn SAVE_IMAGE(app: AppHandle, state: State<'_, AppState>, data: SaveImageData) -> AppResult<()> {
     if let (Some(path), Some(buffer)) = (data.path.as_deref(), data.buffer.as_ref()) {
         if let Some(parent) = Path::new(path).parent() {
-            let _ = std::fs::create_dir_all(parent);
+            std::fs::create_dir_all(parent)?;
         }
         std::fs::write(path, buffer)?;
         return Ok(());
@@ -916,7 +921,9 @@ pub fn SAVE_IMAGE(app: AppHandle, state: State<'_, AppState>, data: SaveImageDat
 
         if data.open_folder.unwrap_or(false) {
             if let Some(parent) = target.parent() {
-                let _ = app.opener().open_path(parent.to_string_lossy().to_string(), None::<&str>);
+                if let Err(err) = app.opener().open_path(parent.to_string_lossy().to_string(), None::<&str>) {
+                    log::warn!("No se pudo abrir {}: {err}", parent.display());
+                }
             }
         }
         return Ok(());

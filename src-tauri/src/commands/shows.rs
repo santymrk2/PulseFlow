@@ -257,8 +257,11 @@ pub fn DELETE_SHOWS(state: State<'_, AppState>, data: DeleteShowsData) -> AppRes
     for show in data.shows {
         let name = format!("{}.show", show.name.as_deref().unwrap_or(&show.id));
         let path = Path::new(&shows_path).join(&name);
-        let _ = files::delete_file(&path);
-        deleted.push(name);
+        // sólo se informa como borrado lo que de verdad se borró
+        match files::delete_file(&path) {
+            Ok(()) => deleted.push(name),
+            Err(err) => log::warn!("DELETE_SHOWS: {err}"),
+        }
     }
     Ok(json!({ "deleted": deleted }))
 }
@@ -294,8 +297,10 @@ pub fn DELETE_SHOWS_NI(
             continue;
         }
         let path = Path::new(&shows_path).join(&name);
-        let _ = files::delete_file(&path);
-        deleted.push(name);
+        match files::delete_file(&path) {
+            Ok(()) => deleted.push(name),
+            Err(err) => log::warn!("limpieza de shows no indexados: {err}"),
+        }
     }
     Ok(json!({ "deleted": deleted }))
 }
@@ -484,7 +489,9 @@ pub fn SAVE(app: AppHandle, state: State<'_, AppState>, data: Value) -> AppResul
             let new_name = show.get("name").and_then(Value::as_str).unwrap_or(id);
             let from = Path::new(&shows_path).join(format!("{old_name}.show"));
             let to = Path::new(&shows_path).join(format!("{new_name}.show"));
-            let _ = std::fs::rename(from, to);
+            if let Err(err) = std::fs::rename(&from, &to) {
+                log::warn!("No se pudo renombrar el show {} → {}: {err}", from.display(), to.display());
+            }
         }
     }
 
@@ -524,7 +531,9 @@ pub fn SAVE(app: AppHandle, state: State<'_, AppState>, data: Value) -> AppResul
                     continue;
                 }
             }
-            let _ = files::delete_file(&file_path);
+            if let Err(err) = files::delete_file(&file_path) {
+                log::warn!("{err}");
+            }
         }
     }
 
