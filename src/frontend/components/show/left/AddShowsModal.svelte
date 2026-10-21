@@ -61,7 +61,7 @@
             <div class="list">
                 {#each shown as show (show.id)}
                     <label class="show">
-                        <input type="checkbox" checked={selected.includes(show.id)} onchange={() => (selected = toggleId(selected, show.id))} />
+                        <input type="checkbox" class="accent-[var(--secondary)]" checked={selected.includes(show.id)} onchange={() => (selected = toggleId(selected, show.id))} />
                         <span class="name">{show.name}</span>
                     </label>
                 {:else}
