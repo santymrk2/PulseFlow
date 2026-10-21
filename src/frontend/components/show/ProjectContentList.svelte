@@ -272,7 +272,6 @@
                             {@const index = show.index}
                             {@const triggerAction = show.data?.settings?.triggerAction || $special.sectionTriggerAction}
                             {@const isFirst = i === 0}
-                            {@const isLast = i === splittedItemsList.items.length - 1}
                             {@const sectionTime = show.data?.time ? getTimeUntilClock(show.data.time, today) : 0}
                             {@const isActive = show.type === "section" ? ($focusMode ? $activeFocus.id === show.id : $activeShow?.id === show.id) : false}
                             {@const isLocked = show.type === "section" && currentProject?.sectionsLocked}
@@ -366,11 +365,9 @@
 
                     <div class="recommended">
                         <div class="listSection">
-                            {#each recommended as path, i}
+                            {#each recommended as path}
                                 {@const name = getFileName(path)}
                                 {@const type = getMediaType(getExtension(name))}
-                                {@const isFirst = i === 0}
-                                {@const isLast = i === recommended.length - 1}
                                 {@const icon = type === "audio" ? "music" : type}
 
                                 <Button
