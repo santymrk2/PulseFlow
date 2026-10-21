@@ -45,7 +45,6 @@
             {#if project.sourcePath}
                 <MenuItem onclick={() => run(() => exportProject(project, projectId, project.sourcePath))}>{translateText("actions.save_to_file")}</MenuItem>
             {/if}
-            <MenuItem onclick={() => run(() => exportProject(project, projectId))}>{translateText("actions.export")}</MenuItem>
             <MenuItem onclick={() => run(() => shareProjectLink(project, projectId))}>{translateText("export.data_link")}</MenuItem>
             <MenuSeparator />
             <MenuItem onclick={() => run(() => special.update((a) => ({ ...a, projectTimelineActive: !a.projectTimelineActive })))}>{translateText("timeline.toggle_timeline")}{$special.projectTimelineActive ? " ✓" : ""}</MenuItem>

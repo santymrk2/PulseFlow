@@ -73,6 +73,9 @@ fn app_menu(app: &AppHandle<Wry>) -> tauri::Result<Submenu<Wry>> {
 /// "macos")`).
 pub fn install(app: &AppHandle<Wry>) -> tauri::Result<()> {
     let app_submenu = app_menu(app)?;
+    let file = Submenu::with_id(app, "file", "Archivo", true)?;
+    file.append(&MenuItem::with_id(app, "file.import", "Importar…", true, Some("CmdOrCtrl+I"))?)?;
+    file.append(&MenuItem::with_id(app, "file.export", "Exportar…", true, Some("CmdOrCtrl+E"))?)?;
     let screens = Submenu::with_id(app, "screens", "Pantallas", true)?;
     screens.append(&MenuItem::with_id(
         app,
@@ -107,7 +110,7 @@ pub fn install(app: &AppHandle<Wry>) -> tauri::Result<()> {
     let live = Submenu::with_id(app, "screens.live", "En vivo", true)?;
     screens.append(&live)?;
 
-    let menu = Menu::with_items(app, &[&app_submenu, &screens])?;
+    let menu = Menu::with_items(app, &[&app_submenu, &file, &screens])?;
     app.set_menu(menu)?;
     app.on_menu_event(|app_handle, event| {
         emit_action(app_handle, event.id().as_ref());
