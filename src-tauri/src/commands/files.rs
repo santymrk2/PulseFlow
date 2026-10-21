@@ -1058,8 +1058,10 @@ mod tests {
         };
         let paths = PDF_TO_IMAGE(state, data).unwrap();
         assert_eq!(paths.len(), 2);
-        assert!(paths[0].ends_with("Imports/PDF/deck/1.jpg"));
-        assert!(paths[1].ends_with("Imports/PDF/deck/2.jpg"));
+        // Con el separador normalizado: en Windows la ruta nativa usa '\'.
+        let norm = |p: &str| p.replace('\\', "/");
+        assert!(norm(&paths[0]).ends_with("Imports/PDF/deck/1.jpg"));
+        assert!(norm(&paths[1]).ends_with("Imports/PDF/deck/2.jpg"));
         assert_eq!(std::fs::read(&paths[0]).unwrap(), b"a");
         assert_eq!(std::fs::read(&paths[1]).unwrap(), b"b");
 
