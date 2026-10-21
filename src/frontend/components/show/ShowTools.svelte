@@ -81,7 +81,6 @@
         {/if}
     {/if}
 </div>
-EOF
 
 <style>
     .main {

@@ -18,7 +18,15 @@
     $: profile = $activeProfile ? getAccess("shows") : {}
     $: readOnly = profile.global === "read"
 
-    $: all = keysToID($categories).filter((a) => profile[a.id] !== "none")
+    // Las bibliotecas heredadas de FreeShow no se muestran: "Scripture" (las Biblias se abren desde su pestaña) y las
+    // de fábrica "Songs"/"Presentations" mientras estén vacías. Una biblioteca elegida nunca se oculta.
+    const LEGACY_EMPTY_HIDDEN = ["song", "presentation"]
+    $: all = keysToID($categories).filter((a) => profile[a.id] !== "none" && !isHiddenLegacy(a.id, counts, activeLibrary))
+    function isHiddenLegacy(id: string, counts: Record<string, number>, active: string | null) {
+        if (id === active) return false
+        if (id === "scripture") return true
+        return LEGACY_EMPTY_HIDDEN.includes(id) && !counts[id]
+    }
     $: libraries = [
         ...sortObject(
             all.filter((a) => !a.isArchive),

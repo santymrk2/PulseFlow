@@ -14,10 +14,13 @@
     import { VideoPlayer } from "../../media/video/videoPlayer"
     import { videoSync } from "../../media/video/videoSync"
     import VideoSlider from "../VideoSlider.svelte"
+    import { clearBackground } from "../clear"
 
     export let currentOutput: Output | null
     export let outputId: string
     export let big = false
+    // barra de transporte del panel de salida: nombre, play/pausa, stop, línea de tiempo, loop y mute
+    export let transport = false
 
     let videoData = { duration: 0, paused: true, loop: false, muted: false }
     let videoTime = 0
@@ -107,7 +110,32 @@
 </script>
 
 {#if background}
-    {#if big}
+    {#if transport}
+        {#if type === "video" || type === "player"}
+            <div class="transport">
+                <span class="name" style="font-size: 0.9em;" role="button" tabindex="0" on:click={openPreview} on:keydown={triggerClickOnEnterSpace}>
+                    <p>{type === "player" ? $playerVideos[background?.id || ""]?.name || "—" : mediaName || "—"}</p>
+                </span>
+                <span class="group">
+                    <Button title={translateText(videoData.paused ? "media.play" : "media.pause")} disabled={$outLocked} on:click={playPause}>
+                        <Icon id={videoData.paused ? "play" : "pause"} white={videoData.paused} size={1.2} />
+                    </Button>
+                    <Button title={translateText("media.stop")} disabled={$outLocked} on:click={() => clearBackground()}>
+                        <Icon id="stop" white size={1.2} />
+                    </Button>
+
+                    <VideoSlider {outputId} {path} disabled={$outLocked} bind:videoData bind:videoTime bind:changeValue />
+
+                    <Button title={translateText("media._loop" + (videoData.loop ? ": settings.enabled" : ""))} on:click={toggleLoop}>
+                        <Icon id="loop" white={!videoData.loop} size={1.2} />
+                    </Button>
+                    <Button title={translateText(videoData.muted === false ? "actions.mute" : "actions.unmute")} disabled={$outLocked} on:click={toggleMute}>
+                        <Icon id={videoData.muted === false ? "volume" : "muted"} white={videoData.muted !== false} size={1.2} />
+                    </Button>
+                </span>
+            </div>
+        {/if}
+    {:else if big}
         <!--  -->
         {#if type === "video" || background?.type === "player"}
             <FloatingBar side="center" style="width: 80%;">
@@ -186,6 +214,14 @@
 {/if}
 
 <style>
+    .transport {
+        display: flex;
+        flex-direction: column;
+    }
+    .transport .group {
+        flex-wrap: nowrap;
+    }
+
     .group {
         display: flex;
         flex-wrap: wrap;

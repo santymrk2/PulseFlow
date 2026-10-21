@@ -202,7 +202,8 @@
         align-items: center;
         justify-content: space-between;
         gap: 6px;
-        z-index: 30;
+        /* por encima de las cabeceras sticky del contenido (ShowHeader z-index 200): si no, los menús desplegables quedan detrás */
+        z-index: 300;
         min-height: 48px;
         height: 48px;
 

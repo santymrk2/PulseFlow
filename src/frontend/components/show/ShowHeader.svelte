@@ -2,10 +2,9 @@
     import { fade } from "svelte/transition"
     import { Main } from "../../../types/IPC/Main"
     import { sendMain } from "../../IPC/main"
-    import { activeEdit, activePage, activePopup, autoOpenedTimeline, openToolsTab, outputs, outLocked, showNotesActive, shows, showsCache, special, styles, templates } from "../../stores"
+    import { activeEdit, activePage, activePopup, autoOpenedTimeline, openToolsTab, outputs, showNotesActive, shows, showsCache, special, styles, templates } from "../../stores"
     import { translateText } from "../../utils/language"
     import { history } from "../helpers/history"
-    import { setOutput } from "../helpers/output"
     import Icon from "../helpers/Icon.svelte"
     import { allOutputsHasStyleTemplate, getFirstActiveOutput } from "../helpers/output"
     import { removeTemplatesFromShow } from "../helpers/show"
@@ -102,6 +101,10 @@
             <span class="layout">· {currentShow?.layouts?.[activeLayout]?.name || activeLayout}</span>
         {/if}
 
+        {#if currentShow}
+            <span class="layout count">· {translateText(slideCount === 1 ? "ui.slide" : "ui.slides", null, [String(slideCount)])}</span>
+        {/if}
+
         {#if notes}
             <span class="notes" role="none" data-title={translateText(notes.title)} on:click={(e) => openTab(e, notes?.tab || "")}>
                 <Icon id={notes.icon} size={0.8} right white />
@@ -112,11 +115,9 @@
 
     <div class="right">
         {#if currentShow}
-            <span class="count">{translateText(slideCount === 1 ? "ui.slide" : "ui.slides", null, [String(slideCount)])}</span>
-
             <Button
                 variant="ghost"
-                style="padding: 0.3em 0.6em;"
+                size="sm"
                 title="new.slide"
                 on:click={() => {
                     if (currentShow?.locked) return
@@ -129,31 +130,15 @@
                 <Icon id="add" size={0.9} white right />
                 <T id="new.slide" />
             </Button>
-
-            <Button
-                variant="default"
-                style="padding: 0.3em 0.6em;"
-                title="preview._start"
-                disabled={$outLocked || !currentShow}
-                on:click={() => {
-                    if (!currentShow) return
-                    const layout = currentShow.settings?.activeLayout
-                    if ($activePage === "edit") setOutput("slide", { id: showId, layout, index: $activeEdit.slide })
-                    else setOutput("slide", { id: showId, layout, index: 0 })
-                }}
-            >
-                <Icon id="play" size={0.9} white right />
-                {translateText("ui.present")}
-            </Button>
         {/if}
 
         <!-- template icon -->
         {#if enableStylePreview}
-            <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;" title="formats.template: <b>{$templates[outputStyleTemplate]?.name || ''}</b>" on:click={() => activePopup.set("template_info")}>
+            <Button variant="ghost" size="icon" title="formats.template: <b>{$templates[outputStyleTemplate]?.name || ''}</b>" on:click={() => activePopup.set("template_info")}>
                 <Icon size={0.8} id="styles" white />
             </Button>
         {:else if enableShowTemplate}
-            <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;" class="context #show_template" title="formats.template: <b>{$templates[showTemplateId]?.name || 'info.template'}</b>" on:click={() => activePopup.set("template_info")}>
+            <Button variant="ghost" size="icon" class="context #show_template" title="formats.template: <b>{$templates[showTemplateId]?.name || 'info.template'}</b>" on:click={() => activePopup.set("template_info")}>
                 <Icon size={0.8} id="templates" white />
             </Button>
         {/if}
@@ -165,7 +150,7 @@
 
         {#if !hideOptions}
             <!-- show more -->
-            <Button style="width: 32px;height: 100%;padding: 0.3em 0.5em;border-bottom-right-radius: 10px;{showDropdown ? '' : 'opacity: 0.8;'}" title="create_show.more_options" icon="more" on:click={() => (showDropdown = !showDropdown)} white={!showDropdown}>
+            <Button variant="ghost" size="icon" isActive={showDropdown} title="create_show.more_options" icon="more" on:click={() => (showDropdown = !showDropdown)} white={!showDropdown}>
                 <!-- prevent force "white" -->
                 <span style="display: none;"></span>
             </Button>
@@ -250,9 +235,12 @@
     }
 
     .header .right {
+        position: relative;
         height: 100%;
 
         display: flex;
+        align-items: center;
+        gap: 2px;
         flex-shrink: 0;
         margin-left: auto;
     }
@@ -286,16 +274,6 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
-    }
-
-    .right .count {
-        opacity: 0.5;
-        font-size: 0.8em;
-        font-weight: normal;
-        white-space: nowrap;
-        margin-right: 0.5em;
-        font-family: var(--font-mono);
-        font-variant-numeric: tabular-nums;
     }
 
     /* notes */
@@ -346,8 +324,8 @@
 
     .showDropdown {
         position: absolute;
-        top: 31px;
-        right: 5px;
+        top: calc(100% - 2px);
+        right: 0;
         overflow: hidden;
 
         display: flex;
@@ -362,7 +340,7 @@
 
         border: 1px solid var(--primary-lighter);
 
-        z-index: 1;
+        z-index: 5;
         box-shadow: var(--shadow-float);
     }
 

@@ -46,6 +46,9 @@
     let { variant = "ghost", size = "sm", title = "", info = "", icon = "", iconSize = 1, children, white = !children, isActive = false, showOutline = false, tab = false, red = false, redHover = false, bold = false, align = "center", disabled = false, class: className = "", style = "", onclick: onclickProp, ...restProps }: Props = $props()
 
     let button = $state<HTMLButtonElement | null>(null)
+    // El aro de foco es sólo para teclado: al volver de un diálogo nativo (elegir carpeta/archivo) el navegador
+    // restaura el foco con :focus-visible y quedaba un borde blanco en el botón que se había clickeado.
+    let pointerFocus = $state(false)
 
     const dispatch = createEventDispatcher<{
         click: ButtonClickDetail
@@ -79,7 +82,34 @@
     }
 </script>
 
-<button data-title={title ? translateText(title, $dictionary) : undefined} {...restProps} bind:this={button} class="btn {variant} {size} {className}" class:isActive class:showOutline class:white class:tab class:red class:redHover class:bold class:start={align === "start"} class:iconOnly={!children && !!icon} tabindex={disabled ? -1 : 0} aria-disabled={disabled} {disabled} {style} onkeydown={handleKey} onclick={handleClick} ondblclick={(e) => click(e, true)}>
+<button
+    data-title={title ? translateText(title, $dictionary) : undefined}
+    {...restProps}
+    bind:this={button}
+    class="btn {variant} {size} {className}"
+    class:pointerFocus
+    class:isActive
+    class:showOutline
+    class:white
+    class:tab
+    class:red
+    class:redHover
+    class:bold
+    class:start={align === "start"}
+    class:iconOnly={!children && !!icon}
+    tabindex={disabled ? -1 : 0}
+    aria-disabled={disabled}
+    {disabled}
+    {style}
+    onkeydown={(e) => {
+        pointerFocus = false
+        handleKey(e)
+    }}
+    onpointerdown={() => (pointerFocus = true)}
+    onblur={() => (pointerFocus = false)}
+    onclick={handleClick}
+    ondblclick={(e) => click(e, true)}
+>
     {#if icon}
         <Icon id={icon} size={iconSize} white={white || isActive || variant === "default"} />
     {/if}
@@ -227,6 +257,9 @@
         .btn:focus-visible:not(:disabled) {
             outline: 1px solid var(--ring);
             outline-offset: 2px;
+        }
+        .btn.pointerFocus:focus-visible {
+            outline: none;
         }
         .btn:disabled {
             opacity: 0.5;

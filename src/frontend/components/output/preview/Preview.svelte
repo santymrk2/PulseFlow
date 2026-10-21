@@ -5,15 +5,12 @@
     import { runAction } from "../../actions/actions"
     import AudioMeter from "../../drawer/audio/AudioMeter.svelte"
     import { getSlideText } from "../../edit/scripts/textStyle"
-    import Icon from "../../helpers/Icon.svelte"
-    import T from "../../helpers/T.svelte"
     import { getActiveOutputs, getFirstOutputIdWithBackground, isOutCleared, outputSlideHasContent, setOutput } from "../../helpers/output"
     import { getLayoutRef } from "../../helpers/show"
     import { applyLook } from "../../helpers/looks"
     import { getFewestOutputLines, getItemWithMostLines, playNextGroup, playPreviousGroup, updateOut } from "../../helpers/showActions"
     import { _show } from "../../helpers/shows"
     import { newSlideTimer } from "../../helpers/tick"
-    import Button from "../../../lib/components/ui/button/button.svelte"
     import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import ShowActions from "../ShowActions.svelte"
     import MediaControls from "../tools/MediaControls.svelte"
@@ -228,43 +225,34 @@
     $: linesPercentage = slideLines && outputLine !== null ? outputLine / slideLines : 0
     $: linesIndex = maxLines !== null ? Math.floor(maxLines * linesPercentage) : 0
 
-    // HIDE PREVIEW
-
-    let enablePreview = true
-
     // LOOKS (F5.4): selector de look en el panel de salida
+    $: bgOut = currentBgOutput?.out?.background
+    $: videoPlaying = !!bgOut && (bgOut.type === "video" || bgOut.type === "player")
     $: lookOptions = Object.entries($looks).map(([id, look]) => ({ value: id, label: look.name }))
 </script>
 
 <svelte:window on:keydown={keydown} />
 
 <div id="previewArea" class="main">
-    {#if enablePreview}
-        <div class="top">
-            <Button class="hide" icon="hide" style="z-index: 2;" title="preview._hide_preview" on:click={() => (enablePreview = false)} />
-            <!-- disable before hiding: disableTransitions={!enablePreview} -->
-            <MultiOutputs />
-            <div class="preview-meter">
-                <AudioMeter channelId="main" preview />
-            </div>
+    <div class="top">
+        <MultiOutputs />
+        <div class="preview-meter">
+            <AudioMeter channelId="main" preview />
         </div>
-    {:else}
-        <Button on:click={() => (enablePreview = true)} style="width: 100%;">
-            <Icon id="eye" right />
-            <T id="preview.show_preview" />
-        </Button>
-    {/if}
+    </div>
 
-    {#if enablePreview}
-        <div class="section" style="margin-bottom: 2px;">
-            <ShowActions {currentOutput} {ref} {linesIndex} {maxLines} />
+    <div class="section" style="margin-bottom: 2px;">
+        <ShowActions {currentOutput} {ref} {linesIndex} {maxLines} />
+    </div>
+
+    {#if videoPlaying}
+        <div class="section transport">
+            <MediaControls currentOutput={currentBgOutput} outputId={backgroundOutputId} transport />
         </div>
-
-        {#if lookOptions.length > 1}
-            <div style="margin: 0 5px;">
-                <SelectField label="looks.looks" value={$activeLook} options={lookOptions} on:change={(e) => applyLook(e.detail)} />
-            </div>
-        {/if}
+    {:else if lookOptions.length > 1}
+        <div style="margin: 0 5px;">
+            <SelectField label="looks.looks" value={$activeLook} options={lookOptions} on:change={(e) => applyLook(e.detail)} />
+        </div>
     {/if}
 
     {#if $activePage === "show"}
@@ -280,9 +268,7 @@
                 }}
             />
 
-            {#if updatedActiveClear === "background"}
-                <MediaControls currentOutput={currentBgOutput} outputId={backgroundOutputId} />
-            {:else if updatedActiveClear === "slide"}
+            {#if updatedActiveClear === "slide"}
                 <Show {currentOutput} {ref} {linesIndex} {maxLines} />
             {/if}
         </div>
@@ -307,27 +293,6 @@
     color: inherit;
     border: none;
   } */
-
-    .top :global(.hide:not(.contained):not(.isActive):not(:disabled)) {
-        position: absolute;
-        top: 10px;
-        inset-inline-end: 16px;
-        z-index: 1;
-        background-color: rgb(0 0 0 / 0.3) !important;
-        border: 1px solid var(--border-strong) !important;
-        width: 40px;
-        height: 40px;
-        opacity: 0;
-        transition:
-            opacity 0.2s,
-            background-color 0.2s;
-    }
-    .top :global(.hide:not(.contained):not(.isActive):not(:disabled):hover) {
-        background-color: rgb(0 0 0 / 0.7) !important;
-    }
-    .top:hover > :global(.hide:not(.contained):not(.isActive):not(:disabled)) {
-        opacity: 1;
-    }
 
     .section {
         display: flex;
