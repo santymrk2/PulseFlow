@@ -130,44 +130,30 @@
 </div>
 
 <style>
+    /* secciones planas separadas por una línea, sin tarjetas redondeadas (igual que el panel izquierdo) */
     .tabSection {
         display: flex;
         flex-direction: column;
-        gap: 5px;
-        padding: 8px 0;
+        padding: 0;
     }
 
     .section {
         position: relative;
 
-        background-color: var(--primary-darker);
-        border: 1px solid var(--primary-lighter);
-        margin: 0 5px;
-        border-radius: 10px;
-
         display: flex;
         flex-direction: column;
 
-        overflow: hidden;
-
-        /* align to left */
-        margin-left: 0;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-        border-left-width: 0;
+        border-bottom: 1px solid var(--border-color, var(--primary-lighter));
     }
 
     .title {
-        /* F11.3 — títulos de sección: mayúsculas pequeñas, atenuados */
-        font-weight: 500;
-        padding: 6px 14px 4px;
+        font-weight: 600;
+        padding: 6px 12px 4px;
         font-size: var(--text-2xs);
         letter-spacing: 0.08em;
         text-transform: uppercase;
-        opacity: 0.45;
+        opacity: 0.6;
         color: var(--text);
-        background: var(--primary-darkest);
-        border-bottom: 1px solid var(--border-color, var(--primary-lighter));
     }
 
     hr {

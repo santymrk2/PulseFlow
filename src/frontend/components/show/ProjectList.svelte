@@ -161,13 +161,13 @@
                             {@const noEditing = !!($activeProfile && project.parent === "/" && project.name)}
                             {@const projectsCount = project.parent === "/" ? tree.reduce((value, a) => (a.type !== "folder" ? value + 1 : value), 0) : 0}
 
-                            <div class="projectItem" class:indented={project.parent !== "/"} style="margin-inline-start: {8 * (project.index || 0)}px;background-color: rgb(255 255 255 / {0.01 * (project.index || 0)});">
+                            <div class="projectItem" class:indented={project.parent !== "/"} style="margin-inline-start: {8 * (project.index || 0)}px;">
                                 <!-- , path: project.path -->
                                 <SelectElem id={project.type || "project"} data={{ type: project.type || "project", id: project.id }} draggable={!isReadOnly && !noEditing} trigger="column" borders="center">
                                     {#if project.type === "folder" && (project.parent === "/" || shown)}
                                         <Button style="width: 100%;padding: 0.22rem 0.65rem;" title="{opened ? 'actions.close' : 'main.open'}: <b>{project.name}</b>" on:click={(e) => toggleFolder(e, project, opened)} class="folder context #folder{isReadOnly ? '_readonly' : noEditing ? '_noediting' : ''}" isActive={pathToActive.includes(project.id)} tab>
                                             <Icon id={opened ? "folderOpen" : "folder"} white />
-                                            <HiddenInput value={project.name} id={"folder_" + project.id} on:edit={(e) => renameFolder(project.id, e.detail.value)} bind:edit={editActive} allowEdit={!isReadOnly && !noEditing} />
+                                            <span class="grow"><HiddenInput value={project.name} id={"folder_" + project.id} on:edit={(e) => renameFolder(project.id, e.detail.value)} bind:edit={editActive} allowEdit={!isReadOnly && !noEditing} /></span>
 
                                             {#if projectsCount}
                                                 <span class="count">{projectsCount}</span>
@@ -175,8 +175,9 @@
                                         </Button>
                                     {:else if project.id && shown && isArchivedShown}
                                         <Button style="width: 100%;padding: 0.08rem 0.65rem;font-weight: normal;" title="actions.id_select_project: <b>{project.name}</b>" on:click={(e) => open(e, project.id)} class="context #project_button{isReadOnly ? '_readonly' : ''}" isActive={activeId === project.id} tab>
-                                            <Icon id={isProjectLinked($projects[project.id], project.id) ? "cloud" : "project"} white={$projects[project.id]?.archived} />
-                                            <HiddenInput value={project.name} id={"project_" + project.id} on:edit={(e) => rename(project.id, e.detail.value)} bind:edit={editActive} allowEdit={!isReadOnly} />
+                                            <span class="grow"><HiddenInput value={project.name} id={"project_" + project.id} on:edit={(e) => rename(project.id, e.detail.value)} bind:edit={editActive} allowEdit={!isReadOnly} /></span>
+                                            {#if isProjectLinked($projects[project.id], project.id)}<Icon id="cloud" size={0.8} white />{/if}
+                                            <span class="count">{$projects[project.id]?.shows?.length ?? 0}</span>
                                         </Button>
                                     {/if}
                                 </SelectElem>
@@ -223,24 +224,12 @@
 {/if}
 
 <style>
+    /* pila plana, como LIBRARIES: sin tarjeta, márgenes ni esquinas redondeadas */
     .fullTree {
         display: flex;
         flex-direction: column;
-        gap: 5px;
-
-        margin: 10px 0;
-        margin-right: 5px;
     }
     .rootFolder {
-        background-color: var(--primary-darker);
-
-        border: 1px solid var(--primary-lighter);
-        border-left: 0;
-
-        border-radius: 10px;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
-
         overflow: hidden;
     }
 
@@ -257,20 +246,25 @@
         border-bottom: 1px solid var(--border-color, var(--primary-lighter));
     }
 
-    /* F11.3 — filas de 32px redondeadas, hover/activa con variables del tema */
+    /* filas planas de 28px: hover y activa como en LIBRARIES */
     .projectItem :global(button.tab) {
-        height: 32px;
-        min-height: 32px;
+        height: 28px;
+        min-height: 28px;
         padding-block: 0 !important;
-        border-radius: var(--radius, 4px) !important;
-        border-left: 3px solid transparent !important;
+        border-radius: 0 !important;
+        border-left: 2px solid transparent !important;
     }
     .projectItem :global(button.tab.isActive) {
-        background-color: var(--primary-lighter) !important;
+        background-color: var(--secondary-opacity) !important;
         border-left-color: var(--secondary) !important;
     }
     .projectItem :global(button.tab):not(:disabled):not(.isActive):hover {
         background-color: var(--hover, var(--bg-hover)) !important;
+    }
+    .grow {
+        flex: 1;
+        min-width: 0;
+        text-align: start;
     }
 
     .count {

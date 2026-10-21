@@ -273,7 +273,6 @@
                             {@const triggerAction = show.data?.settings?.triggerAction || $special.sectionTriggerAction}
                             {@const isFirst = i === 0}
                             {@const isLast = i === splittedItemsList.items.length - 1}
-                            {@const borderRadiusStyle = `${isFirst ? "border-top-right-radius: 10px;" : ""}${isLast ? "border-bottom-right-radius: 10px;" : ""}`}
                             {@const sectionTime = show.data?.time ? getTimeUntilClock(show.data.time, today) : 0}
                             {@const isActive = show.type === "section" ? ($focusMode ? $activeFocus.id === show.id : $activeShow?.id === show.id) : false}
                             {@const isLocked = show.type === "section" && currentProject?.sectionsLocked}
@@ -288,7 +287,7 @@
                                         <Button
                                             {isActive}
                                             class="section {projectReadOnly || isLocked ? '' : `context #project_section ${show.color ? 'color-border' : ''}`}"
-                                            style="{borderRadiusStyle}justify-content: left;background-color: var(--primary-darkest);border-top: 1px solid var(--primary-lighter);padding: 0.1em 1em;{$fullColors ? `background-color: ${show.color || 'var(--primary-darker)'} !important;color: ${getContrast(show.color || '')};` : `background-color: ${fadeColor(show.color || '', 0.2)} !important;color: ${show.color ? brightenDarkColor(show.color) : ''};`}"
+                                            style="justify-content: left;background-color: var(--primary-darkest);border-top: 1px solid var(--primary-lighter);padding: 0.1em 1em;{$fullColors ? `background-color: ${show.color || 'var(--primary-darker)'} !important;color: ${getContrast(show.color || '')};` : `background-color: ${fadeColor(show.color || '', 0.2)} !important;color: ${show.color ? brightenDarkColor(show.color) : ''};`}"
                                             on:click={(e) => {
                                                 if (e.detail.ctrl) return
                                                 if ($focusMode) activeFocus.set({ id: show.id, index, type: show.type })
@@ -335,7 +334,7 @@
                                             {/if}
                                         </Button>
                                     {:else}
-                                        <ShowButton id={show.id} {show} {index} class={projectReadOnly ? "" : `context #project_${getContextMenuId(show.type)}`} style={borderRadiusStyle} icon isProject />
+                                        <ShowButton id={show.id} {show} {index} class={projectReadOnly ? "" : `context #project_${getContextMenuId(show.type)}`} icon isProject />
                                     {/if}
                                 </SelectElem>
                             {/if}
@@ -372,12 +371,11 @@
                                 {@const type = getMediaType(getExtension(name))}
                                 {@const isFirst = i === 0}
                                 {@const isLast = i === recommended.length - 1}
-                                {@const borderRadiusStyle = `${isFirst ? "border-top-right-radius: 10px;" : ""}${isLast ? "border-bottom-right-radius: 10px;" : ""}`}
                                 {@const icon = type === "audio" ? "music" : type}
 
                                 <Button
                                     class="show context #recent_file__project"
-                                    style="justify-content: space-between;padding: 0.35em 0.8em;font-weight: normal;{borderRadiusStyle}"
+                                    style="justify-content: space-between;padding: 0.35em 0.8em;font-weight: normal;"
                                     on:click={() => {
                                         // convert to image? - probably better not to, this can be done via import
                                         // if (type === "pdf") sendMain(Main.PDF_TO_IMAGE, { filePath: path })
@@ -517,22 +515,12 @@
         flex: 1;
     }
 
+    /* pila plana, como LIBRARIES: sin tarjeta, márgenes ni esquinas redondeadas */
     .listSection {
         display: flex;
         flex-direction: column;
 
-        margin: 8px 0;
-        margin-right: 5px;
-
-        background-color: var(--primary-darker);
-
         --border-color: var(--primary-lighter);
-        border: 1px solid var(--border-color);
-        border-left: 0;
-
-        border-radius: 10px;
-        border-top-left-radius: 0;
-        border-bottom-left-radius: 0;
     }
 
     .list#projectArea :global(.droparea) {
@@ -544,13 +532,18 @@
         outline-offset: -2px;
     }
 
-    /* F11.3 — filas de 32px redondeadas, hover/activa con variables del tema */
+    /* filas planas de 28px: hover y activa como en LIBRARIES */
     .listSection :global(button.tab) {
-        min-height: 32px;
-        border-left: 3px solid transparent !important;
+        min-height: 28px;
+        border-radius: 0 !important;
+        border-left: 2px solid transparent !important;
     }
     .listSection :global(button.tab:not(.isActive)):hover {
         background-color: var(--hover, var(--bg-hover)) !important;
+    }
+    .listSection :global(button.tab.isActive) {
+        background-color: var(--secondary-opacity) !important;
+        border-left-color: var(--secondary) !important;
     }
 
     .list :global(.section) {

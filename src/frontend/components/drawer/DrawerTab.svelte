@@ -176,15 +176,15 @@
         width: 100%;
     }
 
-    /* F11.2 — filas de 32px, redondeadas, hover/activa con variables del tema */
+    /* filas planas de 28px: hover y activa como en LIBRARIES */
     .row > :global(button.tab) {
-        height: 32px;
-        min-height: 32px;
-        border-radius: var(--radius, 4px) !important;
-        border-left: 3px solid transparent !important;
+        height: 28px;
+        min-height: 28px;
+        border-radius: 0 !important;
+        border-left: 2px solid transparent !important;
     }
     .row > :global(button.tab.isActive) {
-        background-color: var(--primary-lighter) !important;
+        background-color: var(--secondary-opacity) !important;
         border-left-color: var(--secondary) !important;
     }
     .row > :global(button.tab):not(:disabled):not(.isActive):hover {
