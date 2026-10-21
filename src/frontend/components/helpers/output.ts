@@ -8,7 +8,48 @@ import type { Item, Layout, LayoutRef, Media, OutSlide, Show, Slide, SlideData, 
 import { AudioAnalyser } from "../../audio/audioAnalyser"
 import { requestMain, sendMain } from "../../IPC/main"
 import { invokeCommand } from "../../IPC/tauri"
-import { actions, activeFocus, activeProject, activeRename, activeScenes, activeShow, activeTimers, allOutputs, categories, connections, currentOutputSettings, customMessageCredits, disabledServers, effects, focusMode, lockedOverlays, media, outLocked, outputDisplay, outputs, outputSlideCache, outputState, overlays, overlayTimers, projects, scenes, scriptures, scriptureSettings, serverData, showsCache, special, stageShows, styles, syncedOutputs, templates, theme, themes, transitionData, usageLog, previewOutputId } from "../../stores"
+import {
+    actions,
+    activeFocus,
+    activeProject,
+    activeRename,
+    activeScenes,
+    activeShow,
+    activeTimers,
+    allOutputs,
+    categories,
+    connections,
+    currentOutputSettings,
+    customMessageCredits,
+    disabledServers,
+    effects,
+    focusMode,
+    lockedOverlays,
+    media,
+    outLocked,
+    outputDisplay,
+    outputs,
+    outputSlideCache,
+    outputState,
+    overlays,
+    overlayTimers,
+    projects,
+    scenes,
+    scriptures,
+    scriptureSettings,
+    serverData,
+    showsCache,
+    special,
+    stageShows,
+    styles,
+    syncedOutputs,
+    templates,
+    theme,
+    themes,
+    transitionData,
+    usageLog,
+    previewOutputId
+} from "../../stores"
 import { trackScriptureUsage } from "../../utils/analytics"
 import { isMainWindow, isOutputWindow, newToast } from "../../utils/common"
 import { translateText } from "../../utils/language"

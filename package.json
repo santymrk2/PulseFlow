@@ -31,6 +31,7 @@
         "test:unit": "vitest run --config config/testing/vitest.config.mts",
         "test:format": "prettier --config config/formatting/.prettierrc.yaml --check src",
         "test:svelte": "svelte-check --ignore docs",
+        "test:budget": "bun scripts/quality-budget.ts",
         "format:prettier": "prettier --config config/formatting/.prettierrc.yaml --write src",
         "lint": "bun run lint:frontend && bun run lint:svelte && bun run lint:styles",
         "lint:frontend": "eslint -c config/linting/eslint.frontend.json --ext .js,.ts src/frontend --fix",

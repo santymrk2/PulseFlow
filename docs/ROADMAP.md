@@ -1145,7 +1145,7 @@ Relevamiento abstracto del proyecto (medido en el repo, commit `81c1f6eb`):
 Primero se pone la red, después se hace el lavado de cara: si no, cada pantalla que se
 toque en F14 puede romper algo sin que nadie se entere.
 
-- [ ] **F13.1 CI automático.**
+- [x] **F13.1 CI automático.** (2026-10-20) `ci.yml` corre en `pull_request`, en `push` a `main` y `feature/tauri-rust-migration` (y a mano). Prettier **bloqueante sólo sobre lo que el cambio toca** (`scripts/prettier-changed.sh`, probado: falla con un archivo mal formateado y pasa con uno limpio); svelte-check dejó de ser no bloqueante y lo reemplaza el trinquete (F13.2). Los jobs de Rust siguen en macOS y Windows. **Todavía no corrió en GitHub** (se comprueba al abrir el primer PR); los tests de GPU/AVFoundation y el código de Windows se ejercitan ahí por primera vez.
   *Archivo:* `.github/workflows/ci.yml`.
   *Pasos:* disparar en `pull_request` y en `push` a `main` y `feature/tauri-rust-migration`
   (dejar `workflow_dispatch`). Prettier: chequear **sólo** los archivos de `src/` que
@@ -1154,7 +1154,7 @@ toque en F14 puede romper algo sin que nadie se entere.
   *Aceptación:* un PR de prueba con un archivo mal formateado en `src/` falla el job; uno
   limpio pasa. Los jobs de Rust corren en macOS y Windows.
 
-- [ ] **F13.2 Trinquete de calidad.**
+- [x] **F13.2 Trinquete de calidad.** (2026-10-20) `scripts/quality-budget.ts` (+ `qualityBudget.ts` con tests) y `config/quality-budget.json`: errores de svelte-check **41**, `any` **2701**, hex **568**, `rgb()` **414** al 2026-10-20 (re-medidos; las cifras de la spec eran de antes). `bun run test:budget`: sube → exit 1; baja → informa el valor nuevo; `--update` lo escribe. Probado: un `as any` nuevo lo hace fallar y quitarlo lo hace pasar.
   *Archivos:* nuevo `scripts/quality-budget.ts`, nuevo `config/quality-budget.json`,
   `package.json` (script `test:budget`), `ci.yml`.
   *Pasos:* el script cuenta (1) errores de `svelte-check`, (2) `: any` / `as any` en `src/`,

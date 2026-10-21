@@ -1,16 +1,22 @@
 name: CI
 
-# Manual activation for now (run from the Actions tab); can be wired to pull_request later.
+# F13.1: corre solo en cada pull request y en cada push a las ramas de trabajo; sigue disponible a mano.
 on:
+    pull_request:
+    push:
+        branches: [main, feature/tauri-rust-migration]
     workflow_dispatch:
 
 jobs:
     frontend:
-        name: Frontend (format, type-check, tests, build)
+        name: Frontend (formato de lo cambiado, presupuesto, tests, build)
         runs-on: ubuntu-latest
         steps:
             - name: Check out Git repository
               uses: actions/checkout@v5
+              with:
+                  # el diff contra la base necesita el historial
+                  fetch-depth: 0
 
             - name: Install Bun
               uses: oven-sh/setup-bun@v2
@@ -18,15 +24,15 @@ jobs:
             - name: Install dependencies
               run: bun install --frozen-lockfile
 
-            # Formatting and svelte type-check currently have a pre-existing backlog, so they are
-            # reported but non-blocking for now. Flip continue-on-error off once the backlog is cleared.
-            - name: Check formatting
-              run: bun run test:format
-              continue-on-error: true
+            # Bloqueante, pero sólo sobre los archivos de src/ que este cambio toca: el backlog de
+            # formato heredado no frena a nadie, lo que se toca tiene que quedar formateado.
+            - name: Check formatting (changed files)
+              run: scripts/prettier-changed.sh "${{ github.event.pull_request.base.sha || github.event.before }}"
 
-            - name: Type-check (svelte)
-              run: bun run test:svelte
-              continue-on-error: true
+            # Trinquete de calidad (F13.2): errores de svelte-check, `any` y colores literales no pueden subir.
+            # Reemplaza al svelte-check no bloqueante de antes.
+            - name: Quality budget
+              run: bun run test:budget
 
             - name: Unit tests
               run: bun run test:unit
