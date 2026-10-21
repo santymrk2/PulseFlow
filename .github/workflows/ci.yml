@@ -79,24 +79,3 @@ jobs:
             - name: Cargo test
               working-directory: src-tauri
               run: cargo test --lib --locked
-
-            # TEMPORAL (diagnóstico): el binario de tests no arranca en Windows (STATUS_ENTRYPOINT_NOT_FOUND).
-            # Se vuelca la tabla de imports para ver qué DLL/export falta.
-            - name: Diagnóstico de imports
-              if: always()
-              shell: pwsh
-              run: |
-                  $exe = Get-ChildItem "src-tauri\target\debug\deps\pulseflow_lib-*.exe" -ErrorAction SilentlyContinue | Select-Object -First 1
-                  if (-not $exe) { Write-Host "NO HAY BINARIO"; exit 0 }
-                  Write-Host "BINARIO: $($exe.FullName)"
-                  $dumpbin = $null
-                  $vswhere = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
-                  if (Test-Path $vswhere) {
-                      $vs = & $vswhere -latest -property installationPath
-                      if ($vs) { $dumpbin = (Get-ChildItem "$vs\VC\Tools\MSVC\*\bin\Hostx64\x64\dumpbin.exe" -ErrorAction SilentlyContinue | Select-Object -First 1).FullName }
-                  }
-                  if (-not $dumpbin) { $dumpbin = (Get-ChildItem "C:\Program Files*\Microsoft Visual Studio\*\*\VC\Tools\MSVC\*\bin\Hostx64\x64\dumpbin.exe" -ErrorAction SilentlyContinue | Select-Object -First 1).FullName }
-                  if (-not $dumpbin) { Write-Host "NO HAY DUMPBIN"; exit 0 }
-                  & $dumpbin /dependents $exe.FullName
-                  & $dumpbin /imports $exe.FullName | Out-File -Encoding utf8 "$env:RUNNER_TEMP\imports.txt"
-                  Get-Content "$env:RUNNER_TEMP\imports.txt" | Select-String -Pattern "comctl32|mfplat|mf\.dll|d3d11|TaskDialogIndirect|MFStartup|MFCreate|MFShutdown|D3D11CreateDevice|ole32" -Context 2,2
