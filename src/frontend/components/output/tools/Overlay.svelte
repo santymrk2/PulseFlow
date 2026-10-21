@@ -1,82 +1,110 @@
 <script lang="ts">
+    // Pestaña Overlays del panel derecho: todos los overlays y efectos para sacarlos al aire (clic) o quitarlos si ya están
+    // activos. Es el reemplazo de la pestaña Overlays del cajón inferior, que pasó al Overlay editor.
     import type { Output } from "../../../../types/Output"
-    import { effects, outLocked, overlays } from "../../../stores"
-    import Icon from "../../helpers/Icon.svelte"
-    import { setOutput } from "../../helpers/output"
-    import Button from "../../../lib/components/ui/button/button.svelte"
+    import { effects, outLocked, overlayCategories, overlays } from "../../../stores"
+    import { translateText } from "../../../utils/language"
+    import { getAccess } from "../../../utils/profile"
+    import { keysToID, sortByName } from "../../helpers/array"
+    import { toggleEffectOutput, toggleOverlayOutput } from "../../helpers/overlayOutput"
+    import T from "../../helpers/T.svelte"
 
     export let currentOutput: Output
 
-    // $: if (!currentOutput?.out?.overlays?.length) {
-    //   // get all overlays
-    //   let outs = getAllActiveOutputs()
-    //   currentOutput = outs.find((output) => output.out?.overlays)
-    // }
+    const profile = getAccess("overlays")
 
-    $: activeEffects = currentOutput?.out?.effects?.map((id) => ({ id, ...$effects[id] })) || []
-    $: activeOverlays = currentOutput?.out?.overlays?.map((id) => ({ id, ...$overlays[id] })) || []
+    $: activeOverlayIds = currentOutput?.out?.overlays || []
+    $: activeEffectIds = currentOutput?.out?.effects || []
 
-    function removeEffect(id: string) {
-        if ($outLocked || !currentOutput.out?.effects) return
+    $: overlayList = sortByName(keysToID($overlays).filter((a) => a && profile[a.category || ""] !== "none"))
+    $: effectList = sortByName(keysToID($effects))
 
-        setOutput(
-            "effects",
-            currentOutput.out.effects.filter((a) => a !== id)
-        )
+    const categoryName = (id: string | null | undefined) => {
+        const name = id ? $overlayCategories[id]?.name : ""
+        return name?.includes(".") ? translateText(name) : name || ""
     }
-
-    function removeOverlay(id: string) {
-        if ($outLocked || !currentOutput.out?.overlays) return
-
-        setOutput(
-            "overlays",
-            currentOutput.out.overlays.filter((a) => a !== id)
-        )
-    }
-
-    // function setLocked(id: string, setLocked: boolean) {
-    //     overlays.update((a) => {
-    //         a[id].locked = setLocked
-    //         return a
-    //     })
-    // }
 </script>
 
-{#if currentOutput?.out?.overlays?.length || currentOutput?.out?.effects?.length}
-    <span class="name" style="justify-content: space-between;">
-        {#each activeEffects as effect}
-            <div class="overlay">
-                <Button style="flex: 1;" disabled={$outLocked} on:click={() => removeEffect(effect.id)} red>
-                    <Icon id="effects" right white />
-                    <p>{effect.name || "—"}</p>
-                </Button>
-            </div>
+{#if overlayList.length}
+    <div class="list">
+        {#each overlayList as overlay (overlay.id)}
+            <button type="button" class="row" class:active={activeOverlayIds.includes(overlay.id)} disabled={$outLocked} onclick={() => toggleOverlayOutput(overlay.id)}>
+                <span class="name">{overlay.name || "—"}</span>
+                <span class="category">{categoryName(overlay.category)}</span>
+            </button>
         {/each}
-        {#each activeOverlays as overlay}
-            <!-- {@const locked = $overlays[overlay.id]?.locked} -->
-            <div class="overlay">
-                <!-- disabled={locked} red={!locked} -->
-                <Button style="flex: 1;" disabled={$outLocked} on:click={() => removeOverlay(overlay.id)} red>
-                    <p>{overlay.name || "—"}</p>
-                </Button>
-                <!-- <Button align="start" on:click={() => setLocked(overlay.id, !locked)} title={locked ? $dictionary.preview?.unlock : $dictionary.preview?.lock} red={locked}>
-                    <Icon id={locked ? "locked" : "unlocked"} />
-                </Button> -->
-            </div>
+    </div>
+{/if}
+
+{#if effectList.length}
+    <div class="title"><T id="tabs.effects" /></div>
+    <div class="list">
+        {#each effectList as effect (effect.id)}
+            <button type="button" class="row" class:active={activeEffectIds.includes(effect.id)} disabled={$outLocked} onclick={() => toggleEffectOutput(effect.id)}>
+                <span class="name">{effect.name || "—"}</span>
+            </button>
         {/each}
-    </span>
+    </div>
+{/if}
+
+{#if !overlayList.length && !effectList.length}
+    <div class="empty"><T id="empty.general" /></div>
 {/if}
 
 <style>
-    .name {
+    .list {
         display: flex;
         flex-direction: column;
-        justify-content: center;
-        max-height: 60px;
-        overflow-y: auto;
     }
-
-    .overlay {
+    .title {
+        padding: 6px 12px 4px;
+        font-size: var(--text-2xs);
+        font-weight: 600;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+        opacity: 0.6;
+        border-top: 1px solid var(--border);
+    }
+    .row {
+        position: relative;
         display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        height: 28px;
+        padding: 0 12px;
+        border: 0;
+        border-left: 2px solid transparent;
+        background: transparent;
+        color: var(--text);
+        font-size: var(--text-sm);
+        text-align: start;
+    }
+    .row:hover:not(:disabled) {
+        background: var(--bg-hover);
+    }
+    /* en el aire: relleno y barra de acento, como la fila activa de las listas del panel izquierdo */
+    .row.active {
+        background: var(--secondary-opacity);
+        border-left-color: var(--secondary);
+    }
+    .row:disabled {
+        opacity: 0.5;
+    }
+    .name {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    .category {
+        font-size: var(--text-xs);
+        color: var(--text-muted);
+    }
+    .empty {
+        padding: 12px;
+        opacity: 0.5;
     }
 </style>

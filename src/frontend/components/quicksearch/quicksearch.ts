@@ -353,15 +353,9 @@ const triggerActions = {
         activePage.set("stage")
     },
     overlay: (id: string) => {
-        if (get(activePage) === "edit") {
-            activeEdit.set({ id, type: "overlay", items: [] })
-            refreshEditSlide.set(true)
-        } else {
-            activeShow.set({ id, type: "overlay" })
-            activePage.set("show")
-
-            openDrawer("overlays")
-        }
+        activeEdit.set({ id, type: "overlay", items: [] })
+        activePage.set("edit")
+        refreshEditSlide.set(true)
     },
     project: (id: string) => {
         showRecentlyUsedProjects.set(false)

@@ -8,6 +8,7 @@
     import Preview from "./components/output/preview/Preview.svelte"
     import Show from "./components/show/Show.svelte"
     import LeftColumn from "./components/show/left/LeftColumn.svelte"
+    import OverlayNavigation from "./components/edit/OverlayNavigation.svelte"
     import ThemeNavigation from "./components/edit/ThemeNavigation.svelte"
     import ShowTools from "./components/show/ShowTools.svelte"
     import StageLayouts from "./components/stage/StageLayouts.svelte"
@@ -44,6 +45,8 @@
                 {:else if page === "edit"}
                     {#if $activeEdit.type === "template"}
                         <ThemeNavigation />
+                    {:else if $activeEdit.type === "overlay" || $activeEdit.type === "effect"}
+                        <OverlayNavigation />
                     {:else}
                         <Navigation />
                     {/if}

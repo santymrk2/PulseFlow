@@ -2,14 +2,14 @@
     import { onDestroy } from "svelte"
     import type { Overlay } from "../../../../types/Show"
     import { addProjectItem } from "../../../converters/project"
-    import { activeEdit, activePage, activeShow, labelsDisabled, mediaOptions, outLocked, outputs, overlayCategories, overlays, styles, timelineRecordingAction, previewOutputId } from "../../../stores"
+    import { activeEdit, activePage, activeShow, labelsDisabled, mediaOptions, outputs, overlayCategories, overlays, styles, previewOutputId } from "../../../stores"
     import { translateText } from "../../../utils/language"
     import { getAccess } from "../../../utils/profile"
-    import { runAction } from "../../actions/actions"
     import { clone, keysToID, sortByName } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import Icon from "../../helpers/Icon.svelte"
-    import { findMatchingOut, getResolution, setOutput } from "../../helpers/output"
+    import { findMatchingOut, getResolution } from "../../helpers/output"
+    import { toggleOverlayOutput } from "../../helpers/overlayOutput"
     import T from "../../helpers/T.svelte"
     import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
@@ -23,6 +23,10 @@
     import OverlayActions from "./OverlayActions.svelte"
 
     export let active: string | null
+    // Overlay editor: lista de una columna en el panel izquierdo; un clic abre el overlay para editarlo
+    export let columns: number | null = null
+    export let editOnClick = false
+    $: gridColumns = columns ?? $mediaOptions.columns
 
     const profile = getAccess("overlays")
     $: readOnly = profile.global === "read" || profile[active || ""] === "read"
@@ -41,7 +45,7 @@
 
     let nextScrollTimeout: NodeJS.Timeout | null = null
     function wheel(e: any) {
-        if (!e.ctrlKey && !e.metaKey) return
+        if (columns !== null || (!e.ctrlKey && !e.metaKey)) return
         if (nextScrollTimeout) return
 
         mediaOptions.set({ ...$mediaOptions, columns: Math.max(2, Math.min(10, $mediaOptions.columns + (e.deltaY < 0 ? -100 : 100) / 100)) })
@@ -96,20 +100,17 @@
     }
 
     function overlayClick(e: any, id: string) {
-        if ($outLocked || e.ctrlKey || e.metaKey) return
+        if (e.ctrlKey || e.metaKey) return
         if (e.target?.closest?.(".edit") || e.target?.closest?.(".icons")) return
 
-        const isActive = findMatchingOut(id, $outputs) !== null
-
-        if (!isActive) {
-            // run actions - before starting overlay
-            if (Array.isArray($overlays[id]?.actions)) $overlays[id].actions.forEach((a) => runAction(a, { source: "overlay" }))
+        // Overlay editor: un clic abre el overlay para editarlo (no lo saca al aire)
+        if (editOnClick) {
+            activeEdit.set({ type: "overlay", id, items: [] })
+            activePage.set("edit")
+            return
         }
 
-        setOutput("overlays", id, true)
-
-        if (isActive) timelineRecordingAction.set({ id: "clear_overlay", data: { id } })
-        else timelineRecordingAction.set({ id: "id_select_overlay", data: { id } })
+        toggleOverlayOutput(id)
     }
 </script>
 
@@ -119,7 +120,7 @@
     {:else}
         <DropArea id="overlays">
             {#if fullFilteredOverlays.length}
-                <div class="grid" style="--width: {100 / $mediaOptions.columns}%;">
+                <div class="grid" style="--width: {100 / gridColumns}%;">
                     {#each fullFilteredOverlays as overlay, i (overlay.id)}
                         {@const isReadOnly = readOnly || profile[overlay.category || ""] === "read"}
                         {@const isActive = findMatchingOut(overlay.id, $outputs) !== null}
@@ -146,7 +147,7 @@
                             >
                                 {#if loaded || i < lazyLoader}
                                     <!-- icons -->
-                                    <OverlayActions columns={$mediaOptions.columns} overlayId={overlay.id} />
+                                    <OverlayActions columns={gridColumns} overlayId={overlay.id} />
 
                                     <Zoomed {resolution} background={overlay.items.length ? "var(--primary);" : overlay.color || "var(--primary);"} checkered={!!overlay.items.length}>
                                         {#each overlay.items as item}

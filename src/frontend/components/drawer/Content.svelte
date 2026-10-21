@@ -7,7 +7,6 @@
     import Actions from "./pages/Actions.svelte"
     import Interactions from "./pages/Interactions.svelte"
     import OBS from "./pages/OBS.svelte"
-    import Overlays from "./pages/Overlays.svelte"
     import Scenes from "./pages/Scenes.svelte"
     import Shows from "./pages/Shows.svelte"
     import Variables from "./pages/Variables.svelte"
@@ -36,8 +35,6 @@
         <Media {active} bind:streams />
     {:else if id === "audio"}
         <Audio {active} />
-    {:else if id === "overlays"}
-        <Overlays {active} />
     {:else if id === "scripture"}
         <Scripture {active} />
     {:else if id === "calendar"}

@@ -1,16 +1,20 @@
 <script lang="ts">
     import { onMount } from "svelte"
-    import { activeEdit, activePage, activeShow, effects, mediaOptions, outLocked, outputs, styles, previewOutputId } from "../../../stores"
+    import { activeEdit, activePage, activeShow, effects, mediaOptions, outputs, styles, previewOutputId } from "../../../stores"
     import { addProjectItem } from "../../../converters/project"
     import T from "../../helpers/T.svelte"
     import { clone, keysToID, sortByName } from "../../helpers/array"
-    import { findMatchingOut, getResolution, setOutput } from "../../helpers/output"
+    import { findMatchingOut, getResolution } from "../../helpers/output"
+    import { toggleEffectOutput } from "../../helpers/overlayOutput"
     import Effect from "../../output/effects/Effect.svelte"
     import Zoomed from "../../slide/Zoomed.svelte"
     import Center from "../../system/Center.svelte"
     import SelectElem from "../../system/SelectElem.svelte"
     import Card from "../Card.svelte"
     import EffectIcons from "./EffectIcons.svelte"
+
+    // Overlay editor: un clic abre el efecto para editarlo (no lo saca al aire)
+    export let editOnClick = false
 
     $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
     let filteredEffects: any[] = []
@@ -52,6 +56,7 @@
             {#each fullFilteredEffects as effect, i}
                 <Card
                     class="context #effect_card{effect.isDefault ? '_default' : ''}"
+                    width={editOnClick ? 100 : undefined}
                     resolution={{ width: 16, height: 9 }}
                     preview={$activePage === "edit" ? $activeEdit.type === "effect" && $activeEdit.id === effect.id : $activeShow?.type === "effect" && $activeShow?.id === effect.id}
                     outlineColor={findMatchingOut(effect.id, $outputs)}
@@ -62,10 +67,16 @@
                     color={effect.color}
                     showPlayOnHover
                     on:click={(e) => {
-                        if ($outLocked || e.ctrlKey || e.metaKey) return
+                        if (e.ctrlKey || e.metaKey) return
                         if (e.target?.closest?.(".edit") || e.target?.closest?.(".icons")) return
 
-                        setOutput("effects", effect.id, true)
+                        if (editOnClick) {
+                            activeEdit.set({ type: "effect", id: effect.id, items: [] })
+                            activePage.set("edit")
+                            return
+                        }
+
+                        toggleEffectOutput(effect.id)
                     }}
                     on:dblclick={(e) => {
                         if (e.ctrlKey || e.metaKey) return

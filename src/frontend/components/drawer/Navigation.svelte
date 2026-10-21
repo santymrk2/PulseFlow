@@ -5,7 +5,6 @@
     import CalendarTabs from "./navigation/CalendarTabs.svelte"
     import FunctionsTabs from "./navigation/FunctionsTabs.svelte"
     import MediaTabs from "./navigation/MediaTabs.svelte"
-    import OverlaysTabs from "./navigation/OverlaysTabs.svelte"
     import ScriptureTabs from "./navigation/ScriptureTabs.svelte"
     import ShowsTabs from "./navigation/ShowsTabs.svelte"
 
@@ -28,8 +27,6 @@
                     <MediaTabs />
                 {:else if id === "audio"}
                     <AudioTabs />
-                {:else if id === "overlays"}
-                    <OverlaysTabs />
                 {/if}
             </DropArea>
         {/if}
