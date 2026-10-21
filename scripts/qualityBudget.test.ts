@@ -26,6 +26,14 @@ describe("measureSources", () => {
         ]
         expect(measureSources(files, ["src/ejemplos/"])).toEqual({ anyCount: 2, hexColors: 1, rgbColors: 1 })
     })
+
+    test("los tests (*.test.ts) no cuentan: el presupuesto de any mide código de producción", () => {
+        const files = [
+            { path: "src/a.ts", text: "let a: any" },
+            { path: "src/a.test.ts", text: "const x: any = 1; const y = z as any" }
+        ]
+        expect(measureSources(files)).toEqual({ anyCount: 1, hexColors: 0, rgbColors: 0 })
+    })
 })
 
 describe("parseSvelteCheckErrors", () => {

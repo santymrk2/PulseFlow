@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMLBIBLE biblename="Reina Valera">
+  <INFORMATION>
+    <title>Reina Valera de prueba</title>
+    <publisher>Dominio público</publisher>
+  </INFORMATION>
+  <BIBLEBOOK bnumber="43" bname="Juan" bsname="Jn">
+    <CHAPTER cnumber="3">
+      <VERS vnumber="16">Porque de tal manera amó Dios al mundo</VERS>
+      <VERS vnumber="17">Porque no envió Dios a su Hijo al mundo</VERS>
+    </CHAPTER>
+  </BIBLEBOOK>
+</XMLBIBLE>

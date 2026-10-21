@@ -1609,10 +1609,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   *Aceptación:* `cargo test --lib` (incluidos los golden) pasa igual; ningún archivo de
   `render/` supera ~600 líneas.
 
-- [ ] **F15.4 Tests de dominio del frontend.** Cubrir con fixtures los conversores de
-  importación (`src/frontend/converters/`: datos del usuario) y los helpers de
-  `helpers/output.ts` y `showActions.ts` que usa la salida.
-  *Aceptación:* un test por conversor con un archivo real de ejemplo.
+- [x] **F15.4 Tests de dominio del frontend.** (2026-10-21, **parcial**) 13 tests de conversores de importación con archivos reales de ejemplo en `converters/fixtures/` (ChordPro, OpenLP/OpenLyrics, OpenSong y su Biblia, Quelea, EasySlides, SoftProjector, SongBeamer, VerseVIEW, texto plano, CSV, Biblia Zefania y OSIS: 19 casos), con `testEnv.ts` (globales del navegador, `linkedom` como `DOMParser`, orden de carga que evita un ciclo de imports) y `converterTestKit.ts`. **Encontraron dos bugs reales, ya corregidos:** EasySlides ignoraba en silencio un archivo con **una sola canción** y el importador OSIS fallaba con un archivo de **un solo libro** (ambos esperaban un array y el XML trae un objeto cuando hay un único hijo). Más los tests de `outputAspect` (F21). **Sin cubrir:** VideoPsalm, MediaShout, EasyWorship, ProPresenter, Lessons.church, proyecto, calendario, Beblia, Canva y PDF/imágenes (los binarios y los formatos que no pude reproducir con un archivo real quedan para cuando haya muestras). `anyCount` del trinquete ya no cuenta los `*.test.ts`.
 
 - [ ] **F15.5 Ordenar la documentación.**
   *Pasos:* mover a `docs/archivo/` los planes y verificaciones ya cerrados

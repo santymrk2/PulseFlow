@@ -16,7 +16,7 @@ export const countHex = (text: string) => count(text, HEX)
 export const countRgb = (text: string) => count(text, RGB)
 
 /**
- * Mide `any` en `.ts`/`.svelte` y los colores literales (hex y `rgb()`) sólo en `.svelte`.
+ * Mide `any` en `.ts`/`.svelte` (sin contar los `*.test.ts`) y los colores literales (hex y `rgb()`) sólo en `.svelte`.
  * `excludedColorPaths` son prefijos de ruta (plantillas o datos de ejemplo) que no cuentan para los colores.
  */
 export function measureSources(files: { path: string; text: string }[], excludedColorPaths: string[] = []): Omit<Measures, "svelteCheckErrors"> {
@@ -27,6 +27,8 @@ export function measureSources(files: { path: string; text: string }[], excluded
     for (const file of files) {
         const isSvelte = file.path.endsWith(".svelte")
         if (!isSvelte && !file.path.endsWith(".ts")) continue
+        // los tests inspeccionan estructuras internas con `any`: el presupuesto mide el código de producción
+        if (file.path.endsWith(".test.ts")) continue
 
         anyCount += countAny(file.text)
         if (isSvelte && !excludedColorPaths.some((prefix) => file.path.startsWith(prefix))) {

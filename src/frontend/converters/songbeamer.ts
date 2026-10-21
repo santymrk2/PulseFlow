@@ -455,10 +455,7 @@ function createMultilineTextbox(songbeamerSlide: SongbeamerSlide): Item {
     return textbox
 }
 
-function createSlides(
-    songbeamerSlides: SongbeamerSlide[],
-    metadata: SongbeamerMetadata
-): { slides: Record<ID, Slide>; layout: SlideData[] } {
+function createSlides(songbeamerSlides: SongbeamerSlide[], metadata: SongbeamerMetadata): { slides: Record<ID, Slide>; layout: SlideData[] } {
     const slides: Record<ID, Slide> = {}
     const layout: SlideData[] = []
     const groupSlides = new Map<string, SlideData>()
@@ -469,10 +466,7 @@ function createSlides(
 
     for (const songbeamerSlide of songbeamerSlides) {
         const id: string = uid()
-        const isChildSlide =
-            songbeamerSlide.group !== null
-                ? songbeamerSlide.group === lastGroup && songbeamerSlide.groupNumber === lastGroupNumber
-                : lastGroup !== null
+        const isChildSlide = songbeamerSlide.group !== null ? songbeamerSlide.group === lastGroup && songbeamerSlide.groupNumber === lastGroupNumber : lastGroup !== null
 
         const slide: Slide = {
             group: isChildSlide ? null : songbeamerSlide.group,

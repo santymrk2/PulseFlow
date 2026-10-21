@@ -31,8 +31,10 @@ export function convertEasyslides(data: any) {
             const json = xml2json(content)
             if (!json) return
 
-            const songs = json.Easyslides?.Item || json.EasiSlides?.Item || []
-            if (!Array.isArray(songs) || !songs.length) return
+            // con una sola canción el XML trae un único <Item> (un objeto, no un array)
+            const items = json.Easyslides?.Item || json.EasiSlides?.Item
+            const songs: Song[] = Array.isArray(items) ? items : items ? [items] : []
+            if (!songs.length) return
 
             songs.forEach(convertSong)
         })
