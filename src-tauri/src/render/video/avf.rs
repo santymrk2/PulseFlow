@@ -342,6 +342,17 @@ mod tests {
         assert_eq!(first_native_frame(FIXTURE).matrix, YuvMatrix::Bt601, "64 px y sin etiqueta: SD");
     }
 
+    /// HEVC de 10 bits: se pide NV12 de 8 bits a AVFoundation, que convierte; el video se ve igual.
+    #[test]
+    fn a_10_bit_hevc_file_is_decoded_natively_and_renders_red() {
+        use crate::render::test_util::{assert_near, render_center};
+
+        let path = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/video/solid_red_64_hevc10.mp4");
+        let frame = first_native_frame(path);
+        assert!(!frame.is_cpu_backed());
+        assert_near(render_center(&frame), [255, 0, 0], "rojo de un HEVC 10 bits");
+    }
+
     /// CPU (usuario + sistema) consumido por este proceso hasta ahora.
     fn process_cpu() -> Duration {
         // SAFETY: `getrusage` escribe en una estructura propia y válida.
