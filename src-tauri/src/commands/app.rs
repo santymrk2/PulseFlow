@@ -24,6 +24,15 @@ pub fn IS_DEV() -> bool {
     cfg!(debug_assertions)
 }
 
+/// El frontend heredado de Electron compara contra `process.platform` ("win32", "darwin"); Rust usa "windows" y "macos".
+fn node_platform(rust_os: &str) -> &str {
+    match rust_os {
+        "windows" => "win32",
+        "macos" => "darwin",
+        other => other,
+    }
+}
+
 /// Información del sistema operativo (equivale a `Main.GET_OS`).
 #[tauri::command]
 pub fn GET_OS() -> AppResult<OS> {
@@ -33,7 +42,7 @@ pub fn GET_OS() -> AppResult<OS> {
         .into_owned();
 
     Ok(OS {
-        platform: std::env::consts::OS.to_string(),
+        platform: node_platform(std::env::consts::OS).to_string(),
         name,
         arch: std::env::consts::ARCH.to_string(),
     })
@@ -117,3 +126,14 @@ mod log_tests {
     }
 }
 
+
+#[cfg(test)]
+mod platform_tests {
+    use super::node_platform;
+
+    #[test]
+    fn maps_rust_os_names_to_node_platform_names() {
+        assert_eq!(node_platform("windows"), "win32");
+        assert_eq!(node_platform("macos"), "darwin");
+    }
+}

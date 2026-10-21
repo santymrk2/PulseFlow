@@ -198,8 +198,7 @@ pub const MAIN: &str = "MAIN";
 /// de `src/types/Main.ts`.
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct OS {
-    /// `std::env::consts::OS` (sólo valores de plataformas soportadas:
-    /// "macos" o "windows").
+    /// Como `process.platform` de Node, que es lo que compara el frontend: "darwin" (macOS) o "win32" (Windows).
     pub platform: String,
     /// Nombre del host (`os.hostname()` en Electron).
     pub name: String,
