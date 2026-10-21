@@ -206,14 +206,13 @@ pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<b
         let mut any_opened = false;
         if let Some(ref outs) = data.outputs {
             let mut states: Vec<(String, bool)> = Vec::new();
-            for out in outs {
-                let Ok(config) = serde_json::from_value::<ScreenConfig>(out.clone()) else {
-                    continue;
-                };
-                if !config.enabled.unwrap_or(true) {
-                    continue;
-                }
-                crate::render::open_screen(&app, &config)?;
+            let configs: Vec<ScreenConfig> = outs
+                .iter()
+                .filter_map(|out| serde_json::from_value::<ScreenConfig>(out.clone()).ok())
+                .filter(|config| config.enabled.unwrap_or(true))
+                .collect();
+            for config in crate::render::screens::configs_to_open(&configs) {
+                crate::render::open_screen(&app, config)?;
                 states.push((config.id.clone(), true));
                 any_opened = true;
             }

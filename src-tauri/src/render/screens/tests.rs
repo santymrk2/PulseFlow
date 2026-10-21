@@ -328,3 +328,27 @@ fn native_path_does_not_copy_pixels() {
     assert_eq!(store.uploads(), 0, "ninguna subida desde la CPU");
 }
 
+
+fn config_for_open(id: &str, screen: Option<&str>) -> ScreenConfig {
+    serde_json::from_value(json!({ "id": id, "screen": screen })).expect("config")
+}
+
+#[test]
+fn con_una_salida_asignada_las_sin_monitor_no_abren_ventana_flotante() {
+    // Reportado 2026-10-21: "default" (monitor asignado) + "Streaming" (sin monitor) abrían dos ventanas.
+    let configs = vec![config_for_open("default", Some("SB220Q#1")), config_for_open("streaming", None)];
+    let ids: Vec<&str> = configs_to_open(&configs).iter().map(|c| c.id.as_str()).collect();
+    assert_eq!(ids, vec!["default"]);
+}
+
+#[test]
+fn si_ninguna_tiene_monitor_se_abren_todas_como_vista_previa() {
+    let configs = vec![config_for_open("a", None), config_for_open("b", Some(""))];
+    assert_eq!(configs_to_open(&configs).len(), 2);
+}
+
+#[test]
+fn una_sola_salida_sin_monitor_se_abre() {
+    let configs = vec![config_for_open("solo", None)];
+    assert_eq!(configs_to_open(&configs).len(), 1);
+}

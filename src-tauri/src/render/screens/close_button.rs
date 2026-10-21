@@ -58,8 +58,8 @@ pub(super) fn left_button_down() -> bool {
     unsafe extern "C" {
         fn CGEventSourceButtonState(state_id: i32, button: u32) -> bool;
     }
-    // kCGEventSourceStateCombinedSessionState = 0, kCGMouseButtonLeft = 0
-    unsafe { CGEventSourceButtonState(0, 0) }
+    // kCGMouseButtonLeft = 0; estado combinado de la sesión (0) o del hardware (1)
+    unsafe { CGEventSourceButtonState(0, 0) || CGEventSourceButtonState(1, 0) }
 }
 
 #[cfg(target_os = "windows")]

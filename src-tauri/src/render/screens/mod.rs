@@ -84,6 +84,14 @@ impl ScreenRect {
     }
 }
 
+/// Qué salidas abrir al activar la audiencia/stage. Una salida sin monitor asignado se abre como vista previa flotante
+/// (F10.0d); si en el mismo pedido hay otras con monitor asignado, esa ventana flotante sobra (p. ej. una salida de
+/// streaming que no se proyecta), así que se omiten. Si ninguna tiene monitor, se abren todas.
+pub fn configs_to_open(configs: &[ScreenConfig]) -> Vec<&ScreenConfig> {
+    let any_assigned = configs.iter().any(ScreenConfig::has_assigned_monitor);
+    configs.iter().filter(|c| !any_assigned || c.has_assigned_monitor()).collect()
+}
+
 /// Configuración de una pantalla, tal como llega del frontend (`Output` de Svelte).
 #[derive(Debug, Clone, Default, Deserialize)]
 #[serde(rename_all = "camelCase", default)]

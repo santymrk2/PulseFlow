@@ -76,6 +76,7 @@ pub(super) fn spawn_render_loop(
                 let cursor_inside = cursor_inside && on_close.is_some();
                 if let (true, false, Some(close)) = (clicked, close_fired, on_close.as_ref()) {
                     close_fired = true;
+                    log::info!("✕ de cierre pulsado en {}", window.label());
                     close();
                 }
                 arena.begin_frame();
