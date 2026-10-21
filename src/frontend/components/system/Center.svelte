@@ -11,16 +11,7 @@
         children?: Snippet
     }
 
-    let {
-        faded = false,
-        absolute = false,
-        padding = 0,
-        size = 1,
-        style = "",
-        children,
-        class: className = "",
-        ...restProps
-    }: Props = $props()
+    let { faded = false, absolute = false, padding = 0, size = 1, style = "", children, class: className = "", ...restProps }: Props = $props()
 </script>
 
 <div {...restProps} style="font-size: {size}em;padding: {padding}px;{style}" class="loader {className}" class:faded class:absolute>

@@ -8,12 +8,7 @@
         replace?: string[]
     }
 
-    let {
-        id,
-        index = 0,
-        lowercase = false,
-        replace = []
-    }: Props = $props()
+    let { id, index = 0, lowercase = false, replace = [] }: Props = $props()
 
     const hasPeriod = $derived(id?.includes("."))
     const periodIndex = $derived(id?.indexOf("."))
