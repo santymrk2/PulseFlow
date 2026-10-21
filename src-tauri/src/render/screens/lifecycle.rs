@@ -58,7 +58,6 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
 
     let window = Arc::new(window);
     let scene = state.scene(&config.id);
-    let video_frame: Arc<Mutex<Option<VideoFrame>>> = Arc::new(Mutex::new(None));
     let transition: Arc<Mutex<Option<TransitionRequest>>> = Arc::new(Mutex::new(None));
     let running = Arc::new(AtomicBool::new(true));
     let surface_size = Arc::new(Mutex::new(window.inner_size().unwrap_or(PhysicalSize::new(1920, 1080))));
@@ -67,7 +66,6 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
         Arc::clone(&window),
         kind,
         Arc::clone(&scene),
-        Arc::clone(&video_frame),
         Arc::clone(&running),
         Arc::clone(&transition),
         Arc::clone(&surface_size),
@@ -114,7 +112,6 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
         label: label.clone(),
         running,
         thread: Some(thread),
-        video_frame,
         video: None,
         transition,
     };

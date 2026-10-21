@@ -166,6 +166,9 @@ pub struct MediaStore {
     layouts: LayerLayouts,
     textures: RwLock<HashMap<String, Arc<MediaTexture>>>,
     pipelines: Mutex<HashMap<TextureFormat, Arc<BackgroundPipeline>>>,
+    /// Subidas de fotogramas de video (sólo tests: comprueba que sea una por frame).
+    #[cfg(test)]
+    uploads: std::sync::atomic::AtomicUsize,
 }
 
 impl MediaStore {
@@ -176,6 +179,8 @@ impl MediaStore {
             layouts,
             textures: RwLock::new(HashMap::new()),
             pipelines: Mutex::new(HashMap::new()),
+            #[cfg(test)]
+            uploads: std::sync::atomic::AtomicUsize::new(0),
         })
     }
 
@@ -190,6 +195,11 @@ impl MediaStore {
     /// Arena de uniforms para una pantalla (o un snapshot).
     pub fn new_arena(&self) -> LayerArena {
         LayerArena::new(&self.gpu.device, &self.layouts)
+    }
+
+    #[cfg(test)]
+    pub(crate) fn uploads(&self) -> usize {
+        self.uploads.load(std::sync::atomic::Ordering::SeqCst)
     }
 
     /// Obtiene una textura previamente cargada en VRAM si ya existe.
@@ -235,6 +245,8 @@ impl MediaStore {
         height: u32,
         rgba_bytes: &[u8],
     ) -> AppResult<Arc<MediaTexture>> {
+        #[cfg(test)]
+        self.uploads.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
         if let Some(existing) = self.get(id) {
             if existing.width == width && existing.height == height {
                 // Actualización in-place sin reasignar memoria en VRAM (Zero Allocation)

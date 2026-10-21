@@ -107,14 +107,12 @@ pub(super) fn open_identify_window(app: &AppHandle, number: &str, monitor: &Moni
         ..Default::default()
     }));
     let running = Arc::new(AtomicBool::new(true));
-    let video_frame: Arc<Mutex<Option<VideoFrame>>> = Arc::new(Mutex::new(None));
 
     // La ventana de identificación no transiciona: nace con su contenido.
     let render_thread = match spawn_render_loop(
         Arc::clone(&window),
         ScreenKind::Audience,
         Arc::clone(&scene),
-        video_frame,
         Arc::clone(&running),
         Arc::new(Mutex::new(None)),
         Arc::new(Mutex::new(window.inner_size().unwrap_or(PhysicalSize::new(rect.width as u32, rect.height as u32)))),

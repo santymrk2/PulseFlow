@@ -264,3 +264,32 @@ fn detach_forgets_scene_and_tolerates_unknown_ids() {
     assert!(!manager.forget_scene("a"), "detach ya olvidó la escena");
     assert!(manager.detach("nunca-existio").is_none(), "id desconocido no es un error");
 }
+
+#[test]
+fn subscribers_first_add_starts_and_last_remove_stops() {
+    let mut subs = Subscribers::default();
+    assert!(subs.add("a"), "el primero arranca el decodificador");
+    assert!(!subs.add("b"), "el segundo comparte el decodificador");
+    assert!(!subs.add("b"), "suscribirse dos veces no cuenta doble");
+    assert!(!subs.remove("a"), "queda b: el decodificador sigue (foco: cerrar una pantalla no corta a la otra)");
+    assert!(subs.remove("b"), "el último en irse lo detiene");
+    assert!(!subs.remove("b"), "ya no estaba");
+}
+
+#[test]
+fn video_frames_are_uploaded_once_per_frame_not_once_per_subscriber() {
+    let store = super::super::media::MediaStore::new(super::super::gpu::shared().expect("GPU"));
+    let frame = vec![255u8; 4 * 4 * 4];
+
+    // dos pantallas suscritas al mismo archivo: el decodificador publica un frame por tick
+    let mut subs = Subscribers::default();
+    subs.add("audience");
+    subs.add("stage");
+    for _ in 0..3 {
+        publish_frame(&store, "fondo.mp4", 4, 4, &frame);
+    }
+
+    assert_eq!(store.uploads(), 3);
+    assert!(store.get("fondo.mp4").is_some(), "la textura se guarda con la ruta como id");
+}
+

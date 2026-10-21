@@ -1,6 +1,7 @@
 //! Hub de decodificadores de video compartidos entre pantallas (F8.2).
 
 use super::*;
+use crate::render::media::{self, MediaStore};
 
 /// Arranca, mantiene o detiene el video de fondo de una pantalla según el fondo actual.
 /// Usa el hub de decodificadores compartidos (uno por archivo, F8.2).
@@ -15,12 +16,11 @@ pub(super) fn sync_video(app: &AppHandle, handle: &mut ScreenHandle, background:
 
     // Dejar el decodificador anterior (lo detiene si era el único suscriptor).
     if let Some(old_path) = handle.video.take() {
-        let _ = video_hub_release(app, &old_path, &handle.video_frame);
+        let _ = video_hub_release(app, &old_path, &handle.label);
     }
 
     if let Some(path) = wanted {
-        let bg_id = background.map(|bg| bg.id.clone()).unwrap_or_default();
-        if video_hub_acquire(app, &path, &bg_id, &handle.video_frame).is_err() {
+        if video_hub_acquire(app, &path, &handle.label).is_err() {
             eprintln!("[screens] no se pudo reproducir el video {path}");
         } else {
             handle.video = Some(path);
@@ -28,71 +28,43 @@ pub(super) fn sync_video(app: &AppHandle, handle: &mut ScreenHandle, background:
     }
 }
 
-/// Suscribe el slot de una pantalla al decodificador compartido de `path`.
-/// Si el archivo ya se está decodificando, sólo agrega el suscriptor (sin
-/// otro proceso ffmpeg); si no, inicia uno nuevo.
-pub(super) fn video_hub_acquire(
-    app: &AppHandle,
-    path: &str,
-    bg_id: &str,
-    slot: &Arc<Mutex<Option<VideoFrame>>>,
-) -> AppResult<()> {
+/// Sube un fotograma decodificado a la textura compartida del archivo. Es **una**
+/// subida por frame, vea el video una pantalla o diez (F17.4).
+pub(super) fn publish_frame(store: &MediaStore, path: &str, width: u32, height: u32, rgba: &[u8]) {
+    let _ = store.update_video_frame(path, width, height, rgba);
+}
+
+/// Suscribe una pantalla (`subscriber` = etiqueta de su ventana) al decodificador
+/// compartido de `path`. Si el archivo ya se decodifica, sólo suma el suscriptor;
+/// si no, inicia uno nuevo.
+pub(super) fn video_hub_acquire(app: &AppHandle, path: &str, subscriber: &str) -> AppResult<()> {
     let state = manager(app)?;
     let mut hub = state.video_hub.lock_safe();
 
-    // Ya hay un decodificador para este archivo: agregar el suscriptor.
     if let Some(existing) = hub.get_mut(path) {
-        existing.subscribers.lock_safe().push(VideoSubscriber {
-            bg_id: bg_id.to_string(),
-            slot: Arc::clone(slot),
-        });
+        existing.subscribers.add(subscriber);
         return Ok(());
     }
 
-    // Nuevo decodificador: un proceso ffmpeg que difunde cada fotograma a todos
-    // los suscriptores (cada uno con su propio id de fondo).
-    let subscribers: Arc<Mutex<Vec<VideoSubscriber>>> = Arc::new(Mutex::new(vec![VideoSubscriber {
-        bg_id: bg_id.to_string(),
-        slot: Arc::clone(slot),
-    }]));
-    let broadcast = Arc::clone(&subscribers);
+    let store = media::shared_store()?;
+    let key = path.to_string();
+    let playback = video::start_video_playback(app, path, path, 1920, 1080, move |_vid_id, w, h, bytes| {
+        publish_frame(&store, &key, w, h, bytes);
+    })?;
 
-    let result = video::start_video_playback(app, path, path, 1920, 1080, move |_vid_id, w, h, bytes| {
-        for sub in broadcast.lock_safe().iter() {
-            *sub.slot.lock_safe() = Some((sub.bg_id.clone(), w, h, bytes.to_vec()));
-        }
-    });
-
-    match result {
-        Ok(playback) => {
-            hub.insert(path.to_string(), SharedVideo { playback, subscribers });
-            Ok(())
-        }
-        Err(err) => Err(err),
-    }
+    let mut subscribers = Subscribers::default();
+    subscribers.add(subscriber);
+    hub.insert(path.to_string(), SharedVideo { playback, subscribers });
+    Ok(())
 }
 
-/// Da de baja la suscripción de una pantalla al decodificador de `path`.
-/// Si queda sin suscriptores, detiene el proceso ffmpeg y libera la entrada.
-pub(super) fn video_hub_release(
-    app: &AppHandle,
-    path: &str,
-    slot: &Arc<Mutex<Option<VideoFrame>>>,
-) -> AppResult<()> {
+/// Da de baja la suscripción de una pantalla. Si era la última, detiene el
+/// decodificador y libera la entrada.
+pub(super) fn video_hub_release(app: &AppHandle, path: &str, subscriber: &str) -> AppResult<()> {
     let state = manager(app)?;
     let mut hub = state.video_hub.lock_safe();
 
-    let should_stop = match hub.get_mut(path) {
-        Some(entry) => {
-            entry
-                .subscribers
-                .lock_safe()
-                .retain(|sub| !Arc::ptr_eq(&sub.slot, slot));
-            entry.subscribers.lock_safe().is_empty()
-        }
-        None => false,
-    };
-
+    let should_stop = hub.get_mut(path).is_some_and(|entry| entry.subscribers.remove(subscriber));
     if should_stop {
         if let Some(mut entry) = hub.remove(path) {
             entry.playback.stop();

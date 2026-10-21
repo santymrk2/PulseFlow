@@ -11,7 +11,6 @@ pub(super) fn spawn_render_loop(
     window: Arc<Window>,
     kind: ScreenKind,
     scene: Arc<RwLock<ScreenScene>>,
-    video_frame: Arc<Mutex<Option<VideoFrame>>>,
     running: Arc<AtomicBool>,
     pending_transition: Arc<Mutex<Option<TransitionRequest>>>,
     surface_size: Arc<Mutex<PhysicalSize<u32>>>,
@@ -64,10 +63,6 @@ pub(super) fn spawn_render_loop(
                         surface.configure(&device, &config);
                         transition_engine.resize(&device, config.format, config.width, config.height);
                     }
-                }
-
-                if let Some((id, w, h, bytes)) = video_frame.lock_safe().take() {
-                    let _ = store.update_video_frame(&id, w, h, &bytes);
                 }
 
                 let frame = match surface.get_current_texture() {
@@ -152,7 +147,9 @@ pub(super) fn spawn_render_loop(
                                         }
                                     }
                                 }
-                                if let Some(texture) = store.get(&bg.id) {
+                                // el video se guarda con su ruta como id (una textura por archivo)
+                                let texture_id = if is_video(&bg) { bg.path.clone().unwrap_or_default() } else { bg.id.clone() };
+                                if let Some(texture) = store.get(&texture_id) {
                                     background_pipeline.render(
                                         &queue,
                                         &mut arena,

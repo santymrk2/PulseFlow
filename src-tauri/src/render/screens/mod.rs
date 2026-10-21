@@ -143,9 +143,6 @@ impl ScreenConfig {
     }
 }
 
-/// Fotograma de video pendiente de subir a VRAM: (id, ancho, alto, RGBA).
-pub type VideoFrame = (String, u32, u32, Vec<u8>);
-
 /// Contenido actual de una pantalla.
 #[derive(Debug, Clone, Default)]
 pub struct ScreenScene {
@@ -176,7 +173,6 @@ struct ScreenHandle {
     label: String,
     running: Arc<AtomicBool>,
     thread: Option<JoinHandle<()>>,
-    video_frame: Arc<Mutex<Option<VideoFrame>>>,
     /// Ruta del video suscrito actualmente (el decodificador lo comparte el hub).
     video: Option<String>,
     /// Última transición pedida (la toma el bucle al dibujar el próximo frame).
@@ -191,7 +187,7 @@ impl ScreenHandle {
     /// (`join`) desde ahí colgaba la app al desactivar la audiencia.
     fn stop(&mut self, app: &AppHandle, destroy_window: bool) {
         if let Some(path) = self.video.take() {
-            let _ = video_hub_release(app, &path, &self.video_frame);
+            let _ = video_hub_release(app, &path, &self.label);
         }
         self.running.store(false, Ordering::SeqCst);
         let thread = self.thread.take();
@@ -216,17 +212,29 @@ impl ScreenHandle {
 /// cerrar no choque con la etiqueta todavía ocupada.
 static WINDOW_COUNTER: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU64::new(0);
 
-/// Suscriptor de un decodificador compartido: su slot de frames y el id de fondo
-/// con el que su bucle de render busca la textura.
-struct VideoSubscriber {
-    bg_id: String,
-    slot: Arc<Mutex<Option<VideoFrame>>>,
+/// Pantallas suscritas a un decodificador compartido (por etiqueta de ventana).
+#[derive(Debug, Default)]
+struct Subscribers(HashSet<String>);
+
+impl Subscribers {
+    /// Suscribe `id`. `true` si era el primero (hay que arrancar el decodificador).
+    fn add(&mut self, id: &str) -> bool {
+        let first = self.0.is_empty();
+        self.0.insert(id.to_string());
+        first
+    }
+
+    /// Da de baja `id`. `true` si era el último (hay que detener el decodificador).
+    fn remove(&mut self, id: &str) -> bool {
+        self.0.remove(id) && self.0.is_empty()
+    }
 }
 
-/// Un video en el hub: un único proceso ffmpeg y sus pantallas suscritas.
+/// Un video en el hub: un único decodificador, una única textura en VRAM
+/// (con la ruta como id) y las pantallas suscritas.
 struct SharedVideo {
     playback: VideoPlayback,
-    subscribers: Arc<Mutex<Vec<VideoSubscriber>>>,
+    subscribers: Subscribers,
 }
 
 /// Estado de todas las pantallas del engine (gestionado por Tauri en `lib.rs`).
