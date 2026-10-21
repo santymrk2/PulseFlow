@@ -12,9 +12,11 @@
 mod ffmpeg;
 #[cfg(target_os = "macos")]
 pub mod metal_import;
+#[cfg(target_os = "macos")]
+mod avf;
 pub mod nv12;
 
-use crate::error::{AppError, AppResult};
+use crate::error::AppResult;
 use nv12::{Nv12Frame, YuvMatrix};
 use std::sync::Arc;
 use std::time::Duration;
@@ -63,9 +65,16 @@ pub fn start(app: &AppHandle, path: &str, sink: Arc<dyn FrameSink>) -> AppResult
     Ok(Box::new(ffmpeg::FfmpegDecoder::start(app, path, sink)?))
 }
 
-/// Decodificador nativo de la plataforma. Todavía sin implementar (F18.4 macOS, F18.6 Windows).
+/// Decodificador nativo de la plataforma: AVFoundation en macOS (F18.4).
+#[cfg(target_os = "macos")]
+fn start_native(_app: &AppHandle, path: &str, sink: Arc<dyn FrameSink>) -> AppResult<Box<dyn VideoDecoder>> {
+    Ok(Box::new(avf::start(path, sink)?))
+}
+
+/// Windows (Media Foundation) llega en F18.6; hasta entonces todo va por ffmpeg.
+#[cfg(not(target_os = "macos"))]
 fn start_native(_app: &AppHandle, _path: &str, _sink: Arc<dyn FrameSink>) -> AppResult<Box<dyn VideoDecoder>> {
-    Err(AppError::new("sin decodificador nativo en esta plataforma"))
+    Err(crate::error::AppError::new("sin decodificador nativo en esta plataforma"))
 }
 
 #[cfg(test)]

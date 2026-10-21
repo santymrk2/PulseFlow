@@ -43,6 +43,11 @@ impl MetalTextureCache {
         // SAFETY: `Create` devuelve un objeto con retain count +1 que ahora poseemos.
         Ok(Self { cache: unsafe { CFRetained::from_raw(cache) } })
     }
+
+    /// Suelta las texturas que CoreVideo ya no necesita (se llama cada tanto desde el decodificador).
+    pub fn flush(&self) {
+        self.cache.flush(0);
+    }
 }
 
 /// Lo que no se toca pero tiene que vivir hasta que la GPU deje de usar la textura.
