@@ -25,12 +25,7 @@ export function resolveInitialSource(input: { last: LeftSource | null } & Existi
     return library ? { type: "library", id: library } : null
 }
 
-const normalize = (text: string) =>
-    text
-        .normalize("NFD")
-        .replace(/[̀-ͯ]/g, "")
-        .toLowerCase()
-        .trim()
+const normalize = (text: string) => text.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim()
 
 /** Filtra por nombre ignorando mayúsculas y acentos. Consulta vacía = todo. */
 export function filterShows<T extends { name?: string }>(shows: readonly T[], query: string): T[] {

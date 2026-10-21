@@ -57,7 +57,11 @@ describe("appendShowRefs", () => {
     test("agrega los shows al final sin tocar los existentes y permite repetidos", () => {
         const current = [{ id: "x", type: "show" as const }]
         const result = appendShowRefs(current, ["a", "x"])
-        expect(result).toEqual([{ id: "x", type: "show" }, { id: "a", type: "show" }, { id: "x", type: "show" }])
+        expect(result).toEqual([
+            { id: "x", type: "show" },
+            { id: "a", type: "show" },
+            { id: "x", type: "show" }
+        ])
         expect(current).toHaveLength(1)
     })
 })
