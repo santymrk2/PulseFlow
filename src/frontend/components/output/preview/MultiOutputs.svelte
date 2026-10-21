@@ -13,8 +13,7 @@
     import { bindSlidesToOutput, getLayoutRef } from "../../helpers/show"
     import { _show } from "../../helpers/shows"
     import Button from "../../../lib/components/ui/button/button.svelte"
-    import Dropdown from "../../../lib/components/ui/dropdown/dropdown.svelte"
-    import OutputPreviewLabel from "./OutputPreviewLabel.svelte"
+    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import PreviewOutput from "./PreviewOutput.svelte"
 
     export let disableTransitions = false
@@ -24,7 +23,7 @@
     $: pickable = allEnabledOuts.length > 1 ? allEnabledOuts.filter((a) => !a.hideFromPreview) : allEnabledOuts
     $: shown = pickable.find((a) => a.id === $previewOutputId) || pickable[0] || allEnabledOuts[0]
     $: outs = shown ? [shown] : []
-    $: pickerOptions = pickable.map((o) => ({ id: o.id, name: o.name || o.id }))
+    $: pickerOptions = pickable.map((o) => ({ value: o.id, label: o.name || o.id }))
 
     let fullscreen = false
     let fullscreenId = ""
@@ -165,10 +164,7 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
         <div id={output.id} class="outputPreview output_button context #output_preview" class:drop-target={!fullscreen && dragOverOutputId === output.id} on:dragover={(e) => handleDragOver(e, output.id)} on:dragleave={(e) => handleDragLeave(e, output.id)} on:drop={(e) => handleDrop(e, output.id)} style={fullscreen ? (fullscreenId === output.id ? "display: contents;" : "opacity: 0;position: absolute;") : "display: contents;"}>
             {#if !fullscreen && allEnabledOuts.length > 1}
                 <div class="outputBar">
-                    <OutputPreviewLabel {output} outs={allEnabledOuts} />
-                    {#if pickerOptions.length > 1}
-                        <Dropdown arrow options={pickerOptions} value={output.name || output.id} activeId={output.id} on:click={(e) => previewOutputId.set(e.detail.id)} />
-                    {/if}
+                    <SelectField label="screen_config.output" value={output.id} options={pickerOptions} on:change={(e) => previewOutputId.set(e.detail)} />
                 </div>
             {/if}
 
@@ -263,10 +259,8 @@ aria-label={fullscreen ? "Exit fullscreen preview" : "Toggle fullscreen preview"
 
 <style>
     .outputBar {
-        display: flex;
-        align-items: center;
         width: 100%;
-        border-bottom: 1px solid var(--border);
+        padding: 5px;
     }
 
     .multipleOutputs {

@@ -19,7 +19,7 @@
     }
 
     interface Props extends HTMLButtonAttributes {
-        /** `ghost` por defecto: es lo que casi toda la interfaz usa. `live` = Audiencia/Stage (rojo mientras `aria-pressed`). */
+        /** `ghost` por defecto: es lo que casi toda la interfaz usa. `live` = Audiencia/Stage (rojo apagadas, verde mientras `aria-pressed`). */
         variant?: "default" | "secondary" | "outline" | "ghost" | "destructive" | "link" | "live"
         /** 24 · 28 (por defecto, compacto) · 32 (formularios) · cuadrados de 28 y 24. */
         size?: "xs" | "sm" | "md" | "icon" | "icon-sm"
@@ -214,15 +214,17 @@
             text-decoration: underline;
             text-underline-offset: 4px;
         }
+        /* Audiencia/Stage: rojo apagadas, verde en vivo */
         .btn.live {
-            border-color: var(--border);
+            color: var(--danger);
+            border-color: var(--danger-border);
         }
         .btn.live:hover:not(:disabled) {
             background: var(--bg-hover);
         }
         .btn.live[aria-pressed="true"] {
-            color: var(--danger);
-            border-color: var(--danger-border);
+            color: var(--success);
+            border-color: color-mix(in srgb, var(--success) 50%, transparent);
         }
 
         /* peligro: texto y borde rojos, nunca relleno (el blanco sobre rojo no pasa AA) */

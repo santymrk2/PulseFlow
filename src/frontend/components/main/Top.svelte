@@ -163,7 +163,7 @@
         </div>
     </Capsule>
 
-    <!-- Derecha 2: Audiencia · Stage (rojo mientras están en vivo); clic derecho abre Configurar pantallas -->
+    <!-- Derecha 2: Audiencia · Stage (rojas apagadas, verdes en vivo); clic derecho abre Configurar pantallas -->
     <Capsule>
         <Button variant="live" size="sm" aria-pressed={audienceLive} data-title={translateText("menu.audience")} oncontextmenu={onScreensContextMenu} onclick={toggleAudience}>
             <Icon id="display" size={1} white />
