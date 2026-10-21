@@ -1673,7 +1673,7 @@ Sin documento de plan aparte (el usuario pidió ejecutar directo).
 - [x] **F20.7** "Importar" en el `+` de ÍTEMS (con biblioteca) y opciones de playlists (nombre por defecto, lista al inicio) en un modal.
 - [ ] **F20.8 Verificación en la app real (usuario).** No se pudo mirar la pantalla (extensión de Chrome sin conexión). Falta probar: elegir biblioteca/playlist, buscar, modal Agregar shows, arrastrar, divisores, renombrar y menú contextual de una biblioteca, pestañas del cajón con poco ancho, perfil con acceso restringido.
 
-*Decisiones propias:* ÍTEMS no tiene "⋯ más" en el cajón (la tira de pestañas se desplaza); "Agregar a playlist" muestra todas las playlists; la library virtual "Sin etiqueta" aparece sólo si hay shows sin categoría; `Projects.svelte` quedó sin usar (se conserva): su lista de "usadas recientemente" y la vista de edición de plantillas de proyecto ya no tienen acceso.
+*Decisiones propias:* ÍTEMS no tiene "⋯ más" en el cajón (la tira de pestañas se desplaza); "Agregar a playlist" muestra todas las playlists; la library virtual "Sin etiqueta" aparece sólo si hay shows sin categoría; `Projects.svelte` se **eliminó** (2026-10-21, sin importadores; sigue en el historial de git): su lista de "usadas recientemente" y la vista de edición de plantillas de proyecto ya no tienen acceso, y los stores `showRecentlyUsedProjects` / `editingProjectTemplate` quedan sin interfaz.
 
 ---
 
