@@ -297,17 +297,17 @@ export function useStore<T>(store: Readable<T>): T {
 }
 ```
 
-- [ ] **Step 1: Tests que fallan** (`useStore.test.tsx`, con `renderHook` y `act` de Testing Library):
+- [x] **Step 1: Tests que fallan** (`useStore.test.tsx`, con `renderHook` y `act` de Testing Library):
   - `devuelve_el_valor_inicial`: `writable(1)` → `1`.
   - `se_actualiza_con_set`: `set(2)` → `2`.
   - `se_actualiza_con_mutacion_en_el_lugar`: `writable({ n: 1 })`; `update((s) => { s.n = 5; return s })` → `n` es `5`.
   - `se_desuscribe_al_desmontar`: `readable(0, () => () => { detenido = true })`; `unmount()` → `detenido === true`.
   - `setStoresForTest_restaura`: setea dos stores, llama a la función devuelta y quedan los valores originales.
-- [ ] **Step 2:** Run: `bunx vitest run --config config/testing/vitest.config.mts src/frontend/react/hooks`.
+- [x] **Step 2:** Run: `bunx vitest run --config config/testing/vitest.config.mts src/frontend/react/hooks`.
   Expected: FAIL.
-- [ ] **Step 3: Implementar** los dos archivos. Si importar `stores.ts` en un test con happy-dom rompe por globales del
+- [x] **Step 3: Implementar** los dos archivos. Si importar `stores.ts` en un test con happy-dom rompe por globales del
   navegador o por el orden de imports, seguir el patrón de `src/frontend/converters/testEnv.ts`.
-- [ ] **Step 4:** chequeos verdes. Commit `F24.2: React lee los stores de Svelte con useStore`.
+- [x] **Step 4:** chequeos verdes. Commit `F24.2: React lee los stores de Svelte con useStore`.
 
 ---
 
