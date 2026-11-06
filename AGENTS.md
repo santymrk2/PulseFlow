@@ -23,7 +23,7 @@ diferenciarse, usá `cfg(target_os = "macos")` / `cfg(target_os = "windows")`.
 | Tests JS | `bun run test:unit` |
 | Tipos Svelte | `bun run test:svelte` (hay 56 errores heredados: **no aumentar**) |
 | Formato | `bunx prettier --config config/formatting/.prettierrc.yaml --check <archivos tocados en src/>` |
-| Rust | `cd src-tauri && cargo check && cargo test --lib` |
+| Rust | `cd src-tauri && cargo check && cargo clippy --all-targets -- -D warnings && cargo test --lib` |
 | Build | `bun run build` |
 
 Sólo **bun** (nunca npm, yarn, pnpm ni npx). El lockfile es `bun.lock`.

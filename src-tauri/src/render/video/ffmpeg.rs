@@ -103,11 +103,10 @@ impl VideoDecoder for FfmpegDecoder {
 
         // Matar el proceso cierra el pipe de stdout: el `read_exact` del hilo devuelve error y el
         // hilo puede terminar y ser unido.
-        if let Ok(mut slot) = self.child.lock() {
-            if let Some(mut process) = slot.take() {
+        if let Ok(mut slot) = self.child.lock()
+            && let Some(mut process) = slot.take() {
                 let _ = process.kill();
             }
-        }
 
         if let Some(handle) = self.thread.take() {
             let _ = handle.join();
@@ -213,11 +212,10 @@ impl Session<'_> {
         };
 
         // Matar el proceso (si sigue vivo) y liberar el slot.
-        if let Ok(mut slot) = self.child.lock() {
-            if let Some(mut p) = slot.take() {
+        if let Ok(mut slot) = self.child.lock()
+            && let Some(mut p) = slot.take() {
                 let _ = p.kill();
             }
-        }
         end
     }
 

@@ -292,7 +292,7 @@ fn block_attrs<'a>(family: Option<&'a str>, weight: u16, style: Option<&str>, co
             Some("italic") => Style::Italic,
             _ => Style::Normal,
         })
-        .color(to_glyphon_color(color).into())
+        .color(to_glyphon_color(color))
 }
 
 /// Convierte un color [r, g, b, a] normalizado (0.0..1.0) a `glyphon::Color`.

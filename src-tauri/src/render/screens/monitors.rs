@@ -6,9 +6,9 @@ use super::*;
 // Monitores
 // ---------------------------------------------------------------------------
 
-/// Selección pura del monitor de una salida (testeable sin monitores reales):
-/// 1. el id estable elegido (`screen_ids` de F10.0c), 2. el que contiene el centro
-/// de `bounds`, 3. el elegido por índice, 4. el secundario (o el único si hay uno).
+/// Selección pura del monitor de una salida (testeable sin monitores reales), por orden:
+/// el id estable elegido (`screen_ids` de F10.0c); el que contiene el centro de `bounds`;
+/// el elegido por índice; el secundario (o el único si hay uno).
 pub(super) fn select_monitor_index(
     monitors: &[ScreenRect],
     bounds: Option<ScreenRect>,
@@ -19,11 +19,10 @@ pub(super) fn select_monitor_index(
     if monitors.is_empty() {
         return None;
     }
-    if let Some(id) = screen_id {
-        if let Some(i) = display_ids.iter().position(|a| a == id).filter(|i| *i < monitors.len()) {
+    if let Some(id) = screen_id
+        && let Some(i) = display_ids.iter().position(|a| a == id).filter(|i| *i < monitors.len()) {
             return Some(i);
         }
-    }
     if let Some(b) = bounds.filter(|b| b.width > 0 && b.height > 0) {
         let center = b.center();
         if let Some(i) = monitors.iter().position(|m| m.contains(center)) {

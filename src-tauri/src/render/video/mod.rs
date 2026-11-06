@@ -28,6 +28,7 @@ use std::time::Duration;
 use tauri::AppHandle;
 
 /// Píxeles de un frame decodificado.
+#[allow(clippy::large_enum_variant)] // vive un frame por la pila; boxear añadiría una alocación por frame
 pub enum FramePixels<'a> {
     /// Planos NV12 en memoria de la CPU (camino ffmpeg): hay que subirlos.
     Nv12Cpu { width: u32, height: u32, y: &'a [u8], uv: &'a [u8], matrix: YuvMatrix, full_range: bool },

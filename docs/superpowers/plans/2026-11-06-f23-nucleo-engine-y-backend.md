@@ -150,16 +150,16 @@ autoajuste de texto medido por el engine · lógica de negocio dentro de `comman
 **Files:** los de `src-tauri/src/` que toque `clippy --fix` (~30); `.github/workflows/ci.yml` (job Rust, después de
 "Cargo check", ~l.85); `AGENTS.md` (fila "Rust" de la tabla de comandos)
 
-- [ ] **Step 1:** Run: `git worktree list`. Expected: sólo la carpeta principal. Si hay otras, **parar y preguntar**.
-- [ ] **Step 2:** Run: `cd src-tauri && cargo clippy --fix --lib --tests -p pulseflow --allow-dirty`.
-- [ ] **Step 3:** Run: `cd src-tauri && cargo clippy --all-targets 2>&1 | rg "^warning" | sort | uniq -c`. Expected:
+- [x] **Step 1:** Run: `git worktree list`. Expected: sólo la carpeta principal. Si hay otras, **parar y preguntar**.
+- [x] **Step 2:** Run: `cd src-tauri && cargo clippy --fix --lib --tests -p pulseflow --allow-dirty`.
+- [x] **Step 3:** Run: `cd src-tauri && cargo clippy --all-targets 2>&1 | rg "^warning" | sort | uniq -c`. Expected:
   ~9 avisos.
-- [ ] **Step 4:** regla para cada aviso que queda: si el arreglo toca 10 líneas o menos, se arregla; si no,
+- [x] **Step 4:** regla para cada aviso que queda: si el arreglo toca 10 líneas o menos, se arregla; si no,
   `#[allow(clippy::<lint>)]` sobre el ítem con un comentario de una línea que diga por qué. `too_many_arguments` en
   `render/` va con `allow`.
-- [ ] **Step 5:** Run: `cd src-tauri && cargo clippy --all-targets -- -D warnings && cargo test --lib && bash ../scripts/check-windows-video.sh`.
+- [x] **Step 5:** Run: `cd src-tauri && cargo clippy --all-targets -- -D warnings && cargo test --lib && bash ../scripts/check-windows-video.sh`.
   Expected: todo verde, 177 tests.
-- [ ] **Step 6:** en `ci.yml`, después de "Cargo check":
+- [x] **Step 6:** en `ci.yml`, después de "Cargo check":
 
   ```yaml
               - name: Cargo clippy
@@ -168,7 +168,7 @@ autoajuste de texto medido por el engine · lógica de negocio dentro de `comman
   ```
 
   En `AGENTS.md`, fila Rust: `cd src-tauri && cargo check && cargo clippy --all-targets -- -D warnings && cargo test --lib`.
-- [ ] **Step 7:** commit `F23.2: clippy sin avisos y bloqueante en CI`. Al subir, el job de **Windows** tiene que pasar;
+- [x] **Step 7:** commit `F23.2: clippy sin avisos y bloqueante en CI`. Al subir, el job de **Windows** tiene que pasar;
   si clippy marca código `cfg(windows)`, se arregla con la regla del Step 4 en un commit `F23.2: …` aparte.
 
 ---

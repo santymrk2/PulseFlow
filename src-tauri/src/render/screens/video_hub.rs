@@ -75,14 +75,13 @@ pub(super) fn video_hub_release(app: &AppHandle, path: &str, subscriber: &str) -
     let mut hub = state.video_hub.lock_safe();
 
     let should_stop = hub.get_mut(path).is_some_and(|entry| entry.subscribers.remove(subscriber));
-    if should_stop {
-        if let Some(mut entry) = hub.remove(path) {
+    if should_stop
+        && let Some(mut entry) = hub.remove(path) {
             entry.playback.stop();
             if let Ok(store) = media::shared_store() {
                 store.remove_video(path);
             }
         }
-    }
     Ok(())
 }
 

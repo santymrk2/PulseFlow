@@ -253,11 +253,10 @@ impl ScreenHandle {
                 if let Some(handle) = thread {
                     let _ = handle.join();
                 }
-                if destroy_window {
-                    if let Some(window) = app.get_window(&label) {
+                if destroy_window
+                    && let Some(window) = app.get_window(&label) {
                         let _ = window.destroy();
                     }
-                }
             });
     }
 }
@@ -302,6 +301,12 @@ pub struct ScreenManager {
     /// Configuración global de transición hasta que F3 la aplique por pantalla.
     pub(crate) transition_config:
         Mutex<(super::transition::TransitionType, u64, super::transition::EasingType)>,
+}
+
+impl Default for ScreenManager {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl ScreenManager {

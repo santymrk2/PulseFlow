@@ -57,12 +57,11 @@ pub fn resolve(app: &AppHandle, base: &str) -> PathBuf {
     let name = bin_name(base);
     let mut candidates: Vec<PathBuf> = Vec::new();
 
-    if let Ok(exe) = std::env::current_exe() {
-        if let Some(dir) = exe.parent() {
+    if let Ok(exe) = std::env::current_exe()
+        && let Some(dir) = exe.parent() {
             candidates.push(dir.join(&name));
             candidates.push(dir.join("bin").join(&name));
         }
-    }
     if let Ok(resource_dir) = app.path().resource_dir() {
         candidates.push(resource_dir.join(&name));
         candidates.push(resource_dir.join("bin").join(&name));

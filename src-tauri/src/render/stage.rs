@@ -56,8 +56,8 @@ pub fn stage_blocks(data: &StageData, w: f32, h: f32) -> Vec<TextBlock> {
     }
 
     // 3. Siguiente diapositiva (gris claro para anticipación)
-    if let Some(ref next) = data.next_slide {
-        if !next.is_empty() {
+    if let Some(ref next) = data.next_slide
+        && !next.is_empty() {
             blocks.push(TextBlock {
                 text: format!("SIGUIENTE: {next}"),
                 font_family: None,
@@ -74,11 +74,10 @@ pub fn stage_blocks(data: &StageData, w: f32, h: f32) -> Vec<TextBlock> {
                 ..Default::default()
             });
         }
-    }
 
     // 4. Mensaje / Alerta Pastoral (rojo anaranjado, abajo)
-    if let Some(ref msg) = data.message {
-        if !msg.is_empty() {
+    if let Some(ref msg) = data.message
+        && !msg.is_empty() {
             blocks.push(TextBlock {
                 text: msg.clone(),
                 font_family: None,
@@ -95,7 +94,6 @@ pub fn stage_blocks(data: &StageData, w: f32, h: f32) -> Vec<TextBlock> {
                 ..Default::default()
             });
         }
-    }
 
     blocks
 }

@@ -142,8 +142,8 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
             let mut arena = store.new_arena();
 
             // Capa 1: fondo de imagen a pantalla completa.
-            if let Some(bg) = background.as_ref().filter(|b| b.media_type == "image") {
-                if let Some(path_str) = bg.path.as_deref() {
+            if let Some(bg) = background.as_ref().filter(|b| b.media_type == "image")
+                && let Some(path_str) = bg.path.as_deref() {
                     let texture = store.load_image(path_str)?;
                     pipeline.render(
                         queue,
@@ -156,7 +156,6 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
                         bg.aspect_mode,
                     );
                 }
-            }
 
             // Capa 2: items de medio (imágenes) colocados en la slide.
             for item in &media_items {
@@ -218,15 +217,15 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
         // Capa 3: texto principal.
         let blocks = scene.text_blocks();
         if !blocks.is_empty() {
-            let mut text_engine = TextEngine::new(&device, &queue, SNAPSHOT_FORMAT);
-            text_engine.render(&device, &queue, &mut render_pass, frame_w, frame_h, &blocks)?;
+            let mut text_engine = TextEngine::new(device, queue, SNAPSHOT_FORMAT);
+            text_engine.render(device, queue, &mut render_pass, frame_w, frame_h, &blocks)?;
         }
 
         // Capa 5: texto de los overlays (F4.6).
         let overlay_blocks = scene.overlay_text_blocks();
         if !overlay_blocks.is_empty() {
-            let mut text_engine = TextEngine::new(&device, &queue, SNAPSHOT_FORMAT);
-            text_engine.render(&device, &queue, &mut render_pass, frame_w, frame_h, &overlay_blocks)?;
+            let mut text_engine = TextEngine::new(device, queue, SNAPSHOT_FORMAT);
+            text_engine.render(device, queue, &mut render_pass, frame_w, frame_h, &overlay_blocks)?;
         }
     }
 
@@ -234,8 +233,7 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
 
     // 3. Copiar la textura a un buffer legible (filas alineadas a 256 bytes).
     let unpadded_bytes_per_row = width * 4;
-    let bytes_per_row = (unpadded_bytes_per_row + wgpu::COPY_BYTES_PER_ROW_ALIGNMENT - 1)
-        / wgpu::COPY_BYTES_PER_ROW_ALIGNMENT
+    let bytes_per_row = unpadded_bytes_per_row.div_ceil(wgpu::COPY_BYTES_PER_ROW_ALIGNMENT)
         * wgpu::COPY_BYTES_PER_ROW_ALIGNMENT;
 
     let buffer = device.create_buffer(&wgpu::BufferDescriptor {

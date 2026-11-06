@@ -38,6 +38,7 @@ pub enum TransitionType {
 }
 
 impl TransitionType {
+    #[allow(clippy::should_implement_trait)] // infalible (default Crossfade): FromStr exigiría un Result
     pub fn from_str(s: &str) -> Self {
         match s.to_lowercase().as_str() {
             "crossfade" | "fade" => Self::Crossfade,

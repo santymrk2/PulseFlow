@@ -434,6 +434,7 @@ impl MediaStore {
 
     /// Publica un frame NV12 con los planos en memoria de la CPU: **una subida** por frame, que ven
     /// todas las pantallas. Si el tamaño no cambió se reescriben las texturas en el lugar.
+    #[allow(clippy::too_many_arguments)] // parámetros de GPU/dibujo que no ganan nada agrupándose en un struct
     pub fn update_video_nv12_cpu(&self, id: &str, width: u32, height: u32, y: &[u8], uv: &[u8], matrix: YuvMatrix, full_range: bool) -> AppResult<()> {
         #[cfg(test)]
         self.uploads.fetch_add(1, std::sync::atomic::Ordering::SeqCst);
@@ -443,12 +444,11 @@ impl MediaStore {
         // esta subida (así no queda un frame del dispositivo muerto en la lista).
         let context = self.context.read_safe();
 
-        if let Some(existing) = self.get_video(id) {
-            if existing.is_cpu_backed() && existing.width == width && existing.height == height {
+        if let Some(existing) = self.get_video(id)
+            && existing.is_cpu_backed() && existing.width == width && existing.height == height {
                 existing.write_cpu_planes(&context, y, uv);
                 return Ok(());
             }
-        }
 
         let frame = Arc::new(Nv12Frame::from_cpu_planes(&context, width, height, y, uv, matrix, full_range)?);
         self.videos.write_safe().insert(id.to_string(), frame);
@@ -550,6 +550,7 @@ impl BackgroundPipeline {
     }
 
     /// Dibuja la textura de fondo a pantalla completa en el render pass.
+    #[allow(clippy::too_many_arguments)] // parámetros de GPU/dibujo que no ganan nada agrupándose en un struct
     pub fn render(
         &self,
         queue: &Queue,
@@ -576,6 +577,7 @@ impl BackgroundPipeline {
 
     /// Dibuja la textura en un rect de la pantalla (en píxeles, origen arriba-izquierda).
     /// Es la capa de los items de medio dentro de la slide (F4.5).
+    #[allow(clippy::too_many_arguments)] // parámetros de GPU/dibujo que no ganan nada agrupándose en un struct
     pub fn render_rect(
         &self,
         queue: &Queue,
@@ -605,6 +607,7 @@ impl BackgroundPipeline {
     }
 
     /// Reserva los uniforms de la capa en la arena y dibuja el quad (6 vértices).
+    #[allow(clippy::too_many_arguments)] // parámetros de GPU/dibujo que no ganan nada agrupándose en un struct
     fn draw(
         &self,
         queue: &Queue,
@@ -777,7 +780,7 @@ mod tests {
         // adoptar el contexto compartido y tirar lo que era del dispositivo viejo.
         let own = super::super::gpu::GpuContext::new().expect("GPU disponible");
         let store = MediaStore::new(Arc::clone(&own));
-        let texture = store.load_image(&test_png("sync-device.png")).expect("carga");
+        let texture = store.load_image(test_png("sync-device.png")).expect("carga");
         assert!(store.get(&texture.id).is_some());
 
         assert!(store.sync_device().expect("sincroniza"), "el almacén tenía que rehacerse");

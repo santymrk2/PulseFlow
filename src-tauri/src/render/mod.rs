@@ -76,7 +76,7 @@ mod tests {
     #[test]
     fn test_font_atlas_and_text_block() {
         let atlas = text::FontAtlas::new();
-        assert!(atlas.font_system.db().len() > 0, "Debe cargar fuentes del sistema");
+        assert!(!atlas.font_system.db().is_empty(), "Debe cargar fuentes del sistema");
 
         let block = TextBlock {
             text: "Dios es amor y gracia eterna".to_string(),

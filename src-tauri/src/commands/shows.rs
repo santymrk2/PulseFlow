@@ -175,13 +175,11 @@ pub fn SHOW(state: State<'_, AppState>, data: ShowData) -> AppResult<Value> {
     let Some(mut show) = parse_show(&content) else {
         return Ok(json!({ "error": "not_found", "id": data.id }));
     };
-    if !data.id.is_empty() {
-        if let Some(arr) = show.as_array_mut() {
-            if let Some(first) = arr.first_mut() {
+    if !data.id.is_empty()
+        && let Some(arr) = show.as_array_mut()
+            && let Some(first) = arr.first_mut() {
                 *first = Value::String(data.id.clone());
             }
-        }
-    }
     Ok(json!({ "id": data.id, "content": show }))
 }
 
@@ -526,11 +524,10 @@ pub fn SAVE(app: AppHandle, state: State<'_, AppState>, data: Value) -> AppResul
             // Comprobar el ID real antes de borrar (puede existir otro show con
             // el mismo nombre pero distinto ID).
             let content = files::read_file(&file_path).unwrap_or_else(|_| "{}".to_string());
-            if let Some(parsed) = parse_show(&content) {
-                if parsed.get(0).and_then(Value::as_str) != Some(id) {
+            if let Some(parsed) = parse_show(&content)
+                && parsed.get(0).and_then(Value::as_str) != Some(id) {
                     continue;
                 }
-            }
             if let Err(err) = files::delete_file(&file_path) {
                 log::warn!("{err}");
             }

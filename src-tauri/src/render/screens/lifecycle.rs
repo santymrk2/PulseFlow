@@ -14,8 +14,8 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
     // Ya abierta con el mismo tipo: sólo reubicar.
     {
         let screens = state.screens.lock_safe();
-        if let Some(handle) = screens.get(&config.id) {
-            if handle.kind == kind {
+        if let Some(handle) = screens.get(&config.id)
+            && handle.kind == kind {
                 if let Some(window) = app.get_window(&handle.label) {
                     place_window(app, &window, config, kind);
                     let _ = window.set_always_on_top(config.always_on_top.unwrap_or(true));
@@ -23,7 +23,6 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
                 }
                 return Ok(());
             }
-        }
     }
     // Cambió de tipo (audiencia <-> stage): cerrar y volver a abrir.
     close_screen(app, &config.id)?;

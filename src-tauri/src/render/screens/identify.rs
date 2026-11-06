@@ -114,7 +114,7 @@ pub(super) fn open_identify_window(app: &AppHandle, number: &str, monitor: &Moni
         Arc::clone(&scene),
         Arc::clone(&running),
         Arc::new(Mutex::new(None)),
-        Arc::new(Mutex::new(window.inner_size().unwrap_or(PhysicalSize::new(rect.width as u32, rect.height as u32)))),
+        Arc::new(Mutex::new(window.inner_size().unwrap_or(PhysicalSize::new(rect.width, rect.height)))),
         None,
     ) {
         Ok(thread) => thread,

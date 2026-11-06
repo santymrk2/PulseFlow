@@ -141,8 +141,8 @@ fn does_media_exist(folder: &Path, data: DoesMediaExistData) -> DoesMediaExistRe
     }
 
     let creation_time = ctime_ms(&meta);
-    if let (Some(expected), Some(actual)) = (data.creation_time, creation_time) {
-        if expected as u64 != actual {
+    if let (Some(expected), Some(actual)) = (data.creation_time, creation_time)
+        && expected as u64 != actual {
             delete_thumbnails(folder, &data.path);
             return DoesMediaExistResult {
                 path: data.path,
@@ -150,7 +150,6 @@ fn does_media_exist(folder: &Path, data: DoesMediaExistData) -> DoesMediaExistRe
                 creation_time: None,
             };
         }
-    }
 
     DoesMediaExistResult {
         path: data.path,
@@ -232,11 +231,7 @@ pub async fn GET_THUMBNAIL(app: AppHandle, data: GetThumbnailData) -> AppResult<
         // decodificar y redimensionar es CPU pesado: va al pool, no al cuerpo del comando
         let (from, to) = (input_path.to_path_buf(), output_path.clone());
         crate::render::workers::run(move || generate_image_thumbnail(&from, &to, size)).await.is_some_and(|result| result.is_ok())
-    } else if FFMPEG_VIDEO_EXTENSIONS.contains(&extension.as_str()) {
-        generate_ffmpeg_thumbnail(&app, input_path, &output_path, size)
-            .await
-            .is_ok()
-    } else if FFMPEG_IMAGE_EXTENSIONS.contains(&extension.as_str()) {
+    } else if FFMPEG_VIDEO_EXTENSIONS.contains(&extension.as_str()) || FFMPEG_IMAGE_EXTENSIONS.contains(&extension.as_str()) {
         generate_ffmpeg_thumbnail(&app, input_path, &output_path, size)
             .await
             .is_ok()
@@ -333,17 +328,15 @@ pub async fn MEDIA_CODEC(app: AppHandle, data: MediaCodecData) -> AppResult<Medi
     let mime_type = get_mime_type(&data.path);
     let mut codecs: Vec<String> = Vec::new();
 
-    if let Ok(probe) = ffmpeg::probe(&app, &data.path).await {
-        if let Some(streams) = probe.get("streams").and_then(|s| s.as_array()) {
+    if let Ok(probe) = ffmpeg::probe(&app, &data.path).await
+        && let Some(streams) = probe.get("streams").and_then(|s| s.as_array()) {
             for stream in streams {
-                if let Some(name) = stream.get("codec_name").and_then(|n| n.as_str()) {
-                    if !name.is_empty() && !codecs.iter().any(|c| c == name) {
+                if let Some(name) = stream.get("codec_name").and_then(|n| n.as_str())
+                    && !name.is_empty() && !codecs.iter().any(|c| c == name) {
                         codecs.push(name.to_string());
                     }
-                }
             }
         }
-    }
 
     let mime_codec = if codecs.is_empty() {
         String::new()
@@ -415,8 +408,8 @@ pub async fn MEDIA_TRACKS(app: AppHandle, data: MediaCodecData) -> AppResult<Med
             .unwrap_or(&language)
             .to_string();
 
-        if let Ok(vtt) = extract_subtitle_vtt(&app, &data.path, index).await {
-            if !vtt.trim().is_empty() {
+        if let Ok(vtt) = extract_subtitle_vtt(&app, &data.path, index).await
+            && !vtt.trim().is_empty() {
                 let lang_code = language.chars().take(2).collect::<String>();
                 tracks.push(SubtitleTrack {
                     lang: if lang_code.is_empty() { "und".into() } else { lang_code },
@@ -425,7 +418,6 @@ pub async fn MEDIA_TRACKS(app: AppHandle, data: MediaCodecData) -> AppResult<Med
                     embedded: true,
                 });
             }
-        }
     }
 
     Ok(MediaTracksResult { path: data.path, tracks })
@@ -487,13 +479,12 @@ pub async fn READ_AUDIO_METADATA(
     };
 
     let mut tags = Map::new();
-    if let Some(format) = probe.get("format") {
-        if let Some(format_tags) = format.get("tags").and_then(|t| t.as_object()) {
+    if let Some(format) = probe.get("format")
+        && let Some(format_tags) = format.get("tags").and_then(|t| t.as_object()) {
             for (k, v) in format_tags {
                 tags.insert(k.clone(), v.clone());
             }
         }
-    }
     if let Some(streams) = probe.get("streams").and_then(|s| s.as_array()) {
         for stream in streams {
             if let Some(stream_tags) = stream.get("tags").and_then(|t| t.as_object()) {
@@ -507,14 +498,13 @@ pub async fn READ_AUDIO_METADATA(
     let (gain_db, peak) = find_replay_gain(&Value::Object(tags.clone()));
     let replay_gain_multiplier = gain_db.map(|db| {
         let mut multiplier = 10_f64.powf(db / 20.0);
-        if let Some(peak) = peak {
-            if peak > 0.0 {
+        if let Some(peak) = peak
+            && peak > 0.0 {
                 let max = 1.0 / peak;
                 if multiplier > max {
                     multiplier = max;
                 }
             }
-        }
         multiplier
     });
 

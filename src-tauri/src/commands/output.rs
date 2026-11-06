@@ -66,7 +66,7 @@ pub fn GET_DISPLAYS(app: AppHandle) -> AppResult<Vec<DisplayInfo>> {
         .primary_monitor()
         .ok()
         .flatten()
-        .map(|m| m.position().clone());
+        .map(|m| *m.position());
 
     let mut displays = Vec::new();
     for (index, monitor) in monitors.iter().enumerate() {

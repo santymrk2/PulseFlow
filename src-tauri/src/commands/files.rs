@@ -395,11 +395,10 @@ fn open_in_system(app: &AppHandle, file_path: &str, open_folder: bool) {
     if !files::does_path_exist(file_path) {
         return;
     }
-    if open_folder {
-        if app.opener().open_path(file_path.to_string(), None::<&str>).is_ok() {
+    if open_folder
+        && app.opener().open_path(file_path.to_string(), None::<&str>).is_ok() {
             return;
         }
-    }
     if let Err(err) = app.opener().reveal_item_in_dir(file_path) {
         log::warn!("No se pudo mostrar {file_path} en el explorador: {err}");
     }
@@ -495,11 +494,10 @@ pub fn GET_MEDIA_FOLDER_PATH(state: State<'_, AppState>) -> AppResult<String> {
         .stores
         .lock()
         .map_err(|_| AppError::new("Store manager lock poisoned"))?;
-    if let Some(path) = stores.get_value("config", "mediaFolderPath").as_str() {
-        if !path.is_empty() {
+    if let Some(path) = stores.get_value("config", "mediaFolderPath").as_str()
+        && !path.is_empty() {
             return Ok(path.to_string());
         }
-    }
     Ok(stores.get_data_folder_path(DataFolder::Media, None))
 }
 
@@ -540,11 +538,10 @@ fn media_sync_folder(state: &State<'_, AppState>) -> AppResult<String> {
         .stores
         .lock()
         .map_err(|_| AppError::new("Store manager lock poisoned"))?;
-    if let Some(path) = stores.get_value("config", "mediaFolderPath").as_str() {
-        if !path.is_empty() {
+    if let Some(path) = stores.get_value("config", "mediaFolderPath").as_str()
+        && !path.is_empty() {
             return Ok(path.to_string());
         }
-    }
     Ok(stores.get_data_folder_path(DataFolder::Media, None))
 }
 
@@ -579,13 +576,12 @@ fn decode_uri(input: &str) -> String {
     let mut out: Vec<u8> = Vec::with_capacity(bytes.len());
     let mut i = 0;
     while i < bytes.len() {
-        if bytes[i] == b'%' && i + 2 < bytes.len() {
-            if let (Some(h), Some(l)) = (hex_val(bytes[i + 1]), hex_val(bytes[i + 2])) {
+        if bytes[i] == b'%' && i + 2 < bytes.len()
+            && let (Some(h), Some(l)) = (hex_val(bytes[i + 1]), hex_val(bytes[i + 2])) {
                 out.push(h * 16 + l);
                 i += 3;
                 continue;
             }
-        }
         out.push(bytes[i]);
         i += 1;
     }
@@ -753,11 +749,10 @@ fn collect_media_paths(stores: &crate::domain::data::store::StoreManager, shows_
             if let Some(shows) = project.get("shows").and_then(|s| s.as_array()) {
                 for show in shows {
                     let kind = show.get("type").and_then(|t| t.as_str()).unwrap_or("show");
-                    if ["image", "video", "audio", "pdf", "ppt"].contains(&kind) {
-                        if let Some(id) = show.get("id").and_then(|i| i.as_str()) {
+                    if ["image", "video", "audio", "pdf", "ppt"].contains(&kind)
+                        && let Some(id) = show.get("id").and_then(|i| i.as_str()) {
                             media_files.push(id.to_string());
                         }
-                    }
                 }
             }
         }
@@ -782,11 +777,10 @@ fn collect_media_paths(stores: &crate::domain::data::store::StoreManager, shows_
 
 fn collect_items_media(items: &[serde_json::Value], out: &mut Vec<String>) {
     for item in items {
-        if item.get("type").and_then(|t| t.as_str()) == Some("media") {
-            if let Some(src) = item.get("src").and_then(|s| s.as_str()) {
+        if item.get("type").and_then(|t| t.as_str()) == Some("media")
+            && let Some(src) = item.get("src").and_then(|s| s.as_str()) {
                 out.push(src.to_string());
             }
-        }
     }
 }
 
@@ -919,13 +913,11 @@ pub fn SAVE_IMAGE(app: AppHandle, state: State<'_, AppState>, data: SaveImageDat
         }
         std::fs::write(&target, &bytes)?;
 
-        if data.open_folder.unwrap_or(false) {
-            if let Some(parent) = target.parent() {
-                if let Err(err) = app.opener().open_path(parent.to_string_lossy().to_string(), None::<&str>) {
+        if data.open_folder.unwrap_or(false)
+            && let Some(parent) = target.parent()
+                && let Err(err) = app.opener().open_path(parent.to_string_lossy().to_string(), None::<&str>) {
                     log::warn!("No se pudo abrir {}: {err}", parent.display());
                 }
-            }
-        }
         return Ok(());
     }
 

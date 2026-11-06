@@ -76,14 +76,13 @@ fn runtime_cell() -> &'static Mutex<Option<ServerRuntime>> {
 
 /// Difunde un mensaje a todos los clientes de una sala.
 pub fn broadcast_to_room(room: &str, message: Value) {
-    if let Ok(guard) = runtime_cell().lock() {
-        if let Some(runtime) = guard.as_ref() {
+    if let Ok(guard) = runtime_cell().lock()
+        && let Some(runtime) = guard.as_ref() {
             let _ = runtime.events.send(RoomEvent {
                 room: room.to_string(),
                 message,
             });
         }
-    }
 }
 
 /// Difunde un mensaje a todos los clientes de todas las salas.
@@ -184,11 +183,10 @@ pub fn start(
 
 /// Detiene los servidores internos en ejecución.
 pub fn stop() {
-    if let Ok(mut guard) = runtime_cell().lock() {
-        if let Some(runtime) = guard.take() {
+    if let Ok(mut guard) = runtime_cell().lock()
+        && let Some(runtime) = guard.take() {
             let _ = runtime.shutdown.send(());
         }
-    }
 }
 
 /// `true` si hay servidores en ejecución.

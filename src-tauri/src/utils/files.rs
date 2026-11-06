@@ -98,11 +98,10 @@ pub fn read_folder<P: AsRef<Path>>(path: P) -> AppResult<Vec<String>> {
     let p = path.as_ref();
     let mut entries = Vec::new();
     for entry in fs::read_dir(p)? {
-        if let Ok(entry) = entry {
-            if let Ok(file_name) = entry.file_name().into_string() {
+        if let Ok(entry) = entry
+            && let Ok(file_name) = entry.file_name().into_string() {
                 entries.push(file_name);
             }
-        }
     }
     Ok(entries)
 }
@@ -146,10 +145,7 @@ pub fn is_writable<P: AsRef<Path>>(path: P) -> bool {
             Err(_) => false,
         }
     } else {
-        match fs::OpenOptions::new().append(true).open(p) {
-            Ok(_) => true,
-            Err(_) => false,
-        }
+        fs::OpenOptions::new().append(true).open(p).is_ok()
     }
 }
 

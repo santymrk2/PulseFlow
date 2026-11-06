@@ -143,8 +143,8 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
         // F23.3: si el driver perdió el dispositivo, las texturas importadas quedan
         // huérfanas: la caché de CoreVideo está atada al `MTLDevice`, así que se
         // rehace con el contexto nuevo.
-        if let Ok(current) = crate::render::gpu::shared() {
-            if !Arc::ptr_eq(&current, &gpu) {
+        if let Ok(current) = crate::render::gpu::shared()
+            && !Arc::ptr_eq(&current, &gpu) {
                 match MetalTextureCache::new(&current) {
                     Ok(fresh) => {
                         log::warn!("[VideoEngine] el dispositivo se perdió: se rehacen las texturas de {path}");
@@ -154,7 +154,6 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
                     Err(err) => log::warn!("[VideoEngine] no se pudo rehacer la caché de texturas de {path}: {err}"),
                 }
             }
-        }
 
         // Con el dispositivo perdido no se importan texturas: las que habría que
         // importar pertenecen a un dispositivo muerto.

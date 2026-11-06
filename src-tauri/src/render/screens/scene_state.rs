@@ -7,6 +7,7 @@ use super::*;
 // ---------------------------------------------------------------------------
 
 /// Reemplaza la escena de audiencia de una salida (texto + medios + fondo).
+#[allow(clippy::too_many_arguments)] // parámetros de GPU/dibujo que no ganan nada agrupándose en un struct
 pub fn set_audience_scene(
     app: &AppHandle,
     id: &str,

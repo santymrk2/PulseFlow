@@ -43,7 +43,7 @@ pub fn get_machine_id() -> String {
         .and_then(|h| h.into_string().ok())
         .map(|s| s.hash(&mut hasher))
         .or_else(|| {
-            std::env::var("USER").ok().map(|s| s.hash(&mut hasher));
+            if let Ok(s) = std::env::var("USER") { s.hash(&mut hasher) }
             None
         });
     let host = hasher.finish();
