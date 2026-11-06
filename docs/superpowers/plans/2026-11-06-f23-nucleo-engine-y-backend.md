@@ -188,7 +188,7 @@ autoajuste de texto medido por el engine · lógica de negocio dentro de `comman
   y devuelve `false`.
 - Produce: `GpuContext::uncaptured_errors(&self) -> u64` (contador `Arc<AtomicU64>` dentro de `GpuContext`).
 
-- [ ] **Step 1: Tests que fallan** (en `guard.rs` y en `gpu.rs`):
+- [x] **Step 1: Tests que fallan** (en `guard.rs` y en `gpu.rs`):
 
 ```rust
 // guard.rs
@@ -228,18 +228,18 @@ fn un_error_de_validacion_no_panica_y_se_cuenta() {
 }
 ```
 
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::guard render::gpu`. Expected: FAIL (no existen
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::guard render::gpu`. Expected: FAIL (no existen
   `guard`, `uncaptured_errors`; el test de GPU **panica** con "wgpu error").
-- [ ] **Step 3: Implementar.**
+- [x] **Step 3: Implementar.**
   - `gpu.rs`: `device.on_uncaptured_error(Arc::new(move |err: wgpu::Error| { let n = counter.fetch_add(1, SeqCst) + 1; if guard::should_log(n) { log::error!("[gpu] error no capturado #{n}: {err}"); } }))`.
     La firma en wgpu 30 es `on_uncaptured_error(&self, handler: Arc<dyn UncapturedErrorHandler>)` (`wgpu-30.0.1/src/api/device.rs:506`).
   - `Cargo.toml`: `panic = "unwind"`. Así `catch_unwind` funciona en release (también el de `workers.rs`).
   - `render_loop.rs`: todo el cuerpo del `spawn(move || { … })` pasa a `run_guarded(&label, || { … })`. Si devuelve
     `false`, se llama a la misma función `close()` que usa la ✕ (l.~118): la ventana se cierra, `Destroyed` emite
     `OUTPUT_STATE` y el operador ve la salida apagada y la puede reabrir.
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib && cargo clippy --all-targets -- -D warnings`. Expected: 180
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib && cargo clippy --all-targets -- -D warnings`. Expected: 180
   tests ok.
-- [ ] **Step 5:** commit `F23.3: los errores de GPU y los pánicos del render no cierran la app`.
+- [x] **Step 5:** commit `F23.3: los errores de GPU y los pánicos del render no cierran la app`.
 
 ---
 

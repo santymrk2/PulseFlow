@@ -1745,7 +1745,7 @@ Plan: docs/superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md
 
 - [x] **F23.1** Registrar los planes y poner al día la documentación.
 - [x] **F23.2** Clippy en cero y bloqueante en CI.
-- [ ] **F23.3** Un error de la GPU o un pánico no cierran la app.
+- [x] **F23.3** Un error de la GPU o un pánico no cierran la app.
 - [ ] **F23.4** Un renderer de texto por capa.
 - [ ] **F23.5** El atlas de texto se recorta y los errores de texto se registran.
 - [ ] **F23.6** Viewport y scissor siempre dentro del destino.

@@ -18,7 +18,7 @@
 use crate::error::{AppError, AppResult};
 use super::sync::MutexExt;
 use arc_swap::ArcSwapOption;
-use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, Mutex};
 
 /// Cuántos `Device` se abrieron para el contexto compartido (sólo tests: debe quedar en 1).
@@ -33,6 +33,8 @@ pub struct GpuContext {
     pub queue: wgpu::Queue,
     /// El driver perdió el dispositivo: hay que reabrirlo.
     lost: Arc<AtomicBool>,
+    /// Errores de validación que wgpu no entregó a ningún scope (se cuentan, no panican).
+    uncaptured: Arc<AtomicU64>,
 }
 
 impl GpuContext {
@@ -73,7 +75,17 @@ impl GpuContext {
             flag.store(true, Ordering::SeqCst);
         });
 
-        Ok(Arc::new(Self { instance, adapter, device, queue, lost }))
+        // Un error de validación no puede tumbar la app: se cuenta y se registra (con tope).
+        let uncaptured = Arc::new(AtomicU64::new(0));
+        let counter = Arc::clone(&uncaptured);
+        device.on_uncaptured_error(Arc::new(move |err: wgpu::Error| {
+            let n = counter.fetch_add(1, Ordering::SeqCst) + 1;
+            if super::guard::should_log(n) {
+                log::error!("[gpu] error no capturado #{n}: {err}");
+            }
+        }));
+
+        Ok(Arc::new(Self { instance, adapter, device, queue, lost, uncaptured }))
     }
 
     /// Reabre el dispositivo sobre la misma `Instance` y el mismo `Adapter`.
@@ -88,6 +100,11 @@ impl GpuContext {
     /// `true` si el driver perdió el dispositivo: el contexto ya no sirve para dibujar.
     pub fn is_lost(&self) -> bool {
         self.lost.load(Ordering::SeqCst)
+    }
+
+    /// Cuántos errores de la GPU no capturados se registraron desde que se abrió el dispositivo.
+    pub fn uncaptured_errors(&self) -> u64 {
+        self.uncaptured.load(Ordering::SeqCst)
     }
 
     /// `true` si el adaptador puede presentar en `surface`.
@@ -165,6 +182,20 @@ mod tests {
         let a = shared().expect("GPU disponible");
         let b = shared().expect("GPU disponible");
         assert!(Arc::ptr_eq(&a, &b));
+    }
+
+    #[test]
+    fn un_error_de_validacion_no_panica_y_se_cuenta() {
+        let gpu = GpuContext::new().expect("GPU");
+        let before = gpu.uncaptured_errors();
+        // MAP_READ | MAP_WRITE juntos es inválido sin la feature MAPPABLE_PRIMARY_BUFFERS: error de validación.
+        let _buffer = gpu.device.create_buffer(&wgpu::BufferDescriptor {
+            label: Some("inválido a propósito"),
+            size: 4,
+            usage: wgpu::BufferUsages::MAP_READ | wgpu::BufferUsages::MAP_WRITE,
+            mapped_at_creation: false,
+        });
+        assert_eq!(gpu.uncaptured_errors(), before + 1);
     }
 
     #[test]
