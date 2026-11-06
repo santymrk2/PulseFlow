@@ -185,31 +185,31 @@ las saca el usuario.
   `export interface TscError { file: string; line: number; message: string }`. Formato que lee:
   `ruta(línea,col): error TSxxxx: mensaje`.
 
-- [ ] **Step 1: Dependencias.**
+- [x] **Step 1: Dependencias.**
   Run: `bun add react@^19 react-dom@^19`.
   Run: `bun add -d @vitejs/plugin-react@^4 babel-plugin-react-compiler@^1 @types/react@^19 @types/react-dom@^19 @testing-library/react@^16 @testing-library/dom@^10 happy-dom@^15`.
   Si `bun` avisa conflictos de peer dependencies, **parar y reportar**.
-- [ ] **Step 2: Vite.** En `vite.config.mjs`, `import react from "@vitejs/plugin-react"` y
+- [x] **Step 2: Vite.** En `vite.config.mjs`, `import react from "@vitejs/plugin-react"` y
   `plugins: [svelte({…igual…}), react({ babel: { plugins: [["babel-plugin-react-compiler", {}]] } }), tailwindcss()]`;
   `resolve.dedupe: ["svelte", "react", "react-dom"]`.
-- [ ] **Step 3: Vitest.** El mismo `react({…})` en `plugins` e
+- [x] **Step 3: Vitest.** El mismo `react({…})` en `plugins` e
   `include: ["src/**/*.test.ts", "src/**/*.test.tsx", "scripts/**/*.test.ts"]`. El `environment` sigue en `"node"`.
-- [ ] **Step 4: TypeScript.** En `src/frontend/tsconfig.json`, `"jsx": "react-jsx"` dentro de `compilerOptions`.
+- [x] **Step 4: TypeScript.** En `src/frontend/tsconfig.json`, `"jsx": "react-jsx"` dentro de `compilerOptions`.
   Crear `src/frontend/react/tsconfig.json`:
   `{ "extends": "../tsconfig.json", "compilerOptions": { "noEmit": true }, "include": ["."] }`.
-- [ ] **Step 5: Test de `parseTscErrors`** (`scripts/checkReactTypes.test.ts`), que tiene que fallar primero: con la
+- [x] **Step 5: Test de `parseTscErrors`** (`scripts/checkReactTypes.test.ts`), que tiene que fallar primero: con la
   salida
   `src/frontend/react/ui/button/Button.tsx(3,7): error TS2322: Type 'string' is not assignable to type 'number'.`
   `src/frontend/stores.ts(10,1): error TS2304: Cannot find name 'x'.`
   devuelve dos errores con `file`, `line` y `message` correctos.
-- [ ] **Step 6: Implementar.** `scripts/check-react-types.ts` corre `bunx tsc -p src/frontend/react/tsconfig.json --pretty false`
+- [x] **Step 6: Implementar.** `scripts/check-react-types.ts` corre `bunx tsc -p src/frontend/react/tsconfig.json --pretty false`
   (con `Bun.spawnSync`), pasa la salida por `parseTscErrors`, se queda con los `file` que empiezan con
   `src/frontend/react/`, los imprime y sale con 1 si hay alguno. En `package.json`:
   `"test:react": "bun scripts/check-react-types.ts"`.
-- [ ] **Step 7: Presupuesto de calidad.** En `scripts/quality-budget.ts`, el glob pasa a `src/**/*.{ts,tsx,svelte}` y el
+- [x] **Step 7: Presupuesto de calidad.** En `scripts/quality-budget.ts`, el glob pasa a `src/**/*.{ts,tsx,svelte}` y el
   conteo de hex y `rgb()` también mira `.tsx` y `src/frontend/react/**/*.module.css`. Agregar al test de
   `qualityBudget.ts` un caso con un `.tsx` que tiene `className="bg-[#ff0000]"`: cuenta 1 hex.
-- [ ] **Step 8: Smoke test** `src/frontend/react/setup.test.tsx`:
+- [x] **Step 8: Smoke test** `src/frontend/react/setup.test.tsx`:
 
 ```tsx
 // @vitest-environment happy-dom
@@ -228,14 +228,14 @@ describe("base de React", () => {
 })
 ```
 
-- [ ] **Step 9: CI.** En el job Frontend de `ci.yml`, después de `test:unit`:
+- [x] **Step 9: CI.** En el job Frontend de `ci.yml`, después de `test:unit`:
 
   ```yaml
               - name: Tipos de React
                 run: bun run test:react
   ```
 
-- [ ] **Step 10: `AGENTS.md`.** Agregar en la tabla de comandos la fila `| Tipos React | bun run test:react |` y, después
+- [x] **Step 10: `AGENTS.md`.** Agregar en la tabla de comandos la fila `| Tipos React | bun run test:react |` y, después
   de "Reglas de Svelte", esta sección **textual**:
 
   ```markdown
@@ -264,10 +264,10 @@ describe("base de React", () => {
   ```
 
   Y al final de "Reglas de Svelte": `- **Svelte en retirada (2026-11-06):** no se crean componentes .svelte nuevos; un .svelte sólo se toca para arreglar un bug o para reemplazarlo por su versión React (F24).`
-- [ ] **Step 11: Verificar.** Run: `bun run test:unit && bun run test:react && bun run test:svelte && bun run test:budget && bun run build`.
+- [x] **Step 11: Verificar.** Run: `bun run test:unit && bun run test:react && bun run test:svelte && bun run test:budget && bun run build`. (build y dev:tauri omitidos por regla del usuario: pendiente del usuario)
   Expected: todo verde; svelte-check con los mismos 40 errores (si `"jsx"` sumó errores, parar). `bun run dev:tauri`
   abre igual que antes.
-- [ ] **Step 12:** commit `F24.1: React 19 con React Compiler convive con Svelte en el build`.
+- [x] **Step 12:** commit `F24.1: React 19 con React Compiler convive con Svelte en el build`.
 
 ---
 
