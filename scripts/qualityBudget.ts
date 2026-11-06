@@ -16,7 +16,7 @@ export const countHex = (text: string) => count(text, HEX)
 export const countRgb = (text: string) => count(text, RGB)
 
 /**
- * Mide `any` en `.ts`/`.svelte` (sin contar los `*.test.ts`) y los colores literales (hex y `rgb()`) sólo en `.svelte`.
+ * Mide `any` en `.ts`/`.tsx`/`.svelte` (sin contar los tests) y los colores literales (hex y `rgb()`) en `.svelte`, `.tsx` y `react/ (*.module.css)`.
  * `excludedColorPaths` son prefijos de ruta (plantillas o datos de ejemplo) que no cuentan para los colores.
  */
 export function measureSources(files: { path: string; text: string }[], excludedColorPaths: string[] = []): Omit<Measures, "svelteCheckErrors"> {
@@ -25,13 +25,15 @@ export function measureSources(files: { path: string; text: string }[], excluded
     let rgbColors = 0
 
     for (const file of files) {
-        const isSvelte = file.path.endsWith(".svelte")
-        if (!isSvelte && !file.path.endsWith(".ts")) continue
+        const isModuleCss = file.path.startsWith("src/frontend/react/") && file.path.endsWith(".module.css")
+        const hasColors = file.path.endsWith(".svelte") || file.path.endsWith(".tsx") || isModuleCss
+        const hasCode = file.path.endsWith(".ts") || file.path.endsWith(".tsx") || file.path.endsWith(".svelte")
+        if (!hasCode && !isModuleCss) continue
         // los tests inspeccionan estructuras internas con `any`: el presupuesto mide el código de producción
-        if (file.path.endsWith(".test.ts")) continue
+        if (/\.test\.tsx?$/.test(file.path)) continue
 
-        anyCount += countAny(file.text)
-        if (isSvelte && !excludedColorPaths.some((prefix) => file.path.startsWith(prefix))) {
+        if (!isModuleCss) anyCount += countAny(file.text)
+        if (hasColors && !excludedColorPaths.some((prefix) => file.path.startsWith(prefix))) {
             hexColors += countHex(file.text)
             rgbColors += countRgb(file.text)
         }

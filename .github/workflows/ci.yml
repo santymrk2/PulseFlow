@@ -37,6 +37,9 @@ jobs:
             - name: Unit tests
               run: bun run test:unit
 
+            - name: Tipos de React
+              run: bun run test:react
+
             # Blocking gate: a broken build fails this run.
             - name: Build
               run: bun run build

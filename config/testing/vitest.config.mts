@@ -1,3 +1,4 @@
+import react from "@vitejs/plugin-react"
 import { svelte } from "@sveltejs/vite-plugin-svelte"
 import { fileURLToPath } from "node:url"
 import { defineConfig } from "vitest/config"
@@ -12,7 +13,8 @@ export default defineConfig({
                 if (warning.code.startsWith("a11y-")) return
                 if (warning.code === "element_invalid_self_closing_tag") return
             }
-        })
+        }),
+        react({ babel: { plugins: [["babel-plugin-react-compiler", {}]] } })
     ],
     resolve: {
         alias: {
@@ -20,7 +22,7 @@ export default defineConfig({
         }
     },
     test: {
-        include: ["src/**/*.test.ts", "scripts/**/*.test.ts"],
+        include: ["src/**/*.test.ts", "src/**/*.test.tsx", "scripts/**/*.test.ts"],
         environment: "node"
     }
 })

@@ -27,6 +27,15 @@ describe("measureSources", () => {
         expect(measureSources(files, ["src/ejemplos/"])).toEqual({ anyCount: 2, hexColors: 1, rgbColors: 1 })
     })
 
+    test("un .tsx cuenta colores y any; un .module.css de react cuenta colores", () => {
+        const files = [
+            { path: "src/frontend/react/A.tsx", text: '<div className="bg-[#ff0000]">{x as any}</div>' },
+            { path: "src/frontend/react/A.module.css", text: "a { color: rgb(0 0 0) }" },
+            { path: "src/otro/B.module.css", text: "a { color: #fff }" }
+        ]
+        expect(measureSources(files)).toEqual({ anyCount: 1, hexColors: 1, rgbColors: 1 })
+    })
+
     test("los tests (*.test.ts) no cuentan: el presupuesto de any mide código de producción", () => {
         const files = [
             { path: "src/a.ts", text: "let a: any" },

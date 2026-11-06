@@ -4,6 +4,7 @@
         "types": ["node", "svelte", "vite/client"],
         "sourceMap": true,
         "target": "ESNext",
+        "jsx": "react-jsx",
         "stripInternal": true,
         // "strict": true,
         // "noImplicitAny": true,

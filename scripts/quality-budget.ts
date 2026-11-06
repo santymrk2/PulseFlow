@@ -18,7 +18,7 @@ const budgetFile: BudgetFile = JSON.parse(readFileSync(BUDGET_PATH, "utf8"))
 const { excludedColorPaths = [], ...budget } = budgetFile
 
 const files: { path: string; text: string }[] = []
-for (const path of new Glob("src/**/*.{ts,svelte}").scanSync(".")) {
+for (const path of new Glob("src/**/*.{ts,tsx,svelte,css}").scanSync(".")) {
     files.push({ path, text: readFileSync(path, "utf8") })
 }
 

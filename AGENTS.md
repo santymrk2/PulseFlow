@@ -21,6 +21,7 @@ diferenciarse, usá `cfg(target_os = "macos")` / `cfg(target_os = "windows")`.
 | Frontend dev | `bun run dev` |
 | App completa | `bun run dev:tauri` (requiere `bun run setup:sidecars --only-host` una vez) |
 | Tests JS | `bun run test:unit` |
+| Tipos React | `bun run test:react` |
 | Tipos Svelte | `bun run test:svelte` (hay 56 errores heredados: **no aumentar**) |
 | Formato | `bunx prettier --config config/formatting/.prettierrc.yaml --check <archivos tocados en src/>` |
 | Rust | `cd src-tauri && cargo check && cargo clippy --all-targets -- -D warnings && cargo test --lib` |
@@ -65,6 +66,30 @@ prettier sobre `.md`, `docs/` ni el resto de la configuración.
   y `public/global.css`. No hardcodear colores en componentes.
 - `docs/design-reference/` es **sólo referencia visual** (React, no se compila). No
   importar nada de ahí.
+- **Svelte en retirada (2026-11-06):** no se crean componentes .svelte nuevos; un .svelte sólo se toca para arreglar un bug o para reemplazarlo por su versión React (F24).
+
+## Reglas de React (F24, decidido 2026-11-06)
+
+- La UI se migra de Svelte a React **de a un componente**, siguiendo
+  `docs/superpowers/plans/2026-11-06-f24-migracion-react.md`. Nada de reescrituras paralelas (`src-react/` se
+  abandonó por eso).
+- El código React vive en `src/frontend/react/`. Un componente por archivo `PascalCase.tsx` y su test al lado
+  (`Nombre.test.tsx`, primera línea `// @vitest-environment happy-dom`).
+- React 19 con React Compiler: **prohibidos** `useMemo`, `useCallback` y `memo`. Imports nombrados
+  (`import { useState } from "react"`), nunca `import React` ni `import * as React`. `ref` es una prop: sin
+  `forwardRef`. Es una SPA de Vite: no hay Server Components ni `"use client"`.
+- Estado: los stores de `src/frontend/stores.ts` se leen con `useStore(store)` (`react/hooks/useStore.ts`) y se
+  escriben con `store.set`/`store.update`. No se crean stores ni contextos nuevos para algo que ya existe.
+- Estilos: clases semánticas de Tailwind (`bg-background`, `text-foreground`, `border-border`, …). Prohibido
+  `var()` y colores hex/rgb en `className`. `cn()` sólo para clases condicionales o para mezclar con un
+  `className` recibido. Los `<style>` de un componente Svelte se portan **tal cual** a `Nombre.module.css`.
+- TypeScript: nada de `any` (usar `unknown` y guardas de tipo); `import type` para tipos; interfaces planas (un
+  objeto anidado tiene su propia interface); valores fijos como `const X = { … } as const` y
+  `type X = (typeof X)[keyof typeof X]`, no uniones de strings sueltas.
+- Eventos: lo que en Svelte era `dispatch("x", detail)` / `on:x` pasa a la prop `onX(detail)`. Un padre Svelte le
+  pasa callbacks a una isla React por `props`.
+- `dangerouslySetInnerHTML` sólo donde el Svelte original tenía `{@html}`, con la misma fuente ya saneada. Nunca en
+  código nuevo.
 
 ## Varios agentes en paralelo
 

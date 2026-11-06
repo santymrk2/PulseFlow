@@ -1,4 +1,5 @@
 import tailwindcss from "@tailwindcss/vite"
+import react from "@vitejs/plugin-react"
 import { svelte } from "@sveltejs/vite-plugin-svelte"
 import { fileURLToPath } from "node:url"
 import { defineConfig } from "vite"
@@ -19,6 +20,7 @@ export default defineConfig({
                 handler(warning)
             }
         }),
+        react({ babel: { plugins: [["babel-plugin-react-compiler", {}]] } }),
         tailwindcss()
     ],
     // `public/` holds static assets (global.css, fonts, …) copied as-is.
@@ -35,7 +37,7 @@ export default defineConfig({
         emptyOutDir: true
     },
     resolve: {
-        dedupe: ["svelte"],
+        dedupe: ["svelte", "react", "react-dom"],
         alias: {
             // shadcn-svelte convention: `$lib/*` → `src/frontend/lib/*`
             $lib: fileURLToPath(new URL("./src/frontend/lib", import.meta.url))
