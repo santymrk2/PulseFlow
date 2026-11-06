@@ -949,7 +949,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
   *Aceptación:* cada clave de la lista se puede editar desde el modal y se guarda;
   marcar también F10.3 y F10.5.
 
-- [ ] **F10.9 Quitar el puente.** **Decisión (2026-10-21): no se inicia todavía.** Hoy 62 archivos de `src/frontend` leen `$styles` / `get(styles)` / `getCurrentStyle` y no hay tests de interfaz que cubran esos caminos: migrarlos a ciegas (sin poder correr la app en esta etapa) arriesga romper la salida en silencio, y el puente ya está cubierto por tests (`looks.migration.test.ts`, `computeLookBridgeStyles`, `outputAspect`). Conviene hacerlo **después de F20.8 y F13.4**, con la app probada, y con el CI de F13.1 como red. *Pasos (sin cambio):* helper `getOutputLook(outputId): LookScreen`; reemplazar los usos **un commit por carpeta** (`output/`, `slide/`, `show/`, `edit/`, `helpers/`, …); al final eliminar `__look__*`, `output.style` y el store `styles` (queda el backup). *Aceptación:* `grep -rn "\$styles\|get(styles)" src/frontend` sin resultados fuera de la migración; chequeos y goldens en verde.
+- [x] **F10.9 Quitar el puente.** **Cancelada (2026-11-06):** se resuelve al migrar esa pantalla a React (F24). **Decisión (2026-10-21): no se inicia todavía.** Hoy 62 archivos de `src/frontend` leen `$styles` / `get(styles)` / `getCurrentStyle` y no hay tests de interfaz que cubran esos caminos: migrarlos a ciegas (sin poder correr la app en esta etapa) arriesga romper la salida en silencio, y el puente ya está cubierto por tests (`looks.migration.test.ts`, `computeLookBridgeStyles`, `outputAspect`). Conviene hacerlo **después de F20.8 y F13.4**, con la app probada, y con el CI de F13.1 como red. *Pasos (sin cambio):* helper `getOutputLook(outputId): LookScreen`; reemplazar los usos **un commit por carpeta** (`output/`, `slide/`, `show/`, `edit/`, `helpers/`, …); al final eliminar `__look__*`, `output.style` y el store `styles` (queda el backup). *Aceptación:* `grep -rn "\$styles\|get(styles)" src/frontend` sin resultados fuera de la migración; chequeos y goldens en verde.
 
 - [ ] **F10.10 Prueba manual (usuario).** Sección nueva en `docs/VERIFICAR.md`: crear 2
   pantallas de audiencia + 1 stage desde la ventana, 3 looks, cambiar en vivo desde el
@@ -1103,10 +1103,10 @@ pantallas más visibles, una por tarea. **No es una migración global a Tailwind
 - [x] **F12.4** Modal de Looks con el kit. (2026-10-20, commit ec98bc7f; LookGrid sigue con Material.)
 - [x] **F12.5** Barra superior unificada; menú de Look con "Editar looks…". (2026-10-20, commit 94586d6a.)
 - [x] **F12.6** Columna izquierda: encabezados y filas del kit, categorías traducidas, sin título duplicado. (2026-10-20, commit 58e57c5b; incluye reset de `global.css` en `@layer base`.)
-- [ ] **F12.7** Panel derecho: tira vertical de limpiar y ⓧ de limpiar todo. **Movida a F14.9** (2026-10-20): requiere reorganizar el layout de `Preview.svelte`; ver `docs/informes/f12.md`.
+- [x] **F12.7** **Cancelada (2026-11-06):** se resuelve al migrar esa pantalla a React (F24). Panel derecho: tira vertical de limpiar y ⓧ de limpiar todo. **Movida a F14.9** (2026-10-20): requiere reorganizar el layout de `Preview.svelte`; ver `docs/informes/f12.md`.
 - [x] **F12.8** Textos fijos a traducciones. (2026-10-20, commit 9d338907, parcial: pantallas de F12 y Settings; pestaña activa de Configuración sin revisar.)
 - [x] **F12.9** Pantalla de inicio con el logo. (2026-10-20, commit a8d5045d; ProfileSelector sin cambios.)
-- [ ] **F12.10** Repaso final con capturas (reemplaza a F11.9). **Parcial** (2026-10-20): ver `docs/VERIFICAR-F12.md`. **Reemplazada por F14.10.**
+- [x] **F12.10** **Cancelada (2026-11-06):** se resuelve al migrar esa pantalla a React (F24). Repaso final con capturas (reemplaza a F11.9). **Parcial** (2026-10-20): ver `docs/VERIFICAR-F12.md`. **Reemplazada por F14.10.**
 - [x] **F12.11** Roadmap e informe. (2026-10-20, `docs/informes/f12.md`, estado PARCIAL por F12.7.)
 - [x] **F12.12** Tema fijo: se quita la pestaña "Tema" de Configuración (y el menú
   contextual, duplicar/borrar/exportar/importar temas). Al arrancar siempre se aplica
@@ -1567,7 +1567,7 @@ antes de los tokens: así F14.2 en adelante estiliza el layout definitivo.
   fila "Clear all" con contorno rojo y una tira de 5 íconos) ya es de dos filas y es
   consistente con el resto; si se la quiere igual, es una tarea propia con captura.
 
-- [ ] **F14.10 Repaso final (reemplaza F12.10).** **Parcial** (2026-10-20). Hay 7 capturas en
+- [x] **F14.10 Repaso final (reemplaza F12.10).** **Cancelada (2026-11-06):** se resuelve al migrar esa pantalla a React (F24). **Parcial** (2026-10-20). Hay 7 capturas en
   macOS de Show, Edit, Pantallas, Looks y el menú de Looks (`docs/capturas/f14/despues-*.png`);
   **faltan Windows y la prueba a 1280×800.** Lo que mostraron y se corrigió en este repaso:
   íconos de sección de Edit en rosa/violeta/naranja/verde (`sectionColors`, borrado), íconos
@@ -1739,6 +1739,92 @@ Sin documento de plan aparte (el usuario pidió ejecutar directo).
 
 ---
 
+## F23 — Núcleo: engine, backend y seguridad
+
+Plan: docs/superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md
+
+- [x] **F23.1** Registrar los planes y poner al día la documentación.
+- [ ] **F23.2** Clippy en cero y bloqueante en CI.
+- [ ] **F23.3** Un error de la GPU o un pánico no cierran la app.
+- [ ] **F23.4** Un renderer de texto por capa.
+- [ ] **F23.5** El atlas de texto se recorta y los errores de texto se registran.
+- [ ] **F23.6** Viewport y scissor siempre dentro del destino.
+- [ ] **F23.7** Imágenes con tamaño máximo y presupuesto de memoria de video.
+- [ ] **F23.8** Cerrar la ventana o salir siempre pasa por el guardado.
+- [ ] **F23.9** Servidores de red que respetan "deshabilitado".
+- [ ] **F23.10** El texto bíblico sólo deja pasar etiquetas conocidas.
+- [ ] **F23.11** Cálculos sin `new Function`.
+- [ ] **F23.12** Content Security Policy.
+- [ ] **F23.13** Video: pausa, posición y salto en los decodificadores.
+- [ ] **F23.14** El video del proyector sigue al transporte.
+- [ ] **F23.15** El reloj del proyector avanza.
+- [ ] **F23.16** Fondo, borde, esquinas, opacidad y padding de los cuadros.
+- [ ] **F23.17** Contador de slides, eventos y variables en el proyector.
+- [ ] **F23.18** Espaciado entre letras, subrayado y tachado.
+- [ ] **F23.19** El stage usa los layouts del usuario.
+- [ ] **F23.20** Video dentro de una slide.
+- [ ] **F23.21** Transiciones `scale` y `blur`.
+- [ ] **F23.22** Las funciones no disponibles lo dicen.
+- [ ] **F23.23** Los errores no salen de la máquina del usuario.
+- [ ] **F23.24** Guía única de prueba en hardware (agente).
+- [ ] **F23.25** Ejecutar la guía (usuario) y convertir fallas en tareas.
+
+---
+
+## F24 — Migración de la UI a React
+
+Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
+
+- [ ] **F24.1** Base de React en el proyecto.
+- [ ] **F24.2** `useStore` y el kit de stores para tests.
+- [ ] **F24.3** `ReactIsland`, React dentro de Svelte.
+- [ ] **F24.4** `SvelteIsland`, Svelte dentro de React.
+- [ ] **F24.5** Traducción e íconos en React.
+- [ ] **F24.6** Kit en React: base (`button`, `input`, `link`, `h-rule`, `title`, `section-header`, `capsule`, `list-row`).
+- [ ] **F24.7** Kit en React: controles (`dropdown`, `stepper`, `slider`, `tabs`, `menu`, `zoom-control`, `choice-grid`).
+- [ ] **F24.8** Kit en React: campos I (`text-field`, `number-field`, `textarea-field`, `select-field`, `toggle-field`, `checkbox-field`, `segmented-field`, `toggle-group-field`).
+- [ ] **F24.9** Kit en React: campos II (`color-field`, `colors-field`, `font-field`, `file-field`, `folder-field`, `time-field`, `date-field`, `radial-field`, `popup-field`).
+- [ ] **F24.10** Kit en React: distribución y demo (`input-row`, `floating-bar`, `list`, `dynamic-list`, `combined-input`, `hidden-input`) y popup `kit_demo_react`.
+- [ ] **F24.11** Componentes de sistema.
+- [ ] **F24.12** Configuración (I): general, archivos y otros.
+- [ ] **F24.13a** Configuración (II): perfiles y conexión.
+- [ ] **F24.13b** Configuración (II): ruteo de audio.
+- [ ] **F24.14** Pantallas y Looks.
+- [ ] **F24.15a** Popups, tanda a (About → ChooseChord).
+- [ ] **F24.15b** Popups, tanda b (ChooseMediaInput → Conditions).
+- [ ] **F24.15c** Popups, tanda c (ConditionsBox → DisplayDuration).
+- [ ] **F24.15d** Popups, tanda d (DynamicValues → ImportScripture).
+- [ ] **F24.15e** Popups, tanda e (Initialize → MaxLines), con `KitDemo` reemplazado por `KitDemoReact`.
+- [ ] **F24.15f** Popups, tanda f (MediaFit → Rename).
+- [ ] **F24.15g** Popups, tanda g (ResetAll → SlideMidi).
+- [ ] **F24.15h** Popups, tanda h (SlideShortcut → WebSearch).
+- [ ] **F24.16** Columna izquierda.
+- [ ] **F24.17a** Cajón, tanda a: raíz de `drawer/`, `navigation/*`.
+- [ ] **F24.17b** Cajón, tanda b: `media/*`.
+- [ ] **F24.17c** Cajón, tanda c: `audio/` (paneles y metrónomo).
+- [ ] **F24.17d** Cajón, tanda d: `audio/` (efectos).
+- [ ] **F24.17e** Cajón, tanda e: `info/*`.
+- [ ] **F24.17f** Cajón, tanda f: `live/*`.
+- [ ] **F24.17g** Cajón, tanda g: `pages/*`.
+- [ ] **F24.17h** Cajón, tanda h: `player/*`, `calendar/*`, `effects/*`, `timers/*` y `system/Player`.
+- [ ] **F24.17i** Cajón, tanda i: `bible/Scripture`.
+- [ ] **F24.18a** Slides: `views/*` y relojes de `system/`.
+- [ ] **F24.18b** Slides: textbox, slide, layouts, íconos y acciones.
+- [ ] **F24.19a** Stage.
+- [ ] **F24.19b** Línea de tiempo.
+- [ ] **F24.20a** Show (sin `left/`).
+- [ ] **F24.20b** Controles de `components/output/`.
+- [ ] **F24.20c** Vista previa de `components/output/`.
+- [ ] **F24.21a** Editor: paneles.
+- [ ] **F24.21b** Editor: editores de medios y otros.
+- [ ] **F24.21c** Editor: edición de texto (`contenteditable`).
+- [ ] **F24.22** Lo que queda: menú contextual, búsqueda rápida, acciones y restos.
+- [ ] **F24.23** La raíz pasa a React.
+- [ ] **F24.24** Sacar Svelte.
+- [ ] **F24.25** Aceptación (usuario).
+
+---
+
 ## Deuda registrada (sin tarea)
 
 - **Cliente `src/server/controller`** todavía tiene la interfaz de Dibujo (Focus, Zoom,
@@ -1750,6 +1836,19 @@ Sin documento de plan aparte (el usuario pidió ejecutar directo).
   (`src-tauri/src/server/`, puertos 5510–5513) levantan pero sirven carpetas vacías. Se
   decidió (2026-10-20) dejarlos como están. Revivirlos requiere build propio, bundling,
   tipar los mensajes del server (hoy `serde_json::Value`) y prueba desde un celular.
+- Ítems `qr_code`, `icon`, `camera`, `web`, `visualizer`, `captions`, `metronome`, `current_output`, `chart`, `table`, `weather`, `button` y el reloj analógico en el proyector.
+- Rotación de ítems.
+- Acordes en la salida.
+- Efectos (`effectRenderer.ts`).
+- Fondos PDF, PPT, captura de pantalla, NDI, cámara y reproductor (YouTube/Vimeo).
+- MIDI, OSC, timecode, NDI y Blackmagic reales (hoy los comandos devuelven listas vacías o sólo guardan la configuración).
+- Sincronización en la nube real.
+- Grabador.
+- RTMP.
+- Clientes web de control remoto.
+- Color de fondo del stage.
+- Autoajuste de texto medido por el engine.
+- Lógica de negocio dentro de `commands/` (viola `AGENTS.md`; `files.rs` tiene 1081 líneas).
 
 ## Fuera de alcance por ahora
 

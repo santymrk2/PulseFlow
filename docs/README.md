@@ -10,7 +10,10 @@
 | [`VERIFICAR.md`](VERIFICAR.md) | Pruebas manuales que sólo se pueden hacer con la app y los monitores reales. |
 | [`VERIFICAR-F12.md`](VERIFICAR-F12.md) | Repaso visual parcial de la fase F12 (lo que queda lo retoma F14.10). |
 | [`distribucion.md`](distribucion.md) | Firma (F16.1, preparada) y actualizaciones (F16.2, pendiente): secretos y pasos. |
-| [`PLAN-F12.md`](PLAN-F12.md) | Plan detallado de coherencia visual (F12), todavía en curso. |
+| [`PLAN-F12.md`](PLAN-F12.md) | Plan de coherencia visual (F12), cerrado; lo pendiente se hace en React (F24). |
+| [`superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md`](superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md) | Plan de F23: engine wgpu, backend Rust y seguridad (2026-11-06). |
+| [`superpowers/plans/2026-11-06-f24-migracion-react.md`](superpowers/plans/2026-11-06-f24-migracion-react.md) | Plan de F24: migración de la UI de Svelte a React, por tandas (2026-11-06). |
+| [`superpowers/plans/2026-11-06-guia-para-ejecutores.md`](superpowers/plans/2026-11-06-guia-para-ejecutores.md) | Guía para quien ejecuta los planes F23 y F24: cómo trabajar una tarea y cuándo parar (2026-11-06). |
 
 ## Diseño
 

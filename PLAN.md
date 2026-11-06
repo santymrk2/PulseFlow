@@ -57,47 +57,7 @@ Decisiones de diseño:
 
 ## Estado real (honesto)
 
-Hecho y funcionando a nivel código (compila; falta validación manual con hardware):
-
-- Ventana nativa sin webview + swapchain wgpu con VSync.
-- Texto en GPU con glyphon/cosmic-text, carga de fuentes del sistema/custom, stroke y sombra.
-- Imágenes a textura (crate `image`) y media pool con reutilización de texturas entre salidas.
-- Shaders WGSL de transición (crossfade, dip-to-black, push/wipe) con easing por uniforms en
-  `render/transition.rs`. **Ojo:** el bucle de render de salida todavía NO los usa; `RENDER_SCENE` sólo
-  guarda la configuración (tipo, duración, easing) y el cambio de slide es instantáneo.
-- Stage display: ventana nativa propia.
-- `TOGGLE_OUTPUTS` abre/cierra las salidas y emite `OUTPUT_STATE` al frontend. La API de
-  ventanas por tipo (`OPEN/CLOSE/IS_OUTPUT_WINDOW(_OPEN)`, `OPEN/CLOSE/IS_STAGE_WINDOW(_OPEN)`)
-  y el no-op `OUTPUTS` se eliminaron en F2.7 (sin uso en el frontend); hoy abrir/cerrar
-  salida pasa por `TOGGLE_OUTPUTS` y la escena por `RENDER_SCENE`.
-- **Scene Graph (`RENDER_SCENE`):** Svelte serializa el output activo (`sceneGraph.ts`, tipo en
-  `src/types/SceneGraph.ts`, espejo en `render/scene.rs`) con items de texto en coordenadas de la
-  resolución de la salida (posición, tamaño, fuente, peso, color, alineación horizontal/vertical,
-  line-height, stroke, sombra, tramos con estilo propio), fondo (ruta, tipo, ajuste) y transición.
-  El engine escala de la resolución lógica (1920 de ancho) a la ventana real.
-
-Limitaciones reales:
-
-- **Video:** se decodifica con **ffmpeg por pipe** (CPU) y se sube cada frame a una
-  textura. NO es decodificación por hardware ni zero-copy. Sin sincronización
-  audio/video ni control fino de reproducción.
-- **Stage:** muestra texto plano (slide actual/siguiente), no los layouts reales de stage heredados de FreeShow.
-- **NDI:** no hay salida ni captura. La captura de framebuffer del engine se eliminó en
-  F8.4 (2026-10-19) porque era código muerto: escribía a un buffer cuyo contenido nadie
-  leía nunca. Ver `docs/VERIFICAR.md`, sección "F8.4".
-- **Overlays, timers y alertas** no se renderizan en el engine.
-- **Limitaciones del Scene Graph actual:**
-  - Sólo items de texto; los items de media, timer, reloj, web, cámara, formas, etc. se ignoran.
-  - La alineación horizontal es una por item (la de la primera línea); no por línea.
-  - El stroke y la sombra se toman del primer tramo de texto del item; el blur de `text-shadow` se ignora.
-  - Autosize de texto: sólo se usa `autoFontSize` si ya está calculado; el engine no mide.
-  - No se aplican `letter-spacing`, fondos/bordes del item, ni `lineGap`.
-  - Sólo se renderiza una salida de audiencia (la primera activa); el Stage Display recibe el texto
-    plano de esa misma escena.
-  - Color de fondo sólido, `filter`, `flipped` y `blend` del fondo no se aplican.
-  - La relación de aspecto del estilo de salida se asume igual a la de la ventana (se escala por ancho).
-- Antes de la Fase 2 el comando `OUTPUTS` concatenaba todo el texto de la slide con
-  fuente 56 fija y un rect 1720x700 fijo (se perdían posiciones y estilos).
+> Esta sección describía el estado al 2026-10-18 y quedó vieja. El estado vigente está en docs/ROADMAP.md (F23 y F24).
 
 ## Fases
 

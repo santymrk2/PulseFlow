@@ -124,24 +124,24 @@ autoajuste de texto medido por el engine · lógica de negocio dentro de `comman
 - Modify: `PLAN.md:58-100`
 - Modify: `docs/README.md`
 
-- [ ] **Step 1:** en F10.9, F12.7, F12.10 y F14.10 cambiar `- [ ]` por `- [x]` y agregar al título:
+- [x] **Step 1:** en F10.9, F12.7, F12.10 y F14.10 cambiar `- [ ]` por `- [x]` y agregar al título:
   `**Cancelada (2026-11-06):** se resuelve al migrar esa pantalla a React (F24).` No borrar el texto existente.
   **F16.1 y F16.2 siguen vigentes** (la app sigue en Tauri).
-- [ ] **Step 2:** agregar `## F23 — Núcleo: engine, backend y seguridad` con
+- [x] **Step 2:** agregar `## F23 — Núcleo: engine, backend y seguridad` con
   `Plan: docs/superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md` y un checkbox por tarea F23.1–F23.25
   (sólo el título). Después, `## F24 — Migración de la UI a React` con
   `Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md` y un checkbox por tarea de ese plan.
-- [ ] **Step 3:** en "Deuda registrada" agregar una viñeta por cada punto de "Fuera de este plan" de arriba, copiando
+- [x] **Step 3:** en "Deuda registrada" agregar una viñeta por cada punto de "Fuera de este plan" de arriba, copiando
   el texto.
-- [ ] **Step 4:** en `PLAN.md`, reemplazar el cuerpo de "Estado real (honesto)" y "Limitaciones reales" (desde l.58
+- [x] **Step 4:** en `PLAN.md`, reemplazar el cuerpo de "Estado real (honesto)" y "Limitaciones reales" (desde l.58
   hasta antes de `## Fases`) por:
   `> Esta sección describía el estado al 2026-10-18 y quedó vieja. El estado vigente está en docs/ROADMAP.md (F23 y F24).`
-- [ ] **Step 5:** en `docs/README.md`, la fila de `PLAN-F12.md` pasa a
+- [x] **Step 5:** en `docs/README.md`, la fila de `PLAN-F12.md` pasa a
   `Plan de coherencia visual (F12), cerrado; lo pendiente se hace en React (F24).`. Agregar a "Dónde empezar" filas
   para los tres documentos de `superpowers/plans/` con fecha 2026-11-06.
-- [ ] **Step 6:** Run: `rg -n "^- \[ \] \*\*F(10\.9|12\.7|12\.10|14\.10)" docs/ROADMAP.md`. Expected: sin
+- [x] **Step 6:** Run: `rg -n "^- \[ \] \*\*F(10\.9|12\.7|12\.10|14\.10)" docs/ROADMAP.md`. Expected: sin
   resultados. Run: `rg -c "2026-11-06-f2[34]" docs/ROADMAP.md docs/README.md`. Expected: ≥ 1 en cada uno.
-- [ ] **Step 7:** commit `F23.1: planes de F23 y F24 registrados y documentación al día`.
+- [x] **Step 7:** commit `F23.1: planes de F23 y F24 registrados y documentación al día`.
 
 ---
 
