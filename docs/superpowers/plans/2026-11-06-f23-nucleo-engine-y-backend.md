@@ -262,7 +262,7 @@ Por qué: glyphon escribe los vértices de un `TextRenderer` con `queue.write_bu
 hacen que los dos draws usen los datos del último, y si el último es más grande, `vertex_buffer.destroy()` invalida
 el primer draw.
 
-- [ ] **Step 1: Test que falla.** `capas_de_texto_no_se_pisan`: con `gpu::shared()`, una textura offscreen de
+- [x] **Step 1: Test que falla.** `capas_de_texto_no_se_pisan`: con `gpu::shared()`, una textura offscreen de
   320×180 (`Rgba8UnormSrgb`, `RENDER_ATTACHMENT | COPY_SRC`) y **un** render pass:
   - capa `Slide`: bloque "A" de 60 px, blanco, en x 10..60, y 10..80;
   - capa `Overlay`: bloque "OVERLAY LARGO" de 40 px, rojo, en x 10..310, y 110..170.
@@ -271,14 +271,14 @@ el primer draw.
   con R, G, B > 200) y en la del overlay píxeles rojos (R > 200, G < 80). Además,
   `gpu.uncaptured_errors()` no cambió. Hasta que exista la API con `layer`, el test se escribe llamando dos veces a la
   `render` actual: tiene que fallar (o faltan los blancos o sube el contador).
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::text::tests::capas_de_texto_no_se_pisan`. Expected: FAIL.
-- [ ] **Step 3: Implementar.** Crear los 4 `TextRenderer` en `TextEngine::new` y, en `render`, usar
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::text::tests::capas_de_texto_no_se_pisan`. Expected: FAIL.
+- [x] **Step 3: Implementar.** Crear los 4 `TextRenderer` en `TextEngine::new` y, en `render`, usar
   `self.renderers[layer as usize]`. Asignación en `render_loop.rs`: l.271 → `Slide`, l.308 → `Overlay`,
   l.327 → `Previous`, l.372 → `Chrome`. En `snapshot.rs`, un solo `TextEngine`, con `Slide` y `Overlay`.
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: todo verde, **goldens incluidos sin regenerar**.
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: todo verde, **goldens incluidos sin regenerar**.
 - [ ] **Step 5: En la app:** un show con texto corto ("Amén") y un overlay con texto largo encendido; pasar el mouse
   sobre la pantalla de salida para que aparezca la ✕. Expected: se ven los tres textos y la app no se cierra.
-- [ ] **Step 6:** commit `F23.4: cada capa de texto tiene su renderer y no se pisan`.
+- [x] **Step 6:** commit `F23.4: cada capa de texto tiene su renderer y no se pisan`.
 
 ---
 

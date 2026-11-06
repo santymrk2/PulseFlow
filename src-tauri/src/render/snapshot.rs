@@ -13,7 +13,7 @@ use crate::error::{AppError, AppResult};
 use super::frame::fit_content_rect;
 use super::media::MediaStore;
 use super::scene::ScenePayload;
-use super::text::TextEngine;
+use super::text::{TextEngine, TextLayer};
 
 /// Formato de la textura offscreen: RGBA 8 bits con sRGB, el mismo que el
 /// swapchain de la salida y el formato natural del PNG.
@@ -214,18 +214,18 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
             }
         }
 
+        let mut text_engine = TextEngine::new(device, queue, SNAPSHOT_FORMAT);
+
         // Capa 3: texto principal.
         let blocks = scene.text_blocks();
         if !blocks.is_empty() {
-            let mut text_engine = TextEngine::new(device, queue, SNAPSHOT_FORMAT);
-            text_engine.render(device, queue, &mut render_pass, frame_w, frame_h, &blocks)?;
+            text_engine.render(TextLayer::Slide, device, queue, &mut render_pass, frame_w, frame_h, &blocks)?;
         }
 
         // Capa 5: texto de los overlays (F4.6).
         let overlay_blocks = scene.overlay_text_blocks();
         if !overlay_blocks.is_empty() {
-            let mut text_engine = TextEngine::new(device, queue, SNAPSHOT_FORMAT);
-            text_engine.render(device, queue, &mut render_pass, frame_w, frame_h, &overlay_blocks)?;
+            text_engine.render(TextLayer::Overlay, device, queue, &mut render_pass, frame_w, frame_h, &overlay_blocks)?;
         }
     }
 

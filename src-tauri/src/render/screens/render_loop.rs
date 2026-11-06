@@ -271,7 +271,7 @@ pub(super) fn spawn_render_loop(
                         };
 
                         if !blocks.is_empty() {
-                            let _ = text_engine.render(&device, &queue, &mut pass, w, h, &blocks);
+                            let _ = text_engine.render(TextLayer::Slide, &device, &queue, &mut pass, w, h, &blocks);
                         }
 
                         // Capa de overlays del Scene Graph (F4.6): fondo → medios slide →
@@ -309,6 +309,7 @@ pub(super) fn spawn_render_loop(
                             // Texto de los overlays.
                             if !current.overlay_text.is_empty() {
                                 let _ = text_engine.render(
+                                    TextLayer::Overlay,
                                     &device,
                                     &queue,
                                     &mut pass,
@@ -327,7 +328,7 @@ pub(super) fn spawn_render_loop(
                                 .map(|o| overlay_block(o, w))
                                 .collect();
                             if !old_blocks.is_empty() {
-                                let _ = text_engine.render(&device, &queue, &mut pass, w, h, &old_blocks);
+                                let _ = text_engine.render(TextLayer::Previous, &device, &queue, &mut pass, w, h, &old_blocks);
                             }
                         }
                     }
@@ -372,7 +373,7 @@ pub(super) fn spawn_render_loop(
                             multiview_mask: None,
                         });
                         let block = close_button::block(config.height, cursor_on_button);
-                        let _ = text_engine.render(&device, &queue, &mut pass, config.width, config.height, &[block]);
+                        let _ = text_engine.render(TextLayer::Chrome, &device, &queue, &mut pass, config.width, config.height, &[block]);
                     }
 
                     queue.submit([encoder.finish()]);
