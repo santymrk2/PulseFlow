@@ -142,6 +142,8 @@ export interface SceneTextItem {
     color: SceneColor
     stroke?: { color: SceneColor; width: number }
     shadow?: { color: SceneColor; offsetX: number; offsetY: number }
+    /** Espaciado entre letras en px (por defecto 0) */
+    letterSpacing?: number
     /** Texto completo con saltos de línea (\n) */
     text: string
     /** Tramos con estilo propio; los saltos de línea van dentro de los textos */
@@ -159,6 +161,8 @@ export interface SceneTextSpan {
     fontWeight?: number
     fontStyle?: "normal" | "italic"
     color?: SceneColor
+    underline?: boolean
+    strike?: boolean
 }
 
 /**

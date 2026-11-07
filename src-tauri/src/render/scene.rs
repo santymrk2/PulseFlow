@@ -267,6 +267,9 @@ pub struct SceneTextItem {
     /// Fondo, borde, esquinas, opacidad y padding del cuadro (F23.16).
     #[serde(default, rename = "box", skip_serializing_if = "Option::is_none")]
     pub box_style: Option<SceneBox>,
+    /// Espaciado entre letras en px (F23.18).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub letter_spacing: Option<f32>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -333,6 +336,7 @@ fn text_block(t: &SceneTextItem, design_width: f32) -> TextBlock {
         design_width: Some(design_width),
         live: t.live,
         box_style: t.box_style.clone(),
+        letter_spacing: t.letter_spacing,
     }
 }
 

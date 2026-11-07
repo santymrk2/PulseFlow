@@ -1760,7 +1760,7 @@ Plan: docs/superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md
 - [ ] **F23.15** El reloj del proyector avanza.
 - [ ] **F23.16** Fondo, borde, esquinas, opacidad y padding de los cuadros.
 - [ ] **F23.17** Contador de slides, eventos y variables en el proyector.
-- [ ] **F23.18** Espaciado entre letras, subrayado y tachado.
+- [x] **F23.18** Espaciado entre letras, subrayado y tachado.
 - [ ] **F23.19** El stage usa los layouts del usuario.
 - [ ] **F23.20** Video dentro de una slide.
 - [ ] **F23.21** Transiciones `scale` y `blur`.

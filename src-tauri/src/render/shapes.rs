@@ -5,6 +5,7 @@
 
 use super::media::{LayerArena, LayerLayouts, LayerUniforms};
 use super::scene::SceneBox;
+use super::text::Decoration;
 use super::types::{MediaItem, TextBlock};
 
 /// Uniforms de una caja. Mide lo mismo que `LayerUniforms` para compartir la arena.
@@ -206,6 +207,21 @@ impl ShapePipeline {
                 };
                 self.draw_box(device, queue, arena, pass, style, rect, scale, target);
             }
+        }
+    }
+
+    /// Dibuja los subrayados y tachados de una capa de texto (F23.18): rectángulos sin radio, en píxeles del destino.
+    pub fn draw_decorations(
+        &self,
+        device: &wgpu::Device,
+        queue: &wgpu::Queue,
+        arena: &mut LayerArena,
+        pass: &mut wgpu::RenderPass<'_>,
+        decorations: &[Decoration],
+        target: (u32, u32),
+    ) {
+        for d in decorations {
+            self.draw_rounded_rect(device, queue, arena, pass, d.rect, d.color, d.color, 0.0, 0.0, target);
         }
     }
 

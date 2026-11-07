@@ -115,7 +115,9 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
                     fontSize: partStyle.fontSize,
                     fontWeight: partStyle.fontWeight,
                     fontStyle: partStyle.fontStyle,
-                    color: partStyle.color
+                    color: partStyle.color,
+                    underline: partStyle.underline ?? base.underline,
+                    strike: partStyle.strike ?? base.strike
                 })
             )
         })
@@ -150,6 +152,7 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
         color: resolved.color || [1, 1, 1, 1],
         stroke: resolved.strokeWidth && resolved.strokeWidth > 0 ? { color: resolved.strokeColor || [0, 0, 0, 1], width: resolved.strokeWidth } : undefined,
         shadow: resolved.shadow || undefined,
+        letterSpacing: resolved.letterSpacing,
         text,
         spans,
         box: parseBoxStyle(item.style)

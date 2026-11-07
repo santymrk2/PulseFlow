@@ -483,3 +483,77 @@ fn caja_sin_borde_antialiasea_una_sola_vez() {
     assert!((160..=215).contains(&r), "el píxel del borde debería tener cobertura ~0.5, tiene canal rojo {r}");
     assert_eq!(pixel_at(&rgba, w, 90, 90), [255, 255, 255], "interior");
 }
+
+/// F23.18: "Hola" rojo de 40 px (320x180) con los extras de estilo del tramo / bloque.
+fn texto_decorado(span_extra: serde_json::Value, item_extra: serde_json::Value) -> Vec<u8> {
+    let (w, h) = (320u32, 180u32);
+    let mut span = serde_json::json!({ "text": "Hola" });
+    span.as_object_mut().expect("tramo").extend(span_extra.as_object().expect("extras del tramo").clone());
+    let mut item = serde_json::json!({
+        "type": "text", "x": 0, "y": 40, "width": 320, "height": 100,
+        "align": "left", "verticalAlign": "top", "lineHeight": 1.2,
+        "fontSize": 40, "fontWeight": 400, "color": [1, 0, 0, 1],
+        "text": "Hola", "spans": [span]
+    });
+    item.as_object_mut().expect("item").extend(item_extra.as_object().expect("extras del item").clone());
+    let scene = scene(serde_json::json!({ "outputId": "golden-decorado", "width": w, "height": h, "items": [item] }));
+    render_snapshot_rgba(&scene, w, h).expect("render del snapshot")
+}
+
+fn es_rojo([r, g, b]: [u8; 3]) -> bool {
+    r > 200 && g < 80 && b < 80
+}
+
+/// Píxeles rojos de la fila `y` (escena de 320 de ancho).
+fn rojos_en_fila(rgba: &[u8], y: u32) -> usize {
+    (0..320).filter(|&x| es_rojo(pixel_at(rgba, 320, x, y))).count()
+}
+
+/// Última fila con píxeles rojos (la línea base: "Hola" no tiene descendentes).
+fn fila_base(rgba: &[u8]) -> u32 {
+    (0..180).rev().find(|&y| rojos_en_fila(rgba, y) > 0).expect("hay texto rojo")
+}
+
+#[test]
+fn golden_texto_subrayado() {
+    let sin = texto_decorado(serde_json::json!({}), serde_json::json!({}));
+    let con = texto_decorado(serde_json::json!({ "underline": true }), serde_json::json!({}));
+    let base = fila_base(&sin);
+    let franja = |rgba: &[u8]| (base + 3..=base + 7).map(|y| rojos_en_fila(rgba, y)).sum::<usize>();
+    assert_eq!(franja(&sin), 0, "sin subrayado no hay rojo bajo la línea base");
+    assert!(franja(&con) > 100, "el subrayado dibuja rojo bajo la línea base ({})", franja(&con));
+    assert_golden("texto-subrayado", &con, 320, 180);
+}
+
+#[test]
+fn texto_tachado_dibuja_una_linea_a_media_altura() {
+    let sin = texto_decorado(serde_json::json!({}), serde_json::json!({}));
+    let con = texto_decorado(serde_json::json!({ "strike": true }), serde_json::json!({}));
+    let y = fila_base(&sin) - 10;
+    assert!(rojos_en_fila(&con, y) > rojos_en_fila(&sin, y) + 20, "el tachado rellena la fila {y}");
+}
+
+#[test]
+fn espaciado_entre_letras_ensancha_el_texto() {
+    let ancho = |rgba: &[u8]| {
+        let xs: Vec<u32> = (0..320).filter(|&x| (0..180).any(|y| es_rojo(pixel_at(rgba, 320, x, y)))).collect();
+        xs.last().copied().unwrap_or(0) - xs.first().copied().unwrap_or(0)
+    };
+    let normal = ancho(&texto_decorado(serde_json::json!({}), serde_json::json!({})));
+    let ancho_espaciado = ancho(&texto_decorado(serde_json::json!({}), serde_json::json!({ "letterSpacing": 10 })));
+    assert!(ancho_espaciado >= normal + 25, "3 separaciones de 10 px: {normal} -> {ancho_espaciado}");
+}
+
+/// La opacidad de la caja y el padding alcanzan a la decoración (sale de las posiciones reales de los glifos).
+#[test]
+fn subrayado_sigue_el_padding_y_la_opacidad_de_la_caja() {
+    let con_caja = texto_decorado(
+        serde_json::json!({ "underline": true }),
+        serde_json::json!({ "box": { "padding": { "top": 0, "left": 100, "right": 0, "bottom": 0 }, "opacity": 0.5 } }),
+    );
+    let base = fila_base(&texto_decorado(serde_json::json!({}), serde_json::json!({ "box": { "padding": { "top": 0, "left": 100, "right": 0, "bottom": 0 } } })));
+    let y = base + 5;
+    assert_eq!((0..100).filter(|&x| pixel_at(&con_caja, 320, x, y)[0] > 0).count(), 0, "el subrayado no invade el padding izquierdo");
+    let [r, ..] = pixel_at(&con_caja, 320, 120, y);
+    assert!((90..=200).contains(&r), "la opacidad 0.5 atenúa el subrayado (canal rojo {r})");
+}

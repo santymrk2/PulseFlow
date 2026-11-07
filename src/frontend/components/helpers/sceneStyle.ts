@@ -146,6 +146,10 @@ export interface ParsedTextStyle {
     strokeColor?: SceneColor
     shadow?: { color: SceneColor; offsetX: number; offsetY: number } | null
     textTransform?: string
+    /** px */
+    letterSpacing?: number
+    underline?: boolean
+    strike?: boolean
 }
 
 /** Propiedades de texto presentes en un `style` CSS (sólo las que aparecen) */
@@ -165,6 +169,10 @@ export function parseTextStyle(style: string | undefined): ParsedTextStyle {
     if (raw["-webkit-text-stroke-color"]) parsed.strokeColor = parseCssColor(raw["-webkit-text-stroke-color"], [0, 0, 0, 1])
     if (raw["text-shadow"]) parsed.shadow = parseTextShadow(raw["text-shadow"])
     if (raw["text-transform"]) parsed.textTransform = raw["text-transform"]
+    if (raw["letter-spacing"]) parsed.letterSpacing = parseNumber(raw["letter-spacing"], 0) || undefined
+    const decoration = `${raw["text-decoration"] ?? ""} ${raw["text-decoration-line"] ?? ""}`
+    if (decoration.includes("underline")) parsed.underline = true
+    if (decoration.includes("line-through")) parsed.strike = true
 
     return parsed
 }

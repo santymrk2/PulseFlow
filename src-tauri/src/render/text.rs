@@ -72,6 +72,14 @@ pub enum TextLayer {
     Chrome,
 }
 
+/// Rectángulo de subrayado o tachado, en píxeles del destino (glyphon 0.12 no los dibuja).
+#[derive(Clone, Copy, Debug, PartialEq)]
+pub struct Decoration {
+    /// x, y, ancho, alto.
+    pub rect: [f32; 4],
+    pub color: [f32; 4],
+}
+
 /// Pipeline de texto WGPU que renderiza glifos cacheados en VRAM.
 pub struct TextEngine {
     pub font_atlas: FontAtlas,
@@ -79,6 +87,8 @@ pub struct TextEngine {
     pub atlas: TextAtlas,
     pub viewport: Viewport,
     renderers: [TextRenderer; 4],
+    /// Decoraciones de la última llamada a `render` de cada capa (F23.18).
+    decorations: [Vec<Decoration>; 4],
 }
 
 impl TextEngine {
@@ -97,12 +107,20 @@ impl TextEngine {
             atlas,
             viewport,
             renderers,
+            decorations: Default::default(),
         }
     }
 
     /// Recorta el atlas de glifos: libera los que el frame no usó. Se llama tras presentar cada frame.
     pub fn end_frame(&mut self) {
         self.atlas.trim();
+    }
+
+    /// Subrayados y tachados de la última `render` de la capa. Quien llama los dibuja con
+    /// `ShapePipeline::draw_decorations` en el MISMO pass, justo después de `render`: así quedan
+    /// encima del texto y de la caja de F23.16 (que se dibuja antes del texto).
+    pub fn decorations(&self, layer: TextLayer) -> &[Decoration] {
+        &self.decorations[layer as usize]
     }
 
     /// Prepara y renderiza los bloques de texto de la escena actual en el render pass.
@@ -117,6 +135,7 @@ impl TextEngine {
         screen_height: u32,
         blocks: &[TextBlock],
     ) -> AppResult<()> {
+        self.decorations[layer as usize].clear();
         if blocks.is_empty() {
             return Ok(());
         }
@@ -157,6 +176,7 @@ impl TextEngine {
 
         // Capas: 1) sombra, 2) contorno en 8 direcciones, 3) texto principal.
         let mut text_areas = Vec::new();
+        let mut decorations = Vec::new();
 
         for (i, block) in blocks.iter().enumerate() {
             let BlockLayout { scale, offset_y } = layouts[i];
@@ -199,6 +219,7 @@ impl TextEngine {
                 }
             }
 
+            decorations.extend(block_decorations(&mains[i], block, base_x, base_y, scale));
             text_areas.push(TextArea {
                 buffer: &mains[i],
                 left: base_x,
@@ -229,6 +250,7 @@ impl TextEngine {
             .render(&self.atlas, &self.viewport, render_pass)
             .map_err(|e| AppError::new(format!("Error renderizando texto en GPU: {e:?}")))?;
 
+        self.decorations[layer as usize] = decorations;
         Ok(())
     }
 }
@@ -240,7 +262,12 @@ fn build_buffer(font_system: &mut FontSystem, block: &TextBlock, tint: Option<[f
     let line_ratio = block.line_height_ratio.max(1.0);
     let metrics = Metrics::new(block.font_size, block.font_size * line_ratio);
     let base_family = block.font_family.as_deref().filter(|f| !f.is_empty());
-    let attrs = block_attrs(base_family, block.font_weight, block.font_style.as_deref(), tint.unwrap_or(block.color));
+    let letter_spacing = block.letter_spacing.filter(|ls| *ls != 0.0);
+    let attrs = with_spacing(
+        block_attrs(base_family, block.font_weight, block.font_style.as_deref(), tint.unwrap_or(block.color)),
+        letter_spacing,
+        block.font_size,
+    );
 
     let align = match block.alignment.to_lowercase().as_str() {
         "center" => Some(Align::Center),
@@ -261,7 +288,8 @@ fn build_buffer(font_system: &mut FontSystem, block: &TextBlock, tint: Option<[f
         let spans: Vec<(&str, Attrs)> = block
             .spans
             .iter()
-            .map(|span| {
+            .enumerate()
+            .map(|(index, span)| {
                 let family = span.font_family.as_deref().filter(|f| !f.is_empty()).or(base_family);
                 let size = span.font_size.unwrap_or(block.font_size);
                 let color = tint.or(span.color).unwrap_or(block.color);
@@ -271,8 +299,10 @@ fn build_buffer(font_system: &mut FontSystem, block: &TextBlock, tint: Option<[f
                     span.font_style.as_deref().or(block.font_style.as_deref()),
                     color,
                 )
-                .metrics(Metrics::new(size, size * line_ratio));
-                (span.text.as_str(), a)
+                .metrics(Metrics::new(size, size * line_ratio))
+                // El índice del tramo vuelve en `LayoutGlyph::metadata`: así se ubican sus decoraciones.
+                .metadata(index);
+                (span.text.as_str(), with_spacing(a, letter_spacing, size))
             })
             .collect();
         buffer.set_rich_text(spans, &attrs, Shaping::Advanced, align);
@@ -309,6 +339,55 @@ fn block_attrs<'a>(family: Option<&'a str>, weight: u16, style: Option<&str>, co
             _ => Style::Normal,
         })
         .color(to_glyphon_color(color))
+}
+
+/// `letter_spacing` (px) se pasa a cosmic-text en em: `px / tamaño de fuente`.
+fn with_spacing(attrs: Attrs<'_>, letter_spacing: Option<f32>, font_size: f32) -> Attrs<'_> {
+    match letter_spacing {
+        Some(px) if font_size > 0.0 => attrs.letter_spacing(px / font_size),
+        _ => attrs,
+    }
+}
+
+/// Subrayados y tachados de un bloque a partir de las posiciones reales de sus glifos (siguen solos el
+/// padding, la alineación y el salto de línea). Los glifos contiguos del mismo tramo decorado forman un rect.
+fn block_decorations(buffer: &Buffer, block: &TextBlock, base_x: f32, base_y: f32, scale: f32) -> Vec<Decoration> {
+    let mut out = Vec::new();
+    if !block.spans.iter().any(|s| s.underline || s.strike) {
+        return out;
+    }
+    for run in buffer.layout_runs() {
+        // (tramo, x inicial, x final, tamaño de fuente) del rect en curso por tipo: 0 subrayado, 1 tachado.
+        let mut open: [Option<(usize, f32, f32, f32)>; 2] = [None, None];
+        let flush = |kind: usize, cur: Option<(usize, f32, f32, f32)>, out: &mut Vec<Decoration>| {
+            let Some((span, x0, x1, fs)) = cur else { return };
+            let color = block.spans[span].color.unwrap_or(block.color);
+            let (offset, thickness) = (if kind == 0 { fs * 0.12 } else { -fs * 0.30 }, (fs / 16.0).max(1.0));
+            out.push(Decoration {
+                rect: [base_x + x0 * scale, base_y + (run.line_y + offset) * scale, (x1 - x0) * scale, thickness * scale],
+                color,
+            });
+        };
+        for glyph in run.glyphs {
+            let span = block.spans.get(glyph.metadata);
+            for (kind, slot) in open.iter_mut().enumerate() {
+                let on = span.is_some_and(|s| if kind == 0 { s.underline } else { s.strike });
+                match (slot, on) {
+                    (Some(cur), true) if cur.0 == glyph.metadata => cur.2 = glyph.x + glyph.w,
+                    (cur, _) => {
+                        flush(kind, cur.take(), &mut out);
+                        if on {
+                            *cur = Some((glyph.metadata, glyph.x, glyph.x + glyph.w, glyph.font_size));
+                        }
+                    }
+                }
+            }
+        }
+        for (kind, cur) in open.into_iter().enumerate() {
+            flush(kind, cur, &mut out);
+        }
+    }
+    out
 }
 
 /// Convierte un color [r, g, b, a] normalizado (0.0..1.0) a `glyphon::Color`.

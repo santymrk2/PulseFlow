@@ -72,6 +72,9 @@ pub struct TextBlock {
     /// Caja del cuadro (fondo, borde, esquinas, opacidad, padding): el engine la dibuja antes del texto (F23.16).
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub box_style: Option<SceneBox>,
+    /// Espaciado entre letras en las unidades del bloque (px); `None` = el de la fuente (F23.18).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub letter_spacing: Option<f32>,
 }
 
 impl TextBlock {
@@ -107,6 +110,7 @@ impl Default for TextBlock {
             design_width: None,
             live: false,
             box_style: None,
+            letter_spacing: None,
         }
     }
 }
@@ -127,6 +131,12 @@ pub struct TextSpan {
     pub font_style: Option<String>,
     #[serde(default)]
     pub color: Option<[f32; 4]>,
+    /// Subrayado (F23.18): lo dibuja el engine como un rectángulo bajo la línea base.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub underline: bool,
+    /// Tachado (F23.18): rectángulo a media altura.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub strike: bool,
 }
 
 fn default_font_size() -> f32 {
@@ -261,3 +271,20 @@ pub struct StageData {
 }
 
 
+
+#[cfg(test)]
+mod tests_f2318 {
+    use super::*;
+
+    #[test]
+    fn decoracion_y_espaciado_se_deserializan_y_se_omiten_si_faltan() {
+        let block: TextBlock = serde_json::from_str(r#"{"text":"ab","letterSpacing":4,"spans":[{"text":"a","underline":true,"strike":true},{"text":"b"}]}"#).expect("bloque");
+        assert_eq!(block.letter_spacing, Some(4.0));
+        assert!(block.spans[0].underline && block.spans[0].strike);
+        assert!(!block.spans[1].underline && !block.spans[1].strike);
+        let json = serde_json::to_value(&block.spans[1]).expect("tramo a JSON");
+        assert!(json.get("underline").is_none() && json.get("strike").is_none());
+        assert_ne!(block.spans[0], block.spans[1]);
+        assert!(serde_json::to_value(TextBlock::default()).expect("json").get("letterSpacing").is_none());
+    }
+}

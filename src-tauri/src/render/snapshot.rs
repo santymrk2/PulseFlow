@@ -226,6 +226,7 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
             if !blocks.is_empty() {
                 shapes.draw_text_boxes(device, queue, &mut arena, &mut render_pass, &blocks, (frame_w, frame_h));
                 text_engine.render(TextLayer::Slide, device, queue, &mut render_pass, frame_w, frame_h, &blocks)?;
+                shapes.draw_decorations(device, queue, &mut arena, &mut render_pass, text_engine.decorations(TextLayer::Slide), (frame_w, frame_h));
             }
 
             // Capa 5: texto de los overlays (F4.6).
@@ -233,6 +234,7 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
             if !overlay_blocks.is_empty() {
                 shapes.draw_text_boxes(device, queue, &mut arena, &mut render_pass, &overlay_blocks, (frame_w, frame_h));
                 text_engine.render(TextLayer::Overlay, device, queue, &mut render_pass, frame_w, frame_h, &overlay_blocks)?;
+                shapes.draw_decorations(device, queue, &mut arena, &mut render_pass, text_engine.decorations(TextLayer::Overlay), (frame_w, frame_h));
             }
         }
     }

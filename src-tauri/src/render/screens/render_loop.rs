@@ -284,6 +284,8 @@ pub(super) fn spawn_render_loop(
                                     log::error!("[render] texto (Slide) en {label}: {err}");
                                 }
                             }
+                            // F23.18: subrayados y tachados, en el mismo pass y después del texto (y de su caja).
+                            shape_pipeline.draw_decorations(&device, &queue, &mut arena, &mut pass, text_engine.decorations(TextLayer::Slide), (w, h));
 
                             // Capa de overlays del Scene Graph (F4.6): fondo → medios slide →
                             // texto slide → medios overlay → texto overlay. Sólo en audiencia.
@@ -334,6 +336,7 @@ pub(super) fn spawn_render_loop(
                                         log::error!("[render] texto (Overlay) en {label}: {err}");
                                     }
                                 }
+                                shape_pipeline.draw_decorations(&device, &queue, &mut arena, &mut pass, text_engine.decorations(TextLayer::Overlay), (w, h));
 
                                 // Overlays del modelo previo (relojes/avisos): se dibujan
                                 // por encima de todo, como antes.

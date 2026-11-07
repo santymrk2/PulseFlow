@@ -37,6 +37,17 @@ describe("sceneStyle", () => {
         expect(parsed.strokeWidth).toBe(3)
     })
 
+    it("parses letter-spacing and text-decoration", () => {
+        const parsed = parseTextStyle("letter-spacing: 4px; text-decoration: underline;")
+        expect(parsed.letterSpacing).toBe(4)
+        expect(parsed.underline).toBe(true)
+        expect(parsed.strike).toBeUndefined()
+        const both = parseTextStyle("text-decoration-line: underline line-through;")
+        expect(both.underline).toBe(true)
+        expect(both.strike).toBe(true)
+        expect(parseTextStyle("text-decoration: none").underline).toBeUndefined()
+    })
+
     it("applies text transform", () => {
         expect(applyTextTransform("hola mundo", "uppercase")).toBe("HOLA MUNDO")
         expect(applyTextTransform("hola mundo", "capitalize")).toBe("Hola Mundo")

@@ -908,13 +908,13 @@ archivo (o se importan de `src/types/` si ya existen), como interfaces planas.
   - tachado: `y = run.line_y - font_size * 0.30`;
   - grosor `max(1.0, font_size / 16.0)`, del color del tramo.
 
-- [ ] **Step 1: Tests que fallan:** `sceneStyle.test.ts` (`"letter-spacing: 4px; text-decoration: underline;"` →
+- [x] **Step 1: Tests que fallan:** `sceneStyle.test.ts` (`"letter-spacing: 4px; text-decoration: underline;"` →
   `letterSpacing: 4` y tramos con `underline: true`); Rust `golden_texto_subrayado` (texto "Hola" subrayado, 320×180:
   hay píxeles del color del texto en la franja de 3 px debajo de la línea base, y no los hay sin subrayado).
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar.** Golden nuevo con `UPDATE_ENV` (sólo ese).
-- [ ] **Step 4:** chequeos en verde; goldens viejos sin cambios.
-- [ ] **Step 5:** commit `F23.18: el proyector dibuja espaciado entre letras, subrayado y tachado`.
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar.** Golden nuevo con `UPDATE_ENV` (sólo ese).
+- [x] **Step 4:** chequeos en verde; goldens viejos sin cambios.
+- [x] **Step 5:** commit `F23.18: el proyector dibuja espaciado entre letras, subrayado y tachado`.
 
 ---
 

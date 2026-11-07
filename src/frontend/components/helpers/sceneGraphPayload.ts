@@ -88,6 +88,7 @@ export function sceneTextItem(parts: Omit<SceneTextItem, "type">): SceneTextItem
         color: parts.color,
         stroke: parts.stroke,
         shadow: parts.shadow,
+        letterSpacing: parts.letterSpacing,
         text: parts.text,
         spans: parts.spans,
         live: parts.live,
@@ -120,7 +121,9 @@ export function sceneTextSpan(parts: SceneTextSpan): SceneTextSpan {
         fontSize: parts.fontSize,
         fontWeight: parts.fontWeight,
         fontStyle: parts.fontStyle,
-        color: parts.color
+        color: parts.color,
+        underline: parts.underline,
+        strike: parts.strike
     })
 }
 
