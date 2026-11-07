@@ -48,7 +48,7 @@ input.input::-webkit-calendar-picker-indicator {
     transition: 0.1s background-color ease;
 }
 input.input::-webkit-calendar-picker-indicator:hover {
-    background-color: color-mix(in srgb, black 10%, transparent); /* negro al 10%, igual que el Svelte, sin literal de color */
+    background-color: rgb(0 0 0 / 0.1);
 }
 
 .input::placeholder {
