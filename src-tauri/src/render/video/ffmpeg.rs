@@ -52,6 +52,8 @@ pub(super) struct VideoInfo {
     pub fps: (u32, u32),
     /// Matriz de color declarada por el archivo (`color_space` de ffprobe); `None` si no la trae.
     pub matrix: Option<YuvMatrix>,
+    /// Duración del archivo (`format.duration` de ffprobe); `None` si no la informa.
+    pub duration: Option<Duration>,
 }
 
 /// `color_space` de ffprobe → matriz de conversión YCbCr→RGB. `None` para lo desconocido o no-YCbCr.
@@ -71,7 +73,8 @@ pub(super) fn video_info_from_probe(probe: &serde_json::Value) -> Option<VideoIn
     let height = u32::try_from(stream["height"].as_u64()?).ok()?;
     let fps = ["avg_frame_rate", "r_frame_rate"].iter().find_map(|key| parse_frame_rate(stream[key].as_str()?)).unwrap_or(FALLBACK_FPS);
     let matrix = stream["color_space"].as_str().and_then(matrix_from_color_space);
-    Some(VideoInfo { width, height, fps, matrix })
+    let duration = probe["format"]["duration"].as_str().and_then(|text| text.trim().parse::<f64>().ok()).filter(|secs| secs.is_finite() && *secs > 0.0).map(Duration::from_secs_f64);
+    Some(VideoInfo { width, height, fps, matrix, duration })
 }
 
 /// Tamaño de salida: entra en `max_w × max_h` sin agrandar, conserva la proporción y es par
@@ -168,6 +171,9 @@ impl FfmpegDecoder {
                     }
                     None => (MAX_WIDTH, MAX_HEIGHT, FALLBACK_FPS, None),
                 };
+                if let Some(duration) = info.as_ref().and_then(|info| info.duration) {
+                    state_thread.set_duration(duration, pts_for_frame(1, fps));
+                }
                 // la que declara el archivo; si no trae, la convención por alto
                 let matrix = declared_matrix.unwrap_or_else(|| guess_matrix(height));
                 let mut session = Session { ffmpeg: &ffmpeg, path: &video_path, width, height, fps, matrix, running: &running_thread, child: &child_thread, sink: sink.as_ref(), frames: 0, base: Duration::ZERO, pacer: Pacer::new(state_thread.clone()), state: state_thread };
@@ -306,7 +312,7 @@ impl Session<'_> {
 mod tests {
     use super::*;
     use serde_json::json;
-    use std::time::Duration;
+    use std::time::{Duration, Instant};
 
     #[test]
     fn frame_size_nv12_is_one_and_a_half_bytes_per_pixel() {
@@ -418,6 +424,66 @@ mod tests {
         Some(FfmpegDecoder::start_with(dir.join("ffmpeg"), dir.join("ffprobe"), FIXTURE_3S, sink).expect("iniciar ffmpeg"))
     }
 
+    /// Espera (hasta `timeout`) a que `done` se cumpla.
+    fn wait_until(timeout: Duration, done: impl Fn() -> bool) -> bool {
+        let start = Instant::now();
+        while start.elapsed() < timeout {
+            if done() {
+                return true;
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        done()
+    }
+
+    #[test]
+    fn la_posicion_es_la_real_tras_dar_la_vuelta() {
+        let sink = Arc::new(Count::default());
+        let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
+
+        decoder.seek(2000).expect("seek");
+        // 2000 ms + 1,5 s de reproducción: dio la vuelta del archivo de 3 s
+        thread::sleep(Duration::from_millis(1500));
+        let position = decoder.position_ms();
+        decoder.stop();
+        assert!(position < 2000, "posición {position} ms: debería estar cerca de 500");
+    }
+
+    #[test]
+    fn un_salto_mas_alla_del_final_sigue_entregando_frames() {
+        let sink = Arc::new(Count::default());
+        let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
+
+        decoder.seek(10_000).expect("seek");
+        let before = sink.get();
+        let flowing = wait_until(Duration::from_secs(5), || sink.get() > before + 2);
+        let position = decoder.position_ms();
+        decoder.stop();
+        assert!(flowing, "siguen llegando frames");
+        assert!(position <= 3000, "posición {position} ms");
+    }
+
+    #[test]
+    fn un_salto_en_pausa_muestra_un_frame() {
+        let sink = Arc::new(Count::default());
+        let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
+        decoder.set_paused(true);
+        thread::sleep(Duration::from_millis(200));
+
+        let before = sink.get();
+        decoder.seek(1500).expect("seek");
+        assert!(wait_until(Duration::from_secs(5), || sink.get() > before), "llega el frame del destino");
+        thread::sleep(Duration::from_millis(500));
+        let after = sink.get();
+        let position = decoder.position_ms();
+        decoder.stop();
+        assert_eq!(after, before + 1, "en pausa pasa exactamente un frame");
+        assert!((1500..=1600).contains(&position), "posición {position} ms");
+    }
+
     #[test]
     fn pausa_detiene_los_frames() {
         let sink = Arc::new(Count::default());
@@ -441,7 +507,7 @@ mod tests {
     fn seek_salta_a_la_posicion() {
         let sink = Arc::new(Count::default());
         let Some(mut decoder) = start_fixture(sink.clone()) else { return };
-        thread::sleep(Duration::from_millis(300));
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
 
         decoder.seek(1500).expect("seek");
         thread::sleep(Duration::from_millis(900));
@@ -455,6 +521,8 @@ mod tests {
     fn position_avanza_en_tiempo_real() {
         let sink = Arc::new(Count::default());
         let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        // se mide desde el primer frame: el arranque (ffprobe + ffmpeg) no cuenta
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
 
         thread::sleep(Duration::from_secs(1));
         let position = decoder.position_ms();

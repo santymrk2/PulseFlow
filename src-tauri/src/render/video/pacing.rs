@@ -19,11 +19,16 @@ pub struct PlaybackState {
     paused: Arc<AtomicBool>,
     position_ms: Arc<AtomicU64>,
     seek_to: Arc<AtomicU64>,
+    /// Duración del archivo en ms (0 = no se conoce) y de un frame: la posición se informa dentro del archivo.
+    duration_ms: Arc<AtomicU64>,
+    frame_ms: Arc<AtomicU64>,
+    /// Tras un salto en pausa se deja pasar un frame (lo limpia `set_position`).
+    scrub: Arc<AtomicBool>,
 }
 
 impl Default for PlaybackState {
     fn default() -> Self {
-        Self { paused: Arc::default(), position_ms: Arc::default(), seek_to: Arc::new(AtomicU64::new(NO_SEEK)) }
+        Self { paused: Arc::default(), position_ms: Arc::default(), seek_to: Arc::new(AtomicU64::new(NO_SEEK)), duration_ms: Arc::default(), frame_ms: Arc::default(), scrub: Arc::default() }
     }
 }
 
@@ -36,20 +41,39 @@ impl PlaybackState {
         self.paused.load(Ordering::SeqCst)
     }
 
-    /// PTS en ms del último frame entregado (o del destino del último salto, hasta que llegue un frame).
+    /// Posición real dentro del archivo del último frame entregado (o el destino del último salto,
+    /// hasta que llegue un frame).
     pub fn position_ms(&self) -> u64 {
         self.position_ms.load(Ordering::SeqCst)
     }
 
-    /// Lo llama el hilo del decodificador tras entregar un frame.
-    pub fn set_position(&self, pts: Duration) {
-        self.position_ms.store(u64::try_from(pts.as_millis()).unwrap_or(u64::MAX - 1), Ordering::SeqCst);
+    /// El decodificador informa la duración del archivo y la de un frame (0 = desconocida).
+    pub fn set_duration(&self, duration: Duration, frame: Duration) {
+        self.duration_ms.store(u64::try_from(duration.as_millis()).unwrap_or(0), Ordering::SeqCst);
+        self.frame_ms.store(u64::try_from(frame.as_millis()).unwrap_or(0), Ordering::SeqCst);
     }
 
-    /// Pide un salto; el hilo del decodificador lo toma con `take_seek`.
+    /// Lo llama el hilo del decodificador tras entregar un frame. `pts` es continuo (sigue creciendo
+    /// al dar la vuelta del loop): se reduce a la posición dentro del archivo.
+    pub fn set_position(&self, pts: Duration) {
+        let ms = u64::try_from(pts.as_millis()).unwrap_or(u64::MAX - 1);
+        let duration = self.duration_ms.load(Ordering::SeqCst);
+        self.position_ms.store(if duration > 0 { ms % duration } else { ms }, Ordering::SeqCst);
+        self.scrub.store(false, Ordering::SeqCst);
+    }
+
+    /// Pide un salto; el hilo del decodificador lo toma con `take_seek`. El destino no pasa del
+    /// último frame (un `-ss` más allá del final no produce frames).
     pub fn request_seek(&self, position_ms: u64) {
+        let duration = self.duration_ms.load(Ordering::SeqCst);
+        let position_ms = if duration > 0 { position_ms.min(duration.saturating_sub(self.frame_ms.load(Ordering::SeqCst).max(1))) } else { position_ms };
         self.position_ms.store(position_ms, Ordering::SeqCst);
+        self.scrub.store(true, Ordering::SeqCst);
         self.seek_to.store(position_ms.min(NO_SEEK - 1), Ordering::SeqCst);
+    }
+
+    fn scrub_pending(&self) -> bool {
+        self.scrub.load(Ordering::SeqCst)
     }
 
     pub fn seek_pending(&self) -> bool {
@@ -81,7 +105,7 @@ impl Pacer {
     /// Espera mientras esté en pausa y corre el origen del reloj lo que duró (al reanudar no salta).
     fn hold_while_paused(&mut self, running: &AtomicBool) {
         let paused_at = Instant::now();
-        while self.state.is_paused() && running.load(Ordering::Relaxed) {
+        while self.state.is_paused() && !self.state.scrub_pending() && running.load(Ordering::Relaxed) {
             std::thread::sleep(SLICE);
         }
         self.clock_start += paused_at.elapsed();
@@ -97,7 +121,7 @@ impl Pacer {
             if !running.load(Ordering::Relaxed) {
                 return false;
             }
-            if self.state.is_paused() {
+            if self.state.is_paused() && !self.state.scrub_pending() {
                 self.hold_while_paused(running);
                 continue;
             }
@@ -188,6 +212,30 @@ mod tests {
         assert_eq!(state.position_ms(), 1500);
         assert_eq!(state.take_seek(), Some(1500));
         assert_eq!(state.take_seek(), None);
+    }
+
+    #[test]
+    fn position_wraps_inside_the_file_and_seeks_stop_before_the_end() {
+        let state = PlaybackState::default();
+        state.set_duration(Duration::from_millis(3000), Duration::from_millis(33));
+        state.set_position(Duration::from_millis(4500));
+        assert_eq!(state.position_ms(), 1500, "módulo la duración");
+        state.request_seek(10_000);
+        assert_eq!(state.take_seek(), Some(2967), "último frame");
+    }
+
+    #[test]
+    fn a_scrub_lets_one_frame_through_while_paused() {
+        let running = AtomicBool::new(true);
+        let state = PlaybackState::default();
+        let mut pacer = Pacer::new(state.clone());
+        state.set_paused(true);
+        state.request_seek(500);
+        let started = Instant::now();
+        assert!(pacer.wait(Duration::from_millis(500), &running));
+        assert!(started.elapsed() < Duration::from_millis(100));
+        state.set_position(Duration::from_millis(500)); // el frame se entregó: se acaba el permiso
+        assert!(!state.scrub_pending());
     }
 
     #[test]

@@ -68,6 +68,10 @@ export interface SceneBackground {
     opacity: number
     loop?: boolean
     muted?: boolean
+    /** El transporte del webview está en pausa (el video del engine lo sigue; F23.14) */
+    paused?: boolean
+    /** Posición del transporte del webview en ms */
+    positionMs?: number
 }
 
 export interface SceneTransition {

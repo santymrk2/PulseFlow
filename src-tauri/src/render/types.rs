@@ -147,6 +147,18 @@ pub struct BackgroundMedia {
     pub opacity: f32,
     #[serde(default = "default_aspect_mode")]
     pub aspect_mode: u32, // 0 = Cover, 1 = Contain, 2 = Stretch
+    /// Transporte del webview (F23.14): pausa y posición que el video del engine sigue.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub paused: bool,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub position_ms: Option<u64>,
+}
+
+impl BackgroundMedia {
+    /// El fondo sin el transporte: lo que decide si la imagen cambió (el transporte cambia cada segundo).
+    pub fn without_transport(&self) -> Self {
+        Self { paused: false, position_ms: None, ..self.clone() }
+    }
 }
 
 fn default_media_type() -> String {

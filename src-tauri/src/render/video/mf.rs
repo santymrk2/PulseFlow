@@ -18,7 +18,7 @@ use windows::Win32::Graphics::Direct3D11::ID3D11Texture2D;
 use windows::Win32::Media::MediaFoundation::{
     IMFAttributes, IMFDXGIBuffer, IMFSourceReader, MFCreateAttributes, MFCreateMediaType, MFCreateSourceReaderFromURL, MFMediaType_Video, MFShutdown, MFStartup, MFVideoFormat_NV12, MFSTARTUP_FULL, MF_MT_FRAME_SIZE,
     MF_MT_MAJOR_TYPE, MF_MT_SUBTYPE, MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, MF_SOURCE_READERF_ENDOFSTREAM, MF_SOURCE_READER_D3D_MANAGER, MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING,
-    MF_SOURCE_READER_FIRST_VIDEO_STREAM, MF_VERSION,
+    MF_SOURCE_READER_FIRST_VIDEO_STREAM, MF_SOURCE_READER_MEDIASOURCE, MF_PD_DURATION, MF_VERSION,
 };
 use windows::Win32::System::Com::StructuredStorage::PROPVARIANT;
 use windows::Win32::System::Com::{CoInitializeEx, CoUninitialize, COINIT_MULTITHREADED};
@@ -114,6 +114,8 @@ struct Source {
     reader: IMFSourceReader,
     width: u32,
     height: u32,
+    /// Duración del archivo (`Duration::ZERO` si no la informa).
+    duration: Duration,
 }
 
 impl Source {
@@ -137,7 +139,9 @@ impl Source {
 
             let actual = reader.GetCurrentMediaType(FIRST_VIDEO_STREAM).map_err(|e| e.to_string())?;
             let packed = actual.GetUINT64(&MF_MT_FRAME_SIZE).map_err(|e| e.to_string())?;
-            Ok(Self { reader, width: (packed >> 32) as u32, height: (packed & 0xFFFF_FFFF) as u32 })
+            // MF_PD_DURATION: 100 ns
+            let duration = reader.GetPresentationAttribute(MF_SOURCE_READER_MEDIASOURCE.0 as u32, &MF_PD_DURATION).ok().and_then(|value| u64::try_from(&value).ok()).map_or(Duration::ZERO, |ticks| Duration::from_nanos(ticks.saturating_mul(100)));
+            Ok(Self { reader, width: (packed >> 32) as u32, height: (packed & 0xFFFF_FFFF) as u32, duration })
         }
     }
 
@@ -176,6 +180,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, state: &P
         }
     };
     let _ = ready.send(Ok(()));
+    state.set_duration(source.duration, FALLBACK_FRAME_DURATION);
 
     // Línea de tiempo continua: `offset` suma la duración de las vueltas anteriores del loop.
     let mut offset = Duration::ZERO;
@@ -217,7 +222,10 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, state: &P
                     (offset, last_total) = (Duration::ZERO, Duration::from_millis(position_ms));
                     pacer.reset();
                 }
-                Err(e) => log::warn!("[VideoEngine] no se pudo saltar a {position_ms} ms en {path}: {e}"),
+                Err(e) => {
+                    log::warn!("[VideoEngine] no se pudo saltar a {position_ms} ms en {path}: {e}");
+                    state.set_position(last_total); // la posición vuelve a la del último frame entregado
+                }
             }
         }
 

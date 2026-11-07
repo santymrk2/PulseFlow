@@ -757,7 +757,7 @@ Reloj maestro: **el audio del webview**. El engine lo sigue: en cada escena con 
 `sync_action` devuelve `Some(ms)`, `seek(ms)`. Esto corrige a la vez los saltos de la línea de tiempo y la deriva.
 La clave de `playingVideoState` es `` `${path}_${outputId}` `` (`videoPlayer.ts:512`).
 
-- [ ] **Step 1: Tests que fallan.**
+- [x] **Step 1: Tests que fallan.**
   - Rust `sync_action_respeta_el_umbral`: `(1000, Some(1100), 300)` → `None`; `(1000, Some(2000), 300)` →
     `Some(2000)`; `(1000, None, 300)` → `None`.
   - Rust `fondo_con_pausa_y_posicion_se_deserializa`:
@@ -767,16 +767,16 @@ La clave de `playingVideoState` es `` `${path}_${outputId}` `` (`videoPlayer.ts:
     `videoSyncFields({ currentTime: 1.5, duration: 3, paused: true, loop: false, muted: false })` →
     `{ paused: true, positionMs: 1500 }`; `shouldResendForVideo` → `true` al cambiar `paused`, `false` a los 400 ms
     sin cambios, `true` a los 1000 ms.
-- [ ] **Step 2:** correr los tres. Expected: FAIL.
-- [ ] **Step 3: Implementar.** `sceneGraph.ts:290` suma `...videoSyncFields(get(playingVideoState)[`${path}_${outputId}`])`
+- [x] **Step 2:** correr los tres. Expected: FAIL.
+- [x] **Step 3: Implementar.** `sceneGraph.ts:290` suma `...videoSyncFields(get(playingVideoState)[`${path}_${outputId}`])`
   a `sceneBackground({...})`. En `listeners.ts`, `playingVideoState.subscribe` → para cada salida con video, si
   `shouldResendForVideo(...)` da `true`, `sendOutputScenes()` (el último envío y los últimos campos se guardan en un
   `Map` del módulo).
-- [ ] **Step 4:** chequeos Rust y JS en verde; los fixtures de escena sin cambios (`git diff --stat src-tauri/tests`
+- [x] **Step 4:** chequeos Rust y JS en verde; los fixtures de escena sin cambios (`git diff --stat src-tauri/tests`
   vacío).
 - [ ] **Step 5: En la app:** un video de fondo con sonido en vivo. Pausa → la imagen se congela; play → sigue; mover
   la línea de tiempo → la imagen salta al mismo lugar; después de 5 minutos, el audio y la imagen siguen juntos.
-- [ ] **Step 6:** commit `F23.14: el video del proyector sigue la pausa y la posición del transporte`.
+- [x] **Step 6:** commit `F23.14: el video del proyector sigue la pausa y la posición del transporte`.
 
 ---
 

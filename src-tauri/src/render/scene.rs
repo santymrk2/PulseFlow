@@ -115,6 +115,12 @@ pub struct SceneBackground {
     pub looping: bool,
     #[serde(default)]
     pub muted: bool,
+    /// El transporte del webview está en pausa (F23.14).
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub paused: bool,
+    /// Posición del transporte del webview en ms: el video del engine la sigue.
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub position_ms: Option<u64>,
 }
 
 fn default_bg_type() -> String {
@@ -344,6 +350,8 @@ impl ScenePayload {
                 Some("fill") | Some("stretch") => 2,
                 _ => 0,
             },
+            paused: b.paused,
+            position_ms: b.position_ms,
         })
     }
 
@@ -438,6 +446,22 @@ impl ScenePayload {
 mod tests {
     use super::*;
     use serde_json::json;
+
+    #[test]
+    fn fondo_con_pausa_y_posicion_se_deserializa() {
+        let bg: SceneBackground = serde_json::from_value(json!({"path":"a.mp4","type":"video","paused":true,"positionMs":1500})).expect("fondo");
+        assert!(bg.paused);
+        assert_eq!(bg.position_ms, Some(1500));
+        let payload: ScenePayload = serde_json::from_value(json!({"outputId":"o","background":{"path":"a.mp4","type":"video","paused":true,"positionMs":1500}})).expect("escena");
+        let media = payload.background_media().expect("fondo");
+        assert_eq!((media.paused, media.position_ms), (true, Some(1500)));
+
+        let plain: SceneBackground = serde_json::from_value(json!({"path":"a.mp4","type":"video"})).expect("fondo");
+        assert!(!plain.paused);
+        assert_eq!(plain.position_ms, None);
+        let text = serde_json::to_string(&plain).expect("json");
+        assert!(!text.contains("paused") && !text.contains("positionMs"), "{text}");
+    }
 
     #[test]
     fn parses_text_item_and_ignores_unknown_items() {

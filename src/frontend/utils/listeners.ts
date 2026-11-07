@@ -3,6 +3,7 @@ import { OUTPUT, REMOTE, STAGE } from "../../types/Channels"
 import { AudioPlayer } from "../audio/audioPlayer"
 import { midiInListen } from "../components/actions/midi"
 import { sendOutputScenes } from "../components/helpers/sceneGraph"
+import { shouldResendForVideo, videoSyncFields, type VideoSyncFields } from "../components/helpers/videoSync"
 import { getAllActiveOutputIds, getAllNormalOutputs, updateSyncedOutputs } from "../components/helpers/output"
 import { loadShows } from "../components/helpers/setShow"
 import { getShowCacheId, syncCachedShows, updateCachedShow, updateCachedShows, updateShowsList } from "../components/helpers/show"
@@ -335,8 +336,24 @@ export function storeSubscriber() {
         send(REMOTE, ["AUDIO_CHANNELS_DATA"], data)
     })
 
+    // F23.14: el video del engine sigue el transporte del webview (pausa al instante, posición cada segundo)
+    const videoSyncSent = new Map<string, { fields: VideoSyncFields; sentAt: number }>()
     playingVideoState.subscribe((data) => {
         send(OUTPUT, ["PLAYING_VIDEO_STATE"], data)
+
+        const now = Date.now()
+        let resend = false
+        videoSyncSent.forEach((_, key) => {
+            if (!data[key]) videoSyncSent.delete(key)
+        })
+        Object.entries(data).forEach(([key, state]) => {
+            const fields = videoSyncFields(state)
+            const last = videoSyncSent.get(key)
+            if (!shouldResendForVideo(last?.fields, fields, last?.sentAt ?? 0, now)) return
+            videoSyncSent.set(key, { fields, sentAt: now })
+            resend = true
+        })
+        if (resend) sendOutputScenes()
     })
 
     metronome.subscribe((data) => {

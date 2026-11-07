@@ -17,12 +17,13 @@ import { OUTPUT } from "../../../types/Channels"
 import type { Output, PrefetchPayload } from "../../../types/Output"
 import type { SceneBackground, SceneGraph, SceneItem, SceneMediaItem, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
 import type { Item, OutSlide, Slide } from "../../../types/Show"
-import { activeTimers, media, overlays, outputs, stageShows, styles, timeFormat as timeFormatStore, timers, transitionData } from "../../stores"
+import { activeTimers, media, overlays, outputs, playingVideoState, stageShows, styles, timeFormat as timeFormatStore, timers, transitionData } from "../../stores"
 import { send } from "../../utils/request"
 import { getItemText } from "../edit/scripts/textStyle"
 import { shouldItemBeShown } from "../edit/scripts/itemHelpers"
 import { clone } from "./array"
 import { getSceneSourceId } from "./sceneMirror"
+import { videoSyncFields } from "./videoSync"
 import { getExtension, getMediaStyle, getMediaType } from "./media"
 import { joinTimeBig } from "./time"
 import { getCurrentTimerValue } from "../drawer/timers/timers"
@@ -266,7 +267,7 @@ function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: s
 
 // BACKGROUND
 
-function getBackground(output: Output, currentStyle: ReturnType<typeof getCurrentStyle>, slide: OutSlide | null, layers: string[]): SceneBackground | null {
+function getBackground(outputId: string, output: Output, currentStyle: ReturnType<typeof getCurrentStyle>, slide: OutSlide | null, layers: string[]): SceneBackground | null {
     if (!layers.includes("background")) return null
 
     const outBackground = output.out?.background || null
@@ -287,7 +288,7 @@ function getBackground(output: Output, currentStyle: ReturnType<typeof getCurren
     const mediaStyle = getMediaStyle({ ...get(media)[path], ...(outBackground?.path === path ? outBackground : {}) } as any, currentStyle)
     const fit = mediaStyle.fit === "cover" ? "cover" : mediaStyle.fit === "fill" ? "fill" : "contain"
 
-    return sceneBackground({ path, type: mediaType, fit, opacity: 1, loop: outBackground?.path === path ? outBackground.loop !== false : true, muted: outBackground?.muted })
+    return sceneBackground({ path, type: mediaType, fit, opacity: 1, loop: outBackground?.path === path ? outBackground.loop !== false : true, muted: outBackground?.muted, ...(mediaType === "video" ? videoSyncFields(get(playingVideoState)[`${path}_${outputId}`]) : {}) })
 }
 
 // TRANSITION
@@ -416,7 +417,7 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
         stage: !!output.stageOutput,
         width: resolution.width,
         height: resolution.height,
-        background: getBackground(output, currentStyle, showSlide, layers),
+        background: getBackground(outputId, output, currentStyle, showSlide, layers),
         items,
         overlays: buildOverlayItems(outputId, output, layers, resolution),
         transition: getTransition(output, currentStyle, !!showSlide),

@@ -85,6 +85,8 @@ pub fn start(path: &str, sink: Arc<dyn FrameSink>) -> AppResult<AvfDecoder> {
 struct Source {
     reader: Retained<AVAssetReader>,
     output: Retained<AVAssetReaderTrackOutput>,
+    /// Duración del archivo.
+    duration: Duration,
 }
 
 impl Source {
@@ -112,7 +114,7 @@ impl Source {
                 let reason = reader.error().map(|e| e.localizedDescription().to_string()).unwrap_or_default();
                 return Err(format!("AVAssetReader no pudo empezar a leer: {reason}"));
             }
-            Ok(Self { reader, output })
+            Ok(Self { reader, output, duration: to_duration(asset.duration()) })
         }
     }
 }
@@ -154,6 +156,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, state: &P
         }
     };
     let _ = ready.send(Ok(()));
+    state.set_duration(source.duration, FALLBACK_FRAME_DURATION);
 
     // Línea de tiempo continua: `offset` suma la duración de las vueltas anteriores del loop.
     let mut offset = Duration::ZERO;
@@ -193,7 +196,10 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, state: &P
                     (offset, last_total) = (Duration::ZERO, start);
                     pacer.reset();
                 }
-                Err(err) => log::warn!("[VideoEngine] no se pudo saltar a {position_ms} ms en {path}: {err}"),
+                Err(err) => {
+                    log::warn!("[VideoEngine] no se pudo saltar a {position_ms} ms en {path}: {err}");
+                    state.set_position(last_total); // la posición vuelve a la del último frame entregado
+                }
             }
         }
 

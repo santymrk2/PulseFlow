@@ -11,22 +11,44 @@ pub(super) fn sync_video(app: &AppHandle, handle: &mut ScreenHandle, background:
         .filter(|bg| is_video(bg))
         .and_then(|bg| bg.path.clone());
 
-    if handle.video == wanted {
-        return;
-    }
+    if handle.video != wanted {
+        // Dejar el decodificador anterior (lo detiene si era el único suscriptor).
+        if let Some(old_path) = handle.video.take() {
+            let _ = video_hub_release(app, &old_path, &handle.label);
+        }
 
-    // Dejar el decodificador anterior (lo detiene si era el único suscriptor).
-    if let Some(old_path) = handle.video.take() {
-        let _ = video_hub_release(app, &old_path, &handle.label);
-    }
-
-    if let Some(path) = wanted {
-        if video_hub_acquire(app, &path, &handle.label).is_err() {
-            log::warn!("[screens] no se pudo reproducir el video {path}");
-        } else {
-            handle.video = Some(path);
+        if let Some(path) = wanted {
+            if video_hub_acquire(app, &path, &handle.label).is_err() {
+                log::warn!("[screens] no se pudo reproducir el video {path}");
+            } else {
+                handle.video = Some(path);
+            }
         }
     }
+
+    if let (Some(path), Some(bg)) = (&handle.video, background) {
+        sync_transport(app, path, bg);
+    }
+}
+
+/// Diferencia (ms) entre el decodificador y el transporte del webview a partir de la cual se salta.
+const SYNC_THRESHOLD_MS: u64 = 300;
+
+/// A dónde saltar para seguir al reloj maestro: `Some(wanted)` si la diferencia pasa el umbral.
+pub fn sync_action(decoder_ms: u64, wanted_ms: Option<u64>, threshold_ms: u64) -> Option<u64> {
+    wanted_ms.filter(|wanted| wanted.abs_diff(decoder_ms) > threshold_ms)
+}
+
+/// El audio del webview es el reloj maestro: el decodificador sigue su pausa y su posición.
+fn sync_transport(app: &AppHandle, path: &str, bg: &BackgroundMedia) {
+    let Ok(state) = manager(app) else { return };
+    let mut hub = state.video_hub.lock_safe();
+    let Some(video) = hub.get_mut(path) else { return };
+    video.set_paused(bg.paused);
+    if let Some(ms) = sync_action(video.position_ms(), bg.position_ms, SYNC_THRESHOLD_MS)
+        && let Err(err) = video.seek(ms) {
+            log::warn!("[screens] no se pudo sincronizar {path} a {ms} ms: {err}");
+        }
 }
 
 /// Recibe los frames del decodificador de un archivo y los publica en la textura compartida
@@ -47,8 +69,6 @@ impl FrameSink for HubSink {
     }
 }
 
-// Los consume la sincronización con el transporte (F23.14).
-#[allow(dead_code)]
 impl SharedVideo {
     pub(super) fn set_paused(&mut self, paused: bool) {
         self.playback.set_paused(paused);
@@ -111,3 +131,15 @@ pub(super) fn is_video(bg: &BackgroundMedia) -> bool {
         .any(|ext| lower.ends_with(ext))
 }
 
+
+#[cfg(test)]
+mod tests {
+    use super::sync_action;
+
+    #[test]
+    fn sync_action_respeta_el_umbral() {
+        assert_eq!(sync_action(1000, Some(1100), 300), None);
+        assert_eq!(sync_action(1000, Some(2000), 300), Some(2000));
+        assert_eq!(sync_action(1000, None, 300), None);
+    }
+}

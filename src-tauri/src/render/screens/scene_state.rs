@@ -26,7 +26,7 @@ pub fn set_audience_scene(
         let current = state.scene(id).load();
         current.text != text
             || current.media != media
-            || current.background != background
+            || current.background.as_ref().map(BackgroundMedia::without_transport) != background.as_ref().map(BackgroundMedia::without_transport)
             || current.overlay_text != overlay_text
             || current.overlay_media != overlay_media
             || current.content != content

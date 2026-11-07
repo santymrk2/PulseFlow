@@ -54,7 +54,9 @@ export function sceneBackground(parts: SceneBackground): SceneBackground {
         fit: parts.fit,
         opacity: parts.opacity,
         loop: parts.loop,
-        muted: parts.muted
+        muted: parts.muted,
+        paused: parts.paused,
+        positionMs: parts.positionMs
     })
 }
 
