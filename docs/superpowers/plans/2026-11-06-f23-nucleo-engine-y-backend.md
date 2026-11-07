@@ -314,7 +314,7 @@ el primer draw.
 - Produce: `pub fn apply_to(&self, pass: &mut wgpu::RenderPass<'_>, target_width: u32, target_height: u32) -> bool`:
   aplica el rect recortado y devuelve `false` si quedó vacío (el llamador no dibuja esa capa).
 
-- [ ] **Step 1: Tests que fallan** en `frame.rs`:
+- [x] **Step 1: Tests que fallan** en `frame.rs`:
 
 ```rust
 #[test]
@@ -331,11 +331,11 @@ fn clamped_devuelve_none_si_queda_afuera_o_vacio() {
 ```
 
   Si `Rect` no deriva `PartialEq` y `Debug`, agregarlos.
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::frame`. Expected: FAIL.
-- [ ] **Step 3: Implementar** y actualizar los llamadores pasando el tamaño del destino (`config.width/height` en el
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::frame`. Expected: FAIL.
+- [x] **Step 3: Implementar** y actualizar los llamadores pasando el tamaño del destino (`config.width/height` en el
   loop, el de la textura en `snapshot.rs`).
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde, goldens iguales.
-- [ ] **Step 5:** commit `F23.6: viewport y scissor se recortan al destino`.
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde, goldens iguales.
+- [x] **Step 5:** commit `F23.6: viewport y scissor se recortan al destino`.
 
 ---
 

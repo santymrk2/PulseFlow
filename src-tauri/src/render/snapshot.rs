@@ -122,110 +122,111 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
 
         // F21.2: el contenido se encuadra dentro de la captura según la resolución y `align` de la escena
         let frame_rect = fit_content_rect(scene.content_frame(), width, height);
-        frame_rect.apply_to(&mut render_pass);
-        let (frame_w, frame_h) = (frame_rect.width, frame_rect.height);
+        if frame_rect.apply_to(&mut render_pass, width, height) {
+            let (frame_w, frame_h) = (frame_rect.width, frame_rect.height);
 
-        // Capas de imagen: fondo (si lo hay) e items de medio de la slide (F4.5).
-        // Los videos no se decodifican fuera del bucle de render.
-        let background = scene.background_media();
-        let media_items = scene.media_items();
-        let overlay_media_items = scene.overlay_media_items();
-        let has_background_image = background
-            .as_ref()
-            .map(|b| b.media_type == "image")
-            .unwrap_or(false);
+            // Capas de imagen: fondo (si lo hay) e items de medio de la slide (F4.5).
+            // Los videos no se decodifican fuera del bucle de render.
+            let background = scene.background_media();
+            let media_items = scene.media_items();
+            let overlay_media_items = scene.overlay_media_items();
+            let has_background_image = background
+                .as_ref()
+                .map(|b| b.media_type == "image")
+                .unwrap_or(false);
 
-        if has_background_image || !media_items.is_empty() || !overlay_media_items.is_empty() {
-            // Almacén propio de la captura: no arrastra imágenes cacheadas de las pantallas.
-            let store = MediaStore::new(Arc::clone(&gpu));
-            let pipeline = store.pipeline(SNAPSHOT_FORMAT);
-            let mut arena = store.new_arena();
+            if has_background_image || !media_items.is_empty() || !overlay_media_items.is_empty() {
+                // Almacén propio de la captura: no arrastra imágenes cacheadas de las pantallas.
+                let store = MediaStore::new(Arc::clone(&gpu));
+                let pipeline = store.pipeline(SNAPSHOT_FORMAT);
+                let mut arena = store.new_arena();
 
-            // Capa 1: fondo de imagen a pantalla completa.
-            if let Some(bg) = background.as_ref().filter(|b| b.media_type == "image")
-                && let Some(path_str) = bg.path.as_deref() {
-                    let texture = store.load_image(path_str)?;
-                    pipeline.render(
+                // Capa 1: fondo de imagen a pantalla completa.
+                if let Some(bg) = background.as_ref().filter(|b| b.media_type == "image")
+                    && let Some(path_str) = bg.path.as_deref() {
+                        let texture = store.load_image(path_str)?;
+                        pipeline.render(
+                            queue,
+                            &mut arena,
+                            &mut render_pass,
+                            &texture,
+                            frame_w,
+                            frame_h,
+                            bg.opacity,
+                            bg.aspect_mode,
+                        );
+                    }
+
+                // Capa 2: items de medio (imágenes) colocados en la slide.
+                for item in &media_items {
+                    if item.media_type != "image" || item.path.is_empty() {
+                        continue;
+                    }
+                    let texture = store.load_image(&item.path)?;
+                    let scale = match item.design_width {
+                        Some(dw) if dw > 0.0 => frame_w as f32 / dw,
+                        _ => 1.0,
+                    };
+                    pipeline.render_rect(
                         queue,
                         &mut arena,
                         &mut render_pass,
                         &texture,
                         frame_w,
                         frame_h,
-                        bg.opacity,
-                        bg.aspect_mode,
+                        [
+                            item.x * scale,
+                            item.y * scale,
+                            item.width * scale,
+                            item.height * scale,
+                        ],
+                        item.opacity,
+                        item.aspect_mode,
                     );
                 }
 
-            // Capa 2: items de medio (imágenes) colocados en la slide.
-            for item in &media_items {
-                if item.media_type != "image" || item.path.is_empty() {
-                    continue;
+                // Capa 4: medios (imágenes) de los overlays (F4.6).
+                for item in &overlay_media_items {
+                    if item.media_type != "image" || item.path.is_empty() {
+                        continue;
+                    }
+                    let texture = store.load_image(&item.path)?;
+                    let scale = match item.design_width {
+                        Some(dw) if dw > 0.0 => frame_w as f32 / dw,
+                        _ => 1.0,
+                    };
+                    pipeline.render_rect(
+                        queue,
+                        &mut arena,
+                        &mut render_pass,
+                        &texture,
+                        frame_w,
+                        frame_h,
+                        [
+                            item.x * scale,
+                            item.y * scale,
+                            item.width * scale,
+                            item.height * scale,
+                        ],
+                        item.opacity,
+                        item.aspect_mode,
+                    );
                 }
-                let texture = store.load_image(&item.path)?;
-                let scale = match item.design_width {
-                    Some(dw) if dw > 0.0 => frame_w as f32 / dw,
-                    _ => 1.0,
-                };
-                pipeline.render_rect(
-                    queue,
-                    &mut arena,
-                    &mut render_pass,
-                    &texture,
-                    frame_w,
-                    frame_h,
-                    [
-                        item.x * scale,
-                        item.y * scale,
-                        item.width * scale,
-                        item.height * scale,
-                    ],
-                    item.opacity,
-                    item.aspect_mode,
-                );
             }
 
-            // Capa 4: medios (imágenes) de los overlays (F4.6).
-            for item in &overlay_media_items {
-                if item.media_type != "image" || item.path.is_empty() {
-                    continue;
-                }
-                let texture = store.load_image(&item.path)?;
-                let scale = match item.design_width {
-                    Some(dw) if dw > 0.0 => frame_w as f32 / dw,
-                    _ => 1.0,
-                };
-                pipeline.render_rect(
-                    queue,
-                    &mut arena,
-                    &mut render_pass,
-                    &texture,
-                    frame_w,
-                    frame_h,
-                    [
-                        item.x * scale,
-                        item.y * scale,
-                        item.width * scale,
-                        item.height * scale,
-                    ],
-                    item.opacity,
-                    item.aspect_mode,
-                );
+            let mut text_engine = TextEngine::new(device, queue, SNAPSHOT_FORMAT);
+
+            // Capa 3: texto principal.
+            let blocks = scene.text_blocks();
+            if !blocks.is_empty() {
+                text_engine.render(TextLayer::Slide, device, queue, &mut render_pass, frame_w, frame_h, &blocks)?;
             }
-        }
 
-        let mut text_engine = TextEngine::new(device, queue, SNAPSHOT_FORMAT);
-
-        // Capa 3: texto principal.
-        let blocks = scene.text_blocks();
-        if !blocks.is_empty() {
-            text_engine.render(TextLayer::Slide, device, queue, &mut render_pass, frame_w, frame_h, &blocks)?;
-        }
-
-        // Capa 5: texto de los overlays (F4.6).
-        let overlay_blocks = scene.overlay_text_blocks();
-        if !overlay_blocks.is_empty() {
-            text_engine.render(TextLayer::Overlay, device, queue, &mut render_pass, frame_w, frame_h, &overlay_blocks)?;
+            // Capa 5: texto de los overlays (F4.6).
+            let overlay_blocks = scene.overlay_text_blocks();
+            if !overlay_blocks.is_empty() {
+                text_engine.render(TextLayer::Overlay, device, queue, &mut render_pass, frame_w, frame_h, &overlay_blocks)?;
+            }
         }
     }
 

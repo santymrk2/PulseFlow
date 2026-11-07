@@ -208,47 +208,93 @@ pub(super) fn spawn_render_loop(
                         // F21.2: el contenido se encuadra en la ventana (barras negras + `alignPosition`) cuando la
                         // proporción de la escena no coincide con la de la salida
                         let frame_rect = crate::render::frame::fit_content_rect(current.content, config.width, config.height);
-                        frame_rect.apply_to(&mut pass);
-                        let (w, h) = (frame_rect.width, frame_rect.height);
+                        if frame_rect.apply_to(&mut pass, config.width, config.height) {
+                            let (w, h) = (frame_rect.width, frame_rect.height);
 
-                        let blocks = match kind {
-                            ScreenKind::Audience => {
-                                if let Some(bg) = &current.background {
-                                    if is_video(bg) {
-                                        // video: un frame NV12 por archivo (la ruta es el id), convertido a RGB en el shader
-                                        if let Some(frame) = bg.path.as_deref().and_then(|path| store.get_video(path)) {
-                                            nv12_pipeline.render(&device, &queue, &mut arena, &mut pass, &frame, w, h, bg.opacity, bg.aspect_mode);
+                            let blocks = match kind {
+                                ScreenKind::Audience => {
+                                    if let Some(bg) = &current.background {
+                                        if is_video(bg) {
+                                            // video: un frame NV12 por archivo (la ruta es el id), convertido a RGB en el shader
+                                            if let Some(frame) = bg.path.as_deref().and_then(|path| store.get_video(path)) {
+                                                nv12_pipeline.render(&device, &queue, &mut arena, &mut pass, &frame, w, h, bg.opacity, bg.aspect_mode);
+                                            }
+                                        } else if let Some(texture) = bg.path.as_deref().and_then(|path| ready_image(&store, path)) {
+                                            background_pipeline.render(
+                                                &queue,
+                                                &mut arena,
+                                                &mut pass,
+                                                &texture,
+                                                w,
+                                                h,
+                                                bg.opacity,
+                                                bg.aspect_mode,
+                                            );
                                         }
-                                    } else if let Some(texture) = bg.path.as_deref().and_then(|path| ready_image(&store, path)) {
-                                        background_pipeline.render(
-                                            &queue,
-                                            &mut arena,
-                                            &mut pass,
-                                            &texture,
-                                            w,
-                                            h,
-                                            bg.opacity,
-                                            bg.aspect_mode,
-                                        );
                                     }
-                                }
 
-                                // Items de medio (imágenes) colocados en la slide, encima
-                                // del fondo y debajo del texto (F4.5).
-                                for item in &current.media {
+                                    // Items de medio (imágenes) colocados en la slide, encima
+                                    // del fondo y debajo del texto (F4.5).
+                                    for item in &current.media {
+                                        if item.media_type != "image" || item.path.is_empty() {
+                                            continue;
+                                        }
+                                        if let Some(texture) = ready_image(&store, &item.path) {
+                                            // La caja viene en la resolución lógica de la escena.
+                                            let scale = match item.design_width {
+                                                Some(dw) if dw > 0.0 => w as f32 / dw,
+                                                _ => 1.0,
+                                            };
+                                            background_pipeline.render_rect(
+                                                &queue,
+                                                &mut arena,
+                                                &mut pass,
+                                                &texture,
+                                                w,
+                                                h,
+                                                [
+                                                    item.x * scale,
+                                                    item.y * scale,
+                                                    item.width * scale,
+                                                    item.height * scale,
+                                                ],
+                                                item.opacity,
+                                                item.aspect_mode,
+                                            );
+                                        }
+                                    }
+
+                                    // Texto de la slide (capa 3). Los overlays del Scene Graph
+                                    // (F4.6) se dibujan después, en su propia capa.
+                                    current.text.clone()
+                                }
+                                ScreenKind::Stage => crate::render::stage::stage_blocks(&current.stage, w as f32, h as f32),
+                            };
+
+                            if let Err(err) = text_engine.render(TextLayer::Slide, &device, &queue, &mut pass, w, h, &blocks) {
+                                text_errors += 1;
+                                if crate::render::guard::should_log(text_errors) {
+                                    log::error!("[render] texto (Slide) en {label}: {err}");
+                                }
+                            }
+
+                            // Capa de overlays del Scene Graph (F4.6): fondo → medios slide →
+                            // texto slide → medios overlay → texto overlay. Sólo en audiencia.
+                            if matches!(kind, ScreenKind::Audience) {
+                                // Medios (imágenes) de los overlays.
+                                for item in &current.overlay_media {
                                     if item.media_type != "image" || item.path.is_empty() {
                                         continue;
                                     }
                                     if let Some(texture) = ready_image(&store, &item.path) {
-                                        // La caja viene en la resolución lógica de la escena.
                                         let scale = match item.design_width {
                                             Some(dw) if dw > 0.0 => w as f32 / dw,
                                             _ => 1.0,
                                         };
                                         background_pipeline.render_rect(
-                                            &queue,
-                                            &mut arena,
-                                            &mut pass,
+                                                &queue,
+                                                &mut arena,
+                                                &mut pass,
                                             &texture,
                                             w,
                                             h,
@@ -264,80 +310,35 @@ pub(super) fn spawn_render_loop(
                                     }
                                 }
 
-                                // Texto de la slide (capa 3). Los overlays del Scene Graph
-                                // (F4.6) se dibujan después, en su propia capa.
-                                current.text.clone()
-                            }
-                            ScreenKind::Stage => crate::render::stage::stage_blocks(&current.stage, w as f32, h as f32),
-                        };
-
-                        if let Err(err) = text_engine.render(TextLayer::Slide, &device, &queue, &mut pass, w, h, &blocks) {
-                            text_errors += 1;
-                            if crate::render::guard::should_log(text_errors) {
-                                log::error!("[render] texto (Slide) en {label}: {err}");
-                            }
-                        }
-
-                        // Capa de overlays del Scene Graph (F4.6): fondo → medios slide →
-                        // texto slide → medios overlay → texto overlay. Sólo en audiencia.
-                        if matches!(kind, ScreenKind::Audience) {
-                            // Medios (imágenes) de los overlays.
-                            for item in &current.overlay_media {
-                                if item.media_type != "image" || item.path.is_empty() {
-                                    continue;
+                                // Texto de los overlays.
+                                if let Err(err) = text_engine.render(
+                                    TextLayer::Overlay,
+                                    &device,
+                                    &queue,
+                                    &mut pass,
+                                    w,
+                                    h,
+                                    &current.overlay_text,
+                                ) {
+                                    text_errors += 1;
+                                    if crate::render::guard::should_log(text_errors) {
+                                        log::error!("[render] texto (Overlay) en {label}: {err}");
+                                    }
                                 }
-                                if let Some(texture) = ready_image(&store, &item.path) {
-                                    let scale = match item.design_width {
-                                        Some(dw) if dw > 0.0 => w as f32 / dw,
-                                        _ => 1.0,
-                                    };
-                                    background_pipeline.render_rect(
-                                            &queue,
-                                            &mut arena,
-                                            &mut pass,
-                                        &texture,
-                                        w,
-                                        h,
-                                        [
-                                            item.x * scale,
-                                            item.y * scale,
-                                            item.width * scale,
-                                            item.height * scale,
-                                        ],
-                                        item.opacity,
-                                        item.aspect_mode,
-                                    );
-                                }
-                            }
 
-                            // Texto de los overlays.
-                            if let Err(err) = text_engine.render(
-                                TextLayer::Overlay,
-                                &device,
-                                &queue,
-                                &mut pass,
-                                w,
-                                h,
-                                &current.overlay_text,
-                            ) {
-                                text_errors += 1;
-                                if crate::render::guard::should_log(text_errors) {
-                                    log::error!("[render] texto (Overlay) en {label}: {err}");
-                                }
-                            }
-
-                            // Overlays del modelo previo (relojes/avisos): se dibujan
-                            // por encima de todo, como antes.
-                            let old_blocks: Vec<TextBlock> = current
-                                .overlays
-                                .clone()
-                                .into_iter()
-                                .map(|o| overlay_block(o, w))
-                                .collect();
-                            if let Err(err) = text_engine.render(TextLayer::Previous, &device, &queue, &mut pass, w, h, &old_blocks) {
-                                text_errors += 1;
-                                if crate::render::guard::should_log(text_errors) {
-                                    log::error!("[render] texto (Previous) en {label}: {err}");
+                                // Overlays del modelo previo (relojes/avisos): se dibujan
+                                // por encima de todo, como antes.
+                                let old_blocks: Vec<TextBlock> = current
+                                    .overlays
+                                    .clone()
+                                    .into_iter()
+                                    .map(|o| overlay_block(o, w))
+                                    .collect();
+                                if let Err(err) = text_engine.render(TextLayer::Previous, &device, &queue, &mut pass, w, h, &old_blocks) {
+                                    text_errors += 1;
+                                    if crate::render::guard::should_log(text_errors) {
+                                        log::error!("[render] texto (Previous) en {label}: {err}");
+                                    }
                                 }
                             }
                         }
