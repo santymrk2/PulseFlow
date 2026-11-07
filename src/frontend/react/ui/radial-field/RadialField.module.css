@@ -1,0 +1,185 @@
+/* Portado de radial-field.svelte. `:global(…)` se conserva; los selectores de elemento llevan su clase (elemento.clase). */
+/* Keep your original textfield style */
+.textfield {
+    position: relative;
+    width: 100%;
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    height: 38px;
+}
+.background {
+    position: absolute;
+    inset: 0;
+    background-color: var(--primary-darkest);
+    border-start-start-radius: var(--radius, 4px);
+    border-start-end-radius: var(--radius, 4px);
+    z-index: 0;
+}
+.inputWrapper {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* Hide default browser arrows */
+input.input[type="number"]::-webkit-inner-spin-button,
+input.input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input.input[type="number"].noValue:not(:focus) {
+    color: transparent;
+}
+
+.input {
+    width: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-size: var(--text-sm);
+    padding: 16px 35px 2px 12px;
+    color: var(--text);
+}
+
+.input:disabled {
+    color: var(--text);
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.miniIndicator {
+    position: absolute;
+    right: 35px;
+
+    width: 26px;
+    height: 26px;
+    flex-shrink: 0;
+
+    pointer-events: none;
+}
+
+/* buttons */
+
+.buttons {
+    position: absolute;
+    right: 0.1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    z-index: 2;
+
+    opacity: 0;
+    transition: 0.15s opacity ease;
+}
+
+.textfield:not(.disabled):hover .buttons {
+    opacity: 1;
+}
+
+.buttons button.step {
+    background: var(--primary-darkest);
+    color: var(--text);
+    border: none;
+    cursor: pointer;
+    padding: 0.15rem;
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition:
+        background 0.15s ease,
+        color 0.15s ease,
+        opacity 0.15s ease;
+}
+
+.buttons button.step svg {
+    display: block;
+}
+
+.buttons button.step:hover:not(:disabled) {
+    background: var(--hover);
+    color: var(--secondary);
+}
+
+.buttons button.step:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}
+
+label.label {
+    position: absolute;
+    left: 12px;
+    top: 4px;
+    font-size: var(--text-2xs);
+    color: var(--text-subtle);
+    font-weight: 500;
+    opacity: 1;
+    pointer-events: none;
+    z-index: 1;
+}
+.textfield:has(input:focus) label.label,
+label.label.valueFilled {
+    top: 4px;
+    font-size: var(--text-2xs);
+    color: var(--text-subtle);
+    font-weight: 500;
+    opacity: 1;
+}
+.textfield.disabled label.label {
+    color: var(--text);
+    opacity: 0.35;
+}
+
+.underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1.2px;
+    width: 100%;
+    background-color: var(--secondary);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+    transform-origin: left;
+    z-index: 2;
+}
+.textfield:has(input:focus) .underline {
+    transform: scaleX(1);
+}
+
+/* Popup */
+.picker {
+    position: absolute;
+    z-index: 10;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: var(--primary-darkest);
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    border-radius: var(--radius, 8px);
+    /* padding: 8px 5px; */
+    padding: 5px;
+    box-shadow: var(--shadow-float);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+.handle {
+    cursor: grab;
+    touch-action: none;
+}
+/* .popup-value {
+    font-weight: bold;
+} */
+
+/* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+.background,
+.underline {
+    display: none;
+}
+.textfield:focus-within {
+    border-color: var(--border-strong);
+}

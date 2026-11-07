@@ -1,0 +1,155 @@
+/* Portado de popup-field.svelte. `:global(…)` se conserva; los selectores de elemento llevan su clase (elemento.clase). */
+.textfield {
+    position: relative;
+    width: 100%;
+    color: var(--text);
+    user-select: none;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    height: 38px;
+}
+
+.background {
+    position: absolute;
+    inset: 0;
+    background-color: var(--primary-darkest);
+    border-start-start-radius: var(--radius, 4px);
+    border-start-end-radius: var(--radius, 4px);
+    z-index: 0;
+}
+
+.input {
+    height: 100%;
+}
+
+.textfield:not(:has(:global(.dropdown))):not(:has(.remove:hover)):not(:disabled):hover .input {
+    background-color: var(--hover);
+}
+
+.buttonTrigger {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    padding: 16px 12px 2px;
+    font-size: var(--text-sm);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    outline: none;
+}
+
+.remove {
+    position: absolute;
+    top: 50%;
+    right: 46px;
+    transform: translateY(-50%);
+
+    z-index: 2;
+}
+.remove :global(button) {
+    padding: 0.75rem;
+}
+
+.selectedText {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 88%;
+
+    /* display: flex;
+    align-items: center;
+    gap: 8px; */
+}
+
+.arrow {
+    transition: transform 0.2s ease;
+    color: var(--text);
+    transform: translateY(-0.4rem);
+
+    display: flex;
+}
+
+/* .subicon {
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+
+    border-radius: 50%;
+    background-color: var(--primary-darkest);
+} */
+
+label.label {
+    position: absolute;
+    left: 12px;
+    top: 4px;
+    font-size: var(--text-2xs);
+    color: var(--text-subtle);
+    font-weight: 500;
+    opacity: 1;
+    pointer-events: none;
+    z-index: 1;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 80%;
+}
+label.label.selected {
+    top: 4px;
+    font-size: var(--text-2xs);
+    color: var(--text-subtle);
+    font-weight: 500;
+    opacity: 1;
+}
+
+.underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1.2px;
+    width: 100%;
+    background-color: var(--secondary);
+    transform: scaleX(0);
+    transition: transform 0.2s ease;
+    transform-origin: left;
+    z-index: 2;
+
+    pointer-events: none;
+}
+
+.textfield:not(:has(.remove:hover)):focus-within .underline {
+    transform: scaleX(1);
+}
+.textfield:focus-within label.label {
+    top: 4px;
+    font-size: var(--text-2xs);
+    color: var(--text-subtle);
+    font-weight: 500;
+    opacity: 1;
+}
+
+.disabled {
+    pointer-events: none;
+    opacity: 0.35;
+}
+
+/* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+.background,
+.underline {
+    display: none;
+}
+.textfield:focus-within {
+    border-color: var(--border-strong);
+}
+
+/* el botón de borrar va sobre el campo: se reserva su ancho */
+.textfield:has(.remove :global(button)) .selectedText {
+    margin-inline-end: 36px;
+}

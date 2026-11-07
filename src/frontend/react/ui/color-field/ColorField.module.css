@@ -1,0 +1,265 @@
+/* Portado de color-field.svelte. `:global(…)` se conserva; los selectores de elemento llevan su clase (elemento.clase). */
+.textfield {
+    position: relative;
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    cursor: pointer;
+
+    --margin: 6px;
+    min-height: 38px;
+    height: 50px;
+}
+.textfield.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+/* .textfield:not(.disabled):hover .input {
+    background-color: var(--hover);
+} */
+
+.background {
+    position: absolute;
+    inset: 0;
+    background-color: var(--primary-darkest);
+    border-start-start-radius: var(--radius, 4px);
+    border-start-end-radius: var(--radius, 4px);
+}
+.colorDisplay {
+    position: relative;
+
+    border-radius: 3px;
+    border: 2px solid transparent;
+
+    transition:
+        0.2s background-color,
+        0.1s border-color;
+
+    top: var(--margin);
+    height: calc(100% - (var(--margin) * 2));
+    margin-right: var(--margin);
+    /* margin-left: 200px; */
+    margin-left: 50%;
+
+    top: 50%;
+    transform: translateY(-50%);
+}
+.colorDisplay:hover {
+    border-color: var(--outline-color);
+}
+label.label {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 0.75rem;
+
+    font-size: var(--text-sm);
+    opacity: 0.8;
+
+    transition: all 0.2s ease;
+
+    pointer-events: none;
+}
+.underline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 1.2px;
+    width: 100%;
+    background-color: var(--secondary);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.2s ease;
+}
+/* .textfield:not(.disabled):active .underline */
+.textfield:focus .underline {
+    transform: scaleX(1);
+}
+.picker {
+    position: absolute;
+    top: calc(100% - var(--margin));
+    left: 50%;
+    background: var(--primary-darker);
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    border-radius: var(--radius, 8px);
+    /* display: flex;
+    flex-wrap: wrap; */
+    z-index: 10;
+
+    cursor: default;
+
+    --width: 200px;
+    --padding: 10px;
+    --gap: 5px;
+    width: var(--width);
+    /* padding: var(--padding); */
+    /* gap: var(--gap); */
+
+    display: flex;
+    flex-wrap: wrap;
+
+    box-shadow: var(--shadow-float);
+}
+.picker.isOverflowing {
+    left: unset;
+    right: 0;
+}
+
+.picker :global(.tabs button span) {
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.pickerContent {
+    padding: var(--padding);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--gap);
+}
+
+.pickColor {
+    --count: 5;
+    --size: calc(((var(--width) - var(--padding) * 2) / var(--count)) - (var(--gap) / var(--count) * (var(--count) - 1)) - 0.4px);
+    height: var(--size);
+    width: var(--size);
+    cursor: pointer;
+    border-radius: 3px;
+
+    /* min-width: 30px; */
+    /* width: 40px !important; */
+    aspect-ratio: 1;
+    /* flex: 1; */
+
+    border: 2px solid transparent;
+    transition: 0.1s border-color;
+
+    outline-offset: 2px;
+}
+.pickColor:hover {
+    /* border-color: var(--outline-color); */
+    border-color: var(--primary-darker);
+}
+.pickColor.active {
+    border-color: var(--secondary);
+}
+
+.noColor {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--primary);
+}
+.remove {
+    position: absolute;
+    top: 50%;
+    right: 4px;
+    transform: translateY(-50%);
+}
+.remove :global(svg) {
+    color: var(--outline-color);
+}
+
+/* default picker */
+
+.color {
+    transition: background-color 0.2s;
+    position: relative;
+    border-radius: var(--radius, 4px);
+
+    margin-top: 5px;
+    padding: 15px;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid transparent;
+    transition: 0.1s border-color;
+}
+.color:hover,
+.color:has(input:focus) {
+    border-color: var(--outline-color);
+}
+
+input.colorpicker[type="color"] {
+    position: absolute;
+
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+
+    cursor: pointer;
+}
+
+.pickerContent :global(button) {
+    padding: 15px;
+    font-weight: normal;
+    font-size: 1em;
+    border: 2px solid transparent;
+}
+.pickerContent :global(button:hover) {
+    border-color: var(--outline-color) !important;
+}
+
+/* opacity */
+
+.opacity {
+    display: block;
+    width: 100%;
+    padding-top: 5px;
+}
+
+/* ALWAYS VISIBLE */
+
+.textfield:has(.picker.alwaysVisible) {
+    height: unset;
+}
+.picker.alwaysVisible {
+    position: relative;
+    top: unset;
+    left: unset;
+
+    box-shadow: none;
+
+    width: 100%;
+}
+.picker.alwaysVisible .pickerContent {
+    width: 100%;
+}
+
+/* MANAGE */
+
+.pickColor.disabled {
+    opacity: 0.5;
+    /* filter: blur(3px); */
+}
+.pickColor .hover {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+.pickColor .hover:not(.visible) {
+    display: none;
+}
+.pickColor:hover .hover {
+    display: flex;
+}
+
+/* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+.background,
+.underline {
+    display: none;
+}
+.textfield:focus-within {
+    border-color: var(--border-strong);
+}
+
+/* Svelte: style="background: {hexValue} !important" (un objeto style de React no admite !important) */
+.customButton {
+    background: var(--custom-bg) !important;
+}

@@ -481,7 +481,7 @@ El contrato de eventos del kit está en `docs/design/kit.md` ("Contrato de event
   que haga el Svelte en ese momento)
 - [x] **F24.8**. Verificación extra (Review Focus 4): con un `TextField` React con foco, las teclas de atajo
   globales (`src/frontend/utils/shortcuts.ts`) no se disparan, igual que con el Svelte.
-- [ ] **F24.9**
+- [x] **F24.9**
 - [ ] **F24.10**. Además de las carpetas:
   - **Registro de popups React.** Create `src/frontend/react/popups/registry.ts` con
     `export const reactPopups: Partial<Record<Popups, ElementType>> = {}`. En `src/frontend/components/main/Popup.svelte`,
