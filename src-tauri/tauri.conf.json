@@ -30,7 +30,7 @@
         "img-src": "'self' asset: http://asset.localhost data: blob: https:",
         "media-src": "'self' asset: http://asset.localhost data: blob: https:",
         "font-src": "'self' asset: http://asset.localhost data:",
-        "connect-src": "'self' ipc: http://ipc.localhost asset: http://asset.localhost https: wss:",
+        "connect-src": "'self' ipc: http://ipc.localhost asset: http://asset.localhost https: wss: http: ws:",
         "worker-src": "'self' blob:",
         "frame-src": "https:",
         "object-src": "'none'"
@@ -42,7 +42,7 @@
         "img-src": "'self' asset: http://asset.localhost data: blob: https:",
         "media-src": "'self' asset: http://asset.localhost data: blob: https:",
         "font-src": "'self' asset: http://asset.localhost data:",
-        "connect-src": "'self' ipc: http://ipc.localhost asset: http://asset.localhost https: wss: ws://127.0.0.1:1420 ws://localhost:1420",
+        "connect-src": "'self' ipc: http://ipc.localhost asset: http://asset.localhost https: wss: http: ws: ws://127.0.0.1:1420 ws://localhost:1420",
         "worker-src": "'self' blob:",
         "frame-src": "https:",
         "object-src": "'none'"
