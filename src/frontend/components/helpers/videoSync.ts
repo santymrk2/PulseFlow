@@ -9,6 +9,11 @@ export interface VideoSyncFields {
 /** Cada cuánto se reenvía la posición aunque nada más haya cambiado. */
 const RESEND_INTERVAL_MS = 1000
 
+/** Clave de un video en `playingVideoState` (la misma para el fondo y los ítems de la slide). */
+export function videoStateKey(path: string, outputId: string): string {
+    return `${path}_${outputId}`
+}
+
 export function videoSyncFields(state: PlayingVideoState | undefined): VideoSyncFields {
     if (!state) return {}
     return { ...(state.paused ? { paused: true } : {}), positionMs: Math.round(state.currentTime * 1000) }

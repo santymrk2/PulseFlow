@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest"
-import { shouldResendForVideo, videoSyncFields } from "./videoSync"
+import { shouldResendForVideo, videoStateKey, videoSyncFields } from "./videoSync"
+
+describe("videoStateKey", () => {
+    it("es ruta_salida, la clave con la que el webview guarda el estado", () => {
+        expect(videoStateKey("/m/clip.mp4", "out1")).toBe("/m/clip.mp4_out1")
+    })
+})
 
 describe("videoSyncFields", () => {
     it("es vacío sin estado", () => {

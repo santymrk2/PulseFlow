@@ -23,7 +23,7 @@ import { getItemText } from "../edit/scripts/textStyle"
 import { shouldItemBeShown } from "../edit/scripts/itemHelpers"
 import { clone } from "./array"
 import { getSceneSourceId } from "./sceneMirror"
-import { videoSyncFields } from "./videoSync"
+import { videoStateKey, videoSyncFields } from "./videoSync"
 import { getExtension, getMediaStyle, getMediaType } from "./media"
 import { joinTimeBig } from "./time"
 import { getCurrentTimerValue } from "../drawer/timers/timers"
@@ -177,7 +177,7 @@ function buildMediaItem(item: Item, index: number, allItems: Item[], outputId: s
     // "blur" no se puede pintar en el engine: cae a "contain" (igual que el render HTML)
     const fit = item.fit === "cover" ? "cover" : item.fit === "fill" ? "fill" : "contain"
 
-    return sceneMediaItem({ id: item.id, x: box.x, y: box.y, width: box.width, height: box.height, src, mediaType, fit, opacity: 1, box: parseBoxStyle(item.style), ...(mediaType === "video" ? videoSyncFields(get(playingVideoState)[`_`]) : {}) })
+    return sceneMediaItem({ id: item.id, x: box.x, y: box.y, width: box.width, height: box.height, src, mediaType, fit, opacity: 1, box: parseBoxStyle(item.style), ...(mediaType === "video" ? videoSyncFields(get(playingVideoState)[videoStateKey(src, outputId)]) : {}) })
 }
 
 // TIMERS / RELOJES (F4.7): el engine dibuja el valor que manda el frontend.
@@ -380,7 +380,7 @@ function getBackground(outputId: string, output: Output, currentStyle: ReturnTyp
     const mediaStyle = getMediaStyle({ ...get(media)[path], ...(outBackground?.path === path ? outBackground : {}) } as any, currentStyle)
     const fit = mediaStyle.fit === "cover" ? "cover" : mediaStyle.fit === "fill" ? "fill" : "contain"
 
-    return sceneBackground({ path, type: mediaType, fit, opacity: 1, loop: outBackground?.path === path ? outBackground.loop !== false : true, muted: outBackground?.muted, ...(mediaType === "video" ? videoSyncFields(get(playingVideoState)[`${path}_${outputId}`]) : {}) })
+    return sceneBackground({ path, type: mediaType, fit, opacity: 1, loop: outBackground?.path === path ? outBackground.loop !== false : true, muted: outBackground?.muted, ...(mediaType === "video" ? videoSyncFields(get(playingVideoState)[videoStateKey(path, outputId)]) : {}) })
 }
 
 // TRANSITION

@@ -141,6 +141,9 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
     if kind == ScreenKind::Audience {
         sync_video(app, &mut handle, background.as_ref());
     }
+    // Los videos dentro de la slide (F23.20), también al abrir con la escena ya publicada (audiencia y stage).
+    let media = scene.load().media.clone();
+    sync_item_videos(app, &mut handle, &item_videos(&label, &media));
 
     state.screens.lock_safe().insert(config.id.clone(), handle);
     Ok(())
