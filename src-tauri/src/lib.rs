@@ -7,6 +7,7 @@
 // de recursión por defecto de los macros.
 #![recursion_limit = "512"]
 
+pub mod app_close;
 pub mod commands;
 pub mod domain;
 pub mod error;
@@ -57,6 +58,7 @@ pub fn run() {
             crate::menu::install(app.handle())?;
             Ok(())
         })
+        .on_window_event(app_close::on_window_event)
         .invoke_handler(tauri::generate_handler![
             // APP
             commands::app::VERSION,
@@ -176,7 +178,8 @@ pub fn run() {
             // STREAMING
             commands::streaming::FFMPEG_CHECK,
         ])
-        .run(tauri::generate_context!());
+        .build(tauri::generate_context!())
+        .map(|app| app.run(app_close::on_run_event));
 
     // Regla del proyecto: no usar `.expect()` en producción; reportar y salir.
     if let Err(err) = result {

@@ -14,10 +14,10 @@
 use crate::error::{AppError, AppResult};
 use tauri::{AppHandle, Manager, WebviewWindow};
 
-/// Cierra la ventana actual (equivale a `Main.CLOSE`).
+/// Sale de la app (equivale a `Main.CLOSE`); el frontend lo invoca tras guardar. Detiene las salidas.
 #[tauri::command]
-pub fn CLOSE(window: WebviewWindow) -> AppResult<()> {
-    window.close().map_err(AppError::from)
+pub fn CLOSE(app: AppHandle) {
+    crate::app_close::exit_now(&app);
 }
 
 /// Maximiza la ventana actual (equivale a `Main.MAXIMIZE`).

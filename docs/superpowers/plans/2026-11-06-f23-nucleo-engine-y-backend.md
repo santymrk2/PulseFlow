@@ -399,7 +399,7 @@ Flujo:
   Recibe `app: AppHandle` en vez de `WebviewWindow`.
 - Las ventanas de salida (etiquetas distintas de `main`) no se interceptan.
 
-- [ ] **Step 1: Tests que fallan** en `app_close.rs`:
+- [x] **Step 1: Tests que fallan** en `app_close.rs`:
 
 ```rust
 #[test]
@@ -428,9 +428,9 @@ fn solo_la_ventana_principal() {
 }
 ```
 
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib app_close`. Expected: FAIL.
-- [ ] **Step 3: Implementar** el flujo de arriba.
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib && cargo clippy --all-targets -- -D warnings`. Expected: verde.
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib app_close`. Expected: FAIL.
+- [x] **Step 3: Implementar** el flujo de arriba.
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib && cargo clippy --all-targets -- -D warnings`. Expected: verde.
 - [ ] **Step 5: En la app (macOS):** renombrar un show y cerrar **enseguida** con el botón rojo. Reabrir: el nombre
   nuevo está. Repetir con "Salir" del Dock. Con una salida de video abierta, después de cerrar,
   `pgrep -l ffmpeg` no muestra procesos.
@@ -438,7 +438,7 @@ fn solo_la_ventana_principal() {
   rojo: aparece el popup; "Cancelar" deja la app abierta.
 - [ ] **Step 7 (usuario, Windows):** repetir el Step 5 con la ✕ de la ventana; en el Administrador de tareas no queda
   ningún `ffmpeg.exe`.
-- [ ] **Step 8:** commit `F23.8: cerrar la ventana o salir pasa por el guardado`.
+- [x] **Step 8:** commit `F23.8: cerrar la ventana o salir pasa por el guardado`.
 
 ---
 
