@@ -25,12 +25,32 @@ describe("Input", () => {
         expect(onInput.mock.calls[0][0].target.value).toBe("a")
     })
 
-    it("onChange_recibe_el_evento_con_el_valor_nuevo", () => {
-        const onChange = vi.fn()
+    it("onChange_recibe_el_change_nativo_con_el_valor_nuevo", () => {
+        // El valor se lee dentro del handler: happy-dom limpia event.target al terminar el dispatch
+        const valores: string[] = []
+        const onChange = vi.fn((event: Event) => valores.push((event.target as HTMLInputElement).value))
         render(<Input value="" onChange={onChange} />)
         fireEvent.change(screen.getByRole("textbox"), { target: { value: "b" } })
         expect(onChange).toHaveBeenCalledTimes(1)
-        expect(onChange.mock.calls[0][0].target.value).toBe("b")
+        expect(valores).toEqual(["b"])
+    })
+
+    it("tipear_no_llama_onChange_sino_onInput", () => {
+        const onInput = vi.fn()
+        const onChange = vi.fn()
+        render(<Input value="" onInput={onInput} onChange={onChange} />)
+        fireEvent.input(screen.getByRole("textbox"), { target: { value: "a" } })
+        expect(onInput).toHaveBeenCalledTimes(1)
+        expect(onChange).not.toHaveBeenCalled()
+    })
+
+    it("al_desmontar_se_quita_el_listener_de_change", () => {
+        const onChange = vi.fn()
+        const { unmount } = render(<Input value="" onChange={onChange} />)
+        const input = screen.getByRole("textbox")
+        unmount()
+        fireEvent.change(input, { target: { value: "z" } })
+        expect(onChange).not.toHaveBeenCalled()
     })
 
     it("onKeyDown_reenvia_la_tecla", () => {
@@ -66,12 +86,18 @@ describe("Input", () => {
     })
 
     it("variantes_center_y_light", () => {
-        const { unmount: u1 } = render(<Input value="" center light />)
-        const conCentro = screen.getByRole("textbox")
-        expect(conCentro.classList.contains(styles.center)).toBe(true)
-        expect(conCentro.classList.contains(styles.light)).toBe(true)
-        u1()
-        render(<Input value="" />)
-        expect(screen.getByRole("textbox").classList.contains(styles.center)).toBe(false)
+        const combinaciones = [
+            { center: false, light: false },
+            { center: true, light: false },
+            { center: false, light: true },
+            { center: true, light: true }
+        ]
+        for (const { center, light } of combinaciones) {
+            const { unmount } = render(<Input value="" center={center} light={light} />)
+            const input = screen.getByRole("textbox")
+            expect(input.classList.contains(styles.center)).toBe(center)
+            expect(input.classList.contains(styles.light)).toBe(light)
+            unmount()
+        }
     })
 })

@@ -3,13 +3,12 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { dictionary } from "../../../stores"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../test/mockCommon"
 import iconStyles from "../../helpers/Icon.module.css"
-import { Button } from "./Button"
+import { BUTTON_SIZE, BUTTON_VARIANT, Button, type ButtonProps, type ButtonVariant } from "./Button"
 import styles from "./Button.module.css"
 
-// Corta el ciclo utils/language → utils/common → … → historyHelpers, que llama translateText al cargar (antes de que
-// language termine). language usa isMainWindow sólo dentro de setLanguage, así que el mock no cambia lo probado.
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../utils/common", () => commonMock())
 
 let restaurar: () => void = () => {}
 
@@ -81,13 +80,37 @@ describe("Button", () => {
     })
 
     it("variantes_y_tamanos", () => {
-        const casos: [Parameters<typeof Button>[0], string[]][] = [
-            [{ variant: "default", size: "md" }, [styles.default, styles.md]],
-            [{ variant: "outline", size: "xs" }, [styles.outlined, styles.xs]],
-            [{ variant: "live", size: "icon" }, [styles.live, styles.icon]],
-            [{ variant: "destructive", size: "icon-sm" }, [styles.destructive, styles["icon-sm"]]],
-            [{ variant: "link" }, [styles.link]],
-            [{ variant: "secondary", isActive: true }, [styles.secondary, styles.isActive]],
+        const claseDe = (variante: ButtonVariant) => (variante === "outline" ? styles.outlined : styles[variante])
+        for (const variante of Object.values(BUTTON_VARIANT)) {
+            for (const tamano of Object.values(BUTTON_SIZE)) {
+                const { unmount } = render(
+                    <Button variant={variante} size={tamano}>
+                        x
+                    </Button>
+                )
+                const btn = screen.getByRole("button")
+                expect(btn.classList.contains(claseDe(variante))).toBe(true)
+                for (const otra of Object.values(BUTTON_VARIANT)) if (otra !== variante) expect(btn.classList.contains(claseDe(otra))).toBe(false)
+                // `sm` no tiene regla CSS: el módulo no la exporta y el botón no lleva clase de tamaño
+                if (tamano !== "sm") expect(btn.classList.contains(styles[tamano])).toBe(true)
+                for (const otro of Object.values(BUTTON_SIZE)) if (otro !== tamano && otro !== "sm") expect(btn.classList.contains(styles[otro])).toBe(false)
+                unmount()
+            }
+        }
+    })
+
+    it("por_defecto_es_ghost_y_sm", () => {
+        render(<Button>x</Button>)
+        const btn = screen.getByRole("button")
+        expect(btn.classList.contains(styles.ghost)).toBe(true)
+        expect(btn.classList.contains(styles.md)).toBe(false)
+        expect(btn.classList.contains(styles.xs)).toBe(false)
+        expect(btn.classList.contains(styles.icon)).toBe(false)
+    })
+
+    it("banderas_de_estado_y_forma", () => {
+        const casos: [ButtonProps, string[]][] = [
+            [{ isActive: true }, [styles.isActive]],
             [{ red: true, redHover: true, bold: true }, [styles.red, styles.redHover, styles.bold]],
             [{ tab: true, showOutline: true, align: "start" }, [styles.tab, styles.showOutline, styles.start]]
         ]
@@ -97,6 +120,32 @@ describe("Button", () => {
             for (const clase of clases) expect(btn.classList.contains(clase)).toBe(true)
             unmount()
         }
+    })
+
+    it("onNativeClick_va_antes_que_onClick_fuera_de_edit", () => {
+        const orden: string[] = []
+        render(
+            <Button onNativeClick={() => orden.push("nativo")} onClick={() => orden.push("on:click")}>
+                Ok
+            </Button>
+        )
+        fireEvent.click(screen.getByRole("button"))
+        expect(orden).toEqual(["nativo", "on:click"])
+    })
+
+    it("dentro_de_edit_onNativeClick_se_llama_y_onClick_no", () => {
+        const onNativeClick = vi.fn()
+        const onClick = vi.fn()
+        render(
+            <div className="edit">
+                <Button onNativeClick={onNativeClick} onClick={onClick}>
+                    Ok
+                </Button>
+            </div>
+        )
+        fireEvent.click(screen.getByRole("button"))
+        expect(onNativeClick).toHaveBeenCalledTimes(1)
+        expect(onClick).not.toHaveBeenCalled()
     })
 
     it("outline_no_usa_la_clase_outline_de_tailwind", () => {

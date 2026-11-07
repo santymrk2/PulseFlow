@@ -1849,6 +1849,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - Color de fondo del stage.
 - Autoajuste de texto medido por el engine.
 - Lógica de negocio dentro de `commands/` (viola `AGENTS.md`; `files.rs` tiene 1081 líneas).
+- historyHelpers.ts: projectReplacers llama translateText al importar (ciclo language → common → save → apiHelper → historyHelpers; títulos sin traducir si el diccionario no cargó). Hacerlo perezoso después de F24 y borrar react/test/mockCommon.ts (F24.6).
 
 ## Fuera de alcance por ahora
 

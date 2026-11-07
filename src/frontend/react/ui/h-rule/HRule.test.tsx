@@ -2,11 +2,11 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { dictionary } from "../../../stores"
+import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { HRule } from "./HRule"
 
-// Corta el ciclo utils/language → utils/common → … → historyHelpers (ver Button.test.tsx)
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../utils/common", () => commonMock())
 
 let restaurar: () => void = () => {}
 

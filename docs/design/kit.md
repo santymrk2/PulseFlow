@@ -32,6 +32,7 @@ manejadores de los padres a callbacks: AGENTS.md prohíbe migrar a runes de form
 
 - `Button`: `on:click` y `on:dblclick` con `detail = { ctrl, shift, alt, doubleClick, target }`
   (`ctrl` ya incluye `meta`). **No** entrega el `MouseEvent`: para eso, `onclick`.
+  En React: `on:click` → `onClick(detail, event)` (con guarda); `onclick=` → `onNativeClick(event)` (sin guarda, se llama antes).
 - `*Field`: `on:change` con el valor nuevo en `detail` (y `on:input` donde aplica).
 - `Input`, `Slider`: reenvían los eventos DOM (`e.target.value`).
 

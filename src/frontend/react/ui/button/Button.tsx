@@ -51,13 +51,16 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
     redHover?: boolean
     bold?: boolean
     align?: ButtonAlign
+    // `onclick=` de Svelte: nativo, sin guarda, se llama antes que onClick
+    onNativeClick?: (event: MouseEvent<HTMLButtonElement>) => void
+    // `on:click` de Svelte: con guarda (ignora clicks dentro de `.edit` o de un botón anidado) y con `detail`
     onClick?: (detail: ButtonClickDetail, event: ButtonEvent) => void
     onDblClick?: (detail: ButtonClickDetail, event: ButtonEvent) => void
     children?: ReactNode
     className?: string
 }
 
-export function Button({ variant = "ghost", size = "sm", title = "", info = "", icon = "", iconSize = 1, children, white = !children, isActive = false, showOutline = false, tab = false, red = false, redHover = false, bold = false, align = "center", disabled = false, className, style, onClick, onDblClick, ...rest }: ButtonProps) {
+export function Button({ variant = "ghost", size = "sm", title = "", info = "", icon = "", iconSize = 1, children, white = !children, isActive = false, showOutline = false, tab = false, red = false, redHover = false, bold = false, align = "center", disabled = false, className, style, onNativeClick, onClick, onDblClick, ...rest }: ButtonProps) {
     const dict = useStore(dictionary)
     const button = useRef<HTMLButtonElement>(null)
     // El aro de foco es sólo para teclado: al volver de un diálogo nativo el foco queda con :focus-visible
@@ -74,6 +77,12 @@ export function Button({ variant = "ghost", size = "sm", title = "", info = "", 
         const detail: ButtonClickDetail = { ctrl: event.ctrlKey || event.metaKey, shift: event.shiftKey, alt: event.altKey, doubleClick: event.detail === 2, target: event.target }
         if (double) onDblClick?.(detail, event)
         else onClick?.(detail, event)
+    }
+
+    // Mismo orden que handleClick de button.svelte: primero el nativo sin guarda, después el despacho con guarda
+    function handleClick(event: MouseEvent<HTMLButtonElement>) {
+        onNativeClick?.(event)
+        dispatch(event, false)
     }
 
     function handleKeyDown(event: KeyboardEvent<HTMLButtonElement>) {
@@ -98,7 +107,7 @@ export function Button({ variant = "ghost", size = "sm", title = "", info = "", 
             onKeyDown={handleKeyDown}
             onPointerDown={() => setPointerFocus(true)}
             onBlur={() => setPointerFocus(false)}
-            onClick={(event) => dispatch(event, false)}
+            onClick={handleClick}
             onDoubleClick={(event) => dispatch(event, true)}
         >
             {icon ? <Icon id={icon} size={iconSize} white={white || isActive || variant === "default"} /> : null}
