@@ -169,6 +169,18 @@ describe("Connection", () => {
         expect(checkWindowCapture).toHaveBeenCalledTimes(1)
     })
 
+    it("el_reinicio_al_encender_output_stream_sale_con_el_outputId_inexistente_ya_borrado", async () => {
+        const enviados: unknown[] = []
+        vi.mocked(sendMain).mockImplementation(((id: Main, data?: unknown) => {
+            if (id === Main.START) enviados.push(structuredClone(data))
+        }) as never)
+        serverData.set({ output_stream: { outputId: "fantasma", sendAudio: true } } as never)
+        await montar()
+        fireEvent.click(interruptores()[3])
+        expect(enviados).toHaveLength(1)
+        expect((enviados[0] as { data: { output_stream: object } }).data.output_stream).toEqual({ sendAudio: true })
+    })
+
     it("encender_output_stream_conserva_un_outputId_que_existe", async () => {
         outputs.set({ o1: {} } as never)
         serverData.set({ output_stream: { outputId: "o1" } } as never)

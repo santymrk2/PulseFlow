@@ -72,6 +72,18 @@ export function Connection() {
     // const randomNumber = (from: number, to: number): number => Math.floor(Math.random() * (to - from)) + from
 
     function toggleServer(value: boolean, id: string) {
+        // La limpieza va ANTES del update: el reinicio (subscribe) corre síncrono dentro de `disabledServers.update`,
+        // mientras que el `$:` de Svelte corría después del flush, con `serverData` ya limpio.
+        if (id === "output_stream") {
+            const data = get(serverData)
+            if (data?.output_stream?.outputId && !get(outputs)[data.output_stream.outputId]) {
+                serverData.update((a) => {
+                    delete a.output_stream.outputId
+                    return a
+                })
+            }
+        }
+
         disabledServers.update((a) => {
             a[id] = !value
             return a
@@ -82,17 +94,7 @@ export function Connection() {
             activePopup.set("connect")
         }
 
-        if (id === "output_stream") {
-            const data = get(serverData)
-            if (data?.output_stream?.outputId && !get(outputs)[data.output_stream.outputId]) {
-                serverData.update((a) => {
-                    delete a.output_stream.outputId
-                    return a
-                })
-            }
-
-            if (value) checkWindowCapture()
-        }
+        if (id === "output_stream" && value) checkWindowCapture()
     }
 
     function toggleCompanion(value: boolean) {
