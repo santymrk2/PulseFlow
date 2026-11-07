@@ -1755,7 +1755,7 @@ Plan: docs/superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md
 - [ ] **F23.10** El texto bíblico sólo deja pasar etiquetas conocidas.
 - [ ] **F23.11** Cálculos sin `new Function`.
 - [ ] **F23.12** Content Security Policy.
-- [ ] **F23.13** Video: pausa, posición y salto en los decodificadores.
+- [x] **F23.13** Video: pausa, posición y salto en los decodificadores.
 - [ ] **F23.14** El video del proyector sigue al transporte.
 - [ ] **F23.15** El reloj del proyector avanza.
 - [ ] **F23.16** Fondo, borde, esquinas, opacidad y padding de los cuadros.

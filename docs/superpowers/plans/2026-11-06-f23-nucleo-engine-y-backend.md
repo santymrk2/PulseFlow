@@ -718,16 +718,16 @@ Cómo, por decodificador:
   (`position_ms * 10_000`) y `GUID_NULL`. No se puede ejecutar desde macOS: se valida con `check-windows-video.sh` y en
   la guía (F23.24 §2).
 
-- [ ] **Step 1: Tests que fallan** (en `ffmpeg.rs` y en `avf.rs`, con un `FrameSink` de test que cuenta frames, como
+- [x] **Step 1: Tests que fallan** (en `ffmpeg.rs` y en `avf.rs`, con un `FrameSink` de test que cuenta frames, como
   los tests existentes de esos archivos; si no hay ffmpeg, se saltan como los demás):
   - `pausa_detiene_los_frames`: arrancar con el fixture de 3 s; a los 300 ms, `set_paused(true)`; anotar la cuenta;
     esperar 300 ms → la cuenta no cambió; `set_paused(false)`; esperar 300 ms → subió.
   - `seek_salta_a_la_posicion`: `seek(1500)`; en menos de 1 s, `position_ms()` está entre 1500 y 2500.
   - `position_avanza_en_tiempo_real`: después de 1 s reproduciendo, `position_ms()` está entre 750 y 1250.
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::video`. Expected: FAIL (los métodos no existen).
-- [ ] **Step 3: Implementar** según "Cómo".
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib && bash ../scripts/check-windows-video.sh`. Expected: verde.
-- [ ] **Step 5:** commit `F23.13: los decodificadores de video se pausan, saltan y reportan su posición`.
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::video`. Expected: FAIL (los métodos no existen).
+- [x] **Step 3: Implementar** según "Cómo".
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib && bash ../scripts/check-windows-video.sh`. Expected: verde.
+- [x] **Step 5:** commit `F23.13: los decodificadores de video se pausan, saltan y reportan su posición`.
 
 ---
 

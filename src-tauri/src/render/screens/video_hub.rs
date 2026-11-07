@@ -47,6 +47,22 @@ impl FrameSink for HubSink {
     }
 }
 
+// Los consume la sincronización con el transporte (F23.14).
+#[allow(dead_code)]
+impl SharedVideo {
+    pub(super) fn set_paused(&mut self, paused: bool) {
+        self.playback.set_paused(paused);
+    }
+
+    pub(super) fn seek(&mut self, position_ms: u64) -> AppResult<()> {
+        self.playback.seek(position_ms)
+    }
+
+    pub(super) fn position_ms(&self) -> u64 {
+        self.playback.position_ms()
+    }
+}
+
 /// Suscribe una pantalla (`subscriber` = etiqueta de su ventana) al decodificador
 /// compartido de `path`. Si el archivo ya se decodifica, sólo suma el suscriptor;
 /// si no, inicia uno nuevo.

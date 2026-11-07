@@ -4,7 +4,7 @@
 //! sin copiarlos (`metal_import`). Abre `.mp4`, `.mov` y `.m4v`; lo demás cae a ffmpeg.
 
 use super::metal_import::{import_pixel_buffer, MetalTextureCache};
-use super::pacing::Pacer;
+use super::pacing::{Pacer, PlaybackState};
 use super::{DecodedFrame, FramePixels, FrameSink, VideoDecoder};
 use crate::error::{AppError, AppResult};
 use crate::render::gpu;
@@ -12,6 +12,7 @@ use objc2::rc::{autoreleasepool, Retained};
 use objc2::runtime::AnyObject;
 use objc2_av_foundation::{AVAssetReader, AVAssetReaderStatus, AVAssetReaderTrackOutput, AVMediaTypeVideo, AVURLAsset};
 use objc2_core_foundation::CFString;
+use objc2_core_media::{kCMTimePositiveInfinity, CMTime, CMTimeRange};
 use objc2_core_video::{kCVPixelBufferIOSurfacePropertiesKey, kCVPixelBufferMetalCompatibilityKey, kCVPixelBufferPixelFormatTypeKey, kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange};
 use objc2_foundation::{NSDictionary, NSNumber, NSString, NSURL};
 use std::sync::atomic::{AtomicBool, Ordering};
@@ -26,6 +27,7 @@ const MAX_REOPEN_FAILURES: u32 = 3;
 
 pub struct AvfDecoder {
     running: Arc<AtomicBool>,
+    state: PlaybackState,
     thread: Option<JoinHandle<()>>,
 }
 
@@ -36,21 +38,36 @@ impl VideoDecoder for AvfDecoder {
             let _ = handle.join();
         }
     }
+
+    fn set_paused(&mut self, paused: bool) {
+        self.state.set_paused(paused);
+    }
+
+    /// El hilo (dueño del `AVAssetReader`) toma el pedido y reabre el lector con `timeRange` desde `position_ms`.
+    fn seek(&mut self, position_ms: u64) -> AppResult<()> {
+        self.state.request_seek(position_ms);
+        Ok(())
+    }
+
+    fn position_ms(&self) -> u64 {
+        self.state.position_ms()
+    }
 }
 
 /// Abre `path` con AVFoundation. Falla (y el llamador cae a ffmpeg) si no es un video legible.
 pub fn start(path: &str, sink: Arc<dyn FrameSink>) -> AppResult<AvfDecoder> {
     let running = Arc::new(AtomicBool::new(true));
     let (ready_tx, ready_rx) = mpsc::channel::<Result<(), String>>();
-    let (running_thread, path_thread) = (Arc::clone(&running), path.to_string());
+    let state = PlaybackState::default();
+    let (running_thread, path_thread, state_thread) = (Arc::clone(&running), path.to_string(), state.clone());
 
     // Los objetos de AVFoundation no son `Send`: se crean y viven dentro del hilo del decodificador.
     let thread = thread::Builder::new()
         .name(format!("PulseFlow-AVF-{path}"))
-        .spawn(move || decode_loop(&path_thread, sink.as_ref(), &running_thread, &ready_tx))
+        .spawn(move || decode_loop(&path_thread, sink.as_ref(), &running_thread, &state_thread, &ready_tx))
         .map_err(|e| AppError::new(format!("Error iniciando el decodificador nativo: {e}")))?;
 
-    let mut decoder = AvfDecoder { running, thread: Some(thread) };
+    let mut decoder = AvfDecoder { running, state, thread: Some(thread) };
     match ready_rx.recv_timeout(Duration::from_secs(5)) {
         Ok(Ok(())) => Ok(decoder),
         Ok(Err(message)) => {
@@ -71,7 +88,8 @@ struct Source {
 }
 
 impl Source {
-    fn open(path: &str) -> Result<Self, String> {
+    /// Abre `path` leyendo desde `start` hasta el final.
+    fn open(path: &str, start: Duration) -> Result<Self, String> {
         // SAFETY: llamadas a AVFoundation con objetos propios y vivos; sin aliasing ni hilos compartidos.
         unsafe {
             let url = NSURL::fileURLWithPath(&NSString::from_str(path));
@@ -86,6 +104,10 @@ impl Source {
                 return Err("AVAssetReader no acepta la salida de video".to_string());
             }
             reader.addOutput(&output);
+            if !start.is_zero() {
+                // hay que fijarlo antes de `startReading`
+                reader.setTimeRange(CMTimeRange { start: CMTime::new(i64::try_from(start.as_millis()).unwrap_or(i64::MAX), 1000), duration: kCMTimePositiveInfinity });
+            }
             if !reader.startReading() {
                 let reason = reader.error().map(|e| e.localizedDescription().to_string()).unwrap_or_default();
                 return Err(format!("AVAssetReader no pudo empezar a leer: {reason}"));
@@ -118,11 +140,11 @@ fn to_duration(time: objc2_core_media::CMTime) -> Duration {
     Duration::from_secs_f64(time.value as f64 / f64::from(time.timescale))
 }
 
-fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &mpsc::Sender<Result<(), String>>) {
+fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, state: &PlaybackState, ready: &mpsc::Sender<Result<(), String>>) {
     let setup = || -> Result<(MetalTextureCache, Source, Arc<crate::render::gpu::GpuContext>), String> {
         let gpu = gpu::shared().map_err(|e| e.to_string())?;
         let cache = MetalTextureCache::new(&gpu).map_err(|e| e.to_string())?;
-        Ok((cache, Source::open(path)?, gpu))
+        Ok((cache, Source::open(path, Duration::ZERO)?, gpu))
     };
     let (mut cache, mut source, mut gpu) = match setup() {
         Ok(parts) => parts,
@@ -135,7 +157,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
 
     // Línea de tiempo continua: `offset` suma la duración de las vueltas anteriores del loop.
     let mut offset = Duration::ZERO;
-    let mut pacer = Pacer::new();
+    let mut pacer = Pacer::new(state.clone());
     let (mut last_total, mut frame_duration) = (Duration::ZERO, FALLBACK_FRAME_DURATION);
     let (mut frames, mut failures) = (0u64, 0u32);
 
@@ -162,6 +184,19 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
             continue;
         }
 
+        // salto pedido: reabrir el lector en la posición; la línea de tiempo y el reloj arrancan ahí
+        if let Some(position_ms) = state.take_seek() {
+            let start = Duration::from_millis(position_ms);
+            match Source::open(path, start) {
+                Ok(next) => {
+                    source = next;
+                    (offset, last_total) = (Duration::ZERO, start);
+                    pacer.reset();
+                }
+                Err(err) => log::warn!("[VideoEngine] no se pudo saltar a {position_ms} ms en {path}: {err}"),
+            }
+        }
+
         let produced = autoreleasepool(|_| {
             // SAFETY: `output` pertenece a `source`, vivo durante esta iteración.
             let sample = unsafe { source.output.copyNextSampleBuffer() }?;
@@ -171,12 +206,15 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
 
             let total = offset + pts;
             // esperar al instante del frame (si se pidió detener, se descarta)
-            if !pacer.wait(total, running) {
-                return Some(());
+            if !pacer.wait(total, running) || state.seek_pending() {
+                return Some(()); // detenido, o un frame del lector anterior al salto: se descarta
             }
 
             match import_pixel_buffer(&gpu, &cache, &pixel_buffer) {
-                Ok(frame) => sink.push(DecodedFrame { pts: total, pixels: FramePixels::Native(frame) }),
+                Ok(frame) => {
+                    sink.push(DecodedFrame { pts: total, pixels: FramePixels::Native(frame) });
+                    state.set_position(total);
+                }
                 Err(err) => log::warn!("[VideoEngine] frame nativo descartado en {path}: {err}"),
             }
             if total > last_total {
@@ -210,7 +248,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
             }
             thread::sleep(Duration::from_millis(250));
         }
-        match Source::open(path) {
+        match Source::open(path, Duration::ZERO) {
             Ok(next) => source = next,
             Err(err) => {
                 log::warn!("[VideoEngine] no se pudo reabrir {path}: {err}");
@@ -373,6 +411,53 @@ mod tests {
         let frame = first_native_frame(path);
         assert!(!frame.is_cpu_backed());
         assert_near(render_center(&frame), [255, 0, 0], "rojo de un HEVC 10 bits");
+    }
+
+    const FIXTURE_3S: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/video/solid_red_64_3s.mp4");
+
+    #[test]
+    fn pausa_detiene_los_frames() {
+        let sink = Arc::new(Collect::default());
+        let mut decoder = start(FIXTURE_3S, sink.clone()).expect("abrir el fixture");
+        let count = || sink.0.lock().expect("lock").len();
+
+        std::thread::sleep(Duration::from_millis(300));
+        decoder.set_paused(true);
+        std::thread::sleep(Duration::from_millis(50)); // un frame que ya estaba en vuelo
+        let paused_at = count();
+        std::thread::sleep(Duration::from_millis(300));
+        assert_eq!(count(), paused_at, "en pausa no llegan frames");
+
+        decoder.set_paused(false);
+        std::thread::sleep(Duration::from_millis(300));
+        let resumed = count();
+        decoder.stop();
+        assert!(resumed > paused_at, "al reanudar vuelven los frames ({paused_at} -> {resumed})");
+    }
+
+    #[test]
+    fn seek_salta_a_la_posicion() {
+        let sink = Arc::new(Collect::default());
+        let mut decoder = start(FIXTURE_3S, sink.clone()).expect("abrir el fixture");
+        std::thread::sleep(Duration::from_millis(300));
+
+        decoder.seek(1500).expect("seek");
+        std::thread::sleep(Duration::from_millis(900));
+        let position = decoder.position_ms();
+        decoder.stop();
+        assert!((1500..=2500).contains(&position), "posición {position} ms");
+        assert!(position > 1500, "tras el salto llegaron frames nuevos ({position} ms)");
+    }
+
+    #[test]
+    fn position_avanza_en_tiempo_real() {
+        let sink = Arc::new(Collect::default());
+        let mut decoder = start(FIXTURE_3S, sink.clone()).expect("abrir el fixture");
+
+        std::thread::sleep(Duration::from_secs(1));
+        let position = decoder.position_ms();
+        decoder.stop();
+        assert!((750..=1250).contains(&position), "posición {position} ms");
     }
 
     /// CPU (usuario + sistema) consumido por este proceso hasta ahora.
