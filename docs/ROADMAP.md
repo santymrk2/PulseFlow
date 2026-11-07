@@ -1749,7 +1749,7 @@ Plan: docs/superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md
 - [ ] **F23.4** Un renderer de texto por capa.
 - [x] **F23.5** El atlas de texto se recorta y los errores de texto se registran.
 - [x] **F23.6** Viewport y scissor siempre dentro del destino.
-- [ ] **F23.7** Imágenes con tamaño máximo y presupuesto de memoria de video.
+- [x] **F23.7** Imágenes con tamaño máximo y presupuesto de memoria de video.
 - [ ] **F23.8** Cerrar la ventana o salir siempre pasa por el guardado.
 - [ ] **F23.9** Servidores de red que respetan "deshabilitado".
 - [ ] **F23.10** El texto bíblico sólo deja pasar etiquetas conocidas.

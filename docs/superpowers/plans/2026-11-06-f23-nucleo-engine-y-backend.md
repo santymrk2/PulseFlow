@@ -356,15 +356,15 @@ fn clamped_devuelve_none_si_queda_afuera_o_vacio() {
   la más usada, las entradas con `Arc::strong_count == 1` (nadie más las tiene) hasta quedar dentro del presupuesto.
   Las que están en uso no se tocan, aunque el total quede por encima.
 
-- [ ] **Step 1: Tests que fallan** en `media.rs`, con el estilo de los tests existentes (`wait_until_settled`, l.875):
+- [x] **Step 1: Tests que fallan** en `media.rs`, con el estilo de los tests existentes (`wait_until_settled`, l.875):
   - `imagen_grande_se_reduce_a_4096`: PNG de 6000×10 en una carpeta temporal → `Ready` con textura de 4096×7.
   - `presupuesto_expulsa_la_menos_usada`: `with_image_budget(gpu, 40 * 1024)`; cargar A, B y C de 64×64 (16 KiB cada
     una, sin guardar los `Arc`). A ya no está en `get`; B y C sí. Pedir A de nuevo hace subir `decodes()` en 1.
   - `no_expulsa_texturas_en_uso`: igual, pero guardando el `Arc` de A. Se expulsa B y A sigue.
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::media`. Expected: FAIL.
-- [ ] **Step 3: Implementar.**
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
-- [ ] **Step 5:** commit `F23.7: las imágenes se reducen a 4096 px y las texturas tienen presupuesto de memoria`.
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::media`. Expected: FAIL.
+- [x] **Step 3: Implementar.**
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
+- [x] **Step 5:** commit `F23.7: las imágenes se reducen a 4096 px y las texturas tienen presupuesto de memoria`.
 
 ---
 
