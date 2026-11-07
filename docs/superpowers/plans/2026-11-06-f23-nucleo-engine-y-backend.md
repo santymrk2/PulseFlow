@@ -1074,7 +1074,7 @@ consentimiento explícito y en una tarea aparte.
 **Files:** Create `docs/VERIFICAR-BETA.md`; Modify `docs/ROADMAP.md` (en F2.8, F8.3, F10.10, F13.4, F20.8 y F22.13:
 `→ ver docs/VERIFICAR-BETA.md §N`)
 
-- [ ] **Step 1:** encabezado con el equipo: Mac Apple Silicon, PC con Windows 10/11, **2 monitores**, un `.mp4` 4K
+- [x] **Step 1:** encabezado con el equipo: Mac Apple Silicon, PC con Windows 10/11, **2 monitores**, un `.mp4` 4K
   H.264, un 1080p en loop, un show con fondos de imagen y de video, 50 imágenes 4K distintas y una biblia con palabras
   en rojo. Secciones, **en este orden**:
   1. Salida en 2 monitores (F2.8; incluye F2.2–F2.5 de `docs/VERIFICAR.md`).
@@ -1091,9 +1091,9 @@ consentimiento explícito y en una tarea aparte.
 
   Cada punto lleva **Pasos**, **Esperado**, casillas `Mac [ ]` y `Windows [ ]` y un renglón de **Notas**. El
   contenido se copia de las tareas y de `docs/VERIFICAR.md`: **no se inventan pasos**.
-- [ ] **Step 2:** enlazar cada tarea de verificación pendiente del roadmap. Run: `rg -c "VERIFICAR-BETA" docs/ROADMAP.md`.
+- [x] **Step 2:** enlazar cada tarea de verificación pendiente del roadmap. Run: `rg -c "VERIFICAR-BETA" docs/ROADMAP.md`.
   Expected: ≥ 6.
-- [ ] **Step 3:** commit `F23.24: guía única de prueba en hardware`.
+- [x] **Step 3:** commit `F23.24: guía única de prueba en hardware`.
 
 ---
 

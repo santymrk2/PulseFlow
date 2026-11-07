@@ -303,7 +303,7 @@ monitor; volver a tocar el botón la cierra. Este trabajo **es** el refactor de
   hasta F8.
   *Aceptación:* `commands/output.rs` < 200 líneas, sólo adaptadores.
 
-- [ ] **F2.8 Prueba manual guiada.** (listo para ejecutar: requiere 2 monitores reales en
+- [ ] **F2.8 Prueba manual guiada.** (listo para ejecutar: requiere 2 monitores reales en → ver docs/VERIFICAR-BETA.md §1
   macOS y Windows, algo que no se puede hacer en este entorno sin display físico. El
   checklist guiado completo —elegir monitor con la lupa, poner en vivo, pasar slides de
   una canción, fondos imagen y video, limpiar, stage, cerrar salida— está en
@@ -676,7 +676,7 @@ F6 es independiente de F2–F5 y puede hacerse en paralelo (otra rama).
   difunden a los slots de todas las pantallas suscritas; al cerrar/ cambiar de fondo,
   `video_hub_release` quita al suscriptor y sólo detiene el proceso si queda sin
   suscriptores.
-- [ ] **F8.3 Medir.** CPU/RAM/GPU con un video 1080p en loop durante 30 min en macOS y
+- [ ] **F8.3 Medir.** CPU/RAM/GPU con un video 1080p en loop durante 30 min en macOS y → ver docs/VERIFICAR-BETA.md §2
   Windows; anotar en `PLAN.md`. Decidir recién entonces si hace falta otra estrategia.
 - [x] **F8.4 NDI.** (2026-10-19, decisión (b): **eliminar**.) La captura de framebuffer
   (`render/ndi_stream.rs` + `START/STOP/IS_NDI_NATIVE_FEED_ACTIVE`) era código muerto:
@@ -951,7 +951,7 @@ paralelo, en carpetas/ramas separadas: **A** = F10.3 → F10.4 → F10.5, **B** 
 
 - [x] **F10.9 Quitar el puente.** **Cancelada (2026-11-06):** se resuelve al migrar esa pantalla a React (F24). **Decisión (2026-10-21): no se inicia todavía.** Hoy 62 archivos de `src/frontend` leen `$styles` / `get(styles)` / `getCurrentStyle` y no hay tests de interfaz que cubran esos caminos: migrarlos a ciegas (sin poder correr la app en esta etapa) arriesga romper la salida en silencio, y el puente ya está cubierto por tests (`looks.migration.test.ts`, `computeLookBridgeStyles`, `outputAspect`). Conviene hacerlo **después de F20.8 y F13.4**, con la app probada, y con el CI de F13.1 como red. *Pasos (sin cambio):* helper `getOutputLook(outputId): LookScreen`; reemplazar los usos **un commit por carpeta** (`output/`, `slide/`, `show/`, `edit/`, `helpers/`, …); al final eliminar `__look__*`, `output.style` y el store `styles` (queda el backup). *Aceptación:* `grep -rn "\$styles\|get(styles)" src/frontend` sin resultados fuera de la migración; chequeos y goldens en verde.
 
-- [ ] **F10.10 Prueba manual (usuario).** Sección nueva en `docs/VERIFICAR.md`: crear 2
+- [ ] **F10.10 Prueba manual (usuario).** Sección nueva en `docs/VERIFICAR.md`: crear 2 → ver docs/VERIFICAR-BETA.md §7
   pantallas de audiencia + 1 stage desde la ventana, 3 looks, cambiar en vivo desde el
   menú, la barra, el panel de salida y una acción de slide; espejo; cerrar y reabrir
   la app y comprobar que todo persiste.
@@ -1165,7 +1165,7 @@ toque en F14 puede romper algo sin que nadie se entere.
 - [x] **F13.3 Log a archivo.** (2026-10-20) `tauri-plugin-log` a `app_log_dir` (`pulseflow.log`, 2 MB por archivo, 5 archivos; `info` en release, `debug` en dev con salida también por la terminal). Todos los `println!`/`eprintln!` de producción pasaron a `log::` (se mantiene **uno** a propósito en `lib.rs`: si el arranque falla el plugin puede no existir todavía). El comando `LOG` respeta el nivel (`ERROR:`/`WARN:`, con test) y el frontend reenvía `console.warn`/`console.error` y los errores sin capturar **siempre**, no sólo en dev. `OPEN_LOG` abre la carpeta de registros y el botón de Configuración dice "Abrir carpeta de registros". **Sin verificar en la app real** (falta: abrir un medio inexistente y ver la línea con fecha, nivel y ruta en el archivo).
   *No hecho:* `requestMain` aún no registra el timeout (va con F15.2).
 
-- [ ] **F13.4 Prueba en hardware real (usuario).** Ejecutar F2.8 y F8.3 en una Mac y en
+- [ ] **F13.4 Prueba en hardware real (usuario).** Ejecutar F2.8 y F8.3 en una Mac y en → ver docs/VERIFICAR-BETA.md §2
   una PC con Windows, con 2 monitores. Es requisito para dar por sólida la salida; los
   resultados se anotan en `docs/VERIFICAR.md`.
   *Agregado por F18.6:* en Windows, reproducir un `.mp4` 4K en la audiencia y confirmar (a) que se ve, (b) en los logs
@@ -1671,8 +1671,8 @@ Plan: `docs/superpowers/plans/2026-10-20-gpu-compartida-zero-copy-workers.md`.
 
 - [x] **F17.1 `GpuContext`.** Un solo Instance/Adapter/Device/Queue (`render/gpu.rs`), Metal en macOS y DX12 en Windows. (2026-10-20, commit d625c64e.)
 - [x] **F17.2 `MediaStore` compartido.** Texturas y pipelines por formato compartidos entre pantallas; los uniforms pasan a una `LayerArena` por pantalla con offset dinámico. **Corrige un bug latente:** con fondo + item en la misma slide todas las capas usaban los uniforms de la última (test `golden_fondo_e_item_conservan_sus_uniforms`).
-- [x] **F17.3 Pantallas sobre el Device compartido.** `spawn_render_loop` ya no pide adaptador ni device propios. Hecha junto con F17.2 (no compilan por separado). **Sin verificar en la app real** (dos pantallas abiertas con crossfade): queda para F13.4.
-- [x] **F17.5 Eliminar y duplicar pantallas** (regresión de F10.8, 2026-10-20; hecha antes de F17.4). F10.8 borró la lista vieja con `context #output_screen` y la nueva no podía quitar ni duplicar. Ahora `ScreenDetail` tiene Duplicar y Eliminar (Eliminar deshabilitado en la última audiencia: el historial recrearía una "default" sola). `REMOVE_SCREEN` (Rust) cierra la ventana y olvida la escena; antes `send(OUTPUT, ["REMOVE"])` se descartaba en `tauri.ts` porque ningún comando Rust se llamaba así, y borrar una audiencia en vivo habría dejado la ventana abierta. Renombrar ya existía (input del nombre). **Sin verificar en la app real.**
+- [x] **F17.3 Pantallas sobre el Device compartido.** `spawn_render_loop` ya no pide adaptador ni device propios. Hecha junto con F17.2 (no compilan por separado). **Sin verificar en la app real** (dos pantallas abiertas con crossfade): queda para F13.4. → ver docs/VERIFICAR-BETA.md §7
+- [x] **F17.5 Eliminar y duplicar pantallas** (regresión de F10.8, 2026-10-20; hecha antes de F17.4). F10.8 borró la lista vieja con `context #output_screen` y la nueva no podía quitar ni duplicar. Ahora `ScreenDetail` tiene Duplicar y Eliminar (Eliminar deshabilitado en la última audiencia: el historial recrearía una "default" sola). `REMOVE_SCREEN` (Rust) cierra la ventana y olvida la escena; antes `send(OUTPUT, ["REMOVE"])` se descartaba en `tauri.ts` porque ningún comando Rust se llamaba así, y borrar una audiencia en vivo habría dejado la ventana abierta. Renombrar ya existía (input del nombre). **Sin verificar en la app real.** → ver docs/VERIFICAR-BETA.md §7
 - [x] **F17.4 Una subida de video por archivo.** (2026-10-20: el hub publica cada frame una sola vez a la textura compartida, con la ruta como id; las pantallas sólo se suscriben por etiqueta de ventana y no hay `to_vec()` por suscriptor. Tests `subscribers_*` y `video_frames_are_uploaded_once_*`. Sin verificar en la app real.) El hub sube el frame una vez a la textura compartida (hoy copia `bytes.to_vec()` por suscriptor).
 
 ---
@@ -1687,7 +1687,7 @@ Plan: `docs/superpowers/plans/2026-10-20-gpu-compartida-zero-copy-workers.md`. D
 - [x] **F18.4** Decodificador nativo macOS (`video/avf.rs`: `AVAssetReader` con VideoToolbox, NV12 + IOSurface + `CVMetalTextureCache`). Pacing por PTS, loop continuo con PTS acumulado, reapertura ante errores del lector y fallback a ffmpeg si no abre el archivo. Fixture `tests/fixtures/video/solid_red_64.mp4`. Tests: frames nativos 64×64, loop, archivo corrupto/inexistente, stop < 500 ms.
 - [x] **F18.5** Importación Metal sin copias cableada al render + medición (`docs/informes/f18.md`). Tests: un frame nativo se ve rojo; el camino nativo hace 0 subidas desde la CPU. **Medición en M4, 4K H.264, 10 s:** ffmpeg→RGBA 1080p ≈ 80 % de un núcleo, ffmpeg→NV12 ≈ 57 %, nativo 4K ≈ 5 % (una corrida; sin Windows).
 - [x] **F18.7 Matriz de color del video** (2026-10-21). La matriz YCbCr→RGB sale del video: adjunto `kCVImageBufferYCbCrMatrixKey` del `CVPixelBuffer` (nativo) o `color_space` de ffprobe (ffmpeg); sin etiqueta se mantiene la convención por alto. Tests: `native_frame_uses_the_matrix_declared_by_the_file` (fixture etiquetado BT.709 de 64 px), `a_file_without_a_declared_matrix_falls_back_…`, `color_space_names_map_to_matrices`.
-- [x] **F18.6** Media Foundation + D3D12 en Windows (`video/mf.rs`, `video/d3d_import.rs`, `video/pacing.rs`). **Implementado y type-checkeado, NO ejecutado en Windows**: `scripts/check-windows-video.sh` compila los archivos reales para `x86_64-pc-windows-msvc` con `-D warnings` (la app completa no se puede compilar para Windows desde macOS: falta `llvm-rc`). La ejecución real (decodificar, copiar GPU→GPU, abrir el recurso en DX12, sincronizar) queda en F13.4. `GpuContext` pide `TEXTURE_FORMAT_NV12` si el adaptador lo soporta; si no, o si algo falla, `video::start` cae a ffmpeg.
+- [x] **F18.6** Media Foundation + D3D12 en Windows (`video/mf.rs`, `video/d3d_import.rs`, `video/pacing.rs`). **Implementado y type-checkeado, NO ejecutado en Windows**: `scripts/check-windows-video.sh` compila los archivos reales para `x86_64-pc-windows-msvc` con `-D warnings` (la app completa no se puede compilar para Windows desde macOS: falta `llvm-rc`). La ejecución real (decodificar, copiar GPU→GPU, abrir el recurso en DX12, sincronizar) queda en F13.4. `GpuContext` pide `TEXTURE_FORMAT_NV12` si el adaptador lo soporta; si no, o si algo falla, `video::start` cae a ffmpeg. → ver docs/VERIFICAR-BETA.md §2
 - [x] **F19.1** Workers de carga de imágenes sobre la GPU compartida (`render/workers.rs`: pool de ½ núcleos, 2–8 hilos, resiste panics; `MediaStore::request_image` → `MediaState::{Loading, Ready, Failed}`, un decode por ruta, rechaza imágenes de más de 16384 px por lado leyendo sólo el encabezado). El bucle de render ya no decodifica: la capa aparece en el primer frame tras cargarse.
 - [x] **F19.2** Precarga: `RENDER_SCENE` pide a los workers todas las imágenes de la escena (`ScenePayload::image_paths`) y el frontend manda `RENDER_PREFETCH` con las imágenes de las 2 slides siguientes (`sceneGraph.ts` + `sceneMedia.ts`; contrato `PrefetchPayload` en Rust y `src/types/Output.ts`, tope de 64 rutas). Best-effort y sin inicializar la GPU si todavía no hay pantallas.
 - [x] **F19.3** Miniaturas fuera del hilo de comandos y cierre (`docs/informes/f19.md`): `GET_THUMBNAIL`, `DOES_MEDIA_EXIST` y `READ_EXIF` pasan por `workers::run`; las imágenes fallidas se reintentan a los 30 s. Sin verificar en la app real.
@@ -1706,7 +1706,7 @@ Sin documento de plan aparte (el usuario pidió ejecutar directo).
 - [x] **F20.5** Cajón sin la vista Shows, pestañas con texto, arranca en Media; `Ctrl+1` enfoca el buscador de la biblioteca.
 - [x] **F20.6** Armar un servicio: arrastrar un show de ÍTEMS a una playlist (`dropActions.projects`) y clic derecho → "Agregar a playlist" (`LOAD_add_to_playlist`). `LibrariesPanel` conserva mover shows entre bibliotecas arrastrando (`DropArea id="navigation"`).
 - [x] **F20.7** "Importar" en el `+` de ÍTEMS (con biblioteca) y opciones de playlists (nombre por defecto, lista al inicio) en un modal.
-- [ ] **F20.8 Verificación en la app real (usuario).** No se pudo mirar la pantalla (extensión de Chrome sin conexión). Falta probar: elegir biblioteca/playlist, buscar, modal Agregar shows, arrastrar, divisores, renombrar y menú contextual de una biblioteca, pestañas del cajón con poco ancho, perfil con acceso restringido.
+- [ ] **F20.8 Verificación en la app real (usuario).** No se pudo mirar la pantalla (extensión de Chrome sin conexión). Falta probar: elegir biblioteca/playlist, buscar, modal Agregar shows, arrastrar, divisores, renombrar y menú contextual de una biblioteca, pestañas del cajón con poco ancho, perfil con acceso restringido. → ver docs/VERIFICAR-BETA.md §8
 
 *Decisiones propias:* ÍTEMS no tiene "⋯ más" en el cajón (la tira de pestañas se desplaza); "Agregar a playlist" muestra todas las playlists; la library virtual "Sin etiqueta" aparece sólo si hay shows sin categoría; `Projects.svelte` se **eliminó** (2026-10-21, sin importadores; sigue en el historial de git): su lista de "usadas recientemente" y la vista de edición de plantillas de proyecto ya no tienen acceso, y los stores `showRecentlyUsedProjects` / `editingProjectTemplate` quedan sin interfaz.
 
@@ -1714,8 +1714,8 @@ Sin documento de plan aparte (el usuario pidió ejecutar directo).
 
 ## F21 — Tamaño de las diapositivas = tamaño de la salida
 
-- [x] **F21.1** (2026-10-20). **Causa:** el tamaño de las diapositivas (`getResolution`) salía sólo de `styles[output.style].aspectRatio`; tras F10 la relación de aspecto vive en la Pantalla (`output.aspectRatio`, que edita `ScreenDetail`) y el puente de Looks (`buildLookStyle`) genera estilos sin relación, así que todo caía en 16:9 sin importar la pantalla. **Arreglo:** `helpers/outputAspect.ts` (`resolveOutputAspect`, con tests): relación de la Pantalla → `outputResolutionAsRatio` del estilo → relación vieja del estilo → **tamaño real de la salida ("Original")**; `getResolution`, la clave de caché de `getOutputResolution` y `remoteTalk.ts` lo usan. `Slide.svelte` y `SkeletonSlide.svelte` toman la salida elegida en el selector de la vista previa (`referenceOutputId`) y el esqueleto ya no tiene 16/9 fijo. **Sin verificar en la app real.**
-- [x] **F21.2 Encuadre en el engine nativo.** (2026-10-20) `render/frame.rs` (`fit_content_rect`, `ContentAlign`, `Rect::apply_to` con viewport + scissor): si la resolución de la escena (`width × height`, con la relación elegida en la Pantalla) no coincide con la de la ventana, el contenido se escala hasta entrar entero, se alinea (`alignPosition`: centro por defecto, inicio o final) y el resto queda negro; con "Original" coincide y llena la ventana. Contrato: campo opcional `align` (`"start"`/`"end"`, se omite si es centro, así los fixtures no cambian) en `ScenePayload` y `SceneGraph.ts`. `ScreenScene.content` + `set_audience_scene` + `render_loop` y también el snapshot (test visual `la_escena_se_encuadra_en_la_captura_segun_su_alineacion`). **Sin verificar en la app real.** El stage no se encuadra (usa toda la ventana).
+- [x] **F21.1** (2026-10-20). **Causa:** el tamaño de las diapositivas (`getResolution`) salía sólo de `styles[output.style].aspectRatio`; tras F10 la relación de aspecto vive en la Pantalla (`output.aspectRatio`, que edita `ScreenDetail`) y el puente de Looks (`buildLookStyle`) genera estilos sin relación, así que todo caía en 16:9 sin importar la pantalla. **Arreglo:** `helpers/outputAspect.ts` (`resolveOutputAspect`, con tests): relación de la Pantalla → `outputResolutionAsRatio` del estilo → relación vieja del estilo → **tamaño real de la salida ("Original")**; `getResolution`, la clave de caché de `getOutputResolution` y `remoteTalk.ts` lo usan. `Slide.svelte` y `SkeletonSlide.svelte` toman la salida elegida en el selector de la vista previa (`referenceOutputId`) y el esqueleto ya no tiene 16/9 fijo. **Sin verificar en la app real.** → ver docs/VERIFICAR-BETA.md §7
+- [x] **F21.2 Encuadre en el engine nativo.** (2026-10-20) `render/frame.rs` (`fit_content_rect`, `ContentAlign`, `Rect::apply_to` con viewport + scissor): si la resolución de la escena (`width × height`, con la relación elegida en la Pantalla) no coincide con la de la ventana, el contenido se escala hasta entrar entero, se alinea (`alignPosition`: centro por defecto, inicio o final) y el resto queda negro; con "Original" coincide y llena la ventana. Contrato: campo opcional `align` (`"start"`/`"end"`, se omite si es centro, así los fixtures no cambian) en `ScenePayload` y `SceneGraph.ts`. `ScreenScene.content` + `set_audience_scene` + `render_loop` y también el snapshot (test visual `la_escena_se_encuadra_en_la_captura_segun_su_alineacion`). **Sin verificar en la app real.** El stage no se encuadra (usa toda la ventana). → ver docs/VERIFICAR-BETA.md §7
 - [x] **F21.3** (2026-10-20) `getResolution` sin salida indicada toma la elegida en el selector de la vista previa (si es una audiencia) o la primera activa (`referenceOutputId`); las vistas de plantillas, overlays, escenas, efectos, medios y los editores pasan `$previewOutputId` en su dependencia reactiva para recalcular al cambiar la selección.
 
 ---
@@ -1735,7 +1735,7 @@ Sin documento de plan aparte (el usuario pidió ejecutar directo).
 - [x] **F22.10** Sin el selector de looks bajo el preview; los botones de limpiar (y "Limpiar todo") son neutros, rellenos cuando hay algo para limpiar y atenuados si no; la franja de limpiar pierde el borde exterior y las esquinas redondeadas. Verificado en pantalla.
 - [x] **F22.11** Theme editor como página: "Theme editor" (⋯ de la barra superior) abre Edit con una plantilla; a la izquierda un SelectField de categorías sobre la lista de plantillas (una columna, un clic las abre para editarlas) y `+` para nueva plantilla; "New category" dentro del selector. La pestaña Templates sale del cajón. **Pendiente:** renombrar, cambiar ícono y borrar categorías (antes por clic derecho en la pestaña del cajón) todavía no están en el Theme editor. `SelectField` y `Dropdown` con la superficie del kit (borde de 1 px, filas de 28 px, ✓ en la elegida) y el menú en un portal (no lo recorta ningún panel). El logo del inicio es blanco.
 - [x] **F22.12** Editor de diapositivas: arrastrar desde el texto de un cuadro lo mueve (el clic sin arrastrar sigue poniendo el cursor de texto; antes sólo se movía desde los bordes o con Shift/Ctrl/Alt, y arrastrar texto seleccionado disparaba el drag nativo del navegador). La barra de agregar ítems pasa del `+` flotante a una barra horizontal (Textbox, Media, Camera, Timer, Clock, Table, Chart, Icon) con ⋯ para lo que no entra y los submenús. **Sin verificar en pantalla** (ver nota en el informe).
-- [ ] **F22.13 Verificación (usuario).** Probar en la app real: ✕ en pantalla de audiencia/stage (Mac y Windows), menú superior en Windows, agregar carpeta y medios, barra de video, cabecera del show y botones con borde blanco que queden.
+- [ ] **F22.13 Verificación (usuario).** Probar en la app real: ✕ en pantalla de audiencia/stage (Mac y Windows), menú superior en Windows, agregar carpeta y medios, barra de video, cabecera del show y botones con borde blanco que queden. → ver docs/VERIFICAR-BETA.md §8
 
 ---
 
@@ -1746,27 +1746,27 @@ Plan: docs/superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md
 - [x] **F23.1** Registrar los planes y poner al día la documentación.
 - [x] **F23.2** Clippy en cero y bloqueante en CI.
 - [x] **F23.3** Un error de la GPU o un pánico no cierran la app.
-- [ ] **F23.4** Un renderer de texto por capa.
+- [ ] **F23.4** Un renderer de texto por capa. → ver docs/VERIFICAR-BETA.md §4
 - [x] **F23.5** El atlas de texto se recorta y los errores de texto se registran.
 - [x] **F23.6** Viewport y scissor siempre dentro del destino.
 - [x] **F23.7** Imágenes con tamaño máximo y presupuesto de memoria de video.
-- [ ] **F23.8** Cerrar la ventana o salir siempre pasa por el guardado.
-- [ ] **F23.9** Servidores de red que respetan "deshabilitado".
-- [ ] **F23.10** El texto bíblico sólo deja pasar etiquetas conocidas.
-- [ ] **F23.11** Cálculos sin `new Function`.
-- [ ] **F23.12** Content Security Policy.
+- [ ] **F23.8** Cerrar la ventana o salir siempre pasa por el guardado. → ver docs/VERIFICAR-BETA.md §5
+- [ ] **F23.9** Servidores de red que respetan "deshabilitado". → ver docs/VERIFICAR-BETA.md §9
+- [ ] **F23.10** El texto bíblico sólo deja pasar etiquetas conocidas. → ver docs/VERIFICAR-BETA.md §9
+- [ ] **F23.11** Cálculos sin `new Function`. → ver docs/VERIFICAR-BETA.md §9
+- [ ] **F23.12** Content Security Policy. → ver docs/VERIFICAR-BETA.md §9
 - [x] **F23.13** Video: pausa, posición y salto en los decodificadores.
-- [ ] **F23.14** El video del proyector sigue al transporte.
-- [ ] **F23.15** El reloj del proyector avanza.
-- [ ] **F23.16** Fondo, borde, esquinas, opacidad y padding de los cuadros.
-- [ ] **F23.17** Contador de slides, eventos y variables en el proyector.
+- [ ] **F23.14** El video del proyector sigue al transporte. → ver docs/VERIFICAR-BETA.md §2
+- [ ] **F23.15** El reloj del proyector avanza. → ver docs/VERIFICAR-BETA.md §6
+- [ ] **F23.16** Fondo, borde, esquinas, opacidad y padding de los cuadros. → ver docs/VERIFICAR-BETA.md §4
+- [ ] **F23.17** Contador de slides, eventos y variables en el proyector. → ver docs/VERIFICAR-BETA.md §4
 - [x] **F23.18** Espaciado entre letras, subrayado y tachado.
-- [ ] **F23.19** El stage usa los layouts del usuario.
-- [ ] **F23.20** Video dentro de una slide.
+- [ ] **F23.19** El stage usa los layouts del usuario. → ver docs/VERIFICAR-BETA.md §6
+- [ ] **F23.20** Video dentro de una slide. → ver docs/VERIFICAR-BETA.md §2
 - [x] **F23.21** Transiciones `scale` y `blur`.
-- [ ] **F23.22** Las funciones no disponibles lo dicen.
-- [ ] **F23.23** Los errores no salen de la máquina del usuario.
-- [ ] **F23.24** Guía única de prueba en hardware (agente).
+- [ ] **F23.22** Las funciones no disponibles lo dicen. → ver docs/VERIFICAR-BETA.md §8
+- [ ] **F23.23** Los errores no salen de la máquina del usuario. → ver docs/VERIFICAR-BETA.md §9
+- [x] **F23.24** Guía única de prueba en hardware (agente).
 - [ ] **F23.25** Ejecutar la guía (usuario) y convertir fallas en tareas.
 
 ---
