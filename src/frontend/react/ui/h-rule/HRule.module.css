@@ -1,0 +1,31 @@
+/* Portado de h-rule.svelte. Los estilos no tienen elementos, así que no cambian de forma.
+   `.label` reemplaza al `style="opacity: 0.8;"` del span (valor fijo, no necesita style inline). */
+.title {
+    display: flex;
+    align-items: center;
+    text-align: center;
+
+    margin: 18px 0;
+    font-size: 0.75em;
+    text-transform: uppercase;
+
+    font-weight: bold;
+}
+
+.title::before,
+.title::after {
+    content: "";
+    flex: 1;
+    border-bottom: 2px solid var(--primary-lighter);
+}
+
+.title:not(:empty)::before {
+    margin-inline-end: 10px;
+}
+.title:not(:empty)::after {
+    margin-inline-start: 10px;
+}
+
+.label {
+    opacity: 0.8;
+}

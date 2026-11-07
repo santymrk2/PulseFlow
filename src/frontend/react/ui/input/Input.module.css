@@ -1,0 +1,28 @@
+/* Portado de input.svelte. Elemento → `input.input` (la clase del módulo mantiene el scope que daba Svelte). */
+input.input {
+    background-color: var(--primary-darker);
+    color: var(--text);
+    width: 100%;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    border: 0;
+    padding: 5px 10px;
+    outline-offset: -2px;
+}
+input.input::placeholder {
+    color: var(--text);
+    opacity: 0.5;
+}
+input.input:disabled {
+    opacity: 0.5;
+}
+input.input.center {
+    text-align: center;
+}
+input.input.light {
+    background-color: var(--primary);
+}
+input.input:hover:not(:disabled) {
+    background-color: var(--hover);
+}
