@@ -54,6 +54,10 @@ impl VideoDecoder for MfDecoder {
     fn position_ms(&self) -> u64 {
         self.state.position_ms()
     }
+
+    fn duration_ms(&self) -> u64 {
+        self.state.duration_ms()
+    }
 }
 
 /// Abre `path` con Media Foundation. Falla (y el llamador cae a ffmpeg) si no es un video legible.
@@ -61,6 +65,7 @@ pub fn start(path: &str, sink: Arc<dyn FrameSink>) -> AppResult<MfDecoder> {
     let running = Arc::new(AtomicBool::new(true));
     let (ready_tx, ready_rx) = mpsc::channel::<Result<(), String>>();
     let state = PlaybackState::default();
+    state.allow_one_frame();
     let (running_thread, path_thread, state_thread) = (Arc::clone(&running), path.to_string(), state.clone());
 
     // COM y Media Foundation se inicializan y viven dentro del hilo del decodificador.

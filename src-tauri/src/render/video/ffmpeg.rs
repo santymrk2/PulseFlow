@@ -140,6 +140,10 @@ impl VideoDecoder for FfmpegDecoder {
     fn position_ms(&self) -> u64 {
         self.state.position_ms()
     }
+
+    fn duration_ms(&self) -> u64 {
+        self.state.duration_ms()
+    }
 }
 
 impl FfmpegDecoder {
@@ -153,6 +157,7 @@ impl FfmpegDecoder {
         let running = Arc::new(AtomicBool::new(true));
         let child = Arc::new(Mutex::new(None));
         let state = PlaybackState::default();
+        state.allow_one_frame();
         let (running_thread, child_thread, state_thread) = (Arc::clone(&running), Arc::clone(&child), state.clone());
         let video_path = path.to_string();
 
@@ -443,11 +448,11 @@ mod tests {
         assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
 
         decoder.seek(2000).expect("seek");
-        // 2000 ms + 1,5 s de reproducción: dio la vuelta del archivo de 3 s
-        thread::sleep(Duration::from_millis(1500));
+        // 2000 ms + ~1 s de reproducción: da la vuelta del archivo de 3 s
+        let wrapped = wait_until(Duration::from_secs(10), || decoder.position_ms() < 2000);
         let position = decoder.position_ms();
         decoder.stop();
-        assert!(position < 2000, "posición {position} ms: debería estar cerca de 500");
+        assert!(wrapped, "posición {position} ms: tendría que haber dado la vuelta");
     }
 
     #[test]
@@ -463,6 +468,18 @@ mod tests {
         decoder.stop();
         assert!(flowing, "siguen llegando frames");
         assert!(position <= 3000, "posición {position} ms");
+    }
+
+    #[test]
+    fn arrancar_en_pausa_muestra_el_primer_frame() {
+        let sink = Arc::new(Count::default());
+        let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        decoder.set_paused(true);
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "llega el primer frame");
+        thread::sleep(Duration::from_millis(500));
+        let count = sink.get();
+        decoder.stop();
+        assert_eq!(count, 1, "en pausa pasa exactamente un frame");
     }
 
     #[test]

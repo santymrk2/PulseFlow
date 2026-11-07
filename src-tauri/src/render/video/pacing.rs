@@ -47,6 +47,16 @@ impl PlaybackState {
         self.position_ms.load(Ordering::SeqCst)
     }
 
+    /// Duración del archivo en ms (0 = desconocida).
+    pub fn duration_ms(&self) -> u64 {
+        self.duration_ms.load(Ordering::SeqCst)
+    }
+
+    /// Deja pasar el próximo frame aunque esté en pausa (el arranque en pausa muestra un frame, no negro).
+    pub fn allow_one_frame(&self) {
+        self.scrub.store(true, Ordering::SeqCst);
+    }
+
     /// El decodificador informa la duración del archivo y la de un frame (0 = desconocida).
     pub fn set_duration(&self, duration: Duration, frame: Duration) {
         self.duration_ms.store(u64::try_from(duration.as_millis()).unwrap_or(0), Ordering::SeqCst);

@@ -57,6 +57,8 @@ pub trait VideoDecoder: Send {
     fn seek(&mut self, position_ms: u64) -> AppResult<()>;
     /// PTS en ms del último frame entregado.
     fn position_ms(&self) -> u64;
+    /// Duración del archivo en ms (0 = desconocida).
+    fn duration_ms(&self) -> u64;
 }
 
 /// `true` para los contenedores que abre el decodificador nativo del sistema.

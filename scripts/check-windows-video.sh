@@ -64,6 +64,7 @@ pub trait VideoDecoder: Send {
     fn set_paused(&mut self, paused: bool);
     fn seek(&mut self, position_ms: u64) -> crate::error::AppResult<()>;
     fn position_ms(&self) -> u64;
+    fn duration_ms(&self) -> u64;
 }
 RS
 
