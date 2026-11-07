@@ -93,7 +93,6 @@
     "dependencies": {
         "@fontsource-variable/geist": "^5.3.0",
         "@fontsource-variable/geist-mono": "^5.3.0",
-        "@sentry/browser": "^11.8.0",
         "@tauri-apps/api": "^2.12.4",
         "exif": "^0.6.0",
         "json-bible": "^1.1.9",

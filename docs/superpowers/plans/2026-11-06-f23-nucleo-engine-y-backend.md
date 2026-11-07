@@ -1055,17 +1055,17 @@ F13.3: el frontend reenvía `console.error` y los errores sin capturar) y el usu
 Configuración. Si algún día se quiere reportar errores, tiene que ser con un proyecto propio de PulseFlow, con
 consentimiento explícito y en una tarea aparte.
 
-- [ ] **Step 1:** Run: `rg -n "@sentry" src package.json`. Expected: sólo `src/frontend/main.ts` y `package.json`. Si
+- [x] **Step 1:** Run: `rg -n "@sentry" src package.json`. Expected: sólo `src/frontend/main.ts` y `package.json`. Si
   aparece otro uso, parar.
-- [ ] **Step 2:** borrar de `main.ts` el `import * as Sentry …`, el bloque `if (import.meta.env.PROD) { Sentry.init(…) }`
+- [x] **Step 2:** borrar de `main.ts` el `import * as Sentry …`, el bloque `if (import.meta.env.PROD) { Sentry.init(…) }`
   con su comentario, y el import de `ERROR_FILTER` si queda sin uso (si `ERROR_FILTER` queda sin usuarios en todo
   `src/`, verificarlo con `rg -n "ERROR_FILTER" src` y borrarlo también).
-- [ ] **Step 3:** Run: `bun remove @sentry/browser`.
-- [ ] **Step 4:** Run: `rg -n "sentry" -i src/frontend package.json`. Expected: sin resultados. `bun run test:unit`,
+- [x] **Step 3:** Run: `bun remove @sentry/browser`.
+- [x] **Step 4:** Run: `rg -n "sentry" -i src/frontend package.json`. Expected: sin resultados. `bun run test:unit`,
   `test:svelte`, `test:budget` y `bun run build` en verde.
 - [ ] **Step 5: En la app:** con DevTools → Red, provocar un error (por ejemplo, abrir un medio que no existe).
   Expected: ningún pedido a `sentry.io`, y la línea del error en `pulseflow.log`.
-- [ ] **Step 6:** commit `F23.23: los errores ya no se envían al Sentry de FreeShow`.
+- [x] **Step 6:** commit `F23.23: los errores ya no se envían al Sentry de FreeShow`.
 
 ---
 
