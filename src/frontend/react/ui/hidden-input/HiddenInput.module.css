@@ -1,0 +1,17 @@
+/* Portado de hidden-input.svelte (`p` → .name, `input` → .field). */
+.name {
+    margin: 5px;
+    width: 100%;
+    text-align: start;
+    /* cursor: text; */
+}
+.field {
+    padding: 5px;
+    font-weight: inherit;
+    font-size: inherit;
+    background-color: var(--hover);
+    color: inherit;
+    border: none;
+    width: 100%;
+    min-width: 80px;
+}

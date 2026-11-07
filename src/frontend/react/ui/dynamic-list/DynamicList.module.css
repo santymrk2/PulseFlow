@@ -1,0 +1,16 @@
+/* Copia de components/system/Center.svelte (variante `faded`): temporal hasta que Center se migre a React. */
+.center {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.faded {
+    opacity: 0.5;
+    overflow: hidden;
+}

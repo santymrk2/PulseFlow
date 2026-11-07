@@ -528,6 +528,7 @@ export type Popups =
     | "add_shows"
     | "playlist_options"
     | "kit_demo"
+    | "kit_demo_react"
 
 export type DefaultProjectNames = "date" | "today" | "sunday" | "week" | "custom" | "blank"
 

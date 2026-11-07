@@ -110,7 +110,7 @@ describe("Button", () => {
 
     it("banderas_de_estado_y_forma", () => {
         const casos: [ButtonProps, string[]][] = [
-            [{ isActive: true }, [styles.isActive]],
+            [{ isActive: true }, [styles.isActive, "isActive"]], // "isActive" sin módulo: el CSS global de FloatingBar/InputRow apunta a button.isActive
             [{ red: true, redHover: true, bold: true }, [styles.red, styles.redHover, styles.bold]],
             [{ tab: true, showOutline: true, align: "start" }, [styles.tab, styles.showOutline, styles.start]]
         ]

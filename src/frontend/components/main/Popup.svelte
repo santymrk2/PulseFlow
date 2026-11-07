@@ -9,6 +9,8 @@
     import { disablePopupClose } from "../../utils/shortcuts"
     import T from "../helpers/T.svelte"
     import Button from "../../lib/components/ui/button/button.svelte"
+    import ReactIsland from "../../react/bridge/ReactIsland.svelte"
+    import { reactPopups } from "../../react/popups/registry"
 
     function mousedown(e: any) {
         // same logic for Escape in shortcuts.ts
@@ -52,7 +54,11 @@
 {#if popupId !== null}
     {#key popupId}
         {#if FULL_MODALS.includes(popupId)}
-            <svelte:component this={popups[popupId]} />
+            {#if reactPopups[popupId]}
+                <ReactIsland component={reactPopups[popupId]!} />
+            {:else}
+                <svelte:component this={popups[popupId]} />
+            {/if}
         {:else}
             <div style={isWindows ? `height: calc(100% - ${MENU_BAR_HEIGHT}px);` : null} class="popup" class:isOptimized transition:fade={{ duration: isOptimized ? 20 : 100 }} on:mousedown={mousedown}>
                 <div class="card" transition:scale={{ duration: isOptimized ? 50 : 200 }}>
@@ -82,7 +88,11 @@
                     {/if}
                     <div class="scroll" style="--top-height: {isWindows ? MENU_BAR_HEIGHT : 0}px;" on:scroll={scroll}>
                         <div class="body">
-                            <svelte:component this={popups[popupId]} />
+                            {#if reactPopups[popupId]}
+                                <ReactIsland component={reactPopups[popupId]!} />
+                            {:else}
+                                <svelte:component this={popups[popupId]} />
+                            {/if}
                         </div>
                     </div>
                 </div>

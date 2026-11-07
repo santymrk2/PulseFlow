@@ -96,7 +96,7 @@ import AddShowsModal from "../components/show/left/AddShowsModal.svelte"
 import PlaylistOptionsModal from "../components/show/left/PlaylistOptionsModal.svelte"
 import { activePopup, popupData } from "../stores"
 
-export const popups: { [key in Popups]: ComponentType } = {
+export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     initialize: Initialize,
     confirm: Confirm,
     custom_text: CustomText,

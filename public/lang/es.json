@@ -493,6 +493,7 @@
     },
     "popup": {
         "kit_demo": "Kit de componentes",
+        "kit_demo_react": "Kit de componentes (React)",
         "show": "Nueva presentación",
         "select_show": "Seleccionar presentación",
         "select_template": "Seleccionar plantilla",
