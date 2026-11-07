@@ -51,6 +51,7 @@ pub(super) fn spawn_render_loop(
                 let mut nv12_pipeline = store.nv12_pipeline(config.format);
                 let mut arena = store.new_arena();
                 let mut text_engine = TextEngine::new(&device, &queue, config.format);
+                let mut text_errors: u64 = 0;
                 // F4.4: doble buffer offscreen donde se compone la escena + la transición.
                 let mut transition_engine = crate::render::transition::TransitionEngine::new(
                     &device,
@@ -270,8 +271,11 @@ pub(super) fn spawn_render_loop(
                             ScreenKind::Stage => crate::render::stage::stage_blocks(&current.stage, w as f32, h as f32),
                         };
 
-                        if !blocks.is_empty() {
-                            let _ = text_engine.render(TextLayer::Slide, &device, &queue, &mut pass, w, h, &blocks);
+                        if let Err(err) = text_engine.render(TextLayer::Slide, &device, &queue, &mut pass, w, h, &blocks) {
+                            text_errors += 1;
+                            if crate::render::guard::should_log(text_errors) {
+                                log::error!("[render] texto (Slide) en {label}: {err}");
+                            }
                         }
 
                         // Capa de overlays del Scene Graph (F4.6): fondo → medios slide →
@@ -307,16 +311,19 @@ pub(super) fn spawn_render_loop(
                             }
 
                             // Texto de los overlays.
-                            if !current.overlay_text.is_empty() {
-                                let _ = text_engine.render(
-                                    TextLayer::Overlay,
-                                    &device,
-                                    &queue,
-                                    &mut pass,
-                                    w,
-                                    h,
-                                    &current.overlay_text,
-                                );
+                            if let Err(err) = text_engine.render(
+                                TextLayer::Overlay,
+                                &device,
+                                &queue,
+                                &mut pass,
+                                w,
+                                h,
+                                &current.overlay_text,
+                            ) {
+                                text_errors += 1;
+                                if crate::render::guard::should_log(text_errors) {
+                                    log::error!("[render] texto (Overlay) en {label}: {err}");
+                                }
                             }
 
                             // Overlays del modelo previo (relojes/avisos): se dibujan
@@ -327,8 +334,11 @@ pub(super) fn spawn_render_loop(
                                 .into_iter()
                                 .map(|o| overlay_block(o, w))
                                 .collect();
-                            if !old_blocks.is_empty() {
-                                let _ = text_engine.render(TextLayer::Previous, &device, &queue, &mut pass, w, h, &old_blocks);
+                            if let Err(err) = text_engine.render(TextLayer::Previous, &device, &queue, &mut pass, w, h, &old_blocks) {
+                                text_errors += 1;
+                                if crate::render::guard::should_log(text_errors) {
+                                    log::error!("[render] texto (Previous) en {label}: {err}");
+                                }
                             }
                         }
                     }
@@ -373,11 +383,17 @@ pub(super) fn spawn_render_loop(
                             multiview_mask: None,
                         });
                         let block = close_button::block(config.height, cursor_on_button);
-                        let _ = text_engine.render(TextLayer::Chrome, &device, &queue, &mut pass, config.width, config.height, &[block]);
+                        if let Err(err) = text_engine.render(TextLayer::Chrome, &device, &queue, &mut pass, config.width, config.height, &[block]) {
+                            text_errors += 1;
+                            if crate::render::guard::should_log(text_errors) {
+                                log::error!("[render] texto (Chrome) en {label}: {err}");
+                            }
+                        }
                     }
 
                     queue.submit([encoder.finish()]);
                     queue.present(frame);
+                    text_engine.end_frame();
 
                     // Fifo ya limita a la frecuencia del monitor; esto evita girar en
                     // vacío si el compositor no bloquea.

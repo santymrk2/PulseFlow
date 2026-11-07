@@ -100,6 +100,11 @@ impl TextEngine {
         }
     }
 
+    /// Recorta el atlas de glifos: libera los que el frame no usó. Se llama tras presentar cada frame.
+    pub fn end_frame(&mut self) {
+        self.atlas.trim();
+    }
+
     /// Prepara y renderiza los bloques de texto de la escena actual en el render pass.
     #[allow(clippy::too_many_arguments)] // firma fijada por F23.4
     pub fn render(
@@ -373,5 +378,46 @@ mod tests {
         assert!(hay(&px, (10, 10, 60, 80), |p| p[0] > 200 && p[1] > 200 && p[2] > 200), "faltan los blancos de la slide");
         assert!(hay(&px, (10, 110, 310, 170), |p| p[0] > 200 && p[1] < 80), "faltan los rojos del overlay");
         assert_eq!(gpu.uncaptured_errors(), errores, "errores de validación de wgpu");
+    }
+
+    #[test]
+    fn muchos_tamanos_no_llenan_el_atlas() {
+        let gpu = gpu::shared().expect("gpu");
+        let mut engine = TextEngine::new(&gpu.device, &gpu.queue, FORMAT);
+        let texture = gpu.device.create_texture(&wgpu::TextureDescriptor {
+            label: Some("test atlas"),
+            size: wgpu::Extent3d { width: 320, height: 180, depth_or_array_layers: 1 },
+            mip_level_count: 1,
+            sample_count: 1,
+            dimension: wgpu::TextureDimension::D2,
+            format: FORMAT,
+            usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
+            view_formats: &[],
+        });
+        let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
+
+        for i in 0..200 {
+            let blocks = [bloque(&format!("Texto {i}"), 8.0 + i as f32 * 1.5, [1.0; 4], 0.0, 0.0, 320.0, 180.0)];
+            let mut encoder = gpu.device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: Some("test atlas") });
+            {
+                let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                    label: Some("test atlas"),
+                    color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                        view: &view,
+                        resolve_target: None,
+                        ops: wgpu::Operations { load: wgpu::LoadOp::Clear(wgpu::Color::BLACK), store: wgpu::StoreOp::Store },
+                        depth_slice: None,
+                    })],
+                    depth_stencil_attachment: None,
+                    timestamp_writes: None,
+                    occlusion_query_set: None,
+                    multiview_mask: None,
+                });
+                let r = engine.render(TextLayer::Slide, &gpu.device, &gpu.queue, &mut pass, 320, 180, &blocks);
+                assert!(r.is_ok(), "iteración {i}: {r:?}");
+            }
+            gpu.queue.submit([encoder.finish()]);
+            engine.end_frame();
+        }
     }
 }

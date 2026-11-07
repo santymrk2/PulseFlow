@@ -291,17 +291,17 @@ el primer draw.
 - Consume: `guard::should_log` (F23.3), `TextLayer` (F23.4).
 - Produce: `pub fn end_frame(&mut self)` en `TextEngine`, que llama a `self.atlas.trim()` (`glyphon-0.12/src/text_atlas.rs:334`).
 
-- [ ] **Step 1: Test que falla.** `muchos_tamanos_no_llenan_el_atlas`: con `gpu::shared()` y la misma textura
+- [x] **Step 1: Test que falla.** `muchos_tamanos_no_llenan_el_atlas`: con `gpu::shared()` y la misma textura
   offscreen de F23.4, 200 iteraciones (un pass y un `submit` por iteración) con un texto distinto
   (`format!("Texto {i}")`) a un tamaño distinto (`8.0 + i as f32 * 1.5`), llamando a `end_frame()` después de cada
   submit. Todas las llamadas a `render` devuelven `Ok`. Antes de implementar falla porque `end_frame` no existe.
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::text::tests::muchos_tamanos_no_llenan_el_atlas`.
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::text::tests::muchos_tamanos_no_llenan_el_atlas`.
   Expected: FAIL al compilar.
-- [ ] **Step 3: Implementar** `end_frame`. En `render_loop.rs`, llamarla después de `queue.present(frame)`. Cambiar
+- [x] **Step 3: Implementar** `end_frame`. En `render_loop.rs`, llamarla después de `queue.present(frame)`. Cambiar
   cada `let _ = text_engine.render(…)` por un `if let Err(err) = … { text_errors += 1; if should_log(text_errors) { log::error!("[render] texto ({layer:?}) en {label}: {err}"); } }`,
   con `text_errors: u64` local del hilo.
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
-- [ ] **Step 5:** commit `F23.5: el atlas de texto se recorta cada frame y los errores de texto quedan en el log`.
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
+- [x] **Step 5:** commit `F23.5: el atlas de texto se recorta cada frame y los errores de texto quedan en el log`.
 
 ---
 
