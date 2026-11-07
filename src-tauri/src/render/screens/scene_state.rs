@@ -19,28 +19,15 @@ pub fn set_audience_scene(
     content: Option<crate::render::frame::ContentFrame>,
 ) -> AppResult<()> {
     let state = manager(app)?;
-    // El frontend reenvía la escena ante cualquier cambio de `outputs`, no sólo al
-    // cambiar de diapositiva; por eso sólo se pide transición si el contenido visible
-    // cambió de verdad (F4.4).
-    let changed = {
-        let current = state.scene(id).load();
-        current.text != text
-            || current.media != media
-            || current.background.as_ref().map(BackgroundMedia::without_transport) != background.as_ref().map(BackgroundMedia::without_transport)
-            || current.overlay_text != overlay_text
-            || current.overlay_media != overlay_media
-            || current.content != content
-    };
-
-    // Una sola publicación: el hilo de render nunca ve la escena a medio cambiar.
-    state.scene(id).update(|scene| {
-        scene.text = text;
-        scene.media = media;
-        scene.background = background.clone();
-        scene.overlay_text = overlay_text;
-        scene.overlay_media = overlay_media;
-        scene.content = content;
-    });
+    let changed = publish_audience_scene(
+        &state.scene(id),
+        text,
+        media,
+        &background,
+        overlay_text,
+        overlay_media,
+        content,
+    );
 
     // El video de fondo se sincroniza aparte (toca el hub de decodificadores).
     {
@@ -54,6 +41,53 @@ pub fn set_audience_scene(
         request_transition(&state, id);
     }
     Ok(())
+}
+
+/// Publica la escena de audiencia en `slot` y devuelve si el contenido visible cambió de verdad.
+/// El frontend reenvía la escena ante cualquier cambio de `outputs` (y cada segundo con un reloj),
+/// así que sólo cuenta como cambio lo que no es texto `live`: ese se aplica sin transición (F4.4).
+fn publish_audience_scene(
+    slot: &SceneSlot,
+    text: Vec<TextBlock>,
+    media: Vec<MediaItem>,
+    background: &Option<BackgroundMedia>,
+    overlay_text: Vec<TextBlock>,
+    overlay_media: Vec<MediaItem>,
+    content: Option<crate::render::frame::ContentFrame>,
+) -> bool {
+    let changed = {
+        let current = slot.load();
+        !same_blocks(&current.text, &text)
+            || current.media != media
+            || current.background.as_ref().map(BackgroundMedia::without_transport) != background.as_ref().map(BackgroundMedia::without_transport)
+            || !same_blocks(&current.overlay_text, &overlay_text)
+            || current.overlay_media != overlay_media
+            || current.content != content
+    };
+
+    // Una sola publicación: el hilo de render nunca ve la escena a medio cambiar.
+    slot.update(|scene| {
+        scene.text = text;
+        scene.media = media;
+        scene.background = background.clone();
+        scene.overlay_text = overlay_text;
+        scene.overlay_media = overlay_media;
+        scene.content = content;
+    });
+    changed
+}
+
+/// Igual que `==` por bloque, salvo el texto y los tramos de los bloques `live`: esos cambian
+/// cada segundo y no son un cambio de escena (posición, estilo o cantidad sí lo son).
+fn same_blocks(current: &[TextBlock], next: &[TextBlock]) -> bool {
+    current.len() == next.len()
+        && current.iter().zip(next).all(|(a, b)| {
+            if a.live && b.live {
+                TextBlock { text: b.text.clone(), spans: b.spans.clone(), ..a.clone() } == *b
+            } else {
+                a == b
+            }
+        })
 }
 
 /// Reemplaza sólo el texto de la escena de una salida.
@@ -131,5 +165,49 @@ pub(super) fn request_transition(state: &ScreenManager, id: &str) {
             duration_ms,
             easing,
         });
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn bloque(text: &str, live: bool) -> TextBlock {
+        TextBlock { text: text.into(), live, ..TextBlock::default() }
+    }
+
+    /// Publica sólo bloques de texto; devuelve si cambió la escena.
+    fn publicar(slot: &SceneSlot, text: Vec<TextBlock>) -> bool {
+        publish_audience_scene(slot, text, Vec::new(), &None, Vec::new(), Vec::new(), None)
+    }
+
+    #[test]
+    fn texto_live_nuevo_se_aplica_sin_pedir_transicion() {
+        let slot = SceneSlot::new();
+        publicar(&slot, vec![bloque("10:00", true)]);
+        assert!(!publicar(&slot, vec![bloque("10:01", true)]));
+        assert_eq!(slot.load().text[0].text, "10:01");
+    }
+
+    #[test]
+    fn texto_no_live_que_cambia_pide_transicion() {
+        let slot = SceneSlot::new();
+        publicar(&slot, vec![bloque("hola", false)]);
+        assert!(publicar(&slot, vec![bloque("chau", false)]));
+    }
+
+    #[test]
+    fn bloque_live_que_cambia_de_posicion_pide_transicion() {
+        let slot = SceneSlot::new();
+        publicar(&slot, vec![bloque("10:00", true)]);
+        let movido = TextBlock { x: 40.0, ..bloque("10:01", true) };
+        assert!(publicar(&slot, vec![movido]));
+    }
+
+    #[test]
+    fn bloque_live_nuevo_pide_transicion() {
+        let slot = SceneSlot::new();
+        publicar(&slot, vec![bloque("hola", false)]);
+        assert!(publicar(&slot, vec![bloque("hola", false), bloque("10:00", true)]));
     }
 }

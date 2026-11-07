@@ -38,7 +38,6 @@ import { markSceneClock, resetSceneClock } from "./sceneClock"
 
 dayjs.extend(localizedFormat)
 
-// F23.15: la marca de reloj vive en sceneClock.ts (testeable sin arrastrar la app)
 export { scenesHaveClock } from "./sceneClock"
 
 const DEFAULT_FONT_SIZE = 100
@@ -266,7 +265,8 @@ function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: s
         fontStyle: base.fontStyle,
         color,
         text: value,
-        spans
+        spans,
+        live: true
     })
 }
 

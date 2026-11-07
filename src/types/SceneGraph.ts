@@ -122,6 +122,8 @@ export interface SceneTextItem {
     text: string
     /** Tramos con estilo propio; los saltos de línea van dentro de los textos */
     spans: SceneTextSpan[]
+    /** El texto cambia solo con el tiempo (reloj, timer): el engine lo actualiza sin pedir transición */
+    live?: boolean
 }
 
 export interface SceneTextSpan {

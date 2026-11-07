@@ -223,6 +223,9 @@ pub struct SceneTextItem {
     /// Tramos con estilo propio; los saltos de línea van dentro de los textos.
     #[serde(default)]
     pub spans: Vec<TextSpan>,
+    /// El texto cambia solo con el tiempo (reloj, timer): no cuenta como cambio de escena.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub live: bool,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -305,6 +308,7 @@ impl ScenePayload {
                 spans: t.spans.clone(),
                 vertical_align: t.vertical_align.clone(),
                 design_width: Some(design_width),
+                live: t.live,
             })
             .collect()
     }
@@ -409,6 +413,7 @@ impl ScenePayload {
                 spans: t.spans.clone(),
                 vertical_align: t.vertical_align.clone(),
                 design_width: Some(design_width),
+                live: t.live,
             })
             .collect()
     }
@@ -461,6 +466,19 @@ mod tests {
         assert_eq!(plain.position_ms, None);
         let text = serde_json::to_string(&plain).expect("json");
         assert!(!text.contains("paused") && !text.contains("positionMs"), "{text}");
+    }
+
+    /// F23.15: `live` marca el texto que cambia solo (reloj/timer). Ausente = false, y no se escribe si vale false.
+    #[test]
+    fn texto_live_se_deserializa_y_no_se_escribe_por_defecto() {
+        let con: SceneTextItem = serde_json::from_value(json!({"type":"text","x":0,"y":0,"width":10,"height":10,"text":"10:00","live":true})).expect("item");
+        assert!(con.live);
+        let sin: SceneTextItem = serde_json::from_value(json!({"type":"text","x":0,"y":0,"width":10,"height":10,"text":"hola"})).expect("item");
+        assert!(!sin.live);
+        let text = serde_json::to_string(&sin).expect("json");
+        assert!(!text.contains("live"), "{text}");
+        let text = serde_json::to_string(&con).expect("json");
+        assert!(text.contains("\"live\":true"), "{text}");
     }
 
     #[test]

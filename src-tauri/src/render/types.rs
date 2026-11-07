@@ -65,6 +65,9 @@ pub struct TextBlock {
     /// (`ventana / design_width`). Si es `None`, las coordenadas son píxeles de pantalla.
     #[serde(default)]
     pub design_width: Option<f32>,
+    /// El texto cambia solo con el tiempo (reloj, timer): actualizarlo no pide transición.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub live: bool,
 }
 
 impl Default for TextBlock {
@@ -89,6 +92,7 @@ impl Default for TextBlock {
             spans: Vec::new(),
             vertical_align: None,
             design_width: None,
+            live: false,
         }
     }
 }

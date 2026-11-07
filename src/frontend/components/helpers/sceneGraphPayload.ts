@@ -89,7 +89,8 @@ export function sceneTextItem(parts: Omit<SceneTextItem, "type">): SceneTextItem
         stroke: parts.stroke,
         shadow: parts.shadow,
         text: parts.text,
-        spans: parts.spans
+        spans: parts.spans,
+        live: parts.live
     })
 }
 
