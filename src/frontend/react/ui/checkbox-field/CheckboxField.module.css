@@ -1,0 +1,138 @@
+/* Portado de checkbox-field.svelte. `:global(…)` se conserva. */
+.checkboxfield {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 0 12px;
+    color: var(--text);
+    cursor: pointer;
+    outline: none;
+    border-bottom: 1px solid var(--border);
+    min-height: 36px;
+    height: 36px;
+    overflow: hidden;
+}
+.checkboxfield.centered {
+    justify-content: center;
+}
+.checkboxfield.disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+.checkboxfield.small {
+    padding: 4px;
+}
+
+.background,
+.underline {
+    display: none;
+}
+
+.hiddenInput {
+    display: none;
+}
+
+.checkboxLabel {
+    position: relative;
+    font-size: var(--text-sm);
+    color: var(--text);
+    z-index: 1;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    pointer-events: none; /* prevents clicks on label text directly */
+
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+}
+.small .checkboxLabel {
+    gap: 3px;
+    font-size: 0.8em;
+}
+
+.customCheckbox {
+    position: relative;
+    width: 16px;
+    height: 16px;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius, 4px);
+    background-color: transparent;
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease;
+    flex-shrink: 0;
+}
+.small .customCheckbox {
+    width: 14px;
+    height: 14px;
+}
+
+.checkboxfield:has(.hiddenInput:checked) .customCheckbox {
+    background-color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+.customCheckbox .checkmark {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    color: var(--primary-darkest); /* var(--secondary-text) */
+    opacity: 0;
+    transition: opacity 0.12s ease;
+}
+.checkboxfield:has(.hiddenInput:checked) .customCheckbox .checkmark {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.hover {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+.checkboxfield:not(.disabled):focus-visible {
+    outline: 1px solid var(--ring);
+    outline-offset: -1px;
+}
+.checkboxfield:not(.disabled):hover .hover {
+    background-color: var(--hover);
+}
+
+.data {
+    font-size: 0.7em;
+    opacity: 0.5;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 0 0 auto;
+}
+
+.labelText {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.changed {
+    width: 5px;
+    height: 5px;
+    background-color: var(--text);
+    border-radius: 50%;
+    transition: 0.2s opacity ease;
+    opacity: 0.12;
+}
+.changed.hidden {
+    opacity: 0;
+}

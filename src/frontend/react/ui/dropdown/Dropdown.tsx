@@ -4,6 +4,7 @@ import { cn } from "../../../lib/utils"
 import { dictionary, language } from "../../../stores"
 import { translateText } from "../../../utils/language"
 import { Icon } from "../../helpers/Icon"
+import { cssTextToStyle } from "../../helpers/cssTextToStyle"
 import { useSlide } from "../../helpers/useSlide"
 import { triggerClickOnEnterSpace } from "../../helpers/triggerClickOnEnterSpace"
 import { useStore } from "../../hooks/useStore"
@@ -25,18 +26,6 @@ export interface DropdownProps {
     className?: string
     style?: CSSProperties
     onClick?: (option: Option) => void
-}
-
-// `Option.style` es un string CSS; React pide un objeto. shortcut: no soporta `!important`, ampliar si algún valor lo usa.
-function cssTextToStyle(css: string): CSSProperties {
-    const style: Record<string, string> = {}
-    for (const declaration of css.split(";")) {
-        const colon = declaration.indexOf(":")
-        const property = declaration.slice(0, colon).trim()
-        if (colon < 0 || !property) continue
-        style[property.startsWith("--") ? property : property.replace(/-([a-z])/g, (_, letter: string) => letter.toUpperCase())] = declaration.slice(colon + 1).trim()
-    }
-    return style
 }
 
 function formatId(value: string) {
