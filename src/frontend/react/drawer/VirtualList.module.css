@@ -1,0 +1,16 @@
+/* Portado de VirtualList.svelte: los elementos personalizados svelte-virtual-list-* pasan a clases. */
+.viewport {
+    position: relative;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    display: block;
+}
+
+.contents,
+.row {
+    display: block;
+}
+
+.row {
+    overflow: hidden;
+}

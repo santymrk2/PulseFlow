@@ -46,13 +46,13 @@ export function NumberField({ value = 0, defaultValue = null, label, id = "", pl
     const nextScrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
     // a string might be passed in
     const [numberValue, setNumberValue] = usePropState(Number(value || 0))
-    // Texto escrito: manda mientras numberValue no cambie (en Svelte, `rawInput` se recalcula al cambiar numberValue)
-    const [typed, setTyped] = useState<{ forValue: number; text: string } | null>(null)
+    // Texto escrito: manda mientras numberValue, padLength y maxDecimals no cambien (en Svelte, `rawInput` se recalcula al cambiar numberValue)
+    const [typed, setTyped] = useState<{ forValue: number; padLength: number; maxDecimals: number; text: string } | null>(null)
     const [resetFromValue, setResetFromValue] = useState<number | null>(null)
     const [keyframeActive, setKeyframeActive] = usePropState(hasTimelineAction)
 
     const padded = (n: number) => String(n).padStart(padLength, "0")
-    const rawInput = typed && typed.forValue === numberValue ? typed.text : padLength ? padded(numberValue) : String(Number(numberValue.toFixed(maxDecimals)))
+    const rawInput = typed && typed.forValue === numberValue && typed.padLength === padLength && typed.maxDecimals === maxDecimals ? typed.text : padLength ? padded(numberValue) : String(Number(numberValue.toFixed(maxDecimals)))
 
     // Slider values and percent for filled track
     const sliderMin = sliderValues?.min ?? min ?? 0
@@ -83,14 +83,14 @@ export function NumberField({ value = 0, defaultValue = null, label, id = "", pl
         setNumberValue(calcVal)
 
         // set padded value
-        setTyped({ forValue: calcVal, text: padLength ? padded(calcVal) : String(calcVal) })
+        setTyped({ forValue: calcVal, padLength, maxDecimals, text: padLength ? padded(calcVal) : String(calcVal) })
 
         onInput?.(calcVal)
         onChange?.(calcVal)
     }
 
     function handleInput(e: FormEvent<HTMLInputElement>) {
-        setTyped({ forValue: numberValue, text: e.currentTarget.value })
+        setTyped({ forValue: numberValue, padLength, maxDecimals, text: e.currentTarget.value })
     }
 
     function increment(customStep: number = step) {

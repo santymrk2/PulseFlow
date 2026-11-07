@@ -17,6 +17,7 @@ vi.mock("../../../components/edit/scripts/edit", () => ({ newDropdown: { "new.ti
 
 afterEach(() => {
     cleanup()
+    vi.restoreAllMocks()
     vi.useRealTimers()
     vi.clearAllMocks()
 })
@@ -221,6 +222,10 @@ describe("SelectField", () => {
 
     it("mas_de_100_opciones_usa_la_lista_virtual_con_ventana", () => {
         const muchas: DropdownOptions = Array.from({ length: 500 }, (_, i) => ({ value: `v${i}`, label: `Opción ${i}` }))
+        // happy-dom no hace layout: el viewport mide lo que dice su style.height y cada fila 28 px
+        vi.spyOn(HTMLElement.prototype, "offsetHeight", "get").mockImplementation(function (this: HTMLElement) {
+            return this.style.height ? parseInt(this.style.height) : 28
+        })
         const onChange = vi.fn()
         render(<SelectField label="x" value="v250" options={muchas} onChange={onChange} />)
         abrir()

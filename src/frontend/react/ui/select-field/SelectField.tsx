@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent, type ReactNode } from "react"
+import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, type MouseEvent } from "react"
 import { createPortal } from "react-dom"
 import type { DropdownOptions } from "../../../../types/Input"
 import { cn } from "../../../lib/utils"
@@ -6,6 +6,7 @@ import { newDropdown } from "../../../components/edit/scripts/edit"
 import { dictionary } from "../../../stores"
 import { translateText } from "../../../utils/language"
 import { formatSearch } from "../../../utils/search"
+import { VirtualList } from "../../drawer/VirtualList"
 import { cssTextToStyle } from "../../helpers/cssTextToStyle"
 import { Icon } from "../../helpers/Icon"
 import { usePropState } from "../../hooks/usePropState"
@@ -17,7 +18,7 @@ import styles from "./SelectField.module.css"
 
 // Port de ui/select-field/select-field.svelte. dispatch("change", string | null) → onChange(string | null) (reset despacha defaultValue, que puede ser null);
 // dispatch("new", string) → onNew(string); dispatch("delete", string) → onDelete(string). `use:portal` → createPortal al <body>.
-// La lista virtual (más de 100 opciones) reemplaza a VirtualList.svelte por una ventana propia de filas de 28 px.
+// La lista virtual (más de 100 opciones) usa react/drawer/VirtualList.
 export interface SelectFieldProps {
     label: string
     value: string
@@ -37,41 +38,6 @@ export interface SelectFieldProps {
 }
 
 type Option = DropdownOptions[number]
-
-// shortcut: filas de alto fijo (28 px = min-height de `li`); una fila más alta (ícono grande) desfasa el scroll, medir filas si hace falta
-const ROW_HEIGHT = 28
-const OVERSCAN = 5
-
-interface VirtualRowsProps {
-    count: number
-    height: number
-    activeIndex: number
-    renderRow: (index: number) => ReactNode
-}
-
-function VirtualRows({ count, height, activeIndex, renderRow }: VirtualRowsProps) {
-    const viewport = useRef<HTMLDivElement>(null)
-    const [scrollTop, setScrollTop] = useState(0)
-
-    // Igual que VirtualList.svelte: lleva el índice activo a la vista sólo si no estaba visible
-    useEffect(() => {
-        const el = viewport.current
-        if (!el || activeIndex < 0 || activeIndex >= count) return
-        const top = activeIndex * ROW_HEIGHT
-        if (top < el.scrollTop || top + ROW_HEIGHT > el.scrollTop + height) el.scrollTo({ top: top - height * 0.3 })
-    }, [activeIndex])
-
-    const start = Math.max(0, Math.floor(scrollTop / ROW_HEIGHT) - OVERSCAN)
-    const end = Math.min(count, Math.ceil((scrollTop + height) / ROW_HEIGHT) + OVERSCAN)
-    const rows: ReactNode[] = []
-    for (let i = start; i < end; i++) rows.push(renderRow(i))
-
-    return (
-        <div ref={viewport} className={styles.viewport} style={{ height: `${height}px` }} onScroll={(e) => setScrollTop(e.currentTarget.scrollTop)}>
-            <div style={{ paddingTop: `${start * ROW_HEIGHT}px`, paddingBottom: `${(count - end) * ROW_HEIGHT}px` }}>{rows}</div>
-        </div>
-    )
-}
 
 export function SelectField({ label, value: valueProp, defaultValue = null, options, id = "", disabled = false, allowEmpty = false, flags = false, onlyArrow = false, addNew = null, allowDeleting = false, style, onChange, onNew, onDelete }: SelectFieldProps) {
     const dict = useStore(dictionary)
@@ -403,7 +369,7 @@ export function SelectField({ label, value: valueProp, defaultValue = null, opti
                     {useVirtualList
                         ? createPortal(
                               <div className={cn(styles.dropdown, "select-menu", styles.virtual)} style={menuPos}>
-                                  <VirtualRows count={options.length} height={maxHeight} activeIndex={highlightedIndex} renderRow={(i) => renderOption(options[i], i)} />
+                                  <VirtualList items={options} height={`${maxHeight}px`} activeIndex={highlightedIndex} className={styles.viewport} render={renderOption} />
 
                                   {addNewItem ? <div className={styles.addNewButton}>{addNewItem}</div> : null}
                               </div>,

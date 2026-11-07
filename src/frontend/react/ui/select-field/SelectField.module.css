@@ -187,9 +187,6 @@ label.label.selected {
     overflow-y: hidden;
     padding: 0;
 }
-.dropdown :global(svelte-virtual-list-viewport) {
-    background-color: var(--bg-elevated);
-}
 .addNewButton {
     border-top: 1px solid var(--border);
     padding-top: 4px;
@@ -265,8 +262,7 @@ label.label.selected {
     border-color: var(--border-strong);
 }
 
-/* ventana de la lista virtual (reemplaza al viewport de VirtualList.svelte) */
+/* viewport de VirtualList (reemplaza a svelte-virtual-list-viewport) */
 .viewport {
-    overflow-y: auto;
     background-color: var(--bg-elevated);
 }

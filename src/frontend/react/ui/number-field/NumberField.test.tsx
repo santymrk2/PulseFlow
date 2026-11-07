@@ -194,6 +194,18 @@ describe("NumberField", () => {
         expect(onChange).not.toHaveBeenCalled()
     })
 
+    it("el_texto_escrito_se_invalida_al_cambiar_padLength_o_maxDecimals", () => {
+        const { rerender } = render(<NumberField label="x" value={7} />)
+        fireEvent.input(input(), { target: { value: "garabato" } })
+        expect(input().value).toBe("garabato")
+        rerender(<NumberField label="x" value={7} padLength={3} />)
+        expect(input().value).toBe("007")
+
+        fireEvent.input(input(), { target: { value: "otro" } })
+        rerender(<NumberField label="x" value={1.2345} padLength={0} maxDecimals={3} />)
+        expect(input().value).toBe("1.234")
+    })
+
     it("hideWhenZero_oculta_el_cero_y_marca_la_etiqueta", () => {
         const { rerender } = render(<NumberField label="etiqueta" value={0} hideWhenZero />)
         expect(input().classList.contains(styles.noValue)).toBe(true)
