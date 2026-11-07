@@ -1,0 +1,115 @@
+/* Portado de dropdown.svelte. Elemento → `elemento.clase` para conservar la especificidad que daba el scope de Svelte. */
+.root.flags {
+    font-family:
+        "NotoColorEmojiLimited",
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Oxygen-Sans,
+        Ubuntu,
+        Cantarell,
+        "Helvetica Neue",
+        sans-serif !important;
+}
+
+/* misma superficie y filas que el `Menu` y el `SelectField` del kit (borde de 1 px, filas de 28 px) */
+div.root,
+div.dropdown {
+    color: var(--text);
+}
+
+div.disabled {
+    opacity: 0.5;
+}
+
+.dropdown {
+    max-height: 300px;
+    overflow: auto;
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    padding: 4px;
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-float);
+    font-size: var(--text-sm);
+    z-index: 10;
+}
+
+.dropdown.up {
+    top: 0;
+    left: 0;
+    position: absolute;
+    transform: translateY(-100%);
+}
+
+.dropdown.arrow {
+    inset-inline-end: 0;
+    width: 300px;
+}
+
+.center button.trigger {
+    text-align: center;
+    justify-content: center;
+}
+
+.center .dropdown span.option {
+    text-align: center;
+}
+
+button.trigger,
+span.option {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-height: 28px;
+    padding: 0 8px;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: var(--text-sm);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    position: relative;
+}
+
+span.option {
+    border-radius: calc(var(--radius) - 2px);
+    cursor: pointer;
+}
+
+button.trigger {
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    text-align: start;
+}
+
+button.trigger:hover:not(.disabled button.trigger),
+span.option:hover:not(.disabled span.option) {
+    background-color: var(--bg-hover);
+}
+span.option.active {
+    background-color: var(--bg-active);
+}
+
+.dropdown .extra {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding: 0 10px;
+
+    font-size: 0.8em;
+    background-color: transparent;
+    opacity: 0.5;
+
+    pointer-events: none;
+}

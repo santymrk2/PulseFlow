@@ -1,0 +1,45 @@
+/* Portado de stepper.svelte. `:global(input)` se conserva; los selectores suben a `elemento.clase` para igualar la especificidad del scope de Svelte. */
+.numberInput {
+    display: flex;
+    /* align-items: center; */
+    background-color: var(--primary-darkest);
+    border-radius: var(--radius, 4px);
+    flex-flow: wrap;
+    transition: opacity 0.3s;
+}
+
+.numberInput.outline,
+span.outline :global(input) {
+    /* border: 2px solid var(--primary-lighter); */
+    background-color: var(--primary);
+}
+
+.disabled {
+    opacity: 0.5;
+}
+
+.input {
+    flex: 2;
+    height: 100%;
+    /* font-size: 1.5em; */
+    /* font-weight: bold; */
+
+    position: relative;
+}
+
+span.input :global(input) {
+    padding: 5px;
+    background-color: var(--primary-darkest);
+    border-radius: var(--radius, 4px);
+}
+
+.title {
+    position: absolute;
+    bottom: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    font-size: 0.18em;
+
+    pointer-events: none;
+}

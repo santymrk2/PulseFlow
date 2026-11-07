@@ -477,7 +477,7 @@ El contrato de eventos del kit está en `docs/design/kit.md` ("Contrato de event
 | **F24.10** Distribución y demo | `input-row`, `floating-bar`, `list`, `dynamic-list`, `combined-input`, `hidden-input` + popup `kit_demo_react` | `F24.10: kit completo en React y demo comparativa` |
 
 - [x] **F24.6**
-- [ ] **F24.7** (en `number-field` y `stepper` se usa `evaluateArithmetic` de F23.11 si ya existe; si no, lo mismo
+- [x] **F24.7** (en `number-field` y `stepper` se usa `evaluateArithmetic` de F23.11 si ya existe; si no, lo mismo
   que haga el Svelte en ese momento)
 - [ ] **F24.8**. Verificación extra (Review Focus 4): con un `TextField` React con foco, las teclas de atajo
   globales (`src/frontend/utils/shortcuts.ts`) no se disparan, igual que con el Svelte.

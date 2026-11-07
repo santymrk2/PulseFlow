@@ -1,0 +1,48 @@
+/* Portado de slider.svelte. `input` → `input.slider` para igualar la especificidad del scope de Svelte. */
+input.slider {
+    /* padding: 2px; */
+    -webkit-appearance: none;
+    width: 100%;
+    height: 10px;
+    background: var(--border-strong);
+    outline: none;
+    -webkit-transition: 0.2s;
+    transition: opacity 0.2s;
+
+    border-radius: var(--radius, 10px);
+}
+
+input.slider.invert {
+    transform: rotate(180deg);
+}
+
+input.slider:disabled {
+    opacity: 0.5;
+}
+
+input.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+
+    width: 10px;
+    height: 10px;
+
+    background: var(--secondary);
+    cursor: pointer;
+    pointer-events: none;
+    opacity: 0.8;
+
+    border-radius: 50%;
+
+    -webkit-transition: 0.2s;
+    transition:
+        opacity 0.2s,
+        width 0.1s,
+        height 0.1s;
+}
+
+input.slider::-webkit-slider-thumb:hover {
+    opacity: 1;
+    width: 12px;
+    height: 12px;
+}

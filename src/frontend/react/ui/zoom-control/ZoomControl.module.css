@@ -1,0 +1,46 @@
+/* Portado de zoom-control.svelte */
+.zoom_container {
+    position: relative;
+    width: var(--size);
+}
+.hidden {
+    display: none;
+}
+
+.text {
+    opacity: 0.7;
+    font-size: 0.8em;
+    font-weight: normal;
+}
+
+.zoom_container .divider {
+    width: 100%;
+    height: 1px;
+    background-color: var(--primary-lighter);
+}
+
+.zoom_popup {
+    position: absolute;
+    inset-inline-end: 0;
+    top: 0;
+    transform: translateY(-100%);
+    overflow: hidden;
+
+    background-color: var(--primary-darkest);
+
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+
+    z-index: 2;
+}
+
+/* era style="padding: 0 !important;" en el Button: React no admite !important en style */
+.reset {
+    padding: 0 !important;
+}
