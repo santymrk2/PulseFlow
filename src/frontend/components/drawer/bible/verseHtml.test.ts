@@ -26,4 +26,26 @@ describe("sanitizeVerseText", () => {
         expect(sanitizeVerseText(undefined)).toBe("")
         expect(sanitizeVerseText(null)).toBe("")
     })
+    it.each(['<span class="wj" >a</span>', '<span style="color:red;">a</span>', '<span style="color:red;" >a</span>', "<red>a</red>", "<red >a</red>"])("conserva la forma de rojo que reconoce markJesusWords: %s", (input) => {
+        expect(sanitizeVerseText(input)).toBe(input)
+    })
+    it("descarta comillas simples y mayúsculas en el span de rojo", () => {
+        expect(sanitizeVerseText("<span class='wj'>a</span>")).toBe("a")
+        expect(sanitizeVerseText('<SPAN CLASS="WJ">a</SPAN>')).toBe("a")
+    })
+    it("descarta un </span> huérfano", () => {
+        expect(sanitizeVerseText("a</span>b")).toBe("ab")
+    })
+    it("descarta <i> con atributos, deja su texto y conserva el </i> sin atributos", () => {
+        expect(sanitizeVerseText("<i onmouseover=x>a</i>")).toBe("a</i>")
+    })
+    it("descarta etiquetas autocerradas no permitidas", () => {
+        expect(sanitizeVerseText("<sup/>")).toBe("")
+    })
+    it("conserva el span de rojo anidado en otro", () => {
+        expect(sanitizeVerseText('<span class="wj"><span class="wj">a</span></span>')).toBe('<span class="wj"><span class="wj">a</span></span>')
+    })
+    it("deja las entidades escapadas tal cual", () => {
+        expect(sanitizeVerseText("&lt;script&gt;")).toBe("&lt;script&gt;")
+    })
 })
