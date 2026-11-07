@@ -18,10 +18,10 @@ vi.mock("./OtherButtons", () => ({ OtherButtons: () => <div>stub-other-buttons</
 // Las pestañas que todavía son Svelte entran por SvelteIsland: acá sólo importa cuál se monta y con qué props
 vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} /> }))
 vi.mock("../../components/settings/tabs/AudioRouting.svelte", () => ({ default: { isla: "AudioRouting" } }))
-vi.mock("../../components/settings/tabs/Connection.svelte", () => ({ default: { isla: "Connection" } }))
-vi.mock("../../components/settings/tabs/Profiles.svelte", () => ({ default: { isla: "Profiles" } }))
-vi.mock("../../components/settings/tabs/ProfilesButtons.svelte", () => ({ default: { isla: "ProfilesButtons" } }))
-vi.mock("../../components/settings/tabs/ProfilesTabs.svelte", () => ({ default: { isla: "ProfilesTabs" } }))
+vi.mock("./Connection", () => ({ Connection: () => <div data-isla="Connection" /> }))
+vi.mock("./Profiles", () => ({ Profiles: () => <div data-isla="Profiles" /> }))
+vi.mock("./ProfilesButtons", () => ({ ProfilesButtons: () => <div data-isla="ProfilesButtons" /> }))
+vi.mock("./ProfilesTabs", () => ({ ProfilesTabs: () => <div data-isla="ProfilesTabs" /> }))
 vi.mock("../../components/main/Tip.svelte", () => ({ default: { isla: "Tip" } }))
 
 let restaurar: () => void = () => {}
@@ -70,7 +70,7 @@ describe("Settings", () => {
         expect(scroll().style.getPropertyValue("--padding")).toBe("")
     })
 
-    it("connection_monta_la_isla_de_conexion", () => {
+    it("connection_monta_Connection", () => {
         mostrar("connection")
         render(<Settings />)
         expect(islas()).toEqual(["Connection"])

@@ -1,24 +1,24 @@
 import { useEffect, useState, type CSSProperties, type UIEvent } from "react"
 import { resetAudioRouting } from "../../audio/routing/audioRoutingInit"
 import AudioRouting from "../../components/settings/tabs/AudioRouting.svelte"
-import Connection from "../../components/settings/tabs/Connection.svelte"
-import Profiles from "../../components/settings/tabs/Profiles.svelte"
-import ProfilesButtons from "../../components/settings/tabs/ProfilesButtons.svelte"
-import ProfilesTabs from "../../components/settings/tabs/ProfilesTabs.svelte"
 import Tip from "../../components/main/Tip.svelte"
 import { activePopup, dictionary, settingsTab } from "../../stores"
 import { translateText } from "../../utils/language"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
+import { Connection } from "./Connection"
 import { Files } from "./Files"
 import { FilesButtons } from "./FilesButtons"
 import { General } from "./General"
 import { Other } from "./Other"
 import { OtherButtons } from "./OtherButtons"
+import { Profiles } from "./Profiles"
+import { ProfilesButtons } from "./ProfilesButtons"
+import { ProfilesTabs } from "./ProfilesTabs"
 import styles from "./Settings.module.css"
 
-// Port de components/settings/Settings.svelte (F24.12). AudioRouting, Connection y Profiles* siguen siendo Svelte hasta F24.13.
+// Port de components/settings/Settings.svelte (F24.12). AudioRouting sigue siendo Svelte hasta F24.13b; Connection y Profiles* son React (F24.13a).
 const hints: Record<string, string> = {
     audio: "settings.audio_hint",
     profiles: "profile.profiles_hint",
@@ -46,7 +46,7 @@ export function Settings() {
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     {hints[tabId] ? <SvelteIsland component={Tip} props={{ type: "info", value: translateText(hints[tabId]), style: "opacity: 0.7;", hiddenText: true, white: true }} /> : null}
 
-                    {tabId === "audio" ? <Button title="actions.reset" icon="reset" onClick={() => resetAudioRouting()} /> : tabId === "profiles" ? <SvelteIsland component={ProfilesButtons} /> : null}
+                    {tabId === "audio" ? <Button title="actions.reset" icon="reset" onClick={() => resetAudioRouting()} /> : tabId === "profiles" ? <ProfilesButtons /> : null}
                 </div>
             </div>
 
@@ -63,17 +63,17 @@ export function Settings() {
                 ) : tabId === "audio" ? (
                     <SvelteIsland component={AudioRouting} />
                 ) : tabId === "connection" ? (
-                    <SvelteIsland component={Connection} />
+                    <Connection />
                 ) : tabId === "files" ? (
                     <Files />
                 ) : tabId === "profiles" ? (
-                    <SvelteIsland component={Profiles} />
+                    <Profiles />
                 ) : tabId === "other" ? (
                     <Other />
                 ) : null}
             </div>
 
-            <div className={styles.tabs}>{tabId === "files" ? <FilesButtons /> : tabId === "profiles" ? <SvelteIsland component={ProfilesTabs} /> : tabId === "other" ? <OtherButtons /> : null}</div>
+            <div className={styles.tabs}>{tabId === "files" ? <FilesButtons /> : tabId === "profiles" ? <ProfilesTabs /> : tabId === "other" ? <OtherButtons /> : null}</div>
         </main>
     )
 }

@@ -1,0 +1,4 @@
+.connected {
+    flex: 1;
+    border-bottom: 2px solid var(--connected) !important;
+}
