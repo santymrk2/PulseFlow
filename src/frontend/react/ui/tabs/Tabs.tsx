@@ -1,20 +1,16 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
-import { createPortal } from "react-dom"
 import type { ClickEvent, SelectIds } from "../../../../types/Main"
-import SelectElem from "../../../components/system/SelectElem.svelte"
 import { cn } from "../../../lib/utils"
 import { dictionary } from "../../../stores"
 import { translateText } from "../../../utils/language"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
+import { SelectElem } from "../../system/SelectElem"
 import { Button } from "../button/Button"
 import styles from "./Tabs.module.css"
 
 // Port de ui/tabs/tabs.svelte. dispatch("open", id) → onOpen(id); dispatch("create", detail) → onCreate(detail).
 // `<slot {tab} />` → children como función (render prop) que recibe la pestaña.
-// Temporal: SelectElem sigue en Svelte (se migra con "sistema"). Se monta como isla y el botón se proyecta en su
-// <slot> con un portal; se va cuando SelectElem tenga versión React.
 export interface TabsProps<T extends { id: string; stageOutput?: boolean }> {
     id: SelectIds
     tabs: T[]
@@ -24,32 +20,6 @@ export interface TabsProps<T extends { id: string; stageOutput?: boolean }> {
     onOpen?: (id: string) => void
     onCreate?: (detail: ClickEvent["detail"]) => void
     children?: (tab: T) => ReactNode
-}
-
-function SelectElemSlot({ id, tabId, onReady, children }: { id: SelectIds; tabId: string; onReady: () => void; children: ReactNode }) {
-    const wrapper = useRef<HTMLDivElement>(null)
-    const [slot, setSlot] = useState<Element | null>(null)
-    // misma referencia entre renders mientras no cambien id ni tabId: la isla no reasigna props en cada render
-    const [cached, setCached] = useState({ id, tabId, props: { id, data: { id: tabId }, fill: true } })
-    if (cached.id !== id || cached.tabId !== tabId) setCached({ id, tabId, props: { id, data: { id: tabId }, fill: true } })
-    const islandProps = cached.props
-
-    // la isla se monta en un efecto de su propio componente, que corre antes que éste (hijo antes que padre)
-    useEffect(() => {
-        setSlot(wrapper.current?.querySelector(".selectElem") ?? null)
-    }, [])
-
-    // el botón de la pestaña existe recién cuando el portal tiene slot: ahí se puede medir el scroll
-    useEffect(() => {
-        if (slot) onReady()
-    }, [slot])
-
-    return (
-        <div ref={wrapper} style={{ display: "contents" }}>
-            <SvelteIsland component={SelectElem} props={islandProps} />
-            {slot ? createPortal(children, slot) : null}
-        </div>
-    )
 }
 
 export function Tabs<T extends { id: string; stageOutput?: boolean }>({ id, tabs, value, newLabel = "settings.add", className = "", onOpen, onCreate, children }: TabsProps<T>) {
@@ -62,7 +32,8 @@ export function Tabs<T extends { id: string; stageOutput?: boolean }>({ id, tabs
         setIsScrollable(tabsElem.current.scrollWidth > tabsElem.current.clientWidth)
     }
 
-    useEffect(checkScroll, [])
+    // los botones de las pestañas ya existen cuando corre el efecto; se vuelve a medir al agregar o quitar una
+    useEffect(checkScroll, [tabs.length])
 
     function create(detail: ClickEvent["detail"]) {
         onCreate?.(detail)
@@ -80,11 +51,11 @@ export function Tabs<T extends { id: string; stageOutput?: boolean }>({ id, tabs
             {tabs.length > 1 ? (
                 <div ref={tabsElem} className={cn(styles.tabs, isScrollable && styles.isScrollable)}>
                     {tabs.map((tab, i) => (
-                        <SelectElemSlot key={i} id={id} tabId={tab.id} onReady={checkScroll}>
+                        <SelectElem key={i} id={id} data={{ id: tab.id }} fill>
                             <button className={cn("tab", styles.tab, getTabClass(tab), value === tab.id && styles.active)} onClick={() => onOpen?.(tab.id)}>
                                 {children?.(tab)}
                             </button>
-                        </SelectElemSlot>
+                        </SelectElem>
                     ))}
                 </div>
             ) : null}

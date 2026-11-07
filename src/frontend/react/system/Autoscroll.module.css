@@ -1,0 +1,11 @@
+.scroll {
+    overflow-y: auto;
+    flex: 1;
+
+    scroll-behavior: smooth;
+}
+
+.scroll.instantScroll,
+.scroll.instantScroll :global(.droparea) {
+    scroll-behavior: initial !important;
+}

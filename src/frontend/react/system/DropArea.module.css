@@ -1,0 +1,33 @@
+.droparea {
+    flex: 1;
+    height: 100%;
+    width: 100%;
+    align-self: flex-start;
+    transition: 0.3s opacity;
+    position: relative;
+    overflow: auto;
+}
+.droparea.hover {
+    opacity: 0.3;
+    background-color: hsl(0 0% 0% / 0.4);
+}
+/* en Svelte `span` sólo alcanzaba al span propio (ParentBlock), no a los spans de los hijos */
+.droparea.hover .block {
+    pointer-events: none;
+}
+
+.text {
+    pointer-events: none;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* Starting a drop area with many slides in e.g. overlays/templates drawer is very laggy when the content is
+    smaller than the "Drop here" text (or invisible), because that creates a custom scrollbar. Here is the fix! */
+    overflow: hidden;
+}

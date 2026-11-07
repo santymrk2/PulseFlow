@@ -1,0 +1,100 @@
+.panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    overflow: hidden;
+    position: relative;
+    /* background: var(--primary); */
+
+    /* pressing shift when active created an outline around the element */
+    outline: none;
+}
+
+:global(.bar_left) {
+    padding-inline-end: var(--handle-width);
+}
+:global(.bar_right) {
+    padding-inline-start: var(--handle-width);
+}
+:global(.bar_top) {
+    padding-bottom: var(--handle-width);
+}
+:global(.bar_bottom) {
+    padding-top: var(--handle-width);
+}
+
+/* divisor: la zona de agarre mide --handle-width, lo que se ve es una línea de 1 px */
+.panel::after {
+    content: "";
+    box-sizing: border-box;
+    background-color: transparent;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    transition: border-color 0.12s ease-out;
+}
+.panel:global(.bar_left)::after {
+    border-inline-end: 1px solid var(--border);
+}
+.panel:global(.bar_right)::after {
+    border-inline-start: 1px solid var(--border);
+}
+.panel:global(.bar_top)::after {
+    border-bottom: 1px solid var(--border);
+}
+.panel:global(.bar_bottom)::after {
+    border-top: 1px solid var(--border);
+}
+.panel:hover::after {
+    border-color: var(--border-strong);
+}
+.zero::after {
+    background-color: var(--bg-hover);
+}
+.zero :global(svg) {
+    pointer-events: none;
+
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    /* right: 0;
+    transform: translate(62%, -50%); */
+}
+:global(.bar_right).zero :global(svg) {
+    transform: translate(-50%, -50%) rotate(180deg);
+
+    /* right: unset;
+    left: 0;
+    transform: translate(-62%, -50%) rotate(180deg); */
+}
+:global(.bar_bottom).zero :global(svg) {
+    transform: translate(-50%, -50%) rotate(-90deg);
+}
+:global(.bar_top).zero :global(svg) {
+    transform: translate(-50%, -50%) rotate(90deg);
+}
+
+.panel:global(.bar_left)::after {
+    right: 0; /* stylelint-disable-line */
+    width: var(--handle-width);
+    cursor: ew-resize;
+}
+.panel:global(.bar_right)::after {
+    left: 0; /* stylelint-disable-line */
+    width: var(--handle-width);
+    cursor: ew-resize;
+}
+.panel:global(.bar_top)::after {
+    bottom: 0;
+    height: var(--handle-width);
+    cursor: ns-resize;
+}
+.panel:global(.bar_bottom)::after {
+    top: 0;
+    height: var(--handle-width);
+    cursor: ns-resize;
+}

@@ -1,0 +1,84 @@
+.selectElem {
+    position: relative;
+}
+
+div.isSelected {
+    /* outline: 2px solid red;
+outline-offset: 2px; */
+    background-color: var(--focus);
+    outline: 2px solid var(--text);
+    opacity: 0.9;
+
+    border-radius: 6px;
+
+    /* filter: invert(1); */
+    /* filter: sepia(1); */
+    /* filter: saturate(5); */
+    filter: invert(0.1) brightness(1.2) contrast(0.7);
+}
+div.isSelected :global(button) {
+    background-color: inherit !important;
+}
+
+.fill {
+    width: 100%;
+    height: 100%;
+}
+
+.trigger {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    border-style: solid;
+    border-color: var(--secondary);
+    border-width: 0px;
+    --border-width: 2px;
+}
+.trigger.column.start {
+    border-top-width: var(--border-width);
+}
+.trigger.column.end {
+    border-bottom-width: var(--border-width);
+}
+.trigger.row.start {
+    border-inline-start-width: var(--border-width);
+}
+.trigger.row.end {
+    border-inline-end-width: var(--border-width);
+}
+.trigger.center {
+    border-width: var(--border-width);
+}
+
+.trigger span {
+    width: 100%;
+    height: 100%;
+}
+
+.between {
+    position: absolute;
+    background-color: transparent;
+
+    --border-width: 8px;
+}
+.trigger.column .between {
+    bottom: calc(var(--border-width) / 2 * -1);
+    width: 100%;
+    height: var(--border-width);
+}
+.trigger.row .between {
+    inset-inline-end: calc(var(--border-width) / 2 * -1);
+    height: 100%;
+    width: var(--border-width);
+}
+
+.trigger span.over {
+    position: absolute;
+    top: 0;
+    transform: translateY(-100%);
+
+    height: 10px;
+    display: flex;
+}

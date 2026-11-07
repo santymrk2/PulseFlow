@@ -12,8 +12,6 @@ vi.mock("../../../utils/common", () => commonMock())
 // SelectElem arrastra (vía helpers) el módulo de audio, que necesita AudioContext/AudioWorkletNode (no existen en happy-dom)
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-// Vitest corre en node y Svelte resuelve su build de servidor (mount no existe); acá se fuerza el de cliente
-vi.mock("svelte", async () => vi.importActual("../../../../../node_modules/svelte/src/index-client.js"))
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
 let restaurar: () => void = () => {}
@@ -36,11 +34,11 @@ describe("Tabs", () => {
                 {(tab) => <span>pestana-{tab.id || "admin"}</span>}
             </Tabs>
         )
-        expect(await screen.findByText("pestana-admin")).toBeTruthy()
+        expect(screen.getByText("pestana-admin")).toBeTruthy()
         expect(screen.getByText("pestana-a")).toBeTruthy()
         expect(pestanas()).toHaveLength(3)
         expect(pestanas().map((b) => b.classList.contains(styles.active))).toEqual([false, true, false])
-        // cada pestaña vive dentro del slot del SelectElem (Svelte)
+        // cada pestaña vive dentro del SelectElem
         expect(pestanas()[0].parentElement?.classList.contains("selectElem")).toBe(true)
         // con más de una pestaña el botón de crear es un "+" chico, sin texto
         expect(screen.queryByText("Agregar")).toBeNull()

@@ -1,9 +1,8 @@
 import type { ReactNode } from "react"
-import { cn } from "../../../lib/utils"
 import { T } from "../../helpers/T"
+import { Center } from "../../system/Center"
 import { Button } from "../button/Button"
 import { InputRow } from "../input-row/InputRow"
-import styles from "./DynamicList.module.css"
 
 // Port de ui/dynamic-list/dynamic-list.svelte. dispatch("open"|"delete", id) → onOpen/onDelete(id); dispatch("add") → onAdd();
 // `<slot {item} />` → children(item). El `{#each}` no tenía key: se usa la posición.
@@ -42,10 +41,9 @@ export function DynamicList<I extends DynamicListItem = DynamicListItem>({ items
                 ))
             ) : nothingText ? (
                 <>
-                    {/* Center faded: el "loader" sin módulo es la clase del Svelte */}
-                    <div className={cn("loader", styles.center, styles.faded)} style={{ fontSize: "1em", padding: "0px" }}>
+                    <Center faded>
                         <T id="empty.general" />
-                    </div>
+                    </Center>
 
                     <br />
                 </>
