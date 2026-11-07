@@ -1,0 +1,14 @@
+.aside {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+
+    border-inline-end: 1px solid var(--border);
+}
+
+.section {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+}

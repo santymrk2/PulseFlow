@@ -517,7 +517,7 @@ Receta sobre `components/settings/`: `Settings`, `SettingsModal`, `SettingsTabs`
 Verificación extra: cada opción de esas pestañas cambia el mismo setting (comparar `config.json` en la carpeta de
 configuración antes y después de tocarla, con la versión Svelte y con la React). Con foco en un campo, los atajos
 globales no se disparan.
-- [ ] commit `F24.12: configuración en React (general, archivos, otros)`
+- [x] commit `F24.12: configuración en React (general, archivos, otros)`
 
 ### Task F24.13: Configuración (II)
 

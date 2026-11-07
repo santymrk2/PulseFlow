@@ -1,0 +1,45 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    position: relative;
+
+    --padding: 24px;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 12px var(--padding);
+    border-bottom: 1px solid var(--border);
+
+    transition: 0.2s box-shadow ease;
+}
+
+.heading {
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--text);
+
+    overflow: visible;
+    margin-right: 20px;
+}
+
+.scroll {
+    position: relative;
+
+    overflow-y: auto;
+    /* overflow-x: hidden; */
+    flex: 1;
+    min-height: 0;
+    padding: 20px var(--padding);
+    max-width: 640px;
+    margin-inline: auto;
+}
+
+.tabs {
+    z-index: 1;
+}

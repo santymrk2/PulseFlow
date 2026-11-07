@@ -1,0 +1,16 @@
+.bottom {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    padding: 5px;
+    padding-bottom: 7px;
+
+    overflow-y: auto;
+}
+
+.bottom :global(button) {
+    justify-content: left;
+    /* border-width: 0; */
+    box-shadow: none;
+}
