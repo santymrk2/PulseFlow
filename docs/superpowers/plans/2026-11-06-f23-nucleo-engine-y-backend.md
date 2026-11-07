@@ -1001,13 +1001,13 @@ pegado arriba de su caja. Si el layout no tiene ítems, se mantiene el comportam
   - **blur:** las dos se desenfocan con 9 muestras en cruz y radio `(1 - abs(2p - 1)) * 6` px (máximo en la mitad) y se
     mezclan con `p`.
 
-- [ ] **Step 1: Tests que fallan** con el patrón de los tests de `transition.rs`: para `scale` y `blur`, con `p = 0` el
+- [x] **Step 1: Tests que fallan** con el patrón de los tests de `transition.rs`: para `scale` y `blur`, con `p = 0` el
   centro es el color de la imagen vieja y con `p = 1` el de la nueva; `from_str("scale")` y `from_str("blur")` dan
   los tipos nuevos.
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar.**
-- [ ] **Step 4:** chequeos en verde.
-- [ ] **Step 5:** commit `F23.21: transiciones de escala y desenfoque en el engine`.
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar.**
+- [x] **Step 4:** chequeos en verde.
+- [x] **Step 5:** commit `F23.21: transiciones de escala y desenfoque en el engine`.
 
 ---
 

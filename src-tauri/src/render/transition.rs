@@ -10,7 +10,7 @@
 //! El corte (`None` o duración 0) no copia ni anima: `progress` es 1 desde el inicio y
 //! el shader muestra directamente `texture_b`.
 //!
-//! - Efectos en GPU: crossfade, dip to black, wipe y push.
+//! - Efectos en GPU: crossfade, dip to black, wipe, push, scale y blur.
 //! - Curvas de aceleración (easing) computadas directamente en hardware.
 
 use std::time::{Duration, Instant};
@@ -35,6 +35,8 @@ pub enum TransitionType {
     WipeRight = 4,
     PushLeft = 5,
     PushRight = 6,
+    Scale = 7,
+    Blur = 8,
 }
 
 impl TransitionType {
@@ -47,6 +49,8 @@ impl TransitionType {
             "wiperight" | "wipe_right" | "wipe" => Self::WipeRight,
             "pushleft" | "push_left" => Self::PushLeft,
             "pushright" | "push_right" | "push" => Self::PushRight,
+            "scale" => Self::Scale,
+            "blur" => Self::Blur,
             _ => Self::None,
         }
     }
@@ -450,6 +454,19 @@ mod tests {
         easing: EasingType,
         progress: f32,
     ) -> [u8; 4] {
+        composite_pixel(device, queue, engine, trans_type, easing, progress, (SIZE / 2, SIZE / 2))
+    }
+
+    /// Igual que `composite_center` pero lee el píxel `(x, y)`.
+    fn composite_pixel(
+        device: &Device,
+        queue: &Queue,
+        engine: &mut TransitionEngine,
+        trans_type: TransitionType,
+        easing: EasingType,
+        progress: f32,
+        (x, y): (u32, u32),
+    ) -> [u8; 4] {
         engine.active_transition.transition_type = trans_type;
         engine.active_transition.easing = easing;
 
@@ -526,7 +543,7 @@ mod tests {
         rx.recv().expect("mapeo listo").expect("mapeo ok");
 
         let mapped = slice.get_mapped_range().expect("rango mapeado");
-        let center = ((SIZE / 2) * bytes_per_row + (SIZE / 2) * 4) as usize;
+        let center = (y * bytes_per_row + x * 4) as usize;
         let pixel = [mapped[center], mapped[center + 1], mapped[center + 2], mapped[center + 3]];
         drop(mapped);
         buffer.unmap();
@@ -586,6 +603,43 @@ mod tests {
                 && (i32::from(middle[2]) - 128).abs() <= 10,
             "el crossfade al 50% debe mezclar los dos buffers: {middle:?}"
         );
+    }
+
+    #[test]
+    fn from_str_reconoce_scale_y_blur() {
+        assert_eq!(TransitionType::from_str("scale"), TransitionType::Scale);
+        assert_eq!(TransitionType::from_str("blur"), TransitionType::Blur);
+    }
+
+    #[test]
+    fn scale_y_blur_empiezan_en_la_vieja_y_terminan_en_la_nueva() {
+        let (device, queue, mut engine) = solid();
+        fill(&queue, &engine.texture_a, [255, 0, 0, 255]);
+        fill(&queue, &engine.texture_b, [0, 0, 255, 255]);
+
+        for kind in [TransitionType::Scale, TransitionType::Blur] {
+            let mut at = |progress: f32| {
+                composite_center(&device, &queue, &mut engine, kind, EasingType::Linear, progress)
+            };
+            assert_near(at(0.0), [255, 0, 0, 255], "progreso 0 = vieja");
+            assert_near(at(1.0), [0, 0, 255, 255], "progreso 1 = nueva");
+        }
+    }
+
+    #[test]
+    fn scale_fuera_del_area_escalada_se_ve_la_vieja() {
+        let (device, queue, mut engine) = solid();
+        fill(&queue, &engine.texture_a, [255, 0, 0, 255]);
+        fill(&queue, &engine.texture_b, [0, 0, 255, 255]);
+
+        // Con p = 0.5 la nueva ocupa 96 %: el píxel del borde (0, 32) queda fuera.
+        let edge = composite_pixel(
+            &device, &queue, &mut engine, TransitionType::Scale, EasingType::Linear, 0.5, (0, SIZE / 2),
+        );
+        assert_near(edge, [255, 0, 0, 255], "borde fuera del área escalada = vieja");
+        // El centro sí mezcla ambas.
+        let middle = composite_center(&device, &queue, &mut engine, TransitionType::Scale, EasingType::Linear, 0.5);
+        assert!(middle[0] > 100 && middle[2] > 100, "el centro mezcla: {middle:?}");
     }
 
     #[test]

@@ -148,7 +148,9 @@ impl SceneTransition {
         match self.transition_type.to_lowercase().as_str() {
             "none" => "none",
             "slide" | "fly" => "pushLeft",
-            // fade, crossfade, blur, scale, spin... se aproximan con crossfade
+            "scale" => "scale",
+            "blur" => "blur",
+            // fade, crossfade, spin... se aproximan con crossfade
             _ => "crossfade",
         }
     }

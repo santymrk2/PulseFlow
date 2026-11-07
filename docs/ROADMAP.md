@@ -1763,7 +1763,7 @@ Plan: docs/superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md
 - [x] **F23.18** Espaciado entre letras, subrayado y tachado.
 - [ ] **F23.19** El stage usa los layouts del usuario.
 - [ ] **F23.20** Video dentro de una slide.
-- [ ] **F23.21** Transiciones `scale` y `blur`.
+- [x] **F23.21** Transiciones `scale` y `blur`.
 - [ ] **F23.22** Las funciones no disponibles lo dicen.
 - [ ] **F23.23** Los errores no salen de la máquina del usuario.
 - [ ] **F23.24** Guía única de prueba en hardware (agente).
@@ -1848,6 +1848,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - Clientes web de control remoto.
 - Color de fondo del stage.
 - Autoajuste de texto medido por el engine.
+- Transición `spin` en el engine (hoy cae a crossfade).
 - Lógica de negocio dentro de `commands/` (viola `AGENTS.md`; `files.rs` tiene 1081 líneas).
 - En macOS, "Salir" desde el Dock termina la app sin pasar por el guardado (tao 0.37 no implementa `applicationShouldTerminate`); al salir sí se cierran las salidas y los ffmpeg (`RunEvent::Exit`).
 - WEBSOCKET_START ignora password y nadie escucha SERVER_MESSAGE. Al revivir los clientes web o Companion: autenticar en Rust antes de emitir (F23.9).
