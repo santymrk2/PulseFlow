@@ -653,7 +653,7 @@ describe("evaluateArithmetic", () => {
 **Interfaces:**
 - Consume: F23.11 (sin `new Function` no hace falta `unsafe-eval`).
 
-- [ ] **Step 1:** reemplazar `"csp": null` por la política de abajo. `devCsp` es igual, salvo `connect-src`, que
+- [x] **Step 1:** reemplazar `"csp": null` por la política de abajo. `devCsp` es igual, salvo `connect-src`, que
   suma `ws://127.0.0.1:1420 ws://localhost:1420` para la recarga de Vite (el `devUrl` es `http://127.0.0.1:1420`).
 
   ```json
@@ -681,7 +681,7 @@ describe("evaluateArithmetic", () => {
   `script-src`.
 - [ ] **Step 3:** `bun run build`, abrir el build de release y repetir 2 o 3 puntos del Step 2 (en release el origen
   cambia).
-- [ ] **Step 4:** commit `F23.12: la app declara una Content Security Policy`.
+- [x] **Step 4:** commit `F23.12: la app declara una Content Security Policy`.
 
 ---
 
