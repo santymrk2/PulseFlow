@@ -352,13 +352,13 @@ Implementación (legado `export let` a propósito, para padres en modo legado):
 <div bind:this={host} style="display: contents"></div>
 ```
 
-- [ ] **Step 1: Test que falla** (`// @vitest-environment happy-dom`; `globalThis.IS_REACT_ACT_ENVIRONMENT = true`):
+- [x] **Step 1: Test que falla** (`// @vitest-environment happy-dom`; `globalThis.IS_REACT_ACT_ENVIRONMENT = true`):
   montar con `mount` de `svelte` sobre un `div`, dentro de `act` de `react`, un componente React
   `Saludo({ nombre })` que además marca una variable al desmontarse (`useEffect` con limpieza). Verificar
   `"Hola Ana"`. `unmount` de Svelte y esperar un microtask (`await act(async () => {})`) → la limpieza corrió.
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar.**
-- [ ] **Step 4:** chequeos verdes (svelte-check no sube). Commit `F24.3: islas React dentro de Svelte`.
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar.**
+- [x] **Step 4:** chequeos verdes (svelte-check no sube). Commit `F24.3: islas React dentro de Svelte`.
 
 ---
 

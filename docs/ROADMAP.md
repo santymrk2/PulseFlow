@@ -1777,7 +1777,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 
 - [ ] **F24.1** Base de React en el proyecto.
 - [x] **F24.2** `useStore` y el kit de stores para tests.
-- [ ] **F24.3** `ReactIsland`, React dentro de Svelte.
+- [x] **F24.3** `ReactIsland`, React dentro de Svelte.
 - [ ] **F24.4** `SvelteIsland`, Svelte dentro de React.
 - [ ] **F24.5** Traducción e íconos en React.
 - [ ] **F24.6** Kit en React: base (`button`, `input`, `link`, `h-rule`, `title`, `section-header`, `capsule`, `list-row`).
