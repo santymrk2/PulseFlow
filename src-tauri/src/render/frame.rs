@@ -41,10 +41,25 @@ impl Rect {
         Self { x: 0, y: 0, width: width.max(1), height: height.max(1) }
     }
 
-    /// Limita el dibujo de `pass` a este rectángulo (viewport + scissor).
-    pub fn apply_to(&self, pass: &mut wgpu::RenderPass<'_>) {
-        pass.set_viewport(self.x as f32, self.y as f32, self.width as f32, self.height as f32, 0.0, 1.0);
-        pass.set_scissor_rect(self.x, self.y, self.width, self.height);
+    /// Intersección con un destino de `target_width × target_height`; `None` si queda vacía.
+    pub fn clamped(&self, target_width: u32, target_height: u32) -> Option<Rect> {
+        let x = self.x.min(target_width);
+        let y = self.y.min(target_height);
+        let right = self.x.saturating_add(self.width).min(target_width);
+        let bottom = self.y.saturating_add(self.height).min(target_height);
+        let (width, height) = (right - x, bottom - y);
+        (width > 0 && height > 0).then_some(Rect { x, y, width, height })
+    }
+
+    /// Limita el dibujo de `pass` a este rectángulo recortado al destino (viewport + scissor).
+    /// Devuelve `false` si no queda área: el llamador no dibuja esa capa (wgpu valida que quepa).
+    pub fn apply_to(&self, pass: &mut wgpu::RenderPass<'_>, target_width: u32, target_height: u32) -> bool {
+        let Some(r) = self.clamped(target_width, target_height) else {
+            return false;
+        };
+        pass.set_viewport(r.x as f32, r.y as f32, r.width as f32, r.height as f32, 0.0, 1.0);
+        pass.set_scissor_rect(r.x, r.y, r.width, r.height);
+        true
     }
 }
 
@@ -137,5 +152,17 @@ mod tests {
         assert_eq!(known, ContentAlign::End);
         let unknown: ContentAlign = serde_json::from_str("\"diagonal\"").expect("desconocido");
         assert_eq!(unknown, ContentAlign::Center);
+    }
+
+    #[test]
+    fn clamped_recorta_lo_que_sale_del_destino() {
+        let r = Rect { x: 100, y: 50, width: 300, height: 200 };
+        assert_eq!(r.clamped(320, 180), Some(Rect { x: 100, y: 50, width: 220, height: 130 }));
+    }
+
+    #[test]
+    fn clamped_devuelve_none_si_queda_afuera_o_vacio() {
+        assert_eq!(Rect { x: 400, y: 0, width: 10, height: 10 }.clamped(320, 180), None);
+        assert_eq!(Rect { x: 0, y: 0, width: 0, height: 10 }.clamped(320, 180), None);
     }
 }

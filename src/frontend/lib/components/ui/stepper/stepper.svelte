@@ -3,6 +3,7 @@
     import Icon from "../../../../components/helpers/Icon.svelte"
     import Button from "../button/button.svelte"
     import Input from "../input/input.svelte"
+    import { evaluateArithmetic } from "../../../../utils/safeMath"
 
     export let value: number
     export let title = ""
@@ -24,12 +25,8 @@
     const decrement = (customStep: number = step) => dispatch("change", Math.max(Number(value) - customStep, min).toFixed(decimals))
 
     const input = (e: any) => {
-        let inputValue = e.target.value || 0
-        try {
-            inputValue = new Function(`return ${inputValue}`)() // calculate without eval()
-        } catch (err) {
-            inputValue = value
-        }
+        // calculate without eval(); una expresión inválida vuelve al valor anterior
+        const inputValue = evaluateArithmetic(String(e.target.value || 0)) ?? value
 
         let newVaule = Math.max(Math.min(inputValue, max * inputMultiplier), min * inputMultiplier) / inputMultiplier
         dispatch("change", newVaule !== null ? newVaule.toFixed(decimals) : value)

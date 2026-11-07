@@ -3,6 +3,7 @@
 use crate::domain::data::store::StoreManager;
 use serde_json::Value;
 use std::sync::Mutex;
+use std::time::Instant;
 
 /// Estado de los servidores internos (REST/websocket) y de la sincronización.
 #[derive(Debug)]
@@ -34,6 +35,8 @@ pub struct AppState {
     pub servers: Mutex<ServerState>,
     /// Configuración/estado activo del timecode LTC/MTC.
     pub timecode: Mutex<Value>,
+    /// Último pedido de cierre enviado al frontend (F23.8).
+    pub close_requested_at: Mutex<Option<Instant>>,
 }
 
 impl AppState {
@@ -42,6 +45,7 @@ impl AppState {
             stores: Mutex::new(stores),
             servers: Mutex::new(ServerState::default()),
             timecode: Mutex::new(Value::Null),
+            close_requested_at: Mutex::new(None),
         }
     }
 }

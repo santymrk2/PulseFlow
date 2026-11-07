@@ -18,7 +18,7 @@
 //! la UI); en cualquier otro monitor cubre la pantalla completa.
 
 use super::sync::MutexExt;
-use super::text::TextEngine;
+use super::text::{TextEngine, TextLayer};
 use super::types::{BackgroundMedia, MediaItem, OverlayItem, StageData, TextBlock};
 use super::video::{self, VideoDecoder};
 use crate::error::{AppError, AppResult};

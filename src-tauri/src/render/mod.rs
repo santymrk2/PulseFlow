@@ -11,6 +11,7 @@
 pub mod clock;
 pub mod frame;
 pub mod gpu;
+pub mod guard;
 pub mod media;
 pub mod scene;
 pub mod screens;

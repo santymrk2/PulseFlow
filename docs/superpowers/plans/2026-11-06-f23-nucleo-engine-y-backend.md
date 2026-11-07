@@ -188,7 +188,7 @@ autoajuste de texto medido por el engine · lógica de negocio dentro de `comman
   y devuelve `false`.
 - Produce: `GpuContext::uncaptured_errors(&self) -> u64` (contador `Arc<AtomicU64>` dentro de `GpuContext`).
 
-- [ ] **Step 1: Tests que fallan** (en `guard.rs` y en `gpu.rs`):
+- [x] **Step 1: Tests que fallan** (en `guard.rs` y en `gpu.rs`):
 
 ```rust
 // guard.rs
@@ -228,18 +228,18 @@ fn un_error_de_validacion_no_panica_y_se_cuenta() {
 }
 ```
 
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::guard render::gpu`. Expected: FAIL (no existen
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::guard render::gpu`. Expected: FAIL (no existen
   `guard`, `uncaptured_errors`; el test de GPU **panica** con "wgpu error").
-- [ ] **Step 3: Implementar.**
+- [x] **Step 3: Implementar.**
   - `gpu.rs`: `device.on_uncaptured_error(Arc::new(move |err: wgpu::Error| { let n = counter.fetch_add(1, SeqCst) + 1; if guard::should_log(n) { log::error!("[gpu] error no capturado #{n}: {err}"); } }))`.
     La firma en wgpu 30 es `on_uncaptured_error(&self, handler: Arc<dyn UncapturedErrorHandler>)` (`wgpu-30.0.1/src/api/device.rs:506`).
   - `Cargo.toml`: `panic = "unwind"`. Así `catch_unwind` funciona en release (también el de `workers.rs`).
   - `render_loop.rs`: todo el cuerpo del `spawn(move || { … })` pasa a `run_guarded(&label, || { … })`. Si devuelve
     `false`, se llama a la misma función `close()` que usa la ✕ (l.~118): la ventana se cierra, `Destroyed` emite
     `OUTPUT_STATE` y el operador ve la salida apagada y la puede reabrir.
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib && cargo clippy --all-targets -- -D warnings`. Expected: 180
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib && cargo clippy --all-targets -- -D warnings`. Expected: 180
   tests ok.
-- [ ] **Step 5:** commit `F23.3: los errores de GPU y los pánicos del render no cierran la app`.
+- [x] **Step 5:** commit `F23.3: los errores de GPU y los pánicos del render no cierran la app`.
 
 ---
 
@@ -262,7 +262,7 @@ Por qué: glyphon escribe los vértices de un `TextRenderer` con `queue.write_bu
 hacen que los dos draws usen los datos del último, y si el último es más grande, `vertex_buffer.destroy()` invalida
 el primer draw.
 
-- [ ] **Step 1: Test que falla.** `capas_de_texto_no_se_pisan`: con `gpu::shared()`, una textura offscreen de
+- [x] **Step 1: Test que falla.** `capas_de_texto_no_se_pisan`: con `gpu::shared()`, una textura offscreen de
   320×180 (`Rgba8UnormSrgb`, `RENDER_ATTACHMENT | COPY_SRC`) y **un** render pass:
   - capa `Slide`: bloque "A" de 60 px, blanco, en x 10..60, y 10..80;
   - capa `Overlay`: bloque "OVERLAY LARGO" de 40 px, rojo, en x 10..310, y 110..170.
@@ -271,14 +271,14 @@ el primer draw.
   con R, G, B > 200) y en la del overlay píxeles rojos (R > 200, G < 80). Además,
   `gpu.uncaptured_errors()` no cambió. Hasta que exista la API con `layer`, el test se escribe llamando dos veces a la
   `render` actual: tiene que fallar (o faltan los blancos o sube el contador).
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::text::tests::capas_de_texto_no_se_pisan`. Expected: FAIL.
-- [ ] **Step 3: Implementar.** Crear los 4 `TextRenderer` en `TextEngine::new` y, en `render`, usar
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::text::tests::capas_de_texto_no_se_pisan`. Expected: FAIL.
+- [x] **Step 3: Implementar.** Crear los 4 `TextRenderer` en `TextEngine::new` y, en `render`, usar
   `self.renderers[layer as usize]`. Asignación en `render_loop.rs`: l.271 → `Slide`, l.308 → `Overlay`,
   l.327 → `Previous`, l.372 → `Chrome`. En `snapshot.rs`, un solo `TextEngine`, con `Slide` y `Overlay`.
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: todo verde, **goldens incluidos sin regenerar**.
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: todo verde, **goldens incluidos sin regenerar**.
 - [ ] **Step 5: En la app:** un show con texto corto ("Amén") y un overlay con texto largo encendido; pasar el mouse
   sobre la pantalla de salida para que aparezca la ✕. Expected: se ven los tres textos y la app no se cierra.
-- [ ] **Step 6:** commit `F23.4: cada capa de texto tiene su renderer y no se pisan`.
+- [x] **Step 6:** commit `F23.4: cada capa de texto tiene su renderer y no se pisan`.
 
 ---
 
@@ -291,17 +291,17 @@ el primer draw.
 - Consume: `guard::should_log` (F23.3), `TextLayer` (F23.4).
 - Produce: `pub fn end_frame(&mut self)` en `TextEngine`, que llama a `self.atlas.trim()` (`glyphon-0.12/src/text_atlas.rs:334`).
 
-- [ ] **Step 1: Test que falla.** `muchos_tamanos_no_llenan_el_atlas`: con `gpu::shared()` y la misma textura
+- [x] **Step 1: Test que falla.** `muchos_tamanos_no_llenan_el_atlas`: con `gpu::shared()` y la misma textura
   offscreen de F23.4, 200 iteraciones (un pass y un `submit` por iteración) con un texto distinto
   (`format!("Texto {i}")`) a un tamaño distinto (`8.0 + i as f32 * 1.5`), llamando a `end_frame()` después de cada
   submit. Todas las llamadas a `render` devuelven `Ok`. Antes de implementar falla porque `end_frame` no existe.
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::text::tests::muchos_tamanos_no_llenan_el_atlas`.
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::text::tests::muchos_tamanos_no_llenan_el_atlas`.
   Expected: FAIL al compilar.
-- [ ] **Step 3: Implementar** `end_frame`. En `render_loop.rs`, llamarla después de `queue.present(frame)`. Cambiar
+- [x] **Step 3: Implementar** `end_frame`. En `render_loop.rs`, llamarla después de `queue.present(frame)`. Cambiar
   cada `let _ = text_engine.render(…)` por un `if let Err(err) = … { text_errors += 1; if should_log(text_errors) { log::error!("[render] texto ({layer:?}) en {label}: {err}"); } }`,
   con `text_errors: u64` local del hilo.
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
-- [ ] **Step 5:** commit `F23.5: el atlas de texto se recorta cada frame y los errores de texto quedan en el log`.
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
+- [x] **Step 5:** commit `F23.5: el atlas de texto se recorta cada frame y los errores de texto quedan en el log`.
 
 ---
 
@@ -314,7 +314,7 @@ el primer draw.
 - Produce: `pub fn apply_to(&self, pass: &mut wgpu::RenderPass<'_>, target_width: u32, target_height: u32) -> bool`:
   aplica el rect recortado y devuelve `false` si quedó vacío (el llamador no dibuja esa capa).
 
-- [ ] **Step 1: Tests que fallan** en `frame.rs`:
+- [x] **Step 1: Tests que fallan** en `frame.rs`:
 
 ```rust
 #[test]
@@ -331,11 +331,11 @@ fn clamped_devuelve_none_si_queda_afuera_o_vacio() {
 ```
 
   Si `Rect` no deriva `PartialEq` y `Debug`, agregarlos.
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::frame`. Expected: FAIL.
-- [ ] **Step 3: Implementar** y actualizar los llamadores pasando el tamaño del destino (`config.width/height` en el
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::frame`. Expected: FAIL.
+- [x] **Step 3: Implementar** y actualizar los llamadores pasando el tamaño del destino (`config.width/height` en el
   loop, el de la textura en `snapshot.rs`).
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde, goldens iguales.
-- [ ] **Step 5:** commit `F23.6: viewport y scissor se recortan al destino`.
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde, goldens iguales.
+- [x] **Step 5:** commit `F23.6: viewport y scissor se recortan al destino`.
 
 ---
 
@@ -356,15 +356,15 @@ fn clamped_devuelve_none_si_queda_afuera_o_vacio() {
   la más usada, las entradas con `Arc::strong_count == 1` (nadie más las tiene) hasta quedar dentro del presupuesto.
   Las que están en uso no se tocan, aunque el total quede por encima.
 
-- [ ] **Step 1: Tests que fallan** en `media.rs`, con el estilo de los tests existentes (`wait_until_settled`, l.875):
+- [x] **Step 1: Tests que fallan** en `media.rs`, con el estilo de los tests existentes (`wait_until_settled`, l.875):
   - `imagen_grande_se_reduce_a_4096`: PNG de 6000×10 en una carpeta temporal → `Ready` con textura de 4096×7.
   - `presupuesto_expulsa_la_menos_usada`: `with_image_budget(gpu, 40 * 1024)`; cargar A, B y C de 64×64 (16 KiB cada
     una, sin guardar los `Arc`). A ya no está en `get`; B y C sí. Pedir A de nuevo hace subir `decodes()` en 1.
   - `no_expulsa_texturas_en_uso`: igual, pero guardando el `Arc` de A. Se expulsa B y A sigue.
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::media`. Expected: FAIL.
-- [ ] **Step 3: Implementar.**
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
-- [ ] **Step 5:** commit `F23.7: las imágenes se reducen a 4096 px y las texturas tienen presupuesto de memoria`.
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::media`. Expected: FAIL.
+- [x] **Step 3: Implementar.**
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
+- [x] **Step 5:** commit `F23.7: las imágenes se reducen a 4096 px y las texturas tienen presupuesto de memoria`.
 
 ---
 
@@ -399,7 +399,7 @@ Flujo:
   Recibe `app: AppHandle` en vez de `WebviewWindow`.
 - Las ventanas de salida (etiquetas distintas de `main`) no se interceptan.
 
-- [ ] **Step 1: Tests que fallan** en `app_close.rs`:
+- [x] **Step 1: Tests que fallan** en `app_close.rs`:
 
 ```rust
 #[test]
@@ -428,9 +428,9 @@ fn solo_la_ventana_principal() {
 }
 ```
 
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib app_close`. Expected: FAIL.
-- [ ] **Step 3: Implementar** el flujo de arriba.
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib && cargo clippy --all-targets -- -D warnings`. Expected: verde.
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib app_close`. Expected: FAIL.
+- [x] **Step 3: Implementar** el flujo de arriba.
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib && cargo clippy --all-targets -- -D warnings`. Expected: verde.
 - [ ] **Step 5: En la app (macOS):** renombrar un show y cerrar **enseguida** con el botón rojo. Reabrir: el nombre
   nuevo está. Repetir con "Salir" del Dock. Con una salida de video abierta, después de cerrar,
   `pgrep -l ffmpeg` no muestra procesos.
@@ -438,7 +438,7 @@ fn solo_la_ventana_principal() {
   rojo: aparece el popup; "Cancelar" deja la app abierta.
 - [ ] **Step 7 (usuario, Windows):** repetir el Step 5 con la ✕ de la ventana; en el Administrador de tareas no queda
   ningún `ffmpeg.exe`.
-- [ ] **Step 8:** commit `F23.8: cerrar la ventana o salir pasa por el guardado`.
+- [x] **Step 8:** commit `F23.8: cerrar la ventana o salir pasa por el guardado`.
 
 ---
 
@@ -454,7 +454,7 @@ l.158-181, `api_data` l.238-240; nuevo `#[cfg(test)] mod tests` al final, hoy no
 - Produce: `fn room_static_dir(roots: &[PathBuf], room: &str) -> Option<PathBuf>`.
 - Produce: `fn public_room_data(data: &Value) -> Value`.
 
-- [ ] **Step 1: Tests que fallan:**
+- [x] **Step 1: Tests que fallan:**
 
 ```rust
 #[cfg(test)]
@@ -494,8 +494,8 @@ mod tests {
 }
 ```
 
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib server::tests`. Expected: FAIL.
-- [ ] **Step 3: Implementar.**
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib server::tests`. Expected: FAIL.
+- [x] **Step 3: Implementar.**
   - `is_disabled` → `Some(true)`, y corregir el comentario.
   - `static_root` pasa a `static_roots` (sin los fallbacks a `build/`, a `public/` pelado ni a la raíz) más
     `room_static_dir`, que prueba `<root>/public/<room>` y después `<root>/<room>`, y acepta sólo carpetas con
@@ -504,13 +504,13 @@ mod tests {
     y `continue`.
   - `api_data` → `Json(public_room_data(&shared.data))` (quita `password` del primer nivel).
   - `WEBSOCKET_START` pasa por `start` y hereda la regla.
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
 - [ ] **Step 5: En la app:** con la app abierta, Run: `lsof -nP -iTCP -sTCP:LISTEN | rg ":551[0-3]"` (macOS) o
   `netstat -ano | findstr ":551"` (Windows). Expected: nada escuchando. En `pulseflow.log`, dos líneas
   `[server] remote: sin cliente web…` y `[server] stage: …`.
-- [ ] **Step 6:** en "Deuda registrada":
+- [x] **Step 6:** en "Deuda registrada":
   `- WEBSOCKET_START ignora password y nadie escucha SERVER_MESSAGE. Al revivir los clientes web o Companion: autenticar en Rust antes de emitir (F23.9).`
-- [ ] **Step 7:** commit `F23.9: los servidores respetan deshabilitado y no abren puertos sin cliente web`.
+- [x] **Step 7:** commit `F23.9: los servidores respetan deshabilitado y no abren puertos sin cliente web`.
 
 ---
 
@@ -529,7 +529,7 @@ mod tests {
   `export const VERSE_TOKEN_TYPE = { TEXT: "text", TAG: "tag" } as const` (patrón de constantes de
   `AGENTS.md`/TypeScript).
 
-- [ ] **Step 1: Test que falla:**
+- [x] **Step 1: Test que falla:**
 
 ```ts
 import { describe, expect, it } from "vitest"
@@ -563,9 +563,9 @@ describe("sanitizeVerseText", () => {
 })
 ```
 
-- [ ] **Step 2:** Run: `bunx vitest run --config config/testing/vitest.config.mts src/frontend/components/drawer/bible/verseHtml.test.ts`.
+- [x] **Step 2:** Run: `bunx vitest run --config config/testing/vitest.config.mts src/frontend/components/drawer/bible/verseHtml.test.ts`.
   Expected: FAIL.
-- [ ] **Step 3: Implementar.**
+- [x] **Step 3: Implementar.**
   - `tokenizeHtml`: como la actual, pero con la regex `/<\/?[a-z][^>]*>/gi`: sólo es etiqueta lo que empieza con letra.
   - `sanitizeVerseText`: primero las transformaciones de hoy, en el mismo orden (`<br>` → espacio, ` ` →
     espacio, `<q>` → comillas, `<h4>` → `<span class="undertitle">`, espacios múltiples → uno). Después recorre los
@@ -578,11 +578,11 @@ describe("sanitizeVerseText", () => {
     - al final, `trim()`.
   - Si una biblia real pierde un formato legítimo, se agrega **su etiqueta exacta** a la lista, con su caso en el
     test. Nunca un comodín.
-- [ ] **Step 4:** Run: `bun run test:unit && bun run test:svelte && bun run test:budget` y prettier sobre los 3 archivos.
+- [x] **Step 4:** Run: `bun run test:unit && bun run test:svelte && bun run test:budget` y prettier sobre los 3 archivos.
   Expected: 207 tests; svelte-check ≤ 40.
 - [ ] **Step 5: En la app:** Scripture con una biblia con palabras en rojo → el rojo se ve; crear una slide desde un
   versículo → el texto está. Si no hay una biblia así, anotarlo en el commit.
-- [ ] **Step 6:** commit `F23.10: el texto bíblico sólo deja pasar etiquetas conocidas`.
+- [x] **Step 6:** commit `F23.10: el texto bíblico sólo deja pasar etiquetas conocidas`.
 
 ---
 
@@ -597,7 +597,7 @@ describe("sanitizeVerseText", () => {
 **Interfaces:**
 - Produce: `export function evaluateArithmetic(expression: string): number | null`
 
-- [ ] **Step 1: Test que falla:**
+- [x] **Step 1: Test que falla:**
 
 ```ts
 import { describe, expect, it } from "vitest"
@@ -623,9 +623,9 @@ describe("evaluateArithmetic", () => {
 })
 ```
 
-- [ ] **Step 2:** Run: `bunx vitest run --config config/testing/vitest.config.mts src/frontend/utils/safeMath.test.ts`.
+- [x] **Step 2:** Run: `bunx vitest run --config config/testing/vitest.config.mts src/frontend/utils/safeMath.test.ts`.
   Expected: FAIL.
-- [ ] **Step 3: Implementar** por descenso recursivo. Los espacios entre tokens se ignoran; cualquier otro carácter,
+- [x] **Step 3: Implementar** por descenso recursivo. Los espacios entre tokens se ignoran; cualquier otro carácter,
   entrada sobrante o resultado no finito devuelve `null`:
 
   ```
@@ -635,14 +635,14 @@ describe("evaluateArithmetic", () => {
   number := digits ("." digits)? | "." digits
   ```
 
-- [ ] **Step 4:** en los 4 lugares, `new Function(`return ${x}`)()` → `evaluateArithmetic(String(x))`. **Regla:** el
+- [x] **Step 4:** en los 4 lugares, `new Function(`return ${x}`)()` → `evaluateArithmetic(String(x))`. **Regla:** el
   `null` sigue exactamente el camino que hoy sigue el `catch` (o el valor inválido) de ese lugar: leer cada
   `try/catch` antes de cambiarlo. Borrar los `// eslint-disable-next-line` que queden sin uso.
-- [ ] **Step 5:** Run: `rg -n "new Function\(" src/frontend`. Expected: nada. Correr los chequeos JS y prettier sobre
+- [x] **Step 5:** Run: `rg -n "new Function\(" src/frontend`. Expected: nada. Correr los chequeos JS y prettier sobre
   los 6 archivos.
 - [ ] **Step 6: En la app:** en un campo numérico con stepper, `1920/2` + Enter → `960`; `abc` → vuelve al valor
   anterior.
-- [ ] **Step 7:** commit `F23.11: los cálculos de campos y acciones no ejecutan código`.
+- [x] **Step 7:** commit `F23.11: los cálculos de campos y acciones no ejecutan código`.
 
 ---
 
@@ -653,7 +653,7 @@ describe("evaluateArithmetic", () => {
 **Interfaces:**
 - Consume: F23.11 (sin `new Function` no hace falta `unsafe-eval`).
 
-- [ ] **Step 1:** reemplazar `"csp": null` por la política de abajo. `devCsp` es igual, salvo `connect-src`, que
+- [x] **Step 1:** reemplazar `"csp": null` por la política de abajo. `devCsp` es igual, salvo `connect-src`, que
   suma `ws://127.0.0.1:1420 ws://localhost:1420` para la recarga de Vite (el `devUrl` es `http://127.0.0.1:1420`).
 
   ```json
@@ -681,7 +681,7 @@ describe("evaluateArithmetic", () => {
   `script-src`.
 - [ ] **Step 3:** `bun run build`, abrir el build de release y repetir 2 o 3 puntos del Step 2 (en release el origen
   cambia).
-- [ ] **Step 4:** commit `F23.12: la app declara una Content Security Policy`.
+- [x] **Step 4:** commit `F23.12: la app declara una Content Security Policy`.
 
 ---
 

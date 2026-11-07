@@ -19,6 +19,7 @@ use crate::error::{AppError, AppResult};
 use std::collections::HashMap;
 use std::num::NonZeroU64;
 use std::path::Path;
+use std::sync::atomic::{AtomicU64, Ordering};
 use std::sync::{Arc, Mutex, RwLock};
 use wgpu::util::DeviceExt;
 use wgpu::{
@@ -45,6 +46,10 @@ pub struct MediaTexture {
     pub view: TextureView,
     pub sampler: Sampler,
     pub bind_group: BindGroup,
+    /// Memoria de video que ocupa (`width * height * 4`).
+    pub bytes: u64,
+    /// Último uso, en ms desde la creación del store (heurística LRU; `Relaxed` alcanza).
+    last_used: AtomicU64,
 }
 
 #[repr(C)]
@@ -190,6 +195,12 @@ pub const MAX_PREFETCH: usize = 64;
 /// Lado máximo (px) de una imagen: más que eso no cabe en una textura y se rechaza sin decodificar.
 const MAX_IMAGE_SIDE: u32 = 16_384;
 
+/// Lado mayor (px) con el que se sube una imagen: más grande se reduce conservando la proporción.
+const MAX_UPLOAD_SIDE: u32 = 4096;
+
+/// Presupuesto de memoria de video para imágenes (1 GiB).
+const DEFAULT_IMAGE_BUDGET: u64 = 1 << 30;
+
 /// Almacén de texturas y pipelines compartido por todas las pantallas.
 pub struct MediaStore {
     /// Contexto GPU vigente: se cambia si el driver pierde el dispositivo (F23.3).
@@ -204,6 +215,10 @@ pub struct MediaStore {
     /// Imágenes pedidas a los workers: cargando o fallidas (las listas salen de `textures`).
     jobs: Mutex<HashMap<String, Job>>,
     retry_after: std::time::Duration,
+    /// Tope de bytes de imágenes en `textures`: lo que pasa se expulsa (las que nadie usa).
+    image_budget: u64,
+    /// Origen del reloj de `MediaTexture::last_used`.
+    started: std::time::Instant,
     /// Decodificaciones iniciadas (sólo tests: comprueba que se pidan una sola vez).
     #[cfg(test)]
     decodes: std::sync::atomic::AtomicUsize,
@@ -217,7 +232,16 @@ impl MediaStore {
         Self::new_with_retry(gpu, FAILED_RETRY_AFTER)
     }
 
+    /// Almacén con un presupuesto de imágenes propio (tests).
+    pub fn with_image_budget(gpu: Arc<GpuContext>, budget_bytes: u64) -> Arc<Self> {
+        Self::build(gpu, FAILED_RETRY_AFTER, budget_bytes)
+    }
+
     pub(crate) fn new_with_retry(gpu: Arc<GpuContext>, retry_after: std::time::Duration) -> Arc<Self> {
+        Self::build(gpu, retry_after, DEFAULT_IMAGE_BUDGET)
+    }
+
+    fn build(gpu: Arc<GpuContext>, retry_after: std::time::Duration, image_budget: u64) -> Arc<Self> {
         let layouts = LayerLayouts::new(&gpu.device);
         Arc::new(Self {
             context: RwLock::new(gpu),
@@ -228,6 +252,8 @@ impl MediaStore {
             nv12_pipelines: Mutex::new(HashMap::new()),
             jobs: Mutex::new(HashMap::new()),
             retry_after,
+            image_budget,
+            started: std::time::Instant::now(),
             #[cfg(test)]
             decodes: std::sync::atomic::AtomicUsize::new(0),
             #[cfg(test)]
@@ -307,7 +333,40 @@ impl MediaStore {
 
     /// Obtiene una textura previamente cargada en VRAM si ya existe.
     pub fn get(&self, id: &str) -> Option<Arc<MediaTexture>> {
-        self.textures.read_safe().get(id).cloned()
+        let texture = self.textures.read_safe().get(id).cloned()?;
+        texture.last_used.store(self.now_ms(), Ordering::Relaxed);
+        Some(texture)
+    }
+
+    fn now_ms(&self) -> u64 {
+        self.started.elapsed().as_millis() as u64
+    }
+
+    /// Expulsa, de la menos a la más usada, las texturas que nadie más tiene hasta entrar en el
+    /// presupuesto. Las que están en uso no se tocan aunque el total quede por encima.
+    ///
+    /// Se hace con el lock de escritura de `textures` tomado: `get` necesita el de lectura para
+    /// clonar un `Arc`, así que nadie puede clonar uno entre el `strong_count == 1` y el `remove`.
+    fn evict_to_budget(&self) {
+        let mut textures = self.textures.write_safe();
+        let mut total: u64 = textures.values().map(|t| t.bytes).sum();
+        if total <= self.image_budget {
+            return;
+        }
+        let mut idle: Vec<(u64, String)> = textures
+            .iter()
+            .filter(|(_, t)| Arc::strong_count(t) == 1)
+            .map(|(key, t)| (t.last_used.load(Ordering::Relaxed), key.clone()))
+            .collect();
+        idle.sort();
+        for (_, key) in idle {
+            if total <= self.image_budget {
+                break;
+            }
+            if let Some(texture) = textures.remove(&key) {
+                total -= texture.bytes;
+            }
+        }
     }
 
     /// Carga una imagen estática desde disco a VRAM o reutiliza la existente.
@@ -408,9 +467,16 @@ impl MediaStore {
             return Err(AppError::new(format!("Imagen '{}' demasiado grande ({width}x{height}): el máximo es {MAX_IMAGE_SIDE} px por lado", path.display())));
         }
 
-        let rgba = image::open(path).map_err(|e| open_error(&e))?.to_rgba8();
+        let mut rgba = image::open(path).map_err(|e| open_error(&e))?.to_rgba8();
+        let (width, height) = rgba.dimensions();
+        if width.max(height) > MAX_UPLOAD_SIDE {
+            let scale = f64::from(MAX_UPLOAD_SIDE) / f64::from(width.max(height));
+            let scaled = |side: u32| ((f64::from(side) * scale).round() as u32).clamp(1, MAX_UPLOAD_SIDE);
+            rgba = image::imageops::resize(&rgba, scaled(width), scaled(height), image::imageops::FilterType::Triangle);
+        }
         let (width, height) = rgba.dimensions();
         self.insert_rgba(key, width, height, &rgba.into_raw())?;
+        self.evict_to_budget();
         Ok(())
     }
 
@@ -478,6 +544,7 @@ impl MediaStore {
             height,
             rgba,
         ));
+        media.last_used.store(self.now_ms(), Ordering::Relaxed);
         let mut textures = self.textures.write_safe();
         Ok(Arc::clone(textures.entry(id.to_string()).or_insert(media)))
     }
@@ -712,6 +779,8 @@ fn create_texture_from_rgba(
         view,
         sampler,
         bind_group,
+        bytes: u64::from(width) * u64::from(height) * 4,
+        last_used: AtomicU64::new(0),
     }
 }
 
@@ -939,5 +1008,52 @@ mod tests {
         std::thread::sleep(std::time::Duration::from_millis(120));
         assert!(matches!(wait_until_settled(&store, &path), MediaState::Ready(_)));
         assert_eq!(store.decodes(), 2);
+    }
+
+    // --- F23.7: tamaño máximo y presupuesto de memoria ---
+
+    fn ready(state: MediaState) -> Arc<MediaTexture> {
+        match state {
+            MediaState::Ready(texture) => texture,
+            _ => panic!("tenía que quedar Ready"),
+        }
+    }
+
+    #[test]
+    fn imagen_grande_se_reduce_a_4096() {
+        let store = store();
+        let path = noisy_png("panoramica.png", 6000, 10);
+        let texture = ready(wait_until_settled(&store, &path));
+        assert_eq!((texture.width, texture.height), (4096, 7));
+        assert_eq!(texture.bytes, 4096 * 7 * 4);
+    }
+
+    #[test]
+    fn presupuesto_expulsa_la_menos_usada() {
+        let store = MediaStore::with_image_budget(super::super::gpu::shared().expect("GPU disponible"), 40 * 1024);
+        let (a, b, c) = (noisy_png("presu-a.png", 64, 64), noisy_png("presu-b.png", 64, 64), noisy_png("presu-c.png", 64, 64));
+        for path in [&a, &b, &c] {
+            drop(ready(wait_until_settled(&store, path)));
+        }
+        assert!(store.get(&a.to_string_lossy()).is_none(), "A era la menos usada");
+        assert!(store.get(&b.to_string_lossy()).is_some());
+        assert!(store.get(&c.to_string_lossy()).is_some());
+
+        let before = store.decodes();
+        drop(ready(wait_until_settled(&store, &a)));
+        assert_eq!(store.decodes(), before + 1, "A se vuelve a decodificar");
+    }
+
+    #[test]
+    fn no_expulsa_texturas_en_uso() {
+        let store = MediaStore::with_image_budget(super::super::gpu::shared().expect("GPU disponible"), 40 * 1024);
+        let (a, b, c) = (noisy_png("uso-a.png", 64, 64), noisy_png("uso-b.png", 64, 64), noisy_png("uso-c.png", 64, 64));
+        let held = ready(wait_until_settled(&store, &a));
+        drop(ready(wait_until_settled(&store, &b)));
+        drop(ready(wait_until_settled(&store, &c)));
+        assert!(store.get(&a.to_string_lossy()).is_some(), "A está en uso");
+        assert!(store.get(&b.to_string_lossy()).is_none(), "B era la menos usada sin dueño");
+        assert!(store.get(&c.to_string_lossy()).is_some());
+        drop(held);
     }
 }

@@ -61,13 +61,24 @@ impl Default for FontAtlas {
     }
 }
 
+/// Capa de texto dentro de un frame. Cada capa tiene su propio `TextRenderer`: glyphon escribe los
+/// vértices con `write_buffer` en offset 0, así que dos `prepare` del mismo renderer en un frame
+/// se pisan entre sí.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum TextLayer {
+    Slide,
+    Overlay,
+    Previous,
+    Chrome,
+}
+
 /// Pipeline de texto WGPU que renderiza glifos cacheados en VRAM.
 pub struct TextEngine {
     pub font_atlas: FontAtlas,
     pub cache: Cache,
     pub atlas: TextAtlas,
     pub viewport: Viewport,
-    pub text_renderer: TextRenderer,
+    renderers: [TextRenderer; 4],
 }
 
 impl TextEngine {
@@ -76,25 +87,29 @@ impl TextEngine {
         let cache = Cache::new(device);
         let mut atlas = TextAtlas::new(device, queue, &cache, format);
         let viewport = Viewport::new(device, &cache);
-        let text_renderer = TextRenderer::new(
-            &mut atlas,
-            device,
-            MultisampleState::default(),
-            None,
-        );
+        let renderers = std::array::from_fn(|_| {
+            TextRenderer::new(&mut atlas, device, MultisampleState::default(), None)
+        });
 
         Self {
             font_atlas,
             cache,
             atlas,
             viewport,
-            text_renderer,
+            renderers,
         }
     }
 
+    /// Recorta el atlas de glifos: libera los que el frame no usó. Se llama tras presentar cada frame.
+    pub fn end_frame(&mut self) {
+        self.atlas.trim();
+    }
+
     /// Prepara y renderiza los bloques de texto de la escena actual en el render pass.
+    #[allow(clippy::too_many_arguments)] // firma fijada por F23.4
     pub fn render(
         &mut self,
+        layer: TextLayer,
         device: &Device,
         queue: &Queue,
         render_pass: &mut RenderPass<'_>,
@@ -196,7 +211,8 @@ impl TextEngine {
         }
 
         // Preparar text areas en VRAM
-        self.text_renderer
+        let renderer = &mut self.renderers[layer as usize];
+        renderer
             .prepare(
                 device,
                 queue,
@@ -209,7 +225,7 @@ impl TextEngine {
             .map_err(|e| AppError::new(format!("Error preparando texto en GPU: {e:?}")))?;
 
         // Renderizar los glifos con el pipeline de WGPU
-        self.text_renderer
+        renderer
             .render(&self.atlas, &self.viewport, render_pass)
             .map_err(|e| AppError::new(format!("Error renderizando texto en GPU: {e:?}")))?;
 
@@ -302,4 +318,106 @@ fn to_glyphon_color(c: [f32; 4]) -> Color {
     let b = (c[2].clamp(0.0, 1.0) * 255.0).round() as u8;
     let a = (c[3].clamp(0.0, 1.0) * 255.0).round() as u8;
     Color::rgba(r, g, b, a)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::render::{gpu, test_util::read_texture_bytes};
+
+    const FORMAT: TextureFormat = TextureFormat::Rgba8UnormSrgb;
+
+    fn bloque(text: &str, size: f32, color: [f32; 4], x: f32, y: f32, w: f32, h: f32) -> TextBlock {
+        TextBlock { text: text.into(), font_size: size, color, x, y, width: w, height: h, ..TextBlock::default() }
+    }
+
+    fn hay(px: &[u8], (x0, y0, x1, y1): (u32, u32, u32, u32), f: impl Fn(&[u8]) -> bool) -> bool {
+        (y0..y1).any(|y| (x0..x1).any(|x| f(&px[((y * 320 + x) * 4) as usize..][..4])))
+    }
+
+    #[test]
+    fn capas_de_texto_no_se_pisan() {
+        let gpu = gpu::shared().expect("gpu");
+        let errores = gpu.uncaptured_errors();
+        let mut engine = TextEngine::new(&gpu.device, &gpu.queue, FORMAT);
+        let texture = gpu.device.create_texture(&wgpu::TextureDescriptor {
+            label: Some("test capas de texto"),
+            size: wgpu::Extent3d { width: 320, height: 180, depth_or_array_layers: 1 },
+            mip_level_count: 1,
+            sample_count: 1,
+            dimension: wgpu::TextureDimension::D2,
+            format: FORMAT,
+            usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
+            view_formats: &[],
+        });
+        let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
+        let slide = [bloque("A", 60.0, [1.0; 4], 10.0, 10.0, 50.0, 70.0)];
+        let overlay = [bloque("OVERLAY LARGO", 40.0, [1.0, 0.0, 0.0, 1.0], 10.0, 110.0, 300.0, 60.0)];
+
+        let mut encoder = gpu.device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: Some("test capas") });
+        {
+            let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                label: Some("test capas"),
+                color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                    view: &view,
+                    resolve_target: None,
+                    ops: wgpu::Operations { load: wgpu::LoadOp::Clear(wgpu::Color::BLACK), store: wgpu::StoreOp::Store },
+                    depth_slice: None,
+                })],
+                depth_stencil_attachment: None,
+                timestamp_writes: None,
+                occlusion_query_set: None,
+                multiview_mask: None,
+            });
+            engine.render(TextLayer::Slide, &gpu.device, &gpu.queue, &mut pass, 320, 180, &slide).expect("slide");
+            engine.render(TextLayer::Overlay, &gpu.device, &gpu.queue, &mut pass, 320, 180, &overlay).expect("overlay");
+        }
+        gpu.queue.submit([encoder.finish()]);
+
+        let px = read_texture_bytes(&gpu, &texture, 320, 180, 4);
+        assert!(hay(&px, (10, 10, 60, 80), |p| p[0] > 200 && p[1] > 200 && p[2] > 200), "faltan los blancos de la slide");
+        assert!(hay(&px, (10, 110, 310, 170), |p| p[0] > 200 && p[1] < 80), "faltan los rojos del overlay");
+        assert_eq!(gpu.uncaptured_errors(), errores, "errores de validación de wgpu");
+    }
+
+    #[test]
+    fn muchos_tamanos_no_llenan_el_atlas() {
+        let gpu = gpu::shared().expect("gpu");
+        let mut engine = TextEngine::new(&gpu.device, &gpu.queue, FORMAT);
+        let texture = gpu.device.create_texture(&wgpu::TextureDescriptor {
+            label: Some("test atlas"),
+            size: wgpu::Extent3d { width: 320, height: 180, depth_or_array_layers: 1 },
+            mip_level_count: 1,
+            sample_count: 1,
+            dimension: wgpu::TextureDimension::D2,
+            format: FORMAT,
+            usage: wgpu::TextureUsages::RENDER_ATTACHMENT | wgpu::TextureUsages::COPY_SRC,
+            view_formats: &[],
+        });
+        let view = texture.create_view(&wgpu::TextureViewDescriptor::default());
+
+        for i in 0..200 {
+            let blocks = [bloque(&format!("Texto {i}"), 8.0 + i as f32 * 1.5, [1.0; 4], 0.0, 0.0, 320.0, 180.0)];
+            let mut encoder = gpu.device.create_command_encoder(&wgpu::CommandEncoderDescriptor { label: Some("test atlas") });
+            {
+                let mut pass = encoder.begin_render_pass(&wgpu::RenderPassDescriptor {
+                    label: Some("test atlas"),
+                    color_attachments: &[Some(wgpu::RenderPassColorAttachment {
+                        view: &view,
+                        resolve_target: None,
+                        ops: wgpu::Operations { load: wgpu::LoadOp::Clear(wgpu::Color::BLACK), store: wgpu::StoreOp::Store },
+                        depth_slice: None,
+                    })],
+                    depth_stencil_attachment: None,
+                    timestamp_writes: None,
+                    occlusion_query_set: None,
+                    multiview_mask: None,
+                });
+                let r = engine.render(TextLayer::Slide, &gpu.device, &gpu.queue, &mut pass, 320, 180, &blocks);
+                assert!(r.is_ok(), "iteración {i}: {r:?}");
+            }
+            gpu.queue.submit([encoder.finish()]);
+            engine.end_frame();
+        }
+    }
 }

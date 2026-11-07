@@ -1745,11 +1745,11 @@ Plan: docs/superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md
 
 - [x] **F23.1** Registrar los planes y poner al día la documentación.
 - [x] **F23.2** Clippy en cero y bloqueante en CI.
-- [ ] **F23.3** Un error de la GPU o un pánico no cierran la app.
+- [x] **F23.3** Un error de la GPU o un pánico no cierran la app.
 - [ ] **F23.4** Un renderer de texto por capa.
-- [ ] **F23.5** El atlas de texto se recorta y los errores de texto se registran.
-- [ ] **F23.6** Viewport y scissor siempre dentro del destino.
-- [ ] **F23.7** Imágenes con tamaño máximo y presupuesto de memoria de video.
+- [x] **F23.5** El atlas de texto se recorta y los errores de texto se registran.
+- [x] **F23.6** Viewport y scissor siempre dentro del destino.
+- [x] **F23.7** Imágenes con tamaño máximo y presupuesto de memoria de video.
 - [ ] **F23.8** Cerrar la ventana o salir siempre pasa por el guardado.
 - [ ] **F23.9** Servidores de red que respetan "deshabilitado".
 - [ ] **F23.10** El texto bíblico sólo deja pasar etiquetas conocidas.
@@ -1849,6 +1849,8 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - Color de fondo del stage.
 - Autoajuste de texto medido por el engine.
 - Lógica de negocio dentro de `commands/` (viola `AGENTS.md`; `files.rs` tiene 1081 líneas).
+- En macOS, "Salir" desde el Dock termina la app sin pasar por el guardado (tao 0.37 no implementa `applicationShouldTerminate`); al salir sí se cierran las salidas y los ffmpeg (`RunEvent::Exit`).
+- WEBSOCKET_START ignora password y nadie escucha SERVER_MESSAGE. Al revivir los clientes web o Companion: autenticar en Rust antes de emitir (F23.9).
 - historyHelpers.ts: projectReplacers llama translateText al importar (ciclo language → common → save → apiHelper → historyHelpers; títulos sin traducir si el diccionario no cargó). Hacerlo perezoso después de F24 y borrar react/test/mockCommon.ts (F24.6).
 
 ## Fuera de alcance por ahora
