@@ -14,6 +14,7 @@ import { send } from "../../utils/request"
 import { parseEngScriptureRefToNumbers, resolveScriptureReference } from "../drawer/bible/scripture"
 import { startOutputRecording, stopMediaRecorder } from "../drawer/live/recorder"
 import { getDynamicValue } from "../edit/scripts/itemHelpers"
+import { evaluateArithmetic } from "../../utils/safeMath"
 import { keysToID, removeDeleted, sortByName } from "../helpers/array"
 import { ondrop } from "../helpers/drop"
 import { dropActions } from "../helpers/dropActions"
@@ -445,9 +446,10 @@ export function changeVariable(data: API_variable) {
     if (key === "expression") {
         const stringValue = (data.value || "").toString()
         const replacedValues = stringValue.includes("{") ? getDynamicValue(stringValue) : stringValue
-        // eslint-disable-next-line
-        const calculated = new Function(`return ${replacedValues}`)()
-        value = Number(calculated)
+        const calculated = evaluateArithmetic(replacedValues)
+        // expresión inválida: aborta la acción (antes new Function lanzaba y no se actualizaba nada)
+        if (calculated === null) throw new Error(`Invalid expression: ${replacedValues}`)
+        value = calculated
         key = "number"
     } else if (data.variableAction || variable.type === "number") {
         value = Number(variable.number || variable.default || 0)

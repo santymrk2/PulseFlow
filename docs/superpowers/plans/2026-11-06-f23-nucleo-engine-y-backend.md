@@ -597,7 +597,7 @@ describe("sanitizeVerseText", () => {
 **Interfaces:**
 - Produce: `export function evaluateArithmetic(expression: string): number | null`
 
-- [ ] **Step 1: Test que falla:**
+- [x] **Step 1: Test que falla:**
 
 ```ts
 import { describe, expect, it } from "vitest"
@@ -623,9 +623,9 @@ describe("evaluateArithmetic", () => {
 })
 ```
 
-- [ ] **Step 2:** Run: `bunx vitest run --config config/testing/vitest.config.mts src/frontend/utils/safeMath.test.ts`.
+- [x] **Step 2:** Run: `bunx vitest run --config config/testing/vitest.config.mts src/frontend/utils/safeMath.test.ts`.
   Expected: FAIL.
-- [ ] **Step 3: Implementar** por descenso recursivo. Los espacios entre tokens se ignoran; cualquier otro carácter,
+- [x] **Step 3: Implementar** por descenso recursivo. Los espacios entre tokens se ignoran; cualquier otro carácter,
   entrada sobrante o resultado no finito devuelve `null`:
 
   ```
@@ -635,14 +635,14 @@ describe("evaluateArithmetic", () => {
   number := digits ("." digits)? | "." digits
   ```
 
-- [ ] **Step 4:** en los 4 lugares, `new Function(`return ${x}`)()` → `evaluateArithmetic(String(x))`. **Regla:** el
+- [x] **Step 4:** en los 4 lugares, `new Function(`return ${x}`)()` → `evaluateArithmetic(String(x))`. **Regla:** el
   `null` sigue exactamente el camino que hoy sigue el `catch` (o el valor inválido) de ese lugar: leer cada
   `try/catch` antes de cambiarlo. Borrar los `// eslint-disable-next-line` que queden sin uso.
-- [ ] **Step 5:** Run: `rg -n "new Function\(" src/frontend`. Expected: nada. Correr los chequeos JS y prettier sobre
+- [x] **Step 5:** Run: `rg -n "new Function\(" src/frontend`. Expected: nada. Correr los chequeos JS y prettier sobre
   los 6 archivos.
 - [ ] **Step 6: En la app:** en un campo numérico con stepper, `1920/2` + Enter → `960`; `abc` → vuelve al valor
   anterior.
-- [ ] **Step 7:** commit `F23.11: los cálculos de campos y acciones no ejecutan código`.
+- [x] **Step 7:** commit `F23.11: los cálculos de campos y acciones no ejecutan código`.
 
 ---
 

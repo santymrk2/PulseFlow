@@ -3,6 +3,7 @@
     import { translateText } from "../../../../utils/language"
     import Icon from "../../../../components/helpers/Icon.svelte"
     import Button from "../button/button.svelte"
+    import { evaluateArithmetic } from "../../../../utils/safeMath"
 
     export let value = 0
     export let defaultValue: number | null = null
@@ -44,14 +45,11 @@
         // convert , to .
         let normalizedVal = typeof newVal === "string" ? newVal.replace(/,/g, ".") : newVal
 
-        let calcVal: number
+        let calcVal: number | null
         if (!padLength) {
-            try {
-                calcVal = typeof normalizedVal === "string" ? new Function(`return ${normalizedVal}`)() : normalizedVal
-            } catch {
-                // invalid expression
-                return
-            }
+            calcVal = typeof normalizedVal === "string" ? evaluateArithmetic(normalizedVal) : normalizedVal
+            // invalid expression
+            if (calcVal === null) return
         } else {
             calcVal = Number(normalizedVal)
         }
