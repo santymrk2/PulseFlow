@@ -48,8 +48,8 @@ pub fn exit_now(app: &AppHandle) {
     app.exit(0);
 }
 
-/// Aplica la decisión. Devuelve `true` si hay que cancelar el cierre/salida.
-fn handle_close_request(app: &AppHandle) -> bool {
+/// Aplica la decisión (el llamador ya canceló el cierre/salida).
+fn handle_close_request(app: &AppHandle) {
     let now = Instant::now();
     let decision = {
         let state = app.state::<AppState>();
@@ -65,13 +65,9 @@ fn handle_close_request(app: &AppHandle) -> bool {
             if let Err(err) = app.emit("MAIN", json!({ "channel": "CLOSE", "data": false })) {
                 log::error!("no se pudo pedir el cierre al frontend: {err}");
             }
-            true
         }
-        CloseDecision::Wait => true,
-        CloseDecision::AllowNow => {
-            exit_now(app);
-            true
-        }
+        CloseDecision::Wait => {}
+        CloseDecision::AllowNow => exit_now(app),
     }
 }
 

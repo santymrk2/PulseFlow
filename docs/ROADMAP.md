@@ -1849,6 +1849,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - Color de fondo del stage.
 - Autoajuste de texto medido por el engine.
 - Lógica de negocio dentro de `commands/` (viola `AGENTS.md`; `files.rs` tiene 1081 líneas).
+- En macOS, "Salir" desde el Dock termina la app sin pasar por el guardado (tao 0.37 no implementa `applicationShouldTerminate`); al salir sí se cierran las salidas y los ffmpeg (`RunEvent::Exit`).
 
 ## Fuera de alcance por ahora
 
