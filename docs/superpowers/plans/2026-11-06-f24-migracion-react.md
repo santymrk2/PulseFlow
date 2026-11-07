@@ -419,14 +419,14 @@ export function SvelteIsland({ component, props = {}, events }: SvelteIslandProp
 
 `events` se toma al montar (alcanza para los padres de hoy: los handlers no cambian).
 
-- [ ] **Step 1: Fixture** `Saludo.svelte` (legado): `export let nombre = ""`, muestra `Hola {nombre}` y un botón que hace
+- [x] **Step 1: Fixture** `Saludo.svelte` (legado): `export let nombre = ""`, muestra `Hola {nombre}` y un botón que hace
   `dispatch("saludo", nombre)`.
-- [ ] **Step 2: Tests que fallan:** renderiza "Hola Ana"; al re-renderizar con `nombre: "Beto"` (y `await tick()` de
+- [x] **Step 2: Tests que fallan:** renderiza "Hola Ana"; al re-renderizar con `nombre: "Beto"` (y `await tick()` de
   `svelte`) muestra "Hola Beto"; el clic llama a `events.saludo` con `detail === "Beto"`; `unmount` de Testing Library
   vacía el contenedor.
-- [ ] **Step 3:** correr. Expected: FAIL.
-- [ ] **Step 4: Implementar.**
-- [ ] **Step 5:** chequeos verdes. Commit `F24.4: islas Svelte dentro de React`.
+- [x] **Step 3:** correr. Expected: FAIL.
+- [x] **Step 4: Implementar.**
+- [x] **Step 5:** chequeos verdes. Commit `F24.4: islas Svelte dentro de React`.
 
 ---
 
