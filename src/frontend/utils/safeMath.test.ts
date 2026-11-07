@@ -18,4 +18,8 @@ describe("evaluateArithmetic", () => {
             expect(evaluateArithmetic(bad)).toBeNull()
         }
     })
+    it("devuelve null ante anidación extrema en vez de lanzar", () => {
+        expect(evaluateArithmetic("(".repeat(10000) + "1" + ")".repeat(10000))).toBeNull()
+        expect(evaluateArithmetic("(".repeat(10000))).toBeNull()
+    })
 })
