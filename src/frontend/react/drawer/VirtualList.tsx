@@ -19,6 +19,7 @@ export function VirtualList<T>({ items, height = "100%", itemHeight, activeIndex
     const contents = useRef<HTMLDivElement>(null)
     const heightMap = useRef<number[]>([])
     const averageHeight = useRef(0)
+    const retryRefresh = useRef(false)
     const pendingCorrection = useRef<{ oldStart: number; scrollTop: number } | null>(null)
 
     const [start, setStart] = useState(0)
@@ -41,8 +42,8 @@ export function VirtualList<T>({ items, height = "100%", itemHeight, activeIndex
         return () => observer.disconnect()
     }, [])
 
-    // `$: if (mounted) refresh(items, viewport_height, itemHeight)`. Si falta renderizar una fila sube `end` y vuelve a correr (el `await tick()` del Svelte).
-    useLayoutEffect(() => {
+    // refresh() del Svelte. Si falta renderizar una fila sube `end` y deja `retryRefresh` para seguir cuando se renderice (el `await tick()` del Svelte).
+    function refresh() {
         const el = viewport.current
         if (!el) return
         const { scrollTop } = el
@@ -56,7 +57,8 @@ export function VirtualList<T>({ items, height = "100%", itemHeight, activeIndex
         while (contentHeight < viewportHeight && i < items.length) {
             const row = rows()[i - start]
             if (!row) {
-                if (end !== i + 1) setEnd(i + 1)
+                retryRefresh.current = true
+                setEnd(i + 1)
                 return
             }
 
@@ -74,7 +76,16 @@ export function VirtualList<T>({ items, height = "100%", itemHeight, activeIndex
 
         setBottom(remaining * averageHeight.current)
         heightMap.current.length = items.length
-    }, [items, viewportHeight, itemHeight, end])
+    }
+
+    // `$: if (mounted) refresh(items, viewport_height, itemHeight)`: sólo cuando cambian ésos, no en cada scroll
+    useLayoutEffect(refresh, [items, viewportHeight, itemHeight])
+    // Continuación del refresh que esperaba una fila
+    useLayoutEffect(() => {
+        if (!retryRefresh.current) return
+        retryRefresh.current = false
+        refresh()
+    }, [end])
 
     function handleScroll() {
         const el = viewport.current

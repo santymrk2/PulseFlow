@@ -78,6 +78,34 @@ describe("VirtualList", () => {
         expect(llamada.top).toBe(100 - VIEWPORT * 0.3)
     })
 
+    it("al_subir_sobre_filas_no_medidas_corrige_el_scrollTop_como_handle_scroll", () => {
+        const scrollTo = vi.fn()
+        Object.defineProperty(HTMLElement.prototype, "scrollTo", { value: scrollTo, configurable: true })
+        const real = (i: number) => (i % 2 ? 60 : 20)
+        render(<VirtualList items={filas(real)} height="100px" render={render_} />)
+        const viewport = document.querySelector(`.${styles.viewport}`) as HTMLElement
+        const irA = (scrollTop: number) => {
+            Object.defineProperty(viewport, "scrollTop", { value: scrollTop, configurable: true })
+            fireEvent.scroll(viewport)
+        }
+
+        irA(0) // las filas siguientes a las visibles quedan en el height_map con el promedio
+        const promedio = parseFloat(contents().style.paddingBottom) / (100 - visibles().length)
+        irA(2000) // salto hacia abajo: las filas del medio no se midieron
+        const s1 = visibles()[0]
+
+        scrollTo.mockClear()
+        irA(1000) // sube sobre filas no medidas
+        const s2 = visibles()[0]
+        expect(s2).toBeLessThan(s1)
+
+        // handle_scroll: d = suma de alturas reales - suma de lo estimado, sólo de las filas ya renderizadas entre s2 y s1
+        let d = 0
+        for (let i = s2; i < Math.min(s1, s2 + visibles().length); i++) d += real(i) - promedio
+        expect(d).not.toBe(0)
+        expect(scrollTo).toHaveBeenLastCalledWith(0, 1000 + d)
+    })
+
     it("sin_activeIndex_no_scrollea", () => {
         vi.useFakeTimers()
         const scrollTo = vi.fn()
