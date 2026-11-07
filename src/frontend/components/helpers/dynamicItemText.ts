@@ -47,10 +47,20 @@ export interface VariableValue {
 const NBSP4 = "    "
 const pad2 = (n: number) => ("0" + n).slice(-2)
 
+export interface SlideTrackerParts {
+    current: string
+    total: string
+}
+
 /** `current` es el índice 0-based de la slide (como `OutSlide.index`). `null` si el modo no es texto. */
-export function slideTrackerText(tracker: SlideTrackerOptions, current: number, total: number): string | null {
+export function slideTrackerParts(tracker: SlideTrackerOptions, current: number, total: number): SlideTrackerParts | null {
     if ((tracker.type || "number") !== "number") return null
-    return `${current + 1}/${total}`
+    return { current: String(current + 1), total: String(total) }
+}
+
+export function slideTrackerText(tracker: SlideTrackerOptions, current: number, total: number): string | null {
+    const parts = slideTrackerParts(tracker, current, total)
+    return parts ? `${parts.current}/${parts.total}` : null
 }
 
 function startOf(options: DynamicEventsOptions, now: Date): Date {
@@ -87,16 +97,39 @@ export function visibleEvents(options: DynamicEventsOptions, list: CalendarEvent
     return options.maxEvents ? events.slice(0, options.maxEvents) : events
 }
 
-export function eventsText(options: DynamicEventsOptions, list: CalendarEvent[], now: Date): string {
-    const lines: string[] = []
+/** Tramo de una línea de eventos; `scale` multiplica el tamaño de letra base (como los font-size de DynamicEvents). */
+export interface EventSpan {
+    text: string
+    bold?: boolean
+    italic?: boolean
+    scale?: number
+    family?: string
+}
+
+/** Una lista de tramos por línea, con el formato de DynamicEvents.svelte. */
+export function eventsLines(options: DynamicEventsOptions, list: CalendarEvent[], now: Date): EventSpan[][] {
+    const lines: EventSpan[][] = []
     visibleEvents(options, list, now).forEach((event) => {
         if (!event.name) return
-        const from = new Date(event.from)
-        const time = event.time ? `${pad2(from.getHours())}:${pad2(from.getMinutes())} ` : ""
-        lines.push(`${time}${event.name}${event.location ? ` - ${event.location}` : ""}${event.notes ? ":" : ""}`)
-        if (event.notes) lines.push(NBSP4 + event.notes)
+        const line: EventSpan[] = []
+        if (event.time) {
+            const from = new Date(event.from)
+            line.push({ text: `${pad2(from.getHours())}:${pad2(from.getMinutes())} `, bold: true, scale: 0.8, family: "Arial" })
+        }
+        // los ":" de las notas quedan dentro del tramo del lugar si hay lugar (como el HTML anidado)
+        const colon = event.notes ? ":" : ""
+        line.push({ text: event.name + (event.location ? "" : colon) })
+        if (event.location) line.push({ text: ` - ${event.location}${colon}`, italic: true, scale: 0.9 })
+        lines.push(line)
+        if (event.notes) lines.push([{ text: NBSP4 + event.notes, scale: 0.8 }])
     })
-    return lines.join("\n")
+    return lines
+}
+
+export function eventsText(options: DynamicEventsOptions, list: CalendarEvent[], now: Date): string {
+    return eventsLines(options, list, now)
+        .map((line) => line.map((a) => a.text).join(""))
+        .join("\n")
 }
 
 /** Texto crudo de la variable (los `{...}` los resuelve el llamador). `hideText`: un texto deshabilitado se oculta. */

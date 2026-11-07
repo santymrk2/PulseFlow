@@ -1851,7 +1851,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - Lógica de negocio dentro de `commands/` (viola `AGENTS.md`; `files.rs` tiene 1081 líneas).
 - En macOS, "Salir" desde el Dock termina la app sin pasar por el guardado (tao 0.37 no implementa `applicationShouldTerminate`); al salir sí se cierran las salidas y los ffmpeg (`RunEvent::Exit`).
 - WEBSOCKET_START ignora password y nadie escucha SERVER_MESSAGE. Al revivir los clientes web o Companion: autenticar en Rust antes de emitir (F23.9).
-- El contador de slides (F23.17) sólo llega al proyector en modo numérico ("3/12"); los modos barra, grupos y proyecto (`SlideProgress.svelte`) siguen sin dibujarse en el engine. Además, el número va con el color del tema (`--accent`) en la vista previa y en el proyector sale de un solo color.
+- El contador de slides (F23.17) sólo llega al proyector en modo numérico ("3/12"); los modos barra, grupos y proyecto (`SlideProgress.svelte`) siguen sin dibujarse en el engine.
 
 ## Fuera de alcance por ahora
 

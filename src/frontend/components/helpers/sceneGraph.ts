@@ -30,11 +30,11 @@ import { getCurrentTimerValue } from "../drawer/timers/timers"
 import { defaultLayers, getCurrentStyle, getOutputLines, getOutputResolution, getOutputTransitions, getStyleTemplate, percentageStylePos, setTemplateStyle } from "./output"
 import { _show } from "./shows"
 import { getLayoutRef } from "./show"
-import { eventsText, slideTrackerText, variableText, type CalendarEvent } from "./dynamicItemText"
+import { eventsLines, slideTrackerParts, variableText, type CalendarEvent } from "./dynamicItemText"
 import { replaceDynamicValues } from "./showActions"
 import { contentAlign } from "./outputAspect"
 import { imagePathsOf } from "./sceneMedia"
-import { applyTextTransform, parseBoxStyle, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
+import { applyTextTransform, parseBoxStyle, parseCssColor, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
 import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
 import { markSceneClock, resetSceneClock } from "./sceneClock"
 
@@ -281,32 +281,46 @@ function buildDynamicTextItem(item: Item, index: number, allItems: Item[], outpu
     if (!shouldItemBeShown(item, allItems, { outputId, type: "default" })) return null
     if (item.clickReveal && lineWindow.clickRevealed === false) return null
 
-    let value = ""
+    const box = parseItemBox(percentageStylePos(item.style, resolution), { x: 0, y: 0, width: resolution.width, height: resolution.height })
+    const base = parseTextStyle(item.style)
+    const fontSize = base.fontSize || (item.type === "events" ? 80 : 100)
+    const color = base.color || [1, 1, 1, 1]
+    const plain = (text: string) => sceneTextSpan({ text, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color })
+
+    let spans: SceneTextSpan[] = []
+    let boxStyle = parseBoxStyle(item.style)
     let live = true
     let defaultAlign: "left" | "center" = "center"
     if (item.type === "slide_tracker") {
         // sólo cambia con la slide, que ya dispara la transición: no es "live"
         live = false
-        value = slideTrackerText(item.tracker || {}, dynamicRef.slideIndex ?? -1, getLayoutRef(dynamicRef.showId, get(showsCache)).length) ?? ""
+        const parts = slideTrackerParts(item.tracker || {}, dynamicRef.slideIndex ?? -1, getLayoutRef(dynamicRef.showId, get(showsCache)).length)
+        if (parts) {
+            // la vista previa pinta el número actual con --accent (tracker.accent o, si no, --secondary del tema)
+            const accent = item.tracker?.accent || getComputedStyle(document.documentElement).getPropertyValue("--secondary").trim()
+            spans = [accent ? sceneTextSpan({ ...plain(parts.current), color: parseCssColor(accent, color) }) : plain(parts.current), plain(`/${parts.total}`)]
+        }
     } else if (item.type === "events") {
         // los eventos terminados desaparecen con la hora: la escena se reenvía cada segundo
         markSceneClock()
         defaultAlign = "left"
-        value = eventsText(item.events || {}, Object.values(get(events)) as CalendarEvent[], new Date())
+        eventsLines(item.events || {}, Object.values(get(events)) as CalendarEvent[], new Date()).forEach((line, i) => {
+            if (i > 0) spans.push(sceneTextSpan({ text: "\n" }))
+            line.forEach((a) => spans.push(sceneTextSpan({ ...plain(a.text), fontSize: fontSize * (a.scale ?? 1), fontWeight: a.bold ? 700 : (base.fontWeight ?? 400), fontStyle: a.italic ? "italic" : base.fontStyle, fontFamily: a.family ?? base.fontFamily })))
+        })
     } else {
-        value = variableText(get(variables)[item.variable?.id || ""])
+        const variable = get(variables)[item.variable?.id || ""]
+        let value = variableText(variable, false)
         if (value.includes("{")) {
             markSceneClock() // {time_}… cambian solos
             value = replaceDynamicValues(value, dynamicRef)
         }
+        if (value) spans = [plain(value)]
+        // la salida real mostraba la variable deshabilitada a opacidad 0.2
+        if (variable?.enabled === false) boxStyle = { ...boxStyle, opacity: (boxStyle?.opacity ?? 1) * 0.2 }
     }
+    const value = spans.map((s) => s.text).join("")
     if (!value) return null
-
-    const box = parseItemBox(percentageStylePos(item.style, resolution), { x: 0, y: 0, width: resolution.width, height: resolution.height })
-    const base = parseTextStyle(item.style)
-    const fontSize = base.fontSize || (item.type === "events" ? 80 : 100)
-    const color = base.color || [1, 1, 1, 1]
-    const spans = [sceneTextSpan({ text: value, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color })]
 
     return sceneTextItem({
         id: item.id || `item-${index}`,
@@ -325,7 +339,7 @@ function buildDynamicTextItem(item: Item, index: number, allItems: Item[], outpu
         text: value,
         spans,
         live,
-        box: parseBoxStyle(item.style)
+        box: boxStyle
     })
 }
 

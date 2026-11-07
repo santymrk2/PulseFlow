@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { eventsText, slideTrackerText, variableText, visibleEvents, type CalendarEvent } from "./dynamicItemText"
+import { eventsLines, eventsText, slideTrackerParts, slideTrackerText, variableText, visibleEvents, type CalendarEvent } from "./dynamicItemText"
 
 const NB = "\u00A0\u00A0\u00A0\u00A0"
 
@@ -70,5 +70,27 @@ describe("eventsText", () => {
     it("enableStartDate arranca en la fecha dada", () => {
         const opts = { enableStartDate: true, startDate: "2026-11-09T00:00", startTime: "19:30" }
         expect(visibleEvents(opts, [culto, ensayo, pasado], NOW).map((e) => e.name)).toEqual(["Ensayo"])
+    })
+})
+
+describe("slideTrackerParts", () => {
+    it("separa el número actual del total", () => {
+        expect(slideTrackerParts({ type: "number" }, 2, 12)).toEqual({ current: "3", total: "12" })
+    })
+    it("null si no es modo número", () => {
+        expect(slideTrackerParts({ type: "bar" }, 2, 12)).toBeNull()
+    })
+})
+
+describe("eventsLines", () => {
+    it("hora en negrita Arial a 0.8, nombre base, lugar en cursiva a 0.9 con los dos puntos, notas a 0.8", () => {
+        expect(eventsLines({}, [culto], NOW)).toEqual([[{ text: "10:30 ", bold: true, scale: 0.8, family: "Arial" }, { text: "Culto" }, { text: " - Salón:", italic: true, scale: 0.9 }], [{ text: NB + "Traer Biblia", scale: 0.8 }]])
+    })
+    it("sin lugar los dos puntos van con el nombre", () => {
+        const e = { ...ensayo, notes: "n" }
+        expect(eventsLines({}, [e], NOW)[0]).toEqual([{ text: "Ensayo:" }])
+    })
+    it("sin hora ni lugar ni notas es sólo el nombre", () => {
+        expect(eventsLines({}, [ensayo], NOW)).toEqual([[{ text: "Ensayo" }]])
     })
 })
