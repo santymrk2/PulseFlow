@@ -523,7 +523,7 @@ globales no se disparan.
 
 Receta sobre `components/settings/`: `Profiles`, `ProfilesButtons`, `ProfilesTabs`, `Connection`, `AudioRouting`,
 `AudioRoutingNode`. `AudioRouting.svelte` tiene 1040 líneas: va **en su propio commit**.
-- [ ] commit `F24.13a: perfiles y conexión en React`
+- [x] commit `F24.13a: perfiles y conexión en React`
 - [ ] commit `F24.13b: ruteo de audio en React`
 
 ### Task F24.14: Pantallas y Looks
