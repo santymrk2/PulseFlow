@@ -1,5 +1,6 @@
 import { useEffect, useRef, type CSSProperties, type MouseEvent } from "react"
 import { cn } from "../../../lib/utils"
+import { evaluateArithmetic } from "../../../utils/safeMath"
 import { Icon } from "../../helpers/Icon"
 import { Button } from "../button/Button"
 import { Input } from "../input/Input"
@@ -47,14 +48,10 @@ export function Stepper({ value, title = "", visibleTitle = false, style, inputM
 
     function input(e: Event) {
         const target = e.target as HTMLInputElement
-        let inputValue: number | string = target.value || 0
-        try {
-            inputValue = new Function(`return ${inputValue}`)() // calculate without eval()
-        } catch {
-            inputValue = value
-        }
+        // calculate without eval(); una expresión inválida vuelve al valor anterior
+        const inputValue = evaluateArithmetic(String(target.value || 0)) ?? value
 
-        const newValue = Math.max(Math.min(Number(inputValue), max * inputMultiplier), min * inputMultiplier) / inputMultiplier
+        const newValue = Math.max(Math.min(inputValue, max * inputMultiplier), min * inputMultiplier) / inputMultiplier
         onChange?.(newValue !== null ? newValue.toFixed(decimals) : String(value))
     }
 

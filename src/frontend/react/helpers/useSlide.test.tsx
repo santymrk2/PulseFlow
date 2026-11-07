@@ -67,6 +67,14 @@ describe("useSlide", () => {
         expect(screen.getByText("panel")).toBeTruthy()
     })
 
+    it("desmontar_con_una_animacion_en_curso_la_cancela", () => {
+        const { cancel } = mockAnimate()
+        const { unmount } = render(<Panel open />)
+        expect(cancel).not.toHaveBeenCalled()
+        unmount()
+        expect(cancel).toHaveBeenCalledTimes(1)
+    })
+
     it("sin_animate_monta_y_desmonta_sin_animar", () => {
         expect((Element.prototype as { animate?: unknown }).animate).toBeUndefined()
         const { rerender } = render(<Panel open={false} />)

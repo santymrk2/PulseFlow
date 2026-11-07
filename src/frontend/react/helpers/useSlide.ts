@@ -51,6 +51,7 @@ export function useSlide<T extends HTMLElement>(open: boolean, durationMs: numbe
                 () => {}
             )
         }
+        return () => animation.current?.cancel()
     }, [open, mounted])
 
     return { mounted, ref }

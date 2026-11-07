@@ -76,6 +76,15 @@ describe("Stepper", () => {
         expect(onChange).toHaveBeenLastCalledWith("14")
     })
 
+    it("change_con_division_da_el_cociente_y_texto_invalido_vuelve_al_valor_anterior", () => {
+        const onChange = vi.fn()
+        render(<Stepper value={5} onChange={onChange} />)
+        fireEvent.change(input(), { target: { value: "1920/2" } })
+        expect(onChange).toHaveBeenLastCalledWith("960")
+        fireEvent.change(input(), { target: { value: "abc" } })
+        expect(onChange).toHaveBeenLastCalledWith("5")
+    })
+
     it("tipear_no_despacha_hasta_confirmar", () => {
         const onChange = vi.fn()
         render(<Stepper value={5} onChange={onChange} />)
