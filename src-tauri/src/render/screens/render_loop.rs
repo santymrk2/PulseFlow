@@ -241,6 +241,18 @@ pub(super) fn spawn_render_loop(
                                     for item in &current.media {
                                         // F23.16: la caja del ítem va justo antes de su medio
                                         shape_pipeline.draw_media_box(&device, &queue, &mut arena, &mut pass, item, (w, h));
+                                        if item.media_type == "video" {
+                                            // F23.20: el mismo frame NV12 del hub que usa el fondo, en el rect del ítem
+                                            if let Some(frame) = store.get_video(&item.path) {
+                                                let scale = match item.design_width {
+                                                    Some(dw) if dw > 0.0 => w as f32 / dw,
+                                                    _ => 1.0,
+                                                };
+                                                let rect = [item.x * scale, item.y * scale, item.width * scale, item.height * scale];
+                                                nv12_pipeline.render_rect(&device, &queue, &mut arena, &mut pass, &frame, (w, h), rect, item.opacity, item.aspect_mode);
+                                            }
+                                            continue;
+                                        }
                                         if item.media_type != "image" || item.path.is_empty() {
                                             continue;
                                         }

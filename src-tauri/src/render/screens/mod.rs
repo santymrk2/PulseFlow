@@ -236,6 +236,8 @@ struct ScreenHandle {
     thread: Option<JoinHandle<()>>,
     /// Ruta del video suscrito actualmente (el decodificador lo comparte el hub).
     video: Option<String>,
+    /// Videos dentro de la slide (F23.20): id de suscripción (`etiqueta:id del ítem`) -> ruta.
+    video_items: HashMap<String, String>,
     /// Última transición pedida (la toma el bucle al dibujar el próximo frame).
     transition: Arc<Mutex<Option<TransitionRequest>>>,
 }
@@ -250,6 +252,7 @@ impl ScreenHandle {
         if let Some(path) = self.video.take() {
             let _ = video_hub_release(app, &path, &self.label);
         }
+        release_item_videos(app, self);
         self.running.store(false, Ordering::SeqCst);
         let thread = self.thread.take();
         let app = app.clone();

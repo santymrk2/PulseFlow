@@ -132,6 +132,7 @@ pub fn open_screen(app: &AppHandle, config: &ScreenConfig) -> AppResult<()> {
         running,
         thread: Some(thread),
         video: None,
+        video_items: HashMap::new(),
         transition,
     };
 

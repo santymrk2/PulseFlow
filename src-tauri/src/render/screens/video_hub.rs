@@ -27,7 +27,69 @@ pub(super) fn sync_video(app: &AppHandle, handle: &mut ScreenHandle, background:
     }
 
     if let (Some(path), Some(bg)) = (&handle.video, background) {
-        sync_transport(app, path, &handle.label, bg);
+        sync_transport(app, path, &handle.label, bg.paused, bg.position_ms);
+    }
+}
+
+/// Suscripciones como `(sub_id, ruta)`.
+pub(super) type Subs = Vec<(String, String)>;
+
+/// Un video colocado dentro de la slide (F23.20) con el transporte que le manda el webview.
+#[derive(Debug, Clone, PartialEq)]
+pub(super) struct ItemVideo {
+    /// Id de suscripción al hub: `etiqueta:id del ítem`.
+    pub(super) sub_id: String,
+    pub(super) path: String,
+    pub(super) paused: bool,
+    pub(super) position_ms: Option<u64>,
+}
+
+/// Los ítems de video de la escena de la pantalla `label`.
+pub(super) fn item_videos(label: &str, media: &[MediaItem]) -> Vec<ItemVideo> {
+    media
+        .iter()
+        .filter(|m| m.media_type == "video" && !m.path.is_empty())
+        .map(|m| ItemVideo { sub_id: format!("{label}:{}", m.item_id.as_ref().unwrap_or(&m.id)), path: m.path.clone(), paused: m.paused, position_ms: m.position_ms })
+        .collect()
+}
+
+/// Qué soltar y qué tomar (ambos como `(sub_id, ruta)`) para pasar de las suscripciones actuales a las de la escena.
+pub(super) fn plan_item_videos(current: &HashMap<String, String>, wanted: &[ItemVideo]) -> (Subs, Subs) {
+    let keeps = |sub_id: &str, path: &str| wanted.iter().any(|w| w.sub_id == sub_id && w.path == path);
+    let release = current.iter().filter(|(id, path)| !keeps(id, path)).map(|(id, path)| (id.clone(), path.clone())).collect();
+    let mut acquire: Vec<(String, String)> = Vec::new();
+    for w in wanted {
+        let held = current.get(&w.sub_id).is_some_and(|path| *path == w.path);
+        if !held && !acquire.iter().any(|(id, _)| *id == w.sub_id) {
+            acquire.push((w.sub_id.clone(), w.path.clone()));
+        }
+    }
+    (release, acquire)
+}
+
+/// Sincroniza los videos de la slide de una pantalla: suelta los que salieron, toma los nuevos y sigue el transporte.
+pub(super) fn sync_item_videos(app: &AppHandle, handle: &mut ScreenHandle, wanted: &[ItemVideo]) {
+    let (release, acquire) = plan_item_videos(&handle.video_items, wanted);
+    for (sub_id, path) in release {
+        handle.video_items.remove(&sub_id);
+        let _ = video_hub_release(app, &path, &sub_id);
+    }
+    for (sub_id, path) in acquire {
+        if video_hub_acquire(app, &path, &sub_id).is_err() {
+            log::warn!("[screens] no se pudo reproducir el video {path}");
+        } else {
+            handle.video_items.insert(sub_id, path);
+        }
+    }
+    for w in wanted.iter().filter(|w| handle.video_items.contains_key(&w.sub_id)) {
+        sync_transport(app, &w.path, &w.sub_id, w.paused, w.position_ms);
+    }
+}
+
+/// Suelta todos los videos de la slide (la pantalla se cierra).
+pub(super) fn release_item_videos(app: &AppHandle, handle: &mut ScreenHandle) {
+    for (sub_id, path) in handle.video_items.drain() {
+        let _ = video_hub_release(app, &path, &sub_id);
     }
 }
 
@@ -45,16 +107,16 @@ pub fn sync_action(decoder_ms: u64, wanted_ms: Option<u64>, threshold_ms: u64, d
 }
 
 /// El audio del webview es el reloj maestro: el decodificador sigue su pausa y su posición.
-fn sync_transport(app: &AppHandle, path: &str, label: &str, bg: &BackgroundMedia) {
+fn sync_transport(app: &AppHandle, path: &str, subscriber: &str, paused: bool, position_ms: Option<u64>) {
     let Ok(state) = manager(app) else { return };
     let mut hub = state.video_hub.lock_safe();
     let Some(video) = hub.get_mut(path) else { return };
     // con varias pantallas sobre el mismo archivo sólo la líder manda (si no, se pelean a seeks)
-    if !video.subscribers.is_leader(label) {
+    if !video.subscribers.is_leader(subscriber) {
         return;
     }
-    video.set_paused(bg.paused);
-    if let Some(ms) = sync_action(video.position_ms(), bg.position_ms, SYNC_THRESHOLD_MS, video.playback.duration_ms())
+    video.set_paused(paused);
+    if let Some(ms) = sync_action(video.position_ms(), position_ms, SYNC_THRESHOLD_MS, video.playback.duration_ms())
         && let Err(err) = video.seek(ms) {
             log::warn!("[screens] no se pudo sincronizar {path} a {ms} ms: {err}");
         }

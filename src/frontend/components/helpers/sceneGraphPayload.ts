@@ -109,7 +109,9 @@ export function sceneMediaItem(parts: Omit<SceneMediaItem, "type">): SceneMediaI
         mediaType: parts.mediaType,
         fit: parts.fit,
         opacity: parts.opacity,
-        box: parts.box
+        box: parts.box,
+        paused: parts.paused,
+        positionMs: parts.positionMs
     })
 }
 

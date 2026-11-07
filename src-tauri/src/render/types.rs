@@ -209,9 +209,11 @@ fn default_aspect_mode() -> u32 {
 pub struct MediaItem {
     /// Clave de caché en el `MediaPool` (el `src` si no hay id propio).
     pub id: String,
+    /// Id del ítem en la slide; para un video es parte de su id de suscripción al hub (F23.20).
+    pub item_id: Option<String>,
     /// Ruta del archivo en disco.
     pub path: String,
-    /// "image" o "video" (el engine sólo dibuja imágenes por ahora).
+    /// "image" o "video" (los videos los decodifica el hub, F23.20).
     pub media_type: String,
     pub x: f32,
     pub y: f32,
@@ -225,6 +227,16 @@ pub struct MediaItem {
     pub design_width: Option<f32>,
     /// Caja del cuadro: se dibuja justo antes del medio (F23.16).
     pub box_style: Option<SceneBox>,
+    /// Transporte del webview para un video (F23.20): igual que en el fondo.
+    pub paused: bool,
+    pub position_ms: Option<u64>,
+}
+
+impl MediaItem {
+    /// El ítem sin el transporte: lo que decide si la escena cambió (el transporte cambia cada segundo).
+    pub fn without_transport(&self) -> Self {
+        Self { paused: false, position_ms: None, ..self.clone() }
+    }
 }
 
 /// Elemento de superposición superior (reloj, avisos, tercios inferiores).

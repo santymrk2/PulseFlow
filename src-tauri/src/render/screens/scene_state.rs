@@ -19,6 +19,8 @@ pub fn set_audience_scene(
     content: Option<crate::render::frame::ContentFrame>,
 ) -> AppResult<()> {
     let state = manager(app)?;
+    // los videos de la slide se sincronizan con el hub abajo (la escena se lleva `media`)
+    let videos: Vec<MediaItem> = media.iter().filter(|m| m.media_type == "video").cloned().collect();
     let changed = publish_audience_scene(
         &state.scene(id),
         text,
@@ -34,6 +36,7 @@ pub fn set_audience_scene(
         let mut screens = state.screens.lock_safe();
         if let Some(handle) = screens.get_mut(id) {
             sync_video(app, handle, background.as_ref());
+            sync_item_videos(app, handle, &item_videos(&handle.label, &videos));
         }
     }
 
@@ -58,7 +61,7 @@ fn publish_audience_scene(
     let changed = {
         let current = slot.load();
         !same_blocks(&current.text, &text)
-            || current.media != media
+            || !same_media(&current.media, &media)
             || current.background.as_ref().map(BackgroundMedia::without_transport) != background.as_ref().map(BackgroundMedia::without_transport)
             || !same_blocks(&current.overlay_text, &overlay_text)
             || current.overlay_media != overlay_media
@@ -75,6 +78,11 @@ fn publish_audience_scene(
         scene.content = content;
     });
     changed
+}
+
+/// Igual que `==`, salvo la pausa y la posición de los videos: cambian cada segundo y no son un cambio de escena (F23.20).
+fn same_media(current: &[MediaItem], next: &[MediaItem]) -> bool {
+    current.len() == next.len() && current.iter().zip(next).all(|(a, b)| a.without_transport() == b.without_transport())
 }
 
 /// Igual que `==` por bloque, salvo el texto y los tramos de los bloques `live`: esos cambian
@@ -128,7 +136,12 @@ pub fn set_scene_background(
 /// vacíos, el stage dibuja `stage_blocks` como siempre.
 pub fn set_stage_scene(app: &AppHandle, id: &str, data: StageData, text: Vec<TextBlock>, media: Vec<MediaItem>) -> AppResult<()> {
     let state = manager(app)?;
-    if publish_stage_scene(&state.scene(id), data, text, media) {
+    let videos: Vec<MediaItem> = media.iter().filter(|m| m.media_type == "video").cloned().collect();
+    let changed = publish_stage_scene(&state.scene(id), data, text, media);
+    if let Some(handle) = state.screens.lock_safe().get_mut(id) {
+        sync_item_videos(app, handle, &item_videos(&handle.label, &videos));
+    }
+    if changed {
         request_transition(&state, id);
     }
     Ok(())
@@ -138,7 +151,7 @@ pub fn set_stage_scene(app: &AppHandle, id: &str, data: StageData, text: Vec<Tex
 fn publish_stage_scene(slot: &SceneSlot, data: StageData, text: Vec<TextBlock>, media: Vec<MediaItem>) -> bool {
     let changed = {
         let current = slot.load();
-        current.stage != data || !same_blocks(&current.text, &text) || current.media != media
+        current.stage != data || !same_blocks(&current.text, &text) || !same_media(&current.media, &media)
     };
     slot.update(|scene| {
         scene.stage = data;
@@ -221,6 +234,38 @@ mod tests {
         let slot = SceneSlot::new();
         publicar(&slot, vec![bloque("hola", false)]);
         assert!(publicar(&slot, vec![bloque("hola", false), bloque("10:00", true)]));
+    }
+
+    fn video_item(position_ms: Option<u64>, paused: bool) -> MediaItem {
+        MediaItem {
+            id: "/m/clip.mp4".into(),
+            item_id: Some("v1".into()),
+            path: "/m/clip.mp4".into(),
+            media_type: "video".into(),
+            x: 0.0,
+            y: 0.0,
+            width: 480.0,
+            height: 270.0,
+            aspect_mode: 0,
+            opacity: 1.0,
+            design_width: Some(1920.0),
+            box_style: None,
+            paused,
+            position_ms,
+        }
+    }
+
+    /// F23.20: el transporte de un video de la slide cambia cada segundo y no es un cambio de escena.
+    #[test]
+    fn la_posicion_de_un_video_de_la_slide_no_pide_transicion() {
+        let slot = SceneSlot::new();
+        let publicar = |m: MediaItem| publish_audience_scene(&slot, Vec::new(), vec![m], &None, Vec::new(), Vec::new(), None);
+        assert!(publicar(video_item(Some(1000), false)), "el ítem nuevo sí");
+        assert!(!publicar(video_item(Some(2000), false)), "sólo cambia la posición");
+        assert!(!publicar(video_item(Some(2000), true)), "sólo cambia la pausa");
+        assert_eq!(slot.load().media[0].position_ms, Some(2000), "pero la escena publicada lleva el transporte nuevo");
+        let movido = MediaItem { x: 10.0, ..video_item(Some(2000), true) };
+        assert!(publicar(movido), "mover el ítem sí");
     }
 
     #[test]

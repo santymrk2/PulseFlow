@@ -178,7 +178,7 @@ pub struct SceneMediaItem {
     /// Ruta del archivo en disco.
     #[serde(default)]
     pub src: String,
-    /// "image" o "video" (el engine sólo dibuja imágenes por ahora).
+    /// "image" o "video" (un video lo decodifica el hub y sigue el transporte del webview, F23.20).
     #[serde(default = "default_bg_type", rename = "mediaType")]
     pub media_type: String,
     /// "cover", "contain" o "fill"/"stretch".
@@ -189,6 +189,11 @@ pub struct SceneMediaItem {
     /// Fondo, borde, esquinas y opacidad del cuadro (F23.16).
     #[serde(default, rename = "box", skip_serializing_if = "Option::is_none")]
     pub box_style: Option<SceneBox>,
+    /// Transporte del webview para un video (F23.20): igual que en el fondo.
+    #[serde(default, skip_serializing_if = "std::ops::Not::not")]
+    pub paused: bool,
+    #[serde(default, rename = "positionMs", skip_serializing_if = "Option::is_none")]
+    pub position_ms: Option<u64>,
 }
 
 /// Margen interior de un cuadro, en unidades de la resolución lógica.
@@ -346,6 +351,7 @@ fn media_item(m: &SceneMediaItem, design_width: f32) -> MediaItem {
     MediaItem {
         // El `MediaPool` cachea por ruta (como el fondo): la clave es el `src`.
         id: m.src.clone(),
+        item_id: m.id.clone(),
         path: m.src.clone(),
         media_type: m.media_type.clone(),
         x: m.x,
@@ -360,6 +366,8 @@ fn media_item(m: &SceneMediaItem, design_width: f32) -> MediaItem {
         opacity: (m.opacity * box_opacity).clamp(0.0, 1.0),
         design_width: Some(design_width),
         box_style: m.box_style.clone(),
+        paused: m.paused,
+        position_ms: m.position_ms,
     }
 }
 
@@ -531,6 +539,18 @@ mod tests {
         assert!(!serde_json::to_string(&sin).expect("json").contains("box"));
         let medio: SceneMediaItem = serde_json::from_value(json!({"x":0,"y":0,"width":10,"height":10,"src":"a.png","box":{"opacity":0.5}})).expect("medio");
         assert_eq!(medio.box_style.and_then(|b| b.opacity), Some(0.5));
+    }
+
+    /// F23.20: un ítem de video lleva pausa y posición; sin ellos la clave no se escribe.
+    #[test]
+    fn item_de_video_lleva_el_transporte() {
+        let con: SceneMediaItem = serde_json::from_value(json!({"x":0,"y":0,"width":10,"height":10,"src":"a.mp4","mediaType":"video","paused":true,"positionMs":1500})).expect("medio");
+        assert!(con.paused && con.position_ms == Some(1500));
+        let sin: SceneMediaItem = serde_json::from_value(json!({"x":0,"y":0,"width":10,"height":10,"src":"a.mp4","mediaType":"video"})).expect("medio");
+        let text = serde_json::to_string(&sin).expect("json");
+        assert!(!text.contains("paused") && !text.contains("positionMs"), "{text}");
+        let motor = media_item(&con, 1920.0);
+        assert!(motor.paused && motor.position_ms == Some(1500));
     }
 
     /// F23.16: `opacity` multiplica texto y medio; `padding` achica el texto y la caja conserva el rect completo.

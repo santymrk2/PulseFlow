@@ -976,15 +976,15 @@ pegado arriba de su caja. Si el layout no tiene ítems, se mantiene el comportam
   escena o se cierra la pantalla. Pausa y posición, igual que el fondo (F23.14), desde `playingVideoState` con la
   misma clave.
 
-- [ ] **Step 1: Test que falla** en `screens/tests.rs` (`video_item_se_suscribe_y_se_libera`), con el patrón de los
+- [x] **Step 1: Test que falla** en `screens/tests.rs` (`video_item_se_suscribe_y_se_libera`), con el patrón de los
   tests `subscribers_*`: una escena con un ítem de video suma un suscriptor para esa ruta; una escena sin el ítem lo
   saca.
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar** y actualizar el comentario de `scene.rs:175`.
-- [ ] **Step 4:** chequeos en verde.
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar** y actualizar el comentario de `scene.rs:175`.
+- [x] **Step 4:** chequeos en verde.
 - [ ] **Step 5: En la app:** una slide con un ítem de video ocupando un cuarto de la pantalla: se reproduce en el
   proyector, y al pasar de slide se detiene.
-- [ ] **Step 6:** commit `F23.20: los videos dentro de una slide se reproducen en el proyector`.
+- [x] **Step 6:** commit `F23.20: los videos dentro de una slide se reproducen en el proyector`.
 
 ---
 

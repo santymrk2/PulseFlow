@@ -123,6 +123,9 @@ export interface SceneMediaItem {
     opacity: number
     /** Fondo, borde, esquinas y opacidad del cuadro (F23.16) */
     box?: SceneBoxStyle
+    /** Transporte del webview para un video (F23.20): igual que en el fondo */
+    paused?: boolean
+    positionMs?: number
 }
 
 export interface SceneTextItem {

@@ -177,7 +177,7 @@ function buildMediaItem(item: Item, index: number, allItems: Item[], outputId: s
     // "blur" no se puede pintar en el engine: cae a "contain" (igual que el render HTML)
     const fit = item.fit === "cover" ? "cover" : item.fit === "fill" ? "fill" : "contain"
 
-    return sceneMediaItem({ id: item.id, x: box.x, y: box.y, width: box.width, height: box.height, src, mediaType, fit, opacity: 1, box: parseBoxStyle(item.style) })
+    return sceneMediaItem({ id: item.id, x: box.x, y: box.y, width: box.width, height: box.height, src, mediaType, fit, opacity: 1, box: parseBoxStyle(item.style), ...(mediaType === "video" ? videoSyncFields(get(playingVideoState)[`_`]) : {}) })
 }
 
 // TIMERS / RELOJES (F4.7): el engine dibuja el valor que manda el frontend.

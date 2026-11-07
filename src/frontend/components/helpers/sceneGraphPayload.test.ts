@@ -183,3 +183,16 @@ describe("align del encuadre (F21.2)", () => {
         expect("align" in sceneGraphPayload(base)).toBe(false)
     })
 })
+
+describe("transporte de un video dentro de la slide (F23.20)", () => {
+    const base = { x: 0, y: 0, width: 10, height: 10, src: "/m/v.mp4", mediaType: "video" as const, opacity: 1 }
+
+    it("viaja pausa y posición", () => {
+        const item = sceneMediaItem({ ...base, paused: true, positionMs: 1500 })
+        expect(item).toMatchObject({ paused: true, positionMs: 1500 })
+    })
+
+    it("sin transporte no deja claves (no cambia los fixtures)", () => {
+        expect("paused" in sceneMediaItem(base) || "positionMs" in sceneMediaItem(base)).toBe(false)
+    })
+})
