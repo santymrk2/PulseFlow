@@ -1034,15 +1034,15 @@ Lista inicial de `POSTPONED_NOTIFY` (los que dispara el usuario): `OPEN_NOW_PLAY
 `startup.ts`, en `listeners.ts`, en un `subscribe` o en un temporizador (no la dispara el usuario), se saca de la
 lista (si no, el aviso saldría solo al arrancar) y se anota en el commit.
 
-- [ ] **Step 1: Tests que fallan** en `tauri.test.ts`: (a) todo `POSTPONED_NOTIFY` está en `POSTPONED_COMMANDS`;
+- [x] **Step 1: Tests que fallan** en `tauri.test.ts`: (a) todo `POSTPONED_NOTIFY` está en `POSTPONED_COMMANDS`;
   (b) enviar dos veces un canal de la lista llama a `newToast` una sola vez (mock de `newToast`, como los mocks
   existentes del archivo).
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar.** Para (a), exportar los dos sets sólo para el test.
-- [ ] **Step 4:** chequeos JS y Rust en verde.
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar.** Para (a), exportar los dos sets sólo para el test.
+- [x] **Step 4:** chequeos JS y Rust en verde.
 - [ ] **Step 5: En la app:** Configuración → sincronización en la nube ya no la ofrece como disponible; tocar una
   función pospuesta (por ejemplo, buscar letras) muestra el aviso una vez.
-- [ ] **Step 6:** commit `F23.22: las funciones que todavía no existen avisan en vez de fallar en silencio`.
+- [x] **Step 6:** commit `F23.22: las funciones que todavía no existen avisan en vez de fallar en silencio`.
 
 ---
 

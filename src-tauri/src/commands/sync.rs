@@ -8,7 +8,7 @@
 
 use crate::error::AppResult;
 use serde::Deserialize;
-use serde_json::{json, Value};
+use serde_json::Value;
 
 #[derive(Deserialize)]
 pub struct SyncProviderData {
@@ -16,10 +16,10 @@ pub struct SyncProviderData {
     pub id: Option<String>,
 }
 
-/// `CAN_SYNC`: indica si el proveedor de sincronización está disponible.
+/// `CAN_SYNC`: indica si el proveedor de sincronización está disponible (todavía no).
 #[tauri::command]
 pub fn CAN_SYNC(_data: SyncProviderData) -> AppResult<bool> {
-    Ok(true)
+    Ok(false)
 }
 
 #[derive(Deserialize)]
@@ -42,10 +42,4 @@ pub fn GET_TEAMS(_data: SyncProviderData) -> AppResult<Vec<Value>> {
 #[tauri::command]
 pub fn CLOUD_DATA(_data: CloudDataRequest) -> AppResult<bool> {
     Ok(false)
-}
-
-/// Utilidad interna reutilizable para construir respuestas de sincronización.
-#[allow(dead_code)]
-pub fn success<T: serde::Serialize>(value: T) -> Value {
-    json!({ "success": true, "data": value })
 }
