@@ -27,5 +27,5 @@ monitores reales). Estado por pantalla (F12.10):
 5. **Look ▾** en la barra: cambia de look al hacer clic y "Editar looks…" abre el modal.
 6. **Textos en inglés y en español**: en Settings, la barra y los menús no deben quedar
    con texto del otro idioma (quedan fuera las pantallas que no se tocaron en F12).
-7. **Kit demo** (en dev): `activePopup.set("kit_demo")` desde la consola, en tema
+7. **Kit demo** (en dev, con `bun run dev:tauri`): en DevTools, `activePopup.set("kit_demo")` (Svelte) y `activePopup.set("kit_demo_react")` (React); `activePopup` queda en `window` sólo en desarrollo (`main.ts`), en tema
    claro y oscuro.

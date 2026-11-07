@@ -78,7 +78,7 @@ export function HiddenInput({ value: valueProp = "", style, id, allowEmpty = tru
     function mousedown(e: MouseEvent) {
         const target = e.target
         if (target === nameElem.current && allowEdit) {
-            timeout.current = setTimeout(() => click(target), HOLD_TIME)
+            timeout.current = setTimeout(() => handlers.current.click(target), HOLD_TIME)
             return
         }
 
@@ -103,9 +103,9 @@ export function HiddenInput({ value: valueProp = "", style, id, allowEmpty = tru
     }
 
     // <svelte:window on:mousedown on:mouseup on:dragstart on:keydown>: los handlers cambian en cada render, el listener no
-    const handlers = useRef({ mousedown, keydown })
+    const handlers = useRef({ mousedown, keydown, click })
     useEffect(() => {
-        handlers.current = { mousedown, keydown }
+        handlers.current = { mousedown, keydown, click }
     })
     useEffect(() => {
         const onMouseDown = (e: MouseEvent) => handlers.current.mousedown(e)

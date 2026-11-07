@@ -183,3 +183,13 @@ describe("HiddenInput", () => {
         expect(screen.getByText("Nombre")).toBeTruthy()
     })
 })
+
+describe("HiddenInput (espera de 700ms)", () => {
+    it("al_cumplirse_la_espera_usa_el_valor_vigente_y_no_el_del_mousedown", () => {
+        const { rerender } = render(<HiddenInput value="Viejo" id="show_1" />)
+        fireEvent.mouseDown(screen.getByText("Viejo"))
+        rerender(<HiddenInput value="Nuevo" id="show_1" />)
+        act(() => void vi.advanceTimersByTime(700))
+        expect(input().value).toBe("Nuevo")
+    })
+})
