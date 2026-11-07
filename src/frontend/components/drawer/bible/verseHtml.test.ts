@@ -48,4 +48,10 @@ describe("sanitizeVerseText", () => {
     it("deja las entidades escapadas tal cual", () => {
         expect(sanitizeVerseText("&lt;script&gt;")).toBe("&lt;script&gt;")
     })
+    it("span descartado dentro del rojo: su cierre no cierra el rojo", () => {
+        expect(sanitizeVerseText('<span class="wj"><span foo>a</span>b</span>')).toBe('<span class="wj">ab</span>')
+    })
+    it("span descartado que envuelve al rojo: el cierre del rojo queda con su apertura", () => {
+        expect(sanitizeVerseText('<span foo><span class="wj">a</span></span>b')).toBe('<span class="wj">a</span>b')
+    })
 })

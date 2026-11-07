@@ -10,14 +10,12 @@ export interface VerseToken {
 const EMPHASIS_TAG = /^<\/?(i|em|b|strong|sup|sub)>$/i
 const WJ_OPEN_TAG = '<span class="wj">'
 const UNDERTITLE_OPEN_TAG = '<span class="undertitle">'
-const SPAN_CLOSE_TAG = "</span>"
 // Formas de rojo que reconoce markJesusWords (scripture.ts, RED_OPEN_TAG): exactas, sin comodines
 const WJ_OPEN_TAG_SPACED = '<span class="wj" >'
 const RED_STYLE_OPEN_TAG = '<span style="color:red;">'
 const RED_STYLE_OPEN_TAG_SPACED = '<span style="color:red;" >'
 const RED_OPEN_TAG = "<red>"
 const RED_OPEN_TAG_SPACED = "<red >"
-const RED_CLOSE_TAG = "</red>"
 const SPAN_OPEN_TAGS: readonly string[] = [WJ_OPEN_TAG, WJ_OPEN_TAG_SPACED, RED_STYLE_OPEN_TAG, RED_STYLE_OPEN_TAG_SPACED, UNDERTITLE_OPEN_TAG]
 const RED_TAG_OPENS: readonly string[] = [RED_OPEN_TAG, RED_OPEN_TAG_SPACED]
 
@@ -45,28 +43,34 @@ export function sanitizeVerseText(input: unknown): string {
     const replacedUndertitles = withQuotes.replace(/<h4[^>]*>(.*?)<\/h4>\s*/g, '<span class="undertitle">$1 </span>')
     const withoutMultipleSpaces = replacedUndertitles.replace(/ {2,}/g, " ")
 
-    let spanDepth = 0
-    let redDepth = 0
+    // Una pila por tipo de etiqueta: cada cierre vuelve a la apertura que le toca, aunque la apertura se haya descartado
+    const spanStack: boolean[] = []
+    const redStack: boolean[] = []
     let out = ""
     for (const token of tokenizeHtml(withoutMultipleSpaces)) {
         if (token.type === VERSE_TOKEN_TYPE.TEXT) {
             out += token.value.replace(/</g, "&lt;").replace(/>/g, "&gt;")
         } else if (EMPHASIS_TAG.test(token.value)) {
             out += token.value
-        } else if (SPAN_OPEN_TAGS.includes(token.value)) {
-            spanDepth++
-            out += token.value
-        } else if (RED_TAG_OPENS.includes(token.value)) {
-            redDepth++
-            out += token.value
-        } else if (token.value === SPAN_CLOSE_TAG && spanDepth > 0) {
-            spanDepth--
-            out += token.value
-        } else if (token.value === RED_CLOSE_TAG && redDepth > 0) {
-            redDepth--
-            out += token.value
+        } else {
+            const name = tagNameOf(token.value)
+            if (name === "span") out += filterPairedTag(token.value, spanStack, SPAN_OPEN_TAGS)
+            else if (name === "red") out += filterPairedTag(token.value, redStack, RED_TAG_OPENS)
         }
     }
 
     return out.trim()
+}
+
+function tagNameOf(tag: string) {
+    return tag.match(/^<\/?([a-z][a-z0-9-]*)/i)?.[1]?.toLowerCase() ?? ""
+}
+
+// Devuelve la etiqueta si se conserva; la pila guarda si cada apertura se conservó
+function filterPairedTag(tag: string, stack: boolean[], keptOpens: readonly string[]) {
+    if (tag.startsWith("</")) return stack.pop() ? tag : ""
+    if (tag.endsWith("/>")) return ""
+    const kept = keptOpens.includes(tag)
+    stack.push(kept)
+    return kept ? tag : ""
 }
