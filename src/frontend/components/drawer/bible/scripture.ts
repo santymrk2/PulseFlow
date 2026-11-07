@@ -23,6 +23,9 @@ import { history } from "../../helpers/history"
 import { getMediaStyle } from "../../helpers/media"
 import { getAllNormalOutputs, getFirstActiveOutput, setOutput } from "../../helpers/output"
 import { checkName } from "../../helpers/show"
+import { sanitizeVerseText, tokenizeHtml } from "./verseHtml"
+
+export { sanitizeVerseText } from "./verseHtml"
 
 const SCRIPTURE_API_URL = "https://api.churchapps.org/content/bibles"
 
@@ -1621,20 +1624,6 @@ function sliceHtmlRange(tokens: { type: "text" | "tag"; value: string }[], start
     return out.trim()
 }
 
-function tokenizeHtml(value: string) {
-    const tokens: { type: "text" | "tag"; value: string }[] = []
-    const regex = /(<[^>]+>)/gi
-    let lastIndex = 0
-    let match: RegExpExecArray | null
-    while ((match = regex.exec(value))) {
-        if (match.index > lastIndex) tokens.push({ type: "text", value: value.slice(lastIndex, match.index) })
-        tokens.push({ type: "tag", value: match[0] })
-        lastIndex = regex.lastIndex
-    }
-    if (lastIndex < value.length) tokens.push({ type: "text", value: value.slice(lastIndex) })
-    return tokens
-}
-
 function updateTagStack(tag: string, stack: { name: string; tag: string }[]) {
     const isClosing = /^<\//.test(tag)
     const isSelfClosing = /\/>$/.test(tag)
@@ -1758,19 +1747,6 @@ export function formatBibleText(text: string | undefined, redJesus = false) {
         .map((token) => (token.type === "tag" ? token.value : stripMarkdown(token.value)))
         .join("")
     return text.replaceAll("/ ", " ").replaceAll("*", "").replaceAll("&amp;", "&")
-}
-
-export function sanitizeVerseText(input: unknown): string {
-    if (input === null || input === undefined) return ""
-
-    const text = typeof input === "string" ? input : String(input)
-    const withoutBreaks = text.replace(/<\s*br\s*\/?>/gi, " ")
-    const normalizedSpaces = withoutBreaks.replace(/\u00a0/g, " ")
-    const withQuotes = normalizedSpaces.replace(/<q>(.*?)<\/q>/g, "“$1”")
-    const replacedUndertitles = withQuotes.replace(/<h4[^>]*>(.*?)<\/h4>\s*/g, '<span class="undertitle">$1 </span>')
-    const withoutMultipleSpaces = replacedUndertitles.replace(/ {2,}/g, " ")
-
-    return withoutMultipleSpaces.trim()
 }
 
 // CREATE SHOW/SLIDES

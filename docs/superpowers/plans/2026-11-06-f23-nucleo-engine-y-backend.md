@@ -529,7 +529,7 @@ mod tests {
   `export const VERSE_TOKEN_TYPE = { TEXT: "text", TAG: "tag" } as const` (patrón de constantes de
   `AGENTS.md`/TypeScript).
 
-- [ ] **Step 1: Test que falla:**
+- [x] **Step 1: Test que falla:**
 
 ```ts
 import { describe, expect, it } from "vitest"
@@ -563,9 +563,9 @@ describe("sanitizeVerseText", () => {
 })
 ```
 
-- [ ] **Step 2:** Run: `bunx vitest run --config config/testing/vitest.config.mts src/frontend/components/drawer/bible/verseHtml.test.ts`.
+- [x] **Step 2:** Run: `bunx vitest run --config config/testing/vitest.config.mts src/frontend/components/drawer/bible/verseHtml.test.ts`.
   Expected: FAIL.
-- [ ] **Step 3: Implementar.**
+- [x] **Step 3: Implementar.**
   - `tokenizeHtml`: como la actual, pero con la regex `/<\/?[a-z][^>]*>/gi`: sólo es etiqueta lo que empieza con letra.
   - `sanitizeVerseText`: primero las transformaciones de hoy, en el mismo orden (`<br>` → espacio, ` ` →
     espacio, `<q>` → comillas, `<h4>` → `<span class="undertitle">`, espacios múltiples → uno). Después recorre los
@@ -578,11 +578,11 @@ describe("sanitizeVerseText", () => {
     - al final, `trim()`.
   - Si una biblia real pierde un formato legítimo, se agrega **su etiqueta exacta** a la lista, con su caso en el
     test. Nunca un comodín.
-- [ ] **Step 4:** Run: `bun run test:unit && bun run test:svelte && bun run test:budget` y prettier sobre los 3 archivos.
+- [x] **Step 4:** Run: `bun run test:unit && bun run test:svelte && bun run test:budget` y prettier sobre los 3 archivos.
   Expected: 207 tests; svelte-check ≤ 40.
 - [ ] **Step 5: En la app:** Scripture con una biblia con palabras en rojo → el rojo se ve; crear una slide desde un
   versículo → el texto está. Si no hay una biblia así, anotarlo en el commit.
-- [ ] **Step 6:** commit `F23.10: el texto bíblico sólo deja pasar etiquetas conocidas`.
+- [x] **Step 6:** commit `F23.10: el texto bíblico sólo deja pasar etiquetas conocidas`.
 
 ---
 
