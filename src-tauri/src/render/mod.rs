@@ -14,6 +14,7 @@ pub mod gpu;
 pub mod guard;
 pub mod media;
 pub mod scene;
+pub mod shapes;
 pub mod screens;
 pub mod snapshot;
 pub mod stage;

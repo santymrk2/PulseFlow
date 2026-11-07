@@ -157,8 +157,9 @@ impl LayerArena {
         self.cursor = 0;
     }
 
-    /// Escribe `uniforms` en una entrada nueva y devuelve su offset dinámico.
-    pub(crate) fn push(&mut self, queue: &Queue, uniforms: &LayerUniforms) -> Option<u32> {
+    /// Escribe `uniforms` en una entrada nueva y devuelve su offset dinámico. `T` debe medir lo mismo que
+    /// `LayerUniforms` (el tamaño del binding): lo comprueba cada pipeline que use la arena con otra estructura.
+    pub(crate) fn push<T: bytemuck::Pod>(&mut self, queue: &Queue, uniforms: &T) -> Option<u32> {
         if self.cursor >= MAX_LAYERS_PER_FRAME {
             log::warn!("[media] más de {MAX_LAYERS_PER_FRAME} capas en un frame: se omite el resto");
             return None;

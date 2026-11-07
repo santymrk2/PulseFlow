@@ -431,3 +431,37 @@ fn golden_overlays() {
 
     assert_golden("overlays", &rgba, WIDTH, HEIGHT);
 }
+
+/// F23.16: caja con fondo, borde y esquinas redondeadas (escena de 320x180).
+#[test]
+fn golden_caja_con_fondo_borde_y_esquinas() {
+    let (w, h) = (320u32, 180u32);
+    let scene = scene(serde_json::json!({
+        "outputId": "golden-caja",
+        "stage": false,
+        "width": w,
+        "height": h,
+        "background": null,
+        "items": [{
+            "type": "text",
+            "x": 40, "y": 40, "width": 240, "height": 100,
+            "align": "center", "verticalAlign": "bottom", "lineHeight": 1.1,
+            "fontSize": 16, "fontWeight": 400,
+            "color": [1, 1, 1, 1],
+            "text": "Hola",
+            "spans": [{ "text": "Hola" }],
+            "box": { "background": [1, 0, 0, 1], "borderColor": [0, 1, 0, 1], "borderWidth": 4, "radius": 20 }
+        }],
+        "overlays": [],
+        "transition": null,
+        "plainText": "Hola"
+    }));
+    let rgba = render_snapshot_rgba(&scene, w, h).expect("render del snapshot");
+
+    assert_eq!(pixel_at(&rgba, w, 160, 90), [255, 0, 0], "centro de la caja");
+    assert_eq!(pixel_at(&rgba, w, 42, 90), [0, 255, 0], "borde izquierdo");
+    assert_eq!(pixel_at(&rgba, w, 40, 40), [0, 0, 0], "la esquina redondeada deja ver el fondo de la escena");
+    assert_eq!(pixel_at(&rgba, w, 10, 10), [0, 0, 0], "fuera de la caja");
+
+    assert_golden("caja-fondo-borde-esquinas", &rgba, w, h);
+}

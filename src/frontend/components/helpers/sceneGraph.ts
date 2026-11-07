@@ -32,7 +32,7 @@ import { _show } from "./shows"
 import { replaceDynamicValues } from "./showActions"
 import { contentAlign } from "./outputAspect"
 import { imagePathsOf } from "./sceneMedia"
-import { applyTextTransform, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
+import { applyTextTransform, parseBoxStyle, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
 import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
 import { markSceneClock, resetSceneClock } from "./sceneClock"
 
@@ -149,7 +149,8 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
         stroke: resolved.strokeWidth && resolved.strokeWidth > 0 ? { color: resolved.strokeColor || [0, 0, 0, 1], width: resolved.strokeWidth } : undefined,
         shadow: resolved.shadow || undefined,
         text,
-        spans
+        spans,
+        box: parseBoxStyle(item.style)
     })
 }
 
@@ -169,7 +170,7 @@ function buildMediaItem(item: Item, index: number, allItems: Item[], outputId: s
     // "blur" no se puede pintar en el engine: cae a "contain" (igual que el render HTML)
     const fit = item.fit === "cover" ? "cover" : item.fit === "fill" ? "fill" : "contain"
 
-    return sceneMediaItem({ id: item.id, x: box.x, y: box.y, width: box.width, height: box.height, src, mediaType, fit, opacity: 1 })
+    return sceneMediaItem({ id: item.id, x: box.x, y: box.y, width: box.width, height: box.height, src, mediaType, fit, opacity: 1, box: parseBoxStyle(item.style) })
 }
 
 // TIMERS / RELOJES (F4.7): el engine dibuja el valor que manda el frontend.

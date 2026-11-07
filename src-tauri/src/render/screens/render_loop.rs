@@ -2,6 +2,7 @@
 
 use super::*;
 use crate::render::media::{MediaState, MediaStore, MediaTexture};
+use crate::render::shapes::ShapePipeline;
 use crate::render::{gpu, media};
 
 // ---------------------------------------------------------------------------
@@ -50,6 +51,7 @@ pub(super) fn spawn_render_loop(
                 let mut background_pipeline = store.pipeline(config.format);
                 let mut nv12_pipeline = store.nv12_pipeline(config.format);
                 let mut arena = store.new_arena();
+                let mut shape_pipeline = ShapePipeline::new(&device, config.format);
                 let mut text_engine = TextEngine::new(&device, &queue, config.format);
                 let mut text_errors: u64 = 0;
                 // F4.4: doble buffer offscreen donde se compone la escena + la transición.
@@ -84,6 +86,7 @@ pub(super) fn spawn_render_loop(
                                 background_pipeline = store.pipeline(config.format);
                                 nv12_pipeline = store.nv12_pipeline(config.format);
                                 arena = store.new_arena();
+                                shape_pipeline = ShapePipeline::new(&device, config.format);
                                 text_engine = TextEngine::new(&device, &queue, config.format);
                                 transition_engine = crate::render::transition::TransitionEngine::new(
                                     &device,
@@ -236,6 +239,8 @@ pub(super) fn spawn_render_loop(
                                     // Items de medio (imágenes) colocados en la slide, encima
                                     // del fondo y debajo del texto (F4.5).
                                     for item in &current.media {
+                                        // F23.16: la caja del ítem va justo antes de su medio
+                                        shape_pipeline.draw_media_box(&device, &queue, &mut arena, &mut pass, item, (w, h));
                                         if item.media_type != "image" || item.path.is_empty() {
                                             continue;
                                         }
@@ -266,6 +271,8 @@ pub(super) fn spawn_render_loop(
 
                                     // Texto de la slide (capa 3). Los overlays del Scene Graph
                                     // (F4.6) se dibujan después, en su propia capa.
+                                    // F23.16: las cajas de todos los textos van antes de la llamada de texto de la capa.
+                                    shape_pipeline.draw_text_boxes(&device, &queue, &mut arena, &mut pass, &current.text, (w, h));
                                     current.text.clone()
                                 }
                                 ScreenKind::Stage => crate::render::stage::stage_blocks(&current.stage, w as f32, h as f32),
@@ -283,6 +290,7 @@ pub(super) fn spawn_render_loop(
                             if matches!(kind, ScreenKind::Audience) {
                                 // Medios (imágenes) de los overlays.
                                 for item in &current.overlay_media {
+                                    shape_pipeline.draw_media_box(&device, &queue, &mut arena, &mut pass, item, (w, h));
                                     if item.media_type != "image" || item.path.is_empty() {
                                         continue;
                                     }
@@ -310,7 +318,8 @@ pub(super) fn spawn_render_loop(
                                     }
                                 }
 
-                                // Texto de los overlays.
+                                // Texto de los overlays (con las cajas de todos antes, F23.16).
+                                shape_pipeline.draw_text_boxes(&device, &queue, &mut arena, &mut pass, &current.overlay_text, (w, h));
                                 if let Err(err) = text_engine.render(
                                     TextLayer::Overlay,
                                     &device,

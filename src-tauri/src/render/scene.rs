@@ -186,6 +186,44 @@ pub struct SceneMediaItem {
     pub fit: Option<String>,
     #[serde(default = "default_opacity")]
     pub opacity: f32,
+    /// Fondo, borde, esquinas y opacidad del cuadro (F23.16).
+    #[serde(default, rename = "box", skip_serializing_if = "Option::is_none")]
+    pub box_style: Option<SceneBox>,
+}
+
+/// Margen interior de un cuadro, en unidades de la resolución lógica.
+#[derive(Debug, Clone, Copy, Default, PartialEq, Serialize, Deserialize)]
+pub struct ScenePadding {
+    pub top: f32,
+    pub right: f32,
+    pub bottom: f32,
+    pub left: f32,
+}
+
+/// Caja de un ítem (F23.16): se dibuja en el rect completo, antes del contenido. `opacity` multiplica caja,
+/// texto y medio; `padding` achica el rect del texto.
+#[derive(Debug, Clone, Default, PartialEq, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase", default)]
+pub struct SceneBox {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub background: Option<[f32; 4]>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub border_color: Option<[f32; 4]>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub border_width: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub radius: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub opacity: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub padding: Option<ScenePadding>,
+}
+
+impl SceneBox {
+    /// Opacidad efectiva (0..=1; sin valor, opaco).
+    pub fn opacity_factor(&self) -> f32 {
+        self.opacity.unwrap_or(1.0).clamp(0.0, 1.0)
+    }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -226,6 +264,9 @@ pub struct SceneTextItem {
     /// El texto cambia solo con el tiempo (reloj, timer): no cuenta como cambio de escena.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub live: bool,
+    /// Fondo, borde, esquinas, opacidad y padding del cuadro (F23.16).
+    #[serde(default, rename = "box", skip_serializing_if = "Option::is_none")]
+    pub box_style: Option<SceneBox>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -259,6 +300,65 @@ fn default_color() -> [f32; 4] {
     [1.0, 1.0, 1.0, 1.0]
 }
 
+/// Multiplica el alfa de un color por la opacidad del cuadro.
+fn faded(color: [f32; 4], opacity: f32) -> [f32; 4] {
+    [color[0], color[1], color[2], color[3] * opacity]
+}
+
+/// Item de texto -> bloque del engine. `opacity` multiplica el alfa del texto, el contorno y la sombra;
+/// `padding` achica el rect (la caja se dibuja con el rect completo: ver `TextBlock::box_rect`).
+fn text_block(t: &SceneTextItem, design_width: f32) -> TextBlock {
+    let opacity = t.box_style.as_ref().map_or(1.0, SceneBox::opacity_factor);
+    let pad = t.box_style.as_ref().and_then(|b| b.padding).unwrap_or_default();
+    TextBlock {
+        text: t.text.clone(),
+        font_family: t.font_family.clone(),
+        font_size: t.font_size,
+        font_weight: t.font_weight,
+        font_style: t.font_style.clone(),
+        color: faded(t.color, opacity),
+        alignment: t.align.clone(),
+        x: t.x + pad.left,
+        y: t.y + pad.top,
+        // shortcut: un padding mayor que el cuadro deja 1 unidad de texto y la caja se agranda; no hay caso real
+        width: (t.width - pad.left - pad.right).max(1.0),
+        height: (t.height - pad.top - pad.bottom).max(1.0),
+        line_height_ratio: t.line_height,
+        outline_color: t.stroke.as_ref().map(|s| faded(s.color, opacity)),
+        outline_width: t.stroke.as_ref().map(|s| s.width),
+        shadow_color: t.shadow.as_ref().map(|s| faded(s.color, opacity)),
+        shadow_offset: t.shadow.as_ref().map(|s| [s.offset_x, s.offset_y]),
+        spans: t.spans.iter().map(|s| TextSpan { color: s.color.map(|c| faded(c, opacity)), ..s.clone() }).collect(),
+        vertical_align: t.vertical_align.clone(),
+        design_width: Some(design_width),
+        live: t.live,
+        box_style: t.box_style.clone(),
+    }
+}
+
+/// Item de medio -> `MediaItem` del engine. `opacity` del cuadro multiplica la del medio.
+fn media_item(m: &SceneMediaItem, design_width: f32) -> MediaItem {
+    let box_opacity = m.box_style.as_ref().map_or(1.0, SceneBox::opacity_factor);
+    MediaItem {
+        // El `MediaPool` cachea por ruta (como el fondo): la clave es el `src`.
+        id: m.src.clone(),
+        path: m.src.clone(),
+        media_type: m.media_type.clone(),
+        x: m.x,
+        y: m.y,
+        width: m.width,
+        height: m.height,
+        aspect_mode: match m.fit.as_deref() {
+            Some("contain") => 1,
+            Some("fill") | Some("stretch") => 2,
+            _ => 0,
+        },
+        opacity: (m.opacity * box_opacity).clamp(0.0, 1.0),
+        design_width: Some(design_width),
+        box_style: m.box_style.clone(),
+    }
+}
+
 impl ScenePayload {
     /// Ancho lógico de la escena (1920 si no viene informado).
     pub fn design_width(&self) -> f32 {
@@ -287,29 +387,8 @@ impl ScenePayload {
                 SceneItem::Text(t) => Some(t),
                 _ => None,
             })
-            .filter(|t| !t.text.trim().is_empty() || t.spans.iter().any(|s| !s.text.trim().is_empty()))
-            .map(|t| TextBlock {
-                text: t.text.clone(),
-                font_family: t.font_family.clone(),
-                font_size: t.font_size,
-                font_weight: t.font_weight,
-                font_style: t.font_style.clone(),
-                color: t.color,
-                alignment: t.align.clone(),
-                x: t.x,
-                y: t.y,
-                width: t.width,
-                height: t.height,
-                line_height_ratio: t.line_height,
-                outline_color: t.stroke.as_ref().map(|s| s.color),
-                outline_width: t.stroke.as_ref().map(|s| s.width),
-                shadow_color: t.shadow.as_ref().map(|s| s.color),
-                shadow_offset: t.shadow.as_ref().map(|s| [s.offset_x, s.offset_y]),
-                spans: t.spans.clone(),
-                vertical_align: t.vertical_align.clone(),
-                design_width: Some(design_width),
-                live: t.live,
-            })
+            .filter(|t| t.box_style.is_some() || !t.text.trim().is_empty() || t.spans.iter().any(|s| !s.text.trim().is_empty()))
+            .map(|t| text_block(t, design_width))
             .collect()
     }
 
@@ -322,23 +401,7 @@ impl ScenePayload {
                 _ => None,
             })
             .filter(|m| !m.src.trim().is_empty())
-            .map(|m| MediaItem {
-                // El `MediaPool` cachea por ruta (como el fondo): la clave es el `src`.
-                id: m.src.clone(),
-                path: m.src.clone(),
-                media_type: m.media_type.clone(),
-                x: m.x,
-                y: m.y,
-                width: m.width,
-                height: m.height,
-                aspect_mode: match m.fit.as_deref() {
-                    Some("contain") => 1,
-                    Some("fill") | Some("stretch") => 2,
-                    _ => 0,
-                },
-                opacity: m.opacity.clamp(0.0, 1.0),
-                design_width: Some(self.width),
-            })
+            .map(|m| media_item(m, self.width))
             .collect()
     }
 
@@ -392,29 +455,8 @@ impl ScenePayload {
                 SceneItem::Text(t) => Some(t),
                 _ => None,
             })
-            .filter(|t| !t.text.trim().is_empty() || t.spans.iter().any(|s| !s.text.trim().is_empty()))
-            .map(|t| TextBlock {
-                text: t.text.clone(),
-                font_family: t.font_family.clone(),
-                font_size: t.font_size,
-                font_weight: t.font_weight,
-                font_style: t.font_style.clone(),
-                color: t.color,
-                alignment: t.align.clone(),
-                x: t.x,
-                y: t.y,
-                width: t.width,
-                height: t.height,
-                line_height_ratio: t.line_height,
-                outline_color: t.stroke.as_ref().map(|s| s.color),
-                outline_width: t.stroke.as_ref().map(|s| s.width),
-                shadow_color: t.shadow.as_ref().map(|s| s.color),
-                shadow_offset: t.shadow.as_ref().map(|s| [s.offset_x, s.offset_y]),
-                spans: t.spans.clone(),
-                vertical_align: t.vertical_align.clone(),
-                design_width: Some(design_width),
-                live: t.live,
-            })
+            .filter(|t| t.box_style.is_some() || !t.text.trim().is_empty() || t.spans.iter().any(|s| !s.text.trim().is_empty()))
+            .map(|t| text_block(t, design_width))
             .collect()
     }
 
@@ -427,22 +469,7 @@ impl ScenePayload {
                 _ => None,
             })
             .filter(|m| !m.src.trim().is_empty())
-            .map(|m| MediaItem {
-                id: m.src.clone(),
-                path: m.src.clone(),
-                media_type: m.media_type.clone(),
-                x: m.x,
-                y: m.y,
-                width: m.width,
-                height: m.height,
-                aspect_mode: match m.fit.as_deref() {
-                    Some("contain") => 1,
-                    Some("fill") | Some("stretch") => 2,
-                    _ => 0,
-                },
-                opacity: m.opacity.clamp(0.0, 1.0),
-                design_width: Some(self.width),
-            })
+            .map(|m| media_item(m, self.width))
             .collect()
     }
 }
@@ -479,6 +506,52 @@ mod tests {
         assert!(!text.contains("live"), "{text}");
         let text = serde_json::to_string(&con).expect("json");
         assert!(text.contains("\"live\":true"), "{text}");
+    }
+
+    /// F23.16: la caja de un ítem se deserializa; sin caja, la clave no se escribe.
+    #[test]
+    fn caja_se_deserializa_y_se_omite_si_falta() {
+        let con: SceneTextItem = serde_json::from_value(json!({
+            "type":"text","x":0,"y":0,"width":10,"height":10,"text":"hola",
+            "box": { "background": [1,0,0,1], "radius": 8, "padding": { "top": 1, "right": 2, "bottom": 3, "left": 4 } }
+        }))
+        .expect("item");
+        let caja = con.box_style.as_ref().expect("caja");
+        assert_eq!((caja.background, caja.radius, caja.border_width), (Some([1.0, 0.0, 0.0, 1.0]), Some(8.0), None));
+        assert_eq!(caja.padding.map(|p| (p.top, p.right, p.bottom, p.left)), Some((1.0, 2.0, 3.0, 4.0)));
+        let text = serde_json::to_string(&con).expect("json");
+        assert!(text.contains("\"box\":{\"background\":[1.0,0.0,0.0,1.0],\"radius\":8.0,\"padding\""), "{text}");
+
+        let sin: SceneTextItem = serde_json::from_value(json!({"type":"text","x":0,"y":0,"width":10,"height":10,"text":"hola"})).expect("item");
+        assert!(sin.box_style.is_none());
+        assert!(!serde_json::to_string(&sin).expect("json").contains("box"));
+        let medio: SceneMediaItem = serde_json::from_value(json!({"x":0,"y":0,"width":10,"height":10,"src":"a.png","box":{"opacity":0.5}})).expect("medio");
+        assert_eq!(medio.box_style.and_then(|b| b.opacity), Some(0.5));
+    }
+
+    /// F23.16: `opacity` multiplica texto y medio; `padding` achica el texto y la caja conserva el rect completo.
+    #[test]
+    fn opacidad_y_padding_se_aplican_al_bloque_y_al_medio() {
+        let payload: ScenePayload = serde_json::from_value(json!({
+            "outputId": "o", "width": 1000, "height": 500,
+            "items": [
+                { "type": "text", "x": 100, "y": 50, "width": 400, "height": 200, "text": "Hola", "color": [1,1,1,1],
+                  "spans": [{ "text": "Hola", "color": [1,0,0,0.8] }],
+                  "box": { "background": [0,0,1,1], "opacity": 0.5, "padding": { "top": 10, "right": 20, "bottom": 30, "left": 40 } } },
+                { "type": "text", "x": 0, "y": 0, "width": 10, "height": 10, "text": "", "box": { "background": [0,0,1,1] } },
+                { "type": "media", "x": 0, "y": 0, "width": 10, "height": 10, "src": "a.png", "opacity": 0.8, "box": { "opacity": 0.5 } }
+            ]
+        }))
+        .expect("payload");
+        let blocks = payload.text_blocks();
+        assert_eq!(blocks.len(), 2, "un cuadro sin texto pero con caja se conserva");
+        let b = &blocks[0];
+        assert_eq!((b.x, b.y, b.width, b.height), (140.0, 60.0, 340.0, 160.0));
+        assert_eq!(b.color[3], 0.5);
+        assert_eq!(b.spans[0].color.map(|c| c[3]), Some(0.4));
+        let (_, rect) = b.box_rect().expect("caja");
+        assert_eq!(rect, [100.0, 50.0, 400.0, 200.0], "la caja ocupa el rect completo");
+        assert_eq!(payload.media_items()[0].opacity, 0.4);
     }
 
     #[test]

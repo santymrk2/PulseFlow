@@ -1,5 +1,6 @@
 //! Tipos y estructuras de datos para el motor de renderizado GPU y Scene Graph.
 
+use super::scene::SceneBox;
 use serde::{Deserialize, Serialize};
 
 /// Bloque de texto para proyectar en pantalla.
@@ -68,6 +69,18 @@ pub struct TextBlock {
     /// El texto cambia solo con el tiempo (reloj, timer): actualizarlo no pide transición.
     #[serde(default, skip_serializing_if = "std::ops::Not::not")]
     pub live: bool,
+    /// Caja del cuadro (fondo, borde, esquinas, opacidad, padding): el engine la dibuja antes del texto (F23.16).
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub box_style: Option<SceneBox>,
+}
+
+impl TextBlock {
+    /// Rect completo de la caja (el texto está achicado por el padding) en las unidades del bloque.
+    pub fn box_rect(&self) -> Option<(&SceneBox, [f32; 4])> {
+        let style = self.box_style.as_ref()?;
+        let pad = style.padding.unwrap_or_default();
+        Some((style, [self.x - pad.left, self.y - pad.top, self.width + pad.left + pad.right, self.height + pad.top + pad.bottom]))
+    }
 }
 
 impl Default for TextBlock {
@@ -93,6 +106,7 @@ impl Default for TextBlock {
             vertical_align: None,
             design_width: None,
             live: false,
+            box_style: None,
         }
     }
 }
@@ -199,6 +213,8 @@ pub struct MediaItem {
     /// Resolución lógica de la escena; el engine escala la caja a la ventana
     /// (`ventana / design_width`). Si es `None`, las coordenadas son píxeles.
     pub design_width: Option<f32>,
+    /// Caja del cuadro: se dibuja justo antes del medio (F23.16).
+    pub box_style: Option<SceneBox>,
 }
 
 /// Elemento de superposición superior (reloj, avisos, tercios inferiores).

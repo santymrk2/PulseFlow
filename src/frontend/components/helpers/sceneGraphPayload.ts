@@ -90,7 +90,8 @@ export function sceneTextItem(parts: Omit<SceneTextItem, "type">): SceneTextItem
         shadow: parts.shadow,
         text: parts.text,
         spans: parts.spans,
-        live: parts.live
+        live: parts.live,
+        box: parts.box
     })
 }
 
@@ -106,7 +107,8 @@ export function sceneMediaItem(parts: Omit<SceneMediaItem, "type">): SceneMediaI
         src: parts.src,
         mediaType: parts.mediaType,
         fit: parts.fit,
-        opacity: parts.opacity
+        opacity: parts.opacity,
+        box: parts.box
     })
 }
 

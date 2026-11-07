@@ -274,6 +274,7 @@ fn the_scene_snapshot_is_published_whole() {
             aspect_mode: 0,
             opacity: 1.0,
             design_width: None,
+            box_style: None,
         }];
     });
 
@@ -307,6 +308,7 @@ fn a_reader_never_sees_a_half_updated_scene() {
         aspect_mode: 0,
         opacity: 1.0,
         design_width: None,
+        box_style: None,
     };
     slot.update(|scene| {
         scene.text = vec![TextBlock { text: "a".to_string(), ..Default::default() }];

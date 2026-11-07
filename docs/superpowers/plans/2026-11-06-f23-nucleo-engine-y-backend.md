@@ -837,7 +837,7 @@ La clave de `playingVideoState` es `` `${path}_${outputId}` `` (`videoPlayer.ts:
 - Semántica: la caja se dibuja antes del texto o del medio del ítem; `opacity` multiplica el alfa de la caja, del
   texto y del medio; `padding` achica el rect del texto (la caja ocupa el rect completo).
 
-- [ ] **Step 1: Tests que fallan.**
+- [x] **Step 1: Tests que fallan.**
   - `sceneStyle.test.ts` `parseBoxStyle`:
     `"background-color: rgba(255,0,0,0.5);border: 4px solid #00ff00;border-radius: 20px;opacity: 0.8;padding: 10px 20px;"` →
     `{ background: [1,0,0,0.5], borderColor: [0,1,0,1], borderWidth: 4, radius: 20, opacity: 0.8, padding: { top: 10, right: 20, bottom: 10, left: 20 } }`;
@@ -847,13 +847,13 @@ La clave de `playingVideoState` es `` `${path}_${outputId}` `` (`videoPlayer.ts:
   - Rust golden `golden_caja_con_fondo_borde_y_esquinas`: escena de 320×180 con un ítem de texto "Hola" en
     `x 40, y 40, w 240, h 100`, fondo rojo, borde verde de 4 px y radio 20. Además del golden, píxeles exactos: centro
     de la caja rojo, `(42, 90)` verde, `(40, 40)` (la esquina) del color de fondo de la escena.
-- [ ] **Step 2:** correr los tests. Expected: FAIL.
-- [ ] **Step 3: Implementar** y generar el golden nuevo con `UPDATE_ENV` (sólo ese). Los goldens viejos **no se
+- [x] **Step 2:** correr los tests. Expected: FAIL.
+- [x] **Step 3: Implementar** y generar el golden nuevo con `UPDATE_ENV` (sólo ese). Los goldens viejos **no se
   regeneran**: si alguno cambia, hay un bug.
-- [ ] **Step 4:** todos los chequeos en verde.
+- [x] **Step 4:** todos los chequeos en verde.
 - [ ] **Step 5: En la app:** un cuadro con fondo semitransparente, borde y esquinas redondeadas se ve igual en la vista
   previa y en el proyector.
-- [ ] **Step 6:** commit `F23.16: el proyector dibuja fondo, borde, esquinas, opacidad y padding de los cuadros`.
+- [x] **Step 6:** commit `F23.16: el proyector dibuja fondo, borde, esquinas, opacidad y padding de los cuadros`.
 
 ---
 
