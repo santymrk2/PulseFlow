@@ -163,10 +163,8 @@ impl ShapePipeline {
         if fill.is_none_or(|c| c[3] <= 0.0) && border.is_none_or(|c| c[3] <= 0.0) {
             return;
         }
-        // Lo que falta es transparente, con el RGB del otro para que el suavizado no oscurezca el borde.
-        let border = border
-            .or(fill.map(|c| [c[0], c[1], c[2], 0.0]))
-            .unwrap_or([0.0; 4]);
+        // Sin borde, el borde es el relleno (si no, el alfa del antialiasing se aplicaría dos veces); sin relleno, es transparente con el RGB del borde.
+        let border = border.or(fill).unwrap_or([0.0; 4]);
         let fill = fill.unwrap_or([border[0], border[1], border[2], 0.0]);
         let radius = style.radius.unwrap_or(0.0) * scale;
         let rect = [

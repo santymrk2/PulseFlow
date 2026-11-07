@@ -465,3 +465,21 @@ fn golden_caja_con_fondo_borde_y_esquinas() {
 
     assert_golden("caja-fondo-borde-esquinas", &rgba, w, h);
 }
+
+/// F23.16 (ronda 1): una caja sin borde antialiasea una sola vez. Con el borde en la mitad de un píxel la
+/// cobertura es ~0.5 (sRGB ~188 sobre negro); aplicada dos veces daba ~0.25 (~137).
+#[test]
+fn caja_sin_borde_antialiasea_una_sola_vez() {
+    let (w, h) = (320u32, 180u32);
+    let scene = scene(serde_json::json!({
+        "outputId": "caja-sin-borde", "width": w, "height": h,
+        "items": [{
+            "type": "text", "x": 40.5, "y": 40, "width": 100, "height": 100, "text": " ",
+            "box": { "background": [1, 1, 1, 1] }
+        }]
+    }));
+    let rgba = render_snapshot_rgba(&scene, w, h).expect("render del snapshot");
+    let [r, ..] = pixel_at(&rgba, w, 40, 90);
+    assert!((160..=215).contains(&r), "el píxel del borde debería tener cobertura ~0.5, tiene canal rojo {r}");
+    assert_eq!(pixel_at(&rgba, w, 90, 90), [255, 255, 255], "interior");
+}

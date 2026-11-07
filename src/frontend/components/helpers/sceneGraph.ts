@@ -267,7 +267,8 @@ function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: s
         color,
         text: value,
         spans,
-        live: true
+        live: true,
+        box: parseBoxStyle(item.style)
     })
 }
 
