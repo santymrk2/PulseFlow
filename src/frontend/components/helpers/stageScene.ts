@@ -3,6 +3,7 @@
 import type { SceneItem, SceneTextItem } from "../../../types/SceneGraph"
 import type { StageItem, StageLayout } from "../../../types/Stage"
 import { imageExtensions, videoExtensions } from "../../values/extensions"
+import { variableText, type VariableValue } from "./dynamicItemText"
 import { sceneMediaItem, sceneTextItem, sceneTextSpan } from "./sceneGraphPayload"
 import { parseBoxStyle, parseCssColor, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign } from "./sceneStyle"
 
@@ -17,7 +18,10 @@ export interface StageContext {
     slideTexts: string[]
     slideNotes: string[]
     currentIndex: number
+    /** Respaldo si falta `clockTexts` */
     clockText: string
+    /** Texto de cada reloj por clave del ítem; un reloj sin entrada (analógico) no se dibuja */
+    clockTexts?: Record<string, string>
     /** Por id de timer; `first_active_timer` para el ítem antiguo del primer timer activo */
     timerTexts: Record<string, string>
     variableTexts: Record<string, string>
@@ -51,6 +55,17 @@ export function stageRefId(key: string, item: StageItem): string {
     return item.timer?.id || item.variable?.id || keyId(key) || (key.includes("first_active_timer") ? "first_active_timer" : "")
 }
 
+/** Texto de la variable: `hideText` sólo vale para los ítems antiguos sin tipo; con tipo, una variable deshabilitada se ve (como SlideItems). */
+export function stageVariableText(item: StageItem, variable: VariableValue | undefined): string {
+    return variableText(variable, !item.type)
+}
+
+/** Timer de un ítem: el suyo o, con tipo y sin `timer.id`, el primer activo o el primero que no es contador (como Stagebox). */
+export function stageTimerId(key: string, item: StageItem, activeId: string | undefined, firstNonCounterId: string | undefined): string {
+    const id = stageRefId(key, item)
+    return id === "first_active_timer" || (item.type && !item.timer?.id) ? activeId || firstNonCounterId || "" : id
+}
+
 export function slideOffsetOf(key: string, item: StageItem): number {
     return item.type ? Number(item.slideOffset || 0) : key.includes("next") ? 1 : 0
 }
@@ -67,7 +82,7 @@ function itemText(key: string, item: StageItem, type: string, ctx: StageContext)
         case "slide_notes":
             return slideAt(ctx.slideNotes)
         case "clock":
-            return ctx.clockText
+            return ctx.clockTexts ? ctx.clockTexts[key] : ctx.clockText
         case "timer":
             return ctx.timerTexts[stageRefId(key, item)]
         case "variable":
@@ -132,7 +147,7 @@ function textSceneItem(id: string, item: StageItem, type: string, text: string, 
         letterSpacing: base.letterSpacing,
         text,
         spans: [sceneTextSpan({ text, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color, underline: base.underline, strike: base.strike })],
-        // reloj y timers cambian solos; las variables, sólo si llevan `{…}` (lo marca quien arma el contexto)
+        // reloj, timers y variables van `live` (como F23.17); sólo se reenvía cada segundo la escena si hay reloj/timer o una variable con `{…}` (lo marca quien arma el contexto)
         live: type === "clock" || type === "timer" || type === "variable" ? true : undefined,
         box: parseBoxStyle(item.style)
     })

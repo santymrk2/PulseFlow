@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest"
 import type { StageItem, StageLayout } from "../../../types/Stage"
 import type { SceneMediaItem, SceneTextItem } from "../../../types/SceneGraph"
-import { buildStageItems, stageItemType, type StageContext } from "./stageScene"
+import { buildStageItems, stageItemType, stageTimerId, stageVariableText, type StageContext } from "./stageScene"
 
 const box = (left: number, top: number, width: number, height: number) => `left:${left}px;top:${top}px;width:${width}px;height:${height}px;font-size:60px;color:#ffeb3b;`
 
@@ -128,5 +128,29 @@ describe("buildStageItems", () => {
 
     it("sin ítems devuelve una lista vacía", () => {
         expect(buildStageItems(layout({}), ctx())).toEqual([])
+    })
+
+    it("cada reloj usa su propio texto y uno sin texto (analógico) no se dibuja", () => {
+        const l = layout({
+            a: { type: "clock", style: box(0, 0, 400, 100), align: "", auto: false },
+            b: { type: "clock", style: box(0, 100, 400, 100), align: "", auto: false },
+            c: { type: "clock", style: box(0, 200, 400, 100), align: "", auto: false }
+        })
+        const items = texts(buildStageItems(l, ctx({ clockTexts: { a: "10:30", b: "07/11/2026 10:30:15" } })))
+        expect(items.map((i) => i.text)).toEqual(["10:30", "07/11/2026 10:30:15"])
+    })
+
+    it("una variable deshabilitada se oculta sólo en el ítem antiguo sin tipo", () => {
+        const off = { type: "text", text: "Hola", enabled: false }
+        expect(stageVariableText({ style: "", align: "" }, off)).toBe("")
+        expect(stageVariableText({ type: "variable", style: "", align: "" }, off)).toBe("Hola")
+    })
+
+    it("un timer con tipo y sin id cae en el primer activo o no contador", () => {
+        const typed: StageItem = { type: "timer", style: "", align: "" }
+        expect(stageTimerId("t", typed, "act", "nc")).toBe("act")
+        expect(stageTimerId("t", typed, undefined, "nc")).toBe("nc")
+        expect(stageTimerId("t", { ...typed, timer: { id: "mio" } }, "act", "nc")).toBe("mio")
+        expect(stageTimerId("timers#x", { style: "", align: "" }, "act", "nc")).toBe("x")
     })
 })

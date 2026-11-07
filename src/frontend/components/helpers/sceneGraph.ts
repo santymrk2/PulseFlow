@@ -37,7 +37,7 @@ import { imagePathsOf } from "./sceneMedia"
 import { applyTextTransform, parseBoxStyle, parseCssColor, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
 import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
 import { markSceneClock, resetSceneClock } from "./sceneClock"
-import { buildStageItems, slideOffsetOf, stageItemType, stageRefId, type StageContext } from "./stageScene"
+import { buildStageItems, slideOffsetOf, stageItemType, stageRefId, stageTimerId, stageVariableText, type StageContext } from "./stageScene"
 import type { StageItem, StageLayout } from "../../../types/Stage"
 
 dayjs.extend(localizedFormat)
@@ -557,7 +557,7 @@ function getNextSlideRef(slide: OutSlide): OutSlide | null {
 /** Textos de la escena de un layout de stage (F23.19): slides y notas sólo en las posiciones que usa el layout. */
 function buildStageContext(layout: StageLayout, slide: OutSlide | null, sourceOutputId: string, currentStyle: ReturnType<typeof getCurrentStyle>, resolution: { width: number; height: number }): StageContext {
     const today = new Date()
-    const ctx: StageContext = { resolution, slideTexts: [], slideNotes: [], currentIndex: 0, clockText: "", timerTexts: {}, variableTexts: {}, trackerText: null, positionStyle: (style) => percentageStylePos(style, resolution) }
+    const ctx: StageContext = { resolution, slideTexts: [], slideNotes: [], currentIndex: 0, clockText: "", clockTexts: {}, timerTexts: {}, variableTexts: {}, trackerText: null, positionStyle: (style) => percentageStylePos(style, resolution) }
     const items = Object.entries(layout.items || {}).filter(([, item]) => item && item.enabled !== false) as [string, StageItem][]
 
     // las slides desactivadas se saltean; la actual cuenta aunque esté desactivada
@@ -577,17 +577,19 @@ function buildStageContext(layout: StageLayout, slide: OutSlide | null, sourceOu
             ctx.slideNotes[position] = get(showsCache)[slide.id]?.slides?.[target.ref.id]?.notes || ""
         } else if (type === "clock") {
             markSceneClock()
-            ctx.clockText ||= clockValueText(item as unknown as Item, today) || ""
+            // reloj antiguo (sin tipo): como el Clock.svelte de entonces, con `show_date` -> DD/MM/YYYY
+            const legacy = item.type ? item : { ...item, clock: { type: "digital", seconds: item.clock?.seconds ?? true, dateFormat: item.clock?.show_date ? "DD/MM/YYYY" : "none" } }
+            const text = clockValueText(legacy as unknown as Item, today)
+            if (text) ctx.clockTexts![key] = text
         } else if (type === "timer") {
             markSceneClock()
             const id = stageRefId(key, item)
-            // como Stagebox: el ítem antiguo del "primer timer activo" usa el primero que corre o, si no, el primero que no es contador
-            const timerId = id === "first_active_timer" ? get(activeTimers)[0]?.id || Object.entries(get(timers)).find(([, timer]) => timer.type !== "counter")?.[0] || "" : id
+            const timerId = stageTimerId(key, item, get(activeTimers)[0]?.id, Object.entries(get(timers)).find(([, timer]) => timer.type !== "counter")?.[0])
             ctx.timerTexts[id] = timerValueText({ ...item, timer: { ...(item.timer || {}), id: timerId } } as unknown as Item, today)
         } else if (type === "variable") {
-            // Stagebox muestra las variables con `hideText`: un texto deshabilitado no se ve
             const id = stageRefId(key, item)
-            let value = variableText(get(variables)[id], true)
+            // en Stagebox `hideText` sólo vale para los ítems antiguos sin tipo; con tipo, una variable deshabilitada se ve
+            let value = stageVariableText(item, get(variables)[id])
             if (value.includes("{")) {
                 markSceneClock() // {time_}… cambian solos
                 value = replaceDynamicValues(value, { type: "stage", id: key })
