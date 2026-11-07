@@ -168,6 +168,13 @@ pub struct ScreenScene {
     pub content: Option<super::frame::ContentFrame>,
 }
 
+impl ScreenScene {
+    /// F23.19: un stage con ítems de su layout se dibuja por el camino de la audiencia en vez de `stage_blocks`.
+    pub fn stage_draws_items(&self) -> bool {
+        !self.text.is_empty() || !self.media.is_empty()
+    }
+}
+
 /// Escena viva de una salida.
 ///
 /// La escena es **inmutable** mientras se dibuja: cada cambio la reemplaza entera

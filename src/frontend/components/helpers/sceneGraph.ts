@@ -30,13 +30,15 @@ import { getCurrentTimerValue } from "../drawer/timers/timers"
 import { defaultLayers, getCurrentStyle, getOutputLines, getOutputResolution, getOutputTransitions, getStyleTemplate, percentageStylePos, setTemplateStyle } from "./output"
 import { _show } from "./shows"
 import { getLayoutRef } from "./show"
-import { eventsLines, slideTrackerParts, variableText, type CalendarEvent } from "./dynamicItemText"
+import { eventsLines, slideTrackerParts, slideTrackerText, variableText, type CalendarEvent } from "./dynamicItemText"
 import { replaceDynamicValues } from "./showActions"
 import { contentAlign } from "./outputAspect"
 import { imagePathsOf } from "./sceneMedia"
 import { applyTextTransform, parseBoxStyle, parseCssColor, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
 import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
 import { markSceneClock, resetSceneClock } from "./sceneClock"
+import { buildStageItems, slideOffsetOf, stageItemType, stageRefId, type StageContext } from "./stageScene"
+import type { StageItem, StageLayout } from "../../../types/Stage"
 
 dayjs.extend(localizedFormat)
 
@@ -180,6 +182,62 @@ function buildMediaItem(item: Item, index: number, allItems: Item[], outputId: s
 
 // TIMERS / RELOJES (F4.7): el engine dibuja el valor que manda el frontend.
 
+function timerValueText(item: Item, today: Date): string {
+    const timerId = item.timer?.id || item.timerId || ""
+    const timer = (get(timers) as any)?.[timerId] || {}
+    if (!timer?.type) return ""
+    try {
+        const currentTime = getCurrentTimerValue(timer, { id: timerId }, today, get(activeTimers))
+        const showHours = item.timer?.showHours !== false
+        const padding = item.timer?.padding !== false
+        return joinTimeBig(typeof currentTime === "number" ? currentTime : 0, showHours, padding)
+    } catch {
+        return ""
+    }
+}
+
+/** Texto de un reloj (digital o con formato propio); `null` si es analógico (el engine no lo dibuja). */
+function clockValueText(item: Item, today: Date): string | null {
+    const clock = item.clock || {}
+    const type = clock.type || "digital"
+    if (type === "analog") return null
+
+    const offsetDays = Number(clock.offsetDays) || 0
+    const target = offsetDays ? new Date(today.getTime() + offsetDays * 86400000) : today
+
+    if (type === "custom") return dayjs(target).format(clock.customFormat || "hh:mm a")
+
+    const dateFormat = clock.dateFormat || "none"
+    const showTime = clock.showTime !== false
+    const seconds = clock.seconds !== false
+    const twelve = get(timeFormatStore) === "12"
+
+    let parts: string[] = []
+    if (dateFormat && dateFormat !== "none") {
+        parts.push(dayjs(target).format(dateFormat))
+    }
+    if (showTime) {
+        const d = target
+        let h = d.getHours()
+        let m = d.getMinutes()
+        let s = d.getSeconds()
+        let pm = false
+        if (twelve) {
+            if (h === 0) h = 12
+            else if (h > 12) {
+                h -= 12
+                pm = true
+            }
+        }
+        const pad = (n: number) => String(n).padStart(2, "0")
+        let timeStr = `${pad(h)}:${pad(m)}`
+        if (seconds) timeStr += `:${pad(s)}`
+        if (twelve) timeStr += pm ? " PM" : " AM"
+        parts.push(timeStr)
+    }
+    return parts.join(" ").trim()
+}
+
 function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: string, resolution: { width: number; height: number }, lineWindow: LineWindow): SceneTextItem | null {
     if (item.type !== "timer" && item.type !== "clock") return null
     if (!shouldItemBeShown(item, allItems, { outputId, type: "default" })) return null
@@ -188,66 +246,17 @@ function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: s
     const box = parseItemBox(percentageStylePos(item.style, resolution), { x: 0, y: 0, width: resolution.width, height: resolution.height })
     const base = parseTextStyle(item.style)
 
-    let value = ""
     const today = new Date()
+    let value = ""
 
     if (item.type === "timer") {
-        const timerId = item.timer?.id || item.timerId || ""
-        const timer = (get(timers) as any)?.[timerId] || {}
-        if (timer?.type) {
-            try {
-                const currentTime = getCurrentTimerValue(timer, { id: timerId }, today, get(activeTimers))
-                const showHours = item.timer?.showHours !== false
-                const padding = item.timer?.padding !== false
-                value = joinTimeBig(typeof currentTime === "number" ? currentTime : 0, showHours, padding)
-            } catch {
-                value = ""
-            }
-        }
+        value = timerValueText(item, today)
         // overflow color not handled in engine (cosmetic)
     } else {
-        const clock = item.clock || {}
-        const type = clock.type || "digital"
-        if (type === "analog") return null
+        const text = clockValueText(item, today)
+        if (text === null) return null
         markSceneClock()
-
-        const offsetDays = Number(clock.offsetDays) || 0
-        const target = offsetDays ? new Date(today.getTime() + offsetDays * 86400000) : today
-
-        if (type === "custom") {
-            const fmt = clock.customFormat || "hh:mm a"
-            value = dayjs(target).format(fmt)
-        } else {
-            const dateFormat = clock.dateFormat || "none"
-            const showTime = clock.showTime !== false
-            const seconds = clock.seconds !== false
-            const twelve = get(timeFormatStore) === "12"
-
-            let parts: string[] = []
-            if (dateFormat && dateFormat !== "none") {
-                parts.push(dayjs(target).format(dateFormat))
-            }
-            if (showTime) {
-                const d = target
-                let h = d.getHours()
-                let m = d.getMinutes()
-                let s = d.getSeconds()
-                let pm = false
-                if (twelve) {
-                    if (h === 0) h = 12
-                    else if (h > 12) {
-                        h -= 12
-                        pm = true
-                    }
-                }
-                const pad = (n: number) => String(n).padStart(2, "0")
-                let timeStr = `${pad(h)}:${pad(m)}`
-                if (seconds) timeStr += `:${pad(s)}`
-                if (twelve) timeStr += pm ? " PM" : " AM"
-                parts.push(timeStr)
-            }
-            value = parts.join(" ").trim()
-        }
+        value = text
     }
 
     if (!value) return null
@@ -521,7 +530,7 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
 
 /** Id de la salida de audiencia que una salida stage refleja (su "fuente"). */
 function getStageSourceOutputId(output: Output, outputsData: { [id: string]: Output }): string {
-    const configuredId = stageShows[output.stageOutput || ""]?.settings?.output || ""
+    const configuredId = get(stageShows)[output.stageOutput || ""]?.settings?.output || ""
     if (configuredId && outputsData[configuredId] && !outputsData[configuredId].stageOutput) return configuredId
 
     return (
@@ -545,10 +554,57 @@ function getNextSlideRef(slide: OutSlide): OutSlide | null {
     return { id: slide.id, layout: slide.layout, index }
 }
 
+/** Textos de la escena de un layout de stage (F23.19): slides y notas sólo en las posiciones que usa el layout. */
+function buildStageContext(layout: StageLayout, slide: OutSlide | null, sourceOutputId: string, currentStyle: ReturnType<typeof getCurrentStyle>, resolution: { width: number; height: number }): StageContext {
+    const today = new Date()
+    const ctx: StageContext = { resolution, slideTexts: [], slideNotes: [], currentIndex: 0, clockText: "", timerTexts: {}, variableTexts: {}, trackerText: null, positionStyle: (style) => percentageStylePos(style, resolution) }
+    const items = Object.entries(layout.items || {}).filter(([, item]) => item && item.enabled !== false) as [string, StageItem][]
+
+    // las slides desactivadas se saltean; la actual cuenta aunque esté desactivada
+    const refs = slide && (slide.type || "show") === "show" ? _show(slide.id).layouts([slide.layout]).ref()[0] || [] : []
+    const enabled = refs.map((ref, index) => ({ ref, index })).filter(({ ref, index }) => !ref.data?.disabled || index === slide?.index)
+    const current = slide ? enabled.findIndex(({ index }) => index === slide.index) : -1
+    ctx.currentIndex = Math.max(current, 0)
+
+    items.forEach(([key, item]) => {
+        const type = stageItemType(key, item)
+        if (type === "slide_text" || type === "slide_notes") {
+            const position = ctx.currentIndex + slideOffsetOf(key, item)
+            const target = current >= 0 ? enabled[position] : undefined
+            if (!slide || !target || ctx.slideTexts[position] !== undefined || ctx.slideNotes[position] !== undefined) return
+            const built = buildSlideItems({ id: slide.id, layout: slide.layout, index: target.index }, sourceOutputId, currentStyle, resolution)
+            ctx.slideTexts[position] = plainTextOf(built.textItems, built.slideItems)
+            ctx.slideNotes[position] = get(showsCache)[slide.id]?.slides?.[target.ref.id]?.notes || ""
+        } else if (type === "clock") {
+            markSceneClock()
+            ctx.clockText ||= clockValueText(item as unknown as Item, today) || ""
+        } else if (type === "timer") {
+            markSceneClock()
+            const id = stageRefId(key, item)
+            // como Stagebox: el ítem antiguo del "primer timer activo" usa el primero que corre o, si no, el primero que no es contador
+            const timerId = id === "first_active_timer" ? get(activeTimers)[0]?.id || Object.entries(get(timers)).find(([, timer]) => timer.type !== "counter")?.[0] || "" : id
+            ctx.timerTexts[id] = timerValueText({ ...item, timer: { ...(item.timer || {}), id: timerId } } as unknown as Item, today)
+        } else if (type === "variable") {
+            // Stagebox muestra las variables con `hideText`: un texto deshabilitado no se ve
+            const id = stageRefId(key, item)
+            let value = variableText(get(variables)[id], true)
+            if (value.includes("{")) {
+                markSceneClock() // {time_}… cambian solos
+                value = replaceDynamicValues(value, { type: "stage", id: key })
+            }
+            ctx.variableTexts[id] = value
+        } else if (type === "slide_tracker" && slide) {
+            ctx.trackerText = slideTrackerText(item.tracker || {}, slide.index ?? -1, refs.length)
+        }
+    })
+
+    return ctx
+}
+
 /**
- * Escena de una salida stage (F2.4): el engine sólo usa `plainText`/`nextText`,
- * que se calculan sobre la salida de audiencia fuente (mismo criterio que
- * `receiveSTAGE.OUT` en `utils/stageTalk.ts`).
+ * Escena de una salida stage. Con un layout con ítems (F23.19) la escena trae `items`, que el engine dibuja como
+ * los de una audiencia; sin ellos, el engine sólo usa `plainText`/`nextText` (F2.4), que se calculan sobre la
+ * salida de audiencia fuente (mismo criterio que `receiveSTAGE.OUT` en `utils/stageTalk.ts`).
  */
 function buildStageScene(outputId: string, output: Output, outputsData: { [id: string]: Output }): SceneGraph {
     const sourceOutputId = getStageSourceOutputId(output, outputsData)
@@ -571,13 +627,16 @@ function buildStageScene(outputId: string, output: Output, outputsData: { [id: s
         }
     }
 
+    const layout = get(stageShows)[output.stageOutput || ""]
+    const items = layout && Object.keys(layout.items || {}).length ? buildStageItems(layout, buildStageContext(layout, slide, sourceOutputId, currentStyle, resolution)) : []
+
     return sceneGraphPayload({
         outputId,
         stage: true,
         width: resolution.width,
         height: resolution.height,
         background: null,
-        items: [],
+        items,
         overlays: [],
         transition: null,
         plainText,

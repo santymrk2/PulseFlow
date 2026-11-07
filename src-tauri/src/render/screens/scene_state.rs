@@ -124,16 +124,28 @@ pub fn set_scene_background(
     Ok(())
 }
 
-/// Reemplaza los datos de una pantalla de stage.
-pub fn set_stage_scene(app: &AppHandle, id: &str, data: StageData) -> AppResult<()> {
+/// Reemplaza los datos de una pantalla de stage. `text`/`media` son los ítems del layout del usuario (F23.19);
+/// vacíos, el stage dibuja `stage_blocks` como siempre.
+pub fn set_stage_scene(app: &AppHandle, id: &str, data: StageData, text: Vec<TextBlock>, media: Vec<MediaItem>) -> AppResult<()> {
     let state = manager(app)?;
-    let changed = state.scene(id).load().stage != data;
-    state.scene(id).update(|scene| scene.stage = data);
-
-    if changed {
+    if publish_stage_scene(&state.scene(id), data, text, media) {
         request_transition(&state, id);
     }
     Ok(())
+}
+
+/// Publica la escena de stage y devuelve si el contenido visible cambió (el texto `live` no cuenta, como en audiencia).
+fn publish_stage_scene(slot: &SceneSlot, data: StageData, text: Vec<TextBlock>, media: Vec<MediaItem>) -> bool {
+    let changed = {
+        let current = slot.load();
+        current.stage != data || !same_blocks(&current.text, &text) || current.media != media
+    };
+    slot.update(|scene| {
+        scene.stage = data;
+        scene.text = text;
+        scene.media = media;
+    });
+    changed
 }
 
 /// Configura la transición global del engine (se aplica por pantalla desde F3).
@@ -209,5 +221,28 @@ mod tests {
         let slot = SceneSlot::new();
         publicar(&slot, vec![bloque("hola", false)]);
         assert!(publicar(&slot, vec![bloque("hola", false), bloque("10:00", true)]));
+    }
+
+    #[test]
+    fn stage_con_items_no_usa_stage_blocks() {
+        let slot = SceneSlot::new();
+        let datos = StageData { current_slide: "plano".into(), ..StageData::default() };
+
+        // sin ítems del layout: sigue el stage de siempre (`stage_blocks`)
+        publish_stage_scene(&slot, datos.clone(), Vec::new(), Vec::new());
+        assert!(!slot.load().stage_draws_items());
+
+        // con ítems: el render los dibuja por el camino de la audiencia
+        assert!(publish_stage_scene(&slot, datos.clone(), vec![bloque("10:00", true)], Vec::new()));
+        assert!(slot.load().stage_draws_items());
+        assert_eq!(slot.load().text[0].text, "10:00");
+
+        // el reloj del layout cambia cada segundo y no pide transición
+        assert!(!publish_stage_scene(&slot, datos.clone(), vec![bloque("10:01", true)], Vec::new()));
+
+        // un layout sin ítems vuelve a `stage_blocks` y no deja texto viejo
+        assert!(publish_stage_scene(&slot, datos, Vec::new(), Vec::new()));
+        assert!(!slot.load().stage_draws_items());
+        assert!(slot.load().text.is_empty());
     }
 }

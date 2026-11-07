@@ -10,7 +10,8 @@
 // El contrato describe más de lo que el engine dibuja hoy. Implementado de verdad:
 //
 // - `outputId`: rutea la escena a la pantalla con ese id.
-// - `stage`: elige el layout de Stage Display (`plainText`/`nextText`).
+// - `stage`: elige el layout de Stage Display (`plainText`/`nextText`); si trae `items` (el layout que diseñó el
+//   usuario, F23.19), el engine los dibuja como los de una audiencia (cajas, texto, medios) en lugar de `plainText`.
 // - `width`: resolución lógica; escala `x`, `width` y `fontSize` de los items.
 // - `background`: imagen o video (con `opacity` y `fit`).
 // - `items` de tipo `text`: caja, alineación horizontal y vertical, línea, fuente por

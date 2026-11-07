@@ -11,7 +11,7 @@
 //! El contrato describe más de lo que el engine dibuja hoy. Implementado de verdad:
 //!
 //! - `outputId`: rutea la escena a la pantalla con ese id (`ScreenManager`).
-//! - `stage`: elige el layout de Stage Display (`plainText`/`nextText`).
+//! - `stage`: elige el layout de Stage Display (`plainText`/`nextText`, o `items` si el usuario diseñó un layout, F23.19).
 //! - `width`: resolución lógica; escala `x`, `width` y `fontSize` (los items
 //!   vienen en unidades de diseño). `height` se acepta pero el engine no lo usa.
 //! - `background`: imagen o video (con `opacity` y `fit` → `aspect_mode`).
@@ -739,6 +739,21 @@ mod tests {
 
         let default: ScenePayload = serde_json::from_value(json!({ "outputId": "o", "width": 1920, "height": 1080 })).expect("payload válido");
         assert_eq!(default.content_frame().expect("hay resolución").align, crate::render::frame::ContentAlign::Center, "sin `align` es centro");
+    }
+
+    /// F23.19: una escena de stage con `items` los entrega igual que la audiencia.
+    #[test]
+    fn stage_scene_with_items_yields_text_and_media() {
+        let stage: ScenePayload = serde_json::from_value(json!({
+            "outputId": "s", "stage": true, "width": 1920, "height": 1080, "plainText": "plano",
+            "items": [
+                { "type": "text", "x": 40, "y": 40, "width": 900, "height": 300, "align": "left", "verticalAlign": "top", "lineHeight": 1.1, "fontSize": 60, "fontWeight": 400, "color": [1, 1, 1, 1], "text": "uno", "spans": [] },
+                { "type": "media", "x": 0, "y": 0, "width": 10, "height": 10, "src": "/m/logo.png", "mediaType": "image" }
+            ]
+        }))
+        .expect("payload de stage válido");
+        assert_eq!(stage.text_blocks().len(), 1);
+        assert_eq!(stage.media_items().len(), 1);
     }
 
     #[test]

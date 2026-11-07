@@ -951,16 +951,16 @@ pegado arriba de su caja. Si el layout no tiene ítems, se mantiene el comportam
 - Engine: si la escena de un stage trae `items`, la rama `ScreenKind::Stage` dibuja esos ítems con el mismo camino que
   la audiencia; si no, sigue con `stage_blocks`.
 
-- [ ] **Step 1: Tests que fallan** en `stageScene.test.ts`, con un layout de ejemplo de 4 ítems (actual, siguiente con
+- [x] **Step 1: Tests que fallan** en `stageScene.test.ts`, con un layout de ejemplo de 4 ítems (actual, siguiente con
   `slideOffset: 1`, reloj y notas): textos y cajas esperados; la última slide con `slideOffset: 1` no genera ese ítem;
   `enabled: false` no aparece; `labels: true` suma las etiquetas.
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar** en TS y la rama del engine. Test de Rust `stage_con_items_no_usa_stage_blocks`, con el
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar** en TS y la rama del engine. Test de Rust `stage_con_items_no_usa_stage_blocks`, con el
   estilo de `screens/tests.rs`.
-- [ ] **Step 4:** chequeos en verde.
+- [x] **Step 4:** chequeos en verde.
 - [ ] **Step 5: En la app:** armar un layout de stage con slide actual, siguiente, reloj y notas, y asignarlo a una
   salida stage. Expected: el monitor de stage muestra ese diseño.
-- [ ] **Step 6:** commit `F23.19: el stage dibuja el layout que diseñó el usuario`.
+- [x] **Step 6:** commit `F23.19: el stage dibuja el layout que diseñó el usuario`.
 
 ---
 

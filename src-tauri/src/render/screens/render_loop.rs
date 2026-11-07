@@ -215,7 +215,7 @@ pub(super) fn spawn_render_loop(
                             let (w, h) = (frame_rect.width, frame_rect.height);
 
                             let blocks = match kind {
-                                ScreenKind::Audience => {
+                                ScreenKind::Audience | ScreenKind::Stage if matches!(kind, ScreenKind::Audience) || current.stage_draws_items() => {
                                     if let Some(bg) = &current.background {
                                         if is_video(bg) {
                                             // video: un frame NV12 por archivo (la ruta es el id), convertido a RGB en el shader
@@ -275,7 +275,7 @@ pub(super) fn spawn_render_loop(
                                     shape_pipeline.draw_text_boxes(&device, &queue, &mut arena, &mut pass, &current.text, (w, h));
                                     current.text.clone()
                                 }
-                                ScreenKind::Stage => crate::render::stage::stage_blocks(&current.stage, w as f32, h as f32),
+                                _ => crate::render::stage::stage_blocks(&current.stage, w as f32, h as f32),
                             };
 
                             if let Err(err) = text_engine.render(TextLayer::Slide, &device, &queue, &mut pass, w, h, &blocks) {
