@@ -81,12 +81,21 @@ pub fn on_window_event(window: &Window, event: &WindowEvent) {
 }
 
 pub fn on_run_event(app: &AppHandle, event: RunEvent) {
-    if let RunEvent::ExitRequested {
-        code: None, api, ..
-    } = event
-    {
-        api.prevent_exit();
-        handle_close_request(app);
+    match event {
+        RunEvent::ExitRequested {
+            code: None, api, ..
+        } => {
+            api.prevent_exit();
+            handle_close_request(app);
+        }
+        // Salida que no pasó por `exit_now` (p. ej. "Salir" del Dock en macOS): no dejar ffmpeg huérfanos.
+        // `close_all_screens` es idempotente: sin pantallas abiertas devuelve una lista vacía.
+        RunEvent::Exit => {
+            if let Err(err) = crate::render::close_all_screens(app) {
+                log::error!("no se pudieron cerrar las salidas al salir: {err}");
+            }
+        }
+        _ => {}
     }
 }
 
