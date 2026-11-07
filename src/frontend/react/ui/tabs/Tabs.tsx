@@ -26,18 +26,27 @@ export interface TabsProps<T extends { id: string; stageOutput?: boolean }> {
     children?: (tab: T) => ReactNode
 }
 
-function SelectElemSlot({ id, tabId, children }: { id: SelectIds; tabId: string; children: ReactNode }) {
+function SelectElemSlot({ id, tabId, onReady, children }: { id: SelectIds; tabId: string; onReady: () => void; children: ReactNode }) {
     const wrapper = useRef<HTMLDivElement>(null)
     const [slot, setSlot] = useState<Element | null>(null)
+    // misma referencia entre renders mientras no cambien id ni tabId: la isla no reasigna props en cada render
+    const [cached, setCached] = useState({ id, tabId, props: { id, data: { id: tabId }, fill: true } })
+    if (cached.id !== id || cached.tabId !== tabId) setCached({ id, tabId, props: { id, data: { id: tabId }, fill: true } })
+    const islandProps = cached.props
 
     // la isla se monta en un efecto de su propio componente, que corre antes que éste (hijo antes que padre)
     useEffect(() => {
         setSlot(wrapper.current?.querySelector(".selectElem") ?? null)
     }, [])
 
+    // el botón de la pestaña existe recién cuando el portal tiene slot: ahí se puede medir el scroll
+    useEffect(() => {
+        if (slot) onReady()
+    }, [slot])
+
     return (
         <div ref={wrapper} style={{ display: "contents" }}>
-            <SvelteIsland component={SelectElem} props={{ id, data: { id: tabId }, fill: true }} />
+            <SvelteIsland component={SelectElem} props={islandProps} />
             {slot ? createPortal(children, slot) : null}
         </div>
     )
@@ -71,7 +80,7 @@ export function Tabs<T extends { id: string; stageOutput?: boolean }>({ id, tabs
             {tabs.length > 1 ? (
                 <div ref={tabsElem} className={cn(styles.tabs, isScrollable && styles.isScrollable)}>
                     {tabs.map((tab, i) => (
-                        <SelectElemSlot key={i} id={id} tabId={tab.id}>
+                        <SelectElemSlot key={i} id={id} tabId={tab.id} onReady={checkScroll}>
                             <button className={cn("tab", styles.tab, getTabClass(tab), value === tab.id && styles.active)} onClick={() => onOpen?.(tab.id)}>
                                 {children?.(tab)}
                             </button>

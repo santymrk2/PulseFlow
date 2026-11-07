@@ -4,12 +4,13 @@ import { cn } from "../../../lib/utils"
 import { dictionary, language } from "../../../stores"
 import { translateText } from "../../../utils/language"
 import { Icon } from "../../helpers/Icon"
+import { useSlide } from "../../helpers/useSlide"
 import { triggerClickOnEnterSpace } from "../../helpers/triggerClickOnEnterSpace"
 import { useStore } from "../../hooks/useStore"
 import styles from "./Dropdown.module.css"
 
 // Port de ui/dropdown/dropdown.svelte. `on:click` (dispatch "click" con la Option elegida) → onClick(option).
-// Sin la transición `slide` de Svelte (sólo animación). Cierra con mousedown afuera, como <svelte:window on:mousedown>.
+// `transition:slide` (200 ms) con useSlide. Cierra con mousedown afuera, como <svelte:window on:mousedown>.
 export interface DropdownProps {
     options: Option[]
     id?: string
@@ -48,6 +49,7 @@ export function Dropdown({ options, id = "", disabled = false, center = false, a
     const [active, setActive] = useState(false)
     const self = useRef<HTMLDivElement>(null)
     const trigger = useRef<HTMLButtonElement>(null)
+    const slide = useSlide<HTMLDivElement>(active, 200)
     const nextScrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     const normalizedValue = value || options[0]?.name || "—"
@@ -98,7 +100,7 @@ export function Dropdown({ options, id = "", disabled = false, center = false, a
             self.current.querySelector("#" + optionId)?.scrollIntoView()
         }, 10)
         return () => clearTimeout(timeout)
-    }, [active, value])
+    }, [active]) // como `$: if (active)` en Svelte: sólo al abrir
 
     function select(option: Option) {
         if (disabled) return
@@ -112,8 +114,8 @@ export function Dropdown({ options, id = "", disabled = false, center = false, a
             <button ref={trigger} className={styles.trigger} style={arrow ? { justifyContent: "center" } : undefined} id={id} data-title={title} onClick={() => (disabled ? null : setActive(!active))}>
                 {arrow ? <Icon id="expand" size={1.2} white /> : translateText(normalizedValue, dict) || value}
             </button>
-            {active ? (
-                <div className={cn(styles.dropdown, up && styles.up, arrow && styles.arrow)} style={style}>
+            {slide.mounted ? (
+                <div ref={slide.ref} className={cn(styles.dropdown, up && styles.up, arrow && styles.arrow)} style={style}>
                     {options.map((option, i) => (
                         <span key={i} id={formatId(option.name)} className={cn(styles.option, (activeId && option?.id ? option.id === activeId : option.name === value) && styles.active)} style={option.style ? cssTextToStyle(option.style) : undefined} role="option" aria-selected={activeId ? option.id === activeId : option.name === value} tabIndex={0} onClick={() => select(option)} onKeyDown={triggerClickOnEnterSpace}>
                             {translateText(option.name, dict) || option.name}

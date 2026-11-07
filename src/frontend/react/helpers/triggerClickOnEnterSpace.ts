@@ -1,7 +1,7 @@
 import type { KeyboardEvent } from "react"
 
 // Port de utils/clickable.ts (triggerClickOnEnterSpace) para eventos de React: Enter o espacio hacen click en el elemento.
-export function triggerClickOnEnterSpace(event: KeyboardEvent<HTMLElement>) {
+export function triggerClickOnEnterSpace(event: KeyboardEvent<Element>) {
     const target = event.target instanceof Element ? event.target : null
     if (target?.classList.contains("edit") || target?.nodeName === "INPUT" || target?.nodeName === "TEXTAREA") return
 
@@ -10,6 +10,7 @@ export function triggerClickOnEnterSpace(event: KeyboardEvent<HTMLElement>) {
 
         event.preventDefault()
         event.stopPropagation()
-        event.currentTarget.click()
+        // Equivale al .click() de Svelte (dispara el click y burbuja); Element no tiene click() (SVG), por eso se despacha el evento
+        event.currentTarget.dispatchEvent(new MouseEvent("click", { bubbles: true }))
     }
 }

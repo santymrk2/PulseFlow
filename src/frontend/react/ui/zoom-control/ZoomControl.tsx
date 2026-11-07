@@ -4,12 +4,13 @@ import { cn } from "../../../lib/utils"
 import { dictionary } from "../../../stores"
 import { translateText } from "../../../utils/language"
 import { Icon } from "../../helpers/Icon"
+import { useSlide } from "../../helpers/useSlide"
 import { useStore } from "../../hooks/useStore"
 import { Button } from "../button/Button"
 import styles from "./ZoomControl.module.css"
 
 // Port de ui/zoom-control/zoom-control.svelte. dispatch("change", number) → onChange(number); dispatch("origin", {x, y}) → onOrigin.
-// Sin la transición `slide` de Svelte. mousedown y wheel van en window, como <svelte:window>.
+// `transition:slide` (150 ms) con useSlide. mousedown y wheel van en window, como <svelte:window>.
 export interface ZoomOrigin {
     x: number
     y: number
@@ -30,6 +31,7 @@ export function ZoomControl({ columns, defaultValue = 4, min = 2, max = 10, addV
     useStore(dictionary) // re-render al cambiar el idioma (translateText lee el diccionario)
     const [zoomOpened, setZoomOpened] = useState(false)
     const [currentId] = useState(() => "zoom_" + uid())
+    const slide = useSlide<HTMLDivElement>(zoomOpened, 150)
     const nextScrollTimeout = useRef<ReturnType<typeof setTimeout> | null>(null)
 
     function update(value: number, origin?: ZoomOrigin) {
@@ -96,8 +98,8 @@ export function ZoomControl({ columns, defaultValue = 4, min = 2, max = 10, addV
                 <Icon size={1.3} id="zoomIn" white={!zoomOpened} />
             </Button>
 
-            {zoomOpened ? (
-                <div className={cn("overflow", "zoom_popup", styles.zoom_popup)}>
+            {slide.mounted ? (
+                <div ref={slide.ref} className={cn("overflow", "zoom_popup", styles.zoom_popup)}>
                     <Button className={styles.reset} onClick={reset} bold={false}>
                         <p className={styles.text} data-title={translateText("actions.resetZoom")}>
                             {(addValue < 0 ? columns * 100 : 100 / columns).toFixed()}%

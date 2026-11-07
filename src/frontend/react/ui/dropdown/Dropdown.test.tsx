@@ -184,3 +184,28 @@ describe("Dropdown", () => {
         quitar.mockRestore()
     })
 })
+
+describe("Dropdown con transición slide", () => {
+    afterEach(() => {
+        delete (Element.prototype as { animate?: unknown }).animate
+    })
+
+    it("anima_200ms_al_abrir_y_el_panel_sigue_hasta_que_termina_el_cierre", async () => {
+        let terminar: () => void = () => {}
+        const finished = new Promise<Animation>((resolve) => {
+            terminar = () => resolve({} as Animation)
+        })
+        const animate = vi.fn(() => ({ finished, cancel: vi.fn() }))
+        Object.defineProperty(Element.prototype, "animate", { configurable: true, writable: true, value: animate })
+        render(<Dropdown options={opciones} value="uno" />)
+        fireEvent.click(screen.getByRole("button"))
+        expect(screen.getAllByRole("option")).toHaveLength(3)
+        expect(animate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ duration: 200 }))
+        fireEvent.click(screen.getByRole("button"))
+        expect(screen.getAllByRole("option")).toHaveLength(3)
+        await act(async () => {
+            terminar()
+        })
+        expect(screen.queryAllByRole("option")).toHaveLength(0)
+    })
+})

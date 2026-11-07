@@ -151,3 +151,28 @@ describe("ZoomControl", () => {
         expect(onChange).not.toHaveBeenCalled()
     })
 })
+
+describe("ZoomControl con transición slide", () => {
+    afterEach(() => {
+        delete (Element.prototype as { animate?: unknown }).animate
+    })
+
+    it("anima_150ms_al_abrir_y_se_desmonta_al_terminar_el_cierre", async () => {
+        let terminar: () => void = () => {}
+        const finished = new Promise<Animation>((resolve) => {
+            terminar = () => resolve({} as Animation)
+        })
+        const animate = vi.fn(() => ({ finished, cancel: vi.fn() }))
+        Object.defineProperty(Element.prototype, "animate", { configurable: true, writable: true, value: animate })
+        render(<ZoomControl columns={4} />)
+        abrir()
+        expect(popup()).toBeTruthy()
+        expect(animate).toHaveBeenCalledWith(expect.anything(), expect.objectContaining({ duration: 150 }))
+        abrir()
+        expect(popup()).toBeTruthy()
+        await act(async () => {
+            terminar()
+        })
+        expect(popup()).toBeNull()
+    })
+})

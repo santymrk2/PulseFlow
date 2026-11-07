@@ -128,4 +128,29 @@ describe("Tabs", () => {
         await screen.findAllByRole("button")
         expect(pestanas().every((b) => b.classList.contains("tab"))).toBe(true)
     })
+
+    it("al_montar_mide_el_scroll_cuando_los_botones_ya_existen", async () => {
+        const original = Object.getOwnPropertyDescriptor(HTMLElement.prototype, "scrollWidth")
+        Object.defineProperty(HTMLElement.prototype, "scrollWidth", {
+            configurable: true,
+            get(this: HTMLElement) {
+                // sólo hay overflow cuando los botones de las pestañas ya existen
+                return this.querySelector("button.tab") ? 500 : 0
+            }
+        })
+        Object.defineProperty(HTMLElement.prototype, "clientWidth", { configurable: true, get: () => 100 })
+        try {
+            const { container } = render(
+                <Tabs id="profile" tabs={perfiles} value="a">
+                    {(tab) => <span>p-{tab.id}</span>}
+                </Tabs>
+            )
+            await screen.findByText("p-a")
+            expect(container.querySelector(`.${styles.tabs}`)?.classList.contains(styles.isScrollable)).toBe(true)
+        } finally {
+            if (original) Object.defineProperty(HTMLElement.prototype, "scrollWidth", original)
+            else delete (HTMLElement.prototype as { scrollWidth?: unknown }).scrollWidth
+            delete (HTMLElement.prototype as { clientWidth?: unknown }).clientWidth
+        }
+    })
 })

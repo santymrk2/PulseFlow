@@ -1,4 +1,4 @@
-import type { CSSProperties, KeyboardEvent } from "react"
+import type { CSSProperties } from "react"
 import type { Selected } from "../../../types/Main"
 import { cn } from "../../lib/utils"
 import { defaultColors, fadeColor } from "../../components/helpers/color"
@@ -6,6 +6,7 @@ import { activePopup, localeDirection, selected } from "../../stores"
 import { customIcons } from "../../values/customIcons"
 import icons from "../../values/icons"
 import { useStore } from "../hooks/useStore"
+import { triggerClickOnEnterSpace } from "./triggerClickOnEnterSpace"
 import styles from "./Icon.module.css"
 
 export interface IconProps {
@@ -55,20 +56,19 @@ export function Icon({ id, color = "", title = "", size = 1, white = false, righ
         activePopup.set("icon")
     }
 
-    // Mismo criterio que triggerClickOnEnterSpace (utils/clickable.ts). No se reusa: en React el nativeEvent.currentTarget es el root
-    function handleKeyDown(event: KeyboardEvent<SVGSVGElement>) {
-        const target = event.target instanceof Element ? event.target : null
-        if (target?.classList.contains("edit") || target?.nodeName === "INPUT" || target?.nodeName === "TEXTAREA") return
-
-        if (event.key === "Enter" || event.key === " ") {
-            if (event.key === " " && target?.closest(".slide")) return
-
-            event.preventDefault()
-            event.stopPropagation()
-            // Equivale al .click() de Svelte (dispara el click y burbujea), pero tipado: SVGElement no tiene click()
-            event.currentTarget.dispatchEvent(new MouseEvent("click", { bubbles: true }))
-        }
-    }
-
-    return <svg className={cn(styles.icon, flip && styles.flip, white && styles.white, right && styles.right, fill && styles.fill, boxed && styles.boxed, select && styles.select, className)} style={inlineStyle} width={width} height={height} viewBox={`0 0 ${box} ${box}`} data-title={title} role={select ? "button" : undefined} tabIndex={select ? 0 : undefined} onClick={select ? openSelect : undefined} onKeyDown={select ? handleKeyDown : undefined} dangerouslySetInnerHTML={{ __html: markup }} />
+    return (
+        <svg
+            className={cn(styles.icon, flip && styles.flip, white && styles.white, right && styles.right, fill && styles.fill, boxed && styles.boxed, select && styles.select, className)}
+            style={inlineStyle}
+            width={width}
+            height={height}
+            viewBox={`0 0 ${box} ${box}`}
+            data-title={title}
+            role={select ? "button" : undefined}
+            tabIndex={select ? 0 : undefined}
+            onClick={select ? openSelect : undefined}
+            onKeyDown={select ? triggerClickOnEnterSpace : undefined}
+            dangerouslySetInnerHTML={{ __html: markup }}
+        />
+    )
 }
