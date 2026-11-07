@@ -6,6 +6,7 @@
     import type { ProjectProgressItem } from "../../helpers/projectProgress"
     import { getCurrentProjectIndexes, getProjectItemLabel, getProjectItems } from "../../helpers/projectProgress"
     import { getGroupName, getLayoutRef } from "../../helpers/show"
+    import { slideTrackerText } from "../../helpers/dynamicItemText"
 
     export let tracker: any
     export let outputId = ""
@@ -66,6 +67,7 @@
     $: projectItems = getProjectItems($projects[$activeProject || ""]?.shows || [], $showsCache)
     $: currentProjectIndexes = getCurrentProjectIndexes($projects[$activeProject || ""]?.shows || [], currentOutput?.out || {}, typeof $activeShow?.index === "number" ? $activeShow.index : -1)
     $: slidesLength = progressData.slidesLength
+    $: numberText = slideTrackerText({ type }, currentShowSlide, slidesLength) ?? ""
 
     let progressElem: HTMLElement | undefined
     $: column = (progressElem?.offsetWidth || 0) < (progressElem?.offsetHeight || 0)
@@ -171,7 +173,7 @@
 <div class="progress" bind:this={progressElem} class:barBG={type === "bar"} style={accent ? "--accent: " + accent : ""}>
     {#if type === "number"}
         <div class="align autoFontSize" style="{autoSize ? 'font-size: ' + autoSize + 'px;' : ''}{item?.alignX ? '' : (item?.align || 'justify-content: center;').replaceAll('text-align', 'justify-content')}">
-            <span style="color: var(--accent);">{currentShowSlide + 1}</span>/{slidesLength}
+            <span style="color: var(--accent);">{numberText.split("/")[0]}</span>/{slidesLength}
         </div>
     {:else if type === "bar"}
         <!-- progress bar -->

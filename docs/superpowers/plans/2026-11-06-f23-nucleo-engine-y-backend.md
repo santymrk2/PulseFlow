@@ -876,16 +876,16 @@ parámetro, nunca como `get(store)` dentro de la función pura):**
 Los tipos `SlideTrackerOptions`, `DynamicEventsOptions`, `CalendarEvent` y `VariableValue` se definen en el mismo
 archivo (o se importan de `src/types/` si ya existen), como interfaces planas.
 
-- [ ] **Step 1: Inventario.** Leer los tres `.svelte` y anotar en el encabezado de `dynamicItemText.ts` qué calcula cada
+- [x] **Step 1: Inventario.** Leer los tres `.svelte` y anotar en el encabezado de `dynamicItemText.ts` qué calcula cada
   uno y con qué datos.
-- [ ] **Step 2: Tests que fallan** en `dynamicItemText.test.ts`: por lo menos 3 casos por función, con los formatos
+- [x] **Step 2: Tests que fallan** en `dynamicItemText.test.ts`: por lo menos 3 casos por función, con los formatos
   exactos que muestra hoy la vista previa (por ejemplo, la slide 3 de 12 con el formato numérico da el mismo texto
   que muestra `SlideProgress.svelte`).
-- [ ] **Step 3: Implementar**, mover los `.svelte` a las funciones y armar los ítems en `sceneGraph.ts`.
-- [ ] **Step 4:** chequeos JS en verde; svelte-check ≤ 40.
+- [x] **Step 3: Implementar**, mover los `.svelte` a las funciones y armar los ítems en `sceneGraph.ts`.
+- [x] **Step 4:** chequeos JS en verde; svelte-check ≤ 40.
 - [ ] **Step 5: En la app:** los tres ítems se ven en la vista previa **igual que antes** y ahora también en el
   proyector.
-- [ ] **Step 6:** commit `F23.17: contador de slides, eventos y variables llegan al proyector`.
+- [x] **Step 6:** commit `F23.17: contador de slides, eventos y variables llegan al proyector`.
 
 ---
 

@@ -307,6 +307,9 @@ export function storeSubscriber() {
 
         // REMOTE
         send(REMOTE, ["VARIABLES"], data)
+
+        // F23.17: los ítems de variable de la escena llevan su valor
+        sendOutputScenes()
     })
     variableTags.subscribe((data) => {
         // REMOTE

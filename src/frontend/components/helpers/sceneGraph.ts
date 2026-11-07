@@ -17,7 +17,7 @@ import { OUTPUT } from "../../../types/Channels"
 import type { Output, PrefetchPayload } from "../../../types/Output"
 import type { SceneBackground, SceneGraph, SceneItem, SceneMediaItem, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
 import type { Item, OutSlide, Slide } from "../../../types/Show"
-import { activeTimers, media, overlays, outputs, playingVideoState, stageShows, styles, timeFormat as timeFormatStore, timers, transitionData } from "../../stores"
+import { activeTimers, events, media, overlays, outputs, playingVideoState, showsCache, stageShows, styles, timeFormat as timeFormatStore, timers, transitionData, variables } from "../../stores"
 import { send } from "../../utils/request"
 import { getItemText } from "../edit/scripts/textStyle"
 import { shouldItemBeShown } from "../edit/scripts/itemHelpers"
@@ -29,6 +29,8 @@ import { joinTimeBig } from "./time"
 import { getCurrentTimerValue } from "../drawer/timers/timers"
 import { defaultLayers, getCurrentStyle, getOutputLines, getOutputResolution, getOutputTransitions, getStyleTemplate, percentageStylePos, setTemplateStyle } from "./output"
 import { _show } from "./shows"
+import { getLayoutRef } from "./show"
+import { eventsText, slideTrackerText, variableText, type CalendarEvent } from "./dynamicItemText"
 import { replaceDynamicValues } from "./showActions"
 import { contentAlign } from "./outputAspect"
 import { imagePathsOf } from "./sceneMedia"
@@ -272,6 +274,61 @@ function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: s
     })
 }
 
+// CONTADOR DE SLIDES, EVENTOS Y VARIABLES (F23.17): texto que el engine dibuja tal cual.
+
+function buildDynamicTextItem(item: Item, index: number, allItems: Item[], outputId: string, resolution: { width: number; height: number }, lineWindow: LineWindow, dynamicRef: DynamicRef): SceneTextItem | null {
+    if (item.type !== "slide_tracker" && item.type !== "events" && item.type !== "variable") return null
+    if (!shouldItemBeShown(item, allItems, { outputId, type: "default" })) return null
+    if (item.clickReveal && lineWindow.clickRevealed === false) return null
+
+    let value = ""
+    let live = true
+    let defaultAlign: "left" | "center" = "center"
+    if (item.type === "slide_tracker") {
+        // sólo cambia con la slide, que ya dispara la transición: no es "live"
+        live = false
+        value = slideTrackerText(item.tracker || {}, dynamicRef.slideIndex ?? -1, getLayoutRef(dynamicRef.showId, get(showsCache)).length) ?? ""
+    } else if (item.type === "events") {
+        // los eventos terminados desaparecen con la hora: la escena se reenvía cada segundo
+        markSceneClock()
+        defaultAlign = "left"
+        value = eventsText(item.events || {}, Object.values(get(events)) as CalendarEvent[], new Date())
+    } else {
+        value = variableText(get(variables)[item.variable?.id || ""])
+        if (value.includes("{")) {
+            markSceneClock() // {time_}… cambian solos
+            value = replaceDynamicValues(value, dynamicRef)
+        }
+    }
+    if (!value) return null
+
+    const box = parseItemBox(percentageStylePos(item.style, resolution), { x: 0, y: 0, width: resolution.width, height: resolution.height })
+    const base = parseTextStyle(item.style)
+    const fontSize = base.fontSize || (item.type === "events" ? 80 : 100)
+    const color = base.color || [1, 1, 1, 1]
+    const spans = [sceneTextSpan({ text: value, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color })]
+
+    return sceneTextItem({
+        id: item.id || `item-${index}`,
+        x: box.x,
+        y: box.y,
+        width: box.width,
+        height: box.height,
+        align: parseTextAlign(item.align) || defaultAlign,
+        verticalAlign: parseVerticalAlign(item.align),
+        lineHeight: base.lineHeight || 1.1,
+        fontFamily: base.fontFamily,
+        fontSize,
+        fontWeight: base.fontWeight ?? 400,
+        fontStyle: base.fontStyle,
+        color,
+        text: value,
+        spans,
+        live,
+        box: parseBoxStyle(item.style)
+    })
+}
+
 // BACKGROUND
 
 function getBackground(outputId: string, output: Output, currentStyle: ReturnType<typeof getCurrentStyle>, slide: OutSlide | null, layers: string[]): SceneBackground | null {
@@ -334,6 +391,13 @@ function buildSlideItems(showSlide: OutSlide, outputId: string, currentStyle: Re
         if (timerItem) {
             items.push(timerItem)
             textItems.push(timerItem)
+            return
+        }
+
+        const dynamicItem = buildDynamicTextItem(item, index, slideItems, outputId, resolution, lineWindow, dynamicRef)
+        if (dynamicItem) {
+            items.push(dynamicItem)
+            textItems.push(dynamicItem)
             return
         }
 

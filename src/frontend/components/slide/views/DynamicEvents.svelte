@@ -2,9 +2,9 @@
     import { onMount } from "svelte"
     import { activeDrawerTab, drawer, events } from "../../../stores"
     import { getTime } from "../../drawer/calendar/calendar"
-    import { keysToID, sortByTime } from "../../helpers/array"
+    import { keysToID } from "../../helpers/array"
+    import { visibleEvents } from "../../helpers/dynamicItemText"
     import { setDrawerTabData } from "../../helpers/historyHelpers"
-    import { combineDateAndTime } from "../../helpers/time"
 
     export let edit = false
     export let textSize = 80
@@ -34,37 +34,7 @@
     $: [updateEvents(), $events, maxEvents, startDaysFromToday, justOneDay, enableStartDate, startDate, startTime, fromTime, toTime]
 
     function updateEvents() {
-        let startFromDate = enableStartDate ? combineDateAndTime(startDate, startTime) : getXDaysFromToday(Number(startDaysFromToday || 0))
-        let eventsList = keysToID($events).filter((a) => a.type === "event")
-
-        if (justOneDay) {
-            const [fromH, fromM] = (fromTime || "00:00").split(":").map(Number)
-            const [toH, toM] = (toTime || "00:00").split(":").map(Number)
-
-            let startDateTime = new Date(startFromDate)
-            startDateTime.setHours(fromH, fromM, 0, 0)
-
-            let endDateTime = new Date(startFromDate)
-            endDateTime.setHours(toH, toM, 0, 0)
-
-            if (endDateTime <= startDateTime) {
-                endDateTime.setDate(endDateTime.getDate() + 1)
-            }
-
-            eventsList = eventsList.filter((a) => new Date(a.to) >= startDateTime && new Date(a.from) <= endDateTime)
-        } else {
-            eventsList = eventsList.filter((a) => new Date(a.to) >= startFromDate)
-        }
-
-        eventsList = eventsList.sort(sortByTime)
-        filteredEvents = maxEvents ? eventsList.slice(0, maxEvents) : eventsList
-    }
-
-    function getXDaysFromToday(startDaysFromToday = 0) {
-        let date = new Date()
-        if (startDaysFromToday) date.setHours(0, 0, 0, 0)
-        date.setDate(date.getDate() + startDaysFromToday)
-        return date
+        filteredEvents = visibleEvents({ maxEvents, startDaysFromToday, justOneDay, enableStartDate, startDate, startTime, fromTime, toTime }, keysToID($events), new Date())
     }
 
     // calendar.ts createSlides()
