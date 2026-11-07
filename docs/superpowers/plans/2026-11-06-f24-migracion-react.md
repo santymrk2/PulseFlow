@@ -502,10 +502,10 @@ El contrato de eventos del kit está en `docs/design/kit.md` ("Contrato de event
 Receta sobre `components/system/{DropArea,Resizeable,SelectElem,Center,Autoscroll}.svelte` y
 `components/helpers/{LazyLoad,HoverPlay}.svelte`, hacia `src/frontend/react/system/`.
 
-- [ ] **Step 1:** los 7 componentes con la receta. **Cuidado con `DropArea`:** el arrastre de toda la app lee sus ids
+- [x] **Step 1:** los 7 componentes con la receta. **Cuidado con `DropArea`:** el arrastre de toda la app lee sus ids
   y el store `selected`. Su test verifica que al soltar se llama a la misma función de
   `components/helpers/dropActions.ts`, con los mismos argumentos que en el Svelte.
-- [ ] **Step 2:** commit `F24.11: componentes de sistema en React`.
+- [x] **Step 2:** commit `F24.11: componentes de sistema en React`.
 
 ---
 
