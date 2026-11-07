@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any -- port fiel: `data` y los items de `selected` son `any` en el store y en el Svelte */
 import { useEffect, useRef, useState, type CSSProperties, type DragEvent as ReactDragEvent, type MouseEvent as ReactMouseEvent, type ReactNode } from "react"
 import { get } from "svelte/store"
 import { uid } from "uid"
-import type { SelectIds } from "../../../types/Main"
+import type { Selected, SelectIds } from "../../../types/Main"
 import type { Media, Slide } from "../../../types/Show"
 import { arrayHasData, clone } from "../../components/helpers/array"
 import { getLayoutRef } from "../../components/helpers/show"
@@ -16,15 +15,21 @@ import styles from "./SelectElem.module.css"
 // Port de components/system/SelectElem.svelte. `<slot {elem} />` (nadie usaba `elem`) → children. `class`/`style` → className/style.
 // `<svelte:window …>` → listeners de window con limpieza. `fileOver` es una prop que el componente también reasigna (useDerivedState).
 // Las clases globales `selectElem` y `TriggerBlock` y los ids `start`/`end` los leen drop.ts y el resto del arrastre: se conservan.
-// `data` y los items de `selected` son `any` en el store y en el Svelte; un alias evita repetirlo
-type Loose = any
+// los items de `selected` son `any` en types/Main.ts: la deuda queda ahí, en un solo lugar
+type SelectItem = Selected["data"][number]
+
+// lo que convertDataToSlide lee de cada entrada de la referencia de layout
+interface LayoutRefEntry {
+    id?: string
+    data?: { background?: string; audio?: string[] }
+}
 
 export interface SelectElemProps {
     id: SelectIds
-    data: Loose
+    data: SelectItem
     fill?: boolean
     draggable?: boolean
-    shiftRange?: Loose[]
+    shiftRange?: SelectItem[]
     onlyRightClickSelect?: boolean
     selectable?: boolean
     trigger?: null | "row" | "column"
@@ -62,7 +67,7 @@ function convertDataToSlide(slideRef: { index?: number; id?: string }[]) {
     const currentLayoutRef = getLayoutRef()
 
     const slideData = slideRef.map(({ index, id }) => {
-        let layout: Loose
+        let layout: LayoutRefEntry = {}
         if (id) layout = currentLayoutRef.find((a) => a.id === id) || {}
         else if (index !== undefined) layout = currentLayoutRef[index] || {}
 
@@ -74,7 +79,7 @@ function convertDataToSlide(slideRef: { index?: number; id?: string }[]) {
             })
         }
 
-        return { slide: clone(currentSlides[layout.id]), layoutData: layout.data, media: layoutMedia }
+        return { slide: clone(currentSlides[layout.id ?? ""]), layoutData: layout.data, media: layoutMedia }
     })
 
     return slideData.filter((a) => a.slide)
@@ -210,7 +215,7 @@ export function SelectElem({ id, data, fill = false, draggable = false, shiftRan
         const type: "copy" | "move" | "link" = "move"
         if (e.dataTransfer) e.dataTransfer.effectAllowed = type
 
-        let newData: Loose
+        let newData: SelectItem[] | undefined
         const rightClick: boolean = e.button === 2 || e.buttons === 2 || (get(os).platform === "darwin" && !!e.ctrlKey)
 
         if (onlyRightClickSelect) {
@@ -248,7 +253,7 @@ export function SelectElem({ id, data, fill = false, draggable = false, shiftRan
                     .map((item) => {
                         if (!item) return null
 
-                        const picked: Loose = {}
+                        const picked: Record<string, unknown> = {}
                         keys.forEach((key) => {
                             picked[key] = item[key]
                         })
@@ -317,7 +322,7 @@ export function SelectElem({ id, data, fill = false, draggable = false, shiftRan
                 if (!selectMultiple || rightClick) return
 
                 // remove currently selected
-                newData = sel.data.filter((a: Loose) => JSON.stringify(a) !== JSON.stringify(data))
+                newData = sel.data.filter((a: SelectItem) => JSON.stringify(a) !== JSON.stringify(data))
             } else if (selectMultiple) {
                 let selectedData = sel.data ?? []
                 if (!Array.isArray(selectedData)) selectedData = [sel.data]

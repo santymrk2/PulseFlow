@@ -9,7 +9,7 @@
 }
 .droparea.hover {
     opacity: 0.3;
-    background-color: hsl(0 0% 0% / 0.4);
+    background-color: rgb(0 0 0 / 0.4);
 }
 /* en Svelte `span` sólo alcanzaba al span propio (ParentBlock), no a los spans de los hijos */
 .droparea.hover .block {
