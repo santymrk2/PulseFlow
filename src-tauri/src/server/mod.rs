@@ -92,29 +92,26 @@ pub fn broadcast_all(message: Value) {
     }
 }
 
-/// Calcula el directorio estático para una sala. Se prefieren las carpetas por
-/// cliente (`public/<room>`), con reserva al bundle del frontend.
-fn static_root(app: &AppHandle, room: &str) -> PathBuf {
-    let mut roots: Vec<PathBuf> = Vec::new();
+/// Raíces donde buscar clientes web empaquetados: `resource_dir` y `current_dir`.
+fn static_roots(app: &AppHandle) -> Vec<PathBuf> {
+    let mut roots = Vec::new();
     if let Ok(resource_dir) = app.path().resource_dir() {
-        roots.push(resource_dir.join("public").join(room));
-        roots.push(resource_dir.join(room));
-        roots.push(resource_dir.join("public").join("build"));
-        roots.push(resource_dir.join("build"));
         roots.push(resource_dir);
     }
     if let Ok(cwd) = std::env::current_dir() {
-        roots.push(cwd.join("public").join(room));
-        roots.push(cwd.join("public").join("build"));
-        roots.push(cwd.join("public"));
+        roots.push(cwd);
     }
-    roots.push(PathBuf::from("public").join(room));
-    roots.push(PathBuf::from("public").join("build"));
-
     roots
-        .into_iter()
-        .find(|p| p.exists())
-        .unwrap_or_else(|| PathBuf::from("."))
+}
+
+/// Carpeta del cliente web de una sala: `<root>/public/<room>` o `<root>/<room>`,
+/// sólo si contiene `index.html`. `None` = no hay cliente empaquetado.
+fn room_static_dir(roots: &[PathBuf], room: &str) -> Option<PathBuf> {
+    roots.iter().find_map(|root| {
+        [root.join("public").join(room), root.join(room)]
+            .into_iter()
+            .find(|dir| dir.join("index.html").is_file())
+    })
 }
 
 /// Extrae los puertos configurados (`ports.<room>`), cayendo a los por defecto.
@@ -126,9 +123,9 @@ fn resolve_port(ports: &Value, room: &str, fallback: u16) -> u16 {
         .unwrap_or(fallback)
 }
 
-/// `true` si el servidor de la sala está deshabilitado (`disabled.<room> === false`).
+/// `true` si el servidor de la sala está deshabilitado (`disabled.<room> === true`).
 fn is_disabled(disabled: &Value, room: &str) -> bool {
-    matches!(disabled.get(room).and_then(Value::as_bool), Some(false))
+    matches!(disabled.get(room).and_then(Value::as_bool), Some(true))
 }
 
 /// Arranca los servidores internos. Detiene cualquier instancia previa.
@@ -154,11 +151,16 @@ pub fn start(
         });
     }
 
+    let roots = static_roots(&app);
     for (room, default_port) in DEFAULT_PORTS {
         if is_disabled(&disabled, room) {
             continue;
         }
         let port = resolve_port(&ports, room, *default_port);
+        let Some(dir) = room_static_dir(&roots, room) else {
+            log::info!("[server] {room}: sin cliente web empaquetado, no se abre el puerto {port}");
+            continue;
+        };
         let room_data = data.get(room).cloned().unwrap_or(json!({}));
         let shared = RoomShared {
             app: app.clone(),
@@ -168,7 +170,6 @@ pub fn start(
             max,
             events: events_tx.clone(),
         };
-        let dir = static_root(&app, room);
         let shutdown_rx = shutdown_tx.subscribe();
 
         tauri::async_runtime::spawn(async move {
@@ -234,7 +235,16 @@ async fn api_status(State(shared): State<RoomShared>) -> impl IntoResponse {
 }
 
 async fn api_data(State(shared): State<RoomShared>) -> impl IntoResponse {
-    Json((*shared.data).clone())
+    Json(public_room_data(&shared.data))
+}
+
+/// Datos que se exponen por la API pública: sin `password` en el primer nivel.
+fn public_room_data(data: &Value) -> Value {
+    let mut out = data.clone();
+    if let Some(map) = out.as_object_mut() {
+        map.remove("password");
+    }
+    out
 }
 
 async fn ws_handler(ws: WebSocketUpgrade, State(shared): State<RoomShared>) -> Response {
@@ -325,4 +335,40 @@ pub fn default_max() -> usize {
 /// Códigos de cliente disponibles (para logs/diagnóstico).
 pub fn room_list() -> HashMap<String, u16> {
     DEFAULT_PORTS.iter().map(|(r, p)| (r.to_string(), *p)).collect()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use serde_json::json;
+
+    #[test]
+    fn is_disabled_trata_true_como_deshabilitado() {
+        let d = json!({ "remote": false, "stage": false, "controller": true, "output_stream": true });
+        assert!(!is_disabled(&d, "remote"));
+        assert!(!is_disabled(&d, "stage"));
+        assert!(is_disabled(&d, "controller"));
+        assert!(is_disabled(&d, "output_stream"));
+        assert!(!is_disabled(&d, "sala_sin_configurar"));
+    }
+
+    #[test]
+    fn room_static_dir_exige_index_html_de_la_sala() {
+        let root = std::env::temp_dir().join("pulseflow-server-static");
+        let _ = std::fs::remove_dir_all(&root);
+        std::fs::create_dir_all(root.join("public/remote")).expect("public/remote");
+        std::fs::write(root.join("public/remote/index.html"), "<html></html>").expect("index remote");
+        std::fs::create_dir_all(root.join("stage")).expect("stage vacío");
+        std::fs::write(root.join("index.html"), "<html></html>").expect("index raíz");
+        let roots = vec![root.clone()];
+        assert_eq!(room_static_dir(&roots, "remote"), Some(root.join("public/remote")));
+        assert_eq!(room_static_dir(&roots, "stage"), None);
+        assert_eq!(room_static_dir(&roots, "controller"), None);
+    }
+
+    #[test]
+    fn public_room_data_no_expone_password() {
+        assert_eq!(public_room_data(&json!({ "password": "1234", "name": "Iglesia" })), json!({ "name": "Iglesia" }));
+        assert_eq!(public_room_data(&json!(null)), json!(null));
+    }
 }

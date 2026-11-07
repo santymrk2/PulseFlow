@@ -454,7 +454,7 @@ l.158-181, `api_data` l.238-240; nuevo `#[cfg(test)] mod tests` al final, hoy no
 - Produce: `fn room_static_dir(roots: &[PathBuf], room: &str) -> Option<PathBuf>`.
 - Produce: `fn public_room_data(data: &Value) -> Value`.
 
-- [ ] **Step 1: Tests que fallan:**
+- [x] **Step 1: Tests que fallan:**
 
 ```rust
 #[cfg(test)]
@@ -494,8 +494,8 @@ mod tests {
 }
 ```
 
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib server::tests`. Expected: FAIL.
-- [ ] **Step 3: Implementar.**
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib server::tests`. Expected: FAIL.
+- [x] **Step 3: Implementar.**
   - `is_disabled` → `Some(true)`, y corregir el comentario.
   - `static_root` pasa a `static_roots` (sin los fallbacks a `build/`, a `public/` pelado ni a la raíz) más
     `room_static_dir`, que prueba `<root>/public/<room>` y después `<root>/<room>`, y acepta sólo carpetas con
@@ -504,13 +504,13 @@ mod tests {
     y `continue`.
   - `api_data` → `Json(public_room_data(&shared.data))` (quita `password` del primer nivel).
   - `WEBSOCKET_START` pasa por `start` y hereda la regla.
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib`. Expected: verde.
 - [ ] **Step 5: En la app:** con la app abierta, Run: `lsof -nP -iTCP -sTCP:LISTEN | rg ":551[0-3]"` (macOS) o
   `netstat -ano | findstr ":551"` (Windows). Expected: nada escuchando. En `pulseflow.log`, dos líneas
   `[server] remote: sin cliente web…` y `[server] stage: …`.
-- [ ] **Step 6:** en "Deuda registrada":
+- [x] **Step 6:** en "Deuda registrada":
   `- WEBSOCKET_START ignora password y nadie escucha SERVER_MESSAGE. Al revivir los clientes web o Companion: autenticar en Rust antes de emitir (F23.9).`
-- [ ] **Step 7:** commit `F23.9: los servidores respetan deshabilitado y no abren puertos sin cliente web`.
+- [x] **Step 7:** commit `F23.9: los servidores respetan deshabilitado y no abren puertos sin cliente web`.
 
 ---
 
