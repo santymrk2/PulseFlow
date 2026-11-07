@@ -152,6 +152,15 @@ export interface ParsedTextStyle {
     strike?: boolean
 }
 
+/** `letter-spacing` en px: acepta `px` y `em` (esta última necesita el tamaño de fuente); `normal` y el resto se ignoran. */
+function parseLetterSpacing(value: string | undefined, fontSize: number | undefined): number | undefined {
+    const match = value?.trim().match(/^(-?\d*\.?\d+)(px|em)$/)
+    if (!match) return undefined
+    const n = parseFloat(match[1])
+    if (match[2] === "px") return n
+    return fontSize ? n * fontSize : undefined
+}
+
 /** Propiedades de texto presentes en un `style` CSS (sólo las que aparecen) */
 export function parseTextStyle(style: string | undefined): ParsedTextStyle {
     const raw = getStyles(style)
@@ -169,7 +178,8 @@ export function parseTextStyle(style: string | undefined): ParsedTextStyle {
     if (raw["-webkit-text-stroke-color"]) parsed.strokeColor = parseCssColor(raw["-webkit-text-stroke-color"], [0, 0, 0, 1])
     if (raw["text-shadow"]) parsed.shadow = parseTextShadow(raw["text-shadow"])
     if (raw["text-transform"]) parsed.textTransform = raw["text-transform"]
-    if (raw["letter-spacing"]) parsed.letterSpacing = parseNumber(raw["letter-spacing"], 0) || undefined
+    const spacing = parseLetterSpacing(raw["letter-spacing"], parsed.fontSize)
+    if (spacing) parsed.letterSpacing = spacing
     const decoration = `${raw["text-decoration"] ?? ""} ${raw["text-decoration-line"] ?? ""}`
     if (decoration.includes("underline")) parsed.underline = true
     if (decoration.includes("line-through")) parsed.strike = true

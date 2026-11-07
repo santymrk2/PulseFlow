@@ -48,6 +48,14 @@ describe("sceneStyle", () => {
         expect(parseTextStyle("text-decoration: none").underline).toBeUndefined()
     })
 
+    it("reads letter-spacing in px or em and ignores the rest", () => {
+        expect(parseTextStyle("letter-spacing: -2px").letterSpacing).toBe(-2)
+        expect(parseTextStyle("font-size: 50px; letter-spacing: 0.1em").letterSpacing).toBe(5)
+        expect(parseTextStyle("letter-spacing: 0.1em").letterSpacing).toBeUndefined()
+        expect(parseTextStyle("letter-spacing: normal").letterSpacing).toBeUndefined()
+        expect(parseTextStyle("letter-spacing: 3").letterSpacing).toBeUndefined()
+    })
+
     it("applies text transform", () => {
         expect(applyTextTransform("hola mundo", "uppercase")).toBe("HOLA MUNDO")
         expect(applyTextTransform("hola mundo", "capitalize")).toBe("Hola Mundo")

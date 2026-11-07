@@ -254,7 +254,7 @@ function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: s
 
     const fontSize = base.fontSize || 100
     const color = base.color || [1, 1, 1, 1]
-    const spans = [sceneTextSpan({ text: value, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color })]
+    const spans = [sceneTextSpan({ text: value, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color, underline: base.underline, strike: base.strike })]
 
     return sceneTextItem({
         id: item.id || `item-${index}`,
@@ -270,6 +270,7 @@ function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: s
         fontWeight: base.fontWeight ?? 400,
         fontStyle: base.fontStyle,
         color,
+        letterSpacing: base.letterSpacing,
         text: value,
         spans,
         live: true,
@@ -288,7 +289,7 @@ function buildDynamicTextItem(item: Item, index: number, allItems: Item[], outpu
     const base = parseTextStyle(item.style)
     const fontSize = base.fontSize || (item.type === "events" ? 80 : 100)
     const color = base.color || [1, 1, 1, 1]
-    const plain = (text: string) => sceneTextSpan({ text, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color })
+    const plain = (text: string) => sceneTextSpan({ text, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color, underline: base.underline, strike: base.strike })
 
     let spans: SceneTextSpan[] = []
     let boxStyle = parseBoxStyle(item.style)
@@ -339,6 +340,7 @@ function buildDynamicTextItem(item: Item, index: number, allItems: Item[], outpu
         fontWeight: base.fontWeight ?? 400,
         fontStyle: base.fontStyle,
         color,
+        letterSpacing: base.letterSpacing,
         text: value,
         spans,
         live,
