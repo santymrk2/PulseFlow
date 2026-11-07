@@ -442,15 +442,15 @@ export function SvelteIsland({ component, props = {}, events }: SvelteIslandProp
 - Produce: `export function Icon(props: IconProps)`, con las mismas props que `Icon.svelte` (leer su script) y el
   mismo SVG.
 
-- [ ] **Step 1: Tests que fallan:**
+- [x] **Step 1: Tests que fallan:**
   - `T`: con `dictionary = { toast: { save_error: "No se pudo" } }`, `<T id="toast.save_error" />` → "No se pudo";
     `replace` con `"Hola $1"` y `["Ana"]` → "Hola Ana"; `lowercase` → en minúsculas; clave inexistente → el mismo
     resultado que da `T.svelte` (leerlo y copiar ese comportamiento).
   - `Icon`: con un id conocido de `values/customIcons` (o de donde `Icon.svelte` saque los íconos), renderiza un `svg`
     con el mismo `viewBox` y `path` que el Svelte.
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar.**
-- [ ] **Step 4:** chequeos verdes. Commit `F24.5: traducción e íconos en React`.
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar.**
+- [x] **Step 4:** chequeos verdes. Commit `F24.5: traducción e íconos en React`.
 
 ---
 

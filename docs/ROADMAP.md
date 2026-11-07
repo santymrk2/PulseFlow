@@ -1779,7 +1779,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [x] **F24.2** `useStore` y el kit de stores para tests.
 - [x] **F24.3** `ReactIsland`, React dentro de Svelte.
 - [x] **F24.4** `SvelteIsland`, Svelte dentro de React.
-- [ ] **F24.5** Traducción e íconos en React.
+- [x] **F24.5** Traducción e íconos en React.
 - [ ] **F24.6** Kit en React: base (`button`, `input`, `link`, `h-rule`, `title`, `section-header`, `capsule`, `list-row`).
 - [ ] **F24.7** Kit en React: controles (`dropdown`, `stepper`, `slider`, `tabs`, `menu`, `zoom-control`, `choice-grid`).
 - [ ] **F24.8** Kit en React: campos I (`text-field`, `number-field`, `textarea-field`, `select-field`, `toggle-field`, `checkbox-field`, `segmented-field`, `toggle-group-field`).

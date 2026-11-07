@@ -1,0 +1,36 @@
+/* docs/design/kit.md: íconos en gris, el activo/hover pasa a --text (`white` = currentColor)
+   Portado de Icon.svelte. `svg {…}` pasó a `.icon`: en un CSS module un selector de elemento no tiene scope y pintaría todos los svg de la app */
+.icon {
+    fill: var(--text-muted);
+}
+
+.select {
+    cursor: pointer;
+}
+
+.select:hover {
+    background-color: var(--hover);
+}
+
+.white {
+    /* fill: var(--secondary-text); */
+    fill: currentColor;
+}
+
+.right {
+    margin-inline-end: 0.5em;
+}
+
+.fill {
+    width: 100%;
+    height: 100%;
+}
+
+.flip {
+    transform: scaleX(-1);
+}
+
+.boxed {
+    padding: 0.2em;
+    border-radius: 0.3em;
+}
