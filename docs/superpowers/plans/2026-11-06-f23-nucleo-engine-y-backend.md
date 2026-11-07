@@ -792,10 +792,10 @@ La clave de `playingVideoState` es `` `${path}_${outputId}` `` (`videoPlayer.ts:
 - [ ] **Step 1: Reproducir antes de tocar nada.** En la app, una slide con un ítem reloj digital (sin timers
   corriendo), en vivo. Esperar 70 s. Si **cambia el minuto** en el proyector, el bug no existe: anotarlo en el
   roadmap y cerrar la tarea sin código.
-- [ ] **Step 2: Implementar** (sólo si se congeló). `scenesHaveClock` y, en `listeners.ts`,
+- [x] **Step 2: Implementar** (sólo si se congeló). `scenesHaveClock` y, en `listeners.ts`,
   `setInterval(() => { if (scenesHaveClock()) sendOutputScenes() }, 1000)`.
 - [ ] **Step 3:** repetir el Step 1. Expected: el reloj avanza. `bun run test:unit` y `test:svelte` en verde.
-- [ ] **Step 4:** commit `F23.15: el reloj del proyector se actualiza cada segundo`.
+- [x] **Step 4:** commit `F23.15: el reloj del proyector se actualiza cada segundo`.
 
 ---
 

@@ -2,7 +2,7 @@ import { get } from "svelte/store"
 import { OUTPUT, REMOTE, STAGE } from "../../types/Channels"
 import { AudioPlayer } from "../audio/audioPlayer"
 import { midiInListen } from "../components/actions/midi"
-import { sendOutputScenes } from "../components/helpers/sceneGraph"
+import { scenesHaveClock, sendOutputScenes } from "../components/helpers/sceneGraph"
 import { shouldResendForVideo, videoSyncFields, type VideoSyncFields } from "../components/helpers/videoSync"
 import { getAllActiveOutputIds, getAllNormalOutputs, updateSyncedOutputs } from "../components/helpers/output"
 import { loadShows } from "../components/helpers/setShow"
@@ -355,6 +355,11 @@ export function storeSubscriber() {
         })
         if (resend) sendOutputScenes()
     })
+
+    // F23.15: el engine no calcula la hora; con un reloj en la escena se reenvía cada segundo
+    setInterval(() => {
+        if (scenesHaveClock()) sendOutputScenes()
+    }, 1000)
 
     metronome.subscribe((data) => {
         send(OUTPUT, ["METRONOME"], data)

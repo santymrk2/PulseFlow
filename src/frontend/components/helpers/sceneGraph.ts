@@ -34,8 +34,12 @@ import { contentAlign } from "./outputAspect"
 import { imagePathsOf } from "./sceneMedia"
 import { applyTextTransform, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
 import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
+import { markSceneClock, resetSceneClock } from "./sceneClock"
 
 dayjs.extend(localizedFormat)
+
+// F23.15: la marca de reloj vive en sceneClock.ts (testeable sin arrastrar la app)
+export { scenesHaveClock } from "./sceneClock"
 
 const DEFAULT_FONT_SIZE = 100
 const DEFAULT_LINE_HEIGHT = 1.1
@@ -200,6 +204,7 @@ function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: s
         const clock = item.clock || {}
         const type = clock.type || "digital"
         if (type === "analog") return null
+        markSceneClock()
 
         const offsetDays = Number(clock.offsetDays) || 0
         const target = offsetDays ? new Date(today.getTime() + offsetDays * 86400000) : today
@@ -529,6 +534,7 @@ function nextSlidesImagePaths(outputId: string, output: Output): string[] {
  * salida fuente) y `nextText` (slide siguiente).
  */
 export function sendOutputScenes(outputsData: { [id: string]: Output } = get(outputs)) {
+    resetSceneClock()
     const ids = Object.keys(outputsData || {})
         .filter((id) => outputsData[id]?.enabled)
         .sort((a, b) => (outputsData[a].name || a).localeCompare(outputsData[b].name || b))
