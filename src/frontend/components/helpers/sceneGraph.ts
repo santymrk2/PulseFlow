@@ -30,7 +30,7 @@ import { getCurrentTimerValue } from "../drawer/timers/timers"
 import { defaultLayers, getCurrentStyle, getOutputLines, getOutputResolution, getOutputTransitions, getStyleTemplate, percentageStylePos, setTemplateStyle } from "./output"
 import { _show } from "./shows"
 import { getLayoutRef } from "./show"
-import { eventsLines, slideTrackerParts, slideTrackerText, variableText, type CalendarEvent } from "./dynamicItemText"
+import { eventsLines, hasTimeToken, joinStaticText, slideTrackerParts, slideTrackerText, variableText, type CalendarEvent } from "./dynamicItemText"
 import { replaceDynamicValues } from "./showActions"
 import { contentAlign } from "./outputAspect"
 import { imagePathsOf } from "./sceneMedia"
@@ -95,6 +95,7 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
     let blockStyle: ParsedTextStyle | null = null
     let align: ReturnType<typeof parseTextAlign> = null
     let lineHeight: number | undefined
+    let timeDependent = false
 
     const visibleLines = lines.filter((_line, i) => !hasWindow || (i >= (start as number) && i < (end as number)))
 
@@ -103,6 +104,7 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
         ;(line.text || []).forEach((part) => {
             const partStyle = parseTextStyle(part.style)
             let value = typeof part.value === "string" ? part.value : ""
+            if (hasTimeToken(value)) timeDependent = true
             if (value.includes("{")) value = replaceDynamicValues(value, dynamicRef)
             value = applyTextTransform(value, partStyle.textTransform || base.textTransform)
             if (!value) return
@@ -129,6 +131,7 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
 
     const text = spans.map((s) => s.text).join("")
     if (!text.trim()) return null
+    if (timeDependent) markSceneClock() // {time_}, {video_countdown}… cambian solos
 
     const resolved: ParsedTextStyle = blockStyle || base
     const usesAutoSize = (item.textFit || "none") !== "none" || !!item.auto
@@ -157,6 +160,7 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
         letterSpacing: resolved.letterSpacing,
         text,
         spans,
+        live: timeDependent,
         box: parseBoxStyle(item.style)
     })
 }
@@ -438,7 +442,7 @@ function buildSlideItems(showSlide: OutSlide, outputId: string, currentStyle: Re
 
 /** Texto plano de una slide: items visibles o, si no los hay, todo su texto (para stage). */
 function plainTextOf(items: SceneTextItem[], slideItems: Item[]): string {
-    let text = items.map((a) => a.text).join("\n")
+    let text = joinStaticText(items)
     if (!text) text = slideItems.map((a) => getItemText(a)).join("\n")
     return text.trim()
 }

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { eventsLines, eventsText, slideTrackerParts, slideTrackerText, variableText, visibleEvents, type CalendarEvent } from "./dynamicItemText"
+import { eventsLines, eventsText, hasTimeToken, joinStaticText, slideTrackerParts, slideTrackerText, variableText, visibleEvents, type CalendarEvent } from "./dynamicItemText"
 
 const NB = "\u00A0\u00A0\u00A0\u00A0"
 
@@ -92,5 +92,22 @@ describe("eventsLines", () => {
     })
     it("sin hora ni lugar ni notas es sólo el nombre", () => {
         expect(eventsLines({}, [ensayo], NOW)).toEqual([[{ text: "Ensayo" }]])
+    })
+})
+
+describe("hasTimeToken", () => {
+    it.each(["{time_hours}:{time_minutes}", "Faltan {timer_oracion}", "en {video_countdown}", "{video_time}", "{audio_time}", "{audio_countdown}", "{time_str_day+1}"])("%s cambia solo", (text) => {
+        expect(hasTimeToken(text)).toBe(true)
+    })
+    it.each(["hola", "{show_name}", "{video_duration}", "{audio_title}", "{$mi_variable}", "time_hours sin llaves"])("%s no cambia solo", (text) => {
+        expect(hasTimeToken(text)).toBe(false)
+    })
+})
+
+describe("joinStaticText", () => {
+    it("excluye los ítems live: un reloj no cambia el texto plano", () => {
+        const items = [{ text: "Bienvenidos" }, { text: "10:00", live: true }]
+        expect(joinStaticText(items)).toBe("Bienvenidos")
+        expect(joinStaticText([items[0], { text: "10:01", live: true }])).toBe(joinStaticText(items))
     })
 })

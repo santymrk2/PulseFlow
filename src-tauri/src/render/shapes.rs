@@ -110,7 +110,6 @@ impl ShapePipeline {
     #[allow(clippy::too_many_arguments)] // parámetros de GPU/dibujo que no ganan nada agrupándose en un struct
     pub fn draw_rounded_rect(
         &self,
-        _device: &wgpu::Device,
         queue: &wgpu::Queue,
         arena: &mut LayerArena,
         pass: &mut wgpu::RenderPass<'_>,
@@ -145,7 +144,6 @@ impl ShapePipeline {
     #[allow(clippy::too_many_arguments)] // parámetros de GPU/dibujo que no ganan nada agrupándose en un struct
     pub fn draw_box(
         &self,
-        device: &wgpu::Device,
         queue: &wgpu::Queue,
         arena: &mut LayerArena,
         pass: &mut wgpu::RenderPass<'_>,
@@ -175,7 +173,6 @@ impl ShapePipeline {
             rect[3] * scale,
         ];
         self.draw_rounded_rect(
-            device,
             queue,
             arena,
             pass,
@@ -192,7 +189,6 @@ impl ShapePipeline {
     #[allow(clippy::too_many_arguments)] // parámetros de GPU/dibujo que no ganan nada agrupándose en un struct
     pub fn draw_text_boxes(
         &self,
-        device: &wgpu::Device,
         queue: &wgpu::Queue,
         arena: &mut LayerArena,
         pass: &mut wgpu::RenderPass<'_>,
@@ -205,7 +201,7 @@ impl ShapePipeline {
                     Some(dw) if dw > 0.0 => target.0 as f32 / dw,
                     _ => 1.0,
                 };
-                self.draw_box(device, queue, arena, pass, style, rect, scale, target);
+                self.draw_box(queue, arena, pass, style, rect, scale, target);
             }
         }
     }
@@ -213,7 +209,6 @@ impl ShapePipeline {
     /// Dibuja los subrayados y tachados de una capa de texto (F23.18): rectángulos sin radio, en píxeles del destino.
     pub fn draw_decorations(
         &self,
-        device: &wgpu::Device,
         queue: &wgpu::Queue,
         arena: &mut LayerArena,
         pass: &mut wgpu::RenderPass<'_>,
@@ -221,14 +216,13 @@ impl ShapePipeline {
         target: (u32, u32),
     ) {
         for d in decorations {
-            self.draw_rounded_rect(device, queue, arena, pass, d.rect, d.color, d.color, 0.0, 0.0, target);
+            self.draw_rounded_rect(queue, arena, pass, d.rect, d.color, d.color, 0.0, 0.0, target);
         }
     }
 
     /// Dibuja la caja de un ítem de medio (justo antes del medio).
     pub fn draw_media_box(
         &self,
-        device: &wgpu::Device,
         queue: &wgpu::Queue,
         arena: &mut LayerArena,
         pass: &mut wgpu::RenderPass<'_>,
@@ -241,7 +235,6 @@ impl ShapePipeline {
                 _ => 1.0,
             };
             self.draw_box(
-                device,
                 queue,
                 arena,
                 pass,

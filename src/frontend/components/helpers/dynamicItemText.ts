@@ -138,3 +138,16 @@ export function variableText(variable: VariableValue | undefined, hideText = tru
     if (variable?.type === "text") return variable.enabled === false && hideText ? "" : variable.text || ""
     return ""
 }
+
+/** `true` si el texto crudo tiene un valor dinámico que cambia solo con el tiempo (reloj, timers, video/audio en curso). */
+export function hasTimeToken(text: string): boolean {
+    return /\{(?:time_|timer_|video_time|video_countdown|audio_time|audio_countdown|project_section_time_until_next|interaction_time)/.test(text)
+}
+
+/** Texto de los ítems que no son `live`: lo que cambia solo con el tiempo no cuenta como cambio de slide. */
+export function joinStaticText(items: { text: string; live?: boolean }[]): string {
+    return items
+        .filter((a) => !a.live)
+        .map((a) => a.text)
+        .join("\n")
+}

@@ -162,7 +162,7 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
 
                 // Capa 2: items de medio (imágenes) colocados en la slide.
                 for item in &media_items {
-                    shapes.draw_media_box(device, queue, &mut arena, &mut render_pass, item, (frame_w, frame_h));
+                    shapes.draw_media_box(queue, &mut arena, &mut render_pass, item, (frame_w, frame_h));
                     if item.media_type != "image" || item.path.is_empty() {
                         continue;
                     }
@@ -191,7 +191,7 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
 
                 // Capa 4: medios (imágenes) de los overlays (F4.6).
                 for item in &overlay_media_items {
-                    shapes.draw_media_box(device, queue, &mut arena, &mut render_pass, item, (frame_w, frame_h));
+                    shapes.draw_media_box(queue, &mut arena, &mut render_pass, item, (frame_w, frame_h));
                     if item.media_type != "image" || item.path.is_empty() {
                         continue;
                     }
@@ -224,17 +224,17 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
             // Capa 3: texto principal.
             let blocks = scene.text_blocks();
             if !blocks.is_empty() {
-                shapes.draw_text_boxes(device, queue, &mut arena, &mut render_pass, &blocks, (frame_w, frame_h));
+                shapes.draw_text_boxes(queue, &mut arena, &mut render_pass, &blocks, (frame_w, frame_h));
                 text_engine.render(TextLayer::Slide, device, queue, &mut render_pass, frame_w, frame_h, &blocks)?;
-                shapes.draw_decorations(device, queue, &mut arena, &mut render_pass, text_engine.decorations(TextLayer::Slide), (frame_w, frame_h));
+                shapes.draw_decorations(queue, &mut arena, &mut render_pass, text_engine.decorations(TextLayer::Slide), (frame_w, frame_h));
             }
 
             // Capa 5: texto de los overlays (F4.6).
             let overlay_blocks = scene.overlay_text_blocks();
             if !overlay_blocks.is_empty() {
-                shapes.draw_text_boxes(device, queue, &mut arena, &mut render_pass, &overlay_blocks, (frame_w, frame_h));
+                shapes.draw_text_boxes(queue, &mut arena, &mut render_pass, &overlay_blocks, (frame_w, frame_h));
                 text_engine.render(TextLayer::Overlay, device, queue, &mut render_pass, frame_w, frame_h, &overlay_blocks)?;
-                shapes.draw_decorations(device, queue, &mut arena, &mut render_pass, text_engine.decorations(TextLayer::Overlay), (frame_w, frame_h));
+                shapes.draw_decorations(queue, &mut arena, &mut render_pass, text_engine.decorations(TextLayer::Overlay), (frame_w, frame_h));
             }
         }
     }

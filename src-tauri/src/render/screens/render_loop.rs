@@ -240,7 +240,7 @@ pub(super) fn spawn_render_loop(
                                     // del fondo y debajo del texto (F4.5).
                                     for item in &current.media {
                                         // F23.16: la caja del ítem va justo antes de su medio
-                                        shape_pipeline.draw_media_box(&device, &queue, &mut arena, &mut pass, item, (w, h));
+                                        shape_pipeline.draw_media_box(&queue, &mut arena, &mut pass, item, (w, h));
                                         if item.media_type == "video" {
                                             // F23.20: el mismo frame NV12 del hub que usa el fondo, en el rect del ítem
                                             if let Some(frame) = store.get_video(&item.path) {
@@ -284,7 +284,7 @@ pub(super) fn spawn_render_loop(
                                     // Texto de la slide (capa 3). Los overlays del Scene Graph
                                     // (F4.6) se dibujan después, en su propia capa.
                                     // F23.16: las cajas de todos los textos van antes de la llamada de texto de la capa.
-                                    shape_pipeline.draw_text_boxes(&device, &queue, &mut arena, &mut pass, &current.text, (w, h));
+                                    shape_pipeline.draw_text_boxes(&queue, &mut arena, &mut pass, &current.text, (w, h));
                                     current.text.clone()
                                 }
                                 _ => crate::render::stage::stage_blocks(&current.stage, w as f32, h as f32),
@@ -297,14 +297,14 @@ pub(super) fn spawn_render_loop(
                                 }
                             }
                             // F23.18: subrayados y tachados, en el mismo pass y después del texto (y de su caja).
-                            shape_pipeline.draw_decorations(&device, &queue, &mut arena, &mut pass, text_engine.decorations(TextLayer::Slide), (w, h));
+                            shape_pipeline.draw_decorations(&queue, &mut arena, &mut pass, text_engine.decorations(TextLayer::Slide), (w, h));
 
                             // Capa de overlays del Scene Graph (F4.6): fondo → medios slide →
                             // texto slide → medios overlay → texto overlay. Sólo en audiencia.
                             if matches!(kind, ScreenKind::Audience) {
                                 // Medios (imágenes) de los overlays.
                                 for item in &current.overlay_media {
-                                    shape_pipeline.draw_media_box(&device, &queue, &mut arena, &mut pass, item, (w, h));
+                                    shape_pipeline.draw_media_box(&queue, &mut arena, &mut pass, item, (w, h));
                                     if item.media_type != "image" || item.path.is_empty() {
                                         continue;
                                     }
@@ -333,7 +333,7 @@ pub(super) fn spawn_render_loop(
                                 }
 
                                 // Texto de los overlays (con las cajas de todos antes, F23.16).
-                                shape_pipeline.draw_text_boxes(&device, &queue, &mut arena, &mut pass, &current.overlay_text, (w, h));
+                                shape_pipeline.draw_text_boxes(&queue, &mut arena, &mut pass, &current.overlay_text, (w, h));
                                 if let Err(err) = text_engine.render(
                                     TextLayer::Overlay,
                                     &device,
@@ -348,7 +348,7 @@ pub(super) fn spawn_render_loop(
                                         log::error!("[render] texto (Overlay) en {label}: {err}");
                                     }
                                 }
-                                shape_pipeline.draw_decorations(&device, &queue, &mut arena, &mut pass, text_engine.decorations(TextLayer::Overlay), (w, h));
+                                shape_pipeline.draw_decorations(&queue, &mut arena, &mut pass, text_engine.decorations(TextLayer::Overlay), (w, h));
 
                                 // Overlays del modelo previo (relojes/avisos): se dibujan
                                 // por encima de todo, como antes.
