@@ -241,6 +241,12 @@ Nativo en macOS (AVFoundation), Media Foundation en Windows. Los pasos de F8.3, 
 - Mac [ ] Windows [ ]
 - **Notas:** F23.17 Step 5 y reporte (acento, negrita/cursiva de eventos, variables deshabilitadas tenues).
 
+### 4.5 Valor de tiempo en un texto común sobre un video de fondo (revisión final F23)
+- **Pasos:** una slide con el texto "Empezamos en {video_countdown}" sobre un video de fondo, en vivo. Mirar 20 s.
+- **Esperado:** el texto avanza cada segundo y la salida no hace crossfade cada segundo.
+- Mac [ ] Windows [ ]
+- **Notas:** revisión final F23 (los textos con `{time_…}`, `{timer_…}`, `{video_…}` o `{audio_…}` se tratan como `live`).
+
 ---
 
 ## 5. Cierre y guardado
@@ -269,9 +275,9 @@ Nativo en macOS (AVFoundation), Media Foundation en Windows. Los pasos de F8.3, 
 
 ### 5.4 Aviso de cambios sin guardar (F23.8 Step 6)
 - **Pasos:** activar `special.showClosePopup` y cerrar con el botón rojo. Elegir "Cancelar".
-- **Esperado:** aparece el popup y "Cancelar" deja la app abierta. Un nuevo clic en el botón rojo dentro de los 10
-  segundos siguientes no hace nada; entre 10 y 60 segundos sale sin guardar; después de 60 segundos vuelve a
-  preguntar.
+- **Esperado:** aparece el popup y "Cancelar" deja la app abierta. Un nuevo clic en el botón rojo vuelve a preguntar
+  (ver 5.7). Sin cancelar (el popup sigue abierto): dentro de los 10 segundos no hace nada; entre 10 y 60 segundos
+  sale sin guardar; después de 60 segundos vuelve a preguntar.
 - Mac [ ] Windows [ ]
 - **Notas:** F23.8 Step 6 y reporte (decisión de los tres estados de cierre). Se asume que `app.exit(0)` no re-entra
   al pedido de cierre: a verificar.
@@ -288,6 +294,13 @@ Nativo en macOS (AVFoundation), Media Foundation en Windows. Los pasos de F8.3, 
 - **Esperado:** el nombre nuevo está al reabrir y no queda ningún `ffmpeg.exe`.
 - Mac [n/a] Windows [ ]
 - **Notas:** F23.8 Step 7.
+
+### 5.7 Cancelar el aviso y volver a cerrar (revisión final F23, R8)
+- **Pasos:** activar `special.showClosePopup`. ✕ (botón rojo) → popup "sin guardar" → "Cancelar" → esperar entre 10 y
+  60 segundos → volver a cerrar.
+- **Esperado:** vuelve a mostrar el popup (no sale sin guardar ni sin preguntar).
+- Mac [ ] Windows [ ]
+- **Notas:** revisión final F23. Antes, el segundo cierre en esa ventana de tiempo salía directo.
 
 ---
 
@@ -327,6 +340,13 @@ Nativo en macOS (AVFoundation), Media Foundation en Windows. Los pasos de F8.3, 
 - Mac [ ] Windows [ ]
 - **Notas:** F23.21 no tiene paso "En la app"; el reporte avisa que el aspecto visual no se vio. `spin` sigue siendo
   un crossfade (deuda registrada).
+
+### 6.5 Stage abierto con un reloj o cuenta regresiva en la audiencia (revisión final F23)
+- **Pasos:** monitor de stage abierto y, en la slide de audiencia, un reloj o una cuenta regresiva (timer o evento).
+  Esperar 30 s.
+- **Esperado:** el stage NO hace fundidos cada segundo; el reloj de la audiencia y el del stage avanzan sin parpadeo.
+- Mac [ ] Windows [ ]
+- **Notas:** revisión final F23 (el texto plano del stage ahora excluye los ítems `live`).
 
 ---
 
@@ -539,6 +559,13 @@ Nativo en macOS (AVFoundation), Media Foundation en Windows. Los pasos de F8.3, 
   960; con `2+` falla sin actualizarla; el timer inválido cae a 0.
 - Mac [ ] Windows [ ]
 - **Notas:** F23.11 Step 6. Las pruebas de API y timer son recomendaciones del reporte, no del plan.
+
+### 9.7 Fuente de Google (revisión final F23)
+- **Pasos:** en los ajustes de fuentes, agregar una fuente de Google y usarla en una slide; mirar la consola.
+- **Esperado:** la fuente se carga (sin errores de CSP hacia `fonts.googleapis.com` / `fonts.gstatic.com`) y se ve en
+  la vista previa.
+- Mac [ ] Windows [ ]
+- **Notas:** revisión final F23 (la CSP ahora permite esos dos orígenes en `style-src` y `font-src`).
 
 ---
 

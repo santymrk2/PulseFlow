@@ -1854,6 +1854,17 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - WEBSOCKET_START ignora password y nadie escucha SERVER_MESSAGE. Al revivir los clientes web o Companion: autenticar en Rust antes de emitir (F23.9).
 - El contador de slides (F23.17) sólo llega al proyector en modo numérico ("3/12"); los modos barra, grupos y proyecto (`SlideProgress.svelte`) siguen sin dibujarse en el engine.
 - Un video dentro de `overlay_media` (overlays del Scene Graph) no se dibuja en el proyector (F23.20): el render sólo dibuja imágenes en esa capa.
+- Stage con slides temporales (`id: "temp"`) y `outputSlideCache` no leídos: cae al layout por defecto (F23.19).
+- Un layout de stage con ítems todos vacíos cae a `stage_blocks` y muestra el reloj por defecto (F23.19).
+- El autoajuste estimado del stage puede desbordar con MAYÚSCULAS o fuentes anchas (F23.19).
+- `em`/`%` en padding/radius se leen como px y `borderWidth` sin color pinta el anillo con el relleno (F23.16).
+- Filtro de versículos: `<span …/>` autocerrado y cierres cruzados span/red (F23.10).
+- Deriva de posición por duración de contenedor distinta de la del video tras muchas vueltas (F23.14).
+- `variables.subscribe` reenvía la escena sin debounce (F23.17).
+- Líder de video "mudo": un suscriptor sin transporte (stage, fondos de plantilla) puede ser líder y la pausa del operador no llega (F23.20).
+- Armado de `SceneTextItem` duplicado en 4 lugares: reloj, timer y dinámicos sin `stroke`/`shadow` (F23.18).
+- `{@html}` con datos de terceros fuera de la biblia (eventos ICS, changelog, notas, shows importados) sin filtro: la defensa hoy es la CSP (F23.10).
+- Overlays con variable, eventos o contador no se dibujan en el proyector (F23.17).
 
 ## Fuera de alcance por ahora
 
