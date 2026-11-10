@@ -369,17 +369,18 @@ export function ScreenOutputOptions() {
         return () => destroy(BLACKMAGIC, listenerId)
     }, [])
 
+    // deps = outputs + id (estables entre renders): `currentOutput` se clona en cada render y re-dispararía el IPC con cada tick de rtmpStatus
     useEffect(() => {
         if (currentOutput?.blackmagic) send(BLACKMAGIC, ["GET_DEVICES"])
-    }, [currentOutput])
+    }, [outputsValue, currentId])
 
     useEffect(() => {
         if (currentOutput?.rtmp && encoderOptions.length === 1) loadEncoders()
-    }, [currentOutput, encoderOptions])
+    }, [outputsValue, currentId, encoderOptions])
 
     useEffect(() => {
         if (currentOutput?.rtmp && !currentOutput?.rtmpData?.destinations?.length) addDestination()
-    }, [currentOutput])
+    }, [outputsValue, currentId])
 
     // Check if alpha keying is supported by the device
     function isAlphaSupported(): boolean {

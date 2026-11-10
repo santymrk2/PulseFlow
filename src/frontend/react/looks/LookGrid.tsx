@@ -8,7 +8,7 @@ import { Icon } from "../helpers/Icon"
 import { useFreshStore } from "../settings/audio/useFreshStore"
 import { CheckboxField } from "../ui/checkbox-field/CheckboxField"
 import { SelectField } from "../ui/select-field/SelectField"
-import { LookAdvanced } from "./LookAdvanced"
+import { LookAdvanced, type LookCellPatch } from "./LookAdvanced"
 import styles from "./LookGrid.module.css"
 
 // Port de components/looks/LookGrid.svelte (F24.14): una columna por pantalla de audiencia, filas = Presentación (tema),
@@ -16,7 +16,7 @@ import styles from "./LookGrid.module.css"
 export interface LookGridProps {
     screens?: (Output & { id: string })[]
     draft: Look
-    onCell?: (detail: { outputId: string; patch: Partial<LookScreen> }) => void
+    onCell?: (detail: { outputId: string; patch: LookCellPatch }) => void
 }
 
 type Layer = "media" | "slide" | "overlays"
@@ -32,7 +32,7 @@ export function LookGrid({ screens = [], draft, onCell }: LookGridProps) {
         return draft?.screens?.[outputId] || { layers: { media: true, slide: true, overlays: true } }
     }
 
-    function patch(outputId: string, data: Partial<LookScreen>) {
+    function patch(outputId: string, data: LookCellPatch) {
         onCell?.({ outputId, patch: data })
     }
 

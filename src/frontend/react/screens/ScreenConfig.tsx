@@ -3,13 +3,14 @@ import { get } from "svelte/store"
 import { OUTPUT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
 import type { Display } from "../../../types/Main"
-import { keysToID, sortByName, sortObject } from "../../components/helpers/array"
+import { clone, keysToID, sortByName, sortObject } from "../../components/helpers/array"
 import { addOutput, enableStageOutput } from "../../components/helpers/output"
 import { requestMain } from "../../IPC/main"
 import { currentOutputSettings, outputs } from "../../stores"
 import { translateText } from "../../utils/language"
 import { send } from "../../utils/request"
 import { useStore } from "../hooks/useStore"
+import { useFreshStore } from "../settings/audio/useFreshStore"
 import { ScreenDetail } from "./ScreenDetail"
 import { ScreenList } from "./ScreenList"
 import { SystemDisplays } from "./SystemDisplays"
@@ -22,7 +23,7 @@ const firstOutputId = () => sortObject(sortByName(keysToID(get(outputs))), "stag
 
 export function ScreenConfig() {
     const current = useStore(currentOutputSettings)
-    const outputsValue = useStore(outputs)
+    const outputsValue = useFreshStore(outputs, clone)
     const [displays, setDisplays] = useState<Display[]>([])
     // `$: if ($currentOutputSettings && $outputs[...]) selectedOutputId = $currentOutputSettings`: se resuelve en el render
     // (no en un efecto) para que ScreenDetail reciba el id nuevo en el mismo commit en que cambia el store; si no, su propio

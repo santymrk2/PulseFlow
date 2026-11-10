@@ -1,5 +1,5 @@
 // Reglas puras para eliminar pantallas (salidas) de la configuración.
-// Sin stores ni IPC: lo que toca la app vive en `ScreenDetail.svelte`.
+// Sin stores ni IPC: lo que toca la app vive en `react/screens/ScreenDetail.tsx`.
 
 type ScreenLike = { stageOutput?: unknown; kind?: string }
 

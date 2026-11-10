@@ -331,6 +331,14 @@ describe("ScreenOutputOptions", () => {
             expect(destroy).toHaveBeenCalledWith(BLACKMAGIC, id)
         })
 
+        it("los_cambios_de_rtmpStatus_no_repiten_GET_DEVICES_despues_del_montaje", async () => {
+            await montar()
+            const pedidos = () => vi.mocked(send).mock.calls.filter((c) => c[0] === BLACKMAGIC && c[1][0] === "GET_DEVICES").length
+            const alMontar = pedidos()
+            for (let i = 0; i < 5; i++) act(() => rtmpStatus.set({ a: { d1: { state: "live", restarts: i } } } as never))
+            expect(pedidos()).toBe(alMontar)
+        })
+
         it("renderiza_el_titulo_y_el_selector_de_dispositivo", async () => {
             await montar()
             expect(screen.getByText("Blackmagic Design")).toBeTruthy()
