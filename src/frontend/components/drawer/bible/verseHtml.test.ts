@@ -29,6 +29,14 @@ describe("sanitizeVerseText", () => {
     it.each(['<span class="wj" >a</span>', '<span style="color:red;">a</span>', '<span style="color:red;" >a</span>', "<red>a</red>", "<red >a</red>"])("conserva la forma de rojo que reconoce markJesusWords: %s", (input) => {
         expect(sanitizeVerseText(input)).toBe(input)
     })
+    it("conserva lo incierto, subrayado y tachado de json-bible (parseMarkdown)", () => {
+        expect(sanitizeVerseText('<span class="uncertain">[a]</span>')).toBe('<span class="uncertain">[a]</span>')
+        expect(sanitizeVerseText("<u>a</u>")).toBe("<u>a</u>")
+        expect(sanitizeVerseText("<del>a</del>")).toBe("<del>a</del>")
+    })
+    it("descarta <u> con atributos", () => {
+        expect(sanitizeVerseText("<u onclick=x>a</u>")).not.toContain("onclick")
+    })
     it("descarta comillas simples y mayúsculas en el span de rojo", () => {
         expect(sanitizeVerseText("<span class='wj'>a</span>")).toBe("a")
         expect(sanitizeVerseText('<SPAN CLASS="WJ">a</SPAN>')).toBe("a")

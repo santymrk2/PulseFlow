@@ -1,11 +1,19 @@
 <script lang="ts">
     import { activePopup, saved } from "../../../stores"
     import { closeApp, save, saveComplete } from "../../../utils/save"
+    import { Main } from "../../../../types/IPC/Main"
+    import { sendMain } from "../../../IPC/main"
     import T from "../../helpers/T.svelte"
     import Button from "../../../lib/components/ui/button/button.svelte"
 
+    // avisa al backend: sin esto, volver a cerrar entre 10 y 60 s después saldría sin guardar ni preguntar
+    function cancel() {
+        activePopup.set(null)
+        sendMain(Main.CLOSE_CANCELLED)
+    }
+
     const actions = {
-        n: () => activePopup.set(null),
+        n: cancel,
         q: () => closeApp(),
         y: () => ($saved ? saveComplete({ closeWhenFinished: true }) : save(true))
     }
@@ -23,7 +31,7 @@
 <svelte:window on:keydown={keydown} />
 
 <div class="list">
-    <Button variant="outline" style="width: 100%;" on:click={() => activePopup.set(null)}>
+    <Button variant="outline" style="width: 100%;" on:click={cancel}>
         <T id="popup.cancel" />
         <span>N</span>
     </Button>

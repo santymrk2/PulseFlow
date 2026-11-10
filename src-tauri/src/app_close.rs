@@ -4,6 +4,7 @@
 use crate::render::sync::MutexExt;
 use crate::state::AppState;
 use serde_json::json;
+use std::sync::Mutex;
 use std::time::{Duration, Instant};
 use tauri::{AppHandle, Emitter, Manager, RunEvent, Window, WindowEvent};
 
@@ -33,6 +34,11 @@ pub fn close_decision(now: Instant, last_request: Option<Instant>) -> CloseDecis
     } else {
         CloseDecision::AskFrontend
     }
+}
+
+/// El usuario canceló el aviso de cierre: el próximo pedido vuelve a preguntar en vez de salir (`AllowNow`).
+pub fn cancel_close_request(last_request: &Mutex<Option<Instant>>) {
+    *last_request.lock_safe() = None;
 }
 
 /// Sólo la ventana de `tauri.conf.json` pasa por el guardado; las salidas no se interceptan.
@@ -143,6 +149,21 @@ mod tests {
         );
         assert_eq!(
             close_decision(now, Some(ago(now, 90))),
+            CloseDecision::AskFrontend
+        );
+    }
+
+    #[test]
+    fn cancelar_el_aviso_vuelve_a_preguntar() {
+        let now = Instant::now();
+        let last = Mutex::new(Some(ago(now, 15)));
+        assert_eq!(
+            close_decision(now, *last.lock_safe()),
+            CloseDecision::AllowNow
+        );
+        cancel_close_request(&last);
+        assert_eq!(
+            close_decision(now, *last.lock_safe()),
             CloseDecision::AskFrontend
         );
     }

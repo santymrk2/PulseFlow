@@ -20,6 +20,12 @@ pub fn CLOSE(app: AppHandle) {
     crate::app_close::exit_now(&app);
 }
 
+/// El usuario canceló el aviso de cierre (equivale a `Main.CLOSE_CANCELLED`): el próximo cierre vuelve a preguntar.
+#[tauri::command]
+pub fn CLOSE_CANCELLED(state: tauri::State<'_, crate::state::AppState>) {
+    crate::app_close::cancel_close_request(&state.close_requested_at);
+}
+
 /// Maximiza la ventana actual (equivale a `Main.MAXIMIZE`).
 #[tauri::command]
 pub fn MAXIMIZE(window: WebviewWindow) -> AppResult<()> {
