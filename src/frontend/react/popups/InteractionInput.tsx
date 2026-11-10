@@ -35,6 +35,11 @@ interface InputDraft {
     max?: number | null
 }
 
+// Se guarda sólo con tipo y subtipo elegidos (siempre pasa antes de editar algo). `question` puede faltar hasta que se escribe: el Svelte guardaba el objeto suelto igual
+function isStoredInput(draft: InputDraft): draft is StoredInput {
+    return (draft.type === "heading" || draft.type === "text" || draft.type === "number" || draft.type === "multi_choice") && typeof draft.inputType === "string"
+}
+
 const emptyOption = (): OptionDraft => ({ value: "" })
 
 function createTypes(): ChoiceOption[] {
@@ -98,8 +103,8 @@ export function InteractionInput() {
             if (!interaction) return a
             if (!interaction.inputs) interaction.inputs = []
 
-            // el borrador está completo al guardar (tipo y pregunta ya elegidos); el Svelte guardaba el objeto suelto
-            const current = clone(next) as StoredInput
+            const current = clone(next)
+            if (!isStoredInput(current)) return a
 
             if (inputIndex.current === -1) {
                 interaction.inputs.push(current)

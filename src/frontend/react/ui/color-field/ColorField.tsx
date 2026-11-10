@@ -9,7 +9,8 @@ import { translateText } from "../../../utils/language"
 import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { Icon } from "../../helpers/Icon"
 import { useDerivedState } from "../../hooks/useDerivedState"
-import { useStore } from "../../hooks/useStore"
+import { clone } from "../../../components/helpers/array"
+import { useFreshStore } from "../../hooks/useFreshStore"
 import { Button } from "../button/Button"
 import { NumberField } from "../number-field/NumberField"
 import { BLACK, rgbWithAlpha } from "./colorData"
@@ -71,7 +72,7 @@ function getCurrentMode(value: string) {
 }
 
 export function ColorField({ value = BLACK, defaultValue = "", label, noLabel = false, allowGradients = false, allowOpacity = false, allowEmpty = false, alwaysVisible = false, editMode = false, disabled = false, height = 0, width = 0, style, onChange, onInput }: ColorFieldProps) {
-    const sp = useStore(special)
+    const sp = useFreshStore(special, clone) // ManageColors muta special en el lugar: cada emisión entrega una copia
     const colorElem = useRef<HTMLDivElement>(null)
     const colorInput = useRef<HTMLInputElement>(null)
     const [pickerId] = useState(() => "picker_" + uid())

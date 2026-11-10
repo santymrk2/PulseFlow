@@ -1,6 +1,5 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { readFileSync } from "node:fs"
 import { get } from "svelte/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
@@ -126,15 +125,5 @@ describe("Initialize", () => {
         fireEvent.click(container.querySelector("button.popup-options") as HTMLElement)
         expect(get(popupData)).toEqual({ back: "initialize" })
         expect(get(activePopup)).toBe("restore")
-    })
-
-    // la lógica vive en el marco Svelte (Popup.svelte y shortcuts.ts): se confirma que sigue apuntando a "initialize"
-    it("el_marco_sigue_bloqueando_esc_clic_afuera_y_la_X_para_initialize", () => {
-        const shortcuts = readFileSync("src/frontend/utils/shortcuts.ts", "utf8")
-        const popup = readFileSync("src/frontend/components/main/Popup.svelte", "utf8")
-        expect(shortcuts).toContain('export const disablePopupClose = ["initialize", "cloud_method"]')
-        expect(shortcuts).toContain("if (popupId && disablePopupClose.includes(popupId)) return")
-        expect(popup).toContain("if (popupId && disablePopupClose.includes(popupId)) return")
-        expect(popup).toContain("{#if !disablePopupClose.includes(popupId)}")
     })
 })

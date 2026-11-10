@@ -1827,6 +1827,8 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 
 ## Deuda registrada (sin tarea)
 
+- **MaxLines (F24.15e):** no tiene ningún punto de apertura (ni antes ni después de F24); sin
+  `styleId`, "mostrar atenuado" tira TypeError; decidir si se borra o se conecta (F24.15e).
 - **F24.15d, popups migrados con deuda heredada de FreeShow** (se portó igual, sin arreglar):
   (a) sin test de `format("find_replace")` en `menuClick.ts`: alcance, mayúsculas y deshacer
   sin cubrir (F24.15d); (b) EditEvent `updateTime("to")`: con "hasta" entre 10:00 y 10:59 y
