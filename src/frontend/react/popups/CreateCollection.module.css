@@ -1,0 +1,25 @@
+.list {
+    display: flex;
+    flex-direction: column;
+
+    padding: 10px 0;
+    border-radius: 10px;
+    overflow: hidden;
+
+    background-color: var(--primary-darker);
+    border: 1px solid var(--primary-lighter);
+
+    margin-bottom: 20px;
+}
+.list .item:nth-child(odd) {
+    background-color: var(--primary-darkest);
+}
+
+.item {
+    display: flex;
+    gap: 10px;
+    /* padding: 4px 12px; */
+}
+.item :global(.checkboxfield .background) {
+    background-color: transparent !important;
+}

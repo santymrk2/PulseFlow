@@ -1,0 +1,11 @@
+.prompt {
+    white-space: initial;
+    margin-bottom: 20px;
+}
+
+.message {
+    white-space: initial;
+    font-size: 0.8em;
+    opacity: 0.9;
+    margin-bottom: 20px;
+}

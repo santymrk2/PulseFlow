@@ -6,7 +6,6 @@ import { checkConditionValue, isConditionMet } from "../../components/edit/scrip
 import { getItemText } from "../../components/edit/scripts/textStyle"
 import { clone } from "../../components/helpers/array"
 import { getLayoutRef } from "../../components/helpers/show"
-import ConditionsBox from "../../components/main/popups/ConditionsBox.svelte"
 import Textbox from "../../components/slide/Textbox.svelte"
 import Stagebox from "../../components/stage/Stagebox.svelte"
 import { getSlideTextItems } from "../../components/stage/stage"
@@ -15,6 +14,7 @@ import { activeEdit, activeShow, activeStage, overlays, popupData, showsCache, s
 import { translateText } from "../../utils/language"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Button } from "../ui/button/Button"
+import { ConditionsBox, type ConditionChange } from "./ConditionsBox"
 import { FloatingBar } from "../ui/floating-bar/FloatingBar"
 import { SelectField } from "../ui/select-field/SelectField"
 import { ZoomControl } from "../ui/zoom-control/ZoomControl"
@@ -27,13 +27,12 @@ import styles from "./Conditions.module.css"
 //   El único caso observable que eso cambia es el de un contextElem sin `.editItem` fuera del escenario: el Svelte alteraba el alias sin avisar al store; el menú contextual sólo ofrece
 //   "conditions" sobre `.editItem` o `.stage_item`, así que no es alcanzable.
 // `slide`, `item` e `itemText` eran lets no reactivos (foto al montar y al cambiar de item): viven en `view`. `itemOptions` se calcula una vez.
-// ConditionsBox, Textbox y Stagebox siguen siendo Svelte (islas): sus handlers se toman al montar, por eso sólo leen `live` (la vista más reciente), nunca el estado del render.
+// Textbox y Stagebox siguen siendo Svelte (islas): sus handlers se toman al montar, por eso sólo leen `live` (la vista más reciente), nunca el estado del render.
 // Los nodos no tenían key en el Svelte: se usa la posición.
 type Conditions = { [key: string]: Condition }
 type ConditionItem = Item | StageItem
 type ItemKey = string | number
 type ItemHolder = { items: Record<ItemKey, ConditionItem | undefined>; modified?: number }
-type ConditionChange = { key: string; value: string }
 
 interface ConditionsContext {
     obj: { contextElem?: HTMLElement | null }
@@ -163,14 +162,15 @@ export function Conditions() {
         writeConditions(ctx, live.current.itemIndex, next)
     }
 
-    function updateContent(key: string, value: string, a: number, b: number, c: number, d: number) {
+    function updateContent(key: string, value: ConditionChange["value"], a: number, b: number, c: number, d: number) {
         editValues((values) => {
             if (!values[a]) values[a] = []
             if (!values[a][b]) values[a][b] = []
             if (!values[a][b][c]) values[a][b][c] = []
             if (!values[a][b][c][d] || key === "element") values[a][b][c][d] = {}
 
-            values[a][b][c][d][key] = value
+            // ConditionValue dice string, pero index/seconds llegan como número (igual que en el Svelte)
+            values[a][b][c][d][key] = value as string
         })
     }
 
@@ -325,7 +325,7 @@ export function Conditions() {
                                                                         </div>
                                                                     ) : null}
 
-                                                                    <SvelteIsland component={ConditionsBox} props={{ input: CONTENT }} events={{ change: (e: CustomEvent<ConditionChange>) => updateContent(e.detail.key, e.detail.value, a, b, c, d) }} />
+                                                                    <ConditionsBox input={CONTENT} onChange={(change) => updateContent(change.key, change.value, a, b, c, d)} />
                                                                 </div>
                                                             )
                                                         })}

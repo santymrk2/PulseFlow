@@ -13,7 +13,16 @@ vi.mock("../../utils/common", () => commonMock())
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../../components/slide/Textbox.svelte", () => ({ default: { isla: "Textbox" } }))
 vi.mock("../../components/stage/Stagebox.svelte", () => ({ default: { isla: "Stagebox" } }))
-vi.mock("../../components/main/popups/ConditionsBox.svelte", () => ({ default: { isla: "ConditionsBox" } }))
+// ConditionsBox ya es React: el doble lo registra como las islas, para seguir usando islands/emit
+vi.mock("./ConditionsBox", async () => {
+    const { islands } = await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")
+    return {
+        ConditionsBox: ({ input, onChange }: { input: object; onChange: (c: unknown) => void }) => {
+            islands.ConditionsBox = { props: { input }, events: { change: (e) => onChange(e.detail) } }
+            return <div data-isla="ConditionsBox" />
+        }
+    }
+})
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ isConditionMet: vi.fn(() => true), checkConditionValue: vi.fn(() => true) }))
 vi.mock("../../components/edit/scripts/textStyle", () => ({ getItemText: (item: { text?: string } | null) => item?.text ?? "" }))
 vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "sl1" }]) }))

@@ -1,0 +1,16 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.shows {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.show {
+    display: flex;
+    flex-direction: column;
+}

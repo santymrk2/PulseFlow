@@ -1,0 +1,24 @@
+.box {
+    text-align: center;
+}
+
+.box :global(a) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hr {
+    border: none;
+    height: 2px;
+    margin: 20px 0;
+    background-color: var(--primary-lighter);
+}
+
+.box :global(img) {
+    border-radius: 4px;
+}
+
+.reserved.isReserved :global(input) {
+    color: #ff3232;
+}

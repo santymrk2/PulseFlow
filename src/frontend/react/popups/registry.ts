@@ -22,6 +22,16 @@ import { CloudUpdate } from "./CloudUpdate"
 import { Color } from "./Color"
 import { ColorGradient } from "./ColorGradient"
 import { Conditions } from "./Conditions"
+import { Confirm } from "./Confirm"
+import { Connect } from "./Connect"
+import { CreateCollection } from "./CreateCollection"
+import { CreatePlayer } from "./CreatePlayer"
+import { CreateShow } from "./CreateShow"
+import { CustomAction } from "./CustomAction"
+import { CustomText } from "./CustomText"
+import { DeleteDuplicatedShows } from "./DeleteDuplicatedShows"
+import { DeleteShow } from "./DeleteShow"
+import { DisplayDuration } from "./DisplayDuration"
 import { KitDemoReact } from "./KitDemoReact"
 
 // Popups que ya viven en React. Al migrar uno, sale del mapa `popups` de components/main/popupComponents.ts y entra acá (nunca en los dos).
@@ -48,5 +58,15 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     color: Color,
     color_gradient: ColorGradient,
     conditions: Conditions,
+    confirm: Confirm,
+    connect: Connect,
+    create_collection: CreateCollection,
+    player: CreatePlayer,
+    show: CreateShow,
+    custom_action: CustomAction,
+    custom_text: CustomText,
+    delete_duplicated_shows: DeleteDuplicatedShows,
+    delete_show: DeleteShow,
+    display_duration: DisplayDuration,
     kit_demo_react: KitDemoReact
 }

@@ -1,16 +1,6 @@
 import type { ComponentType } from "svelte"
 import type { Popups } from "../../../types/Main"
 
-import Confirm from "./popups/Confirm.svelte"
-import Connect from "./popups/Connect.svelte"
-import CreateCollection from "./popups/CreateCollection.svelte"
-import CreatePlayer from "./popups/CreatePlayer.svelte"
-import CreateShow from "./popups/createShow/CreateShow.svelte"
-import CustomAction from "./popups/CustomAction.svelte"
-import CustomText from "./popups/CustomText.svelte"
-import DeleteDuplicatedShows from "./popups/DeleteDuplicatedShows.svelte"
-import DeleteShow from "./popups/DeleteShow.svelte"
-import DisplayDuration from "./popups/DisplayDuration.svelte"
 import DynamicValues from "./popups/DynamicValues.svelte"
 import EditChart from "./popups/EditChart.svelte"
 import EditEvent from "./popups/EditEvent.svelte"
@@ -72,19 +62,14 @@ import PlaylistOptionsModal from "../show/left/PlaylistOptionsModal.svelte"
 
 export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     initialize: Initialize,
-    confirm: Confirm,
-    custom_text: CustomText,
     import: Import,
     export: Export,
-    show: CreateShow,
-    delete_show: DeleteShow,
     select_show: SelectShow,
     select_template: SelectTemplate,
     select_overlay: SelectOverlay,
     select_style: SelectStyle,
     select_look: SelectLook,
     select_stage_layout: SelectStageLayout,
-    delete_duplicated_shows: DeleteDuplicatedShows,
     manage_groups: ManageGroups,
     manage_fonts: ManageFonts,
     manage_icons: ManageIcons,
@@ -93,7 +78,6 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     manage_dynamic_values: ManageDynamicValues,
     template_style_overrides: TemplateStyleOverrides,
     regex_manager: RegexManager,
-    player: CreatePlayer,
     rename: Rename,
     find_replace: FindReplace,
     timer: Timer,
@@ -106,7 +90,6 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     metadata_display: MetadataDisplay,
     import_scripture: ImportScripture,
     import_calendar: ImportCalendar,
-    create_collection: CreateCollection,
     edit_event: EditEvent,
     edit_chart: EditChart,
 
@@ -118,7 +101,6 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     dynamic_values: DynamicValues,
     translate: Translate,
     next_timer: NextTimer,
-    display_duration: DisplayDuration,
     manage_tags: ManageTags,
     update_manager: UpdateManager,
     shortcuts: Shortcuts,
@@ -128,9 +110,7 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     new_update: NewUpdate,
     history: History,
     manage_emitters: Emitters,
-    custom_action: CustomAction,
     slide_midi: SlideMidi,
-    connect: Connect,
     effect_items: EffectItems,
     timeline: TimelineSettings,
     timecode: Timecode,

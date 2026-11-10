@@ -25,6 +25,11 @@ describe("CheckboxField", () => {
         expect(raiz().querySelector(`.${styles.hover}`)?.classList.contains("hover")).toBe(true)
     })
 
+    it("el_fondo_tambien_lleva_la_clase_global_background", () => {
+        render(<CheckboxField label="x" />)
+        expect(raiz().querySelector(`.${styles.background}`)?.classList.contains("background")).toBe(true)
+    })
+
     it("renderiza_lo_principal", () => {
         restaurar = setStoresForTest([storeEntry(dictionary, { inputs: { name: "<b>Nombre</b>" } })])
         render(<CheckboxField label="inputs.name" checked data="info" icon="check" id="c" />)
