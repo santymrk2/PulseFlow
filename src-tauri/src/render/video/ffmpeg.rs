@@ -505,6 +505,8 @@ mod tests {
     fn pausa_detiene_los_frames() {
         let sink = Arc::new(Count::default());
         let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        // se mide desde el primer frame: un arranque lento no puede meter ese frame dentro de la pausa
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
 
         thread::sleep(Duration::from_millis(300));
         decoder.set_paused(true);

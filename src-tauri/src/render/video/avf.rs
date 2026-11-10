@@ -426,11 +426,21 @@ mod tests {
 
     const FIXTURE_3S: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/video/solid_red_64_3s.mp4");
 
+    /// Espera al primer frame: los tiempos se miden desde ahí y no desde `start` (un arranque lento no los falsea).
+    fn wait_first_frame(sink: &Collect) {
+        let start = std::time::Instant::now();
+        while sink.0.lock().expect("lock").is_empty() {
+            assert!(start.elapsed() < Duration::from_secs(10), "primer frame");
+            std::thread::sleep(Duration::from_millis(10));
+        }
+    }
+
     #[test]
     fn pausa_detiene_los_frames() {
         let sink = Arc::new(Collect::default());
         let mut decoder = start(FIXTURE_3S, sink.clone()).expect("abrir el fixture");
         let count = || sink.0.lock().expect("lock").len();
+        wait_first_frame(&sink);
 
         std::thread::sleep(Duration::from_millis(300));
         decoder.set_paused(true);
@@ -450,6 +460,7 @@ mod tests {
     fn seek_salta_a_la_posicion() {
         let sink = Arc::new(Collect::default());
         let mut decoder = start(FIXTURE_3S, sink.clone()).expect("abrir el fixture");
+        wait_first_frame(&sink);
         std::thread::sleep(Duration::from_millis(300));
 
         decoder.seek(1500).expect("seek");
@@ -464,6 +475,7 @@ mod tests {
     fn position_avanza_en_tiempo_real() {
         let sink = Arc::new(Collect::default());
         let mut decoder = start(FIXTURE_3S, sink.clone()).expect("abrir el fixture");
+        wait_first_frame(&sink);
 
         std::thread::sleep(Duration::from_secs(1));
         let position = decoder.position_ms();
