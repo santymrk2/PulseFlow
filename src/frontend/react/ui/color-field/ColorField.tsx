@@ -9,7 +9,6 @@ import { translateText } from "../../../utils/language"
 import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { Icon } from "../../helpers/Icon"
 import { useDerivedState } from "../../hooks/useDerivedState"
-import { clone } from "../../../components/helpers/array"
 import { useFreshStore } from "../../hooks/useFreshStore"
 import { Button } from "../button/Button"
 import { NumberField } from "../number-field/NumberField"
@@ -71,8 +70,20 @@ function getCurrentMode(value: string) {
     return "normal"
 }
 
+interface ColorLists {
+    customColors?: string[]
+    disabledColors?: string[]
+    customColorsGradient?: string[]
+    disabledColorsGradient?: string[]
+}
+
+// sólo las cuatro listas que se leen (no todo `special`: hay decenas de campos de color montados a la vez)
+function copyColorLists(value: ColorLists): ColorLists {
+    return { customColors: [...(value.customColors ?? [])], disabledColors: [...(value.disabledColors ?? [])], customColorsGradient: [...(value.customColorsGradient ?? [])], disabledColorsGradient: [...(value.disabledColorsGradient ?? [])] }
+}
+
 export function ColorField({ value = BLACK, defaultValue = "", label, noLabel = false, allowGradients = false, allowOpacity = false, allowEmpty = false, alwaysVisible = false, editMode = false, disabled = false, height = 0, width = 0, style, onChange, onInput }: ColorFieldProps) {
-    const sp = useFreshStore(special, clone) // ManageColors muta special en el lugar: cada emisión entrega una copia
+    const sp = useFreshStore(special, copyColorLists) // ManageColors muta estos arrays en el lugar: cada emisión entrega copias de los que se leen
     const colorElem = useRef<HTMLDivElement>(null)
     const colorInput = useRef<HTMLInputElement>(null)
     const [pickerId] = useState(() => "picker_" + uid())
