@@ -9,7 +9,7 @@ globals.ImageData ??= class ImageData {}
 globals.window ??= globals
 globals.window.addEventListener ??= () => {}
 globals.window.removeEventListener ??= () => {}
-globals.document ??= { createElement: () => ({ style: {}, getContext: () => null, setAttribute: () => {} }), addEventListener: () => {}, documentElement: { style: {} } }
+globals.document ??= { createElement: () => ({ style: {}, getContext: () => null }), addEventListener: () => {}, documentElement: { style: {} } }
 globals.navigator ??= { userAgent: "node", language: "es-ES", platform: "test" }
 for (const name of ["AudioWorkletNode", "AudioContext", "GainNode", "AnalyserNode", "AudioNode", "BiquadFilterNode", "HTMLElement", "HTMLMediaElement", "HTMLCanvasElement", "HTMLVideoElement", "Worker", "MutationObserver", "ResizeObserver", "IntersectionObserver", "Image", "Audio", "MediaStream"]) {
     globals[name] ??= class {}

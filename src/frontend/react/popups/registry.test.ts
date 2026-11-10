@@ -9,9 +9,9 @@ vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 
-// Importar utils/popup arrastra ~90 popups Svelte que tocan AudioContext, pdf, etc. al cargarse: se leen las claves del literal.
+// Importar popupComponents arrastra ~90 popups Svelte que tocan AudioContext, pdf, etc. al cargarse: se leen las claves del literal.
 function clavesDePopups(): string[] {
-    const source = readFileSync("src/frontend/utils/popup.ts", "utf8")
+    const source = readFileSync("src/frontend/components/main/popupComponents.ts", "utf8")
     const literal = source.slice(source.indexOf("export const popups"))
     const body = literal.slice(0, literal.indexOf("\n}"))
     return [...body.matchAll(/^ {4}(\w+):/gm)].map((match) => match[1])
