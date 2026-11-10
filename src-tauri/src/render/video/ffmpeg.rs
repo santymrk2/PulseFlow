@@ -2,16 +2,19 @@
 //!
 //! - macOS: VideoToolbox (`-hwaccel videotoolbox`). Windows: D3D11VA (`-hwaccel d3d11va`).
 //! - Si la decodificación por hardware muere a mitad de camino, se reintenta en software.
-//! - `-stream_loop -1` reproduce en bucle; el PTS sale del contador de frames (no se reinicia al
+//! - `-stream_loop -1` reproduce en bucle; el ritmo lo marca `Pacer` (no `-re`, que al reanudar de una
+//!   pausa soltaría una ráfaga de frames); el PTS sale del contador de frames (no se reinicia al
 //!   dar la vuelta) y de la tasa de cuadros que informa `ffprobe`.
 //! - El video se escala para entrar en 1920×1080 **conservando la proporción** (antes se estiraba a
 //!   16:9 y el modo Cover/Contain del compositor trabajaba con una proporción falsa).
 
 use super::nv12::{guess_matrix, YuvMatrix};
+use super::pacing::{Pacer, PlaybackState};
 use super::{DecodedFrame, FramePixels, FrameSink, VideoDecoder};
 use crate::error::{AppError, AppResult};
 use crate::utils::ffmpeg as ffmpeg_bin;
 use std::io::Read;
+use std::path::PathBuf;
 use std::process::{Child, Command, Stdio};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::{Arc, Mutex};
@@ -49,6 +52,8 @@ pub(super) struct VideoInfo {
     pub fps: (u32, u32),
     /// Matriz de color declarada por el archivo (`color_space` de ffprobe); `None` si no la trae.
     pub matrix: Option<YuvMatrix>,
+    /// Duración del archivo (`format.duration` de ffprobe); `None` si no la informa.
+    pub duration: Option<Duration>,
 }
 
 /// `color_space` de ffprobe → matriz de conversión YCbCr→RGB. `None` para lo desconocido o no-YCbCr.
@@ -68,7 +73,8 @@ pub(super) fn video_info_from_probe(probe: &serde_json::Value) -> Option<VideoIn
     let height = u32::try_from(stream["height"].as_u64()?).ok()?;
     let fps = ["avg_frame_rate", "r_frame_rate"].iter().find_map(|key| parse_frame_rate(stream[key].as_str()?)).unwrap_or(FALLBACK_FPS);
     let matrix = stream["color_space"].as_str().and_then(matrix_from_color_space);
-    Some(VideoInfo { width, height, fps, matrix })
+    let duration = probe["format"]["duration"].as_str().and_then(|text| text.trim().parse::<f64>().ok()).filter(|secs| secs.is_finite() && *secs > 0.0).map(Duration::from_secs_f64);
+    Some(VideoInfo { width, height, fps, matrix, duration })
 }
 
 /// Tamaño de salida: entra en `max_w × max_h` sin agrandar, conserva la proporción y es par
@@ -85,6 +91,8 @@ pub(super) fn fit_even(width: u32, height: u32, max_w: u32, max_h: u32) -> (u32,
 enum SessionEnd {
     /// El usuario puso stop (`running == false`).
     Stopped,
+    /// Se pidió un salto: hay que relanzar ffmpeg en la nueva posición.
+    Seek,
     /// EOF o error de lectura con `running` todavía en true.
     Error,
 }
@@ -94,6 +102,7 @@ pub struct FfmpegDecoder {
     running: Arc<AtomicBool>,
     /// Proceso vivo, compartido para que `stop()` pueda matarlo desde fuera del hilo.
     child: Arc<Mutex<Option<Child>>>,
+    state: PlaybackState,
     thread: Option<JoinHandle<()>>,
 }
 
@@ -106,22 +115,51 @@ impl VideoDecoder for FfmpegDecoder {
         if let Ok(mut slot) = self.child.lock()
             && let Some(mut process) = slot.take() {
                 let _ = process.kill();
+                let _ = process.wait();
             }
 
         if let Some(handle) = self.thread.take() {
             let _ = handle.join();
         }
     }
+
+    fn set_paused(&mut self, paused: bool) {
+        self.state.set_paused(paused);
+    }
+
+    /// Mata el proceso actual; el hilo lo espera (`wait`) y relanza ffmpeg con `-ss` (ver `Session::run`).
+    fn seek(&mut self, position_ms: u64) -> AppResult<()> {
+        self.state.request_seek(position_ms);
+        if let Ok(mut slot) = self.child.lock()
+            && let Some(process) = slot.as_mut() {
+                let _ = process.kill();
+            }
+        Ok(())
+    }
+
+    fn position_ms(&self) -> u64 {
+        self.state.position_ms()
+    }
+
+    fn duration_ms(&self) -> u64 {
+        self.state.duration_ms()
+    }
 }
 
 impl FfmpegDecoder {
     pub fn start(app: &AppHandle, path: &str, sink: Arc<dyn FrameSink>) -> AppResult<Self> {
-        let ffmpeg = ffmpeg_bin::ffmpeg(app).to_string_lossy().into_owned();
+        Self::start_with(ffmpeg_bin::ffmpeg(app), ffmpeg_bin::ffprobe(app), path, sink)
+    }
+
+    /// Como `start`, con los binarios ya resueltos (los tests no tienen un `AppHandle` real).
+    fn start_with(ffmpeg: PathBuf, ffprobe: PathBuf, path: &str, sink: Arc<dyn FrameSink>) -> AppResult<Self> {
+        let ffmpeg = ffmpeg.to_string_lossy().into_owned();
         let running = Arc::new(AtomicBool::new(true));
         let child = Arc::new(Mutex::new(None));
-        let (running_thread, child_thread) = (Arc::clone(&running), Arc::clone(&child));
+        let state = PlaybackState::default();
+        state.allow_one_frame();
+        let (running_thread, child_thread, state_thread) = (Arc::clone(&running), Arc::clone(&child), state.clone());
         let video_path = path.to_string();
-        let app = app.clone();
 
         // Plataformas soportadas: macOS (VideoToolbox) y Windows (D3D11VA).
         let hwaccel = if cfg!(target_os = "macos") { "videotoolbox" } else { "d3d11va" };
@@ -130,7 +168,7 @@ impl FfmpegDecoder {
             .name(format!("PulseFlow-VideoDec-{path}"))
             .spawn(move || {
                 // `ffprobe` es async: se espera acá, en el hilo del decodificador, no en el de comandos.
-                let info = tauri::async_runtime::block_on(ffmpeg_bin::probe(&app, &video_path)).ok().and_then(|probe| video_info_from_probe(&probe));
+                let info = tauri::async_runtime::block_on(ffmpeg_bin::probe_with(&ffprobe, &video_path)).ok().and_then(|probe| video_info_from_probe(&probe));
                 let (width, height, fps, declared_matrix) = match &info {
                     Some(info) => {
                         let (w, h) = fit_even(info.width, info.height, MAX_WIDTH, MAX_HEIGHT);
@@ -138,22 +176,31 @@ impl FfmpegDecoder {
                     }
                     None => (MAX_WIDTH, MAX_HEIGHT, FALLBACK_FPS, None),
                 };
+                if let Some(duration) = info.as_ref().and_then(|info| info.duration) {
+                    state_thread.set_duration(duration, pts_for_frame(1, fps));
+                }
                 // la que declara el archivo; si no trae, la convención por alto
                 let matrix = declared_matrix.unwrap_or_else(|| guess_matrix(height));
-                let mut session = Session { ffmpeg: &ffmpeg, path: &video_path, width, height, fps, matrix, running: &running_thread, child: &child_thread, sink: sink.as_ref(), frames: 0 };
+                let mut session = Session { ffmpeg: &ffmpeg, path: &video_path, width, height, fps, matrix, running: &running_thread, child: &child_thread, sink: sink.as_ref(), frames: 0, base: Duration::ZERO, pacer: Pacer::new(state_thread.clone()), state: state_thread };
 
                 // 1er intento: aceleración por hardware nativa.
-                let end = session.run(Some(hwaccel));
-
-                // Si el stream por hardware murió a mitad de camino, reintentar en software.
-                if end == SessionEnd::Error && running_thread.load(Ordering::Relaxed) {
-                    log::warn!("[VideoEngine] decodificación por hardware falló a mitad de camino, reintentando en software: {video_path}");
-                    session.run(None);
+                let mut accel = Some(hwaccel);
+                loop {
+                    match session.run(accel) {
+                        // un salto relanza ffmpeg con el mismo modo de decodificación
+                        SessionEnd::Seek => {}
+                        // Si el stream por hardware murió a mitad de camino, reintentar en software.
+                        SessionEnd::Error if accel.is_some() && running_thread.load(Ordering::Relaxed) => {
+                            log::warn!("[VideoEngine] decodificación por hardware falló a mitad de camino, reintentando en software: {video_path}");
+                            accel = None;
+                        }
+                        _ => break,
+                    }
                 }
             })
             .map_err(|e| AppError::new(format!("Error iniciando decodificador de video: {e}")))?;
 
-        Ok(Self { running, child, thread: Some(thread) })
+        Ok(Self { running, child, state, thread: Some(thread) })
     }
 }
 
@@ -169,18 +216,27 @@ struct Session<'a> {
     sink: &'a dyn FrameSink,
     /// Frames entregados en total: el PTS no se reinicia entre sesiones ni al dar la vuelta del loop.
     frames: u64,
+    /// PTS del primer frame de este proceso (la posición del último salto; 0 si no hubo).
+    base: Duration,
+    pacer: Pacer,
+    state: PlaybackState,
 }
 
 impl Session<'_> {
     /// Ejecuta una sesión (spawn + bucle de lectura) y devuelve cómo terminó.
     fn run(&mut self, hwaccel: Option<&str>) -> SessionEnd {
-        // `hwaccel` es una opción de entrada y debe ir antes de `-i`.
+        // `hwaccel` y `-ss` son opciones de entrada y deben ir antes de `-i`.
         let mut args: Vec<String> = Vec::new();
         if let Some(accel) = hwaccel {
             args.extend(["-hwaccel".into(), accel.into()]);
         }
+        if let Some(position_ms) = self.state.take_seek() {
+            self.base = Duration::from_millis(position_ms);
+            self.frames = 0;
+            self.pacer.reset();
+            args.extend(["-ss".into(), format!("{:.3}", position_ms as f64 / 1000.0)]);
+        }
         args.extend(["-stream_loop".into(), "-1".into()]); // Bucle infinito continuo
-        args.push("-re".into()); // Tasa de refresco en tiempo real
         args.extend(["-i".into(), self.path.into()]);
         args.extend(["-vf".into(), format!("scale={}:{}", self.width, self.height)]);
         args.extend(["-f".into(), "rawvideo".into(), "-pix_fmt".into(), "nv12".into()]);
@@ -211,10 +267,11 @@ impl Session<'_> {
             }
         };
 
-        // Matar el proceso (si sigue vivo) y liberar el slot.
+        // Matar el proceso (si sigue vivo), esperarlo (sin huérfanos ni zombis) y liberar el slot.
         if let Ok(mut slot) = self.child.lock()
             && let Some(mut p) = slot.take() {
                 let _ = p.kill();
+                let _ = p.wait();
             }
         end
     }
@@ -226,6 +283,10 @@ impl Session<'_> {
 
         while self.running.load(Ordering::Relaxed) {
             if let Err(e) = stdout.read_exact(&mut buffer) {
+                // un salto mata el proceso a propósito: no es un error
+                if self.state.seek_pending() {
+                    return SessionEnd::Seek;
+                }
                 // EOF o error de lectura: reportar y salir (si no fue un stop).
                 if self.running.load(Ordering::Relaxed) {
                     log::warn!("[VideoEngine] fin del stream ({hwaccel:?}) en {}: {e}", self.path);
@@ -234,8 +295,18 @@ impl Session<'_> {
                 break;
             }
 
+            let pts = self.base + pts_for_frame(self.frames, self.fps);
+            // pausa y ritmo; un frame del proceso anterior (salto pedido mientras esperaba) se descarta
+            if !self.pacer.wait(pts, self.running) {
+                break;
+            }
+            if self.state.seek_pending() {
+                return SessionEnd::Seek;
+            }
+
             let (y, uv) = buffer.split_at(luma);
-            self.sink.push(DecodedFrame { pts: pts_for_frame(self.frames, self.fps), pixels: FramePixels::Nv12Cpu { width: self.width, height: self.height, y, uv, matrix, full_range: false } });
+            self.sink.push(DecodedFrame { pts, pixels: FramePixels::Nv12Cpu { width: self.width, height: self.height, y, uv, matrix, full_range: false } });
+            self.state.set_position(pts);
             self.frames += 1;
         }
         SessionEnd::Stopped
@@ -246,7 +317,7 @@ impl Session<'_> {
 mod tests {
     use super::*;
     use serde_json::json;
-    use std::time::Duration;
+    use std::time::{Duration, Instant};
 
     #[test]
     fn frame_size_nv12_is_one_and_a_half_bytes_per_pixel() {
@@ -327,5 +398,154 @@ mod tests {
         assert_eq!(fit_even(1001, 563, 1920, 1080), (1000, 562), "pares");
         let (w, h) = fit_even(0, 0, 1920, 1080);
         assert!(w >= 2 && h >= 2);
+    }
+
+    /// Cuenta los frames que recibe.
+    #[derive(Default)]
+    struct Count(std::sync::atomic::AtomicUsize);
+
+    impl FrameSink for Count {
+        fn push(&self, _frame: DecodedFrame<'_>) {
+            self.0.fetch_add(1, Ordering::SeqCst);
+        }
+    }
+
+    impl Count {
+        fn get(&self) -> usize {
+            self.0.load(Ordering::SeqCst)
+        }
+    }
+
+    const FIXTURE_3S: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/fixtures/video/solid_red_64_3s.mp4");
+
+    /// Inicia el decodificador ffmpeg sobre el fixture de 3 s; `None` (se salta el test) si no hay ffmpeg.
+    fn start_fixture(sink: Arc<Count>) -> Option<FfmpegDecoder> {
+        // el binario de ffmpeg y el de ffprobe viven juntos: carpetas habituales, o el PATH
+        let dir = ["/opt/homebrew/bin", "/usr/local/bin", ""].into_iter().map(PathBuf::from).find(|dir| Command::new(dir.join("ffmpeg")).arg("-version").output().is_ok_and(|o| o.status.success()));
+        let Some(dir) = dir else {
+            eprintln!("ffmpeg no disponible: se salta el test");
+            return None;
+        };
+        Some(FfmpegDecoder::start_with(dir.join("ffmpeg"), dir.join("ffprobe"), FIXTURE_3S, sink).expect("iniciar ffmpeg"))
+    }
+
+    /// Espera (hasta `timeout`) a que `done` se cumpla.
+    fn wait_until(timeout: Duration, done: impl Fn() -> bool) -> bool {
+        let start = Instant::now();
+        while start.elapsed() < timeout {
+            if done() {
+                return true;
+            }
+            thread::sleep(Duration::from_millis(10));
+        }
+        done()
+    }
+
+    #[test]
+    fn la_posicion_es_la_real_tras_dar_la_vuelta() {
+        let sink = Arc::new(Count::default());
+        let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
+
+        decoder.seek(2000).expect("seek");
+        // 2000 ms + ~1 s de reproducción: da la vuelta del archivo de 3 s
+        let wrapped = wait_until(Duration::from_secs(10), || decoder.position_ms() < 2000);
+        let position = decoder.position_ms();
+        decoder.stop();
+        assert!(wrapped, "posición {position} ms: tendría que haber dado la vuelta");
+    }
+
+    #[test]
+    fn un_salto_mas_alla_del_final_sigue_entregando_frames() {
+        let sink = Arc::new(Count::default());
+        let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
+
+        decoder.seek(10_000).expect("seek");
+        let before = sink.get();
+        let flowing = wait_until(Duration::from_secs(5), || sink.get() > before + 2);
+        let position = decoder.position_ms();
+        decoder.stop();
+        assert!(flowing, "siguen llegando frames");
+        assert!(position <= 3000, "posición {position} ms");
+    }
+
+    #[test]
+    fn arrancar_en_pausa_muestra_el_primer_frame() {
+        let sink = Arc::new(Count::default());
+        let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        decoder.set_paused(true);
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "llega el primer frame");
+        thread::sleep(Duration::from_millis(500));
+        let count = sink.get();
+        decoder.stop();
+        assert_eq!(count, 1, "en pausa pasa exactamente un frame");
+    }
+
+    #[test]
+    fn un_salto_en_pausa_muestra_un_frame() {
+        let sink = Arc::new(Count::default());
+        let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
+        decoder.set_paused(true);
+        thread::sleep(Duration::from_millis(200));
+
+        let before = sink.get();
+        decoder.seek(1500).expect("seek");
+        assert!(wait_until(Duration::from_secs(5), || sink.get() > before), "llega el frame del destino");
+        thread::sleep(Duration::from_millis(500));
+        let after = sink.get();
+        let position = decoder.position_ms();
+        decoder.stop();
+        assert_eq!(after, before + 1, "en pausa pasa exactamente un frame");
+        assert!((1500..=1600).contains(&position), "posición {position} ms");
+    }
+
+    #[test]
+    fn pausa_detiene_los_frames() {
+        let sink = Arc::new(Count::default());
+        let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        // se mide desde el primer frame: un arranque lento no puede meter ese frame dentro de la pausa
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
+
+        thread::sleep(Duration::from_millis(300));
+        decoder.set_paused(true);
+        thread::sleep(Duration::from_millis(50)); // un frame que ya estaba en vuelo
+        let paused_at = sink.get();
+        thread::sleep(Duration::from_millis(300));
+        assert_eq!(sink.get(), paused_at, "en pausa no llegan frames");
+
+        decoder.set_paused(false);
+        thread::sleep(Duration::from_millis(300));
+        let resumed = sink.get();
+        decoder.stop();
+        assert!(resumed > paused_at, "al reanudar vuelven los frames ({paused_at} -> {resumed})");
+    }
+
+    #[test]
+    fn seek_salta_a_la_posicion() {
+        let sink = Arc::new(Count::default());
+        let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
+
+        decoder.seek(1500).expect("seek");
+        thread::sleep(Duration::from_millis(900));
+        let position = decoder.position_ms();
+        decoder.stop();
+        assert!((1500..=2500).contains(&position), "posición {position} ms");
+        assert!(position > 1500, "tras el salto llegaron frames nuevos ({position} ms)");
+    }
+
+    #[test]
+    fn position_avanza_en_tiempo_real() {
+        let sink = Arc::new(Count::default());
+        let Some(mut decoder) = start_fixture(sink.clone()) else { return };
+        // se mide desde el primer frame: el arranque (ffprobe + ffmpeg) no cuenta
+        assert!(wait_until(Duration::from_secs(10), || sink.get() > 0), "primer frame");
+
+        thread::sleep(Duration::from_secs(1));
+        let position = decoder.position_ms();
+        decoder.stop();
+        assert!((750..=1250).contains(&position), "posición {position} ms");
     }
 }

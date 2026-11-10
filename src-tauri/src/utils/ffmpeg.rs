@@ -129,7 +129,11 @@ pub async fn ffmpeg_available(app: &AppHandle) -> bool {
 /// Ejecuta `ffprobe` sobre `path` y devuelve las secciones `streams`/`format`
 /// ya parseadas como JSON.
 pub async fn probe(app: &AppHandle, path: &str) -> AppResult<serde_json::Value> {
-    let bin = ffprobe(app);
+    probe_with(&ffprobe(app), path).await
+}
+
+/// Como `probe`, con el binario de `ffprobe` ya resuelto.
+pub async fn probe_with(bin: &Path, path: &str) -> AppResult<serde_json::Value> {
     let args: Vec<String> = vec![
         "-v".into(),
         "quiet".into(),
@@ -139,7 +143,7 @@ pub async fn probe(app: &AppHandle, path: &str) -> AppResult<serde_json::Value> 
         "-show_streams".into(),
         path.into(),
     ];
-    let stdout = run_capture(&bin, &args).await?;
+    let stdout = run_capture(bin, &args).await?;
     let value: serde_json::Value = serde_json::from_str(&stdout)
         .map_err(|e| AppError::new(format!("Salida JSON de ffprobe inválida: {e}")))?;
     Ok(value)

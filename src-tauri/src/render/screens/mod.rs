@@ -168,6 +168,13 @@ pub struct ScreenScene {
     pub content: Option<super::frame::ContentFrame>,
 }
 
+impl ScreenScene {
+    /// F23.19: un stage con ítems de su layout se dibuja por el camino de la audiencia en vez de `stage_blocks`.
+    pub fn stage_draws_items(&self) -> bool {
+        !self.text.is_empty() || !self.media.is_empty()
+    }
+}
+
 /// Escena viva de una salida.
 ///
 /// La escena es **inmutable** mientras se dibuja: cada cambio la reemplaza entera
@@ -229,6 +236,8 @@ struct ScreenHandle {
     thread: Option<JoinHandle<()>>,
     /// Ruta del video suscrito actualmente (el decodificador lo comparte el hub).
     video: Option<String>,
+    /// Videos dentro de la slide (F23.20): id de suscripción (`etiqueta:id del ítem`) -> ruta.
+    video_items: HashMap<String, String>,
     /// Última transición pedida (la toma el bucle al dibujar el próximo frame).
     transition: Arc<Mutex<Option<TransitionRequest>>>,
 }
@@ -243,6 +252,7 @@ impl ScreenHandle {
         if let Some(path) = self.video.take() {
             let _ = video_hub_release(app, &path, &self.label);
         }
+        release_item_videos(app, self);
         self.running.store(false, Ordering::SeqCst);
         let thread = self.thread.take();
         let app = app.clone();
@@ -267,19 +277,35 @@ static WINDOW_COUNTER: std::sync::atomic::AtomicU64 = std::sync::atomic::AtomicU
 
 /// Pantallas suscritas a un decodificador compartido (por etiqueta de ventana).
 #[derive(Debug, Default)]
-struct Subscribers(HashSet<String>);
+struct Subscribers {
+    ids: HashSet<String>,
+    /// La pantalla que manda sobre pausa y posición del decodificador (F23.14): la primera que lo usó;
+    /// si se va, pasa a otra suscrita.
+    leader: Option<String>,
+}
 
 impl Subscribers {
     /// Suscribe `id`. `true` si era el primero (hay que arrancar el decodificador).
     fn add(&mut self, id: &str) -> bool {
-        let first = self.0.is_empty();
-        self.0.insert(id.to_string());
+        let first = self.ids.is_empty();
+        self.ids.insert(id.to_string());
+        if self.leader.is_none() {
+            self.leader = Some(id.to_string());
+        }
         first
     }
 
     /// Da de baja `id`. `true` si era el último (hay que detener el decodificador).
     fn remove(&mut self, id: &str) -> bool {
-        self.0.remove(id) && self.0.is_empty()
+        let had = self.ids.remove(id);
+        if self.leader.as_deref() == Some(id) {
+            self.leader = self.ids.iter().min().cloned();
+        }
+        had && self.ids.is_empty()
+    }
+
+    fn is_leader(&self, id: &str) -> bool {
+        self.leader.as_deref() == Some(id)
     }
 }
 

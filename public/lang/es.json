@@ -606,6 +606,7 @@
     "toast": {
         "saving": "Guardando...",
         "saved": "Guardado",
+        "feature_unavailable": "Esta función todavía no está disponible en PulseFlow.",
         "autosize_disabled": "Cambio de tamaño automático desactivado",
         "error_media": "No se pudieron obtener los archivos multimedia.",
         "empty_styles": "Sin estilos",

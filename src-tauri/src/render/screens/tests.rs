@@ -265,6 +265,7 @@ fn the_scene_snapshot_is_published_whole() {
         scene.text = vec![TextBlock { text: "hola".to_string(), ..Default::default() }];
         scene.media = vec![MediaItem {
             id: "m1".to_string(),
+            item_id: None,
             path: "/tmp/imagen.png".to_string(),
             media_type: "image".to_string(),
             x: 0.0,
@@ -274,6 +275,9 @@ fn the_scene_snapshot_is_published_whole() {
             aspect_mode: 0,
             opacity: 1.0,
             design_width: None,
+            box_style: None,
+            paused: false,
+            position_ms: None,
         }];
     });
 
@@ -298,6 +302,7 @@ fn a_reader_never_sees_a_half_updated_scene() {
     let slot = Arc::new(SceneSlot::new());
     let item = MediaItem {
         id: "m1".to_string(),
+        item_id: None,
         path: "/tmp/imagen.png".to_string(),
         media_type: "image".to_string(),
         x: 0.0,
@@ -307,6 +312,9 @@ fn a_reader_never_sees_a_half_updated_scene() {
         aspect_mode: 0,
         opacity: 1.0,
         design_width: None,
+        box_style: None,
+        paused: false,
+        position_ms: None,
     };
     slot.update(|scene| {
         scene.text = vec![TextBlock { text: "a".to_string(), ..Default::default() }];
@@ -430,4 +438,72 @@ fn si_ninguna_tiene_monitor_se_abren_todas_como_vista_previa() {
 fn una_sola_salida_sin_monitor_se_abre() {
     let configs = vec![config_for_open("solo", None)];
     assert_eq!(configs_to_open(&configs).len(), 1);
+}
+
+fn item_de_video(id: &str, src: &str, paused: bool, position_ms: Option<u64>) -> MediaItem {
+    MediaItem {
+        id: src.to_string(),
+        item_id: Some(id.to_string()),
+        path: src.to_string(),
+        media_type: "video".to_string(),
+        x: 0.0,
+        y: 0.0,
+        width: 480.0,
+        height: 270.0,
+        aspect_mode: 0,
+        opacity: 1.0,
+        design_width: None,
+        box_style: None,
+        paused,
+        position_ms,
+    }
+}
+
+/// F23.20: una escena con un ítem de video suma un suscriptor para esa ruta; sin el ítem, lo saca.
+#[test]
+fn video_item_se_suscribe_y_se_libera() {
+    fn aplicar(subs: &mut HashMap<String, Subscribers>, current: &mut HashMap<String, String>, media: &[MediaItem]) {
+        let (release, acquire) = plan_item_videos(current, &item_videos("audience", media));
+        for (id, path) in release {
+            current.remove(&id);
+            if subs.get_mut(&path).is_some_and(|s| s.remove(&id)) {
+                subs.remove(&path);
+            }
+        }
+        for (id, path) in acquire {
+            subs.entry(path.clone()).or_default().add(&id);
+            current.insert(id, path);
+        }
+    }
+    let mut subs: HashMap<String, Subscribers> = HashMap::new();
+    let mut current: HashMap<String, String> = HashMap::new();
+
+    let video = item_de_video("v1", "/m/clip.mp4", false, None);
+    let imagen = MediaItem { media_type: "image".into(), path: "/m/foto.png".into(), ..item_de_video("i1", "/m/foto.png", false, None) };
+    aplicar(&mut subs, &mut current, &[video.clone(), imagen]);
+    assert!(subs["/m/clip.mp4"].ids.contains("audience:v1"), "el id es etiqueta:id del ítem");
+    assert_eq!(subs.len(), 1, "la imagen no se suscribe");
+
+    // el mismo video con otra posición no cambia nada
+    aplicar(&mut subs, &mut current, &[item_de_video("v1", "/m/clip.mp4", true, Some(5000))]);
+    assert_eq!(subs["/m/clip.mp4"].ids.len(), 1);
+
+    // el ítem cambia de archivo: se suelta el viejo y se toma el nuevo
+    aplicar(&mut subs, &mut current, &[item_de_video("v1", "/m/otro.mp4", false, None)]);
+    assert!(!subs.contains_key("/m/clip.mp4") && subs.contains_key("/m/otro.mp4"));
+
+    // el ítem sale de la escena: se libera
+    aplicar(&mut subs, &mut current, &[]);
+    assert!(subs.is_empty() && current.is_empty());
+}
+
+/// F23.20: el mismo archivo como fondo de una salida y como ítem de otra comparte decodificador y tiene una sola líder.
+#[test]
+fn fondo_e_item_del_mismo_archivo_tienen_una_sola_lider() {
+    let mut subs = Subscribers::default();
+    subs.add("audience");
+    subs.add("stage:v1");
+    assert!(subs.is_leader("audience") && !subs.is_leader("stage:v1"));
+    assert!(!subs.remove("audience"));
+    assert!(subs.is_leader("stage:v1"), "al irse la líder manda el ítem");
 }

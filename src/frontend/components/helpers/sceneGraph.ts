@@ -17,24 +17,32 @@ import { OUTPUT } from "../../../types/Channels"
 import type { Output, PrefetchPayload } from "../../../types/Output"
 import type { SceneBackground, SceneGraph, SceneItem, SceneMediaItem, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
 import type { Item, OutSlide, Slide } from "../../../types/Show"
-import { activeTimers, media, overlays, outputs, stageShows, styles, timeFormat as timeFormatStore, timers, transitionData } from "../../stores"
+import { activeTimers, events, media, overlays, outputs, playingVideoState, showsCache, stageShows, styles, timeFormat as timeFormatStore, timers, transitionData, variables } from "../../stores"
 import { send } from "../../utils/request"
 import { getItemText } from "../edit/scripts/textStyle"
 import { shouldItemBeShown } from "../edit/scripts/itemHelpers"
 import { clone } from "./array"
 import { getSceneSourceId } from "./sceneMirror"
+import { videoStateKey, videoSyncFields } from "./videoSync"
 import { getExtension, getMediaStyle, getMediaType } from "./media"
 import { joinTimeBig } from "./time"
 import { getCurrentTimerValue } from "../drawer/timers/timers"
 import { defaultLayers, getCurrentStyle, getOutputLines, getOutputResolution, getOutputTransitions, getStyleTemplate, percentageStylePos, setTemplateStyle } from "./output"
 import { _show } from "./shows"
+import { getLayoutRef } from "./show"
+import { eventsLines, hasTimeToken, plainSlideText, slideTrackerParts, slideTrackerText, variableText, type CalendarEvent } from "./dynamicItemText"
 import { replaceDynamicValues } from "./showActions"
 import { contentAlign } from "./outputAspect"
 import { imagePathsOf } from "./sceneMedia"
-import { applyTextTransform, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
+import { applyTextTransform, parseBoxStyle, parseCssColor, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign, type ParsedTextStyle } from "./sceneStyle"
 import { sceneBackground, sceneGraphPayload, sceneMediaItem, sceneTextItem, sceneTextSpan, sceneTransition } from "./sceneGraphPayload"
+import { markSceneClock, resetSceneClock } from "./sceneClock"
+import { buildStageItems, slideOffsetOf, stageItemType, stageRefId, stageTimerId, stageVariableText, type StageContext } from "./stageScene"
+import type { StageItem, StageLayout } from "../../../types/Stage"
 
 dayjs.extend(localizedFormat)
+
+export { scenesHaveClock } from "./sceneClock"
 
 const DEFAULT_FONT_SIZE = 100
 const DEFAULT_LINE_HEIGHT = 1.1
@@ -87,6 +95,7 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
     let blockStyle: ParsedTextStyle | null = null
     let align: ReturnType<typeof parseTextAlign> = null
     let lineHeight: number | undefined
+    let timeDependent = false
 
     const visibleLines = lines.filter((_line, i) => !hasWindow || (i >= (start as number) && i < (end as number)))
 
@@ -95,6 +104,7 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
         ;(line.text || []).forEach((part) => {
             const partStyle = parseTextStyle(part.style)
             let value = typeof part.value === "string" ? part.value : ""
+            if (hasTimeToken(value)) timeDependent = true
             if (value.includes("{")) value = replaceDynamicValues(value, dynamicRef)
             value = applyTextTransform(value, partStyle.textTransform || base.textTransform)
             if (!value) return
@@ -109,7 +119,9 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
                     fontSize: partStyle.fontSize,
                     fontWeight: partStyle.fontWeight,
                     fontStyle: partStyle.fontStyle,
-                    color: partStyle.color
+                    color: partStyle.color,
+                    underline: partStyle.underline ?? base.underline,
+                    strike: partStyle.strike ?? base.strike
                 })
             )
         })
@@ -119,6 +131,7 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
 
     const text = spans.map((s) => s.text).join("")
     if (!text.trim()) return null
+    if (timeDependent) markSceneClock() // {time_}, {video_countdown}… cambian solos
 
     const resolved: ParsedTextStyle = blockStyle || base
     const usesAutoSize = (item.textFit || "none") !== "none" || !!item.auto
@@ -144,8 +157,11 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
         color: resolved.color || [1, 1, 1, 1],
         stroke: resolved.strokeWidth && resolved.strokeWidth > 0 ? { color: resolved.strokeColor || [0, 0, 0, 1], width: resolved.strokeWidth } : undefined,
         shadow: resolved.shadow || undefined,
+        letterSpacing: resolved.letterSpacing,
         text,
-        spans
+        spans,
+        live: timeDependent,
+        box: parseBoxStyle(item.style)
     })
 }
 
@@ -165,10 +181,66 @@ function buildMediaItem(item: Item, index: number, allItems: Item[], outputId: s
     // "blur" no se puede pintar en el engine: cae a "contain" (igual que el render HTML)
     const fit = item.fit === "cover" ? "cover" : item.fit === "fill" ? "fill" : "contain"
 
-    return sceneMediaItem({ id: item.id, x: box.x, y: box.y, width: box.width, height: box.height, src, mediaType, fit, opacity: 1 })
+    return sceneMediaItem({ id: item.id, x: box.x, y: box.y, width: box.width, height: box.height, src, mediaType, fit, opacity: 1, box: parseBoxStyle(item.style), ...(mediaType === "video" ? videoSyncFields(get(playingVideoState)[videoStateKey(src, outputId)]) : {}) })
 }
 
 // TIMERS / RELOJES (F4.7): el engine dibuja el valor que manda el frontend.
+
+function timerValueText(item: Item, today: Date): string {
+    const timerId = item.timer?.id || item.timerId || ""
+    const timer = (get(timers) as any)?.[timerId] || {}
+    if (!timer?.type) return ""
+    try {
+        const currentTime = getCurrentTimerValue(timer, { id: timerId }, today, get(activeTimers))
+        const showHours = item.timer?.showHours !== false
+        const padding = item.timer?.padding !== false
+        return joinTimeBig(typeof currentTime === "number" ? currentTime : 0, showHours, padding)
+    } catch {
+        return ""
+    }
+}
+
+/** Texto de un reloj (digital o con formato propio); `null` si es analógico (el engine no lo dibuja). */
+function clockValueText(item: Item, today: Date): string | null {
+    const clock = item.clock || {}
+    const type = clock.type || "digital"
+    if (type === "analog") return null
+
+    const offsetDays = Number(clock.offsetDays) || 0
+    const target = offsetDays ? new Date(today.getTime() + offsetDays * 86400000) : today
+
+    if (type === "custom") return dayjs(target).format(clock.customFormat || "hh:mm a")
+
+    const dateFormat = clock.dateFormat || "none"
+    const showTime = clock.showTime !== false
+    const seconds = clock.seconds !== false
+    const twelve = get(timeFormatStore) === "12"
+
+    let parts: string[] = []
+    if (dateFormat && dateFormat !== "none") {
+        parts.push(dayjs(target).format(dateFormat))
+    }
+    if (showTime) {
+        const d = target
+        let h = d.getHours()
+        let m = d.getMinutes()
+        let s = d.getSeconds()
+        let pm = false
+        if (twelve) {
+            if (h === 0) h = 12
+            else if (h > 12) {
+                h -= 12
+                pm = true
+            }
+        }
+        const pad = (n: number) => String(n).padStart(2, "0")
+        let timeStr = `${pad(h)}:${pad(m)}`
+        if (seconds) timeStr += `:${pad(s)}`
+        if (twelve) timeStr += pm ? " PM" : " AM"
+        parts.push(timeStr)
+    }
+    return parts.join(" ").trim()
+}
 
 function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: string, resolution: { width: number; height: number }, lineWindow: LineWindow): SceneTextItem | null {
     if (item.type !== "timer" && item.type !== "clock") return null
@@ -178,72 +250,24 @@ function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: s
     const box = parseItemBox(percentageStylePos(item.style, resolution), { x: 0, y: 0, width: resolution.width, height: resolution.height })
     const base = parseTextStyle(item.style)
 
-    let value = ""
     const today = new Date()
+    let value = ""
 
     if (item.type === "timer") {
-        const timerId = item.timer?.id || item.timerId || ""
-        const timer = (get(timers) as any)?.[timerId] || {}
-        if (timer?.type) {
-            try {
-                const currentTime = getCurrentTimerValue(timer, { id: timerId }, today, get(activeTimers))
-                const showHours = item.timer?.showHours !== false
-                const padding = item.timer?.padding !== false
-                value = joinTimeBig(typeof currentTime === "number" ? currentTime : 0, showHours, padding)
-            } catch {
-                value = ""
-            }
-        }
+        value = timerValueText(item, today)
         // overflow color not handled in engine (cosmetic)
     } else {
-        const clock = item.clock || {}
-        const type = clock.type || "digital"
-        if (type === "analog") return null
-
-        const offsetDays = Number(clock.offsetDays) || 0
-        const target = offsetDays ? new Date(today.getTime() + offsetDays * 86400000) : today
-
-        if (type === "custom") {
-            const fmt = clock.customFormat || "hh:mm a"
-            value = dayjs(target).format(fmt)
-        } else {
-            const dateFormat = clock.dateFormat || "none"
-            const showTime = clock.showTime !== false
-            const seconds = clock.seconds !== false
-            const twelve = get(timeFormatStore) === "12"
-
-            let parts: string[] = []
-            if (dateFormat && dateFormat !== "none") {
-                parts.push(dayjs(target).format(dateFormat))
-            }
-            if (showTime) {
-                const d = target
-                let h = d.getHours()
-                let m = d.getMinutes()
-                let s = d.getSeconds()
-                let pm = false
-                if (twelve) {
-                    if (h === 0) h = 12
-                    else if (h > 12) {
-                        h -= 12
-                        pm = true
-                    }
-                }
-                const pad = (n: number) => String(n).padStart(2, "0")
-                let timeStr = `${pad(h)}:${pad(m)}`
-                if (seconds) timeStr += `:${pad(s)}`
-                if (twelve) timeStr += pm ? " PM" : " AM"
-                parts.push(timeStr)
-            }
-            value = parts.join(" ").trim()
-        }
+        const text = clockValueText(item, today)
+        if (text === null) return null
+        markSceneClock()
+        value = text
     }
 
     if (!value) return null
 
     const fontSize = base.fontSize || 100
     const color = base.color || [1, 1, 1, 1]
-    const spans = [sceneTextSpan({ text: value, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color })]
+    const spans = [sceneTextSpan({ text: value, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color, underline: base.underline, strike: base.strike })]
 
     return sceneTextItem({
         id: item.id || `item-${index}`,
@@ -259,14 +283,87 @@ function buildTimerItem(item: Item, index: number, allItems: Item[], outputId: s
         fontWeight: base.fontWeight ?? 400,
         fontStyle: base.fontStyle,
         color,
+        letterSpacing: base.letterSpacing,
         text: value,
-        spans
+        spans,
+        live: true,
+        box: parseBoxStyle(item.style)
+    })
+}
+
+// CONTADOR DE SLIDES, EVENTOS Y VARIABLES (F23.17): texto que el engine dibuja tal cual.
+
+function buildDynamicTextItem(item: Item, index: number, allItems: Item[], outputId: string, resolution: { width: number; height: number }, lineWindow: LineWindow, dynamicRef: DynamicRef): SceneTextItem | null {
+    if (item.type !== "slide_tracker" && item.type !== "events" && item.type !== "variable") return null
+    if (!shouldItemBeShown(item, allItems, { outputId, type: "default" })) return null
+    if (item.clickReveal && lineWindow.clickRevealed === false) return null
+
+    const box = parseItemBox(percentageStylePos(item.style, resolution), { x: 0, y: 0, width: resolution.width, height: resolution.height })
+    const base = parseTextStyle(item.style)
+    const fontSize = base.fontSize || (item.type === "events" ? 80 : 100)
+    const color = base.color || [1, 1, 1, 1]
+    const plain = (text: string) => sceneTextSpan({ text, fontFamily: base.fontFamily, fontSize, fontWeight: base.fontWeight ?? 400, fontStyle: base.fontStyle, color, underline: base.underline, strike: base.strike })
+
+    let spans: SceneTextSpan[] = []
+    let boxStyle = parseBoxStyle(item.style)
+    let live = true
+    let defaultAlign: "left" | "center" = "center"
+    if (item.type === "slide_tracker") {
+        // sólo cambia con la slide, que ya dispara la transición: no es "live"
+        live = false
+        const parts = slideTrackerParts(item.tracker || {}, dynamicRef.slideIndex ?? -1, getLayoutRef(dynamicRef.showId, get(showsCache)).length)
+        if (parts) {
+            // la vista previa pinta el número actual con --accent (tracker.accent o, si no, --secondary del tema)
+            const accent = item.tracker?.accent || getComputedStyle(document.documentElement).getPropertyValue("--secondary").trim()
+            spans = [accent ? sceneTextSpan({ ...plain(parts.current), color: parseCssColor(accent, color) }) : plain(parts.current), plain(`/${parts.total}`)]
+        }
+    } else if (item.type === "events") {
+        // los eventos terminados desaparecen con la hora: la escena se reenvía cada segundo
+        markSceneClock()
+        defaultAlign = "left"
+        eventsLines(item.events || {}, Object.values(get(events)) as CalendarEvent[], new Date()).forEach((line, i) => {
+            if (i > 0) spans.push(sceneTextSpan({ text: "\n" }))
+            line.forEach((a) => spans.push(sceneTextSpan({ ...plain(a.text), fontSize: fontSize * (a.scale ?? 1), fontWeight: a.bold ? 700 : (base.fontWeight ?? 400), fontStyle: a.italic ? "italic" : base.fontStyle, fontFamily: a.family ?? base.fontFamily })))
+        })
+    } else {
+        const variable = get(variables)[item.variable?.id || ""]
+        let value = variableText(variable, false)
+        if (value.includes("{")) {
+            markSceneClock() // {time_}… cambian solos
+            value = replaceDynamicValues(value, dynamicRef)
+        }
+        if (value) spans = [plain(value)]
+        // la salida real mostraba la variable deshabilitada a opacidad 0.2
+        if (variable?.enabled === false) boxStyle = { ...boxStyle, opacity: (boxStyle?.opacity ?? 1) * 0.2 }
+    }
+    const value = spans.map((s) => s.text).join("")
+    if (!value) return null
+
+    return sceneTextItem({
+        id: item.id || `item-${index}`,
+        x: box.x,
+        y: box.y,
+        width: box.width,
+        height: box.height,
+        align: parseTextAlign(item.align) || defaultAlign,
+        verticalAlign: parseVerticalAlign(item.align),
+        lineHeight: base.lineHeight || 1.1,
+        fontFamily: base.fontFamily,
+        fontSize,
+        fontWeight: base.fontWeight ?? 400,
+        fontStyle: base.fontStyle,
+        color,
+        letterSpacing: base.letterSpacing,
+        text: value,
+        spans,
+        live,
+        box: boxStyle
     })
 }
 
 // BACKGROUND
 
-function getBackground(output: Output, currentStyle: ReturnType<typeof getCurrentStyle>, slide: OutSlide | null, layers: string[]): SceneBackground | null {
+function getBackground(outputId: string, output: Output, currentStyle: ReturnType<typeof getCurrentStyle>, slide: OutSlide | null, layers: string[]): SceneBackground | null {
     if (!layers.includes("background")) return null
 
     const outBackground = output.out?.background || null
@@ -287,7 +384,7 @@ function getBackground(output: Output, currentStyle: ReturnType<typeof getCurren
     const mediaStyle = getMediaStyle({ ...get(media)[path], ...(outBackground?.path === path ? outBackground : {}) } as any, currentStyle)
     const fit = mediaStyle.fit === "cover" ? "cover" : mediaStyle.fit === "fill" ? "fill" : "contain"
 
-    return sceneBackground({ path, type: mediaType, fit, opacity: 1, loop: outBackground?.path === path ? outBackground.loop !== false : true, muted: outBackground?.muted })
+    return sceneBackground({ path, type: mediaType, fit, opacity: 1, loop: outBackground?.path === path ? outBackground.loop !== false : true, muted: outBackground?.muted, ...(mediaType === "video" ? videoSyncFields(get(playingVideoState)[videoStateKey(path, outputId)]) : {}) })
 }
 
 // TRANSITION
@@ -329,6 +426,13 @@ function buildSlideItems(showSlide: OutSlide, outputId: string, currentStyle: Re
             return
         }
 
+        const dynamicItem = buildDynamicTextItem(item, index, slideItems, outputId, resolution, lineWindow, dynamicRef)
+        if (dynamicItem) {
+            items.push(dynamicItem)
+            textItems.push(dynamicItem)
+            return
+        }
+
         const mediaItem = buildMediaItem(item, index, slideItems, outputId, resolution, lineWindow)
         if (mediaItem) items.push(mediaItem)
     })
@@ -338,9 +442,7 @@ function buildSlideItems(showSlide: OutSlide, outputId: string, currentStyle: Re
 
 /** Texto plano de una slide: items visibles o, si no los hay, todo su texto (para stage). */
 function plainTextOf(items: SceneTextItem[], slideItems: Item[]): string {
-    let text = items.map((a) => a.text).join("\n")
-    if (!text) text = slideItems.map((a) => getItemText(a)).join("\n")
-    return text.trim()
+    return plainSlideText(items, () => slideItems.map((a) => getItemText(a)).join("\n"))
 }
 
 // OVERLAYS (F4.6)
@@ -416,7 +518,7 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
         stage: !!output.stageOutput,
         width: resolution.width,
         height: resolution.height,
-        background: getBackground(output, currentStyle, showSlide, layers),
+        background: getBackground(outputId, output, currentStyle, showSlide, layers),
         items,
         overlays: buildOverlayItems(outputId, output, layers, resolution),
         transition: getTransition(output, currentStyle, !!showSlide),
@@ -430,7 +532,7 @@ export function buildSceneGraph(outputId: string, output: Output): SceneGraph {
 
 /** Id de la salida de audiencia que una salida stage refleja (su "fuente"). */
 function getStageSourceOutputId(output: Output, outputsData: { [id: string]: Output }): string {
-    const configuredId = stageShows[output.stageOutput || ""]?.settings?.output || ""
+    const configuredId = get(stageShows)[output.stageOutput || ""]?.settings?.output || ""
     if (configuredId && outputsData[configuredId] && !outputsData[configuredId].stageOutput) return configuredId
 
     return (
@@ -454,10 +556,59 @@ function getNextSlideRef(slide: OutSlide): OutSlide | null {
     return { id: slide.id, layout: slide.layout, index }
 }
 
+/** Textos de la escena de un layout de stage (F23.19): slides y notas sólo en las posiciones que usa el layout. */
+function buildStageContext(layout: StageLayout, slide: OutSlide | null, sourceOutputId: string, currentStyle: ReturnType<typeof getCurrentStyle>, resolution: { width: number; height: number }): StageContext {
+    const today = new Date()
+    const ctx: StageContext = { resolution, slideTexts: [], slideNotes: [], currentIndex: 0, clockText: "", clockTexts: {}, timerTexts: {}, variableTexts: {}, trackerText: null, positionStyle: (style) => percentageStylePos(style, resolution) }
+    const items = Object.entries(layout.items || {}).filter(([, item]) => item && item.enabled !== false) as [string, StageItem][]
+
+    // las slides desactivadas se saltean; la actual cuenta aunque esté desactivada
+    const refs = slide && (slide.type || "show") === "show" ? _show(slide.id).layouts([slide.layout]).ref()[0] || [] : []
+    const enabled = refs.map((ref, index) => ({ ref, index })).filter(({ ref, index }) => !ref.data?.disabled || index === slide?.index)
+    const current = slide ? enabled.findIndex(({ index }) => index === slide.index) : -1
+    ctx.currentIndex = Math.max(current, 0)
+
+    items.forEach(([key, item]) => {
+        const type = stageItemType(key, item)
+        if (type === "slide_text" || type === "slide_notes") {
+            const position = ctx.currentIndex + slideOffsetOf(key, item)
+            const target = current >= 0 ? enabled[position] : undefined
+            if (!slide || !target || ctx.slideTexts[position] !== undefined || ctx.slideNotes[position] !== undefined) return
+            const built = buildSlideItems({ id: slide.id, layout: slide.layout, index: target.index }, sourceOutputId, currentStyle, resolution)
+            ctx.slideTexts[position] = plainTextOf(built.textItems, built.slideItems)
+            ctx.slideNotes[position] = get(showsCache)[slide.id]?.slides?.[target.ref.id]?.notes || ""
+        } else if (type === "clock") {
+            markSceneClock()
+            // reloj antiguo (sin tipo): como el Clock.svelte de entonces, con `show_date` -> DD/MM/YYYY
+            const legacy = item.type ? item : { ...item, clock: { type: "digital", seconds: item.clock?.seconds ?? true, dateFormat: item.clock?.show_date ? "DD/MM/YYYY" : "none" } }
+            const text = clockValueText(legacy as unknown as Item, today)
+            if (text) ctx.clockTexts![key] = text
+        } else if (type === "timer") {
+            markSceneClock()
+            const id = stageRefId(key, item)
+            const timerId = stageTimerId(key, item, get(activeTimers)[0]?.id, Object.entries(get(timers)).find(([, timer]) => timer.type !== "counter")?.[0])
+            ctx.timerTexts[id] = timerValueText({ ...item, timer: { ...(item.timer || {}), id: timerId } } as unknown as Item, today)
+        } else if (type === "variable") {
+            const id = stageRefId(key, item)
+            // en Stagebox `hideText` sólo vale para los ítems antiguos sin tipo; con tipo, una variable deshabilitada se ve
+            let value = stageVariableText(item, get(variables)[id])
+            if (value.includes("{")) {
+                markSceneClock() // {time_}… cambian solos
+                value = replaceDynamicValues(value, { type: "stage", id: key })
+            }
+            ctx.variableTexts[id] = value
+        } else if (type === "slide_tracker" && slide) {
+            ctx.trackerText = slideTrackerText(item.tracker || {}, slide.index ?? -1, refs.length)
+        }
+    })
+
+    return ctx
+}
+
 /**
- * Escena de una salida stage (F2.4): el engine sólo usa `plainText`/`nextText`,
- * que se calculan sobre la salida de audiencia fuente (mismo criterio que
- * `receiveSTAGE.OUT` en `utils/stageTalk.ts`).
+ * Escena de una salida stage. Con un layout con ítems (F23.19) la escena trae `items`, que el engine dibuja como
+ * los de una audiencia; sin ellos, el engine sólo usa `plainText`/`nextText` (F2.4), que se calculan sobre la
+ * salida de audiencia fuente (mismo criterio que `receiveSTAGE.OUT` en `utils/stageTalk.ts`).
  */
 function buildStageScene(outputId: string, output: Output, outputsData: { [id: string]: Output }): SceneGraph {
     const sourceOutputId = getStageSourceOutputId(output, outputsData)
@@ -480,13 +631,16 @@ function buildStageScene(outputId: string, output: Output, outputsData: { [id: s
         }
     }
 
+    const layout = get(stageShows)[output.stageOutput || ""]
+    const items = layout && Object.keys(layout.items || {}).length ? buildStageItems(layout, buildStageContext(layout, slide, sourceOutputId, currentStyle, resolution)) : []
+
     return sceneGraphPayload({
         outputId,
         stage: true,
         width: resolution.width,
         height: resolution.height,
         background: null,
-        items: [],
+        items,
         overlays: [],
         transition: null,
         plainText,
@@ -528,6 +682,7 @@ function nextSlidesImagePaths(outputId: string, output: Output): string[] {
  * salida fuente) y `nextText` (slide siguiente).
  */
 export function sendOutputScenes(outputsData: { [id: string]: Output } = get(outputs)) {
+    resetSceneClock()
     const ids = Object.keys(outputsData || {})
         .filter((id) => outputsData[id]?.enabled)
         .sort((a, b) => (outputsData[a].name || a).localeCompare(outputsData[b].name || b))

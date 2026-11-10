@@ -245,14 +245,22 @@ impl Nv12Pipeline {
     /// Dibuja el frame a pantalla completa (`aspect_mode`: 0 Cover, 1 Contain, 2 Stretch).
     #[allow(clippy::too_many_arguments)]
     pub fn render(&self, device: &wgpu::Device, queue: &wgpu::Queue, arena: &mut LayerArena, pass: &mut wgpu::RenderPass<'_>, frame: &Nv12Frame, screen_width: u32, screen_height: u32, opacity: f32, aspect_mode: u32) {
+        let rect = [0.0, 0.0, screen_width as f32, screen_height as f32];
+        self.render_rect(device, queue, arena, pass, frame, (screen_width, screen_height), rect, opacity, aspect_mode);
+    }
+
+    /// Dibuja el frame en un rect de la pantalla (px, origen arriba-izquierda): los videos dentro de una slide (F23.20).
+    #[allow(clippy::too_many_arguments)]
+    pub fn render_rect(&self, device: &wgpu::Device, queue: &wgpu::Queue, arena: &mut LayerArena, pass: &mut wgpu::RenderPass<'_>, frame: &Nv12Frame, screen: (u32, u32), rect: [f32; 4], opacity: f32, aspect_mode: u32) {
+        let (w, h) = (screen.0.max(1) as f32, screen.1.max(1) as f32);
         // La conversión de color va precalculada a la CPU: el shader multiplica y listo.
         let transform = YuvTransform::new(frame.matrix, frame.full_range);
         let uniforms = LayerUniforms {
             opacity,
             aspect_mode,
-            target_ratio: screen_width as f32 / screen_height.max(1) as f32,
+            target_ratio: rect[2] / rect[3].max(1.0),
             media_ratio: frame.width as f32 / frame.height.max(1) as f32,
-            rect: [0.0, 0.0, 1.0, 1.0],
+            rect: [rect[0] / w, rect[1] / h, rect[2] / w, rect[3] / h],
             yuv_matrix: transform.matrix,
             yuv_offset: transform.offset,
         };

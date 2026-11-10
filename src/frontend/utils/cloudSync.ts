@@ -26,10 +26,14 @@ function syncFinished() {
     contentProviderSync(startup, true)
 }
 
-export async function setupCloudSync(auto: boolean = false) {
+// `notifyUnavailable`: avisar con toast si la sync no está disponible. Por defecto sólo en
+// el pedido manual; los listeners y timers pasan `false` para no avisar solos.
+export async function setupCloudSync(auto: boolean = false, notifyUnavailable: boolean = !auto) {
     queueProviderSync(auto)
 
+    // shortcut: este corte no consulta CAN_SYNC, así que avisa aunque la sync estuviera disponible; revisar cuando CAN_SYNC devuelva true
     if (get(cloudSyncData).enabled === false) {
+        if (notifyUnavailable) newToast("toast.feature_unavailable")
         syncFinished()
         return
     }
@@ -49,6 +53,7 @@ export async function setupCloudSync(auto: boolean = false) {
         return
     }
     if (!(await requestMain(Main.CAN_SYNC))) {
+        if (notifyUnavailable) newToast("toast.feature_unavailable")
         syncFinished()
         return
     }

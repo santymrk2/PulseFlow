@@ -1,7 +1,7 @@
 // Parseo de estilos CSS de items/líneas de FreeShow a valores que entiende el engine nativo.
 // Funciones puras (sin stores) para poder testearlas.
 
-import type { SceneColor } from "../../../types/SceneGraph"
+import type { SceneBoxStyle, SceneColor } from "../../../types/SceneGraph"
 import { getStyles } from "./style"
 
 const NAMED_COLORS: { [key: string]: SceneColor } = {
@@ -146,6 +146,19 @@ export interface ParsedTextStyle {
     strokeColor?: SceneColor
     shadow?: { color: SceneColor; offsetX: number; offsetY: number } | null
     textTransform?: string
+    /** px */
+    letterSpacing?: number
+    underline?: boolean
+    strike?: boolean
+}
+
+/** `letter-spacing` en px: acepta `px` y `em` (esta última necesita el tamaño de fuente); `normal` y el resto se ignoran. */
+function parseLetterSpacing(value: string | undefined, fontSize: number | undefined): number | undefined {
+    const match = value?.trim().match(/^(-?\d*\.?\d+)(px|em)$/)
+    if (!match) return undefined
+    const n = parseFloat(match[1])
+    if (match[2] === "px") return n
+    return fontSize ? n * fontSize : undefined
 }
 
 /** Propiedades de texto presentes en un `style` CSS (sólo las que aparecen) */
@@ -165,6 +178,55 @@ export function parseTextStyle(style: string | undefined): ParsedTextStyle {
     if (raw["-webkit-text-stroke-color"]) parsed.strokeColor = parseCssColor(raw["-webkit-text-stroke-color"], [0, 0, 0, 1])
     if (raw["text-shadow"]) parsed.shadow = parseTextShadow(raw["text-shadow"])
     if (raw["text-transform"]) parsed.textTransform = raw["text-transform"]
+    const spacing = parseLetterSpacing(raw["letter-spacing"], parsed.fontSize)
+    if (spacing) parsed.letterSpacing = spacing
+    const decoration = `${raw["text-decoration"] ?? ""} ${raw["text-decoration-line"] ?? ""}`
+    if (decoration.includes("underline")) parsed.underline = true
+    if (decoration.includes("line-through")) parsed.strike = true
 
     return parsed
+}
+
+/** Color CSS de un token suelto, o `undefined` si no es un color */
+function colorToken(token: string): SceneColor | undefined {
+    const none: SceneColor = [-1, -1, -1, -1]
+    const color = parseCssColor(token, none)
+    return color === none ? undefined : color
+}
+
+const CSS_TOKENS = /[^\s(]+\([^)]*\)|\S+/g
+
+/** Fondo, borde, esquinas, opacidad y padding de un `style` CSS (F23.16); `undefined` si no hay ninguno */
+export function parseBoxStyle(style: string | undefined): SceneBoxStyle | undefined {
+    const raw = getStyles(style)
+    const box: SceneBoxStyle = {}
+
+    // `background` sólo aporta el color (imágenes y degradados no se dibujan)
+    const background = colorToken(raw["background-color"] ?? "") ?? (raw.background ? (raw.background.match(CSS_TOKENS) || []).map(colorToken).find(Boolean) : undefined)
+    if (background) box.background = background
+
+    if (raw.border) {
+        const tokens = raw.border.match(CSS_TOKENS) || []
+        const width = tokens.find((t) => /^\d*\.?\d+(px)?$/.test(t))
+        const color = tokens.map(colorToken).find(Boolean)
+        if (width !== undefined) box.borderWidth = parseNumber(width, 0)
+        if (color) box.borderColor = color
+    }
+
+    if (raw["border-radius"]) box.radius = parseNumber(raw["border-radius"].trim().split(/\s+/)[0], 0)
+
+    if (raw.opacity !== undefined) {
+        const opacity = parseFloat(raw.opacity)
+        if (!Number.isNaN(opacity)) box.opacity = clamp01(opacity)
+    }
+
+    if (raw.padding) {
+        const v = (raw.padding.match(/-?\d*\.?\d+/g) || []).slice(0, 4).map(Number)
+        if (v.length) {
+            const [top, right = top, bottom = top, left = right] = v
+            box.padding = { top, right, bottom, left }
+        }
+    }
+
+    return Object.keys(box).length ? box : undefined
 }

@@ -13,6 +13,7 @@ use crate::error::{AppError, AppResult};
 use super::frame::fit_content_rect;
 use super::media::MediaStore;
 use super::scene::ScenePayload;
+use super::shapes::ShapePipeline;
 use super::text::{TextEngine, TextLayer};
 
 /// Formato de la textura offscreen: RGBA 8 bits con sRGB, el mismo que el
@@ -135,11 +136,13 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
                 .map(|b| b.media_type == "image")
                 .unwrap_or(false);
 
+            // Almacén propio de la captura: no arrastra imágenes cacheadas de las pantallas.
+            let store = MediaStore::new(Arc::clone(&gpu));
+            let mut arena = store.new_arena();
+            let shapes = ShapePipeline::new(device, SNAPSHOT_FORMAT);
+
             if has_background_image || !media_items.is_empty() || !overlay_media_items.is_empty() {
-                // Almacén propio de la captura: no arrastra imágenes cacheadas de las pantallas.
-                let store = MediaStore::new(Arc::clone(&gpu));
                 let pipeline = store.pipeline(SNAPSHOT_FORMAT);
-                let mut arena = store.new_arena();
 
                 // Capa 1: fondo de imagen a pantalla completa.
                 if let Some(bg) = background.as_ref().filter(|b| b.media_type == "image")
@@ -159,6 +162,7 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
 
                 // Capa 2: items de medio (imágenes) colocados en la slide.
                 for item in &media_items {
+                    shapes.draw_media_box(queue, &mut arena, &mut render_pass, item, (frame_w, frame_h));
                     if item.media_type != "image" || item.path.is_empty() {
                         continue;
                     }
@@ -187,6 +191,7 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
 
                 // Capa 4: medios (imágenes) de los overlays (F4.6).
                 for item in &overlay_media_items {
+                    shapes.draw_media_box(queue, &mut arena, &mut render_pass, item, (frame_w, frame_h));
                     if item.media_type != "image" || item.path.is_empty() {
                         continue;
                     }
@@ -219,13 +224,17 @@ pub fn render_snapshot_rgba(scene: &ScenePayload, width: u32, height: u32) -> Ap
             // Capa 3: texto principal.
             let blocks = scene.text_blocks();
             if !blocks.is_empty() {
+                shapes.draw_text_boxes(queue, &mut arena, &mut render_pass, &blocks, (frame_w, frame_h));
                 text_engine.render(TextLayer::Slide, device, queue, &mut render_pass, frame_w, frame_h, &blocks)?;
+                shapes.draw_decorations(queue, &mut arena, &mut render_pass, text_engine.decorations(TextLayer::Slide), (frame_w, frame_h));
             }
 
             // Capa 5: texto de los overlays (F4.6).
             let overlay_blocks = scene.overlay_text_blocks();
             if !overlay_blocks.is_empty() {
+                shapes.draw_text_boxes(queue, &mut arena, &mut render_pass, &overlay_blocks, (frame_w, frame_h));
                 text_engine.render(TextLayer::Overlay, device, queue, &mut render_pass, frame_w, frame_h, &overlay_blocks)?;
+                shapes.draw_decorations(queue, &mut arena, &mut render_pass, text_engine.decorations(TextLayer::Overlay), (frame_w, frame_h));
             }
         }
     }

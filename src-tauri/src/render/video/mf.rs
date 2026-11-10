@@ -5,7 +5,7 @@
 //! **Sin verificar en Windows**: se compila contra `x86_64-pc-windows-msvc`, pero no se pudo ejecutar.
 
 use super::d3d_import::D3dInterop;
-use super::pacing::Pacer;
+use super::pacing::{Pacer, PlaybackState};
 use super::{DecodedFrame, FramePixels, FrameSink, VideoDecoder};
 use crate::error::{AppError, AppResult};
 use crate::render::gpu;
@@ -18,7 +18,7 @@ use windows::Win32::Graphics::Direct3D11::ID3D11Texture2D;
 use windows::Win32::Media::MediaFoundation::{
     IMFAttributes, IMFDXGIBuffer, IMFSourceReader, MFCreateAttributes, MFCreateMediaType, MFCreateSourceReaderFromURL, MFMediaType_Video, MFShutdown, MFStartup, MFVideoFormat_NV12, MFSTARTUP_FULL, MF_MT_FRAME_SIZE,
     MF_MT_MAJOR_TYPE, MF_MT_SUBTYPE, MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, MF_SOURCE_READERF_ENDOFSTREAM, MF_SOURCE_READER_D3D_MANAGER, MF_SOURCE_READER_ENABLE_VIDEO_PROCESSING,
-    MF_SOURCE_READER_FIRST_VIDEO_STREAM, MF_VERSION,
+    MF_SOURCE_READER_FIRST_VIDEO_STREAM, MF_SOURCE_READER_MEDIASOURCE, MF_PD_DURATION, MF_VERSION,
 };
 use windows::Win32::System::Com::StructuredStorage::PROPVARIANT;
 use windows::Win32::System::Com::{CoInitializeEx, CoUninitialize, COINIT_MULTITHREADED};
@@ -29,6 +29,7 @@ const FIRST_VIDEO_STREAM: u32 = MF_SOURCE_READER_FIRST_VIDEO_STREAM.0 as u32;
 
 pub struct MfDecoder {
     running: Arc<AtomicBool>,
+    state: PlaybackState,
     thread: Option<JoinHandle<()>>,
 }
 
@@ -39,21 +40,41 @@ impl VideoDecoder for MfDecoder {
             let _ = handle.join();
         }
     }
+
+    fn set_paused(&mut self, paused: bool) {
+        self.state.set_paused(paused);
+    }
+
+    /// El hilo (dueño del `IMFSourceReader`) toma el pedido y llama a `SetCurrentPosition`.
+    fn seek(&mut self, position_ms: u64) -> AppResult<()> {
+        self.state.request_seek(position_ms);
+        Ok(())
+    }
+
+    fn position_ms(&self) -> u64 {
+        self.state.position_ms()
+    }
+
+    fn duration_ms(&self) -> u64 {
+        self.state.duration_ms()
+    }
 }
 
 /// Abre `path` con Media Foundation. Falla (y el llamador cae a ffmpeg) si no es un video legible.
 pub fn start(path: &str, sink: Arc<dyn FrameSink>) -> AppResult<MfDecoder> {
     let running = Arc::new(AtomicBool::new(true));
     let (ready_tx, ready_rx) = mpsc::channel::<Result<(), String>>();
-    let (running_thread, path_thread) = (Arc::clone(&running), path.to_string());
+    let state = PlaybackState::default();
+    state.allow_one_frame();
+    let (running_thread, path_thread, state_thread) = (Arc::clone(&running), path.to_string(), state.clone());
 
     // COM y Media Foundation se inicializan y viven dentro del hilo del decodificador.
     let thread = thread::Builder::new()
         .name(format!("PulseFlow-MF-{path}"))
-        .spawn(move || decode_loop(&path_thread, sink.as_ref(), &running_thread, &ready_tx))
+        .spawn(move || decode_loop(&path_thread, sink.as_ref(), &running_thread, &state_thread, &ready_tx))
         .map_err(|e| AppError::new(format!("Error iniciando el decodificador nativo: {e}")))?;
 
-    let mut decoder = MfDecoder { running, thread: Some(thread) };
+    let mut decoder = MfDecoder { running, state, thread: Some(thread) };
     match ready_rx.recv_timeout(Duration::from_secs(5)) {
         Ok(Ok(())) => Ok(decoder),
         Ok(Err(message)) => {
@@ -98,6 +119,8 @@ struct Source {
     reader: IMFSourceReader,
     width: u32,
     height: u32,
+    /// Duración del archivo (`Duration::ZERO` si no la informa).
+    duration: Duration,
 }
 
 impl Source {
@@ -121,14 +144,17 @@ impl Source {
 
             let actual = reader.GetCurrentMediaType(FIRST_VIDEO_STREAM).map_err(|e| e.to_string())?;
             let packed = actual.GetUINT64(&MF_MT_FRAME_SIZE).map_err(|e| e.to_string())?;
-            Ok(Self { reader, width: (packed >> 32) as u32, height: (packed & 0xFFFF_FFFF) as u32 })
+            // MF_PD_DURATION: 100 ns
+            let duration = reader.GetPresentationAttribute(MF_SOURCE_READER_MEDIASOURCE.0 as u32, &MF_PD_DURATION).ok().and_then(|value| u64::try_from(&value).ok()).map_or(Duration::ZERO, |ticks| Duration::from_nanos(ticks.saturating_mul(100)));
+            Ok(Self { reader, width: (packed >> 32) as u32, height: (packed & 0xFFFF_FFFF) as u32, duration })
         }
     }
 
-    /// Vuelve al principio para dar la vuelta del loop.
-    fn rewind(&self) -> Result<(), String> {
+    /// Salta a `position_ms` (vuelta del loop: 0).
+    fn seek(&self, position_ms: u64) -> Result<(), String> {
+        let hundred_ns = i64::try_from(position_ms.saturating_mul(10_000)).unwrap_or(i64::MAX);
         // SAFETY: `reader` es un objeto COM vivo; la posición se pasa como PROPVARIANT de 100 ns.
-        unsafe { self.reader.SetCurrentPosition(&GUID::zeroed(), &PROPVARIANT::from(0i64)).map_err(|e| e.to_string()) }
+        unsafe { self.reader.SetCurrentPosition(&GUID::zeroed(), &PROPVARIANT::from(hundred_ns)).map_err(|e| e.to_string()) }
     }
 }
 
@@ -137,7 +163,7 @@ fn to_duration(hundred_ns: i64) -> Duration {
     Duration::from_nanos(u64::try_from(hundred_ns).unwrap_or(0).saturating_mul(100))
 }
 
-fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &mpsc::Sender<Result<(), String>>) {
+fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, state: &PlaybackState, ready: &mpsc::Sender<Result<(), String>>) {
     let setup = || -> Result<(Runtime, Arc<crate::render::gpu::GpuContext>, D3dInterop), String> {
         let runtime = Runtime::new()?;
         let gpu = gpu::shared().map_err(|e| e.to_string())?;
@@ -159,10 +185,11 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
         }
     };
     let _ = ready.send(Ok(()));
+    state.set_duration(source.duration, FALLBACK_FRAME_DURATION);
 
     // Línea de tiempo continua: `offset` suma la duración de las vueltas anteriores del loop.
     let mut offset = Duration::ZERO;
-    let mut pacer = Pacer::new();
+    let mut pacer = Pacer::new(state.clone());
     let (mut last_total, mut frame_duration) = (Duration::ZERO, FALLBACK_FRAME_DURATION);
 
     while running.load(Ordering::Relaxed) {
@@ -193,6 +220,20 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
             continue;
         }
 
+        // salto pedido: la línea de tiempo y el reloj arrancan en la nueva posición
+        if let Some(position_ms) = state.take_seek() {
+            match source.seek(position_ms) {
+                Ok(()) => {
+                    (offset, last_total) = (Duration::ZERO, Duration::from_millis(position_ms));
+                    pacer.reset();
+                }
+                Err(e) => {
+                    log::warn!("[VideoEngine] no se pudo saltar a {position_ms} ms en {path}: {e}");
+                    state.set_position(last_total); // la posición vuelve a la del último frame entregado
+                }
+            }
+        }
+
         let mut flags = 0u32;
         let mut timestamp = 0i64;
         let mut sample = None;
@@ -206,7 +247,7 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
         if flags & (MF_SOURCE_READERF_ENDOFSTREAM.0 as u32) != 0 {
             // fin del archivo: dar la vuelta con el PTS acumulado
             offset = last_total + frame_duration;
-            if let Err(e) = source.rewind() {
+            if let Err(e) = source.seek(0) {
                 log::warn!("[VideoEngine] no se pudo reiniciar {path}: {e}");
                 break;
             }
@@ -217,6 +258,9 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
         let total = offset + to_duration(timestamp);
         if !pacer.wait(total, running) {
             break;
+        }
+        if state.seek_pending() {
+            continue; // frame del lector anterior al salto: se descarta
         }
 
         // SAFETY: el buffer del frame es un `IMFDXGIBuffer` cuando el decodificador usa D3D11.
@@ -237,7 +281,10 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, ready: &m
             Err(e) => Err(AppError::new(format!("el frame no es una textura D3D11: {e}"))),
         };
         match frame {
-            Ok(frame) => sink.push(DecodedFrame { pts: total, pixels: FramePixels::Native(frame) }),
+            Ok(frame) => {
+                sink.push(DecodedFrame { pts: total, pixels: FramePixels::Native(frame) });
+                state.set_position(total);
+            }
             Err(err) => log::warn!("[VideoEngine] frame nativo descartado en {path}: {err}"),
         }
 

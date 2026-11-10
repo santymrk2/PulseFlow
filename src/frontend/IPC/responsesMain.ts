@@ -346,7 +346,7 @@ export const mainResponses: MainResponses = {
             newToast("main.finished")
 
             if (data.providerId === "churchApps") {
-                setTimeout(() => setupCloudSync(false), 1000)
+                setTimeout(() => setupCloudSync(false, false), 1000)
             }
         }
     },

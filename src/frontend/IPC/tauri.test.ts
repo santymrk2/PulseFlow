@@ -21,7 +21,7 @@ vi.mock("../utils/common", () => ({ newToast: vi.fn(), setStatus: vi.fn() }))
 }
 
 const { Main, MAIN } = await import("../../types/IPC/Main")
-const { setupTauriApi, invokeCommand } = await import("./tauri")
+const { setupTauriApi, invokeCommand, POSTPONED_COMMANDS, POSTPONED_NOTIFY } = await import("./tauri")
 setupTauriApi()
 const api = (window as any).api
 
@@ -105,6 +105,37 @@ describe("send (F7.2)", () => {
         expect(commandCalls()).toEqual([])
         expect(forA[0].data).toBeUndefined()
         expect(forB[0].data).toBeUndefined()
+    })
+})
+
+describe("funciones pospuestas avisan una vez (F23.22)", () => {
+    it("todo canal de POSTPONED_NOTIFY está en POSTPONED_COMMANDS", () => {
+        for (const channel of POSTPONED_NOTIFY) expect(POSTPONED_COMMANDS.has(channel)).toBe(true)
+    })
+
+    it("avisa con un toast una sola vez por canal, aunque se envíe varias veces", async () => {
+        const { newToast } = await import("../utils/common")
+        const received: any[] = []
+        api.receive(MAIN, (msg: any) => received.push(msg), "id-toast")
+
+        api.send(MAIN, { channel: Main.PPT_TO_PDF, data: undefined }, "id-toast")
+        api.send(MAIN, { channel: Main.PPT_TO_PDF, data: undefined }, "id-toast")
+        await vi.waitFor(() => expect(received.length).toBe(2))
+
+        expect(newToast).toHaveBeenCalledTimes(1)
+        expect(newToast).toHaveBeenCalledWith("toast.feature_unavailable")
+        expect(commandCalls()).toEqual([])
+    })
+
+    it("un canal pospuesto que no está en POSTPONED_NOTIFY no avisa", async () => {
+        const { newToast } = await import("../utils/common")
+        const received: any[] = []
+        api.receive(MAIN, (msg: any) => received.push(msg), "id-silent")
+
+        api.send(MAIN, { channel: Main.NOW_PLAYING, data: undefined }, "id-silent")
+        await vi.waitFor(() => expect(received.length).toBe(1))
+
+        expect(newToast).not.toHaveBeenCalled()
     })
 })
 

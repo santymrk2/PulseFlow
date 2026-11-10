@@ -4,6 +4,7 @@
 // - Dip to Black
 // - Wipe (Borrido geométrico)
 // - Push (Desplazamiento)
+// - Scale (la nueva crece de 92 % a 100 %) y Blur (desenfoque en cruz)
 // - Curvas de aceleración (Easing) por hardware
 
 struct VertexOutput {
@@ -13,7 +14,7 @@ struct VertexOutput {
 
 struct TransitionUniforms {
     progress: f32,          // 0.0 a 1.0
-    transition_type: u32,   // 0 = None, 1 = Crossfade, 2 = DipToBlack, 3 = WipeLeft, 4 = WipeRight, 5 = PushLeft, 6 = PushRight
+    transition_type: u32,   // 0 = None, 1 = Crossfade, 2 = DipToBlack, 3 = WipeLeft, 4 = WipeRight, 5 = PushLeft, 6 = PushRight, 7 = Scale, 8 = Blur
     easing: u32,            // 0 = Linear, 1 = EaseInOut, 2 = EaseOut
     _pad: u32,
 };
@@ -135,6 +136,39 @@ fn fs_main(in: VertexOutput) -> @location(0) vec4<f32> {
         } else {
             return textureSample(texture_b, trans_sampler, uv_b);
         }
+    }
+
+    // Tipo 7: Scale. La nueva se muestrea de 92 % a 100 %; fuera de [0,1] no hay
+    // imagen nueva (alfa 0) y se ve la vieja, en vez de estirar el borde.
+    if (uniforms.transition_type == 7u) {
+        let col_a = textureSample(texture_a, trans_sampler, uv);
+        let uv_b = vec2<f32>(0.5) + (uv - vec2<f32>(0.5)) / (0.92 + 0.08 * p);
+        let inside = all(uv_b >= vec2<f32>(0.0)) && all(uv_b <= vec2<f32>(1.0));
+        let col_b = textureSample(texture_b, trans_sampler, clamp(uv_b, vec2<f32>(0.0), vec2<f32>(1.0)));
+        return mix(col_a, col_b, select(0.0, p, inside));
+    }
+
+    // Tipo 8: Blur. 9 muestras en cruz; el radio está en píxeles del destino
+    // (máximo 6 px a la mitad) y se pasa a UV con el tamaño de la textura.
+    if (uniforms.transition_type == 8u) {
+        let radius = (1.0 - abs(2.0 * p - 1.0)) * 6.0;
+        let texel = vec2<f32>(1.0) / vec2<f32>(textureDimensions(texture_a));
+        let dx = vec2<f32>(radius * texel.x, 0.0);
+        let dy = vec2<f32>(0.0, radius * texel.y);
+        var sum_a = textureSample(texture_a, trans_sampler, uv);
+        var sum_b = textureSample(texture_b, trans_sampler, uv);
+        for (var i = 0; i < 2; i++) {
+            let k = 1.0 - 0.5 * f32(i); // 1 y 1/2 del radio
+            sum_a += textureSample(texture_a, trans_sampler, uv + dx * k)
+                + textureSample(texture_a, trans_sampler, uv - dx * k)
+                + textureSample(texture_a, trans_sampler, uv + dy * k)
+                + textureSample(texture_a, trans_sampler, uv - dy * k);
+            sum_b += textureSample(texture_b, trans_sampler, uv + dx * k)
+                + textureSample(texture_b, trans_sampler, uv - dx * k)
+                + textureSample(texture_b, trans_sampler, uv + dy * k)
+                + textureSample(texture_b, trans_sampler, uv - dy * k);
+        }
+        return mix(sum_a / 9.0, sum_b / 9.0, p);
     }
 
     return textureSample(texture_b, trans_sampler, uv);

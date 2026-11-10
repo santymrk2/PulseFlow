@@ -45,6 +45,7 @@ pub enum Main {
     CACHE,
     // WINDOW
     CLOSE,
+    CLOSE_CANCELLED,
     MAXIMIZE,
     MAXIMIZED,
     MINIMIZE,

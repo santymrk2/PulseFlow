@@ -54,7 +54,9 @@ export function sceneBackground(parts: SceneBackground): SceneBackground {
         fit: parts.fit,
         opacity: parts.opacity,
         loop: parts.loop,
-        muted: parts.muted
+        muted: parts.muted,
+        paused: parts.paused,
+        positionMs: parts.positionMs
     })
 }
 
@@ -86,8 +88,11 @@ export function sceneTextItem(parts: Omit<SceneTextItem, "type">): SceneTextItem
         color: parts.color,
         stroke: parts.stroke,
         shadow: parts.shadow,
+        letterSpacing: parts.letterSpacing,
         text: parts.text,
-        spans: parts.spans
+        spans: parts.spans,
+        live: parts.live,
+        box: parts.box
     })
 }
 
@@ -103,7 +108,10 @@ export function sceneMediaItem(parts: Omit<SceneMediaItem, "type">): SceneMediaI
         src: parts.src,
         mediaType: parts.mediaType,
         fit: parts.fit,
-        opacity: parts.opacity
+        opacity: parts.opacity,
+        box: parts.box,
+        paused: parts.paused,
+        positionMs: parts.positionMs
     })
 }
 
@@ -115,7 +123,9 @@ export function sceneTextSpan(parts: SceneTextSpan): SceneTextSpan {
         fontSize: parts.fontSize,
         fontWeight: parts.fontWeight,
         fontStyle: parts.fontStyle,
-        color: parts.color
+        color: parts.color,
+        underline: parts.underline,
+        strike: parts.strike
     })
 }
 

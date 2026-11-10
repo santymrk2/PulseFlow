@@ -7,16 +7,18 @@ export interface VerseToken {
 }
 
 // Only these tags survive sanitization; anything else is dropped and its text is kept
-const EMPHASIS_TAG = /^<\/?(i|em|b|strong|sup|sub)>$/i
+const EMPHASIS_TAG = /^<\/?(i|em|b|strong|sup|sub|u|del)>$/i
 const WJ_OPEN_TAG = '<span class="wj">'
 const UNDERTITLE_OPEN_TAG = '<span class="undertitle">'
 // Formas de rojo que reconoce markJesusWords (scripture.ts, RED_OPEN_TAG): exactas, sin comodines
 const WJ_OPEN_TAG_SPACED = '<span class="wj" >'
 const RED_STYLE_OPEN_TAG = '<span style="color:red;">'
 const RED_STYLE_OPEN_TAG_SPACED = '<span style="color:red;" >'
+// Formas de json-bible (parseMarkdown) que no son rojo: lo incierto va en span; subrayado y tachado como el énfasis
+const UNCERTAIN_OPEN_TAG = '<span class="uncertain">'
 const RED_OPEN_TAG = "<red>"
 const RED_OPEN_TAG_SPACED = "<red >"
-const SPAN_OPEN_TAGS: readonly string[] = [WJ_OPEN_TAG, WJ_OPEN_TAG_SPACED, RED_STYLE_OPEN_TAG, RED_STYLE_OPEN_TAG_SPACED, UNDERTITLE_OPEN_TAG]
+const SPAN_OPEN_TAGS: readonly string[] = [WJ_OPEN_TAG, WJ_OPEN_TAG_SPACED, RED_STYLE_OPEN_TAG, RED_STYLE_OPEN_TAG_SPACED, UNDERTITLE_OPEN_TAG, UNCERTAIN_OPEN_TAG]
 const RED_TAG_OPENS: readonly string[] = [RED_OPEN_TAG, RED_OPEN_TAG_SPACED]
 
 export function tokenizeHtml(value: string): VerseToken[] {

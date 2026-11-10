@@ -248,7 +248,7 @@ pub fn TOGGLE_OUTPUTS(app: AppHandle, data: ToggleOutputsPayload) -> AppResult<b
 /// con su `outputId`; la escena se guarda en `ScreenManager` **por id de salida**,
 /// así que persiste aunque la pantalla esté cerrada. Si `stage` es falso es
 /// escena de audiencia (fondo + texto); si no, es escena de stage y se usa
-/// `plainText`/`nextText`. La transición sigue siendo global hasta F3.
+/// `plainText`/`nextText`, salvo que traiga `items` (el layout del usuario, F23.19). La transición sigue siendo global hasta F3.
 #[tauri::command]
 pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
     data.validate_version()?;
@@ -275,6 +275,8 @@ pub fn RENDER_SCENE(app: AppHandle, data: ScenePayload) -> AppResult<()> {
                 next_slide,
                 ..Default::default()
             },
+            data.text_blocks(),
+            data.media_items(),
         );
     }
 

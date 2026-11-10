@@ -2,7 +2,8 @@ import { get } from "svelte/store"
 import { OUTPUT, REMOTE, STAGE } from "../../types/Channels"
 import { AudioPlayer } from "../audio/audioPlayer"
 import { midiInListen } from "../components/actions/midi"
-import { sendOutputScenes } from "../components/helpers/sceneGraph"
+import { scenesHaveClock, sendOutputScenes } from "../components/helpers/sceneGraph"
+import { shouldResendForVideo, videoSyncFields, type VideoSyncFields } from "../components/helpers/videoSync"
 import { getAllActiveOutputIds, getAllNormalOutputs, updateSyncedOutputs } from "../components/helpers/output"
 import { loadShows } from "../components/helpers/setShow"
 import { getShowCacheId, syncCachedShows, updateCachedShow, updateCachedShows, updateShowsList } from "../components/helpers/show"
@@ -306,6 +307,9 @@ export function storeSubscriber() {
 
         // REMOTE
         send(REMOTE, ["VARIABLES"], data)
+
+        // F23.17: los ítems de variable de la escena llevan su valor
+        sendOutputScenes()
     })
     variableTags.subscribe((data) => {
         // REMOTE
@@ -335,9 +339,30 @@ export function storeSubscriber() {
         send(REMOTE, ["AUDIO_CHANNELS_DATA"], data)
     })
 
+    // F23.14: el video del engine sigue el transporte del webview (pausa al instante, posición cada segundo)
+    const videoSyncSent = new Map<string, { fields: VideoSyncFields; sentAt: number }>()
     playingVideoState.subscribe((data) => {
         send(OUTPUT, ["PLAYING_VIDEO_STATE"], data)
+
+        const now = Date.now()
+        let resend = false
+        videoSyncSent.forEach((_, key) => {
+            if (!data[key]) videoSyncSent.delete(key)
+        })
+        Object.entries(data).forEach(([key, state]) => {
+            const fields = videoSyncFields(state)
+            const last = videoSyncSent.get(key)
+            if (!shouldResendForVideo(last?.fields, fields, last?.sentAt ?? 0, now)) return
+            videoSyncSent.set(key, { fields, sentAt: now })
+            resend = true
+        })
+        if (resend) sendOutputScenes()
     })
+
+    // F23.15: el engine no calcula la hora; con un reloj en la escena se reenvía cada segundo
+    setInterval(() => {
+        if (scenesHaveClock()) sendOutputScenes()
+    }, 1000)
 
     metronome.subscribe((data) => {
         send(OUTPUT, ["METRONOME"], data)

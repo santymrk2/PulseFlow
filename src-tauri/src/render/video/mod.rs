@@ -51,6 +51,14 @@ pub trait FrameSink: Send + Sync {
 pub trait VideoDecoder: Send {
     /// Lo detiene y espera a su hilo.
     fn stop(&mut self);
+    /// Pausa o reanuda la entrega de frames; al reanudar el reloj sigue donde quedó (no salta).
+    fn set_paused(&mut self, paused: bool);
+    /// Salta a `position_ms` (la reproducción sigue desde ahí; en pausa, queda ahí).
+    fn seek(&mut self, position_ms: u64) -> AppResult<()>;
+    /// PTS en ms del último frame entregado.
+    fn position_ms(&self) -> u64;
+    /// Duración del archivo en ms (0 = desconocida).
+    fn duration_ms(&self) -> u64;
 }
 
 /// `true` para los contenedores que abre el decodificador nativo del sistema.

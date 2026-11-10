@@ -71,6 +71,7 @@ pub fn run() {
             commands::startup::READY,
             // WINDOW
             commands::window::CLOSE,
+            commands::window::CLOSE_CANCELLED,
             commands::window::MAXIMIZE,
             commands::window::MAXIMIZED,
             commands::import::IMPORT,

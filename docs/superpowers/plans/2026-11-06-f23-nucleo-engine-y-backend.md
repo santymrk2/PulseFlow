@@ -718,16 +718,16 @@ Cómo, por decodificador:
   (`position_ms * 10_000`) y `GUID_NULL`. No se puede ejecutar desde macOS: se valida con `check-windows-video.sh` y en
   la guía (F23.24 §2).
 
-- [ ] **Step 1: Tests que fallan** (en `ffmpeg.rs` y en `avf.rs`, con un `FrameSink` de test que cuenta frames, como
+- [x] **Step 1: Tests que fallan** (en `ffmpeg.rs` y en `avf.rs`, con un `FrameSink` de test que cuenta frames, como
   los tests existentes de esos archivos; si no hay ffmpeg, se saltan como los demás):
   - `pausa_detiene_los_frames`: arrancar con el fixture de 3 s; a los 300 ms, `set_paused(true)`; anotar la cuenta;
     esperar 300 ms → la cuenta no cambió; `set_paused(false)`; esperar 300 ms → subió.
   - `seek_salta_a_la_posicion`: `seek(1500)`; en menos de 1 s, `position_ms()` está entre 1500 y 2500.
   - `position_avanza_en_tiempo_real`: después de 1 s reproduciendo, `position_ms()` está entre 750 y 1250.
-- [ ] **Step 2:** Run: `cd src-tauri && cargo test --lib render::video`. Expected: FAIL (los métodos no existen).
-- [ ] **Step 3: Implementar** según "Cómo".
-- [ ] **Step 4:** Run: `cd src-tauri && cargo test --lib && bash ../scripts/check-windows-video.sh`. Expected: verde.
-- [ ] **Step 5:** commit `F23.13: los decodificadores de video se pausan, saltan y reportan su posición`.
+- [x] **Step 2:** Run: `cd src-tauri && cargo test --lib render::video`. Expected: FAIL (los métodos no existen).
+- [x] **Step 3: Implementar** según "Cómo".
+- [x] **Step 4:** Run: `cd src-tauri && cargo test --lib && bash ../scripts/check-windows-video.sh`. Expected: verde.
+- [x] **Step 5:** commit `F23.13: los decodificadores de video se pausan, saltan y reportan su posición`.
 
 ---
 
@@ -757,7 +757,7 @@ Reloj maestro: **el audio del webview**. El engine lo sigue: en cada escena con 
 `sync_action` devuelve `Some(ms)`, `seek(ms)`. Esto corrige a la vez los saltos de la línea de tiempo y la deriva.
 La clave de `playingVideoState` es `` `${path}_${outputId}` `` (`videoPlayer.ts:512`).
 
-- [ ] **Step 1: Tests que fallan.**
+- [x] **Step 1: Tests que fallan.**
   - Rust `sync_action_respeta_el_umbral`: `(1000, Some(1100), 300)` → `None`; `(1000, Some(2000), 300)` →
     `Some(2000)`; `(1000, None, 300)` → `None`.
   - Rust `fondo_con_pausa_y_posicion_se_deserializa`:
@@ -767,16 +767,16 @@ La clave de `playingVideoState` es `` `${path}_${outputId}` `` (`videoPlayer.ts:
     `videoSyncFields({ currentTime: 1.5, duration: 3, paused: true, loop: false, muted: false })` →
     `{ paused: true, positionMs: 1500 }`; `shouldResendForVideo` → `true` al cambiar `paused`, `false` a los 400 ms
     sin cambios, `true` a los 1000 ms.
-- [ ] **Step 2:** correr los tres. Expected: FAIL.
-- [ ] **Step 3: Implementar.** `sceneGraph.ts:290` suma `...videoSyncFields(get(playingVideoState)[`${path}_${outputId}`])`
+- [x] **Step 2:** correr los tres. Expected: FAIL.
+- [x] **Step 3: Implementar.** `sceneGraph.ts:290` suma `...videoSyncFields(get(playingVideoState)[`${path}_${outputId}`])`
   a `sceneBackground({...})`. En `listeners.ts`, `playingVideoState.subscribe` → para cada salida con video, si
   `shouldResendForVideo(...)` da `true`, `sendOutputScenes()` (el último envío y los últimos campos se guardan en un
   `Map` del módulo).
-- [ ] **Step 4:** chequeos Rust y JS en verde; los fixtures de escena sin cambios (`git diff --stat src-tauri/tests`
+- [x] **Step 4:** chequeos Rust y JS en verde; los fixtures de escena sin cambios (`git diff --stat src-tauri/tests`
   vacío).
 - [ ] **Step 5: En la app:** un video de fondo con sonido en vivo. Pausa → la imagen se congela; play → sigue; mover
   la línea de tiempo → la imagen salta al mismo lugar; después de 5 minutos, el audio y la imagen siguen juntos.
-- [ ] **Step 6:** commit `F23.14: el video del proyector sigue la pausa y la posición del transporte`.
+- [x] **Step 6:** commit `F23.14: el video del proyector sigue la pausa y la posición del transporte`.
 
 ---
 
@@ -792,10 +792,10 @@ La clave de `playingVideoState` es `` `${path}_${outputId}` `` (`videoPlayer.ts:
 - [ ] **Step 1: Reproducir antes de tocar nada.** En la app, una slide con un ítem reloj digital (sin timers
   corriendo), en vivo. Esperar 70 s. Si **cambia el minuto** en el proyector, el bug no existe: anotarlo en el
   roadmap y cerrar la tarea sin código.
-- [ ] **Step 2: Implementar** (sólo si se congeló). `scenesHaveClock` y, en `listeners.ts`,
+- [x] **Step 2: Implementar** (sólo si se congeló). `scenesHaveClock` y, en `listeners.ts`,
   `setInterval(() => { if (scenesHaveClock()) sendOutputScenes() }, 1000)`.
 - [ ] **Step 3:** repetir el Step 1. Expected: el reloj avanza. `bun run test:unit` y `test:svelte` en verde.
-- [ ] **Step 4:** commit `F23.15: el reloj del proyector se actualiza cada segundo`.
+- [x] **Step 4:** commit `F23.15: el reloj del proyector se actualiza cada segundo`.
 
 ---
 
@@ -837,7 +837,7 @@ La clave de `playingVideoState` es `` `${path}_${outputId}` `` (`videoPlayer.ts:
 - Semántica: la caja se dibuja antes del texto o del medio del ítem; `opacity` multiplica el alfa de la caja, del
   texto y del medio; `padding` achica el rect del texto (la caja ocupa el rect completo).
 
-- [ ] **Step 1: Tests que fallan.**
+- [x] **Step 1: Tests que fallan.**
   - `sceneStyle.test.ts` `parseBoxStyle`:
     `"background-color: rgba(255,0,0,0.5);border: 4px solid #00ff00;border-radius: 20px;opacity: 0.8;padding: 10px 20px;"` →
     `{ background: [1,0,0,0.5], borderColor: [0,1,0,1], borderWidth: 4, radius: 20, opacity: 0.8, padding: { top: 10, right: 20, bottom: 10, left: 20 } }`;
@@ -847,13 +847,13 @@ La clave de `playingVideoState` es `` `${path}_${outputId}` `` (`videoPlayer.ts:
   - Rust golden `golden_caja_con_fondo_borde_y_esquinas`: escena de 320×180 con un ítem de texto "Hola" en
     `x 40, y 40, w 240, h 100`, fondo rojo, borde verde de 4 px y radio 20. Además del golden, píxeles exactos: centro
     de la caja rojo, `(42, 90)` verde, `(40, 40)` (la esquina) del color de fondo de la escena.
-- [ ] **Step 2:** correr los tests. Expected: FAIL.
-- [ ] **Step 3: Implementar** y generar el golden nuevo con `UPDATE_ENV` (sólo ese). Los goldens viejos **no se
+- [x] **Step 2:** correr los tests. Expected: FAIL.
+- [x] **Step 3: Implementar** y generar el golden nuevo con `UPDATE_ENV` (sólo ese). Los goldens viejos **no se
   regeneran**: si alguno cambia, hay un bug.
-- [ ] **Step 4:** todos los chequeos en verde.
+- [x] **Step 4:** todos los chequeos en verde.
 - [ ] **Step 5: En la app:** un cuadro con fondo semitransparente, borde y esquinas redondeadas se ve igual en la vista
   previa y en el proyector.
-- [ ] **Step 6:** commit `F23.16: el proyector dibuja fondo, borde, esquinas, opacidad y padding de los cuadros`.
+- [x] **Step 6:** commit `F23.16: el proyector dibuja fondo, borde, esquinas, opacidad y padding de los cuadros`.
 
 ---
 
@@ -876,16 +876,16 @@ parámetro, nunca como `get(store)` dentro de la función pura):**
 Los tipos `SlideTrackerOptions`, `DynamicEventsOptions`, `CalendarEvent` y `VariableValue` se definen en el mismo
 archivo (o se importan de `src/types/` si ya existen), como interfaces planas.
 
-- [ ] **Step 1: Inventario.** Leer los tres `.svelte` y anotar en el encabezado de `dynamicItemText.ts` qué calcula cada
+- [x] **Step 1: Inventario.** Leer los tres `.svelte` y anotar en el encabezado de `dynamicItemText.ts` qué calcula cada
   uno y con qué datos.
-- [ ] **Step 2: Tests que fallan** en `dynamicItemText.test.ts`: por lo menos 3 casos por función, con los formatos
+- [x] **Step 2: Tests que fallan** en `dynamicItemText.test.ts`: por lo menos 3 casos por función, con los formatos
   exactos que muestra hoy la vista previa (por ejemplo, la slide 3 de 12 con el formato numérico da el mismo texto
   que muestra `SlideProgress.svelte`).
-- [ ] **Step 3: Implementar**, mover los `.svelte` a las funciones y armar los ítems en `sceneGraph.ts`.
-- [ ] **Step 4:** chequeos JS en verde; svelte-check ≤ 40.
+- [x] **Step 3: Implementar**, mover los `.svelte` a las funciones y armar los ítems en `sceneGraph.ts`.
+- [x] **Step 4:** chequeos JS en verde; svelte-check ≤ 40.
 - [ ] **Step 5: En la app:** los tres ítems se ven en la vista previa **igual que antes** y ahora también en el
   proyector.
-- [ ] **Step 6:** commit `F23.17: contador de slides, eventos y variables llegan al proyector`.
+- [x] **Step 6:** commit `F23.17: contador de slides, eventos y variables llegan al proyector`.
 
 ---
 
@@ -908,13 +908,13 @@ archivo (o se importan de `src/types/` si ya existen), como interfaces planas.
   - tachado: `y = run.line_y - font_size * 0.30`;
   - grosor `max(1.0, font_size / 16.0)`, del color del tramo.
 
-- [ ] **Step 1: Tests que fallan:** `sceneStyle.test.ts` (`"letter-spacing: 4px; text-decoration: underline;"` →
+- [x] **Step 1: Tests que fallan:** `sceneStyle.test.ts` (`"letter-spacing: 4px; text-decoration: underline;"` →
   `letterSpacing: 4` y tramos con `underline: true`); Rust `golden_texto_subrayado` (texto "Hola" subrayado, 320×180:
   hay píxeles del color del texto en la franja de 3 px debajo de la línea base, y no los hay sin subrayado).
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar.** Golden nuevo con `UPDATE_ENV` (sólo ese).
-- [ ] **Step 4:** chequeos en verde; goldens viejos sin cambios.
-- [ ] **Step 5:** commit `F23.18: el proyector dibuja espaciado entre letras, subrayado y tachado`.
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar.** Golden nuevo con `UPDATE_ENV` (sólo ese).
+- [x] **Step 4:** chequeos en verde; goldens viejos sin cambios.
+- [x] **Step 5:** commit `F23.18: el proyector dibuja espaciado entre letras, subrayado y tachado`.
 
 ---
 
@@ -951,16 +951,16 @@ pegado arriba de su caja. Si el layout no tiene ítems, se mantiene el comportam
 - Engine: si la escena de un stage trae `items`, la rama `ScreenKind::Stage` dibuja esos ítems con el mismo camino que
   la audiencia; si no, sigue con `stage_blocks`.
 
-- [ ] **Step 1: Tests que fallan** en `stageScene.test.ts`, con un layout de ejemplo de 4 ítems (actual, siguiente con
+- [x] **Step 1: Tests que fallan** en `stageScene.test.ts`, con un layout de ejemplo de 4 ítems (actual, siguiente con
   `slideOffset: 1`, reloj y notas): textos y cajas esperados; la última slide con `slideOffset: 1` no genera ese ítem;
   `enabled: false` no aparece; `labels: true` suma las etiquetas.
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar** en TS y la rama del engine. Test de Rust `stage_con_items_no_usa_stage_blocks`, con el
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar** en TS y la rama del engine. Test de Rust `stage_con_items_no_usa_stage_blocks`, con el
   estilo de `screens/tests.rs`.
-- [ ] **Step 4:** chequeos en verde.
+- [x] **Step 4:** chequeos en verde.
 - [ ] **Step 5: En la app:** armar un layout de stage con slide actual, siguiente, reloj y notas, y asignarlo a una
   salida stage. Expected: el monitor de stage muestra ese diseño.
-- [ ] **Step 6:** commit `F23.19: el stage dibuja el layout que diseñó el usuario`.
+- [x] **Step 6:** commit `F23.19: el stage dibuja el layout que diseñó el usuario`.
 
 ---
 
@@ -976,15 +976,15 @@ pegado arriba de su caja. Si el layout no tiene ítems, se mantiene el comportam
   escena o se cierra la pantalla. Pausa y posición, igual que el fondo (F23.14), desde `playingVideoState` con la
   misma clave.
 
-- [ ] **Step 1: Test que falla** en `screens/tests.rs` (`video_item_se_suscribe_y_se_libera`), con el patrón de los
+- [x] **Step 1: Test que falla** en `screens/tests.rs` (`video_item_se_suscribe_y_se_libera`), con el patrón de los
   tests `subscribers_*`: una escena con un ítem de video suma un suscriptor para esa ruta; una escena sin el ítem lo
   saca.
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar** y actualizar el comentario de `scene.rs:175`.
-- [ ] **Step 4:** chequeos en verde.
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar** y actualizar el comentario de `scene.rs:175`.
+- [x] **Step 4:** chequeos en verde.
 - [ ] **Step 5: En la app:** una slide con un ítem de video ocupando un cuarto de la pantalla: se reproduce en el
   proyector, y al pasar de slide se detiene.
-- [ ] **Step 6:** commit `F23.20: los videos dentro de una slide se reproducen en el proyector`.
+- [x] **Step 6:** commit `F23.20: los videos dentro de una slide se reproducen en el proyector`.
 
 ---
 
@@ -1001,13 +1001,13 @@ pegado arriba de su caja. Si el layout no tiene ítems, se mantiene el comportam
   - **blur:** las dos se desenfocan con 9 muestras en cruz y radio `(1 - abs(2p - 1)) * 6` px (máximo en la mitad) y se
     mezclan con `p`.
 
-- [ ] **Step 1: Tests que fallan** con el patrón de los tests de `transition.rs`: para `scale` y `blur`, con `p = 0` el
+- [x] **Step 1: Tests que fallan** con el patrón de los tests de `transition.rs`: para `scale` y `blur`, con `p = 0` el
   centro es el color de la imagen vieja y con `p = 1` el de la nueva; `from_str("scale")` y `from_str("blur")` dan
   los tipos nuevos.
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar.**
-- [ ] **Step 4:** chequeos en verde.
-- [ ] **Step 5:** commit `F23.21: transiciones de escala y desenfoque en el engine`.
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar.**
+- [x] **Step 4:** chequeos en verde.
+- [x] **Step 5:** commit `F23.21: transiciones de escala y desenfoque en el engine`.
 
 ---
 
@@ -1034,15 +1034,15 @@ Lista inicial de `POSTPONED_NOTIFY` (los que dispara el usuario): `OPEN_NOW_PLAY
 `startup.ts`, en `listeners.ts`, en un `subscribe` o en un temporizador (no la dispara el usuario), se saca de la
 lista (si no, el aviso saldría solo al arrancar) y se anota en el commit.
 
-- [ ] **Step 1: Tests que fallan** en `tauri.test.ts`: (a) todo `POSTPONED_NOTIFY` está en `POSTPONED_COMMANDS`;
+- [x] **Step 1: Tests que fallan** en `tauri.test.ts`: (a) todo `POSTPONED_NOTIFY` está en `POSTPONED_COMMANDS`;
   (b) enviar dos veces un canal de la lista llama a `newToast` una sola vez (mock de `newToast`, como los mocks
   existentes del archivo).
-- [ ] **Step 2:** correr. Expected: FAIL.
-- [ ] **Step 3: Implementar.** Para (a), exportar los dos sets sólo para el test.
-- [ ] **Step 4:** chequeos JS y Rust en verde.
+- [x] **Step 2:** correr. Expected: FAIL.
+- [x] **Step 3: Implementar.** Para (a), exportar los dos sets sólo para el test.
+- [x] **Step 4:** chequeos JS y Rust en verde.
 - [ ] **Step 5: En la app:** Configuración → sincronización en la nube ya no la ofrece como disponible; tocar una
   función pospuesta (por ejemplo, buscar letras) muestra el aviso una vez.
-- [ ] **Step 6:** commit `F23.22: las funciones que todavía no existen avisan en vez de fallar en silencio`.
+- [x] **Step 6:** commit `F23.22: las funciones que todavía no existen avisan en vez de fallar en silencio`.
 
 ---
 
@@ -1055,17 +1055,17 @@ F13.3: el frontend reenvía `console.error` y los errores sin capturar) y el usu
 Configuración. Si algún día se quiere reportar errores, tiene que ser con un proyecto propio de PulseFlow, con
 consentimiento explícito y en una tarea aparte.
 
-- [ ] **Step 1:** Run: `rg -n "@sentry" src package.json`. Expected: sólo `src/frontend/main.ts` y `package.json`. Si
+- [x] **Step 1:** Run: `rg -n "@sentry" src package.json`. Expected: sólo `src/frontend/main.ts` y `package.json`. Si
   aparece otro uso, parar.
-- [ ] **Step 2:** borrar de `main.ts` el `import * as Sentry …`, el bloque `if (import.meta.env.PROD) { Sentry.init(…) }`
+- [x] **Step 2:** borrar de `main.ts` el `import * as Sentry …`, el bloque `if (import.meta.env.PROD) { Sentry.init(…) }`
   con su comentario, y el import de `ERROR_FILTER` si queda sin uso (si `ERROR_FILTER` queda sin usuarios en todo
   `src/`, verificarlo con `rg -n "ERROR_FILTER" src` y borrarlo también).
-- [ ] **Step 3:** Run: `bun remove @sentry/browser`.
-- [ ] **Step 4:** Run: `rg -n "sentry" -i src/frontend package.json`. Expected: sin resultados. `bun run test:unit`,
+- [x] **Step 3:** Run: `bun remove @sentry/browser`.
+- [x] **Step 4:** Run: `rg -n "sentry" -i src/frontend package.json`. Expected: sin resultados. `bun run test:unit`,
   `test:svelte`, `test:budget` y `bun run build` en verde.
 - [ ] **Step 5: En la app:** con DevTools → Red, provocar un error (por ejemplo, abrir un medio que no existe).
   Expected: ningún pedido a `sentry.io`, y la línea del error en `pulseflow.log`.
-- [ ] **Step 6:** commit `F23.23: los errores ya no se envían al Sentry de FreeShow`.
+- [x] **Step 6:** commit `F23.23: los errores ya no se envían al Sentry de FreeShow`.
 
 ---
 
@@ -1074,7 +1074,7 @@ consentimiento explícito y en una tarea aparte.
 **Files:** Create `docs/VERIFICAR-BETA.md`; Modify `docs/ROADMAP.md` (en F2.8, F8.3, F10.10, F13.4, F20.8 y F22.13:
 `→ ver docs/VERIFICAR-BETA.md §N`)
 
-- [ ] **Step 1:** encabezado con el equipo: Mac Apple Silicon, PC con Windows 10/11, **2 monitores**, un `.mp4` 4K
+- [x] **Step 1:** encabezado con el equipo: Mac Apple Silicon, PC con Windows 10/11, **2 monitores**, un `.mp4` 4K
   H.264, un 1080p en loop, un show con fondos de imagen y de video, 50 imágenes 4K distintas y una biblia con palabras
   en rojo. Secciones, **en este orden**:
   1. Salida en 2 monitores (F2.8; incluye F2.2–F2.5 de `docs/VERIFICAR.md`).
@@ -1091,9 +1091,9 @@ consentimiento explícito y en una tarea aparte.
 
   Cada punto lleva **Pasos**, **Esperado**, casillas `Mac [ ]` y `Windows [ ]` y un renglón de **Notas**. El
   contenido se copia de las tareas y de `docs/VERIFICAR.md`: **no se inventan pasos**.
-- [ ] **Step 2:** enlazar cada tarea de verificación pendiente del roadmap. Run: `rg -c "VERIFICAR-BETA" docs/ROADMAP.md`.
+- [x] **Step 2:** enlazar cada tarea de verificación pendiente del roadmap. Run: `rg -c "VERIFICAR-BETA" docs/ROADMAP.md`.
   Expected: ≥ 6.
-- [ ] **Step 3:** commit `F23.24: guía única de prueba en hardware`.
+- [x] **Step 3:** commit `F23.24: guía única de prueba en hardware`.
 
 ---
 

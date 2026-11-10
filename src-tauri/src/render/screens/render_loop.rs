@@ -2,6 +2,7 @@
 
 use super::*;
 use crate::render::media::{MediaState, MediaStore, MediaTexture};
+use crate::render::shapes::ShapePipeline;
 use crate::render::{gpu, media};
 
 // ---------------------------------------------------------------------------
@@ -50,6 +51,7 @@ pub(super) fn spawn_render_loop(
                 let mut background_pipeline = store.pipeline(config.format);
                 let mut nv12_pipeline = store.nv12_pipeline(config.format);
                 let mut arena = store.new_arena();
+                let mut shape_pipeline = ShapePipeline::new(&device, config.format);
                 let mut text_engine = TextEngine::new(&device, &queue, config.format);
                 let mut text_errors: u64 = 0;
                 // F4.4: doble buffer offscreen donde se compone la escena + la transición.
@@ -84,6 +86,7 @@ pub(super) fn spawn_render_loop(
                                 background_pipeline = store.pipeline(config.format);
                                 nv12_pipeline = store.nv12_pipeline(config.format);
                                 arena = store.new_arena();
+                                shape_pipeline = ShapePipeline::new(&device, config.format);
                                 text_engine = TextEngine::new(&device, &queue, config.format);
                                 transition_engine = crate::render::transition::TransitionEngine::new(
                                     &device,
@@ -212,7 +215,7 @@ pub(super) fn spawn_render_loop(
                             let (w, h) = (frame_rect.width, frame_rect.height);
 
                             let blocks = match kind {
-                                ScreenKind::Audience => {
+                                ScreenKind::Audience | ScreenKind::Stage if matches!(kind, ScreenKind::Audience) || current.stage_draws_items() => {
                                     if let Some(bg) = &current.background {
                                         if is_video(bg) {
                                             // video: un frame NV12 por archivo (la ruta es el id), convertido a RGB en el shader
@@ -236,6 +239,20 @@ pub(super) fn spawn_render_loop(
                                     // Items de medio (imágenes) colocados en la slide, encima
                                     // del fondo y debajo del texto (F4.5).
                                     for item in &current.media {
+                                        // F23.16: la caja del ítem va justo antes de su medio
+                                        shape_pipeline.draw_media_box(&queue, &mut arena, &mut pass, item, (w, h));
+                                        if item.media_type == "video" {
+                                            // F23.20: el mismo frame NV12 del hub que usa el fondo, en el rect del ítem
+                                            if let Some(frame) = store.get_video(&item.path) {
+                                                let scale = match item.design_width {
+                                                    Some(dw) if dw > 0.0 => w as f32 / dw,
+                                                    _ => 1.0,
+                                                };
+                                                let rect = [item.x * scale, item.y * scale, item.width * scale, item.height * scale];
+                                                nv12_pipeline.render_rect(&device, &queue, &mut arena, &mut pass, &frame, (w, h), rect, item.opacity, item.aspect_mode);
+                                            }
+                                            continue;
+                                        }
                                         if item.media_type != "image" || item.path.is_empty() {
                                             continue;
                                         }
@@ -266,9 +283,11 @@ pub(super) fn spawn_render_loop(
 
                                     // Texto de la slide (capa 3). Los overlays del Scene Graph
                                     // (F4.6) se dibujan después, en su propia capa.
+                                    // F23.16: las cajas de todos los textos van antes de la llamada de texto de la capa.
+                                    shape_pipeline.draw_text_boxes(&queue, &mut arena, &mut pass, &current.text, (w, h));
                                     current.text.clone()
                                 }
-                                ScreenKind::Stage => crate::render::stage::stage_blocks(&current.stage, w as f32, h as f32),
+                                _ => crate::render::stage::stage_blocks(&current.stage, w as f32, h as f32),
                             };
 
                             if let Err(err) = text_engine.render(TextLayer::Slide, &device, &queue, &mut pass, w, h, &blocks) {
@@ -277,12 +296,15 @@ pub(super) fn spawn_render_loop(
                                     log::error!("[render] texto (Slide) en {label}: {err}");
                                 }
                             }
+                            // F23.18: subrayados y tachados, en el mismo pass y después del texto (y de su caja).
+                            shape_pipeline.draw_decorations(&queue, &mut arena, &mut pass, text_engine.decorations(TextLayer::Slide), (w, h));
 
                             // Capa de overlays del Scene Graph (F4.6): fondo → medios slide →
                             // texto slide → medios overlay → texto overlay. Sólo en audiencia.
                             if matches!(kind, ScreenKind::Audience) {
                                 // Medios (imágenes) de los overlays.
                                 for item in &current.overlay_media {
+                                    shape_pipeline.draw_media_box(&queue, &mut arena, &mut pass, item, (w, h));
                                     if item.media_type != "image" || item.path.is_empty() {
                                         continue;
                                     }
@@ -310,7 +332,8 @@ pub(super) fn spawn_render_loop(
                                     }
                                 }
 
-                                // Texto de los overlays.
+                                // Texto de los overlays (con las cajas de todos antes, F23.16).
+                                shape_pipeline.draw_text_boxes(&queue, &mut arena, &mut pass, &current.overlay_text, (w, h));
                                 if let Err(err) = text_engine.render(
                                     TextLayer::Overlay,
                                     &device,
@@ -325,6 +348,7 @@ pub(super) fn spawn_render_loop(
                                         log::error!("[render] texto (Overlay) en {label}: {err}");
                                     }
                                 }
+                                shape_pipeline.draw_decorations(&queue, &mut arena, &mut pass, text_engine.decorations(TextLayer::Overlay), (w, h));
 
                                 // Overlays del modelo previo (relojes/avisos): se dibujan
                                 // por encima de todo, como antes.

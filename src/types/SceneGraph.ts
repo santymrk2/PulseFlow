@@ -10,7 +10,8 @@
 // El contrato describe más de lo que el engine dibuja hoy. Implementado de verdad:
 //
 // - `outputId`: rutea la escena a la pantalla con ese id.
-// - `stage`: elige el layout de Stage Display (`plainText`/`nextText`).
+// - `stage`: elige el layout de Stage Display (`plainText`/`nextText`); si trae `items` (el layout que diseñó el
+//   usuario, F23.19), el engine los dibuja como los de una audiencia (cajas, texto, medios) en lugar de `plainText`.
 // - `width`: resolución lógica; escala `x`, `width` y `fontSize` de los items.
 // - `background`: imagen o video (con `opacity` y `fit`).
 // - `items` de tipo `text`: caja, alineación horizontal y vertical, línea, fuente por
@@ -35,6 +36,28 @@ export const SCENE_GRAPH_VERSION = 1
 
 /** Color RGBA normalizado: cada canal entre 0 y 1. */
 export type SceneColor = [number, number, number, number]
+
+/** Margen interior de un cuadro, en unidades de la resolución lógica (orden CSS: arriba, derecha, abajo, izquierda) */
+export interface ScenePadding {
+    top: number
+    right: number
+    bottom: number
+    left: number
+}
+
+/**
+ * Caja de un ítem (F23.16): fondo, borde, esquinas redondeadas, opacidad y padding. Todo opcional; el engine
+ * dibuja la caja en el rect completo del ítem, antes de su contenido. `opacity` multiplica caja, texto y medio.
+ * `padding` achica el rect del texto (no el de la caja).
+ */
+export interface SceneBoxStyle {
+    background?: SceneColor
+    borderColor?: SceneColor
+    borderWidth?: number
+    radius?: number
+    opacity?: number
+    padding?: ScenePadding
+}
 
 export interface SceneGraph {
     /** Versión del contrato (`SCENE_GRAPH_VERSION`). El engine la valida. */
@@ -68,6 +91,10 @@ export interface SceneBackground {
     opacity: number
     loop?: boolean
     muted?: boolean
+    /** El transporte del webview está en pausa (el video del engine lo sigue; F23.14) */
+    paused?: boolean
+    /** Posición del transporte del webview en ms */
+    positionMs?: number
 }
 
 export interface SceneTransition {
@@ -94,6 +121,11 @@ export interface SceneMediaItem {
     /** Cómo encaja la imagen en la caja (por defecto "contain") */
     fit?: "cover" | "contain" | "fill"
     opacity: number
+    /** Fondo, borde, esquinas y opacidad del cuadro (F23.16) */
+    box?: SceneBoxStyle
+    /** Transporte del webview para un video (F23.20): igual que en el fondo */
+    paused?: boolean
+    positionMs?: number
 }
 
 export interface SceneTextItem {
@@ -114,10 +146,16 @@ export interface SceneTextItem {
     color: SceneColor
     stroke?: { color: SceneColor; width: number }
     shadow?: { color: SceneColor; offsetX: number; offsetY: number }
+    /** Espaciado entre letras en px (por defecto 0) */
+    letterSpacing?: number
     /** Texto completo con saltos de línea (\n) */
     text: string
     /** Tramos con estilo propio; los saltos de línea van dentro de los textos */
     spans: SceneTextSpan[]
+    /** El texto cambia solo con el tiempo (reloj, timer): el engine lo actualiza sin pedir transición */
+    live?: boolean
+    /** Fondo, borde, esquinas, opacidad y padding del cuadro (F23.16) */
+    box?: SceneBoxStyle
 }
 
 export interface SceneTextSpan {
@@ -127,6 +165,8 @@ export interface SceneTextSpan {
     fontWeight?: number
     fontStyle?: "normal" | "italic"
     color?: SceneColor
+    underline?: boolean
+    strike?: boolean
 }
 
 /**

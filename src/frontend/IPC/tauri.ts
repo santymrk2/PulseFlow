@@ -103,7 +103,7 @@ const PERSISTENCE_COMMANDS = new Set(["SAVE", "SET_STORE_VALUE", "SET_MEDIA_FOLD
 // contenido, Spotify, lyrics, PPT externo, …). Para no castigar al frontend con
 // la espera de `requestMain` (15 s), `send` responde `undefined` al instante al
 // listener que hizo la petición. En desarrollo se avisa una sola vez por canal.
-const POSTPONED_COMMANDS = new Set<Main>([
+export const POSTPONED_COMMANDS = new Set<Main>([
     Main.DEVICE_ID,
     Main.GET_DEVICE_NAME,
     Main.CHECK_RAM_USAGE,
@@ -158,6 +158,12 @@ const POSTPONED_COMMANDS = new Set<Main>([
     Main.ENCODER_DETECT,
     Main.SET_RTMP_ENCODER
 ])
+
+// Subconjunto de los pospuestos que el usuario dispara a mano: al enviarlos se muestra
+// un toast una vez por sesión. Los que se llaman solos (startup, listeners, `$:`,
+// autosave, temporizadores) no van acá, o el aviso saldría sin que el usuario haga nada.
+export const POSTPONED_NOTIFY = new Set<Main>([Main.OPEN_NOW_PLAYING, Main.DOWNLOAD_LESSONS_MEDIA, Main.CAPTURE_SLIDE, Main.PPT_TO_PDF, Main.START_SLIDESHOW, Main.SEND_MIDI, Main.GET_LYRICS, Main.SEARCH_LYRICS, Main.RECORDER, Main.EMIT_OSC, Main.RESTORE_CLOUD_BACKUP, Main.PROVIDER_LOAD_SERVICES, Main.ONSTAGE_LOAD_SERVICE, Main.SPOTIFY_COMMAND, Main.FFMPEG_DOWNLOAD, Main.SET_RTMP_ENCODER])
+const notifiedPostponed = new Set<Main>()
 
 // Comandos ya avisados en depuración de IPC, para no repetir el warning.
 const warnedIpcCommands = new Set<string>()
@@ -249,6 +255,10 @@ async function send(channel: string, data?: any, id?: string) {
     // apenas retorna el control de este `send`.
     if (POSTPONED_COMMANDS.has(command as Main)) {
         ipcDebugWarn("canal pospuesto", command)
+        if (POSTPONED_NOTIFY.has(command as Main) && !notifiedPostponed.has(command as Main)) {
+            notifiedPostponed.add(command as Main)
+            newToast("toast.feature_unavailable")
+        }
         dispatch(channel, { channel: command, data: undefined }, id)
         return
     }

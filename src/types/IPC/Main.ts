@@ -54,6 +54,7 @@ export enum Main {
     CACHE = "CACHE",
     // WINDOW
     CLOSE = "CLOSE",
+    CLOSE_CANCELLED = "CLOSE_CANCELLED",
     MAXIMIZE = "MAXIMIZE",
     MAXIMIZED = "MAXIMIZED",
     MINIMIZE = "MINIMIZE",
@@ -331,6 +332,7 @@ export interface MainReturnPayloads {
     [Main.CACHE]: any
     // WINDOW
     [Main.CLOSE]: boolean | void
+    [Main.CLOSE_CANCELLED]: void
     [Main.MAXIMIZED]: boolean
     /////////////////////
     [Main.BIBLE]: { id: string; error?: string; content?: [string, Bible] }

@@ -3,6 +3,7 @@
     import type { Item } from "../../../../types/Show"
     import { activeDrawerTab, drawer, variables } from "../../../stores"
     import { setDrawerTabData } from "../../helpers/historyHelpers"
+    import { variableText } from "../../helpers/dynamicItemText"
     import { replaceDynamicValues } from "../../helpers/showActions"
 
     export let id = ""
@@ -52,9 +53,9 @@
 <div class="align autoFontSize" style="{style}{item?.align || ''}" class:hidden={variable.enabled === false} on:dblclick={openInDrawer}>
     <div class="line">
         {#if variable.type === "number"}
-            {Number(variable.number || 0)}
+            {variableText(variable)}
         {:else if variable.type === "text"}
-            {variable.enabled === false && hideText ? "" : replaceDynamicValues(variable.text || "", ref, updateDynamic)}
+            {replaceDynamicValues(variableText(variable, hideText), ref, updateDynamic)}
         {/if}
     </div>
 </div>

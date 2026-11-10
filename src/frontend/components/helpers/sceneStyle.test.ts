@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { applyTextTransform, parseCssColor, parseItemBox, parseTextAlign, parseTextShadow, parseTextStyle, parseVerticalAlign } from "./sceneStyle"
+import { applyTextTransform, parseBoxStyle, parseCssColor, parseItemBox, parseTextAlign, parseTextShadow, parseTextStyle, parseVerticalAlign } from "./sceneStyle"
 
 describe("sceneStyle", () => {
     it("parses hex and rgb colors", () => {
@@ -37,9 +37,43 @@ describe("sceneStyle", () => {
         expect(parsed.strokeWidth).toBe(3)
     })
 
+    it("parses letter-spacing and text-decoration", () => {
+        const parsed = parseTextStyle("letter-spacing: 4px; text-decoration: underline;")
+        expect(parsed.letterSpacing).toBe(4)
+        expect(parsed.underline).toBe(true)
+        expect(parsed.strike).toBeUndefined()
+        const both = parseTextStyle("text-decoration-line: underline line-through;")
+        expect(both.underline).toBe(true)
+        expect(both.strike).toBe(true)
+        expect(parseTextStyle("text-decoration: none").underline).toBeUndefined()
+    })
+
+    it("reads letter-spacing in px or em and ignores the rest", () => {
+        expect(parseTextStyle("letter-spacing: -2px").letterSpacing).toBe(-2)
+        expect(parseTextStyle("font-size: 50px; letter-spacing: 0.1em").letterSpacing).toBe(5)
+        expect(parseTextStyle("letter-spacing: 0.1em").letterSpacing).toBeUndefined()
+        expect(parseTextStyle("letter-spacing: normal").letterSpacing).toBeUndefined()
+        expect(parseTextStyle("letter-spacing: 3").letterSpacing).toBeUndefined()
+    })
+
     it("applies text transform", () => {
         expect(applyTextTransform("hola mundo", "uppercase")).toBe("HOLA MUNDO")
         expect(applyTextTransform("hola mundo", "capitalize")).toBe("Hola Mundo")
         expect(applyTextTransform("Hola", undefined)).toBe("Hola")
+    })
+
+    it("parses the box style of an item", () => {
+        expect(parseBoxStyle("background-color: rgba(255,0,0,0.5);border: 4px solid #00ff00;border-radius: 20px;opacity: 0.8;padding: 10px 20px;")).toEqual({
+            background: [1, 0, 0, 0.5],
+            borderColor: [0, 1, 0, 1],
+            borderWidth: 4,
+            radius: 20,
+            opacity: 0.8,
+            padding: { top: 10, right: 20, bottom: 10, left: 20 }
+        })
+        expect(parseBoxStyle("top: 10px; left: 5px;")).toBeUndefined()
+        expect(parseBoxStyle(undefined)).toBeUndefined()
+        expect(parseBoxStyle("background: linear-gradient(red, blue);")).toBeUndefined()
+        expect(parseBoxStyle("background: #00f url(a.png); padding: 1px 2px 3px 4px;")).toEqual({ background: [0, 0, 1, 1], padding: { top: 1, right: 2, bottom: 3, left: 4 } })
     })
 })
