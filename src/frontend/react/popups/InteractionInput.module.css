@@ -1,0 +1,13 @@
+.options {
+    display: flex;
+    flex-direction: column;
+}
+
+/* el Svelte lo ponía con `style="background-color: … !important;"`, que React no admite inline */
+.correct {
+    background-color: var(--connected) !important;
+}
+
+.incorrect {
+    background-color: var(--red) !important;
+}

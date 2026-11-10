@@ -2,19 +2,9 @@ import type { ComponentType } from "svelte"
 import type { Popups } from "../../../types/Main"
 
 import EffectItems from "./popups/EffectItems.svelte"
-import Initialize from "./popups/Initialize.svelte"
-import InteractionInput from "./popups/InteractionInput.svelte"
 import Translate from "./popups/localization/Translate.svelte"
-import ManageColors from "./popups/ManageColors.svelte"
-import ManageDynamicValues from "./popups/ManageDynamicValues.svelte"
-import ManageFonts from "./popups/ManageFonts.svelte"
-import ManageGroups from "./popups/ManageGroups.svelte"
-import ManageIcons from "./popups/ManageIcons.svelte"
-import ManageMetadata from "./popups/ManageMetadata.svelte"
-import ManageTags from "./popups/ManageTags.svelte"
 import LooksWindow from "../looks/LooksWindow.svelte"
 import KitDemo from "./popups/KitDemo.svelte"
-import MaxLines from "./popups/MaxLines.svelte"
 import MediaFit from "./popups/MediaFit.svelte"
 import MetadataDisplay from "./popups/MetadataDisplay.svelte"
 import NewUpdate from "./popups/NewUpdate.svelte"
@@ -51,27 +41,18 @@ import AddShowsModal from "../show/left/AddShowsModal.svelte"
 import PlaylistOptionsModal from "../show/left/PlaylistOptionsModal.svelte"
 
 export const popups: Partial<{ [key in Popups]: ComponentType }> = {
-    initialize: Initialize,
     select_show: SelectShow,
     select_template: SelectTemplate,
     select_overlay: SelectOverlay,
     select_style: SelectStyle,
     select_look: SelectLook,
     select_stage_layout: SelectStageLayout,
-    manage_groups: ManageGroups,
-    manage_fonts: ManageFonts,
-    manage_icons: ManageIcons,
-    manage_colors: ManageColors,
-    manage_metadata: ManageMetadata,
-    manage_dynamic_values: ManageDynamicValues,
     template_style_overrides: TemplateStyleOverrides,
     regex_manager: RegexManager,
     rename: Rename,
     timer: Timer,
     variable: Variable,
-    interaction_input: InteractionInput,
     now_playing: NowPlaying,
-    max_lines: MaxLines,
     transition: Transition,
     media_fit: MediaFit,
     metadata_display: MetadataDisplay,
@@ -83,7 +64,6 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     assign_shortcut: SlideShortcut,
     translate: Translate,
     next_timer: NextTimer,
-    manage_tags: ManageTags,
     update_manager: UpdateManager,
     shortcuts: Shortcuts,
     unsaved: Unsaved,

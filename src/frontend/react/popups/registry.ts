@@ -42,6 +42,16 @@ import { History } from "./History"
 import { Import } from "./Import"
 import { ImportCalendar } from "./ImportCalendar"
 import { ImportScripture } from "./ImportScripture"
+import { Initialize } from "./Initialize"
+import { InteractionInput } from "./InteractionInput"
+import { ManageColors } from "./ManageColors"
+import { ManageDynamicValues } from "./ManageDynamicValues"
+import { ManageFonts } from "./ManageFonts"
+import { ManageGroups } from "./ManageGroups"
+import { ManageIcons } from "./ManageIcons"
+import { ManageMetadata } from "./ManageMetadata"
+import { ManageTags } from "./ManageTags"
+import { MaxLines } from "./MaxLines"
 import { KitDemoReact } from "./KitDemoReact"
 
 // Popups que ya viven en React. Al migrar uno, sale del mapa `popups` de components/main/popupComponents.ts y entra acá (nunca en los dos).
@@ -88,5 +98,15 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     import: Import,
     import_calendar: ImportCalendar,
     import_scripture: ImportScripture,
+    initialize: Initialize,
+    interaction_input: InteractionInput,
+    manage_colors: ManageColors,
+    manage_dynamic_values: ManageDynamicValues,
+    manage_fonts: ManageFonts,
+    manage_groups: ManageGroups,
+    manage_icons: ManageIcons,
+    manage_metadata: ManageMetadata,
+    manage_tags: ManageTags,
+    max_lines: MaxLines,
     kit_demo_react: KitDemoReact
 }

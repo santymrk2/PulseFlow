@@ -1,0 +1,44 @@
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.grid :global(button) {
+    font-weight: normal;
+    border: 2px solid var(--primary-lighter) !important;
+
+    padding: 0.4em;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+}
+
+.lines {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+
+    width: 100px;
+    aspect-ratio: 16/9;
+
+    /* border: 3px solid black; */
+    background: black;
+    border-radius: 3px;
+
+    /* padding-left: 0; */
+    padding: 8px 4px;
+}
+
+.lines .line {
+    height: 5px;
+    width: 100%;
+
+    border-radius: 1px;
+    /* border-radius: 10px; */
+
+    background-color: white;
+    /* border-radius: 1px; */
+}
