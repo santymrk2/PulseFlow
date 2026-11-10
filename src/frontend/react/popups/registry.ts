@@ -32,6 +32,16 @@ import { CustomText } from "./CustomText"
 import { DeleteDuplicatedShows } from "./DeleteDuplicatedShows"
 import { DeleteShow } from "./DeleteShow"
 import { DisplayDuration } from "./DisplayDuration"
+import { DynamicValues } from "./DynamicValues"
+import { EditChart } from "./EditChart"
+import { EditEvent } from "./EditEvent"
+import { Emitters } from "./Emitters"
+import { Export } from "./Export"
+import { FindReplace } from "./FindReplace"
+import { History } from "./History"
+import { Import } from "./Import"
+import { ImportCalendar } from "./ImportCalendar"
+import { ImportScripture } from "./ImportScripture"
 import { KitDemoReact } from "./KitDemoReact"
 
 // Popups que ya viven en React. Al migrar uno, sale del mapa `popups` de components/main/popupComponents.ts y entra acá (nunca en los dos).
@@ -68,5 +78,15 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     delete_duplicated_shows: DeleteDuplicatedShows,
     delete_show: DeleteShow,
     display_duration: DisplayDuration,
+    dynamic_values: DynamicValues,
+    edit_chart: EditChart,
+    edit_event: EditEvent,
+    manage_emitters: Emitters,
+    export: Export,
+    find_replace: FindReplace,
+    history: History,
+    import: Import,
+    import_calendar: ImportCalendar,
+    import_scripture: ImportScripture,
     kit_demo_react: KitDemoReact
 }

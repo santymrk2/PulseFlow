@@ -1,17 +1,7 @@
 import type { ComponentType } from "svelte"
 import type { Popups } from "../../../types/Main"
 
-import DynamicValues from "./popups/DynamicValues.svelte"
-import EditChart from "./popups/EditChart.svelte"
-import EditEvent from "./popups/EditEvent.svelte"
 import EffectItems from "./popups/EffectItems.svelte"
-import Emitters from "./popups/Emitters.svelte"
-import Export from "./popups/export/Export.svelte"
-import FindReplace from "./popups/FindReplace.svelte"
-import History from "./popups/History.svelte"
-import Import from "./popups/Import.svelte"
-import ImportCalendar from "./popups/ImportCalendar.svelte"
-import ImportScripture from "./popups/ImportScripture.svelte"
 import Initialize from "./popups/Initialize.svelte"
 import InteractionInput from "./popups/InteractionInput.svelte"
 import Translate from "./popups/localization/Translate.svelte"
@@ -62,8 +52,6 @@ import PlaylistOptionsModal from "../show/left/PlaylistOptionsModal.svelte"
 
 export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     initialize: Initialize,
-    import: Import,
-    export: Export,
     select_show: SelectShow,
     select_template: SelectTemplate,
     select_overlay: SelectOverlay,
@@ -79,7 +67,6 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     template_style_overrides: TemplateStyleOverrides,
     regex_manager: RegexManager,
     rename: Rename,
-    find_replace: FindReplace,
     timer: Timer,
     variable: Variable,
     interaction_input: InteractionInput,
@@ -88,17 +75,12 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     transition: Transition,
     media_fit: MediaFit,
     metadata_display: MetadataDisplay,
-    import_scripture: ImportScripture,
-    import_calendar: ImportCalendar,
-    edit_event: EditEvent,
-    edit_chart: EditChart,
 
     choose_output_type: OutputSetup,
 
     output_selector: OutputSelector,
     set_time: SetTime,
     assign_shortcut: SlideShortcut,
-    dynamic_values: DynamicValues,
     translate: Translate,
     next_timer: NextTimer,
     manage_tags: ManageTags,
@@ -108,8 +90,6 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     restore: Restore,
     reset_all: ResetAll,
     new_update: NewUpdate,
-    history: History,
-    manage_emitters: Emitters,
     slide_midi: SlideMidi,
     effect_items: EffectItems,
     timeline: TimelineSettings,

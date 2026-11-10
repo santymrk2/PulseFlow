@@ -553,7 +553,7 @@ Receta sobre `components/main/popups/`. Cada popup migrado sale de `popups` (`ut
 
 Verificación extra por popup: abrir desde su lugar habitual (`rg -n "activePopup.set\(\"<id>\"\)" src/frontend`),
 confirmar, cancelar y cerrar con `Esc`. `Unsaved` (15h) se prueba con el cierre de F23.8.
-- [x] 15a · - [x] 15b · - [x] 15c · - [ ] 15d · - [ ] 15e · - [ ] 15f · - [ ] 15g · - [ ] 15h
+- [x] 15a · - [x] 15b · - [x] 15c · - [x] 15d (sin `EffectItems`: usa `Card` con slot, que se migra en 17a; sigue como popup Svelte) · - [ ] 15e · - [ ] 15f · - [ ] 15g · - [ ] 15h
   (commit `F24.15<letra>: popups en React (<primero>–<último>)`)
 
 ### Task F24.16: Columna izquierda

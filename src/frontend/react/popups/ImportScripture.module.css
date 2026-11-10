@@ -1,0 +1,42 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    max-height: 55vh;
+    margin-top: 10px;
+    overflow: auto;
+
+    background-color: var(--primary-darker);
+    border-radius: 8px;
+    padding: 10px 0;
+}
+
+.list :global(button) {
+    justify-content: start;
+    font-weight: normal;
+
+    line-height: 1.5em;
+
+    border-radius: 0;
+    cursor: pointer;
+    padding: 16px 20px;
+}
+
+.separator {
+    border: 1px solid var(--primary-lighter);
+    margin: 20px 0;
+}
+
+.info {
+    position: absolute;
+    right: 40px;
+    top: 8px;
+    padding: 10px 20px;
+    font-size: 0.7em;
+    opacity: 0.3;
+}
+
+.existingBiblesList {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}

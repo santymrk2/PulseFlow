@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte"
     import type { Show } from "../../../../../types/Show"
     import { translateText } from "../../../../utils/language"
     import Pdf from "../../../export/Pdf.svelte"
@@ -49,6 +50,10 @@
 
     // always one file if project type
     $: pdfOptions.oneFile = exportType === "project"
+
+    // Export.tsx (React) no puede usar `bind:pdfOptions`: recibe las opciones por evento. Temporal hasta migrar este componente.
+    const dispatch = createEventDispatcher()
+    $: dispatch("change", JSON.parse(JSON.stringify(pdfOptions)))
     console.log("Shows:", showCount)
 
     $: pdfTypeOptions = [{ value: "default", label: translateText("example.default") }, { value: "text", label: translateText("export.text") }, { value: "slides", label: translateText("export.slides") }, { value: "media", label: translateText("items.media") }, ...(showHasChords(previewShow) ? [{ value: "chordSheet", label: "Chord Sheet" }] : [])]

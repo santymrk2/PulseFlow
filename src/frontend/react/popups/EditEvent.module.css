@@ -1,0 +1,4 @@
+/* `background-color: var(--secondary) !important` inline del Svelte: un objeto de estilo de React no admite !important */
+.save {
+    background-color: var(--secondary) !important;
+}
