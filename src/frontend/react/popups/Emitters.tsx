@@ -34,6 +34,7 @@ interface InputChange {
     value: unknown
 }
 
+const EMITTER_TYPES: Emitter["type"][] = ["osc", "http", "midi"]
 const emitterTypes = [
     { value: "osc", label: "OSC" },
     { value: "http", label: "HTTP" },
@@ -154,13 +155,14 @@ export function Emitters() {
         updateValue("templates", templates)
     }
 
-    function updateMidiTemplateValue(detail: { values?: EmitterTemplateValue["value"] } | undefined) {
+    function updateMidiTemplateValue(detail: { values: EmitterTemplateValue["value"] } | undefined) {
         const values = detail?.values
+        if (values === undefined) return // MidiValues siempre manda `values`; el Svelte guardaría undefined
 
         const templates = currentTemplates()
         if (!templates[editTemplate]?.inputs?.[0]) createTemplateValue()
 
-        templates[editTemplate].inputs[0] = { name: "", value: values as EmitterTemplateValue["value"] }
+        templates[editTemplate].inputs[0] = { name: "", value: values }
         updateValue("templates", templates)
     }
 
@@ -247,7 +249,11 @@ export function Emitters() {
                 <TextField label="midi.name" value={emitter.name} onChange={(value) => updateValue("name", value ?? "")} autofocus={!emitter.name} />
                 <TextField label="midi.description" value={emitter.description || ""} onChange={(value) => updateValue("description", value ?? "")} />
 
-                <SelectField label="midi.type" disabled={!!Object.keys(emitter.templates || {})?.length} options={emitterTypes} value={emitter.type} onChange={(value) => updateValue("type", (value ?? "") as Emitter["type"])} />
+                <SelectField label="midi.type" disabled={!!Object.keys(emitter.templates || {})?.length} options={emitterTypes} value={emitter.type} onChange={(value) => {
+                        // las opciones son las de EMITTER_TYPES: un valor vacío/desconocido (reset sin defaultValue, inalcanzable) no se guarda
+                        const type = EMITTER_TYPES.find((t) => t === value)
+                        if (type) updateValue("type", type)
+                    }} />
 
                 <SvelteIsland component={FormInputs} props={{ inputs: midiInputs, title: "emitters.signal" }} events={{ change: (event) => live.current.changed(event.detail, "signal") }} />
 

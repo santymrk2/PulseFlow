@@ -133,7 +133,7 @@ export function Export() {
 
         if (showId) {
             await loadShows([showId])
-            setPreviewShow({ ...get(showsCache)[showId], id: showId } as Show)
+            setPreviewShow({ ...get(showsCache)[showId], id: showId })
         }
 
         setLoading(false)

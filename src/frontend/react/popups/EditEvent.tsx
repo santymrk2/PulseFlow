@@ -103,6 +103,7 @@ export function EditEvent() {
         const from = new Date(event.from)
         const to = new Date(event.to)
 
+        // narrowing verificado: los eventos guardados salen de este mismo formulario (repeatData completo) y eventEdit no es null acá
         const next = { ...event, id: get(eventEdit) as string, isoFrom: getISO(from), isoTo: getISO(to), fromTime: getTime(from), toTime: getTime(to) } as EventWithData
         if (!next.repeatData) next.repeatData = { ...DEFAULT_REPEAT }
 

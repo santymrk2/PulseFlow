@@ -1827,6 +1827,16 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 
 ## Deuda registrada (sin tarea)
 
+- **F24.15d, popups migrados con deuda heredada de FreeShow** (se portó igual, sin arreglar):
+  (a) sin test de `format("find_replace")` en `menuClick.ts`: alcance, mayúsculas y deshacer
+  sin cubrir (F24.15d); (b) EditEvent `updateTime("to")`: con "hasta" entre 10:00 y 10:59 y
+  "desde" posterior, "desde" queda "90:00"–"95:xx" (falta padding) (F24.15d); (c) EditEvent
+  muta `actionData` del store en el lugar y cancelar no lo deshace (F24.15d); (d)
+  DynamicValues: con "ver todos" apagado, la 1ª letra reinicia la lista y `empty.search` nunca
+  se muestra (F24.15d); (e) ImportScripture: volver a entrar a "API" duplica las biblias
+  recomendadas (F24.15d); (f) Emitters: la lista de salidas MIDI no se refresca si se conecta
+  un dispositivo con el popup abierto, hasta salir y volver a entrar al emisor (antes se
+  refrescaba de forma accidental) (F24.15d).
 - **Cliente `src/server/controller`** todavía tiene la interfaz de Dibujo (Focus, Zoom,
   Paint…) y manda mensajes `FOCUS`/`clear_painting` que el frontend ya no atiende (F14.1c).
   Como esos clientes no se compilan, no se tocó; se resuelve al decidir qué hacer con ellos.
