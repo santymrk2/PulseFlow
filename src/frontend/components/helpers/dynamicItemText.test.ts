@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest"
-import { eventsLines, eventsText, hasTimeToken, joinStaticText, slideTrackerParts, slideTrackerText, variableText, visibleEvents, type CalendarEvent } from "./dynamicItemText"
+import { eventsLines, eventsText, hasTimeToken, joinStaticText, plainSlideText, slideTrackerParts, slideTrackerText, variableText, visibleEvents, type CalendarEvent } from "./dynamicItemText"
 
 const NB = "\u00A0\u00A0\u00A0\u00A0"
 
@@ -101,6 +101,19 @@ describe("hasTimeToken", () => {
     })
     it.each(["hola", "{show_name}", "{video_duration}", "{audio_title}", "{$mi_variable}", "time_hours sin llaves"])("%s no cambia solo", (text) => {
         expect(hasTimeToken(text)).toBe(false)
+    })
+})
+
+describe("plainSlideText", () => {
+    const raw = () => "Empezamos en {video_countdown}"
+    it("todos live: vacío, sin caer al texto crudo", () => {
+        expect(plainSlideText([{ text: "9:59", live: true }], raw)).toBe("")
+    })
+    it("sin ítems: respaldo", () => {
+        expect(plainSlideText([], raw)).toBe("Empezamos en {video_countdown}")
+    })
+    it("mezcla: sólo los no live", () => {
+        expect(plainSlideText([{ text: "Hola" }, { text: "9:59", live: true }], raw)).toBe("Hola")
     })
 })
 

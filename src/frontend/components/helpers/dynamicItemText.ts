@@ -151,3 +151,8 @@ export function joinStaticText(items: { text: string; live?: boolean }[]): strin
         .map((a) => a.text)
         .join("\n")
 }
+
+/** Texto plano de una slide: el de los ítems no `live`; `fallback` (texto crudo) sólo si no hay ítems de texto. */
+export function plainSlideText(items: { text: string; live?: boolean }[], fallback: () => string): string {
+    return (items.length ? joinStaticText(items) : fallback()).trim()
+}

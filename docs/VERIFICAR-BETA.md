@@ -297,8 +297,8 @@ Nativo en macOS (AVFoundation), Media Foundation en Windows. Los pasos de F8.3, 
 
 ### 5.7 Cancelar el aviso y volver a cerrar (revisión final F23, R8)
 - **Pasos:** activar `special.showClosePopup`. ✕ (botón rojo) → popup "sin guardar" → "Cancelar" → esperar entre 10 y
-  60 segundos → volver a cerrar.
-- **Esperado:** vuelve a mostrar el popup (no sale sin guardar ni sin preguntar).
+  60 segundos → volver a cerrar. Repetir cerrando el aviso con Esc y con un clic afuera (además de "Cancelar").
+- **Esperado:** en los tres casos vuelve a mostrar el popup (no sale sin guardar ni sin preguntar).
 - Mac [ ] Windows [ ]
 - **Notas:** revisión final F23. Antes, el segundo cierre en esa ventana de tiempo salía directo.
 
@@ -345,6 +345,7 @@ Nativo en macOS (AVFoundation), Media Foundation en Windows. Los pasos de F8.3, 
 - **Pasos:** monitor de stage abierto y, en la slide de audiencia, un reloj o una cuenta regresiva (timer o evento).
   Esperar 30 s.
 - **Esperado:** el stage NO hace fundidos cada segundo; el reloj de la audiencia y el del stage avanzan sin parpadeo.
+  Con la slide "Empezamos en {video_countdown}" y el stage abierto, el stage NO muestra "{video_countdown}" literal.
 - Mac [ ] Windows [ ]
 - **Notas:** revisión final F23 (el texto plano del stage ahora excluye los ítems `live`).
 

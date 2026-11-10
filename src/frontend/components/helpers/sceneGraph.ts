@@ -30,7 +30,7 @@ import { getCurrentTimerValue } from "../drawer/timers/timers"
 import { defaultLayers, getCurrentStyle, getOutputLines, getOutputResolution, getOutputTransitions, getStyleTemplate, percentageStylePos, setTemplateStyle } from "./output"
 import { _show } from "./shows"
 import { getLayoutRef } from "./show"
-import { eventsLines, hasTimeToken, joinStaticText, slideTrackerParts, slideTrackerText, variableText, type CalendarEvent } from "./dynamicItemText"
+import { eventsLines, hasTimeToken, plainSlideText, slideTrackerParts, slideTrackerText, variableText, type CalendarEvent } from "./dynamicItemText"
 import { replaceDynamicValues } from "./showActions"
 import { contentAlign } from "./outputAspect"
 import { imagePathsOf } from "./sceneMedia"
@@ -442,9 +442,7 @@ function buildSlideItems(showSlide: OutSlide, outputId: string, currentStyle: Re
 
 /** Texto plano de una slide: items visibles o, si no los hay, todo su texto (para stage). */
 function plainTextOf(items: SceneTextItem[], slideItems: Item[]): string {
-    let text = joinStaticText(items)
-    if (!text) text = slideItems.map((a) => getItemText(a)).join("\n")
-    return text.trim()
+    return plainSlideText(items, () => slideItems.map((a) => getItemText(a)).join("\n"))
 }
 
 // OVERLAYS (F4.6)
