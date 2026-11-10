@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties, type UIEvent } from "react"
 import { resetAudioRouting } from "../../audio/routing/audioRoutingInit"
-import AudioRouting from "../../components/settings/tabs/AudioRouting.svelte"
+import { AudioRouting } from "./audio/AudioRouting"
 import Tip from "../../components/main/Tip.svelte"
 import { activePopup, dictionary, settingsTab } from "../../stores"
 import { translateText } from "../../utils/language"
@@ -18,7 +18,7 @@ import { ProfilesButtons } from "./ProfilesButtons"
 import { ProfilesTabs } from "./ProfilesTabs"
 import styles from "./Settings.module.css"
 
-// Port de components/settings/Settings.svelte (F24.12). AudioRouting sigue siendo Svelte hasta F24.13b; Connection y Profiles* son React (F24.13a).
+// Port de components/settings/Settings.svelte (F24.12). Connection y Profiles* son React (F24.13a).
 const hints: Record<string, string> = {
     audio: "settings.audio_hint",
     profiles: "profile.profiles_hint",
@@ -61,7 +61,7 @@ export function Settings() {
                         </div>
                     </>
                 ) : tabId === "audio" ? (
-                    <SvelteIsland component={AudioRouting} />
+                    <AudioRouting />
                 ) : tabId === "connection" ? (
                     <Connection />
                 ) : tabId === "files" ? (

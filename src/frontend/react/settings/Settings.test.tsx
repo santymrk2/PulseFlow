@@ -17,7 +17,7 @@ vi.mock("./Other", () => ({ Other: () => <div>stub-other</div> }))
 vi.mock("./OtherButtons", () => ({ OtherButtons: () => <div>stub-other-buttons</div> }))
 // Las pestañas que todavía son Svelte entran por SvelteIsland: acá sólo importa cuál se monta y con qué props
 vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} /> }))
-vi.mock("../../components/settings/tabs/AudioRouting.svelte", () => ({ default: { isla: "AudioRouting" } }))
+vi.mock("./audio/AudioRouting", () => ({ AudioRouting: () => <div data-isla="AudioRouting" /> }))
 vi.mock("./Connection", () => ({ Connection: () => <div data-isla="Connection" /> }))
 vi.mock("./Profiles", () => ({ Profiles: () => <div data-isla="Profiles" /> }))
 vi.mock("./ProfilesButtons", () => ({ ProfilesButtons: () => <div data-isla="ProfilesButtons" /> }))
