@@ -20,3 +20,8 @@ export function setStoresForTest(entries: StoreEntry[]): () => void {
     const restores = entries.map((entry) => entry.apply())
     return () => [...restores].reverse().forEach((restore) => restore())
 }
+
+// Como `storeEntry`, pero el valor de ejemplo no tiene que cumplir el tipo completo del store (tests con datos mínimos)
+export function looseEntry<T>(store: Writable<T>, value: unknown): StoreEntry {
+    return storeEntry(store, value as T)
+}

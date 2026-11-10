@@ -11,6 +11,17 @@ import { AudioStream } from "./AudioStream"
 import { CategoryAction } from "./CategoryAction"
 import { ChangeIcon } from "./ChangeIcon"
 import { ChooseChord } from "./ChooseChord"
+import { ChooseMediaInput } from "./ChooseMediaInput"
+import { ChooseOutput } from "./ChooseOutput"
+import { ChooseStyle } from "./ChooseStyle"
+import { ChurchAppsSyncCategories } from "./ChurchAppsSyncCategories"
+import { CleaningUtility } from "./CleaningUtility"
+import { CloudMethod } from "./CloudMethod"
+import { CloudSync } from "./CloudSync"
+import { CloudUpdate } from "./CloudUpdate"
+import { Color } from "./Color"
+import { ColorGradient } from "./ColorGradient"
+import { Conditions } from "./Conditions"
 import { KitDemoReact } from "./KitDemoReact"
 
 // Popups que ya viven en React. Al migrar uno, sale del mapa `popups` de components/main/popupComponents.ts y entra acá (nunca en los dos).
@@ -26,5 +37,16 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     category_action: CategoryAction,
     icon: ChangeIcon,
     choose_chord: ChooseChord,
+    choose_media_input: ChooseMediaInput,
+    choose_output_input: ChooseOutput,
+    choose_style: ChooseStyle,
+    sync_categories: ChurchAppsSyncCategories,
+    cleaning_utility: CleaningUtility,
+    cloud_method: CloudMethod,
+    cloud_sync: CloudSync,
+    cloud_update: CloudUpdate,
+    color: Color,
+    color_gradient: ColorGradient,
+    conditions: Conditions,
     kit_demo_react: KitDemoReact
 }

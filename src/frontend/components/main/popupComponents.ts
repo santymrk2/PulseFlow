@@ -1,18 +1,6 @@
 import type { ComponentType } from "svelte"
 import type { Popups } from "../../../types/Main"
 
-import ChooseMediaInput from "./popups/ChooseMediaInput.svelte"
-import ChooseOutput from "./popups/ChooseOutput.svelte"
-
-import ChooseStyle from "./popups/ChooseStyle.svelte"
-import ChurchAppsSyncCategories from "./popups/ChurchAppsSyncCategories.svelte"
-import CleaningUtility from "./popups/CleaningUtility.svelte"
-import CloudMethod from "./popups/CloudMethod.svelte"
-import CloudSync from "./popups/CloudSync.svelte"
-import CloudUpdate from "./popups/CloudUpdate.svelte"
-import Color from "./popups/Color.svelte"
-import ColorGradient from "./popups/ColorGradient.svelte"
-import Conditions from "./popups/Conditions.svelte"
 import Confirm from "./popups/Confirm.svelte"
 import Connect from "./popups/Connect.svelte"
 import CreateCollection from "./popups/CreateCollection.svelte"
@@ -105,11 +93,8 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     manage_dynamic_values: ManageDynamicValues,
     template_style_overrides: TemplateStyleOverrides,
     regex_manager: RegexManager,
-    choose_media_input: ChooseMediaInput,
     player: CreatePlayer,
     rename: Rename,
-    color: Color,
-    color_gradient: ColorGradient,
     find_replace: FindReplace,
     timer: Timer,
     variable: Variable,
@@ -125,15 +110,12 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     edit_event: EditEvent,
     edit_chart: EditChart,
 
-    choose_output_input: ChooseOutput,
     choose_output_type: OutputSetup,
-    choose_style: ChooseStyle,
 
     output_selector: OutputSelector,
     set_time: SetTime,
     assign_shortcut: SlideShortcut,
     dynamic_values: DynamicValues,
-    conditions: Conditions,
     translate: Translate,
     next_timer: NextTimer,
     display_duration: DisplayDuration,
@@ -149,15 +131,10 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     custom_action: CustomAction,
     slide_midi: SlideMidi,
     connect: Connect,
-    cloud_sync: CloudSync,
-    cloud_update: CloudUpdate,
-    cloud_method: CloudMethod,
-    sync_categories: ChurchAppsSyncCategories,
     effect_items: EffectItems,
     timeline: TimelineSettings,
     timecode: Timecode,
     template_info: TemplateInfo,
-    cleaning_utility: CleaningUtility,
     node_options: NodeOptions,
     looks: LooksWindow,
     screen_config: ScreenConfig,
