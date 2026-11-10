@@ -269,7 +269,7 @@ export interface Scrolling {
 // [outer_or, [outer_and, [inner_or, [inner_and, [content, {}}]]]]]
 export type Condition = ConditionValue[][][][]
 export interface ConditionValue {
-    [key: string]: string
+    [key: string]: string | number | null
 }
 
 export interface Weather {

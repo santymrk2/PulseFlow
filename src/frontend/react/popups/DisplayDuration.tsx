@@ -8,10 +8,10 @@ import { NumberField } from "../ui/number-field/NumberField"
 // Muta en el lugar el objeto del store, como el Svelte (WIP history del original).
 export function DisplayDuration() {
     const [{ isEffect, ids }] = useState(() => ({ isEffect: get(drawerTabsData).overlays?.activeSubTab === "effects", ids: get(selected).data }))
-    const [currentValue, setCurrentValue] = useState(() => (isEffect ? get(effects) : get(overlays))[ids[0]]?.displayDuration || 0)
+    const [currentValue, setCurrentValue] = useState<number | null>(() => (isEffect ? get(effects) : get(overlays))[ids[0]]?.displayDuration || 0)
 
     function updateValue(value: number | null) {
-        setCurrentValue(value as number)
+        setCurrentValue(value)
 
         const store = isEffect ? effects : overlays
         store.update((a) => {
@@ -25,5 +25,5 @@ export function DisplayDuration() {
         })
     }
 
-    return <NumberField label="timer.seconds" value={currentValue} max={3600} onChange={updateValue} />
+    return <NumberField label="timer.seconds" value={currentValue ?? 0} max={3600} onChange={updateValue} />
 }

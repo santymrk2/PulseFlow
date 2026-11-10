@@ -24,7 +24,7 @@ import styles from "./Connect.module.css"
 // Port de components/main/popups/Connect.svelte. Lee (al montar): popupData.id/ip/remoteController y special.remoteControllerId; después ports, os, special, serverData, outputs y maxConnections.
 // Escribe: popupData = {} al montar; ports[id]; serverData[id][clave] (+ Main.SERVER_DATA con el store completo; la contraseña de companion reinicia el WebSocket); maxConnections;
 // special.connectionHostname; y, sin id de control remoto, un id nuevo en special.remoteControllerId (+ startRemoteController; stopRemoteController del anterior al regenerar).
-// Un clic en un link cierra el popup. Tip es Svelte (isla). Un NumberField que devuelve null (reset sin valor por defecto) se ignora: el Svelte guardaba null.
+// Un clic en un link cierra el popup. Tip es Svelte (isla). Los NumberField pueden emitir null: se ignora (guarda defensiva).
 type PortId = "remote" | "stage" | "controller" | "output_stream" | "companion"
 
 const DEFAULT_PORTS: Record<PortId, number> = { remote: 5510, stage: 5511, controller: 5512, output_stream: 5513, companion: 5505 }

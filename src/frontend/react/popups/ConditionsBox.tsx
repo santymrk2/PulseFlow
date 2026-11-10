@@ -1,4 +1,5 @@
 import { Fragment } from "react"
+import type { ConditionValue } from "../../../types/Show"
 import { audioRouting, timers } from "../../stores"
 import { clone, sortByName } from "../../components/helpers/array"
 import { getDynamicIds, getVariablesIds } from "../../components/helpers/showActions"
@@ -12,11 +13,11 @@ import styles from "./ConditionsBox.module.css"
 
 // Port de components/main/popups/ConditionsBox.svelte. Lee: input (un contenido de condición), timers y audioRouting.
 // Emite onChange({ key, value }) = dispatch("change", { key, value }). El valor es lo que entrega cada campo (texto, número o null);
-// ConditionValue dice `string`, pero el Svelte ya guardaba números (index, seconds).
+// El valor es lo que entrega cada campo (index y seconds son números); ConditionValue admite string | number | null.
 export type ConditionChange = { key: string; value: string | number | null }
 
 interface ConditionsBoxProps {
-    input: { [key: string]: string }
+    input: ConditionValue
     onChange?: (change: ConditionChange) => void
 }
 
@@ -76,9 +77,12 @@ export function ConditionsBox({ input, onChange }: ConditionsBoxProps) {
     }
     const noData: string[] = ["isRunning"]
 
-    const elementId = input.element ?? conditionValues.element[0]?.value
+    // los campos de texto guardan strings; index y seconds, números
+    const str = (key: string) => (typeof input[key] === "string" ? input[key] : undefined)
+
+    const elementId = str("element") ?? conditionValues.element[0]?.value
     const operatorOptions = customOperators[elementId] ? customOperators[elementId] : conditionValues.operator
-    const operatorId = input.operator ? input.operator : operatorOptions[0]?.value
+    const operatorId = str("operator") || (operatorOptions[0]?.value ?? "")
 
     const channelNodesList = (audioRoutingValue?.channels || [{ id: "main", name: translateText("audio.main") }]).map((c) => ({
         value: c.id,
@@ -104,19 +108,19 @@ export function ConditionsBox({ input, onChange }: ConditionsBoxProps) {
                 if (!((conditionId === "element" || input.element) && (conditionId !== "data" || !noData.includes(operatorId)))) return null
 
                 const options: Option[] = conditionId === "operator" ? operatorOptions : conditionId === "data" && customData[elementId] ? customData[elementId] : condition
-                const value = options.find((a) => a.value === input[conditionId]) || options[0]
+                const value = options.find((a) => a.value === str(conditionId)) || options[0]
                 const label = conditionId === "operator" ? "actions.mode" : conditionId === "data" ? "variables.value" : "sort.type"
 
                 return (
                     <Fragment key={conditionId}>
-                        {conditionId !== "data" || options.length > 1 ? <SelectField label={label} options={options} value={(conditionId === "element" ? input[conditionId] : value?.value) ?? ""} onChange={(v) => setValue(conditionId, v)} /> : null}
+                        {conditionId !== "data" || options.length > 1 ? <SelectField label={label} options={options} value={(conditionId === "element" ? str(conditionId) : value?.value) ?? ""} onChange={(v) => setValue(conditionId, v)} /> : null}
 
                         {conditionId === "element" && elementOptions[value.value] ? (
                             <>
-                                <SelectField label="tools.item" options={elementOptions[value.value]} value={input.elementId ?? ""} onChange={(v) => setValue("elementId", v)} />
+                                <SelectField label="tools.item" options={elementOptions[value.value]} value={str("elementId") ?? ""} onChange={(v) => setValue("elementId", v)} />
 
                                 {/* 0 = active */}
-                                {input.element === "variable" && input.elementId?.includes("__") ? <NumberField label="variables.number" value={Number(input.index ?? 0)} onChange={(v) => setValue("index", v)} /> : null}
+                                {input.element === "variable" && str("elementId")?.includes("__") ? <NumberField label="variables.number" value={Number(input.index ?? 0)} onChange={(v) => setValue("index", v)} /> : null}
                             </>
                         ) : null}
 

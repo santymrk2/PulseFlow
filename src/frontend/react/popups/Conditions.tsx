@@ -169,8 +169,7 @@ export function Conditions() {
             if (!values[a][b][c]) values[a][b][c] = []
             if (!values[a][b][c][d] || key === "element") values[a][b][c][d] = {}
 
-            // ConditionValue dice string, pero index/seconds llegan como número (igual que en el Svelte)
-            values[a][b][c][d][key] = value as string
+            values[a][b][c][d][key] = value
         })
     }
 
