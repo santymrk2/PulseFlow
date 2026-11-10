@@ -1,0 +1,56 @@
+.hint {
+    padding: 0 10px 10px;
+    font-size: 0.8em;
+    opacity: 0.5;
+}
+
+/* Stream destinations */
+
+.destinations {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.destination {
+    display: flex;
+    flex-direction: column;
+
+    padding: 8px;
+    border: 1px solid var(--primary-lighter);
+    border-radius: 4px;
+}
+
+.dot {
+    flex-shrink: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #6b6b6b;
+}
+.dot.connecting,
+.dot.reconnecting {
+    background-color: #e0a800;
+}
+.dot.live {
+    background-color: var(--success);
+}
+.dot.error {
+    background-color: #b60707;
+}
+
+.destination-warning {
+    padding-top: 4px;
+    font-size: 0.8em;
+    color: #e0bc50;
+}
+.destination-error {
+    padding-top: 4px;
+    color: #ff8080;
+    font-size: 0.8em;
+}
+
+/* botón de transmisión activa: antes `background: #b60707 !important` en el style en línea */
+.streaming {
+    background: #b60707 !important;
+}

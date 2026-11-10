@@ -1,0 +1,71 @@
+.displayLayout {
+    position: relative;
+    overflow: hidden;
+    max-width: 100%;
+}
+.displayLayout.fill {
+    width: 100%;
+}
+.monitor {
+    position: absolute;
+    box-sizing: border-box;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius);
+    background-color: var(--primary-darker);
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    cursor: pointer;
+}
+.monitor:hover {
+    border-color: var(--border-strong);
+}
+.monitor.primary {
+    border-style: dashed;
+}
+.monitor.assigned {
+    border-width: 2px;
+    border-color: var(--text);
+}
+.number {
+    font-size: 1.6em;
+    font-weight: bold;
+    opacity: 0.85;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}
+.badge {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    color: var(--text);
+}
+.badge.primary {
+    top: 2px;
+    left: 4px;
+    opacity: 0.7;
+}
+.badge.assigned {
+    top: 2px;
+    right: 4px;
+    color: var(--secondary, var(--primary));
+}
+.meta {
+    position: absolute;
+    bottom: 2px;
+    left: 0;
+    right: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 0.62em;
+    opacity: 0.75;
+    pointer-events: none;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.meta .res {
+    opacity: 0.7;
+}

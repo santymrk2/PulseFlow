@@ -1,0 +1,110 @@
+/* cabecera en una sola línea: el nombre se achica, la resolución y el estado no se cortan */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    white-space: nowrap;
+}
+.name-input {
+    background: transparent;
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    color: var(--text);
+    padding: 4px 6px;
+    border-radius: var(--radius, 4px);
+    flex: 1;
+    min-width: 0;
+}
+.res {
+    flex-shrink: 0;
+    opacity: 0.7;
+    font-size: 0.9em;
+}
+.row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.label {
+    width: 80px;
+    opacity: 0.8;
+    font-size: 0.9em;
+}
+.canvas {
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    border-radius: var(--radius, 4px);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+.canvas-title {
+    align-self: flex-start;
+    opacity: 0.8;
+    font-size: 0.9em;
+}
+.canvas-info {
+    align-self: flex-start;
+    opacity: 0.7;
+    font-size: 0.8em;
+}
+/* pestañas: si no entran en el ancho, la tira scrollea sin cortar letras */
+.tabs {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.tab-panel {
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    border-radius: var(--radius, 4px);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    min-height: 0;
+    /* único scroll del detalle: el contenido de la pestaña */
+    overflow-y: auto;
+}
+/* dos columnas de campos cuando hay ancho (>= ~640 px del modal); una si no */
+.tab-panel:has(> .row) {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    align-content: start;
+}
+.tab-panel > .info-box,
+.tab-panel > .actions,
+.tab-panel > .section {
+    grid-column: 1 / -1;
+}
+.info-box {
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    border-radius: var(--radius, 4px);
+    padding: 8px;
+    font-size: 0.9em;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.actions {
+    display: flex;
+    gap: 6px;
+    margin-top: auto;
+}
+.scroll {
+    overflow: auto;
+}
+.section {
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    border-radius: var(--radius, 4px);
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.section-title {
+    font-size: 0.9em;
+    opacity: 0.8;
+}

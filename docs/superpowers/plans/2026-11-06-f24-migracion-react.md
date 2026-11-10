@@ -532,7 +532,7 @@ Receta sobre `components/screens/` (`DisplayLayout`, `ScreenConfig`, `ScreenDeta
 `ScreenOutputOptions`, `SystemDisplays`) y `components/looks/` (`LookAdvanced`, `LookGrid`, `LooksWindow`).
 Verificación extra: abrir, cerrar, duplicar y eliminar pantallas; elegir monitor; identificar pantallas; cambiar de
 look en vivo. Todo con el engine real.
-- [ ] commit `F24.14: pantallas y looks en React`
+- [x] commit `F24.14: pantallas y looks en React`
 
 ### Task F24.15: Popups (89, en 8 tandas)
 

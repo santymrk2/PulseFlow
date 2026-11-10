@@ -1,0 +1,13 @@
+.group {
+    padding: 6px 0;
+}
+.res {
+    font-size: 11px;
+    opacity: 0.7;
+}
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--success);
+}

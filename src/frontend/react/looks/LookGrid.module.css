@@ -1,0 +1,43 @@
+.grid {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: min-content;
+}
+
+.row {
+    display: grid;
+    grid-template-columns: 140px repeat(var(--columns), minmax(140px, 1fr));
+    align-items: center;
+    gap: 8px;
+    min-height: 34px;
+}
+
+.row.header {
+    border-bottom: 1px solid var(--border-color, var(--primary-lighter));
+}
+
+.row-label {
+    font-size: 0.85em;
+    opacity: 0.7;
+    padding-inline-start: 4px;
+}
+
+.cell {
+    display: flex;
+    align-items: center;
+    padding: 2px 4px;
+}
+.cell.centered {
+    justify-content: center;
+}
+
+.header-cell {
+    gap: 6px;
+    font-weight: 600;
+    font-size: 0.9em;
+    justify-content: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

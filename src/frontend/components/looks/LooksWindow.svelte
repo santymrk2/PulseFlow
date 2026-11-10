@@ -12,7 +12,8 @@
     import Button from "../../lib/components/ui/button/button.svelte"
     import ListRow from "../../lib/components/ui/list-row/list-row.svelte"
     import SectionHeader from "../../lib/components/ui/section-header/section-header.svelte"
-    import LookGrid from "./LookGrid.svelte"
+    import ReactIsland from "../../react/bridge/ReactIsland.svelte"
+    import { LookGrid } from "../../react/looks/LookGrid"
     import Modal from "../main/Modal.svelte"
 
     // F10.6 — modal "Looks": presets a la izquierda, grilla pantallas × capas a la
@@ -151,7 +152,7 @@
                 </div>
 
                 <div class="scroll">
-                    <LookGrid screens={audienceScreens} {draft} on:cell={(e) => updateCell(e.detail.outputId, e.detail.patch)} />
+                    <ReactIsland component={LookGrid} props={{ screens: audienceScreens, draft, onCell: (detail) => updateCell(detail.outputId, detail.patch) }} />
                 </div>
             {:else}
                 <p class="hint">{t("looks.no_screens")}</p>

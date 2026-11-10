@@ -1,0 +1,33 @@
+.wrap {
+    padding: 6px 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.empty {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-subtle);
+    font-size: var(--text-xs);
+}
+.row {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 0 8px;
+    height: 28px;
+    border-radius: var(--radius);
+    text-align: left;
+    cursor: pointer;
+    font-size: var(--text-sm);
+}
+.btn:hover {
+    background-color: var(--hover-bg, var(--bg-hover));
+}
