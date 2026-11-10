@@ -41,7 +41,7 @@ export function CheckboxField({ checked = false, defaultValue = null, label, ico
     return (
         <div style={style} className={cn("checkboxfield", styles.checkboxfield, center && "centered", center && styles.centered, disabled && "disabled", disabled && styles.disabled, small && styles.small)} data-title={translateText(title || label)} role="checkbox" aria-checked={checkedValue} tabIndex={disabled ? undefined : 0} onClick={toggle} onKeyDown={onKeyDown}>
             <div className={styles.background} />
-            <div className={styles.hover} />
+            <div className={cn(styles.hover, "hover")} />
 
             <input type="checkbox" checked={checkedValue} readOnly id={id} disabled={disabled} className={styles.hiddenInput} tabIndex={-1} aria-hidden="true" />
 

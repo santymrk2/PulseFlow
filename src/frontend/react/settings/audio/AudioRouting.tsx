@@ -15,7 +15,7 @@ import { cn } from "../../../lib/utils"
 import { Button } from "../../ui/button/Button"
 import { AudioRoutingNode } from "./AudioRoutingNode"
 import { applyDrop, connectionPath, dragPath, FIXED_INPUTS, FIXED_OUTPUTS, isLineConnectedToPort, isValidConnection, isValidHoverTarget, keepAfterPortContext, lineKey, nodeHue, type AudioDevice, type ColumnType, type HoveredPort, type PortType, type RenderedLine } from "./routingLogic"
-import { useFreshStore } from "./useFreshStore"
+import { useFreshStore } from "../../hooks/useFreshStore"
 import styles from "./AudioRouting.module.css"
 
 // Port de components/settings/tabs/AudioRouting.svelte (F24.13b).

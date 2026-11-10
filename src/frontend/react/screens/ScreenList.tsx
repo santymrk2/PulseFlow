@@ -2,7 +2,7 @@ import { keysToID, sortByName, sortObject, clone } from "../../components/helper
 import { toggleOutputs } from "../../components/helpers/output"
 import { outputs, outputState } from "../../stores"
 import { translateText } from "../../utils/language"
-import { useFreshStore } from "../settings/audio/useFreshStore"
+import { useFreshStore } from "../hooks/useFreshStore"
 import { Button } from "../ui/button/Button"
 import { ListRow } from "../ui/list-row/ListRow"
 import { SectionHeader } from "../ui/section-header/SectionHeader"

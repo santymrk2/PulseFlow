@@ -6,7 +6,7 @@ import { categories, contentProviderData, shows } from "../../stores"
 import { translateText } from "../../utils/language"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { CheckboxField } from "../ui/checkbox-field/CheckboxField"
-import { useFreshStore } from "../settings/audio/useFreshStore"
+import { useFreshStore } from "../hooks/useFreshStore"
 import styles from "./ChurchAppsSyncCategories.module.css"
 
 // Port de components/main/popups/ChurchAppsSyncCategories.svelte. Lee: categories y shows (una vez, al montar) y contentProviderData.churchApps.syncCategories.

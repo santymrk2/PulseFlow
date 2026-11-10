@@ -20,6 +20,11 @@ afterEach(() => {
 const raiz = () => document.querySelector(`.${styles.checkboxfield}`) as HTMLElement
 
 describe("CheckboxField", () => {
+    it("el_fondo_hover_tambien_lleva_la_clase_global_hover", () => {
+        render(<CheckboxField label="x" />)
+        expect(raiz().querySelector(`.${styles.hover}`)?.classList.contains("hover")).toBe(true)
+    })
+
     it("renderiza_lo_principal", () => {
         restaurar = setStoresForTest([storeEntry(dictionary, { inputs: { name: "<b>Nombre</b>" } })])
         render(<CheckboxField label="inputs.name" checked data="info" icon="check" id="c" />)

@@ -13,7 +13,7 @@ import { activePage, activePopup, activeStage, currentOutputSettings, dictionary
 import { translateText } from "../../utils/language"
 import { send } from "../../utils/request"
 import { useStore } from "../hooks/useStore"
-import { useFreshStore } from "../settings/audio/useFreshStore"
+import { useFreshStore } from "../hooks/useFreshStore"
 import { Button } from "../ui/button/Button"
 import { ColorField } from "../ui/color-field/ColorField"
 import { NumberField } from "../ui/number-field/NumberField"

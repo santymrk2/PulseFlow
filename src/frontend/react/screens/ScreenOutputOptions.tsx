@@ -15,7 +15,7 @@ import { activePopup, alertMessage, currentOutputSettings, ndiData, omtData, os,
 import { newToast } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { destroy, receive, send } from "../../utils/request"
-import { useFreshStore } from "../settings/audio/useFreshStore"
+import { useFreshStore } from "../hooks/useFreshStore"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
 import { CheckboxField } from "../ui/checkbox-field/CheckboxField"

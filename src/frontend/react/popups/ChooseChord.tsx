@@ -4,7 +4,7 @@ import { chordTensions, chordTypes, keys, keysInverted, romanKeys } from "../../
 import { popupData, special, storedChordsData } from "../../stores"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
-import { useFreshStore } from "../settings/audio/useFreshStore"
+import { useFreshStore } from "../hooks/useFreshStore"
 import { Button } from "../ui/button/Button"
 import { TextField } from "../ui/text-field/TextField"
 import { ToggleField } from "../ui/toggle-field/ToggleField"
