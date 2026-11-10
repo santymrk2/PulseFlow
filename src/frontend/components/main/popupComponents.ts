@@ -1,17 +1,6 @@
 import type { ComponentType } from "svelte"
 import type { Popups } from "../../../types/Main"
-import About from "./popups/About.svelte"
-import Action from "./popups/Action.svelte"
-import ActionHistory from "./popups/ActionHistory.svelte"
-import AddAudioEffect from "./popups/AddAudioEffect.svelte"
-import Alert from "./popups/Alert.svelte"
-import AspectRatio from "./popups/AspectRatio.svelte"
-import AudioEffect from "./popups/AudioEffect.svelte"
-import AudioStream from "./popups/AudioStream.svelte"
-import CategoryAction from "./popups/CategoryAction.svelte"
-import ChangeIcon from "./popups/ChangeIcon.svelte"
 
-import ChooseChord from "./popups/ChooseChord.svelte"
 import ChooseMediaInput from "./popups/ChooseMediaInput.svelte"
 import ChooseOutput from "./popups/ChooseOutput.svelte"
 
@@ -108,7 +97,6 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     select_look: SelectLook,
     select_stage_layout: SelectStageLayout,
     delete_duplicated_shows: DeleteDuplicatedShows,
-    icon: ChangeIcon,
     manage_groups: ManageGroups,
     manage_fonts: ManageFonts,
     manage_icons: ManageIcons,
@@ -117,7 +105,6 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     manage_dynamic_values: ManageDynamicValues,
     template_style_overrides: TemplateStyleOverrides,
     regex_manager: RegexManager,
-    choose_chord: ChooseChord,
     choose_media_input: ChooseMediaInput,
     player: CreatePlayer,
     rename: Rename,
@@ -127,11 +114,7 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     timer: Timer,
     variable: Variable,
     interaction_input: InteractionInput,
-    audio_stream: AudioStream,
-    audio_effect: AudioEffect,
-    add_audio_effect: AddAudioEffect,
     now_playing: NowPlaying,
-    aspect_ratio: AspectRatio,
     max_lines: MaxLines,
     transition: Transition,
     media_fit: MediaFit,
@@ -155,19 +138,14 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     next_timer: NextTimer,
     display_duration: DisplayDuration,
     manage_tags: ManageTags,
-    about: About,
     update_manager: UpdateManager,
     shortcuts: Shortcuts,
     unsaved: Unsaved,
     restore: Restore,
     reset_all: ResetAll,
-    alert: Alert,
     new_update: NewUpdate,
     history: History,
-    action_history: ActionHistory,
     manage_emitters: Emitters,
-    action: Action,
-    category_action: CategoryAction,
     custom_action: CustomAction,
     slide_midi: SlideMidi,
     connect: Connect,

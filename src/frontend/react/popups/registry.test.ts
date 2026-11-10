@@ -5,6 +5,9 @@ import { commonMock } from "../test/mockCommon"
 import { reactPopups } from "./registry"
 
 vi.mock("../../utils/common", () => commonMock())
+// el registro importa los popups React, que arrastran los .svelte de audio (AudioWorkletNode no existe en happy-dom)
+vi.mock("../../audio/audioProcessor", () => ({}))
+vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))

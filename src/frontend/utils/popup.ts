@@ -49,12 +49,17 @@ export async function promptCustom(prompt: string, inputType: string = "text", m
 
 let activeSubmit: (() => void) | null = null
 
-export function registerPopupSubmit(submit: () => void) {
+// Para React (sin ciclo de vida de Svelte): devuelve la función que lo desregistra, para la limpieza del efecto.
+export function setPopupSubmit(submit: () => void): () => void {
     activeSubmit = submit
 
-    onDestroy(() => {
+    return () => {
         if (activeSubmit === submit) activeSubmit = null
-    })
+    }
+}
+
+export function registerPopupSubmit(submit: () => void) {
+    onDestroy(setPopupSubmit(submit))
 }
 
 export function triggerPopupSubmit(e?: KeyboardEvent): boolean {

@@ -1,0 +1,50 @@
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}
+
+.grid :global(button) {
+    border: 2px solid var(--primary-lighter) !important;
+
+    padding: 0.4em;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: center;
+}
+.grid :global(button.isActive) {
+    background-color: var(--primary-darker) !important;
+}
+
+.box {
+    width: 100px;
+    /* max-height: 500px; */
+    background-color: black;
+    border-radius: 3px;
+}
+
+.box p,
+.preview p {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+
+    font-weight: bold;
+}
+
+.preview {
+    position: relative;
+    flex: 1;
+
+    display: flex;
+    justify-content: center;
+    /* padding: 0.6em; */
+}
+
+.preview .box {
+    /* always active */
+    outline-offset: -2px;
+    outline: 2px solid var(--text-muted);
+}
