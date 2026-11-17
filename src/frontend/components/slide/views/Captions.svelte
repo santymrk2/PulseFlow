@@ -1,19 +1,9 @@
 <script lang="ts">
-    export let item
+    // Migrado a React en F24.18a. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import { Captions as CaptionsReact } from "../../../react/slide/views/Captions"
 
-    // la ventana webview de salida ya no existe: los captions (caption.ninja) no tienen dónde
-    // renderizarse, así que este componente queda como previsualización del item
+    export let item: unknown = undefined
 </script>
 
-<div class="preview fill"></div>
-
-<style>
-    .fill {
-        width: 100%;
-        height: 100%;
-    }
-
-    .preview {
-        background-color: rgb(0 0 0 / 0.5);
-    }
-</style>
+<ReactIsland component={CaptionsReact} props={{ item }} />
