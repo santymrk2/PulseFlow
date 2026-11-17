@@ -1,0 +1,19 @@
+.align {
+    display: flex;
+    justify-content: center;
+    /* stage align */
+    justify-content: var(--text-align);
+    align-items: center;
+    height: 100%;
+    white-space: nowrap;
+}
+
+.align.styled {
+    align-items: baseline;
+    font-size: 4em;
+    height: unset;
+}
+
+.colored {
+    color: var(--secondary);
+}
