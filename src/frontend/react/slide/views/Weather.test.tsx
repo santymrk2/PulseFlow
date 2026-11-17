@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { act, cleanup, render, screen } from "@testing-library/react"
+import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { getWeather } from "../../../utils/weather"
 import type { Weather as WeatherData } from "../../../../types/Show"

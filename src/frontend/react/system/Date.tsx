@@ -24,7 +24,7 @@ export function Date({ format = "day,d,m,y" }: DateProps) {
     }
 
     return (
-        <div>
+        <div className={styles.date}>
             {format.split(",").map((key, i) => {
                 const value = data[key] ?? ""
                 return <span key={i}>{value.includes("T: ") ? <T id={value.slice(3)} /> : value} </span>
