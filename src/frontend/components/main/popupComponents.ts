@@ -37,8 +37,6 @@ import Unsaved from "./popups/Unsaved.svelte"
 import UpdateManager from "./popups/UpdateManager.svelte"
 import Variable from "./popups/Variable.svelte"
 import ScreenConfig from "../screens/ScreenConfig.svelte"
-import AddShowsModal from "../show/left/AddShowsModal.svelte"
-import PlaylistOptionsModal from "../show/left/PlaylistOptionsModal.svelte"
 
 export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     select_show: SelectShow,
@@ -78,7 +76,5 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     node_options: NodeOptions,
     looks: LooksWindow,
     screen_config: ScreenConfig,
-    add_shows: AddShowsModal,
-    playlist_options: PlaylistOptionsModal,
     kit_demo: KitDemo
 }

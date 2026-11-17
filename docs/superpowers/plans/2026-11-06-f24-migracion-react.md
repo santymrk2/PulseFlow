@@ -565,7 +565,7 @@ Verificación extra (Review Focus 5): con una biblioteca de 5000 shows (generar 
 datos de prueba, **nunca** en la del usuario), el scroll es fluido y el filtro responde en menos de 100 ms (medir con
 el Performance de DevTools). Todo lo de F20.8: elegir biblioteca y playlist, buscar, agregar shows, arrastrar a una
 playlist, renombrar, menú contextual.
-- [ ] commit `F24.16: columna izquierda en React`
+- [x] commit `F24.16: columna izquierda en React`
 
 ### Task F24.17: Cajón (drawer, 9 tandas)
 

@@ -7,7 +7,8 @@
     import Top from "./components/main/Top.svelte"
     import Preview from "./components/output/preview/Preview.svelte"
     import Show from "./components/show/Show.svelte"
-    import LeftColumn from "./components/show/left/LeftColumn.svelte"
+    import ReactIsland from "./react/bridge/ReactIsland.svelte"
+    import { LeftColumn } from "./react/show/left/LeftColumn"
     import OverlayNavigation from "./components/edit/OverlayNavigation.svelte"
     import ThemeNavigation from "./components/edit/ThemeNavigation.svelte"
     import ShowTools from "./components/show/ShowTools.svelte"
@@ -40,7 +41,7 @@
             <div class="left">
                 {#if page === "show"}
                     {#key $activeProfile}
-                        <LeftColumn />
+                        <ReactIsland component={LeftColumn} />
                     {/key}
                 {:else if page === "edit"}
                     {#if $activeEdit.type === "template"}

@@ -1798,7 +1798,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [ ] **F24.15f** Popups, tanda f (MediaFit → Rename).
 - [ ] **F24.15g** Popups, tanda g (ResetAll → SlideMidi).
 - [ ] **F24.15h** Popups, tanda h (SlideShortcut → WebSearch).
-- [ ] **F24.16** Columna izquierda.
+- [x] **F24.16** Columna izquierda.
 - [ ] **F24.17a** Cajón, tanda a: raíz de `drawer/`, `navigation/*`.
 - [ ] **F24.17b** Cajón, tanda b: `media/*`.
 - [ ] **F24.17c** Cajón, tanda c: `audio/` (paneles y metrónomo).

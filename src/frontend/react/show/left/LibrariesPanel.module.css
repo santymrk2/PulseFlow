@@ -1,0 +1,39 @@
+.libraryRow {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    height: 28px;
+    padding: 0 12px;
+    border: 0;
+    background: transparent;
+    color: var(--text);
+    font-size: 13px;
+    text-align: left;
+}
+.libraryRow:hover {
+    background: var(--hover, rgb(255 255 255 / 0.05));
+}
+.libraryRow.active {
+    background: var(--secondary-opacity);
+}
+.libraryRow.active::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 2px;
+    background: var(--secondary);
+}
+.name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.count {
+    font-size: 12px;
+    color: var(--text-muted);
+}
