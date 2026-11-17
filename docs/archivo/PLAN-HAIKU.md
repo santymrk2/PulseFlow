@@ -27,9 +27,9 @@ quitar la pestaña vieja *Settings → Outputs* se perdieron opciones; acá se r
    `git push origin feature/tauri-rust-migration`.
 5. Si una tarea no se puede hacer como está escrita (un texto a buscar no existe, un
    chequeo no pasa después de 2 intentos): **no inventes**. Hacé `git checkout -- <archivo>`
-   de lo que tocaste en esa tarea, anotá el problema en `docs/informes/haiku.md` y pasá
+   de lo que tocaste en esa tarea, anotá el problema en `docs/archivo/informes/haiku.md` y pasá
    a la siguiente.
-6. Al terminar todas: escribí en `docs/informes/haiku.md` una línea por tarea
+6. Al terminar todas: escribí en `docs/archivo/informes/haiku.md` una línea por tarea
    (hecha / salteada y por qué), agregá al final una línea que diga exactamente
    `TERMINADO`, commit `docs: informe de Haiku` y push.
 
@@ -43,7 +43,7 @@ bun install
 bun run test:unit && bun run test:svelte; bun run build
 ```
 
-Creá `docs/informes/haiku.md` con el título `# Informe Haiku` y los 3 resultados.
+Creá `docs/archivo/informes/haiku.md` con el título `# Informe Haiku` y los 3 resultados.
 No hay commit en esta tarea (se commitea con H1).
 
 ---
@@ -438,7 +438,7 @@ editable, no un campo de formulario).
 
 En `docs/ROADMAP.md` marcá con `[x]` las tareas **F10.3**, **F10.5**, **F10.4b** y
 **F10.8b**, sólo si sus pasos quedaron hechos (si alguna tarea H se salteó, dejá la que
-corresponda sin marcar y explicá en el informe). Completá `docs/informes/haiku.md`
+corresponda sin marcar y explicá en el informe). Completá `docs/archivo/informes/haiku.md`
 según la regla 6 (incluye la línea `TERMINADO`).
 
 **Commit:** `docs: informe de Haiku`
@@ -464,5 +464,5 @@ una por vez, siguiendo al pie de la letra las reglas del plan (chequeos antes de
 commit, commit con el mensaje indicado y push a feature/tauri-rust-migration después
 de cada tarea). No toques nada fuera de lo que pide cada tarea. Si una tarea no se
 puede hacer como está escrita, deshacé sólo esa tarea, anotalo en
-docs/informes/haiku.md y seguí con la siguiente. Al terminar, completá el informe.
+docs/archivo/informes/haiku.md y seguí con la siguiente. Al terminar, completá el informe.
 ```

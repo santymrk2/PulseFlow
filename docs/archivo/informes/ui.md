@@ -257,7 +257,7 @@ los tres modos") quedan pendientes de verificación manual en la app Tauri.
 - `src/frontend/MainLayout.svelte` (sólo columna izquierda)
 - `public/lang/en.json`, `public/lang/es.json` (sección `ui.filter`)
 - `docs/ROADMAP.md` (sólo checkboxes propios)
-- `docs/informes/ui.md`
+- `docs/archivo/informes/ui.md`
 
 ## F11.6b — Panel derecho de verdad como ProPresenter (2026-10-20)
 

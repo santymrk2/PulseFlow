@@ -121,10 +121,10 @@ tocás los archivos que la tabla de carriles dice que son tuyos (más los compar
 con sus reglas). Para usar la app, respetá el lock de "Compartir la app".
 ```
 
-- **A:** `Carril A — Pantallas. Tareas en orden: F10.3, F10.4, F10.5. Rama feature/f10-pantallas. Informe: docs/informes/pantallas.md.`
+- **A:** `Carril A — Pantallas. Tareas en orden: F10.3, F10.4, F10.5. Rama feature/f10-pantallas. Informe: docs/archivo/informes/pantallas.md.`
 - **B:** (agente principal, carpeta original) `Carril B — Looks. Tareas en orden: terminar F10.1 y F10.2, después F10.6. Rama feature/tauri-rust-migration. Informe: docs/informes/looks.md.`
-- **C:** `Carril C — Barra y menú. Tareas en orden: F10.0f, F10.7, F11.1. Rama feature/f10-menu. Informe: docs/informes/menu.md.`
-- **D:** `Carril D — Interfaz. Tareas en orden: F11.2, F11.3, F11.4, F11.5, F11.6, F11.8, F11.10. Rama feature/f11-ui. Informe: docs/informes/ui.md.`
+- **C:** `Carril C — Barra y menú. Tareas en orden: F10.0f, F10.7, F11.1. Rama feature/f10-menu. Informe: docs/archivo/informes/menu.md.`
+- **D:** `Carril D — Interfaz. Tareas en orden: F11.2, F11.3, F11.4, F11.5, F11.6, F11.8, F11.10. Rama feature/f11-ui. Informe: docs/archivo/informes/ui.md.`
 
 ## Reintento automático (si se corta por el límite del modelo)
 
@@ -137,9 +137,9 @@ Desde la carpeta original `FreeShow`, una terminal por carril:
 
 ```bash
 scripts/carril.sh . docs/informes/looks.md "Carril B — Looks (agente principal). Tareas en orden: terminar F10.1 y F10.2 (migración idempotente + test, startLookBridge al arrancar, applyLook con transitionMs, arreglar settings/tabs/Looks.svelte; svelte-check vuelve a 58; marcar F10.0a-e, F10.1 y F10.2 y pushear porque el carril A lo espera), después F10.6. Rama feature/tauri-rust-migration. Informe: docs/informes/looks.md."
-scripts/carril.sh ../PulseFlow-pantallas docs/informes/pantallas.md "Carril A — Pantallas. Tareas en orden: F10.3, F10.4, F10.5. Rama feature/f10-pantallas. Cuando necesites los tipos de F10.1/F10.2, seguí la sección Esperar la base. Informe: docs/informes/pantallas.md."
-scripts/carril.sh ../PulseFlow-menu docs/informes/menu.md "Carril C — Barra y menú. Tareas en orden: F10.0f, F10.7, F11.1. Rama feature/f10-menu. Informe: docs/informes/menu.md."
-scripts/carril.sh ../PulseFlow-ui docs/informes/ui.md "Carril D — Interfaz. Tareas en orden: F11.2, F11.3, F11.4, F11.5, F11.6, F11.8, F11.10. Rama feature/f11-ui. Informe: docs/informes/ui.md."
+scripts/carril.sh ../PulseFlow-pantallas docs/archivo/informes/pantallas.md "Carril A — Pantallas. Tareas en orden: F10.3, F10.4, F10.5. Rama feature/f10-pantallas. Cuando necesites los tipos de F10.1/F10.2, seguí la sección Esperar la base. Informe: docs/archivo/informes/pantallas.md."
+scripts/carril.sh ../PulseFlow-menu docs/archivo/informes/menu.md "Carril C — Barra y menú. Tareas en orden: F10.0f, F10.7, F11.1. Rama feature/f10-menu. Informe: docs/archivo/informes/menu.md."
+scripts/carril.sh ../PulseFlow-ui docs/archivo/informes/ui.md "Carril D — Interfaz. Tareas en orden: F11.2, F11.3, F11.4, F11.5, F11.6, F11.8, F11.10. Rama feature/f11-ui. Informe: docs/archivo/informes/ui.md."
 ```
 
 Opciones: `MODELO=opencode/<otro> ESPERA=900 scripts/carril.sh …`. Con `--auto`, opencode

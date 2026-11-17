@@ -29,8 +29,8 @@
 
 | Ruta | Contenido |
 | --- | --- |
-| [`informes/`](informes/) | Un informe por fase terminada (`f12`, `f18`, `f19`, `looks`, `menu`, `pantallas`, `ui`, `haiku`). |
-| [`capturas/`](capturas/) | Capturas de pantalla de los repasos visuales (`f12`, `f14`). |
+| [`informes/`](informes/) | Informes vigentes: F12 (`f12`), F18 (`f18`), F19 (`f19`) y Looks (`looks`). Los informes de carriles F10/F11 cerrados están en [`archivo/informes/`](archivo/informes/). |
+| [`capturas/`](capturas/) | Capturas de los repasos visuales F12 y F14, referenciadas desde el ROADMAP. |
 | [`superpowers/`](superpowers/) | Diseños y planes de implementación (`specs/`, `plans/`). |
 
 ## Archivo
@@ -41,3 +41,5 @@
 | [`archivo/PLAN-NOCHE.md`](archivo/PLAN-NOCHE.md) | Plan de trabajo nocturno en carriles paralelos (cerrado). |
 | [`archivo/VERIFICAR-F6.md`](archivo/VERIFICAR-F6.md) | Verificación visual de F6 (cerrada). |
 | [`archivo/VERIFICAR-F7.md`](archivo/VERIFICAR-F7.md) | Verificación de F7 (cerrada). |
+| [`archivo/README.md`](archivo/README.md) | Índice de todo lo archivado, con el motivo de lo que sigue vigente. |
+| [`archivo/informes/`](archivo/informes/) | Informes de los carriles F10/F11 cerrados (`haiku`, `menu`, `pantallas`, `ui`). |
