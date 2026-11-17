@@ -1,0 +1,33 @@
+/* text set */
+
+.text_set {
+    flex: 1;
+    min-height: unset;
+
+    position: relative;
+
+    background-color: var(--primary-darker);
+    border: 1px solid var(--primary-lighter);
+
+    border-radius: 8px;
+    overflow: hidden;
+}
+.text_set.active {
+    border: 2px solid var(--secondary) !important;
+}
+
+.part {
+    width: 100%;
+    padding: 5px 10px;
+    /* justify-content: center; */
+    font-size: 0.8em;
+    font-weight: bold;
+}
+
+.delete {
+    position: absolute;
+    top: 0;
+    right: 0;
+
+    display: flex;
+}

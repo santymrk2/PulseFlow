@@ -5,7 +5,7 @@ import { ShowObj } from "../../classes/Show"
 import { clone, sortObject } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"
 import { checkName } from "../../components/helpers/show"
-import WebSearch from "../../components/main/popups/createShow/WebSearch.svelte"
+import { WebSearch } from "./WebSearch"
 import { convertText, getQuickExample, trimNameFromString } from "../../converters/txt"
 import { cn } from "../../lib/utils"
 import { activePopup, activeProject, activeShow, categories, drawerTabsData, formatNewShow, quickTextCache, shows, special, splitLines } from "../../stores"
@@ -13,7 +13,7 @@ import { newToast } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { getNormalizedKey } from "../../utils/shortcuts"
 import { customIconsColors } from "../../values/customIcons"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
@@ -299,7 +299,7 @@ export function CreateShow() {
                     </Button>
                 </>
             ) : selectedOption === "web" ? (
-                <SvelteIsland component={WebSearch} props={{ query: values.name }} events={{ update: (e: CustomEvent<Lyrics>) => live.current.updateLyrics(e.detail || {}) }} />
+                <WebSearch query={values.name} onUpdate={(data) => live.current.updateLyrics(data || {})} />
             ) : null}
         </>
     )

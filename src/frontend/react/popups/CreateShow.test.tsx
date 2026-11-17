@@ -28,7 +28,12 @@ vi.mock("../../classes/Show", () => ({
     }
 }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/main/popups/createShow/WebSearch.svelte", () => ({ default: { isla: "WebSearch" } }))
+vi.mock("./WebSearch", () => ({
+    WebSearch: (props: { query?: string; onUpdate?: (data: unknown) => void }) => {
+        islands.WebSearch = { props: { query: props.query }, events: { update: (e: CustomEvent) => props.onUpdate?.(e.detail) } }
+        return <div data-isla="WebSearch" />
+    }
+}))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))

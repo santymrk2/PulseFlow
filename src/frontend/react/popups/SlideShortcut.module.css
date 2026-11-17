@@ -1,0 +1,7 @@
+.shortcut {
+    font-size: 4em;
+    /* color: var(--secondary); */
+    font-weight: bold;
+    text-transform: capitalize;
+    text-align: center;
+}

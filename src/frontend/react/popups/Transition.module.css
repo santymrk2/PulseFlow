@@ -1,0 +1,16 @@
+.types {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+    padding: 15px 0;
+}
+
+.types :global(button) {
+    font-weight: normal;
+    border: 2px solid var(--primary-lighter) !important;
+
+    padding: 0.6em;
+    flex-direction: column;
+    gap: 5px;
+}

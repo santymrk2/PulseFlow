@@ -73,6 +73,17 @@ import { SelectTemplate } from "./SelectTemplate"
 import { SetTime } from "./SetTime"
 import { Shortcuts } from "./Shortcuts"
 import { SlideMidi } from "./SlideMidi"
+import { SlideShortcut } from "./SlideShortcut"
+import { TemplateInfo } from "./TemplateInfo"
+import { TemplateStyleOverrides } from "./TemplateStyleOverrides"
+import { Timecode } from "./Timecode"
+import { TimelineSettings } from "./TimelineSettings"
+import { Timer } from "./Timer"
+import { Transition } from "./Transition"
+import { Unsaved } from "./Unsaved"
+import { UpdateManager } from "./UpdateManager"
+import { Variable } from "./Variable"
+import { Translate } from "./Translate"
 
 // Popups que ya viven en React. Al migrar uno, sale del mapa `popups` de components/main/popupComponents.ts y entra acá (nunca en los dos).
 export const reactPopups: Partial<Record<Popups, ElementType>> = {
@@ -147,6 +158,17 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     select_style: SelectStyle,
     select_template: SelectTemplate,
     set_time: SetTime,
+    assign_shortcut: SlideShortcut,
+    translate: Translate,
     shortcuts: Shortcuts,
+    unsaved: Unsaved,
     slide_midi: SlideMidi,
+    timeline: TimelineSettings,
+    timecode: Timecode,
+    template_info: TemplateInfo,
+    template_style_overrides: TemplateStyleOverrides,
+    timer: Timer,
+    transition: Transition,
+    update_manager: UpdateManager,
+    variable: Variable
 }
