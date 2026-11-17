@@ -1,0 +1,47 @@
+svg {
+    width: 100%;
+    height: 100%;
+}
+
+.clock-face {
+    stroke: currentcolor;
+    fill: none;
+    stroke-width: 0;
+}
+
+.fulcrum {
+    fill: currentcolor;
+}
+
+.minor {
+    stroke: currentcolor;
+    opacity: 0.5;
+    stroke-width: 0.5;
+}
+
+.major {
+    stroke: currentcolor;
+    opacity: 0.7;
+    stroke-width: 1;
+}
+
+.hour {
+    stroke: currentcolor;
+    stroke-width: 1.5;
+}
+
+.minute {
+    stroke: currentcolor;
+    stroke-width: 1;
+}
+
+.second {
+    stroke-width: 0.5;
+    stroke: currentcolor;
+    opacity: 0.8;
+}
+
+/* Equivale al tweened(1000, linear) de Svelte para el barrido de segundos. */
+.second-sweep {
+    transition: transform 1s linear;
+}
