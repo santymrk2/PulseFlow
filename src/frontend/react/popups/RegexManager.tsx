@@ -1,12 +1,24 @@
-<script lang="ts">
-    import { activePopup, globalRegexes, popupData } from "../../../stores"
-    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
-    import Button from "../../../lib/components/ui/button/button.svelte"
-    import TextField from "../../../lib/components/ui/text-field/text-field.svelte"
+import { useState } from "react"
+import { get } from "svelte/store"
+import { activePopup, globalRegexes, popupData } from "../../stores"
+import { Button } from "../ui/button/Button"
+import { HRule } from "../ui/h-rule/HRule"
+import { TextField } from "../ui/text-field/TextField"
+import { useStore } from "../hooks/useStore"
+import styles from "./RegexManager.module.css"
 
-    const regexId = $popupData.id
-    $: label = $globalRegexes[regexId]?.label || ""
-    $: pattern = $globalRegexes[regexId]?.value || ""
+// Port de components/main/popups/RegexManager.svelte. Lee popupData.id al montar (y previousPopup/previousData al volver) y globalRegexes en forma reactiva.
+// Escribe: globalRegexes[id].label/value y, al volver, popupData/activePopup. Los {@html} del original se portan con dangerouslySetInnerHTML sobre el mismo HTML generado y saneado.
+export function RegexManager() {
+    const [regexId] = useState<string>(() => get(popupData).id || "")
+    const globalRegexesValue = useStore(globalRegexes)
+    const [testInput, setTestInput] = useState("Lorem ipsum 123! test@example.com https://example.com/path?q=1&x=2 #tag (alpha)_beta +47.5%")
+
+    const label = globalRegexesValue[regexId]?.label || ""
+    const pattern = globalRegexesValue[regexId]?.value || ""
+    const isValid = validateRegex(pattern)
+    const previewHtml = getPreviewHtml(pattern, testInput)
+    const patternHtml = highlightRegexSyntax(pattern)
 
     function update(key: string, value: string) {
         globalRegexes.update((a) => {
@@ -28,17 +40,13 @@
     }
 
     function goBack() {
-        let previousPopup = $popupData.previousPopup
-        if ($popupData.previousData) popupData.set($popupData.previousData)
+        const popup = get(popupData)
+        const previousPopup = popup.previousPopup
+        if (popup.previousData) popupData.set(popup.previousData)
         if (previousPopup) activePopup.set(previousPopup)
     }
 
-    let testInput = "Lorem ipsum 123! test@example.com https://example.com/path?q=1&x=2 #tag (alpha)_beta +47.5%"
-
-    $: isValid = validateRegex(pattern)
-    $: previewHtml = getPreviewHtml(pattern, testInput)
-
-    function validateRegex(pat: string) {
+    function validateRegex(pat: string): boolean {
         const match = pat.match(/^\/(.*)\/([gimsuy]*)$/)
         if (!match) return false
         try {
@@ -49,11 +57,9 @@
         }
     }
 
-    function escapeHtml(s: string) {
+    function escapeHtml(s: string): string {
         return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
     }
-
-    $: patternHtml = highlightRegexSyntax(pattern)
 
     function highlightRegexSyntax(pat: string): string {
         const match = pat.match(/^(\/)(.*)(\/)([gimsuy]*)$/)
@@ -122,7 +128,7 @@
         return result
     }
 
-    function getPreviewHtml(pat: string, text: string) {
+    function getPreviewHtml(pat: string, text: string): string {
         if (!text) return ""
         const match = pat.match(/^\/(.*)\/([gimsuy]*)$/)
         if (!match) return escapeHtml(text)
@@ -148,116 +154,27 @@
         result += escapeHtml(text.slice(lastIndex))
         return result
     }
-</script>
 
-<Button class="popup-back" icon="back" iconSize={1.3} title="actions.back" on:click={goBack} />
+    return (
+        <>
+            <Button className="popup-back" icon="back" iconSize={1.3} title="actions.back" onClick={goBack} />
 
-<!-- inputs.name -->
-<TextField label="midi.description" value={label} on:change={(e) => update("label", e.detail)} />
-<TextField label="/regex/" value={pattern} on:change={(e) => setRegex(e.detail)} autofocus />
+            <TextField label="midi.description" value={label} onChange={(value) => update("label", value ?? "")} />
+            <TextField label="/regex/" value={pattern} onChange={(value) => setRegex(value ?? "")} autofocus />
 
-<HRule />
+            <HRule />
 
-<div class="preview">
-    {#if pattern}
-        <div class="regex-display" class:valid={isValid} class:invalid={!isValid}>
-            <code class="regex-highlight">{@html patternHtml}</code>
-            <span class="validity-badge">{isValid ? "✓" : "✗"}</span>
-        </div>
-    {/if}
+            <div className={styles.preview}>
+                {pattern ? (
+                    <div className={`${styles.regexDisplay} ${isValid ? styles.valid : styles.invalid}`}>
+                        <code className={styles.regexHighlight} dangerouslySetInnerHTML={{ __html: patternHtml }} />
+                        <span className={styles.validityBadge}>{isValid ? "✓" : "✗"}</span>
+                    </div>
+                ) : null}
 
-    <TextField label="timer.preview" value={testInput} on:change={(e) => (testInput = e.detail)} />
-    {#if testInput}
-        <div class="preview-text">{@html previewHtml}</div>
-    {/if}
-</div>
-
-<style>
-    .preview {
-        display: flex;
-        flex-direction: column;
-    }
-    .regex-display {
-        display: flex;
-        align-items: center;
-        gap: 0.5em;
-
-        padding: 0.4em 0.6em;
-        margin-bottom: 0.5em;
-
-        font-size: 0.9em;
-        background: var(--primary-darker);
-        border-radius: 4px;
-        border-left: 3px solid var(--primary-lighter);
-    }
-    .regex-display.valid {
-        border-left-color: #4caf50;
-    }
-    .regex-display.invalid {
-        border-left-color: #f44336;
-    }
-    .regex-highlight {
-        font-family: monospace;
-        font-size: 1em;
-        flex: 1;
-        word-break: break-all;
-    }
-    .validity-badge {
-        font-weight: 700;
-        font-size: 1em;
-    }
-    .regex-display.valid .validity-badge {
-        color: #4caf50;
-    }
-    .regex-display.invalid .validity-badge {
-        color: #f44336;
-    }
-    .regex-highlight :global(.rx-delim) {
-        color: #888;
-    }
-    .regex-highlight :global(.rx-flag) {
-        color: #ce93d8;
-    }
-    .regex-highlight :global(.rx-escape) {
-        color: #4dd0e1;
-    }
-    .regex-highlight :global(.rx-charclass) {
-        color: #ffb74d;
-    }
-    .regex-highlight :global(.rx-group) {
-        color: #fff176;
-    }
-    .regex-highlight :global(.rx-group-mod) {
-        color: #ffe082;
-    }
-    .regex-highlight :global(.rx-quantifier) {
-        color: #a5d6a7;
-    }
-    .regex-highlight :global(.rx-anchor) {
-        color: #ef9a9a;
-    }
-    .regex-highlight :global(.rx-alternation) {
-        color: #f48fb1;
-    }
-    .regex-highlight :global(.rx-dot) {
-        color: #4dd0e1;
-    }
-    .regex-highlight :global(.rx-literal) {
-        color: var(--text);
-    }
-    .preview-text {
-        font-family: monospace;
-        font-size: 0.95em;
-        padding: 0.4em 0.6em;
-        background: var(--primary-darker);
-        border-radius: 4px;
-        word-break: break-all;
-        white-space: pre-wrap;
-    }
-    .preview-text :global(mark) {
-        background: #f9a825;
-        color: var(--action-text);
-        border-radius: 2px;
-        padding: 0 1px;
-    }
-</style>
+                <TextField label="timer.preview" value={testInput} onChange={(value) => setTestInput(value ?? "")} />
+                {testInput ? <div className={styles.previewText} dangerouslySetInnerHTML={{ __html: previewHtml }} /> : null}
+            </div>
+        </>
+    )
+}

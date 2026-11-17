@@ -1,0 +1,40 @@
+.previewBox {
+    background-color: var(--primary-darker);
+    border: 1px solid var(--primary-lighter);
+    border-radius: 8px;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    flex: 1;
+
+    position: relative;
+}
+
+.paper {
+    background-color: white;
+    width: 100%;
+    height: auto;
+    min-width: 200px;
+    max-width: 900px;
+    zoom: 0.4;
+    overflow: auto;
+    aspect-ratio: var(--paper-aspect-ratio, 210/297);
+    align-self: center;
+}
+
+.paper::-webkit-scrollbar-track,
+.paper::-webkit-scrollbar-corner {
+    background: rgb(0 0 0 / 0.05);
+}
+.paper::-webkit-scrollbar-thumb {
+    background: rgb(0 0 0 / 0.3);
+}
+.paper::-webkit-scrollbar-thumb:hover {
+    background: rgb(0 0 0 / 0.5);
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+}

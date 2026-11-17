@@ -51,8 +51,17 @@ import { ManageGroups } from "./ManageGroups"
 import { ManageIcons } from "./ManageIcons"
 import { ManageMetadata } from "./ManageMetadata"
 import { ManageTags } from "./ManageTags"
-import { MaxLines } from "./MaxLines"
 import { KitDemoReact } from "./KitDemoReact"
+import { MediaFit } from "./MediaFit"
+import { MetadataDisplay } from "./MetadataDisplay"
+import { NewUpdate } from "./NewUpdate"
+import { NextTimer } from "./NextTimer"
+import { NodeOptions } from "./NodeOptions"
+import { NowPlaying } from "./NowPlaying"
+import { OutputSelector } from "./OutputSelector"
+import { OutputSetup } from "./OutputSetup"
+import { RegexManager } from "./RegexManager"
+import { Rename } from "./Rename"
 
 // Popups que ya viven en React. Al migrar uno, sale del mapa `popups` de components/main/popupComponents.ts y entra acá (nunca en los dos).
 export const reactPopups: Partial<Record<Popups, ElementType>> = {
@@ -107,6 +116,15 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     manage_icons: ManageIcons,
     manage_metadata: ManageMetadata,
     manage_tags: ManageTags,
-    max_lines: MaxLines,
-    kit_demo_react: KitDemoReact
+    kit_demo_react: KitDemoReact,
+    media_fit: MediaFit,
+    metadata_display: MetadataDisplay,
+    new_update: NewUpdate,
+    next_timer: NextTimer,
+    node_options: NodeOptions,
+    now_playing: NowPlaying,
+    output_selector: OutputSelector,
+    choose_output_type: OutputSetup,
+    regex_manager: RegexManager,
+    rename: Rename
 }

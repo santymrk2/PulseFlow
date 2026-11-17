@@ -12,9 +12,11 @@ import { send } from "../../utils/request"
 import { save } from "../../utils/save"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
 import { clearFields, fire } from "../test/kitMocks"
-import { clearIslands, emit, islands } from "../test/islandMock"
+import { clearIslands } from "../test/islandMock"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Export } from "./Export"
+
+const pdf = vi.hoisted(() => ({ props: null as null | { pdfOptions: Record<string, unknown>; onChange?: (o: Record<string, unknown>) => void } }))
 
 vi.mock("../../utils/common", () => ({ isMainWindow: () => false, wait: () => Promise.resolve(), newToast: vi.fn() }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
@@ -26,7 +28,12 @@ vi.mock("../../components/helpers/setShow", () => ({ loadShows: vi.fn(async () =
 vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
 vi.mock("../../components/helpers/media", () => ({ getSlideThumbnail: vi.fn() }))
 vi.mock("../../components/main/popups/export/exportHelper", async () => ({ ...(await vi.importActual<typeof import("../../components/main/popups/export/exportHelper")>("../../components/main/popups/export/exportHelper")), convertShowSlidesToImages: vi.fn() }))
-vi.mock("../../components/main/popups/export/PdfExport.svelte", () => ({ default: { isla: "PdfExport" } }))
+vi.mock("./PdfExport", () => ({
+    PdfExport: (props: { pdfOptions: Record<string, unknown>; onChange?: (o: Record<string, unknown>) => void }) => {
+        pdf.props = props
+        return null
+    }
+}))
 vi.mock("../../components/main/Loader.svelte", () => ({ default: { isla: "Loader" } }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
@@ -65,6 +72,7 @@ beforeEach(() => {
     vi.clearAllMocks()
     clearFields()
     clearIslands()
+    pdf.props = null
 })
 afterEach(() => {
     cleanup()
@@ -182,10 +190,10 @@ describe("Export", () => {
         montar({ selectedIds: ["a", "b"] })
         elegir("Shows elegidos")
         await formato("PDF")
-        const inicial = islands.PdfExport.props.pdfOptions as Record<string, unknown>
+        const inicial = pdf.props?.pdfOptions as Record<string, unknown>
         expect(inicial).toMatchObject({ type: "default", oneFile: false, grid: [3, 6], textSize: 80 })
-        emit("PdfExport", "change", { ...inicial, type: "slides" })
-        expect(islands.PdfExport.props.pdfOptions).toMatchObject({ type: "slides" })
+        act(() => pdf.props?.onChange?.({ ...inicial, type: "slides" }))
+        expect(pdf.props?.pdfOptions).toMatchObject({ type: "slides" })
         await exportar()
         expect(send).toHaveBeenCalledWith(EXPORT, ["GENERATE"], { type: "pdf", showIds: ["a", "b"], showNames: ["Uno", "Dos"], options: { ...inicial, type: "slides" }, projectItems: undefined })
     })
@@ -194,7 +202,7 @@ describe("Export", () => {
         montar({ project: true })
         elegir("Proyecto actual")
         await formato("PDF")
-        const inicial = islands.PdfExport.props.pdfOptions as Record<string, unknown>
+        const inicial = pdf.props?.pdfOptions as Record<string, unknown>
         expect(inicial.oneFile).toBe(true)
         await exportar()
         expect(send).toHaveBeenCalledWith(EXPORT, ["GENERATE"], { type: "pdf", showIds: ["a", "x", "m"], showNames: ["Uno", "", ""], options: { ...inicial, oneFile: true, name: "Mi proyecto" }, projectItems: get(projects).p1.shows })

@@ -5,16 +5,6 @@ import EffectItems from "./popups/EffectItems.svelte"
 import Translate from "./popups/localization/Translate.svelte"
 import LooksWindow from "../looks/LooksWindow.svelte"
 import KitDemo from "./popups/KitDemo.svelte"
-import MediaFit from "./popups/MediaFit.svelte"
-import MetadataDisplay from "./popups/MetadataDisplay.svelte"
-import NewUpdate from "./popups/NewUpdate.svelte"
-import NextTimer from "./popups/NextTimer.svelte"
-import NodeOptions from "./popups/NodeOptions.svelte"
-import NowPlaying from "./popups/NowPlaying.svelte"
-import OutputSelector from "./popups/OutputSelector.svelte"
-import OutputSetup from "./popups/OutputSetup.svelte"
-import RegexManager from "./popups/RegexManager.svelte"
-import Rename from "./popups/Rename.svelte"
 import ResetAll from "./popups/ResetAll.svelte"
 import Restore from "./popups/Restore.svelte"
 import SelectLook from "./popups/SelectLook.svelte"
@@ -48,34 +38,24 @@ export const popups: Partial<{ [key in Popups]: ComponentType }> = {
     select_look: SelectLook,
     select_stage_layout: SelectStageLayout,
     template_style_overrides: TemplateStyleOverrides,
-    regex_manager: RegexManager,
-    rename: Rename,
     timer: Timer,
     variable: Variable,
-    now_playing: NowPlaying,
     transition: Transition,
-    media_fit: MediaFit,
-    metadata_display: MetadataDisplay,
 
-    choose_output_type: OutputSetup,
 
-    output_selector: OutputSelector,
     set_time: SetTime,
     assign_shortcut: SlideShortcut,
     translate: Translate,
-    next_timer: NextTimer,
     update_manager: UpdateManager,
     shortcuts: Shortcuts,
     unsaved: Unsaved,
     restore: Restore,
     reset_all: ResetAll,
-    new_update: NewUpdate,
     slide_midi: SlideMidi,
     effect_items: EffectItems,
     timeline: TimelineSettings,
     timecode: Timecode,
     template_info: TemplateInfo,
-    node_options: NodeOptions,
     looks: LooksWindow,
     screen_config: ScreenConfig,
     add_shows: AddShowsModal,

@@ -1,0 +1,71 @@
+.content {
+    width: 100%;
+    display: flex;
+    overflow: auto;
+
+    min-height: 200px;
+}
+.screens {
+    --zoom: 0.08;
+    zoom: var(--zoom);
+    font-size: 20em;
+    overflow: visible;
+    position: absolute;
+    left: 50%;
+    top: calc(50% + 350px);
+}
+
+.screens :global(.lock) {
+    zoom: calc(1 / var(--zoom));
+    position: absolute;
+    top: 2px;
+    inset-inline-end: 2px;
+
+    padding: 5px !important;
+    z-index: 2;
+}
+
+.bottom {
+    position: absolute;
+    bottom: 20px;
+    inset-inline-start: 20px;
+}
+
+.screen {
+    position: absolute;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--primary);
+    outline: 40px solid var(--secondary);
+    transition: background-color 0.1s;
+}
+
+.screen:hover:not(.disabled):not(.noClick) {
+    background-color: var(--primary-lighter);
+    cursor: pointer;
+}
+
+.screen.noClick {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.screen.noClick {
+    outline: 40px solid var(--primary-lighter);
+    background-color: var(--primary-darker);
+    z-index: 1;
+}
+
+.screen:focus:not(.disabled) {
+    outline: 42px solid var(--secondary);
+    outline-offset: 0;
+}
+
+.screen :global(.previewOutput) {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: unset !important;
+}
