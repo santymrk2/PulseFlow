@@ -1,0 +1,24 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    margin-bottom: 20px;
+}
+
+.info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
+    width: 100%;
+}
+
+.name.deleted {
+    text-decoration: line-through;
+    opacity: 0.5;
+}
+.date {
+    font-size: 0.9em;
+    opacity: 0.7;
+    font-family: monospace;
+}

@@ -1,0 +1,16 @@
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    padding: 5px;
+    place-content: flex-start;
+}
+
+.stageLayout {
+    width: 25%;
+    cursor: pointer;
+}
+.stageLayout:focus {
+    outline: 1px solid var(--ring);
+    outline-offset: 2px;
+}

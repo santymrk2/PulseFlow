@@ -62,6 +62,17 @@ import { OutputSelector } from "./OutputSelector"
 import { OutputSetup } from "./OutputSetup"
 import { RegexManager } from "./RegexManager"
 import { Rename } from "./Rename"
+import { ResetAll } from "./ResetAll"
+import { Restore } from "./Restore"
+import { SelectLook } from "./SelectLook"
+import { SelectOverlay } from "./SelectOverlay"
+import { SelectShow } from "./SelectShow"
+import { SelectStageLayout } from "./SelectStageLayout"
+import { SelectStyle } from "./SelectStyle"
+import { SelectTemplate } from "./SelectTemplate"
+import { SetTime } from "./SetTime"
+import { Shortcuts } from "./Shortcuts"
+import { SlideMidi } from "./SlideMidi"
 
 // Popups que ya viven en React. Al migrar uno, sale del mapa `popups` de components/main/popupComponents.ts y entra acá (nunca en los dos).
 export const reactPopups: Partial<Record<Popups, ElementType>> = {
@@ -126,5 +137,16 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     output_selector: OutputSelector,
     choose_output_type: OutputSetup,
     regex_manager: RegexManager,
-    rename: Rename
+    rename: Rename,
+    reset_all: ResetAll,
+    restore: Restore,
+    select_look: SelectLook,
+    select_overlay: SelectOverlay,
+    select_show: SelectShow,
+    select_stage_layout: SelectStageLayout,
+    select_style: SelectStyle,
+    select_template: SelectTemplate,
+    set_time: SetTime,
+    shortcuts: Shortcuts,
+    slide_midi: SlideMidi,
 }

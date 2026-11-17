@@ -1,12 +1,17 @@
-<script>
-    import { os } from "../../../stores"
-    import { translateText } from "../../../utils/language"
-    import HRule from "../../../lib/components/ui/h-rule/h-rule.svelte"
+import { os } from "../../stores"
+import { translateText } from "../../utils/language"
+import { useStore } from "../hooks/useStore"
+import { HRule } from "../ui/h-rule/HRule"
+import styles from "./Shortcuts.module.css"
 
-    const ctrl = $os.platform === "darwin" ? "cmd" : "ctrl"
-    const alt = $os.platform === "darwin" ? "option" : "alt"
+// Port de components/main/popups/Shortcuts.svelte. Lee: os.platform (para cmd/ctrl y option/alt) y dictionary (vía translateText).
+// No escribe ningún store. Las filas "SEPARATOR" se renderizan como HRule con título traducido si la clave tiene punto.
+export function Shortcuts() {
+    const osValue = useStore(os)
+    const ctrl = osValue.platform === "darwin" ? "cmd" : "ctrl"
+    const alt = osValue.platform === "darwin" ? "option" : "alt"
 
-    const shortcuts = {
+    const shortcuts: Record<string, string> = {
         "actions.selectAll": `${ctrl} + a`,
         "edit._title_bold": `${ctrl} + b`,
         "actions.copy": `${ctrl} + c`,
@@ -71,7 +76,7 @@
         // MAC: cmd + shift + f
         // "main.quick_search": "f8",
         // F11 does not mean fullscreen on macOS (shortcuts.ts)
-        ...($os.platform === "darwin" ? {} : { "actions.fullscreen": "f11" }),
+        ...(osValue.platform === "darwin" ? {} : { "actions.fullscreen": "f11" }),
 
         // presenterKeys: "SEPARATOR",
 
@@ -89,49 +94,19 @@
 
         "media.play": `${ctrl} + Enter`
     }
-</script>
 
-<main>
-    {#each Object.entries(shortcuts) as [id, shortcut]}
-        {#if shortcut === "SEPARATOR"}
-            <HRule title={id.includes(".") ? translateText(id) : ""} />
-        {:else}
-            <div>
-                <p>{translateText(id)}</p>
-                <span class="shortcut">{shortcut}</span>
-            </div>
-        {/if}
-    {/each}
-</main>
-
-<style>
-    main {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    main div {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        gap: 10px;
-        padding-inline-start: 10px;
-    }
-    main div:nth-child(odd) {
-        background-color: rgb(0 0 20 / 0.08);
-    }
-
-    .shortcut {
-        background-color: var(--primary-darker);
-        border: 2px solid var(--primary-lighter);
-        border-radius: 3px;
-
-        font-size: 0.9em;
-        text-align: center;
-        text-transform: uppercase;
-
-        padding: 4px 10px;
-        min-width: 160px;
-    }
-</style>
+    return (
+        <main className={styles.main}>
+            {Object.entries(shortcuts).map(([id, shortcut]) =>
+                shortcut === "SEPARATOR" ? (
+                    <HRule key={id} title={id.includes(".") ? translateText(id) : ""} />
+                ) : (
+                    <div key={id}>
+                        <p>{translateText(id)}</p>
+                        <span className={styles.shortcut}>{shortcut}</span>
+                    </div>
+                )
+            )}
+        </main>
+    )
+}
