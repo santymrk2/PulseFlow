@@ -80,7 +80,8 @@ Sólo **bun** (nunca npm, yarn, pnpm ni npx).
 - **Colores:** nada de hex sueltos en `.svelte`, `.tsx` ni `className`. Se usan los tokens del tema.
 - **Datos del usuario:** nunca cambiar el formato de `.show`, proyectos ni settings. Si una tarea parece pedirlo, parar.
 - **`docs/design-reference/`** es sólo referencia visual del intento anterior en React. No se importa nada de ahí.
-- **`src/server/`** (clientes web viejos) no se compila ni se migra. No tocar.
+- **Clientes web viejos:** archivados en `docs/archivo/clientes-web-viejos/` (decisión del
+  usuario 2026-11-17). No se compilan ni se migran; no revivirlos sin una tarea en el ROADMAP.
 
 ## 6. Glosario del dominio
 

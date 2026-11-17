@@ -1848,6 +1848,11 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
   (`src-tauri/src/server/`, puertos 5510–5513) levantan pero sirven carpetas vacías. Se
   decidió (2026-10-20) dejarlos como están. Revivirlos requiere build propio, bundling,
   tipar los mensajes del server (hoy `serde_json::Value`) y prueba desde un celular.
+  **Resuelto 2026-11-17:** se archivaron en `docs/archivo/clientes-web-viejos/` con un README
+  que explica qué eran y cómo se reactivarían; se eliminó `config/typescript/tsconfig.server.json`,
+  su único consumidor. `test:budget`: errores de `svelte-check` 37 → 20, `any` 2520 → 2088,
+  hex 567 → 453, rgb 411 → 240 (presupuesto actualizado en el mismo commit). `test:unit` 1613,
+  `test:react` y `build` en verde.
 - Ítems `qr_code`, `icon`, `camera`, `web`, `visualizer`, `captions`, `metronome`, `current_output`, `chart`, `table`, `weather`, `button` y el reloj analógico en el proyector.
 - Rotación de ítems.
 - Acordes en la salida.
