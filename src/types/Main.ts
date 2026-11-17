@@ -474,7 +474,6 @@ export type Popups =
     | "add_audio_effect"
     | "now_playing"
     | "aspect_ratio"
-    | "max_lines"
     | "transition"
     | "media_fit"
     | "metadata_display"

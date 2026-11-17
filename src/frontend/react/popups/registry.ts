@@ -51,7 +51,6 @@ import { ManageGroups } from "./ManageGroups"
 import { ManageIcons } from "./ManageIcons"
 import { ManageMetadata } from "./ManageMetadata"
 import { ManageTags } from "./ManageTags"
-import { MaxLines } from "./MaxLines"
 import { KitDemoReact } from "./KitDemoReact"
 
 // Popups que ya viven en React. Al migrar uno, sale del mapa `popups` de components/main/popupComponents.ts y entra acá (nunca en los dos).
@@ -107,6 +106,5 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     manage_icons: ManageIcons,
     manage_metadata: ManageMetadata,
     manage_tags: ManageTags,
-    max_lines: MaxLines,
     kit_demo_react: KitDemoReact
 }
