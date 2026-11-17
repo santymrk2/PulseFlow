@@ -1,0 +1,73 @@
+/* Portado de Label.svelte: los :global(…) se conservan tal cual. */
+.label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background-color: var(--primary-darkest);
+
+    font-size: 0.8em;
+    /* font-weight: bold; */
+
+    height: 25px;
+    flex: 1;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+
+    width: 100%;
+    text-align: center;
+}
+
+/* edit input */
+.padding {
+    padding: 4px 5px;
+    padding-bottom: 3px;
+}
+div.label:not(.padding) :global(.icon) {
+    margin-inline-start: 3px;
+}
+.label :global(input) {
+    padding: 6px;
+}
+div.label.alignRight :global(p),
+div.label.alignRight :global(input) {
+    margin-inline-start: 20px;
+}
+div.label :global(p),
+div.label :global(input) {
+    text-align: center;
+}
+
+div.label.list {
+    height: 100%;
+    font-size: inherit;
+    padding: 4px 16px;
+    background-color: var(--primary);
+}
+
+div.label :global(.icon) {
+    position: absolute;
+}
+
+div.label .title {
+    width: 100%;
+    margin: 0 5px;
+    text-align: center;
+    overflow-x: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    /* display: flex;
+    align-items: center; / * baseline * /
+    justify-content: space-between;
+    gap: 5px; */
+}
+div.label.alignRight .title {
+    margin: 0;
+    margin-inline-start: 24px;
+}
+div.label.list .title {
+    text-align: start;
+    padding: 0 10px;
+}

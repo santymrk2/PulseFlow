@@ -1,0 +1,11 @@
+/* MediaTabs.svelte no tiene bloque <style>: acá van los estilos de los slots con nombre */
+.slot,
+.slotNoCurriculum {
+    padding: 8px;
+}
+.spaced {
+    padding-top: 12px;
+}
+.addButton {
+    width: 100%;
+}

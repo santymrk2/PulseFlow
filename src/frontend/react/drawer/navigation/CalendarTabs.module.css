@@ -1,0 +1,8 @@
+/* CalendarTabs.svelte no tiene bloque <style>: acá van los estilos del slot con nombre */
+.slot {
+    padding: 8px;
+    padding-top: 12px;
+}
+.addButton {
+    width: 100%;
+}

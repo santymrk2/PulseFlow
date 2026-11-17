@@ -42,8 +42,9 @@ export function LeftColumn() {
         } else if (next) {
             const id = next.id
             drawerTabsData.update((a) => {
-                a.shows = { ...(a.shows || { enabled: true }), activeSubTab: id }
-                return a
+                const next = { ...a }
+                next.shows = { ...(a.shows || { enabled: true }), activeSubTab: id }
+                return next
             })
         }
         leftSource.set(next)

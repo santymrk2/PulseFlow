@@ -33,8 +33,10 @@ export function PlaylistOptionsMenu({ projectId }: PlaylistOptionsMenuProps) {
 
     function update(key: "sectionsCollapsed" | "sectionsLocked", value: boolean) {
         projects.update((a) => {
-            if (a[projectId]) a[projectId][key] = value
-            return a
+            if (!a[projectId]) return a
+            const next = { ...a }
+            next[projectId] = { ...a[projectId], [key]: value }
+            return next
         })
     }
 

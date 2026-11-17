@@ -110,7 +110,9 @@
     {/if}
 
     {#if $loaded && (page === "show" || page === "edit")}
-        <LazyLoad component={() => import("./components/drawer/Drawer.svelte")} show={$loaded && (page === "show" || page === "edit")} />
+        {#await import("./react/drawer/Drawer") then drawerModule}
+            <ReactIsland component={drawerModule.Drawer} />
+        {/await}
     {/if}
 
     {#if $showChangeProfileMenu && $activeProfile !== null}

@@ -1,0 +1,10 @@
+/* ShowsTabs.svelte no tiene bloque <style>: acá van los estilos inline del slot con nombre */
+.slot {
+    padding: 8px;
+}
+.spaced {
+    padding-top: 12px;
+}
+.addButton {
+    width: 100%;
+}

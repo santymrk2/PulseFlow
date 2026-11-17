@@ -585,7 +585,7 @@ Receta sobre `components/drawer/`:
 
 Verificación extra: el audio sigue sonando y midiendo (WebAudio no cambia); medios con miniaturas; arrastrar un medio
 a la salida.
-- [ ] 17a · - [ ] 17b · - [ ] 17c · - [ ] 17d · - [ ] 17e · - [ ] 17f · - [ ] 17g · - [ ] 17h · - [ ] 17i
+- [x] 17a · - [ ] 17b · - [ ] 17c · - [ ] 17d · - [ ] 17e · - [ ] 17f · - [ ] 17g · - [ ] 17h · - [ ] 17i
 
 ### Task F24.18: Slides
 

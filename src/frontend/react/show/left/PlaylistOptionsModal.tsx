@@ -10,10 +10,10 @@ import styles from "./PlaylistOptionsModal.module.css"
 // (FULL_MODALS), así que la base (backdrop, tarjeta, header y cierre) vive en ModalBase.
 function updateSpecial(value: string | boolean | null, key: string, allowEmpty = false) {
     special.update((a) => {
-        if (!allowEmpty && !value) delete a[key]
-        else a[key] = value
-
-        return a
+        const next = { ...a }
+        if (!allowEmpty && !value) delete next[key]
+        else next[key] = value
+        return next
     })
 }
 

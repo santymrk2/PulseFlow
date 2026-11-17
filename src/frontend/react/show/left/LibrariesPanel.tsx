@@ -57,8 +57,9 @@ export function LibrariesPanel() {
         leftSource.set({ type: "library", id })
         // "nuevo show" toma la biblioteca de esta sub-pestaña
         drawerTabsData.update((a) => {
-            a.shows = { ...(a.shows || { enabled: true }), activeSubTab: id }
-            return a
+            const next = { ...a }
+            next.shows = { ...(a.shows || { enabled: true }), activeSubTab: id }
+            return next
         })
     }
 
@@ -69,9 +70,12 @@ export function LibrariesPanel() {
     function rename(id: string, value: string) {
         categories.update((a) => {
             if (!a[id]) return a
-            if (a[id].default) delete a[id].default
-            a[id].name = value
-            return a
+            const next = { ...a }
+            const entry = { ...a[id] }
+            delete entry.default
+            entry.name = value
+            next[id] = entry
+            return next
         })
     }
 
