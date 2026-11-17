@@ -11,7 +11,7 @@
 # Uso (desde cualquier carpeta):
 #   scripts/carril.sh <carpeta> <informe> "<línea del carril>"
 # Ejemplo:
-#   scripts/carril.sh ../PulseFlow-ui docs/informes/ui.md "Carril D — Interfaz. Tareas en orden: ..."
+#   scripts/carril.sh ../PulseFlow-ui docs/archivo/informes/ui.md "Carril D — Interfaz. Tareas en orden: ..."
 #
 # Variables opcionales:
 #   MODELO=opencode/big-pickle  ESPERA=600 (segundos entre intentos)  MAX=60 (intentos)
