@@ -1,12 +1,13 @@
 # División del repo en módulos — plan ejecutable (después de F24)
 
 > **Estado:** propuesta. No se movió ningún archivo, no se cambió ningún import, no se tocó código.
-> **Base medida:** rama local `main`, commit `7644d6fe` (F23 + F24 hasta F24.15e + 2 commits de limpieza).
+> **Base medida:** rama local `main`, commit `2575770f` (F23 + F24 hasta F24.15e + limpieza de código muerto
+> y archivado de los clientes web viejos).
 > **Precondición:** ejecutar recién después de `F24.25` (aceptación de la UI React). Antes de arrancar,
 > hay que registrar las tareas `F25.x` en `docs/ROADMAP.md`: este documento no crea tareas en el roadmap
 > y `AGENTS.md` no permite `TODO` sin tarea asociada.
-> **Fuera de alcance:** `src/server/` (clientes web viejos, no se compilan). La guía de ejecutores dice
-> "No tocar" hasta que el usuario decida. Sigue exactamente donde está.
+> **Fuera de alcance:** `docs/archivo/clientes-web-viejos/` (clientes web viejos, archivados el
+> 2026-11-17). No se compilan ni se migran; no revivirlos sin una tarea en el ROADMAP.
 
 ---
 
@@ -398,7 +399,8 @@ rg -n 'src/frontend|src/types|src-tauri/src/render' --glob '!docs/**' --glob '!*
 
 ## 8. Deuda que queda registrada
 
-- `src/server/` (138 archivos / 22.687 líneas) sigue en su sitio: necesita decisión del usuario.
+- `docs/archivo/clientes-web-viejos/` (138 archivos / 22.687 líneas) sigue archivado: no se
+  revivirá sin una tarea en el ROADMAP.
 - Los 121 imports inversos se arreglan en la fase de desacople (§5, antes de F25.1), no en este documento.
 - `utils/` queda repartido según criterio por archivo; conviene un `F25.x` de seguimiento para que
   no reaparezcan imports de `components/` en `core/` o `domain/`.
