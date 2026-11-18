@@ -98,7 +98,7 @@ export async function invokeCommand<T = void>(command: string, data?: any): Prom
 // indicador de estado pasa a "error" (deja el "saving" para poder reintentar).
 const PERSISTENCE_COMMANDS = new Set(["SAVE", "SET_STORE_VALUE", "SET_MEDIA_FOLDER_PATH", "UPDATE_DATA_PATH"])
 
-// Canales marcados *posponer* en el inventario de F7.1 (`PLAN.md`): no tienen
+// Canales marcados *posponer* en el inventario de F7.1: no tienen
 // comando Rust y no están previstos a corto plazo (Now Playing, providers de
 // contenido, Spotify, lyrics, PPT externo, …). Para no castigar al frontend con
 // la espera de `requestMain` (15 s), `send` responde `undefined` al instante al

@@ -135,7 +135,7 @@ input.input::-webkit-date-and-time-value {
     text-align: left;
 }
 
-/* docs/design/kit.md: borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
+/* borde de 1 px y etiqueta fija; sin relleno propio ni subrayado animado */
 .background,
 .underline {
     display: none;

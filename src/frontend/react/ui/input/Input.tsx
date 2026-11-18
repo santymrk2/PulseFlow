@@ -2,7 +2,7 @@ import { useEffect, useRef, type CSSProperties, type FormEvent, type KeyboardEve
 import { cn } from "../../../lib/utils"
 import styles from "./Input.module.css"
 
-// Port de ui/input/input.svelte. Eventos DOM reenviados (contrato de kit.md). `value` es de una vía, como en Svelte:
+// Port de ui/input/input.svelte. Eventos DOM reenviados. `value` es de una vía, como en Svelte:
 // el DOM conserva lo escrito mientras la prop no cambie.
 export interface InputProps {
     id?: string

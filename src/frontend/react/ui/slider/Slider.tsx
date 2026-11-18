@@ -2,7 +2,7 @@ import { useEffect, useRef, type CSSProperties, type FormEvent, type MouseEvent 
 import { cn } from "../../../lib/utils"
 import styles from "./Slider.module.css"
 
-// Port de ui/slider/slider.svelte. Reenvía los eventos DOM (kit.md): `value` es de una vía y el DOM conserva lo arrastrado
+// Port de ui/slider/slider.svelte. Reenvía los eventos DOM: `value` es de una vía y el DOM conserva lo arrastrado
 // mientras la prop no cambie (el `bind:value` de Svelte sólo actualizaba el estado local). `onChange` es el `change` nativo
 // (al soltar), no el de React.
 export interface SliderProps {

@@ -1,5 +1,5 @@
 /* Portado de floating-bar. `:global(…)` se conserva. */
-/* barra flotante: rectángulo con borde de 1 px (docs/design/kit.md); sin píldora, degradé ni botón redondo */
+/* barra flotante: rectángulo con borde de 1 px; sin píldora, degradé ni botón redondo */
 .row {
     --size: 32px;
     --padding: 12px;

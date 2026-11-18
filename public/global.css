@@ -32,7 +32,7 @@
 }
 
 :root {
-    /* Escala de grises (docs/design/kit.md). Los componentes usan los tokens semánticos de abajo, no ésta. */
+    /* Escala de grises. Los componentes usan los tokens semánticos de abajo, no ésta. */
     --gray-50: #fafafa;
     --gray-100: #ededed;
     --gray-200: #d4d4d4;
@@ -92,7 +92,7 @@
 
     /* Geist y Geist Mono (tema PulseFlow): las variables se cargan desde main.ts (@fontsource-variable) */
     --font-family: "Geist Variable", system-ui, -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-    /* escala de texto (docs/design/kit.md): 11 / 12 / 13 (base) / 15 / 20 px */
+    /* escala de texto: 11 / 12 / 13 (base) / 15 / 20 px */
     --text-2xs: 11px;
     --text-xs: 12px;
     --text-sm: 13px;

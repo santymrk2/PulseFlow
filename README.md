@@ -17,7 +17,7 @@
 
 ## What is PulseFlow
 
-PulseFlow is a desktop app to put text, media and video on a big screen. The control UI is built with Svelte 5 and the backend with Tauri v2 / Rust. Every output (audience screens and stage displays) is drawn by a native WGPU render engine; there is no web output.
+PulseFlow is a desktop app to put text, media and video on a big screen. The control UI is built with React 19 and the backend with Tauri v2 / Rust. Every output (audience screens and stage displays) is drawn by a native WGPU render engine; there is no web output.
 
 - Libraries, playlists and items in a single left panel.
 - Multiple outputs and stage displays, each with its own resolution and aspect ratio.
@@ -40,7 +40,7 @@ Download the latest installer from the [Releases page](https://github.com/santym
 5. `bun run setup:sidecars --only-host` (once)
 6. `bun run dev:tauri` (frontend only: `bun run dev`)
 
-Tests: `bun run test:unit`, `bun run test:react`, `bun run test:budget`, and `cd src-tauri && cargo test --lib`. The work plan lives in [`docs/ROADMAP.md`](docs/ROADMAP.md); agent rules in [`AGENTS.md`](AGENTS.md).
+Tests: `bun run test:unit`, `bun run test:react`, `bun run test:budget`, and `cd src-tauri && cargo test --lib`. Agent rules live in [`AGENTS.md`](AGENTS.md).
 
 ## Report an issue or request a feature
 

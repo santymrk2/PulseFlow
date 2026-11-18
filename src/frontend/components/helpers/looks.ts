@@ -107,8 +107,7 @@ export interface LooksMigrationResult {
 }
 
 /**
- * Migración idempotente al modelo de F10 (pura, sin stores; ver
- * `docs/design/pantallas-y-looks.md` sección "Migración"):
+ * Migración idempotente al modelo de F10 (pura, sin stores):
  *
  * 1. cada Look gana una celda LookScreen por pantalla de audiencia, copiando los
  *    campos del estilo que referenciaba (o el estilo actual de la salida);

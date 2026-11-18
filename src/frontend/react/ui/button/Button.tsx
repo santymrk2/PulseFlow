@@ -6,7 +6,7 @@ import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
 import styles from "./Button.module.css"
 
-// Port de ui/button/button.svelte (F14.8a). Contrato de eventos (docs/design/kit.md): onClick y onDblClick reciben
+// Port de ui/button/button.svelte (F14.8a). Contrato de eventos: onClick y onDblClick reciben
 // el `detail` de modificadores y objetivo, y el evento como segundo argumento.
 export interface ButtonClickDetail {
     ctrl: boolean

@@ -323,8 +323,7 @@ const updateList: { [key in SaveListSettings | SaveListSyncedSettings]: any } = 
     language: (v: any) => {
         // F25.6: public/lang/ sólo conserva en.json y es.json. Un valor persistido
         // de los otros 29 idiomas se migra a "en", el mismo fallback que
-        // setLanguage() ya aplicaba a un locale no reconocido (decisión documentada
-        // en docs/propuestas/idiomas.md). Así la migración es explícita y no depende
+        // setLanguage() ya aplicaba a un locale no reconocido. Así la migración es explícita y no depende
         // de que falle la carga de un JSON que ya no existe.
         const saved: string = typeof v === "string" ? v : ""
         const locale = Object.keys(languages).includes(saved) ? saved : "en"

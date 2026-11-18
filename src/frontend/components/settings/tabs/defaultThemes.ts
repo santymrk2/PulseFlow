@@ -2,7 +2,7 @@ import type { Themes } from "../../../../types/Settings"
 
 export const defaultThemes: { [key: string]: Themes } = {
     // Tema por defecto "PulseFlow": los valores del tema `.dark` de la referencia
-    // (docs/design-reference/index.css) mapeados por valor según la tabla de F6.1.
+    // mapeados por valor según la tabla de F6.1.
     default: {
         name: "PulseFlow",
         default: true,
@@ -11,7 +11,7 @@ export const defaultThemes: { [key: string]: Themes } = {
             size: "13px"
         },
         colors: {
-            // monocromo (docs/design/kit.md); los mismos valores están en public/global.css
+            // monocromo; los mismos valores están en public/global.css
             primary: "#0a0a0a", // --bg
             "primary-lighter": "#1f1f1f", // gris 850
             "primary-darker": "#0a0a0a", // = --bg: las zonas se separan con bordes, no con fondos
