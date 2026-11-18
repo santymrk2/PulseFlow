@@ -4,7 +4,6 @@ import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePlaylist, activePopup, activeRename, audioFolders, audioPlaylists, drawerTabsData, effectsLibrary, labelsDisabled, media, outLocked, selectAllAudio, selected } from "../../../stores"
 import { commonMock } from "../../test/mockCommon"
-import { clearIslands, islands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { Audio } from "./Audio"
 
@@ -24,10 +23,8 @@ vi.mock("../../../audio/audioPlayer", () => ({
 }))
 vi.mock("../../../audio/audioPlaylist", () => ({ AudioPlaylist: { update: vi.fn(), start: vi.fn(), stop: vi.fn() } }))
 vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../components/drawer/live/Microphones.svelte", () => ({ default: { isla: "Microphones" } }))
-vi.mock("../../../components/drawer/live/AudioStreams.svelte", () => ({ default: { isla: "AudioStreams" } }))
-
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
+vi.mock("../live/Microphones", () => ({ Microphones: () => <div data-testid="microphones" /> }))
+vi.mock("../live/AudioStreams", () => ({ AudioStreams: () => <div data-testid="audio-streams" /> }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
 vi.mock("../../ui/button/Button", () => ({
@@ -50,7 +47,6 @@ let restaurar: () => void = () => {}
 
 beforeEach(() => {
     vi.clearAllMocks()
-    clearIslands()
     restaurar = setStoresForTest([looseEntry(audioPlaylists, {}), looseEntry(audioFolders, {}), looseEntry(drawerTabsData, {}), looseEntry(effectsLibrary, []), looseEntry(media, {}), looseEntry(outLocked, false), looseEntry(labelsDisabled, false), looseEntry(activePlaylist, null), looseEntry(selectAllAudio, false), looseEntry(selected, null), looseEntry(activePopup, null), looseEntry(activeRename, "")])
 })
 
@@ -60,18 +56,18 @@ afterEach(() => {
 })
 
 describe("Audio", () => {
-    it("muestra las pestañas de inputs y la isla de microphones", () => {
+    it("muestra las pestañas de inputs y el port de microphones", () => {
         render(<Audio active="inputs" />)
         expect(screen.getByText("live.microphones")).toBeTruthy()
         expect(screen.getByText("live.audio_streams")).toBeTruthy()
-        expect(islands["Microphones"]).toBeTruthy()
+        expect(screen.getByTestId("microphones")).toBeTruthy()
     })
 
     it("cambia a audio streams al elegir la pestaña", () => {
         render(<Audio active="inputs" />)
         const tab = screen.getAllByRole("button").find((button) => button.textContent === "live.audio_streams")
         fireEvent.click(tab as Element)
-        expect(islands["AudioStreams"]).toBeTruthy()
+        expect(screen.getByTestId("audio-streams")).toBeTruthy()
     })
 
     it("monta el metrónomo React cuando está activo", () => {

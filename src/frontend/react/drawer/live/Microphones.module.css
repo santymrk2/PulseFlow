@@ -1,0 +1,6 @@
+/* Port del <style> de Microphones.svelte. */
+.row {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}

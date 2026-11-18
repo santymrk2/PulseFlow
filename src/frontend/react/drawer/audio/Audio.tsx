@@ -11,7 +11,6 @@ import { clone, keysToID, sortFilenames } from "../../../components/helpers/arra
 import { splitPath } from "../../../components/helpers/get"
 import { getExtension, getFileName, getMediaType } from "../../../components/helpers/media"
 import { joinTime, secondsToTime } from "../../../components/helpers/time"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { Icon } from "../../helpers/Icon"
 import { T } from "../../helpers/T"
 import { useStore } from "../../hooks/useStore"
@@ -20,15 +19,15 @@ import { FloatingBar } from "../../ui/floating-bar/FloatingBar"
 import { NumberField } from "../../ui/number-field/NumberField"
 import { Center } from "../../system/Center"
 import { DropArea } from "../../system/DropArea"
-import MicrophonesSvelte from "../../../components/drawer/live/Microphones.svelte"
-import AudioStreamsSvelte from "../../../components/drawer/live/AudioStreams.svelte"
+import { AudioStreams } from "../live/AudioStreams"
+import { Microphones } from "../live/Microphones"
 import { Folder } from "../media/Folder"
 import { AudioFile } from "./AudioFile"
 import { AudioEffect } from "./effects/AudioEffect"
 import { Metronome } from "./Metronome"
 import styles from "./Audio.module.css"
 
-// Port de components/drawer/audio/Audio.svelte. Los inputs live siguen como SvelteIsland (se migran en F24.17f).
+// Port de components/drawer/audio/Audio.svelte. Los inputs live son ports React (F24.17f).
 export interface AudioProps {
     active: string | null
 }
@@ -247,8 +246,8 @@ export function Audio({ active }: AudioProps) {
 
     function renderContent() {
         if (active === "inputs") {
-            if (inputsTab === "microphones") return <SvelteIsland component={MicrophonesSvelte} />
-            if (inputsTab === "audio_streams") return <SvelteIsland component={AudioStreamsSvelte} />
+            if (inputsTab === "microphones") return <Microphones />
+            if (inputsTab === "audio_streams") return <AudioStreams />
             return null
         }
         if (active === "metronome") return <Metronome />

@@ -1,0 +1,14 @@
+/* Port del <style> de Capture.svelte. */
+.video {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.canvas {
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1920/1080;
+    object-fit: contain;
+}

@@ -1,0 +1,18 @@
+/* Port del <style> de LiveInfo.svelte. */
+.scroll {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.video {
+    background-color: black;
+    aspect-ratio: 16/9;
+}
+
+.bottom {
+    display: flex;
+    flex-direction: column;
+}

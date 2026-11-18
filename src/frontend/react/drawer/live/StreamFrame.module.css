@@ -1,0 +1,6 @@
+/* Port del <style> de NDIStream.svelte y OMTStream.svelte. */
+.canvas {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}

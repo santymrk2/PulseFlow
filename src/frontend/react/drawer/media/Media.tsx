@@ -11,13 +11,14 @@ import { countFolderMediaItems, getExtension, getFileName, getMediaType, isMedia
 import { getFirstActiveOutput, setOutput } from "../../../components/helpers/output"
 import { clearBackground } from "../../../components/output/clear"
 import { translateText } from "../../../utils/language"
-import BmdStreamsSvelte from "../../../components/drawer/live/BMDStreams.svelte"
-import CamerasSvelte from "../../../components/drawer/live/Cameras.svelte"
-import NdiStreamsSvelte from "../../../components/drawer/live/NDIStreams.svelte"
-import OmtStreamsSvelte from "../../../components/drawer/live/OMTStreams.svelte"
-import ScreensSvelte from "../../../components/drawer/live/Screens.svelte"
-import WindowsSvelte from "../../../components/drawer/live/Windows.svelte"
 import PlayerVideosSvelte from "../../../components/drawer/player/PlayerVideos.svelte"
+import { BMDStreams } from "../live/BMDStreams"
+import { Cameras } from "../live/Cameras"
+import { NDIStreams } from "../live/NDIStreams"
+import { OMTStreams } from "../live/OMTStreams"
+import { Screens } from "../live/Screens"
+import { Windows } from "../live/Windows"
+import type { InputSelectDetail } from "../live/types"
 import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { Icon } from "../../helpers/Icon"
 import { T } from "../../helpers/T"
@@ -38,7 +39,7 @@ import { loadFromPixabay } from "../../../components/drawer/media/pixabay"
 import { loadFromUnsplash } from "../../../components/drawer/media/unsplash"
 import styles from "./Media.module.css"
 
-// Port de components/drawer/media/Media.svelte. Los hijos aún no migrados (live/*, PlayerVideos) siguen como SvelteIsland.
+// Port de components/drawer/media/Media.svelte. Las listas de live/* son ports React; PlayerVideos sigue como SvelteIsland.
 export interface MediaProps {
     active: string | null
     streams: MediaStream[]
@@ -499,19 +500,15 @@ export function Media({ active, streams }: MediaProps) {
         }
         if (active === "online" && onlineTab === "canva") return <Canva />
         if (active === "inputs") {
-            const inputComponents = {
-                cameras: CamerasSvelte,
-                screens: ScreensSvelte,
-                ndi: NdiStreamsSvelte,
-                omt: OmtStreamsSvelte,
-                blackmagic: BmdStreamsSvelte
-            }
-            const Component = inputComponents[inputsTab as keyof typeof inputComponents]
-            const onInputClick = ({ detail }: { detail: { event: ReactMouseEvent; cam?: { id: string; name: string }; screen?: { id: string; name: string; group?: string } } }) => clickInput(detail.event, (detail.cam || detail.screen)!, inputsTab === "cameras" ? "camera" : inputsTab === "screens" ? "screen" : inputsTab)
+            const onInputClick = ({ event, cam, screen }: InputSelectDetail) => clickInput(event, (cam || screen)!, inputsTab === "cameras" ? "camera" : inputsTab === "screens" ? "screen" : inputsTab)
             return (
                 <div className={styles.gridgap}>
-                    {Component ? <SvelteIsland component={Component} props={{ streams }} events={{ click: onInputClick }} /> : null}
-                    {inputsTab === "screens" ? <SvelteIsland component={WindowsSvelte} props={{ streams }} events={{ click: onInputClick }} /> : null}
+                    {inputsTab === "cameras" ? <Cameras onClick={onInputClick} /> : null}
+                    {inputsTab === "screens" ? <Screens streams={streams} onClick={onInputClick} /> : null}
+                    {inputsTab === "screens" ? <Windows streams={streams} onClick={onInputClick} /> : null}
+                    {inputsTab === "ndi" ? <NDIStreams onClick={onInputClick} /> : null}
+                    {inputsTab === "omt" ? <OMTStreams onClick={onInputClick} /> : null}
+                    {inputsTab === "blackmagic" ? <BMDStreams onClick={onInputClick} /> : null}
                 </div>
             )
         }

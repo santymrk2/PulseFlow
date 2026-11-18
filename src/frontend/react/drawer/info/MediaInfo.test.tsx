@@ -14,7 +14,7 @@ vi.mock("../../../components/helpers/media", async () => {
     const actual = await vi.importActual<typeof import("../../../components/helpers/media")>("../../../components/helpers/media")
     return { ...actual, getMediaInfo: vi.fn(() => Promise.resolve(null)) }
 })
-vi.mock("../../../components/drawer/live/LiveInfo.svelte", () => ({ default: { isla: "LiveInfo" } }))
+vi.mock("../live/LiveInfo", () => ({ LiveInfo: ({ optionsOpen }: { optionsOpen: boolean }) => <div data-testid="live-info" data-open={optionsOpen} /> }))
 vi.mock("../../../components/system/Clock.svelte", () => ({ default: { isla: "Clock" } }))
 vi.mock("../../../components/system/Date.svelte", () => ({ default: { isla: "Date" } }))
 vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
@@ -61,7 +61,7 @@ describe("MediaInfo", () => {
         restaurar()
         restaurar = setStoresForTest([looseEntry(activeRecording, {}), looseEntry(drawerTabsData, { media: { activeSubTab: "files" } })])
         render(<MediaInfo optionsOpen={false} />)
-        expect(islands["LiveInfo"]?.props).toEqual({ optionsOpen: false })
+        expect(screen.getByTestId("live-info").getAttribute("data-open")).toBe("false")
     })
 
     it("delega en PlayerInfo en la pestaña online", () => {

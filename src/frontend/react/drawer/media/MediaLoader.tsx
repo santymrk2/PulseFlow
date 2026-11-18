@@ -10,9 +10,9 @@ import { getStyleResolution } from "../../../components/slide/getStyleResolution
 import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
 import CameraSvelte from "../../../components/output/Camera.svelte"
-import CaptureSvelte from "../../../components/drawer/live/Capture.svelte"
-import NdiStreamSvelte from "../../../components/drawer/live/NDIStream.svelte"
-import OmtStreamSvelte from "../../../components/drawer/live/OMTStream.svelte"
+import { Capture } from "../live/Capture"
+import { NDIStream } from "../live/NDIStream"
+import { OMTStream } from "../live/OMTStream"
 import styles from "./MediaLoader.module.css"
 
 // Port de components/drawer/media/MediaLoader.svelte.
@@ -243,11 +243,11 @@ export function MediaLoader({ name = "", path, thumbnailPath = "", loadFullImage
                     <SvelteIsland component={CameraSvelte} props={{ id: path, groupId: cameraGroup, class: "media", style: getStyleResolution({ width: videoElem?.videoWidth || 0, height: videoElem?.videoHeight || 0 }, width, height, "cover"), preview: true }} events={{ loaded: () => setLoaded(true) }} />
                 </div>
             ) : mediaType === "screen" ? (
-                <SvelteIsland component={CaptureSvelte} props={{ screen: { id: path, name }, streams: [], background: true }} />
+                <Capture screen={{ id: path, name }} streams={[]} background />
             ) : mediaType === "ndi" ? (
-                <SvelteIsland component={NdiStreamSvelte} props={{ screen: { id: path, name }, background: true }} />
+                <NDIStream screen={{ id: path, name }} background />
             ) : mediaType === "omt" ? (
-                <SvelteIsland component={OmtStreamSvelte} props={{ screen: { id: path, name }, background: true }} />
+                <OMTStream screen={{ id: path, name }} background />
             ) : readyToLoad ? (
                 <>
                     {!(ghost && !thumbnailPath) && (mediaType !== "video" || (thumbnailPath && retryCount <= MAX_RETRIES)) ? (

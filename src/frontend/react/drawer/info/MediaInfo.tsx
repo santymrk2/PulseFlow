@@ -5,10 +5,10 @@ import { activeRecording, activeShow, cloudSyncData, drawerTabsData, special } f
 import { videoExtensions } from "../../../values/extensions"
 import { formatBytes } from "../../../components/helpers/bytes"
 import { getExtension, getFileName, getMediaInfo, removeExtension } from "../../../components/helpers/media"
-import LiveInfo from "../../../components/drawer/live/LiveInfo.svelte"
 import Clock from "../../../components/system/Clock.svelte"
 import Date from "../../../components/system/Date.svelte"
 import { SvelteIsland } from "../../bridge/SvelteIsland"
+import { LiveInfo } from "../live/LiveInfo"
 import { useStore } from "../../hooks/useStore"
 import { T } from "../../helpers/T"
 import { Button } from "../../ui/button/Button"
@@ -19,7 +19,7 @@ import { InfoMetadata, type InfoMetadataEntry } from "./InfoMetadata"
 import { PlayerInfo } from "./PlayerInfo"
 import styles from "./MediaInfo.module.css"
 
-// Port de components/drawer/info/MediaInfo.svelte. LiveInfo, Clock y Date siguen en Svelte.
+// Port de components/drawer/info/MediaInfo.svelte. LiveInfo es port React; Clock y Date siguen en Svelte.
 export interface MediaInfoProps {
     optionsOpen: boolean
 }
@@ -87,7 +87,7 @@ export function MediaInfo({ optionsOpen }: MediaInfoProps) {
         sendMain(Main.BUNDLE_MEDIA_FILES, { openFolder: true })
     }
 
-    if (subTab === "inputs" || recording) return <SvelteIsland component={LiveInfo} props={{ optionsOpen }} />
+    if (subTab === "inputs" || recording) return <LiveInfo optionsOpen={optionsOpen} />
     if (subTab === "online") return <PlayerInfo optionsOpen={optionsOpen} />
 
     return (
