@@ -21,7 +21,7 @@ interface ActiveAudio {
     data?: { isMic?: boolean }
 }
 
-// Port de components/show/AudioPreview.svelte (F24.20a).
+// (F24.20a).
 export function AudioPreview({ active }: AudioPreviewProps) {
     const currentFocusMode = useStore(focusMode)
     const currentMedia = useStore(media)

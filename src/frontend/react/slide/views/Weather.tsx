@@ -23,7 +23,7 @@ function toGlobalISO(time: number | string) {
     return `${currentTime.getFullYear()}-${(currentTime.getMonth() + 1).toString().padStart(2, "0")}-${currentTime.getDate().toString().padStart(2, "0")}T${currentTime.getHours().toString().padStart(2, "0")}:${currentTime.getMinutes().toString().padStart(2, "0")}:${currentTime.getSeconds().toString().padStart(2, "0")}Z`
 }
 
-// Port de components/slide/views/Weather.svelte (F24.18a).
+// (F24.18a).
 export function Weather({ data }: WeatherProps) {
     const format = useStore(timeFormat)
     const [updated, setUpdated] = useState("")

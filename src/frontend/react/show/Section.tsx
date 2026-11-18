@@ -47,7 +47,7 @@ interface ProjectData {
     modified?: number
 }
 
-// Port de components/show/Section.svelte (F24.20a).
+// (F24.20a).
 export function Section({ section }: SectionProps) {
     const currentActions = useStore(actions)
     const currentActiveProject = useStore(activeProject)

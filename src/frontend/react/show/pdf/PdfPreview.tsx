@@ -41,7 +41,7 @@ function getId(text: string) {
     return typeof text === "string" ? text.replace(/[^a-zA-Z0-9]+/g, "") : ""
 }
 
-// Port de components/show/pdf/PdfPreview.svelte (F24.20a).
+// (F24.20a).
 export function PdfPreview({ show, index }: PdfPreviewProps) {
     const currentActiveProject = useStore(activeProject)
     const currentFocusMode = useStore(focusMode)

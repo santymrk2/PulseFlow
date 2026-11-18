@@ -17,7 +17,6 @@ import { useStore } from "../../hooks/useStore"
 // El Svelte original escribía `input.relative` e `input.input` sobre el detail de EditValues (tipado como any).
 type ItemStyleInput = EditInput & { relative?: boolean; input?: string }
 
-// Port de components/stage/tools/ItemStyle.svelte (F24.19a).
 // `EditValues` sigue en Svelte (F24.21a): se monta como isla y su `dispatch("change", input)` llega como events.change.
 export function ItemStyle() {
     const currentActiveStage = useStore(activeStage)

@@ -8,7 +8,6 @@ export interface AnalogClockProps {
     seconds?: boolean
 }
 
-// Port de components/system/AnalogClock.svelte (F24.18a).
 // El tweened(1000ms, linear) de Svelte se replica con una transición CSS
 // sobre el ángulo de la aguja de segundos.
 export function AnalogClock({ date, h, m, s, seconds = true }: AnalogClockProps) {

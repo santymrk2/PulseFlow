@@ -16,7 +16,7 @@ export interface FocusItemProps {
     show: ProjectShowRef
 }
 
-// Port de components/show/focus/FocusItem.svelte (F24.20a).
+// (F24.20a).
 export function FocusItem({ show }: FocusItemProps) {
     const currentOutputs = useStore(outputs)
     const currentShowsCache = useStore(showsCache)

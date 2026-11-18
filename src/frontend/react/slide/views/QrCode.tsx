@@ -9,7 +9,7 @@ export interface QrCodeProps {
     edit?: boolean
 }
 
-// Port de components/slide/views/QrCode.svelte (F24.18a). La generación (M con respaldo L y los tres
+// (F24.18a). La generación (M con respaldo L y los tres
 // reemplazos del SVG) se conserva igual: el `{@html}` original pasa a dangerouslySetInnerHTML con la misma fuente.
 function generate(data: string, qrColor: string, qrBg: string): string {
     let svg = ""

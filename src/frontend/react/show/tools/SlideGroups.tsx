@@ -41,7 +41,7 @@ interface GlobalGroupSetting {
     shortcut?: string
 }
 
-// Port de components/show/tools/SlideGroups.svelte (F24.20a).
+// (F24.20a).
 export function SlideGroups() {
     const currentActiveShow = useStore(activeShow)
     const currentCachedShowsData = useStore(cachedShowsData)

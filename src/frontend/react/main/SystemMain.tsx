@@ -8,7 +8,7 @@ export interface SystemMainProps {
     children: (size: { width: number; height: number; resolution: ReturnType<typeof getResolution> }) => ReactNode
 }
 
-// Port de components/system/Main.svelte: expone width/height/resolution a sus hijos (render prop).
+// Expone width/height/resolution a sus hijos (render prop).
 export function SystemMain({ children }: SystemMainProps) {
     const outputsValue = useStore(outputs)
     const stylesValue = useStore(styles)

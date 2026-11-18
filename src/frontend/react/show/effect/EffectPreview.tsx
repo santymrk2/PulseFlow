@@ -12,7 +12,7 @@ export interface EffectPreviewProps {
     show: Show
 }
 
-// Port de components/show/effect/EffectPreview.svelte (F24.20a).
+// (F24.20a).
 export function EffectPreview({ show }: EffectPreviewProps) {
     const currentEffects = useStore(effects)
     const currentOutputs = useStore(outputs)

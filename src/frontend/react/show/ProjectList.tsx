@@ -24,7 +24,7 @@ export interface ProjectListProps {
     selectedId?: string | null
 }
 
-// Port de components/show/ProjectList.svelte (F24.20a).
+// (F24.20a).
 export function ProjectList({ tree, readOnly = false, selectedId }: ProjectListProps) {
     const currentActiveProfile = useStore(activeProfile)
     const currentActiveProject = useStore(activeProject)
@@ -44,7 +44,8 @@ export function ProjectList({ tree, readOnly = false, selectedId }: ProjectListP
 
     useEffect(() => {
         openedFolders.set([...new Set(currentOpenedFolders.filter((id) => currentFolders[id]))])
-        setTimeout(() => setStartLoading(true), 20)
+        const timeout = setTimeout(() => setStartLoading(true), 20)
+        return () => clearTimeout(timeout)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 

@@ -8,7 +8,7 @@ export interface IconItemProps {
     ratio?: number
 }
 
-// Port de components/slide/views/IconItem.svelte (F24.18a).
+// (F24.18a).
 export function IconItem({ item, ratio = 1 }: IconItemProps) {
     const customColor = typeof item?.style === "string" && item.style.includes("color:") && !item.style.includes("color:;")
 

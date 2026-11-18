@@ -21,7 +21,7 @@ interface WindowInfo {
     name: string
 }
 
-// Port de components/show/ppt/ScreenCapture.svelte (F24.20a).
+// (F24.20a).
 export function ScreenCapture({ path = "" }: ScreenCaptureProps) {
     const currentPresentationData = useStore(presentationData)
     const currentProjects = useStore(projects)

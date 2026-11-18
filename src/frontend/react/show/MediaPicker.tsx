@@ -17,7 +17,7 @@ export interface MediaPickerProps {
     onPicked?: (files: string | string[]) => void
 }
 
-// Port de components/show/MediaPicker.svelte (F24.20a). `dispatch("picked")` → onPicked; `<slot />` → children.
+// (F24.20a). `dispatch("picked")` → onPicked; `<slot />` → children.
 export function MediaPicker({ id, filter, title = "", multiple = false, clearOnClick = false, center = true, style, children, slotHost, onPicked }: MediaPickerProps) {
     const slotRef = useRef<HTMLSpanElement>(null)
 

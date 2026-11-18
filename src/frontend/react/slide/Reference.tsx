@@ -18,7 +18,7 @@ export interface ReferenceProps {
     show: Show
 }
 
-// Port de components/slide/Reference.svelte (F24.18b).
+// (F24.18b).
 export function Reference({ showId, show }: ReferenceProps) {
     const currentActiveShow = useStore(activeShow)
     const currentDrawer = useStore(drawer)

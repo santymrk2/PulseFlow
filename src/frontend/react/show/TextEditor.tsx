@@ -19,7 +19,7 @@ export interface TextEditorProps {
     currentShow?: Show
 }
 
-// Port de components/show/TextEditor.svelte (F24.20a). El índice de caja de texto es estado local, como en Svelte.
+// (F24.20a). El índice de caja de texto es estado local, como en Svelte.
 export function TextEditor({ currentShow }: TextEditorProps) {
     const zoom = useStore(textEditZoom)
     const [itemIndex, setItemIndex] = useState(0)

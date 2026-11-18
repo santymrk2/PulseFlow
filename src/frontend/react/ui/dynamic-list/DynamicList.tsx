@@ -4,7 +4,7 @@ import { Center } from "../../system/Center"
 import { Button } from "../button/Button"
 import { InputRow } from "../input-row/InputRow"
 
-// Port de ui/dynamic-list/dynamic-list.svelte. dispatch("open"|"delete", id) → onOpen/onDelete(id); dispatch("add") → onAdd();
+// dispatch("open"|"delete", id) → onOpen/onDelete(id); dispatch("add") → onAdd();
 // `<slot {item} />` → children(item). El `{#each}` no tenía key: se usa la posición.
 export interface DynamicListItem {
     id: string

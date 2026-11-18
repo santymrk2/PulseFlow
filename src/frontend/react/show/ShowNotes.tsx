@@ -20,7 +20,7 @@ interface ShowWithLayouts {
     layouts?: Record<string, { notes?: string }>
 }
 
-// Port de components/show/ShowNotes.svelte (F24.20a). `{@html formatLinks(note)}` se conserva con la misma fuente.
+// (F24.20a). `{@html formatLinks(note)}` se conserva con la misma fuente.
 export function ShowNotes() {
     const currentActiveShow = useStore(activeShow)
     const currentShowsCache = useStore(showsCache)

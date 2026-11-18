@@ -30,7 +30,7 @@ interface PresentationStat {
     slides: number
 }
 
-// Port de components/show/ppt/PowerPointPreview.svelte (F24.20a). `<svelte:window on:keydown>` → listener de window.
+// (F24.20a). `<svelte:window on:keydown>` → listener de window.
 export function PowerPointPreview({ show }: PowerPointPreviewProps) {
     const currentApps = useStore(presentationApps)
     const currentPresentationData = useStore(presentationData)

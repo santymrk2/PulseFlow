@@ -16,7 +16,7 @@ export interface SkeletonSlideProps {
     onClick?: (event: MouseEvent<HTMLDivElement>) => void
 }
 
-// Port de components/slide/SkeletonSlide.svelte (F24.18b).
+// (F24.18b).
 export function SkeletonSlide({ slide, index, color, columns = 1, active = false, onClick }: SkeletonSlideProps) {
     const currentOutputs = useStore(outputs)
     const currentPreviewOutputId = useStore(previewOutputId)

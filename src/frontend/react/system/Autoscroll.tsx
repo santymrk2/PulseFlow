@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type R
 import { cn } from "../../lib/utils"
 import styles from "./Autoscroll.module.css"
 
-// Port de components/system/Autoscroll.svelte. dispatch("wheel", { event }) → onWheel({ event }) con el evento nativo.
+// dispatch("wheel", { event }) → onWheel({ event }) con el evento nativo.
 // `bind:scrollElem` → `scrollElem`: ref que el padre pasa y que apunta al div. `$: if (offset >= 0) scroll(0)` no corre
 // al montar (en Svelte 5 el `$:` corre antes de que exista el DOM, con scrollElem null: no hacía nada), sólo al cambiar `offset`.
 export interface AutoscrollProps {

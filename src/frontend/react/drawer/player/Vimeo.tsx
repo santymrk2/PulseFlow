@@ -23,7 +23,7 @@ export interface VimeoProps {
     onLoaded?: () => void
 }
 
-// Port de components/drawer/player/Vimeo.svelte (F24.20c, rezagado F24.17h).
+// (F24.20c, rezagado F24.17h).
 export function Vimeo({ videoData = { paused: false, muted: true, loop: false, duration: 0 }, onVideoDataChange, videoTime = 0, onVideoTimeChange, actualVideoTime = 0, onActualVideoTimeChange, id, preview = false, onLoaded }: VimeoProps) {
     const currentFocusMode = useStore(focusMode)
     const currentTheme = useStore(theme)

@@ -13,7 +13,7 @@ import { Center } from "../../system/Center"
 import { FocusItem } from "./FocusItem"
 import styles from "./FocusMode.module.css"
 
-// Port de components/show/focus/FocusMode.svelte (F24.20a).
+// (F24.20a).
 export function FocusMode() {
     const currentActiveProject = useStore(activeProject)
     const currentProjects = useStore(projects)

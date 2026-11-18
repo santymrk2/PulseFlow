@@ -62,7 +62,7 @@ function useHost(host: HTMLElement | null | undefined, ref: { current: HTMLDivEl
     }, [host, active, ref])
 }
 
-// Port de components/show/VideoShow.svelte (F24.20a).
+// (F24.20a).
 export function VideoShow({ mediaPath, show, mediaStyle = {}, videoData: videoDataProp, videoTime: videoTimeProp, onVideoDataChange, onVideoTimeChange, playerHost, sliderHost, controlsHost }: VideoShowProps) {
     const defaultVideoData: VideoData = { paused: false, muted: true, duration: 0, loop: false, softLoop: 0 }
     const currentProjects = useStore(projects)

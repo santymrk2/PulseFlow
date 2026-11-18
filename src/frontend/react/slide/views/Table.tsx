@@ -47,7 +47,7 @@ const DEFAULT_TABLE: TableData = {
     ]
 }
 
-// Port de components/slide/views/Table.svelte (F24.18a).
+// (F24.18a).
 export function Table({ item, edit = false, ref = {}, ratio = 1, index = -1 }: TableProps) {
     const [tableData, setTableData] = useState<TableData>(() => item.table || clone(DEFAULT_TABLE))
     const containerRef = useRef<HTMLDivElement | null>(null)

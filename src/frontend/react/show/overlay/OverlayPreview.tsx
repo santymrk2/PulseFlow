@@ -12,7 +12,7 @@ export interface OverlayPreviewProps {
     show: Show
 }
 
-// Port de components/show/overlay/OverlayPreview.svelte (F24.20a).
+// (F24.20a).
 export function OverlayPreview({ show }: OverlayPreviewProps) {
     const currentOverlays = useStore(overlays)
     const currentOutputs = useStore(outputs)

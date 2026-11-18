@@ -21,7 +21,7 @@ export interface HighlightedNotesProps {
 
 const TIME = 100
 
-// Port de components/show/tools/HighlightedNotes.svelte (F24.20a). `{@html highlightedText}` se conserva con el mismo escape.
+// (F24.20a). `{@html highlightedText}` se conserva con el mismo escape.
 export function HighlightedNotes({ value: valueProp, placeholder = "", disabled = false, lines = 4, autofocus = false, className, style, onEdit, onChange, onKeydown }: HighlightedNotesProps) {
     const [value, setValue] = usePropState(valueProp)
     const currentGroups = useStore(groups)

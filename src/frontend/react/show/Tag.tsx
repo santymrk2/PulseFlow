@@ -18,7 +18,7 @@ interface QuickAccess {
     tags?: string[]
 }
 
-// Port de components/show/Tag.svelte (F24.20a). `bind:edit` → edit/onEditChange, `on:edit` → onEdit.
+// (F24.20a). `bind:edit` → edit/onEditChange, `on:edit` → onEdit.
 export function Tag({ tag, active = false }: TagProps) {
     const tagId = tag.id || ""
     const currentGlobalTags = useStore(globalTags)

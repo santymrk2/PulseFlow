@@ -22,7 +22,7 @@ export interface MediaItemProps {
     cropPreviewMode?: boolean
 }
 
-// Port de components/slide/views/MediaItem.svelte (F24.18a).
+// (F24.18a).
 export function MediaItem({ item, outputId = "", slideRef = {}, preview = false, miniPreview = false, edit = false, cropPreviewMode = false }: MediaItemProps) {
     const currentStyles = useStore(styles)
     const currentOutputs = useStore(outputs)

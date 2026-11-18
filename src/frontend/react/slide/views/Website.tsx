@@ -15,7 +15,7 @@ export interface WebsiteProps {
     outputId?: string
 }
 
-// Port de components/slide/views/Website.svelte (F24.18a). La acción `use:attachPersistentWebview` se reproduce
+// (F24.18a). La acción `use:attachPersistentWebview` se reproduce
 // con un ref: se crea al montar, se le llama a `update` al cambiar las opciones y se destruye al desmontar.
 export function Website({ src, zoom, disablePreview = false, outputId = "" }: WebsiteProps) {
     const [parsedSrc, setParsedSrc] = useState("")

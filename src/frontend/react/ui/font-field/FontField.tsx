@@ -8,7 +8,7 @@ import { usePropState } from "../../hooks/usePropState"
 import { InputRow } from "../input-row/InputRow"
 import { SelectField } from "../select-field/SelectField"
 
-// Port de ui/font-field/font-field.svelte. dispatch("change", string | null) → onChange (detalle del SelectField); dispatch("fontStyle", string) → onFontStyle.
+// dispatch("change", string | null) → onChange (detalle del SelectField); dispatch("fontStyle", string) → onFontStyle.
 // La lista se arma una vez al montar (como onMount); los estilos se recalculan sólo cuando cambian `value` o `enableFontStyles` (el `$:` del original).
 export interface FontFieldProps {
     label: string

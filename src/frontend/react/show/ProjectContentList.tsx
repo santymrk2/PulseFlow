@@ -74,7 +74,7 @@ function getContextMenuId(type: ShowType | undefined, isTemplate: boolean) {
     return type
 }
 
-// Port de components/show/ProjectContentList.svelte (F24.20a).
+// (F24.20a).
 export function ProjectContentList({ tree, recentlyUsedList: _recentlyUsedList = [], isTemplate = false, onScrollElem }: ProjectContentListProps) {
     const currentActions = useStore(actions)
     const currentActiveFocus = useStore(activeFocus)

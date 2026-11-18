@@ -2,7 +2,7 @@ import { popupData } from "../../stores"
 import { translateText } from "../../utils/language"
 import { ChoiceGrid } from "../ui/choice-grid/ChoiceGrid"
 
-// Port de components/main/popups/ChooseStyle.svelte. Escribe: popupData = { id: "choose_style", value: id }.
+// Escribe: popupData = { id: "choose_style", value: id }.
 export function ChooseStyle() {
     const styleTypes = [
         { id: "normal", name: translateText("settings.normal"), icon: "styles" },

@@ -17,7 +17,6 @@ import { useStore } from "../../hooks/useStore"
 
 type StyleInput = Partial<EditInput> & { id: string; value: unknown; name?: string; key?: string; values?: { [key: string]: unknown } }
 
-// Port de components/stage/tools/BoxStyle.svelte (F24.19a).
 // `EditValues` sigue en Svelte (F24.21a): se monta como isla y su `dispatch("change", input)` llega como events.change.
 export function BoxStyle() {
     const currentActiveStage = useStore(activeStage)

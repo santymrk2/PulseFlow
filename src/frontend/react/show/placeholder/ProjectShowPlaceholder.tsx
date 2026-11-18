@@ -6,7 +6,7 @@ import { Center } from "../../system/Center"
 import { DropArea } from "../../system/DropArea"
 import { useStore } from "../../hooks/useStore"
 
-// Port de components/show/placeholder/ProjectShowPlaceholder.svelte (F24.20a).
+// (F24.20a).
 export function ProjectShowPlaceholder() {
     const projectId = useStore(activeProject) || ""
     const currentProjects = useStore(projects)

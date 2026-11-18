@@ -19,7 +19,7 @@ export interface YouTubePlayerProps {
     onPause?: (event: PlayerEvent) => void
 }
 
-// Port de components/drawer/player/YouTubePlayer.svelte (F24.20c, rezagado F24.17h).
+// (F24.20c, rezagado F24.17h).
 export function YouTubePlayer({ videoId, options = {}, className, onReady, onError, onStateChange, onEnd, onPlay, onPause }: YouTubePlayerProps) {
     const playerElem = useRef<HTMLDivElement | null>(null)
     const player = useRef<YouTubePlayerInstance | null>(null)

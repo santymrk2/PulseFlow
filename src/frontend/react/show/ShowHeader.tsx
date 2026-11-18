@@ -25,7 +25,7 @@ export interface ShowHeaderProps {
     hideOptions?: boolean
 }
 
-// Port de components/show/ShowHeader.svelte (F24.20a).
+// (F24.20a).
 export function ShowHeader({ showId, hideOptions = false }: ShowHeaderProps) {
     const currentShowsCache = useStore(showsCache)
     const currentOutputs = useStore(outputs)

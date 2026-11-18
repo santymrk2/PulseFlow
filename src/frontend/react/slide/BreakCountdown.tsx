@@ -9,7 +9,7 @@ export interface BreakCountdownProps {
 const RADIUS = 45
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS
 
-// Port de components/slide/BreakCountdown.svelte (F24.18b).
+// (F24.18b).
 export function BreakCountdown({ activeKey = "", breakDuration = 0, ratio = 1 }: BreakCountdownProps) {
     const [remaining, setRemaining] = useState(0)
     const rafRef = useRef<number | null>(null)

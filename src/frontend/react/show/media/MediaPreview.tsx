@@ -17,7 +17,7 @@ export interface MediaPreviewProps {
     projectShow?: ProjectShowRef | null
 }
 
-// Port de components/show/media/MediaPreview.svelte (F24.20a).
+// (F24.20a).
 export function MediaPreview({ projectShow = null }: MediaPreviewProps) {
     const currentActiveShow = useStore(activeShow)
     const currentMedia = useStore(media)

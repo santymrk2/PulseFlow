@@ -8,7 +8,7 @@ import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
 import styles from "./Resizeable.module.css"
 
-// Port de components/system/Resizeable.svelte. `<slot {width} />` → children como nodo o como función que recibe el ancho.
+// `<slot {width} />` → children como nodo o como función que recibe el ancho.
 // Los `<svelte:window on:mouseup on:mousemove>` son listeners de window con limpieza.
 // `export let minWidth = handleWidth` tomaba el valor inicial del handle (4).
 export interface ResizeableProps {
