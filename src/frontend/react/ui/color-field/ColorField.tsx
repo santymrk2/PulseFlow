@@ -1,15 +1,14 @@
-import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent, type MouseEvent } from "react"
+import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from "react"
 import { uid } from "uid"
 import { cn } from "../../../lib/utils"
 import { addOpacityToGradient, getGradientOpacity } from "../../../components/edit/scripts/edit"
 import { defaultColors, defaultGradients, getContrast, hexToRgb, rgbToHex, splitRgb } from "../../../components/helpers/color"
-import Tabs from "../../../components/main/Tabs.svelte"
 import { activePopup, popupData, special } from "../../../stores"
 import { translateText } from "../../../utils/language"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { Icon } from "../../helpers/Icon"
 import { useDerivedState } from "../../hooks/useDerivedState"
 import { useFreshStore } from "../../hooks/useFreshStore"
+import { Tabs } from "../../main/Tabs"
 import { Button } from "../button/Button"
 import { NumberField } from "../number-field/NumberField"
 import { BLACK, rgbWithAlpha } from "./colorData"
@@ -19,8 +18,7 @@ import styles from "./ColorField.module.css"
 // Elegir un color despacha change y luego input. El selector nativo (<input type="color">) despacha input por tecla y change NATIVO, como `on:input`/`on:change`.
 // `hexValue` y `opacity` son locales y se recalculan desde `value` cuando el padre lo cambia (el `$: hexValue = getHexValue(value)` del original).
 // Stores: lee `special`; escribe popupData y activePopup ("color_gradient", y "manage_colors" de vuelta en editMode) con lo mismo que el Svelte.
-// Temporal: la barra de pestañas es components/main/Tabs.svelte (otra área, sin versión React): se monta como isla y, como SvelteIsland no devuelve
-// `bind:active`, el modo se deduce del botón pulsado (los botones salen en el orden de TABS). Se va cuando Tabs tenga versión React.
+// La barra de pestañas usa el port React (P11c): `onActiveChange` reemplaza la deducción del botón pulsado.
 // Las listas de colores no tenían key en el Svelte: se usa la posición.
 export interface ColorFieldProps {
     value?: string
@@ -51,7 +49,6 @@ interface LocalColor {
 }
 
 const TABS = { normal: { name: "color.normal", icon: "color" }, gradient: { name: "color.gradient", icon: "gradient" } }
-const TAB_IDS = Object.keys(TABS)
 const TABS_STYLE = "flex: 1;border-top-left-radius: 8px;border-top-right-radius: 8px;"
 
 function getHexValue(value: string): LocalColor {
@@ -265,13 +262,6 @@ export function ColorField({ value = BLACK, defaultValue = "", label, noLabel = 
         }
     }
 
-    // El botón pulsado de la isla de pestañas: sus botones salen en el orden de TABS
-    function handleTabsClick(event: MouseEvent<HTMLDivElement>) {
-        const button = (event.target as Element).closest("button")
-        const index = button ? Array.from(event.currentTarget.querySelectorAll(".tabs > button")).indexOf(button) : -1
-        if (index > -1) setSelectedMode(TAB_IDS[index])
-    }
-
     // GRADIENTS
 
     const disabledColors: string[] = sp.disabledColors || []
@@ -308,11 +298,7 @@ export function ColorField({ value = BLACK, defaultValue = "", label, noLabel = 
 
             {pickerOpen || alwaysVisible ? (
                 <div className={cn(styles.picker, isOverflowing && styles.isOverflowing, alwaysVisible && styles.alwaysVisible)} style={noLabel && !isOverflowing ? { left: 0, transform: "initial" } : undefined}>
-                    {allowGradients || editMode ? (
-                        <div style={{ display: "contents" }} onClick={handleTabsClick}>
-                            <SvelteIsland component={Tabs} props={{ tabs: TABS, active: selectedMode, style: TABS_STYLE }} />
-                        </div>
-                    ) : null}
+                    {allowGradients || editMode ? <Tabs tabs={TABS} active={selectedMode} onActiveChange={setSelectedMode} style={TABS_STYLE} /> : null}
 
                     <div className={styles.pickerContent}>
                         {selectedMode === "gradient" ? (

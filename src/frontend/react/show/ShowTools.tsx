@@ -1,10 +1,12 @@
-import { useEffect, useRef } from "react"
+import { useState } from "react"
 import type { Output } from "../../../types/Output"
 import type { TabsObj } from "../../../types/Tabs"
 import { activeShow, labelsDisabled, outputs, showsCache, slideTimers } from "../../stores"
-import { translateText } from "../../utils/language"
 import { getActiveOutputs } from "../../components/helpers/output"
+import { _show } from "../../components/helpers/shows"
+import { translateText } from "../../utils/language"
 import { useStore } from "../hooks/useStore"
+import { Tabs } from "../main/Tabs"
 import { Audio } from "../output/Audio"
 import { NextTimer } from "../output/NextTimer"
 import { TimerControls } from "../output/TimerControls"
@@ -14,14 +16,10 @@ import { Metadata } from "./tools/Metadata"
 import { SlideGroups } from "./tools/SlideGroups"
 import styles from "./ShowTools.module.css"
 
-export interface ShowToolsProps {
-    tabs: TabsObj
-    active: string
-    tabsHost?: HTMLElement | null
-}
+// Port autocontenedor de components/show/ShowTools.svelte (P11c): tabs, active y checkMedia viven acá.
+export function ShowTools() {
+    const [active, setActive] = useState("audio")
 
-// Port de components/show/ShowTools.svelte (F24.20a). Tabs sigue siendo Svelte porque usa `bind:active`.
-export function ShowTools({ tabs, active, tabsHost }: ShowToolsProps) {
     const currentActiveShow = useStore(activeShow)
     const currentLabelsDisabled = useStore(labelsDisabled)
     const currentOutputs = useStore(outputs)
@@ -35,21 +33,23 @@ export function ShowTools({ tabs, active, tabsHost }: ShowToolsProps) {
     const reference = currentShow?.reference?.type
     const slideTimer: { time?: number; paused?: boolean; timer?: { pause: () => void; resume: () => void } } = currentOutput?.id ? currentSlideTimers[currentOutput.id] || {} : {}
 
-    const tabsRef = useRef<HTMLDivElement>(null)
-    useEffect(() => {
-        const container = tabsRef.current
-        if (!container || !tabsHost) return
-        container.appendChild(tabsHost)
-        return () => {
-            if (tabsHost.parentNode === container) container.removeChild(tabsHost)
-        }
-    }, [tabsHost])
+    // checkMedia: la pestaña media se oculta si el show no tiene fondos, overlays, audio, mics ni acciones de slide
+    const refs = currentShow ? _show().layouts().ref() : []
+    const hasMedia = refs.some((ref) => ref.some((slide) => Boolean(slide.data.background || slide.data.overlays?.length || slide.data.audio || slide.data.mics || slide.data.actions?.slideActions?.length)))
+    const tabs: TabsObj = {
+        audio: { name: "tabs.audio", icon: "audio" },
+        overlays: { name: "clear.overlays", icon: "overlays" },
+        timers: { name: "tools.timers", icon: "clock" },
+        groups: { name: "tools.groups", icon: "groups" },
+        metadata: { name: "tools.metadata", icon: "info" },
+        media: { name: "tools.media", icon: "media", remove: !hasMedia }
+    }
 
     return (
         <div className={`main border ${styles.main} ${!currentLabelsDisabled ? styles.labels : ""}`}>
             {reference === "lessons" ? null : (
                 <>
-                    <div ref={tabsRef} style={{ display: "contents" }} />
+                    <Tabs tabs={tabs} active={active} onActiveChange={setActive} labels={false} />
                     <div className={styles.tabTitle}>{translateText(tabs[active]?.name || "")}</div>
 
                     {currentShow ? (

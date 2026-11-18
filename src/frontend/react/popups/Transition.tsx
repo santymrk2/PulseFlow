@@ -1,4 +1,4 @@
-import { useEffect, useState, type MouseEvent } from "react"
+import { useEffect, useState } from "react"
 import { get } from "svelte/store"
 import { OUTPUT } from "../../../types/Channels"
 import type { Transition as TransitionValue } from "../../../types/Show"
@@ -6,14 +6,13 @@ import { clone } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"
 import { getLayoutRef } from "../../components/helpers/show"
 import { _show } from "../../components/helpers/shows"
-import Tabs from "../../components/main/Tabs.svelte"
 import { activeEdit, activeShow, overlays, popupData, selected, showsCache, styles, templates, transitionData } from "../../stores"
 import { translateText } from "../../utils/language"
 import { send } from "../../utils/request"
 import { easings, transitionTypes } from "../../utils/transitions"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
+import { Tabs } from "../main/Tabs"
 import { Button } from "../ui/button/Button"
 import { InputRow } from "../ui/input-row/InputRow"
 import { NumberField } from "../ui/number-field/NumberField"
@@ -23,7 +22,7 @@ import stylesModule from "./Transition.module.css"
 // Port de components/main/popups/Transition.svelte. Lee: popupData (al montar), transitionData, styles, selected, activeEdit, overlays y templates.
 // Escribe: popupData = {} al montar (salvo trigger), transitionData global, history para slides/items/styles y trigger(valor), además de un
 // send(OUTPUT, ["SHOWS"]) 500 ms después de cambiar una transición de slide.
-// Las pestañas siguen siendo components/main/Tabs.svelte (isla): como no devuelve bind:active, se deduce el tab del botón pulsado.
+// Las pestañas son el port React (P11c): onActiveChange actualiza selectedType y selectedSpecific.
 // Los SVG `{@html icons[type.id]}` se conservan como dangerouslySetInnerHTML con la misma fuente del Svelte.
 type TransitionKey = "type" | "duration" | "easing" | "fadeInOffset" | "custom"
 type TransitionTypes = "text" | "media"
@@ -240,28 +239,16 @@ export function Transition() {
     }
     const correctedSlideDirection = getCorrectedDirection(slideDirection)
 
-    function handleTabsClick(event: MouseEvent<HTMLDivElement>, ids: string[], setter: (id: string) => void) {
-        const button = (event.target as Element).closest("button")
-        const index = button ? Array.from(event.currentTarget.querySelectorAll(".tabs > button")).indexOf(button) : -1
-        if (index > -1) setter(ids[index])
-    }
-
     return (
         <>
             <Button className={`popup-options ${showMore ? "active" : ""}`} icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} onClick={() => setShowMore(!showMore)} white />
 
             {showMore ? <Button className="popup-reset" icon="reset" iconSize={1.1} title="actions.reset" onClick={reset} white /> : null}
 
-            {!initial.isItem ? (
-                <div style={{ display: "contents" }} onClick={(event) => handleTabsClick(event, ["text", "media"], (id) => setSelectedType(id as TransitionTypes))}>
-                    <SvelteIsland component={Tabs} props={{ tabs: transitionTabs, active: selectedType, style: "font-weight: normal;" }} />
-                </div>
-            ) : null}
+            {!initial.isItem ? <Tabs tabs={transitionTabs} active={selectedType} onActiveChange={(id) => setSelectedType(id as TransitionTypes)} style="font-weight: normal;" /> : null}
 
             {enableSpecific ? (
-                <div style={{ display: "contents" }} onClick={(event) => handleTabsClick(event, selectedType === "media" ? ["in", "out"] : SPECIFIC_SCENARIOS, setSelectedSpecific)}>
-                    <SvelteIsland component={Tabs} props={{ tabs: selectedType === "media" ? specificTabsMedia : specificTabs, active: selectedSpecific, style: "font-weight: normal;" }} />
-                </div>
+                <Tabs tabs={selectedType === "media" ? specificTabsMedia : specificTabs} active={selectedSpecific} onActiveChange={setSelectedSpecific} style="font-weight: normal;" />
             ) : showMore ? (
                 <Button variant="outline" style={{ fontWeight: "normal" }} onClick={() => setEnableSpecific(true)}>
                     <T id="transition.specific" />

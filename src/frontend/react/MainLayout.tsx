@@ -3,7 +3,6 @@ import { activeEdit, activePage, activeProfile, activeProject, activeShow, activ
 import { DEFAULT_WIDTH } from "../utils/common"
 import { customActionActivation } from "../components/actions/actions"
 import { useStore } from "./hooks/useStore"
-import { SvelteIsland } from "./bridge/SvelteIsland"
 import { LeftColumn } from "./show/left/LeftColumn"
 import { Drawer } from "./drawer/Drawer"
 import { Show } from "./show/Show"
@@ -22,11 +21,11 @@ import { OverlayNavigation } from "./edit/OverlayNavigation"
 import { ThemeNavigation } from "./edit/ThemeNavigation"
 import { Editor } from "./edit/Editor"
 import { EditTools } from "./edit/EditTools"
-import ShowTools from "../components/show/ShowTools.svelte"
 import { AudioTools } from "./edit/AudioTools"
 import { EffectTools } from "./edit/EffectTools"
 import { MediaTools } from "./edit/MediaTools"
 import { SceneTools } from "./edit/SceneTools"
+import { ShowTools } from "./show/ShowTools"
 import styles from "./MainLayout.module.css"
 
 export function MainLayout() {
@@ -95,7 +94,7 @@ export function MainLayout() {
 
                             {page === "show" ? (
                                 activeShowValue && (activeShowValue.type === "show" || activeShowValue.type === undefined) && !focusModeValue ? (
-                                    <SvelteIsland component={ShowTools} />
+                                    <ShowTools />
                                 ) : null
                             ) : page === "edit" ? (
                                 activeEditValue.type === "media" || activeEditValue.type === "camera" ? (

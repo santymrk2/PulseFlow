@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react"
-import { activeProfile, closeAd, currentWindow, loaded, os, profiles, theme, themes } from "../stores"
+import { activeProfile, closeAd, currentWindow, loaded, os, profiles, settingsOpen, theme, themes } from "../stores"
 import { focusArea, logerror, mainClick } from "../utils/common"
 import { keydown } from "../utils/shortcuts"
 import { startup, startupAppEffects } from "../utils/startup"
 import { getContrast } from "../components/helpers/color"
 import { useStore } from "./hooks/useStore"
-import { SvelteIsland } from "./bridge/SvelteIsland"
 import { Loader } from "./main/Loader"
 import { MenuBar } from "./main/MenuBar"
 import { Popup } from "./main/Popup"
@@ -16,7 +15,7 @@ import { StatusIndicator } from "./main/StatusIndicator"
 import { Toast } from "./main/Toast"
 import { TooltipManager } from "./main/TooltipManager"
 import { MainLayout } from "./MainLayout"
-import SettingsModal from "../components/settings/SettingsModal.svelte"
+import { SettingsModal } from "./settings/SettingsModal"
 import { ContextMenu } from "./context/ContextMenu"
 import { Pdf } from "./export/Pdf"
 import { Guide } from "./guide/Guide"
@@ -34,6 +33,7 @@ export function App() {
     const closeAdValue = useStore(closeAd)
     const profilesValue = useStore(profiles)
     const activeProfileId = useStore(activeProfile)
+    const settingsOpenValue = useStore(settingsOpen)
 
     const [ready, setReady] = useState(false)
 
@@ -89,7 +89,7 @@ export function App() {
 
                 {isLoaded ? (
                     <>
-                        <SvelteIsland component={SettingsModal} />
+                        {settingsOpenValue ? <SettingsModal /> : null}
                         <Popup />
                         <QuickSearch />
                         <Toast />

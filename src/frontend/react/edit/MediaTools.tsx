@@ -1,6 +1,5 @@
-import { useEffect, useState, type MouseEvent } from "react"
+import { useEffect, useState } from "react"
 import type { TabsObj } from "../../../types/Tabs"
-import Tabs from "../../components/main/Tabs.svelte"
 import type { EditInput } from "../../components/edit/values/boxes"
 import { EditValues } from "./tools/EditValues"
 import { filterSections, mediaBoxes } from "../../components/edit/values/media"
@@ -12,8 +11,8 @@ import { getFirstActiveOutput, setOutput } from "../../components/helpers/output
 import { removeStore, updateStore } from "../../components/helpers/update"
 import { VideoPlayer } from "../../components/media/video/videoPlayer"
 import { activeEdit, activeShow, media } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
+import { Tabs } from "../main/Tabs"
 import { Button } from "../ui/button/Button"
 import { FloatingBar } from "../ui/floating-bar/FloatingBar"
 import styles from "./MediaTools.module.css"
@@ -120,18 +119,9 @@ export function MediaTools() {
         valueChanged(input)
     }
 
-    function handleTabsClick(event: MouseEvent<HTMLDivElement>) {
-        const button = (event.target as Element).closest("button")
-        const ids = Object.keys(tabs)
-        const index = button ? Array.from(event.currentTarget.querySelectorAll(".tabs > button")).indexOf(button) : -1
-        if (index > -1) setActive(ids[index])
-    }
-
     return (
         <div className={`main border editTools ${styles.main}`}>
-            <div style={{ display: "contents" }} onClick={handleTabsClick}>
-                <SvelteIsland component={Tabs} props={{ tabs, active }} />
-            </div>
+            <Tabs tabs={tabs} active={active} onActiveChange={setActive} />
 
             <div className={styles.content}>
                 {active === "media" ? <EditValues sections={mediaSections as never} item={currentItem as never} onChange={onEditValuesChange} /> : null}

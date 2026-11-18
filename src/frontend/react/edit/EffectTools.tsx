@@ -1,15 +1,14 @@
-import { useEffect, useState, type MouseEvent } from "react"
+import { useEffect, useState } from "react"
 import type { EffectItem } from "../../../types/Effects"
 import type { TabsObj } from "../../../types/Tabs"
-import Tabs from "../../components/main/Tabs.svelte"
 import { EditValues } from "./tools/EditValues"
 import { effectSections } from "../../components/edit/values/effects"
 import { clone } from "../../components/helpers/array"
 import { addToPos } from "../../components/helpers/mover"
 import { activeEdit, effects, hoveredEffectItem } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
+import { Tabs } from "../main/Tabs"
 import { Button } from "../ui/button/Button"
 import { ColorField } from "../ui/color-field/ColorField"
 import { InputRow } from "../ui/input-row/InputRow"
@@ -21,7 +20,7 @@ const tabs: TabsObj = {
     options: { name: "edit.options", icon: "options", overflow: true }
 }
 
-// Port de components/edit/EffectTools.svelte. Tabs es una isla Svelte (sin bind:active), así que el tab se deduce por clic.
+// Port de components/edit/EffectTools.svelte. Tabs es el port React y devuelve el tab activo por onActiveChange.
 export function EffectTools() {
     const currentActiveEdit = useStore(activeEdit)
     const currentEffects = useStore(effects)
@@ -69,20 +68,11 @@ export function EffectTools() {
         setMoved((value) => value + 1)
     }
 
-    function handleTabsClick(event: MouseEvent<HTMLDivElement>) {
-        const button = (event.target as Element).closest("button")
-        const ids = Object.keys(tabs)
-        const index = button ? Array.from(event.currentTarget.querySelectorAll(".tabs > button")).indexOf(button) : -1
-        if (index > -1) setActive(ids[index])
-    }
-
     const invertedItems = [...currentItems].reverse()
 
     return (
         <div className={`main border editTools ${stylesModule.main}`}>
-            <div style={{ display: "contents" }} onClick={handleTabsClick}>
-                <SvelteIsland component={Tabs} props={{ tabs, active }} />
-            </div>
+            <Tabs tabs={tabs} active={active} onActiveChange={setActive} />
 
             <div className={stylesModule.content}>
                 {active === "effect" ? (

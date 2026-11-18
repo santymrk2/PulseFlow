@@ -1,16 +1,15 @@
 import { useEffect, useState, type MouseEvent } from "react"
 import type { TabsObj } from "../../../types/Tabs"
-import Tabs from "../../components/main/Tabs.svelte"
 import { clone } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"
 import { updateActiveSceneOutputs } from "../../components/helpers/output"
 import { openSettings } from "../../components/settings/openSettings"
 import { activeEdit, activePopup, activeStyle, overlays, popupData, scenes, selected, styles } from "../../stores"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
+import { Tabs } from "../main/Tabs"
 import { Button } from "../ui/button/Button"
 import { InputRow } from "../ui/input-row/InputRow"
 import { PopupField } from "../ui/popup-field/PopupField"
@@ -20,8 +19,7 @@ const tabs: TabsObj = {
     scene: { name: "tools.scene", icon: "scene" }
 }
 
-// Port de components/edit/SceneTools.svelte. Las pestañas siguen siendo components/main/Tabs.svelte (isla),
-// así que el tab activo se deduce del botón pulsado como en Transition.tsx.
+// Port de components/edit/SceneTools.svelte. Las pestañas usan el port React (onActiveChange).
 export function SceneTools() {
     const currentActiveEdit = useStore(activeEdit)
     const currentScenes = useStore(scenes)
@@ -116,12 +114,6 @@ export function SceneTools() {
         }
     }, [])
 
-    function handleTabsClick(event: MouseEvent<HTMLDivElement>, ids: string[]) {
-        const button = (event.target as Element).closest("button")
-        const index = button ? Array.from(event.currentTarget.querySelectorAll(".tabs > button")).indexOf(button) : -1
-        if (index > -1) setActive(ids[index])
-    }
-
     function handleMainClick(event: MouseEvent<HTMLDivElement>) {
         const target = event.target as Element | null
         if (!target?.closest(".overlay-item") && !target?.closest(".contextMenu")) deselectOverlay()
@@ -131,9 +123,7 @@ export function SceneTools() {
 
     return (
         <div className={`main border editTools ${stylesModule.main}`} onClick={handleMainClick}>
-            <div style={{ display: "contents" }} onClick={(event) => handleTabsClick(event, Object.keys(tabs))}>
-                <SvelteIsland component={Tabs} props={{ tabs, active }} />
-            </div>
+            <Tabs tabs={tabs} active={active} onActiveChange={setActive} />
 
             <div className={stylesModule.content}>
                 <PopupField label="popup.choose_media_input" value={content.media} name={media?.name || media?.id || ""} icon={media?.type || "camera"} popupId="choose_media_input" onChange={(value) => updateContent("media", value || null)} allowEmpty />

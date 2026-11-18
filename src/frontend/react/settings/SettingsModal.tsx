@@ -1,14 +1,18 @@
+import { activePopup, settingsOpen } from "../../stores"
+import { useStore } from "../hooks/useStore"
+import { Modal } from "../main/Modal"
 import { Settings } from "./Settings"
 import styles from "./SettingsModal.module.css"
 import { SettingsTabs } from "./SettingsTabs"
 import { SettingsTools } from "./SettingsTools"
 
-// Cuerpo de SettingsModal.svelte (F24.12). El `Modal` (marco, Esc, transiciones) sigue siendo Svelte y necesita un <slot>
-// que una isla React no puede llenar; SettingsModal.svelte queda como cascarón y monta este cuerpo con ReactIsland.
-// Se retira junto con Modal.svelte cuando éste se migre.
+// Root completo de Configuración (P11c): el marco React Modal reemplaza a Modal.svelte.
+// App condiciona el montaje por `settingsOpen`; acá sólo se arma el diálogo y su cuerpo.
 export function SettingsModal() {
+    const activePopupValue = useStore(activePopup)
+
     return (
-        <>
+        <Modal title="menu.settings" width={960} height={620} managesPopup={false} blockEscape={!!activePopupValue} onClose={() => settingsOpen.set(false)}>
             <aside className={styles.aside}>
                 <SettingsTabs />
                 <SettingsTools />
@@ -17,6 +21,6 @@ export function SettingsModal() {
             <section className={styles.section}>
                 <Settings />
             </section>
-        </>
+        </Modal>
     )
 }

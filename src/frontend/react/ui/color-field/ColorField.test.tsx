@@ -8,6 +8,7 @@ import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { ColorField } from "./ColorField"
 import styles from "./ColorField.module.css"
+import tabsStyles from "../../main/Tabs.module.css"
 
 vi.mock("../../../utils/common", () => commonMock())
 // edit.ts arrastra medio frontend; ColorField sólo usa dos funciones puras de gradientes: se mockea el borde
@@ -36,6 +37,7 @@ const display = () => document.querySelector(`.${styles.colorDisplay}`) as HTMLE
 const picker = () => document.querySelector(`.${styles.picker}`) as HTMLElement | null
 const swatches = () => Array.from(document.querySelectorAll(".pickColor")) as HTMLElement[]
 const colorInput = () => document.querySelector("input.colorpicker") as HTMLInputElement
+const tabsButtons = () => Array.from(document.querySelectorAll(`.${tabsStyles.tabs} button`)) as HTMLElement[]
 const abrir = () => fireEvent.click(display())
 const limpiar = () => (restaurar = setStoresForTest([storeEntry(special, {}), storeEntry(activePopup, null), storeEntry(popupData, {})]))
 const hex = (n: number) => defaultColors[n].value
@@ -333,7 +335,7 @@ describe("ColorField", () => {
             limpiar()
             render(<ColorField label="x" value={degradado} allowGradients />)
             abrir()
-            await waitFor(() => expect(document.querySelectorAll(".tabs button").length).toBe(2))
+            await waitFor(() => expect(tabsButtons().length).toBe(2))
             expect(swatches().length).toBe(defaultGradients.length)
             expect(swatches().filter((s) => s.classList.contains(styles.active)).length).toBe(1)
             expect(swatches()[0].getAttribute("aria-label")).toContain("Select gradient")
@@ -343,7 +345,7 @@ describe("ColorField", () => {
             limpiar()
             render(<ColorField label="x" value={degradado} />)
             abrir()
-            expect(document.querySelector(".tabs")).toBeNull()
+            expect(document.querySelector(`.${tabsStyles.tabs}`)).toBeNull()
             expect(swatches().length).toBe(defaultColors.length)
         })
 
@@ -351,9 +353,9 @@ describe("ColorField", () => {
             limpiar()
             const { rerender } = render(<ColorField label="x" value="#336699" allowGradients />)
             abrir()
-            await waitFor(() => expect(document.querySelectorAll(".tabs button").length).toBe(2))
+            await waitFor(() => expect(tabsButtons().length).toBe(2))
             expect(swatches().length).toBe(defaultColors.length)
-            fireEvent.click(document.querySelectorAll(".tabs button")[1])
+            fireEvent.click(tabsButtons()[1])
             await waitFor(() => expect(swatches().length).toBe(defaultGradients.length))
             rerender(<ColorField label="x" value="#445566" allowGradients />)
             await waitFor(() => expect(swatches().length).toBe(defaultColors.length))
