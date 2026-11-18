@@ -26,7 +26,7 @@ vi.mock("../../../audio/audioPlaylist", () => ({ AudioPlaylist: { update: vi.fn(
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../components/drawer/live/Microphones.svelte", () => ({ default: { isla: "Microphones" } }))
 vi.mock("../../../components/drawer/live/AudioStreams.svelte", () => ({ default: { isla: "AudioStreams" } }))
-vi.mock("../../../components/drawer/audio/AudioEffect.svelte", () => ({ default: { isla: "AudioEffect" } }))
+
 vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
@@ -43,6 +43,7 @@ vi.mock("../../system/Center", () => ({ Center: ({ children }: { children?: Reac
 vi.mock("../../system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 vi.mock("../media/Folder", () => ({ Folder: ({ name }: { name: string }) => <div data-testid="folder">{name}</div> }))
 vi.mock("./AudioFile", () => ({ AudioFile: ({ name }: { name: string }) => <div data-testid="audio-file">{name}</div> }))
+vi.mock("./effects/AudioEffect", () => ({ AudioEffect: ({ name }: { name: string }) => <div data-testid="effect-card">{name}</div> }))
 vi.mock("./Metronome", () => ({ Metronome: () => <div data-testid="metronome" /> }))
 
 let restaurar: () => void = () => {}
@@ -82,6 +83,12 @@ describe("Audio", () => {
         audioPlaylists.set({ "pl-1": { name: "LISTA", songs: ["/a.mp3", "/b.mp3"] } } as never)
         render(<Audio active="pl-1" />)
         expect(screen.getAllByTestId("audio-file")).toHaveLength(2)
+    })
+
+    it("monta los efectos de la librería como componentes React", () => {
+        effectsLibrary.set([{ path: "/fx/a.wav", name: "a.wav" }] as never)
+        render(<Audio active="effects_library" />)
+        expect(screen.getByTestId("effect-card").textContent).toBe("a.wav")
     })
 
     it("muestra el icono vacío cuando no hay archivos", () => {

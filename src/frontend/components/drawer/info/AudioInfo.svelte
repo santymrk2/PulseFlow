@@ -9,7 +9,8 @@
     import NumberField from "../../../lib/components/ui/number-field/number-field.svelte"
     import ToggleField from "../../../lib/components/ui/toggle-field/toggle-field.svelte"
     import { VideoPlayer } from "../../media/video/videoPlayer"
-    import AudioEffects from "../audio/AudioEffects.svelte"
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import { AudioEffects } from "../../../react/drawer/audio/effects/AudioEffects"
     import AudioMixers from "../audio/AudioMixers.svelte"
 
     // export let optionsOpen: boolean
@@ -63,7 +64,7 @@
         </Button>
     </main>
 {:else if $activeAudioEffects}
-    <AudioEffects />
+    <ReactIsland component={AudioEffects} />
 {:else}
     <AudioMixers />
 {/if}

@@ -22,13 +22,13 @@ import { Center } from "../../system/Center"
 import { DropArea } from "../../system/DropArea"
 import MicrophonesSvelte from "../../../components/drawer/live/Microphones.svelte"
 import AudioStreamsSvelte from "../../../components/drawer/live/AudioStreams.svelte"
-import AudioEffectSvelte from "../../../components/drawer/audio/AudioEffect.svelte"
 import { Folder } from "../media/Folder"
 import { AudioFile } from "./AudioFile"
+import { AudioEffect } from "./effects/AudioEffect"
 import { Metronome } from "./Metronome"
 import styles from "./Audio.module.css"
 
-// Port de components/drawer/audio/Audio.svelte. Hijos aún no migrados (inputs live, AudioEffect) siguen como SvelteIsland.
+// Port de components/drawer/audio/Audio.svelte. Los inputs live siguen como SvelteIsland (se migran en F24.17f).
 export interface AudioProps {
     active: string | null
 }
@@ -83,28 +83,32 @@ export function Audio({ active }: AudioProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [active, rootPath, isDefault, !!playlist])
 
-    function filterFiles() {
+    function filterFiles(files = filesList, folders = foldersList) {
         if (active === "inputs" || active === "metronome") return
-        const localFiles = [...sortFilenames(filesList as never[]), ...sortFilenames(foldersList as never[])] as AudioEntry[]
+        const localFiles = [...sortFilenames(files as never[]), ...sortFilenames(folders as never[])] as AudioEntry[]
         const next = clone(localFiles)
         setFilteredFiles(next)
         setSearchedFiles(next)
         scrollElem.current?.scrollTo(0, 0)
     }
 
-    function openFolder(folderPath: string) {
+    // `source` permite usar la lista recién calculada: el state de React todavía no se actualizó cuando se llama.
+    function openFolder(folderPath: string, source: AudioEntry[] = allRelevantFiles) {
         if (folderPath === "all" || folderPath === "favourites" || folderPath === "effects_library") {
+            const nextFiles = source.filter((a) => !a.isFolder)
             setFoldersList([])
-            setFilesList(allRelevantFiles.filter((a) => !a.isFolder))
-            filterFiles()
+            setFilesList(nextFiles)
+            filterFiles(nextFiles, [])
             return
         }
 
-        const folder = allRelevantFiles.find((a) => a.isFolder && a.path === folderPath)
+        const folder = source.find((a) => a.isFolder && a.path === folderPath)
         if (!folder) return
-        setFoldersList(allRelevantFiles.filter((a) => a.isFolder && !!folder.files?.includes(a.path)))
-        setFilesList(allRelevantFiles.filter((a) => !a.isFolder && !!folder.files?.includes(a.path)))
-        filterFiles()
+        const nextFolders = source.filter((a) => a.isFolder && !!folder.files?.includes(a.path))
+        const nextFiles = source.filter((a) => !a.isFolder && !!folder.files?.includes(a.path))
+        setFoldersList(nextFolders)
+        setFilesList(nextFiles)
+        filterFiles(nextFiles, nextFolders)
     }
 
     async function requestFiles(requestPath: string | string[], depth = 0) {
@@ -120,7 +124,7 @@ export function Audio({ active }: AudioProps) {
             return getMediaType(getExtension(a.name)) === "audio"
         }) as AudioEntry[]
         setAllRelevantFiles(relevant)
-        openFolder(active === "all" ? "all" : (requestPath as string))
+        openFolder(active === "all" ? "all" : (requestPath as string), relevant)
     }
 
     function updateContent() {
@@ -130,12 +134,12 @@ export function Audio({ active }: AudioProps) {
                 .filter((a) => a.favourite === true && a.audio === true)
                 .map((a) => ({ isFolder: false, path: a.id, name: getFileName(a.id), stats: {} }))
             setAllRelevantFiles(favourites)
-            openFolder("favourites")
+            openFolder("favourites", favourites)
         } else if (active === "effects_library") {
             prevActive.current = active
             const files = library.map((a) => ({ isFolder: false, path: a.path, name: a.name, stats: {} }))
             setAllRelevantFiles(files)
-            openFolder("effects_library")
+            openFolder("effects_library", files)
         } else if (active === "all") {
             if (active === prevActive.current) return
             prevActive.current = active
@@ -275,7 +279,7 @@ export function Audio({ active }: AudioProps) {
                     {searchedFiles.length ? (
                         <div className={styles.effects}>
                             {searchedFiles.map((file) => (
-                                <SvelteIsland key={file.path} component={AudioEffectSvelte} props={{ path: file.path, name: file.name }} />
+                                <AudioEffect key={file.path} path={file.path} name={file.name} />
                             ))}
                         </div>
                     ) : (

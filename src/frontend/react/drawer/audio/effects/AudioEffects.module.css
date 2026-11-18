@@ -1,0 +1,65 @@
+/* Portado de AudioEffects.svelte. */
+.stackList {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    padding-bottom: 0;
+}
+
+.effectCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 4px;
+    background-color: var(--primary-darker);
+    border: 1px solid var(--primary-lighter);
+    border-left: 4px solid var(--accent-color);
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    user-select: none;
+}
+
+.effectCard:hover {
+    background-color: var(--primary);
+}
+
+.effectCard.bypassed {
+    border-left-color: #555555;
+}
+
+.effectInfo {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex: 1;
+    min-width: 0;
+}
+
+.slotNumber {
+    font-size: 0.6em;
+    opacity: 0.5;
+    min-width: 16px;
+    text-align: center;
+}
+
+.effectName {
+    font-size: 0.88em;
+    font-weight: 500;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.effectActions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    flex-shrink: 0;
+}
+
+.addSection {
+    padding: 0 10px;
+    padding-top: 4px;
+}

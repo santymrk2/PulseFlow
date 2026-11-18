@@ -1,0 +1,30 @@
+/* Portado de AudioSidechain.svelte. */
+.track {
+    position: relative;
+    width: calc(100% - 5px);
+    height: 3px;
+    background-color: var(--bg-hover);
+    border-radius: 2px;
+    overflow: hidden;
+    margin-left: 5px;
+}
+
+.max {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 2px;
+    transform: translateX(50%);
+    background-color: white;
+    opacity: 0.12;
+}
+
+.bar {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: var(--warning);
+    border-radius: 2px;
+    transition: width 0.08s ease-out;
+}

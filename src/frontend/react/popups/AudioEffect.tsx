@@ -1,23 +1,22 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, type ComponentType } from "react"
 import { get } from "svelte/store"
 import type { EffectType } from "../../audio/effects/audioEffectsHelpers"
-import AudioCompressor from "../../components/drawer/audio/effects/AudioCompressor.svelte"
-import AudioDelay from "../../components/drawer/audio/effects/AudioDelay.svelte"
-import AudioEffectPresets from "../../components/drawer/audio/effects/AudioEffectPresets.svelte"
-import AudioEqualizer from "../../components/drawer/audio/effects/AudioEqualizer.svelte"
-import AudioFilter from "../../components/drawer/audio/effects/AudioFilter.svelte"
-import AudioLimiter from "../../components/drawer/audio/effects/AudioLimiter.svelte"
-import AudioNoiseGate from "../../components/drawer/audio/effects/AudioNoiseGate.svelte"
-import AudioReverb from "../../components/drawer/audio/effects/AudioReverb.svelte"
-import AudioStereoShaper from "../../components/drawer/audio/effects/AudioStereoShaper.svelte"
 import { activeAudioEffects, popupData } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
+import { AudioCompressor } from "../drawer/audio/effects/AudioCompressor"
+import { AudioDelay, type AudioEffectProps } from "../drawer/audio/effects/AudioDelay"
+import { AudioEffectPresets } from "../drawer/audio/effects/AudioEffectPresets"
+import { AudioEqualizer } from "../drawer/audio/effects/AudioEqualizer"
+import { AudioFilter } from "../drawer/audio/effects/AudioFilter"
+import { AudioLimiter } from "../drawer/audio/effects/AudioLimiter"
+import { AudioNoiseGate } from "../drawer/audio/effects/AudioNoiseGate"
+import { AudioReverb } from "../drawer/audio/effects/AudioReverb"
+import { AudioStereoShaper } from "../drawer/audio/effects/AudioStereoShaper"
 import { Button } from "../ui/button/Button"
 
 // Port de components/main/popups/AudioEffect.svelte. Lee: popupData { channelId, effect, effectId } (al montar) y activeAudioEffects.
-// Escribe: activeAudioEffects = channelId. Los efectos y los presets siguen siendo Svelte (islas).
-const EFFECT_COMPONENTS: Partial<Record<EffectType, Parameters<typeof SvelteIsland>[0]["component"]>> = {
+// Escribe: activeAudioEffects = channelId. Los efectos y los presets ya son componentes React (F24.17d).
+const EFFECT_COMPONENTS: Partial<Record<EffectType, ComponentType<AudioEffectProps>>> = {
     equalizer: AudioEqualizer,
     filter: AudioFilter,
     noiseGate: AudioNoiseGate,
@@ -39,7 +38,7 @@ export function AudioEffect() {
         if (channelId && activeChannel !== channelId) activeAudioEffects.set(channelId)
     }, [channelId, activeChannel])
 
-    const component = EFFECT_COMPONENTS[effectKey]
+    const Effect = EFFECT_COMPONENTS[effectKey]
 
     return (
         <>
@@ -48,11 +47,11 @@ export function AudioEffect() {
             <div style={{ display: "flex", flexDirection: "column", width: "calc(100vw - (var(--navigation-width) + 20px) * 2)" }}>
                 {showMore ? (
                     <div style={{ marginBottom: "10px" }}>
-                        <SvelteIsland component={AudioEffectPresets} props={{ effectKey, channelId, effectId }} />
+                        <AudioEffectPresets effectKey={effectKey} channelId={channelId} effectId={effectId} />
                     </div>
                 ) : null}
 
-                {component ? <SvelteIsland key={`${channelId}_${effectId || effectKey}`} component={component} props={{ effectId, channelId }} /> : null}
+                {Effect ? <Effect key={`${channelId}_${effectId || effectKey}`} effectId={effectId} channelId={channelId} /> : null}
             </div>
         </>
     )

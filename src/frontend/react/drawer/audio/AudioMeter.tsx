@@ -3,13 +3,11 @@ import { dbToLinear, MIN_DB } from "../../../audio/dBUtils"
 import { AudioInputCapture } from "../../../audio/routing/audioInputCapture"
 import { activeDrawerTab, activePage, audioChannelsData, audioRouting, drawer } from "../../../stores"
 import { DEFAULT_DRAWER_HEIGHT } from "../../../utils/common"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
-import AudioSidechain from "../../../components/drawer/audio/AudioSidechain.svelte"
+import { AudioSidechain } from "./effects/AudioSidechain"
 import styles from "./AudioMeter.module.css"
 
 // Port de components/drawer/audio/AudioMeter.svelte. Actualiza el DOM directamente (~30 fps) para no re-renderizar React.
-// AudioSidechain sigue siendo Svelte (se migra en F24.17d).
 export interface AudioMeterProps {
     channelId?: string
     detailed?: boolean
@@ -192,7 +190,7 @@ export function AudioMeter({ channelId = "", detailed = false, preview = false }
                 {!preview && hasSidechainConnection ? (
                     <>
                         <div style={{ height: 2, width: "100%" }} />
-                        <SvelteIsland component={AudioSidechain} props={{ channelId }} />
+                        <AudioSidechain channelId={channelId} />
                     </>
                 ) : null}
 

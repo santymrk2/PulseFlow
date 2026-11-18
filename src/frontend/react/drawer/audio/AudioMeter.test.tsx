@@ -4,7 +4,6 @@ import { get } from "svelte/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeDrawerTab, activePage, audioChannelsData, audioRouting, drawer } from "../../../stores"
 import { commonMock } from "../../test/mockCommon"
-import { clearIslands, islands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { AudioMeter } from "./AudioMeter"
 
@@ -12,13 +11,10 @@ vi.mock("../../../audio/routing/audioInputCapture", () => ({
     AudioInputCapture: { getInstance: () => ({ getVisualizerData: vi.fn(() => undefined) }) }
 }))
 vi.mock("../../../utils/common", () => ({ ...commonMock(), DEFAULT_DRAWER_HEIGHT: 300 }))
-vi.mock("../../../components/drawer/audio/AudioSidechain.svelte", () => ({ default: { isla: "AudioSidechain" } }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
 
 let restaurar: () => void = () => {}
 
 beforeEach(() => {
-    clearIslands()
     vi.stubGlobal(
         "requestAnimationFrame",
         vi.fn(() => 1)
@@ -39,15 +35,15 @@ describe("AudioMeter", () => {
         expect(container.querySelector("[class*='background']")).not.toBeNull()
     })
 
-    it("muestra la isla de sidechain cuando hay una conexión", () => {
+    it("muestra la barra de sidechain cuando hay una conexión", () => {
         audioRouting.set({ channels: [], connections: [{ to: "main", type: "sidechain" }] } as never)
         render(<AudioMeter channelId="main" />)
-        expect(islands["AudioSidechain"]?.props.channelId).toBe("main")
+        expect(document.querySelector("[data-title*='sidechain']")).not.toBeNull()
     })
 
     it("no muestra sidechain sin conexión", () => {
         render(<AudioMeter channelId="main" />)
-        expect(document.querySelector("[data-isla='AudioSidechain']")).toBeNull()
+        expect(document.querySelector("[data-title*='sidechain']")).toBeNull()
     })
 
     it("detailed muestra la escala en dB", () => {
