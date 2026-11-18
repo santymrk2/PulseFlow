@@ -12,7 +12,7 @@ vi.mock("../../../IPC/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() })
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
+vi.mock("./MediaCard", async () => ({ MediaCard: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("MediaCard") }))
 
 let restaurar: () => void = () => {}
 

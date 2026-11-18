@@ -27,6 +27,7 @@ vi.mock("../bridge/SvelteIsland", () => ({
         </span>
     )
 }))
+vi.mock("../stage/Stagebox", async () => ({ Stagebox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Stagebox") }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../system/SelectElem", () => ({
     SelectElem: ({ children }: { children: ReactNode }) => <div data-select>{children}</div>
@@ -80,14 +81,14 @@ describe("StageSlide", () => {
 
     it("renderiza un Stagebox por ítem visible", () => {
         const { container } = renderStage()
-        expect(container.querySelector("[data-island='Stagebox']")).toBeTruthy()
+        expect(container.querySelector("[data-isla='Stagebox']")).toBeTruthy()
     })
 
     it("oculta los ítems filtrados por condiciones", () => {
         vi.mocked(shouldItemBeShown).mockReturnValue(false as never)
         vi.mocked(getSortedStageItems).mockReturnValue([{ id: "i1", type: "text", bindings: ["stage"] }] as never)
         const { container } = renderStage()
-        expect(container.querySelector("[data-island='Stagebox']")).toBeNull()
+        expect(container.querySelector("[data-isla='Stagebox']")).toBeNull()
     })
 
     it("edita el nombre del stage desde HiddenInput", () => {
@@ -114,6 +115,6 @@ describe("StageSlide", () => {
         vi.mocked(getSortedStageItems).mockReturnValue([{ id: "i2", type: "slide_text", bindings: ["stage"] }] as never)
         const { container } = renderStage()
         expect(getSlideTextItems).toHaveBeenCalled()
-        expect(container.querySelector("[data-island='Stagebox']")).toBeTruthy()
+        expect(container.querySelector("[data-isla='Stagebox']")).toBeTruthy()
     })
 })

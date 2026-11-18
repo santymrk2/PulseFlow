@@ -8,12 +8,11 @@ import { clone, keysToID, sortByName } from "../../../components/helpers/array"
 import { history } from "../../../components/helpers/history"
 import { findMatchingOut, getResolution } from "../../../components/helpers/output"
 import { toggleOverlayOutput } from "../../../components/helpers/overlayOutput"
-import Textbox from "../../../components/slide/Textbox.svelte"
-import Zoomed from "../../../components/slide/Zoomed.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { T } from "../../helpers/T"
 import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
+import { Textbox } from "../../slide/Textbox"
+import { Zoomed } from "../../slide/Zoomed"
 import { Center } from "../../system/Center"
 import { DropArea } from "../../system/DropArea"
 import { SelectElem } from "../../system/SelectElem"
@@ -25,7 +24,7 @@ import { OverlayActions } from "./OverlayActions"
 import styles from "./Overlays.module.css"
 
 // Port de components/drawer/pages/Overlays.svelte: grilla de overlays con carga por lotes.
-// `Zoomed.svelte` y `Textbox.svelte` siguen en Svelte y se montan como islas.
+// Zoomed y Textbox se importan directamente desde sus ports React (F24.24 P8g).
 export interface OverlaysProps {
     active: string | null
     // Overlay editor: lista de una columna en el panel izquierdo; un clic abre el overlay para editarlo
@@ -173,13 +172,11 @@ export function Overlays({ active, columns = null, editOnClick = false }: Overla
                                                         {/* icons */}
                                                         <OverlayActions columns={gridColumns} overlayId={overlay.id} />
 
-                                                        <SvelteIsland
-                                                            component={Zoomed}
-                                                            props={{ resolution, background: overlay.items.length ? "var(--primary);" : overlay.color || "var(--primary);", checkered: !!overlay.items.length }}
-                                                            slots={{
-                                                                default: overlay.items.map((item, index) => <SvelteIsland key={index} component={Textbox} props={{ item, ref: { type: "overlay", id: overlay.id }, preview: true, miniPreview: true }} />)
-                                                            }}
-                                                        />
+                                                        <Zoomed resolution={resolution} background={overlay.items.length ? "var(--primary);" : overlay.color || "var(--primary);"} checkered={!!overlay.items.length}>
+                                                            {overlay.items.map((item, index) => (
+                                                                <Textbox key={index} item={item} ref={{ type: "overlay", id: overlay.id }} preview miniPreview />
+                                                            ))}
+                                                        </Zoomed>
                                                     </>
                                                 ) : null}
                                             </Card>

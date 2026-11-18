@@ -18,9 +18,7 @@ vi.mock("../../system/HoverPlay", () => ({
         </div>
     )
 }))
-vi.mock("../../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ children }: { children?: unknown }) => <>{children as never}</>
-}))
+vi.mock("../../output/OutputOverlay", async () => ({ Overlay: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Overlay") }))
 vi.mock("../../slide/Zoomed", () => ({ Zoomed: ({ children }: { children: unknown }) => <div data-view="Zoomed">{children as never}</div> }))
 
 let restore: () => void = () => {}

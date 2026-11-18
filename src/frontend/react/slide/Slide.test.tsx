@@ -40,7 +40,9 @@ vi.mock("../../components/helpers/shows", () => ({
 vi.mock("../bridge/SvelteIsland", () => ({
     SvelteIsland: ({ component, props }: { component: { name?: string }; props: Record<string, unknown> }) => <span data-island={component?.name || "svelte"} data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
 }))
+vi.mock("../edit/editbox/Editbox", async () => ({ Editbox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Editbox") }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Effect") }))
 vi.mock("../system/SelectElem", () => ({
     SelectElem: ({ children, style }: { children: ReactNode; style?: CSSProperties }) => (
         <div data-select style={style}>
@@ -216,7 +218,7 @@ describe("Slide", () => {
             looseEntry(refreshSlideThumbnails, false)
         ])
         const { container } = renderSlide({ layoutSlide: { ...layoutSlide, effects: ["efUnder", "efOver"], overlays: ["ovUnder", "ovOver"] } })
-        expect(container.querySelectorAll("[data-island='Effect']")).toHaveLength(2)
+        expect(container.querySelectorAll("[data-isla='Effect']")).toHaveLength(2)
         expect(container.querySelectorAll("[data-view='Textbox']")).toHaveLength(3)
     })
 
@@ -232,7 +234,7 @@ describe("Slide", () => {
         restore = setStoresForTest([looseEntry(slidesOptions, { mode: "list", columns: 2 }), looseEntry(fullColors, false), looseEntry(focusMode, false), looseEntry(special, {}), looseEntry(outputs, {}), looseEntry(styles, {}), looseEntry(overlays, {}), looseEntry(effects, {}), looseEntry(activeShow, { id: "sh1" }), looseEntry(activeEdit, { showId: "sh1" }), looseEntry(slideDeleteHighlight, null), looseEntry(refreshListBoxes, 1), looseEntry(refreshSlideThumbnails, false)])
         const { container } = renderSlide({ list: true })
         expect(container.querySelector(".quickEdit")).toBeTruthy()
-        expect(container.querySelector(".quickEdit [data-island]")).toBeTruthy()
+        expect(container.querySelector(".quickEdit [data-isla='Editbox']")).toBeTruthy()
     })
 
     it("usa setTemplateStyle cuando hay preview de plantilla", () => {

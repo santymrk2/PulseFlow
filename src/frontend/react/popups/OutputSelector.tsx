@@ -4,11 +4,10 @@ import { OUTPUT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
 import { requestMain } from "../../IPC/main"
 import { clone, keysToID } from "../../components/helpers/array"
-import PreviewOutput from "../../components/output/preview/PreviewOutput.svelte"
+import { PreviewOutput } from "../output/PreviewOutput"
 import { openSettings } from "../../components/settings/openSettings"
 import { activePopup, currentOutputSettings, outputs } from "../../stores"
 import { send } from "../../utils/request"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
@@ -18,7 +17,6 @@ import styles from "./OutputSelector.module.css"
 
 // Port de components/main/popups/OutputSelector.svelte. Lee outputs (al renderizar) y pide los monitores con requestMain(Main.GET_DISPLAYS) al montar.
 // Escribe: currentOutputSettings + activePopup al elegir una salida (abre Configuración/Pantallas) y send(OUTPUT, ["IDENTIFY_SCREENS"], screens).
-// PreviewOutput sigue siendo Svelte (isla): no tiene versión React.
 interface PreviewScreen extends Display {
     previewBounds: { x: number; y: number }
 }
@@ -96,7 +94,7 @@ export function OutputSelector() {
                                 {!currentScreen.enabled ? <span style={{ zIndex: 2, position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontSize: "0.5em", pointerEvents: "none" }}>{currentScreen.name}</span> : null}
 
                                 <div data-title={`main.open: <b>${currentScreen.name}</b>`} className={styles.screen} style={{ width: "100%", height: "100%", ...(currentScreen.screen && screens.find((a) => a.id.toString() === currentScreen.screen) ? { opacity: 1 } : {}) }} onClick={() => openOutput(currentScreen.id)} role="button" tabIndex={0} onKeyDown={triggerClickOnEnterSpace}>
-                                    {currentScreen.enabled ? <SvelteIsland component={PreviewOutput} props={{ outputId: currentScreen.id, disableTransitions: true }} /> : null}
+                                    {currentScreen.enabled ? <PreviewOutput outputId={currentScreen.id} disableTransitions /> : null}
                                 </div>
                             </div>
                         ))}

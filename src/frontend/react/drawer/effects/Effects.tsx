@@ -5,11 +5,10 @@ import { addProjectItem } from "../../../converters/project"
 import { clone, keysToID, sortByName } from "../../../components/helpers/array"
 import { findMatchingOut, getResolution } from "../../../components/helpers/output"
 import { toggleEffectOutput } from "../../../components/helpers/overlayOutput"
-import EffectView from "../../../components/output/effects/Effect.svelte"
-import Zoomed from "../../../components/slide/Zoomed.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
+import { Effect as EffectView } from "../../output/Effect"
 import { T } from "../../helpers/T"
 import { useStore } from "../../hooks/useStore"
+import { Zoomed } from "../../slide/Zoomed"
 import { Center } from "../../system/Center"
 import { SelectElem } from "../../system/SelectElem"
 import { Card } from "../Card"
@@ -17,7 +16,7 @@ import { EffectIcons } from "./EffectIcons"
 import "./Effects.module.css"
 
 // Port de components/drawer/effects/Effects.svelte: grilla de efectos con carga por lotes.
-// `Effect.svelte` y `Zoomed.svelte` siguen en Svelte y se montan como islas.
+// Effect y Zoomed se importan directamente desde sus ports React (F24.24 P8g).
 export interface EffectsProps {
     // Editor de overlays: un clic abre el efecto para editarlo (no lo saca al aire)
     editOnClick?: boolean
@@ -116,13 +115,9 @@ export function Effects({ editOnClick = false }: EffectsProps) {
                             <EffectIcons columns={mediaOptionsValue.columns} effectId={effect.id} />
 
                             <SelectElem id="effect" data={effect.id} fill draggable>
-                                <SvelteIsland
-                                    component={Zoomed}
-                                    props={{ resolution, background: effect.items?.length ? "var(--primary);" : effect.color || "var(--primary);", checkered: !!effect.items?.length }}
-                                    slots={{
-                                        default: slowLoader < 0 || slowLoader > i ? <SvelteIsland key={hover === i ? "hover" : "idle"} component={EffectView} props={{ effect, preview: hover !== i }} /> : null
-                                    }}
-                                />
+                                <Zoomed resolution={resolution} background={effect.items?.length ? "var(--primary);" : effect.color || "var(--primary);"} checkered={!!effect.items?.length}>
+                                    {slowLoader < 0 || slowLoader > i ? <EffectView key={hover === i ? "hover" : "idle"} effect={effect} preview={hover !== i} /> : null}
+                                </Zoomed>
                             </SelectElem>
                         </Card>
                     ))}

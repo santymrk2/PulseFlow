@@ -2,8 +2,8 @@ import { useEffect, useRef, useState, type CSSProperties } from "react"
 import type { Item } from "../../../types/Show"
 import { slidesOptions } from "../../stores"
 import { MetronomeVisualizer } from "../drawer/audio/MetronomeVisualizer"
-import BMDStream from "../../components/drawer/live/BMDStream.svelte"
-import Cam from "../../components/drawer/live/Cam.svelte"
+import { BMDStream } from "../drawer/live/BMDStream"
+import { Cam } from "../drawer/live/Cam"
 import NDIStream from "../../components/drawer/live/NDIStream.svelte"
 import OMTStream from "../../components/drawer/live/OMTStream.svelte"
 import autosize from "../../components/edit/scripts/autosize"
@@ -83,11 +83,20 @@ export function SlideItems({ item, edit = false, itemElem, slideIndex = 0, previ
     const cameraStyleString = `${cameraCropState.mediaCropGeometry}object-fit: ${cameraCropState.cropHasValues ? (item.fit === "cover" ? "cover" : "fill") : item.fit || "contain"};filter: ${item.filter};transform: scale(${item.flipped ? "-1" : "1"}, ${item.flippedY ? "-1" : "1"});`
     const variableStyleString = typeof item.style === "string" ? (item.style.includes("font-size") && item.style.split("font-size:")[1].trim()[0] !== "0" ? "" : `font-size: ${edit ? autoSize : fontSize}px;`) : ""
 
-    function cameraContainer(screenType: "screen" | "ndi" | "omt" | "blackmagic", component: typeof Window | typeof NDIStream | typeof OMTStream | typeof BMDStream) {
+    function cameraContainer(screenType: "screen" | "ndi" | "omt", component: typeof Window | typeof NDIStream | typeof OMTStream) {
         const screen = { id: item.device?.id || "", name: item.device?.name || "" }
         return (
             <div className="mediaContainer" style={cssTextToStyle(cameraCropState.mediaContainerStyle)}>
                 <SvelteIsland key={item.device?.id} component={component} props={{ ...(screenType === "screen" ? { id: screen.id } : { screen, background: true, outputId }), style: cameraStyleString }} />
+            </div>
+        )
+    }
+
+    function blackmagicContainer() {
+        const screen = { id: item.device?.id || "", name: item.device?.name || "" }
+        return (
+            <div className="mediaContainer" style={cssTextToStyle(cameraCropState.mediaContainerStyle)}>
+                <BMDStream key={item.device?.id} screen={screen} background outputId={outputId} style={cameraStyleString} />
             </div>
         )
     }
@@ -109,22 +118,8 @@ export function SlideItems({ item, edit = false, itemElem, slideIndex = 0, previ
         if (item.device.type === "screen") return cameraContainer("screen", Window)
         if (item.device.type === "ndi") return cameraContainer("ndi", NDIStream)
         if (item.device.type === "omt") return cameraContainer("omt", OMTStream)
-        if (item.device.type === "blackmagic") return cameraContainer("blackmagic", BMDStream)
-        return (
-            <SvelteIsland
-                component={Cam}
-                props={{
-                    cam: { id: item.device.id, group: item.device.group || "", name: item.device.name },
-                    item,
-                    style: cameraStyleString,
-                    disablePreview: isTemplatePreview,
-                    cropping: item.cropping,
-                    cropPreviewMode,
-                    preview: !outputId && (preview || isTemplatePreview),
-                    itemStyle: item.style
-                }}
-            />
-        )
+        if (item.device.type === "blackmagic") return blackmagicContainer()
+        return <Cam cam={{ id: item.device.id, group: item.device.group || "", name: item.device.name }} item style={cameraStyleString} disablePreview={isTemplatePreview} cropping={item.cropping} cropPreviewMode={cropPreviewMode} preview={!outputId && (preview || isTemplatePreview)} itemStyle={item.style} />
     }
     if (item.type === "slide_tracker") {
         return <SlideProgress item={item} tracker={item.tracker || {}} autoSize={item.auto === false ? 0 : edit ? autoSize : fontSize} outputId={outputId} />

@@ -8,7 +8,7 @@ import { DEFAULT_ITEM_STYLE } from "../../components/edit/scripts/itemHelpers"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"
 import { getResolution } from "../../components/helpers/output"
-import Output from "../../components/output/Output.svelte"
+import { Output } from "../output/Output"
 import { openSettings } from "../../components/settings/openSettings"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
 import { activePopup, activeStyle, currentOutputSettings, outputs, popupData, styles } from "../../stores"
@@ -23,7 +23,7 @@ import stylesCSS from "./SelectStyle.module.css"
 // Port de components/main/popups/SelectStyle.svelte. Lee: styles, currentOutputSettings, outputs y popupData (active, skip, trigger).
 // Escribe: el trigger con el id elegido, popupData = { id: "select_style", value }, activePopup = null (200 ms después),
 // y al crear: history UPDATE, activeStyle = id y openSettings("styles").
-// Card y Output siguen siendo Svelte (islas); como SvelteIsland no pasa slots, se renderizan como hermanos.
+// Card sigue siendo Svelte (isla); como SvelteIsland no pasa slots, se renderiza como hermano de Output.
 interface StyleItem extends Styles {
     id: string
 }
@@ -87,7 +87,7 @@ export function SelectStyle() {
                             return (
                                 <div key={style.id}>
                                     <SvelteIsland component={Card} props={{ width: 25, active: active === style.id, label: style.name, resolution }} events={{ click: () => select(style.id) }} />
-                                    <SvelteIsland component={Output} props={{ outputId, style: getStyleResolution(resolution, resolution.width, resolution.height, "fit"), styleIdOverride: style.id, outOverride: out, mirror: true }} />
+                                    <Output outputId={outputId} style={getStyleResolution(resolution, resolution.width, resolution.height, "fit")} styleIdOverride={style.id} outOverride={out} mirror />
                                 </div>
                             )
                         })}

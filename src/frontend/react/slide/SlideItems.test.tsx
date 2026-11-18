@@ -4,6 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../types/Show"
 import { slidesOptions } from "../../stores"
 import autosize from "../../components/edit/scripts/autosize"
+import { clearIslands } from "../test/islandMock"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { SlideItems } from "./SlideItems"
 
@@ -35,8 +36,8 @@ vi.mock("./views/Variable", () => ({ Variable: viewMock("Variable") }))
 vi.mock("./views/Chart", () => ({ Chart: viewMock("Chart") }))
 vi.mock("./views/Table", () => ({ Table: viewMock("Table") }))
 vi.mock("./views/QrCode", () => ({ QrCode: viewMock("QrCode") }))
-vi.mock("../../components/drawer/live/BMDStream.svelte", () => ({ default: { name: "BMDStream" } }))
-vi.mock("../../components/drawer/live/Cam.svelte", () => ({ default: { name: "Cam" } }))
+vi.mock("../drawer/live/BMDStream", async () => ({ BMDStream: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("BMDStream") }))
+vi.mock("../drawer/live/Cam", async () => ({ Cam: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Cam") }))
 vi.mock("../../components/drawer/live/NDIStream.svelte", () => ({ default: { name: "NDIStream" } }))
 vi.mock("../../components/drawer/live/OMTStream.svelte", () => ({ default: { name: "OMTStream" } }))
 
@@ -46,6 +47,7 @@ beforeEach(() => {
 })
 afterEach(() => {
     cleanup()
+    clearIslands()
     restore()
     vi.clearAllMocks()
 })
@@ -92,9 +94,21 @@ describe("SlideItems", () => {
     })
 
     it("renderiza_las_camaras_por_tipo", () => {
-        for (const type of ["screen", "ndi", "omt", "blackmagic"]) {
+        for (const [type, name] of [
+            ["screen", "Window"],
+            ["ndi", "NDIStream"],
+            ["omt", "OMTStream"]
+        ]) {
             const container = renderItem({ type: "camera", device: { id: "d1", name: "Cámara", type } })
-            expect(container.querySelector("[data-island]")).toBeTruthy()
+            expect(container.querySelector(`[data-island='${name}']`)).toBeTruthy()
+            cleanup()
+        }
+        for (const [type, name] of [
+            ["blackmagic", "BMDStream"],
+            ["camera", "Cam"]
+        ]) {
+            const container = renderItem({ type: "camera", device: { id: "d1", name: "Cámara", type } })
+            expect(container.querySelector(`[data-isla='${name}']`)).toBeTruthy()
             cleanup()
         }
     })

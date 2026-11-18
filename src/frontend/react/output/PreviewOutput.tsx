@@ -1,11 +1,10 @@
 import { livePrepare, outputs, styles as stylesStore } from "../../stores"
 import { getResolution } from "../../components/helpers/output"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
-import StageLayoutSvelte from "../../components/stage/StageLayout.svelte"
 import { Icon } from "../helpers/Icon"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { useStore } from "../hooks/useStore"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+import { StageLayout } from "../stage/StageLayout"
 import styles from "./PreviewOutput.module.css"
 
 export interface PreviewOutputProps {
@@ -37,7 +36,7 @@ export function PreviewOutput({ fullscreen = false, disableTransitions = false, 
     return (
         <div className={`${styles.center} previewOutput ${disabled ? styles.disabled : ""}`.trim()} id={outputId} style={cssTextToStyle(`${style}${aspect}`)}>
             {stageOutput ? (
-                <SvelteIsland component={StageLayoutSvelte} props={{ outputId, stageId: stageOutput, preview: !disableTransitions, edit: false }} />
+                <StageLayout outputId={outputId} stageId={stageOutput} preview={!disableTransitions} edit={false} />
             ) : (
                 <div
                     data-output-slot

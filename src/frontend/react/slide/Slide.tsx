@@ -21,10 +21,10 @@ import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
 import { SelectElem } from "../system/SelectElem"
 import MediaLoader from "../../components/drawer/media/MediaLoader.svelte"
-import Editbox from "../../components/edit/editbox/Editbox.svelte"
-import Effect from "../../components/output/effects/Effect.svelte"
 import { Actions } from "./Actions"
 import { BreakCountdown } from "./BreakCountdown"
+import { Editbox } from "../edit/editbox/Editbox"
+import { Effect } from "../output/Effect"
 import { Icons } from "./Icons"
 import { Textbox } from "./Textbox"
 import { Zoomed } from "./Zoomed"
@@ -331,7 +331,7 @@ export function Slide({ showId, slide, layoutSlide, layoutSlides = [], show, col
                                 </div>
                             ) : null}
 
-                            {!altKeyPressed && layoutSlide.effects?.length && (viewMode !== "lyrics" || noQuickEdit) ? layoutSlide.effects.map((id) => (currentEffects[id]?.placeUnderSlide === true ? <SvelteIsland key={id} component={Effect} props={{ effect: { id, ...currentEffects[id] }, preview: true }} /> : null)) : null}
+                            {!altKeyPressed && layoutSlide.effects?.length && (viewMode !== "lyrics" || noQuickEdit) ? layoutSlide.effects.map((id) => (currentEffects[id]?.placeUnderSlide === true ? <Effect key={id} effect={{ id, ...currentEffects[id] }} preview /> : null)) : null}
 
                             {!altKeyPressed && layoutSlide.overlays?.length && (viewMode !== "lyrics" || noQuickEdit) ? layoutSlide.overlays.map((id) => (currentOverlays[id]?.placeUnderSlide === true ? (currentOverlays[id]?.items || []).map((item, itemIndex) => <Textbox key={`${id}-${itemIndex}`} item={item} ref={{ type: "overlay", id }} preview miniPreview />) : null)) : null}
 
@@ -362,7 +362,7 @@ export function Slide({ showId, slide, layoutSlide, layoutSlides = [], show, col
                                   })
                                 : null}
 
-                            {!altKeyPressed && layoutSlide.effects?.length && (viewMode !== "lyrics" || noQuickEdit) ? layoutSlide.effects.map((id) => (currentEffects[id] && !currentEffects[id]?.placeUnderSlide ? <SvelteIsland key={id} component={Effect} props={{ effect: { id, ...currentEffects[id] }, preview: true }} /> : null)) : null}
+                            {!altKeyPressed && layoutSlide.effects?.length && (viewMode !== "lyrics" || noQuickEdit) ? layoutSlide.effects.map((id) => (currentEffects[id] && !currentEffects[id]?.placeUnderSlide ? <Effect key={id} effect={{ id, ...currentEffects[id] }} preview /> : null)) : null}
 
                             {!altKeyPressed && layoutSlide.overlays?.length && (viewMode !== "lyrics" || noQuickEdit) ? layoutSlide.overlays.map((id) => (currentOverlays[id] && !currentOverlays[id]?.placeUnderSlide ? (currentOverlays[id]?.items || []).map((item, itemIndex) => <Textbox key={`${id}-${itemIndex}`} item={item} ref={{ type: "overlay", id }} preview miniPreview />) : null)) : null}
 
@@ -417,7 +417,7 @@ export function Slide({ showId, slide, layoutSlide, layoutSlides = [], show, col
                 <>
                     <hr />
                     <div className={`quickEdit ${css.quickEdit}`} style={{ fontSize: `${(-1.1 * currentSlidesOptions.columns + 12) / 6}em` }} data-index={index}>
-                        {currentRefreshListBoxes >= 0 && currentRefreshListBoxes !== index ? slide.items?.map((item, itemIndex) => (item?.lines ? <SvelteIsland key={itemIndex} component={Editbox} props={{ item, ref: { showId, id: layoutSlide.id }, editIndex: index, index: itemIndex, plain: true }} /> : null)) : null}
+                        {currentRefreshListBoxes >= 0 && currentRefreshListBoxes !== index ? slide.items?.map((item, itemIndex) => (item?.lines ? <Editbox key={itemIndex} item={item} ref={{ showId, id: layoutSlide.id }} editIndex={index} index={itemIndex} plain /> : null)) : null}
                     </div>
                 </>
             ) : null}

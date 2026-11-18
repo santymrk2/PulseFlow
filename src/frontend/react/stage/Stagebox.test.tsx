@@ -61,10 +61,19 @@ vi.mock("../ui/button/Button", () => ({
         </button>
     )
 }))
+const serializeProps = (props: Record<string, unknown>) => JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))
+vi.mock("../edit/editbox/EditboxLines", () => ({ EditboxLines: (props: Record<string, unknown>) => <span data-view="EditboxLines" data-props={JSON.stringify(props)} /> }))
+vi.mock("../output/Output", () => ({ Output: (props: Record<string, unknown>) => <span data-view="Output" data-props={serializeProps(props)} /> }))
+vi.mock("../system/Clock", () => ({ Clock: (props: Record<string, unknown>) => <span data-view="Clock" data-props={serializeProps(props)} /> }))
+vi.mock("../system/Movebox", () => ({ Movebox: (props: Record<string, unknown>) => <span data-view="Movebox" data-props={serializeProps(props)} /> }))
 vi.mock("../slide/SlideItems", () => ({ SlideItems: (props: Record<string, unknown>) => <span data-view="SlideItems" data-props={JSON.stringify(props)} /> }))
+vi.mock("../slide/views/SlideProgress", () => ({ SlideProgress: (props: Record<string, unknown>) => <span data-view="SlideProgress" data-props={serializeProps(props)} /> }))
 vi.mock("../slide/Textbox", () => ({ Textbox: (props: Record<string, unknown>) => <span data-view="Textbox" data-props={JSON.stringify(props)} /> }))
+vi.mock("../slide/views/Timer", () => ({ Timer: (props: Record<string, unknown>) => <span data-view="Timer" data-props={serializeProps(props)} /> }))
+vi.mock("../slide/views/Variable", () => ({ Variable: (props: Record<string, unknown>) => <span data-view="Variable" data-props={serializeProps(props)} /> }))
 vi.mock("./SlideText", () => ({ SlideText: (props: Record<string, unknown>) => <span data-view="SlideText" data-props={JSON.stringify(props)} /> }))
 vi.mock("./SlideNotes", () => ({ SlideNotes: (props: Record<string, unknown>) => <span data-view="SlideNotes" data-props={JSON.stringify(props)} /> }))
+vi.mock("./StageLayout", () => ({ StageLayout: (props: Record<string, unknown>) => <span data-view="StageLayout" data-props={serializeProps(props)} /> }))
 
 const baseItem = { id: "i1", type: "text", style: "font-size: 100px;", align: "center" } as StageItem
 const stageLayout = { id: "st1", name: "Stage", settings: { labels: true, labelColor: "#fff" }, items: {} } as unknown as StageLayout
@@ -143,7 +152,7 @@ describe("Stagebox", () => {
 
     it("usa EditboxLines al editar texto y Textbox en reproducción", () => {
         const edit = renderBox({ edit: true })
-        expect(edit.container.querySelector("[data-island='EditboxLines']")).toBeTruthy()
+        expect(edit.container.querySelector("[data-view='EditboxLines']")).toBeTruthy()
         edit.unmount()
 
         const view = renderBox()

@@ -1,8 +1,7 @@
 import type { MediaStyle } from "../../../types/Main"
-import Cam from "../../components/drawer/live/Cam.svelte"
 import { getMediaStyle } from "../../components/helpers/media"
 import { activeEdit, media } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+import { Cam } from "../drawer/live/Cam"
 import { useStore } from "../hooks/useStore"
 
 // Port de components/edit/editors/CameraEditor.svelte.
@@ -21,7 +20,7 @@ export function CameraEditor() {
     return (
         <div className="parent" style={{ display: "flex", flexDirection: "column", height: "100%" }}>
             <div className="media" style={{ flex: 1, overflow: "hidden", position: "relative" }}>
-                {data ? <SvelteIsland component={Cam} props={{ cam: data, item: true, style: cameraStyleString }} /> : null}
+                {data ? <Cam cam={data} item style={cameraStyleString} /> : null}
             </div>
         </div>
     )

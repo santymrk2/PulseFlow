@@ -13,24 +13,24 @@ import { getActiveOutputs, getStageResolution, percentageStylePos } from "../../
 import { createCSSVariables, replaceDynamicValues } from "../../components/helpers/showActions"
 import { getStyles } from "../../components/helpers/style"
 import { getCustomStageLabel, getSlideTextItems, stageItemToItem } from "../../components/stage/stage"
-import EditboxLines from "../../components/edit/editbox/EditboxLines.svelte"
 import Media from "../../components/output/layers/Media.svelte"
-import Output from "../../components/output/Output.svelte"
-import SlideProgress from "../../components/slide/views/SlideProgress.svelte"
-import Timer from "../../components/slide/views/Timer.svelte"
-import Variable from "../../components/slide/views/Variable.svelte"
-import Clock from "../../components/system/Clock.svelte"
-import Movebox from "../../components/system/Movebox.svelte"
-import StageLayout from "../../components/stage/StageLayout.svelte"
 import { SvelteIsland } from "../bridge/SvelteIsland"
+import { EditboxLines } from "../edit/editbox/EditboxLines"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
+import { Output } from "../output/Output"
+import { Clock } from "../system/Clock"
+import { Movebox } from "../system/Movebox"
 import { Button } from "../ui/button/Button"
 import { SlideItems } from "../slide/SlideItems"
+import { SlideProgress } from "../slide/views/SlideProgress"
 import { Textbox } from "../slide/Textbox"
+import { Timer } from "../slide/views/Timer"
+import { Variable } from "../slide/views/Variable"
 import { SlideNotes } from "./SlideNotes"
 import { SlideText } from "./SlideText"
+import { StageLayout } from "./StageLayout"
 import styles from "./Stagebox.module.css"
 
 export interface StageboxMouse {
@@ -65,7 +65,7 @@ type StageBackground = BackgroundFrame & { next?: BackgroundFrame; next2?: Backg
 const MAX_AUTOSIZE_RETRIES = 5
 
 // Port de components/stage/Stagebox.svelte (F24.19a). `bind:mouse` → onMouseChange.
-// Los hijos aún no migrados se montan con SvelteIsland; el context Svelte `layoutMounted` se pasa como getLayoutMounted.
+// La imagen de fondo (`Media`) aún se monta con SvelteIsland; el context Svelte `layoutMounted` se pasa como getLayoutMounted.
 export function Stagebox({ id, item, stageLayout = null, ratio, preview = false, edit = false, disableStagePreview = false, onMouseChange, getLayoutMounted }: StageboxProps) {
     const currentActiveStage = useStore(activeStage)
     const currentActivePopup = useStore(activePopup)
@@ -359,7 +359,7 @@ export function Stagebox({ id, item, stageLayout = null, ratio, preview = false,
 
             {edit && item ? (
                 <>
-                    <SvelteIsland component={Movebox as never} props={{ ratio, itemStyle: item.style, active: currentActiveStage.items.includes(id) }} />
+                    <Movebox ratio={ratio} itemStyle={item.style} active={currentActiveStage.items.includes(id)} />
 
                     <div className={`actions ${styles.actions}`}>
                         {item.button?.press || item.button?.release ? (
@@ -386,7 +386,7 @@ export function Stagebox({ id, item, stageLayout = null, ratio, preview = false,
                     <span style={cssTextToStyle(spanStyle)}>
                         {item.type === "current_output" || id.includes("current_output") ? (
                             <>
-                                {stageOutput ? disableStagePreview ? null : <SvelteIsland component={StageLayout as never} props={{ outputId: outputWindowId, stageId: stageOutput, edit: false, disableStagePreview: true }} /> : <SvelteIsland component={Output as never} props={{ outputId: outputWindowId, mirror: true, style: "width: 100%; height: 100%;" }} />}
+                                {stageOutput ? disableStagePreview ? null : <StageLayout outputId={outputWindowId} stageId={stageOutput} edit={false} disableStagePreview={true} /> : <Output outputId={outputWindowId} mirror={true} style="width: 100%; height: 100%;" />}
 
                                 {item.currentOutput?.showLabel ? (
                                     <div className={`label ${styles.label}`} style={cssTextToStyle("position: absolute;top: unset;bottom: 10px;left: 50%;transform: translateX(-50%);pointer-events: none;font-size: 28px;background-color: rgba(0, 0, 0, 0.5);padding: 2px 6px;border-radius: 12px;height: 46px;width: 180px;display: flex;justify-content: center;align-items: center;")}>
@@ -420,7 +420,7 @@ export function Stagebox({ id, item, stageLayout = null, ratio, preview = false,
                         ) : item.type === "text" ? (
                             edit ? (
                                 <span key={String(currentRefreshEditSlide)} className={`edit_item ${styles.editItem}`} style={cssTextToStyle(`pointer-events: initial;--font-size: ${fontSize}px;`)}>
-                                    <SvelteIsland component={EditboxLines as never} props={{ item: stageItemToItem(item), ref: { type: "stage", id }, index: -1 }} />
+                                    <EditboxLines item={stageItemToItem(item)} ref={{ type: "stage", id }} index={-1} />
                                 </span>
                             ) : (
                                 <Textbox item={stageItemToItem(item)} stageItem={item} ref={{ type: "stage", id }} fontSize={fontSize} stageAutoSize={item.auto || (item.textFit && item.textFit !== "none")} isStage />
@@ -432,18 +432,18 @@ export function Stagebox({ id, item, stageLayout = null, ratio, preview = false,
                         ) : (
                             <div>
                                 {id.includes("slide_tracker") ? (
-                                    <SvelteIsland component={SlideProgress as never} props={{ tracker: item.tracker || {}, autoSize: item.auto !== false ? autoSizeValue : fontSize, outputId: stageOutputId }} />
+                                    <SlideProgress tracker={item.tracker || {}} autoSize={item.auto !== false ? autoSizeValue : fontSize} outputId={stageOutputId} />
                                 ) : id.includes("clock") ? (
-                                    <SvelteIsland component={Clock as never} props={{ style: false, fontStyle: item.auto === false ? "" : `font-size: ${edit ? autoSizeValue : fontSize}px;`, seconds: item.clock?.seconds ?? true, dateFormat: item.clock?.show_date ? "DD/MM/YYYY" : "none" }} />
+                                    <Clock style={false} fontStyle={item.auto === false ? "" : `font-size: ${edit ? autoSizeValue : fontSize}px;`} seconds={item.clock?.seconds ?? true} dateFormat={item.clock?.show_date ? "DD/MM/YYYY" : "none"} />
                                 ) : id.includes("first_active_timer") ? (
-                                    <SvelteIsland component={Timer as never} props={{ item: stageItemToItem(item), id: firstTimerId, today, style: `font-size: ${item.auto !== false ? autoSizeValue : fontSize}px;` }} />
+                                    <Timer item={stageItemToItem(item)} id={firstTimerId} today={today} style={`font-size: ${item.auto !== false ? autoSizeValue : fontSize}px;`} />
                                 ) : id.includes("timers") ? (
                                     currentTimers[id.split("#")[1]] ? (
-                                        <SvelteIsland component={Timer as never} props={{ item: stageItemToItem(item), id: id.split("#")[1], today, style: `font-size: ${item.auto !== false ? autoSizeValue : fontSize}px;` }} />
+                                        <Timer item={stageItemToItem(item)} id={id.split("#")[1]} today={today} style={`font-size: ${item.auto !== false ? autoSizeValue : fontSize}px;`} />
                                     ) : null
                                 ) : id.includes("variables") ? (
                                     currentVariables[id.split("#")[1]] ? (
-                                        <SvelteIsland component={Variable as never} props={{ id: id.split("#")[1], style: `font-size: ${item.auto !== false ? autoSizeValue : fontSize}px;`, ref: { type: "stage", id }, hideText: true }} />
+                                        <Variable id={id.split("#")[1]} style={`font-size: ${item.auto !== false ? autoSizeValue : fontSize}px;`} ref={{ type: "stage", id }} hideText={true} />
                                     ) : null
                                 ) : (
                                     id

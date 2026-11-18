@@ -17,8 +17,8 @@ vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../../components/drawer/Card.svelte", () => ({ default: { isla: "Card" } }))
-vi.mock("../../components/slide/Zoomed.svelte", () => ({ default: { isla: "Zoomed" } }))
-vi.mock("../../components/slide/Textbox.svelte", () => ({ default: { isla: "Textbox" } }))
+vi.mock("../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Textbox") }))
+vi.mock("../slide/Zoomed", async () => ({ Zoomed: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Zoomed") }))
 vi.mock("../ui/text-field/TextField", () => ({
     TextField: ({ label, value, onInput }: { label: string; value: string; onInput?: (v: string) => void }) => <input data-label={label} value={value} onChange={(e) => onInput?.(e.currentTarget.value)} />
 }))

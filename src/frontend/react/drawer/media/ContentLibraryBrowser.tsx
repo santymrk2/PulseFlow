@@ -8,9 +8,8 @@ import { Icon } from "../../helpers/Icon"
 import { Button } from "../../ui/button/Button"
 import { Center } from "../../system/Center"
 import { FloatingBar } from "../../ui/floating-bar/FloatingBar"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
-import MediaCardSvelte from "../../../components/drawer/media/MediaCard.svelte"
+import { MediaCard } from "./MediaCard"
 import styles from "./ContentLibraryBrowser.module.css"
 
 type ContentFileWithExtras = ContentFile & { [key: string]: unknown }
@@ -218,20 +217,7 @@ export function ContentLibraryBrowser({ providerId, columns: columnsProp, onCurr
                         }
                         return (
                             <div key={idx} className={styles.card} style={{ width: listMode ? "100%" : `${100 / columns}%` }}>
-                                <SvelteIsland
-                                    component={MediaCardSvelte}
-                                    props={{
-                                        credits: {},
-                                        name: item.name || "",
-                                        path: item.url,
-                                        thumbnailPath: item.thumbnail || "",
-                                        type: item.type,
-                                        shiftRange: [],
-                                        active: "online",
-                                        contentProvider: providerId,
-                                        contentFileData: item
-                                    }}
-                                />
+                                <MediaCard credits={{}} name={item.name || ""} path={item.url} thumbnailPath={item.thumbnail || ""} type={item.type} shiftRange={[]} active="online" contentProvider={providerId} contentFileData={item} />
                             </div>
                         )
                     })}

@@ -13,6 +13,7 @@ vi.mock("../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.p
 vi.mock("../bridge/SvelteIsland", () => ({
     SvelteIsland: () => <div data-testid="effect" />
 }))
+vi.mock("../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Effect") }))
 
 afterEach(() => {
     cleanup()

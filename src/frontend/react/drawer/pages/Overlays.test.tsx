@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
+import type { ReactNode } from "react"
 import { get } from "svelte/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activePage, activeProfile, activeShow, dictionary, labelsDisabled, mediaOptions, overlayCategories, outputs, overlays, previewOutputId, profiles, styles } from "../../../stores"
@@ -22,8 +23,19 @@ vi.mock("../../../components/helpers/output", () => ({ getResolution: () => ({ w
 vi.mock("../../../components/helpers/overlayOutput", () => ({ toggleOverlayOutput: toggleOverlayOutputMock }))
 vi.mock("../../../converters/project", () => ({ addProjectItem: addProjectItemMock }))
 vi.mock("../effects/Effects", () => ({ Effects: () => <div data-isla="Effects" /> }))
-vi.mock("../../../components/slide/Zoomed.svelte", () => ({ default: { isla: "Zoomed" } }))
-vi.mock("../../../components/slide/Textbox.svelte", () => ({ default: { isla: "Textbox" } }))
+vi.mock("../../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Textbox") }))
+vi.mock("../../slide/Zoomed", async () => {
+    const { makePortMock } = await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")
+    const Port = makePortMock("Zoomed")
+    return {
+        Zoomed: ({ children, ...props }: { children?: ReactNode } & Record<string, unknown>) => (
+            <>
+                {<Port {...props} />}
+                {children}
+            </>
+        )
+    }
+})
 vi.mock("../../bridge/SvelteIsland", () => ({
     SvelteIsland: ({ component, props, slots = {} }: { component: { isla: string }; props?: object; slots?: Record<string, unknown> }) => (
         <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})}>

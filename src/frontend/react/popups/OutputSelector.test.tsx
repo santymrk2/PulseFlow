@@ -22,8 +22,7 @@ vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn()
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
-vi.mock("../../components/output/preview/PreviewOutput.svelte", () => ({ default: { isla: "PreviewOutput" } }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
+vi.mock("../output/PreviewOutput", async () => ({ PreviewOutput: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("PreviewOutput") }))
 
 const displays = [
     { id: "display-1", label: "Principal", bounds: { x: 0, y: 0, width: 1920, height: 1080 }, internal: true },

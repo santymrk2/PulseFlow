@@ -26,8 +26,7 @@ vi.mock("../../components/helpers/output", () => ({
 vi.mock("../../components/helpers/rtmpDestinations", () => ({ getUnhealthyDestinations: vi.fn(() => []), hasStreamableDestination: vi.fn(() => false) }))
 vi.mock("../../components/helpers/show", () => ({ bindSlidesToOutput: vi.fn(), getLayoutRef: vi.fn(() => []) }))
 vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn(() => ({ get: vi.fn(() => null) })) }))
-vi.mock("../../components/output/preview/PreviewOutput.svelte", () => ({ default: {} }))
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-testid="preview-output" /> }))
+vi.mock("./PreviewOutput", () => ({ PreviewOutput: () => <div data-testid="preview-output" /> }))
 vi.mock("../drawer/audio/AudioMeter", () => ({ AudioMeter: () => <div data-testid="audio-meter" /> }))
 vi.mock("../ui/select-field/SelectField", () => ({
     SelectField: ({ value, options, onChange }: { value: string; options: { value: string; label: string }[]; onChange?: (v: string | null) => void }) => (

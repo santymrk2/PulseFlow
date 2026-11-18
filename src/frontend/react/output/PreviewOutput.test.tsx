@@ -40,8 +40,7 @@ vi.mock("../../stores", () => {
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({ o1: { out: {} } }) }))
 vi.mock("../../components/helpers/output", () => ({ getResolution: () => ({ width: 1920, height: 1080 }) }))
 vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: () => "width:100%" }))
-vi.mock("../../components/stage/StageLayout.svelte", () => ({ default: {} }))
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-testid="island" /> }))
+vi.mock("../stage/StageLayout", () => ({ StageLayout: () => <div data-testid="island" /> }))
 vi.mock("../helpers/Icon", () => ({ Icon: () => <span /> }))
 
 import PreviewOutput from "./PreviewOutput"

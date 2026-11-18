@@ -1,16 +1,17 @@
 import { useEffect, useRef, useState } from "react"
 import { get } from "svelte/store"
 import { uid } from "uid"
+import type { Item } from "../../../types/Show"
 import Card from "../../components/drawer/Card.svelte"
 import { keysToID, sortByName } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"
 import { getResolution } from "../../components/helpers/output"
-import Textbox from "../../components/slide/Textbox.svelte"
-import Zoomed from "../../components/slide/Zoomed.svelte"
 import { activePopup, outputs, overlays, popupData, previewOutputId, styles } from "../../stores"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
+import { Textbox } from "../slide/Textbox"
+import { Zoomed } from "../slide/Zoomed"
 import { Center } from "../system/Center"
 import { Button } from "../ui/button/Button"
 import { TextField } from "../ui/text-field/TextField"
@@ -19,12 +20,13 @@ import stylesCSS from "./SelectOverlay.module.css"
 // Port de components/main/popups/SelectOverlay.svelte. Lee: popupData (active, hide, trigger), outputs, styles,
 // previewOutputId (resolución) y overlays. Escribe: el trigger, popupData = { id: "select_overlay", value },
 // activePopup = null (500 ms después), popupData = {} y un history UPDATE al crear.
-// Card, Zoomed y Textbox siguen siendo Svelte (islas); al no pasar slots se renderizan como hermanos.
+// Card sigue siendo Svelte (isla); Zoomed y Textbox se importan directamente desde sus ports React.
+// Como el Zoomed original no recibía slots, Textbox se renderiza como hermano suyo (F24.24 P8g).
 interface OverlayItem {
     id: string
     name?: string
     color?: string | null
-    items?: object[]
+    items?: Item[]
 }
 
 const INITIAL_BATCH = 8
@@ -107,9 +109,9 @@ export function SelectOverlay() {
                                 <SvelteIsland component={Card} props={{ width: 25, active: active === overlay.id, label: overlay.name, color: overlay.color, resolution }} events={{ click: () => select(overlay.id) }} />
                                 {loaded || i < lazyLoader ? (
                                     <>
-                                        <SvelteIsland component={Zoomed} props={{ resolution, background: overlay.items?.length ? "var(--primary);" : overlay.color || "var(--primary);", checkered: !!overlay.items?.length }} />
+                                        <Zoomed resolution={resolution} background={overlay.items?.length ? "var(--primary);" : overlay.color || "var(--primary);"} checkered={!!overlay.items?.length} />
                                         {(overlay.items || []).map((item, index) => (
-                                            <SvelteIsland key={index} component={Textbox} props={{ item, ref: { type: "overlay", id: overlay.id }, preview: true, miniPreview: true }} />
+                                            <Textbox key={index} item={item} ref={{ type: "overlay", id: overlay.id }} preview miniPreview />
                                         ))}
                                     </>
                                 ) : null}

@@ -7,8 +7,7 @@ import { clearIslands, islands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { ScenePreview } from "./ScenePreview"
 
-vi.mock("../../../components/output/Output.svelte", () => ({ default: { isla: "Output" } }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
+vi.mock("../../output/Output", async () => ({ Output: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Output") }))
 vi.mock("../../../utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

@@ -14,10 +14,7 @@ vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/actions/actions", () => ({ customActionActivation: customActionActivationMock, runActionId: vi.fn() }))
 vi.mock("../../../components/edit/scripts/edit", () => ({ openDrawer: openDrawerMock }))
-vi.mock("../../../components/slide/views/Timer.svelte", () => ({ default: { isla: "Timer" } }))
-vi.mock("../../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} />
-}))
+vi.mock("../../slide/views/Timer", async () => ({ Timer: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Timer") }))
 
 const dict = {
     empty: { timers: "Sin temporizadores" },

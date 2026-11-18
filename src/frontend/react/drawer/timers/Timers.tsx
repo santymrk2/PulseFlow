@@ -4,13 +4,12 @@ import { activePopup, activeProfile, activeTimerTagFilter, activeTimers, disable
 import { translateText } from "../../../utils/language"
 import { clone, keysToID, sortByName } from "../../../components/helpers/array"
 import { joinTime, secondsToTime } from "../../../components/helpers/time"
-import TimerValue from "../../../components/slide/views/Timer.svelte"
 import { openDrawer } from "../../../components/edit/scripts/edit"
 import { getCurrentTimerValue, getTimerDynamicValue, playPauseGlobal, resetTimer } from "../../../components/drawer/timers/timers"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { Icon } from "../../helpers/Icon"
 import { T } from "../../helpers/T"
 import { useStore } from "../../hooks/useStore"
+import { Timer as TimerView } from "../../slide/views/Timer"
 import { Center } from "../../system/Center"
 import { SelectElem } from "../../system/SelectElem"
 import { Button } from "../../ui/button/Button"
@@ -19,7 +18,7 @@ import { Slider } from "../../ui/slider/Slider"
 import "./Timers.module.css"
 
 // Port de components/drawer/timers/Timers.svelte: lista de temporizadores globales.
-// `views/Timer.svelte` sigue en Svelte y se monta como isla; el resto de la lógica usa los helpers de `timers.ts`.
+// `views/Timer` ya es React (port); el resto de la lógica usa los helpers de `timers.ts`.
 export interface TimersProps {
     onlyPlaying?: boolean
 }
@@ -147,7 +146,7 @@ export function Timers({ onlyPlaying = false }: TimersProps) {
 
                                         <div style={{ display: "flex", justifyContent: "end", flexShrink: 0, ...(onlyPlaying ? {} : { minWidth: "220px" }) }}>
                                             <span style={{ display: "flex", alignSelf: "center", padding: "0 5px" }} role="none" onClick={openTimers}>
-                                                <SvelteIsland component={TimerValue} props={{ id: timer.id, today }} />
+                                                <TimerView id={timer.id} today={today} />
 
                                                 {timer.type === "counter" && endTime && endTime !== 0 ? (
                                                     <span className="end" style={{ opacity: 0.6, fontSize: "0.8em", alignSelf: "center", marginLeft: "5px" }}>

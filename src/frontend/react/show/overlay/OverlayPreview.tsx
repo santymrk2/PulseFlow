@@ -1,9 +1,8 @@
-import type { Show } from "../../../../types/Show"
+import type { Item, Show } from "../../../../types/Show"
 import { outLocked, outputs, overlays } from "../../../stores"
 import { findMatchingOut, getActiveOutputs, setOutput } from "../../../components/helpers/output"
-import Overlay from "../../../components/output/layers/Overlay.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
+import { Overlay } from "../../output/OutputOverlay"
 import { HoverPlay } from "../../system/HoverPlay"
 import { Zoomed } from "../../slide/Zoomed"
 import styles from "./OverlayPreview.module.css"
@@ -28,7 +27,7 @@ export function OverlayPreview({ show }: OverlayPreviewProps) {
         <div className={`overlayPreview context #overlay_preview ${styles.overlayPreview}`}>
             <HoverPlay icon={isOutputted ? "clear" : "play"} size={isOutputted ? 8 : 10} onClick={play}>
                 <Zoomed background="transparent" checkered center mirror>
-                    <SvelteIsland component={Overlay as never} props={{ overlay: currentOverlays[show.id || ""], id: show.id || "", outputId, mirror: true, transition: { type: "none", duration: 0, easing: "" }, preview: true }} />
+                    <Overlay overlay={currentOverlays[show.id || ""] as unknown as { items: Item[]; [key: string]: unknown }} id={show.id || ""} outputId={outputId} mirror transition={{ type: "none", duration: 0, easing: "" }} preview />
                 </Zoomed>
             </HoverPlay>
         </div>

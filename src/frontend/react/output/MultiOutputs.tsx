@@ -10,14 +10,13 @@ import { defaultLayers, getOutputResolution, startRtmpStreaming, startStreaming,
 import { getUnhealthyDestinations, hasStreamableDestination } from "../../components/helpers/rtmpDestinations"
 import { bindSlidesToOutput, getLayoutRef } from "../../components/helpers/show"
 import { _show } from "../../components/helpers/shows"
-import PreviewOutput from "../../components/output/preview/PreviewOutput.svelte"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { AudioMeter } from "../drawer/audio/AudioMeter"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
 import { SelectField } from "../ui/select-field/SelectField"
+import { PreviewOutput } from "./PreviewOutput"
 import styles from "./MultiOutputs.module.css"
 
 export interface MultiOutputsProps {
@@ -203,7 +202,7 @@ export function MultiOutputs({ disableTransitions = false }: MultiOutputsProps) 
                         ) : null}
 
                         <div className={styles.previewContainer}>
-                            <SvelteIsland component={PreviewOutput} props={{ outputId: output.id, disableTransitions, disabled: allEnabledOuts.length > 1 && !fullscreen && !output?.active, fullscreen }} />
+                            <PreviewOutput outputId={output.id} disableTransitions={disableTransitions} disabled={allEnabledOuts.length > 1 && !fullscreen && !output?.active} fullscreen={fullscreen} />
 
                             {/* BADGES (LIVE / REC) */}
                             {!fullscreen ? (

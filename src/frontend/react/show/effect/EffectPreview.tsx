@@ -1,9 +1,8 @@
 import type { Show } from "../../../../types/Show"
 import { effects, outLocked, outputs } from "../../../stores"
 import { findMatchingOut, setOutput } from "../../../components/helpers/output"
-import Effect from "../../../components/output/effects/Effect.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
+import { Effect } from "../../output/Effect"
 import { HoverPlay } from "../../system/HoverPlay"
 import { Zoomed } from "../../slide/Zoomed"
 import styles from "./EffectPreview.module.css"
@@ -27,7 +26,7 @@ export function EffectPreview({ show }: EffectPreviewProps) {
         <div className={`effectPreview context #effect_preview ${styles.effectPreview}`}>
             <HoverPlay icon={isOutputted ? "clear" : "play"} size={isOutputted ? 8 : 10} onClick={play}>
                 <Zoomed background="transparent" checkered center mirror zoom={false}>
-                    <SvelteIsland component={Effect as never} props={{ effect: currentEffects[show.id || ""], preview: false }} />
+                    <Effect effect={currentEffects[show.id || ""]} preview={false} />
                 </Zoomed>
             </HoverPlay>
         </div>

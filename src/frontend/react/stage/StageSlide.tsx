@@ -6,7 +6,6 @@ import { getAccess } from "../../utils/profile"
 import { getSortedStageItems, shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
 import { getStageOutputId, getStageResolution } from "../../components/helpers/output"
 import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
-import Stagebox from "../../components/stage/Stagebox.svelte"
 import { getSlideTextItems, stageItemToItem } from "../../components/stage/stage"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
@@ -15,6 +14,7 @@ import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
 import { useStore } from "../hooks/useStore"
 import { SelectElem } from "../system/SelectElem"
 import { Zoomed } from "../slide/Zoomed"
+import { Stagebox } from "./Stagebox"
 import styles from "./StageSlide.module.css"
 
 export interface StageSlideProps {
@@ -74,7 +74,7 @@ export function StageSlide({ layout, id, columns = 1, active = false, list = fal
                             {stageItems.map((item) => {
                                 const showItem = (item.type || item.enabled !== false) && (!item.conditions?.showItem && !(item as { bindings?: unknown[] }).bindings?.length ? true : shouldItemBeShown(stageItemToItem(item), item.type === "slide_text" ? getSlideTextItems(layout, item, currentOutputs || currentAllOutputs) : [], { type: "stage" }, conditionsUpdater))
                                 if (!showItem) return null
-                                return <SvelteIsland key={item.id} component={Stagebox as never} props={{ id: item.id, item, ratio, stageLayout: layout, disableStagePreview: true }} />
+                                return <Stagebox key={item.id} id={item.id} item={item} ratio={ratio} stageLayout={layout} disableStagePreview />
                             })}
                         </Zoomed>
                         <div className={`label ${styles.label}`} style={{ position: "relative" }} data-title={layout.name}>

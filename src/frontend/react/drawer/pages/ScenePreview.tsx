@@ -1,11 +1,10 @@
 import type { Scene } from "../../../../types/Show"
-import Output from "../../../components/output/Output.svelte"
 import { getAllActiveOutputIds, getAllNormalOutputs } from "../../../components/helpers/output"
 import { outputs } from "../../../stores"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
+import { Output } from "../../output/Output"
 
-// Port de components/drawer/pages/ScenePreview.svelte. Output sigue siendo Svelte: se monta como isla con el mismo outOverride.
+// Port de components/drawer/pages/ScenePreview.svelte. Renderiza Output con el mismo outOverride.
 export interface ScenePreviewProps {
     scene: Scene
 }
@@ -24,5 +23,5 @@ export function ScenePreview({ scene }: ScenePreviewProps) {
     const out = outputsValue[firstOutputId]?.out
     const outOverride = { ...(out || {}), scene: sceneData }
 
-    return <SvelteIsland component={Output} props={{ outputId: firstOutputId, style: "width: 100%; height: 100%;", outOverride, mirror: true }} />
+    return <Output outputId={firstOutputId} style="width: 100%; height: 100%;" outOverride={outOverride} mirror />
 }

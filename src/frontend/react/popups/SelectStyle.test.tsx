@@ -20,7 +20,7 @@ vi.mock("../../components/helpers/output", () => ({ getResolution: vi.fn(() => (
 vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../../components/drawer/Card.svelte", () => ({ default: { isla: "Card" } }))
-vi.mock("../../components/output/Output.svelte", () => ({ default: { isla: "Output" } }))
+vi.mock("../output/Output", async () => ({ Output: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Output") }))
 
 const trigger = vi.fn()
 let restaurar: () => void = () => {}

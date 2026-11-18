@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react"
-import Effect from "../../components/output/effects/Effect.svelte"
 import { getResolution } from "../../components/helpers/output"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
 import { activeEdit, effects, outputs, previewOutputId, styles } from "../../stores"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
+import { Effect } from "../output/Effect"
 import { observeResize } from "../slide/observeResize"
 import { Zoomed } from "../slide/Zoomed"
 import stylesModule from "./EffectEditor.module.css"
@@ -47,7 +46,7 @@ export function EffectEditor() {
                 <div ref={parentRef} className={stylesModule.parent}>
                     {effect?.items ? (
                         <Zoomed background="transparent" checkered border style={getStyleResolution(resolution, size.width, size.height, "fit", { zoom })} hideOverflow={false} center>
-                            <SvelteIsland component={Effect} props={{ effect, edit: true }} />
+                            <Effect effect={effect} edit />
                         </Zoomed>
                     ) : (
                         <div style={{ display: "flex", width: "100%", height: "100%", alignItems: "center", justifyContent: "center", opacity: 0.5 }}>
