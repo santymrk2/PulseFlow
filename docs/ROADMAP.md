@@ -1835,7 +1835,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [ ] **F25.3** `src/domain/helpers/` y clasificación de `utils/`.
 - [ ] **F25.4** `src/ui/`: componentes y estilos.
 - [ ] **F25.5** `src-tauri/src/engine/` y `platform/`.
-- [ ] **F25.6** Reducir los idiomas de `public/lang/` a `en` y `es` (`docs/propuestas/idiomas.md`).
+- [x] **F25.6** Reducir los idiomas de `public/lang/` a `en` y `es` (`docs/propuestas/idiomas.md`).
 
 ---
 
