@@ -1,0 +1,26 @@
+/* Port literal del <style> de EditboxPlain.svelte (F24.21c). */
+.actions {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    display: flex;
+    flex-direction: column;
+}
+.actionValue {
+    font-size: small;
+    opacity: 0.5;
+    font-weight: bold;
+    padding: 0 5px;
+    text-shadow: none;
+}
+.actionButton {
+    display: flex;
+    align-items: center;
+    background-color: var(--focus);
+    color: var(--text);
+}
+.actionButton :global(button) {
+    padding: 5px !important;
+    z-index: 3;
+}

@@ -1,0 +1,65 @@
+.main {
+    display: flex;
+    flex-direction: column;
+
+    height: 100%;
+
+    overflow: hidden;
+}
+
+.content {
+    display: flex;
+    flex-direction: column;
+
+    padding: 10px;
+    height: 100%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.overlayItem {
+    display: flex;
+    min-height: 32px;
+
+    background-color: var(--primary-darkest);
+    border-bottom: 1px solid var(--primary-lighter);
+    user-select: none;
+    cursor: pointer;
+}
+
+.overlayItem:hover,
+.selected {
+    background-color: var(--active);
+}
+
+.overlayItem :global(button) {
+    padding: 8px;
+}
+
+.itemTitle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+
+    padding: 0 8px;
+    overflow: hidden;
+}
+
+/* title */
+
+.title {
+    background-color: var(--primary-darker);
+    border-bottom: 1px solid var(--primary-lighter);
+
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    overflow: hidden;
+}
+
+.title p {
+    font-weight: 500;
+    font-size: var(--text-xs);
+    opacity: 0.8;
+}

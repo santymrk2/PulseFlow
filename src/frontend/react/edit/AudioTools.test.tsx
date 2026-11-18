@@ -1,0 +1,38 @@
+// @vitest-environment happy-dom
+import { cleanup, render } from "@testing-library/react"
+import { afterEach, describe, expect, it, vi } from "vitest"
+import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { activeEdit, activeShow, media } from "../../stores"
+import { AudioTools } from "./AudioTools"
+
+vi.mock("../bridge/SvelteIsland", () => ({
+    SvelteIsland: () => <div data-testid="edit-values" />
+}))
+
+vi.mock("../../audio/audioPlayer", () => ({
+    AudioPlayer: {
+        getDuration: () => Promise.resolve(0),
+        updateVolume: () => {},
+        setPitch: () => {},
+        setTempo: () => {}
+    }
+}))
+vi.mock("../../audio/audioProcessor", () => ({}))
+vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+
+afterEach(() => {
+    cleanup()
+})
+
+describe("AudioTools", () => {
+    it("renderiza los valores de audio", () => {
+        const restore = setStoresForTest([looseEntry(activeEdit, { id: "a.mp3" }), looseEntry(activeShow, null), looseEntry(media, { "a.mp3": {} })])
+
+        try {
+            const { getByTestId } = render(<AudioTools />)
+            expect(getByTestId("edit-values")).toBeTruthy()
+        } finally {
+            restore()
+        }
+    })
+})

@@ -1,90 +1,47 @@
 <script lang="ts">
+    // Migrado a React en F24.21b. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import { MediaEditor } from "../../../react/edit/MediaEditor"
     import type { MediaStyle } from "../../../../types/Main"
-    import { activeEdit, activeShow, media, outputs, playingVideoState, styles, previewOutputId } from "../../../stores"
-    import Icon from "../../helpers/Icon.svelte"
-    import { getExtension, getMedia, getMediaStyle, getMediaType } from "../../helpers/media"
-    import { getCurrentStyle, getFirstActiveOutput, getResolution } from "../../helpers/output"
-    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
-    import Button from "../../../lib/components/ui/button/button.svelte"
-    import { VideoPlayer } from "../../media/video/videoPlayer"
     import Media from "../../output/layers/Media.svelte"
     import VideoSlider from "../../output/VideoSlider.svelte"
-    import { getStyleResolution } from "../../slide/getStyleResolution"
-    import Zoomed from "../../slide/Zoomed.svelte"
 
-    $: path = $activeEdit.id || $activeShow!.id
+    let videoData = { paused: false, muted: true, duration: 0, loop: true }
+    let videoTime = 0
 
     let mediaPath = ""
-
-    // LOAD MEDIA
-
-    $: if (path) loadMedia()
-    async function loadMedia() {
-        mediaPath = path
-
-        VideoPlayer.getDuration(path).then((duration) => {
-            videoData.duration = duration
-
-            // get currentTime of outputted video initially (if any)
-            const id = `${path}_${output?.id}`
-            const currentTime = $playingVideoState[id]?.currentTime
-            if (currentTime) videoTime = currentTime
-        })
-
-        const media = await getMedia(path)
-        if (!media) return
-
-        mediaPath = media.path
-    }
-
-    let width = 0
-    let height = 0
-    $: resolution = getResolution(null, { $outputs, $styles, $previewOutputId })
-    $: widthOrHeight = getStyleResolution(resolution, width, height, "fit")
-
-    $: extension = getExtension(mediaPath)
-    $: type = getMediaType(extension)
-
-    let videoTime = 0
-    let videoData = { paused: false, muted: true, duration: 0, loop: true }
-
-    $: output = getFirstActiveOutput($outputs)
-    $: outputStyle = getCurrentStyle($styles, output?.style)
-
-    // get styling
     let mediaStyle: MediaStyle = {}
-    $: mediaId = $activeEdit.id && $activeEdit.type === "media" ? $activeEdit.id : $activeShow?.id && ($activeShow.type === "image" || $activeShow.type === "video") ? $activeShow.id : ""
-    $: if (mediaId) mediaStyle = getMediaStyle($media[mediaId], outputStyle)
+    let type = ""
+
+    let mediaHost: HTMLDivElement | undefined
+    let sliderHost: HTMLDivElement | undefined
 </script>
 
-<div class="parent" style="display: flex;flex-direction: column;height: 100%;" bind:offsetWidth={width} bind:offsetHeight={height}>
-    <Zoomed background="transparent" {resolution} checkered={mediaStyle.fit === "contain"} border style={widthOrHeight}>
+<ReactIsland
+    component={MediaEditor}
+    props={{
+        videoData,
+        videoTime,
+        onVideoDataChange: (data) => (videoData = data),
+        onVideoTimeChange: (time) => (videoTime = time),
+        onComputedChange: (detail) => {
+            mediaPath = detail.mediaPath
+            mediaStyle = detail.mediaStyle
+            type = detail.type
+        },
+        mediaHost,
+        sliderHost
+    }}
+/>
+
+<div bind:this={mediaHost} style="display: contents">
+    {#if mediaPath}
         <Media path={mediaPath} {mediaStyle} bind:videoData bind:videoTime mirror />
-    </Zoomed>
-
-    {#if type === "video"}
-        <FloatingBar side="center" style="width: 60%;">
-            <Button title={videoData.paused ? "media.play" : "media.pause"} on:click={() => (videoData.paused = !videoData.paused)}>
-                <Icon id={videoData.paused ? "play" : "pause"} white={videoData.paused} size={1.3} />
-            </Button>
-
-            <div class="divider" />
-
-            <VideoSlider path={mediaPath} bind:videoData bind:videoTime big />
-
-            <div class="divider" />
-
-            <Button title="media._loop" disabled>
-                <Icon id="loop" size={1.2} />
-            </Button>
-        </FloatingBar>
     {/if}
 </div>
 
-<style>
-    .parent :global(.zoomed) {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-</style>
+<div bind:this={sliderHost} style="display: contents">
+    {#if type === "video"}
+        <VideoSlider path={mediaPath} bind:videoData bind:videoTime big />
+    {/if}
+</div>
