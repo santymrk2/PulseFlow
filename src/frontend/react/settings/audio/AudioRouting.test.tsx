@@ -25,7 +25,7 @@ vi.mock("../../../audio/routing/audioRoutingInit", () => ({ syncOutputAudioChann
 vi.mock("../../../audio/routing/audioRoutingManager", () => ({ AudioRoutingManager: { sortChannels: vi.fn((a: unknown) => a) } }))
 vi.mock("../../../components/helpers/output", () => ({ getAllOutputs: vi.fn() }))
 vi.mock("../../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} /> }))
-vi.mock("../../../components/drawer/audio/AudioMeter.svelte", () => ({ default: { isla: "AudioMeter" } }))
+vi.mock("../../drawer/audio/AudioMeter", () => ({ AudioMeter: () => <div data-meter /> }))
 
 const addDevice = vi.fn()
 const removeDevice = vi.fn()

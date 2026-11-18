@@ -1,0 +1,43 @@
+.main {
+    flex: 1;
+    min-width: 50%;
+}
+
+.top {
+    display: flex;
+    position: relative;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+
+    position: relative;
+
+    background-color: var(--primary-darker);
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    margin: 5px;
+    border-radius: var(--radius, 10px);
+
+    overflow: hidden;
+
+    transition: transform 0.2s ease;
+}
+
+/* limpiar: franja plana, sin esquinas redondeadas ni borde exterior */
+.section.flat {
+    margin: 5px 0 0;
+    border: 0;
+    border-top: 1px solid var(--border);
+    border-radius: 0;
+    background-color: transparent;
+}
+
+.previewMeter {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 4px;
+    z-index: 5;
+}

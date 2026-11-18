@@ -13,8 +13,7 @@ vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { start: vi.fn() } }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} /> }))
-vi.mock("../../../components/drawer/audio/AudioMeter.svelte", () => ({ default: { isla: "AudioMeter" } }))
+vi.mock("../../drawer/audio/AudioMeter", () => ({ AudioMeter: ({ channelId }: { channelId: string }) => <div data-meter={channelId} /> }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {
@@ -43,7 +42,7 @@ describe("AudioRoutingNode", () => {
         expect(card().id).toBe("metronome")
         expect(card().classList.contains("metronome")).toBe(true)
         expect(q(".card-content, [class*=card-content]").textContent).toBe("Metrónomo")
-        expect(document.querySelector('[data-isla="AudioMeter"]')?.getAttribute("data-props")).toBe('{"channelId":"metronome"}')
+        expect(document.querySelector('[data-meter="metronome"]')).toBeTruthy()
         expect(document.querySelectorAll(".port-in")).toHaveLength(0)
         expect(document.querySelectorAll(".port-out")).toHaveLength(1)
     })
@@ -175,13 +174,13 @@ describe("AudioRoutingNode", () => {
 
     it("sin_conexion_de_entrada_o_deshabilitado_no_hay_medidor", () => {
         montar({ id: "channel_a", name: "A", type: "channel", nodeType: "channel", hasInputConnection: false })
-        expect(document.querySelector('[data-isla="AudioMeter"]')).toBeNull()
+        expect(document.querySelector("[data-meter]")).toBeNull()
         cleanup()
         montar({ id: "metronome", name: "M", type: "metronome", nodeType: "input", isEnabled: false })
-        expect(document.querySelector('[data-isla="AudioMeter"]')).toBeNull()
+        expect(document.querySelector("[data-meter]")).toBeNull()
         cleanup()
         montar({ id: "network_default", name: "N", type: "network", nodeType: "output" })
-        expect(document.querySelector('[data-isla="AudioMeter"]')).toBeNull()
+        expect(document.querySelector("[data-meter]")).toBeNull()
     })
 
     it("clases_de_estado_disabled_invalid_hover_valid_y_sub_card", () => {

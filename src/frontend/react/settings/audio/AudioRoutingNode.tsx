@@ -1,10 +1,9 @@
 import type { CSSProperties, MouseEvent } from "react"
 import { AudioMicrophone } from "../../../audio/audioMicrophone"
-import AudioMeter from "../../../components/drawer/audio/AudioMeter.svelte"
 import { cn } from "../../../lib/utils"
 import { activePopup, playingAudio, popupData, special } from "../../../stores"
 import { translateText } from "../../../utils/language"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
+import { AudioMeter } from "../../drawer/audio/AudioMeter"
 import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
 import { Button } from "../../ui/button/Button"
@@ -12,7 +11,7 @@ import { ToggleField } from "../../ui/toggle-field/ToggleField"
 import type { ColumnType, PortType } from "./routingLogic"
 import styles from "./AudioRoutingNode.module.css"
 
-// Port de components/settings/tabs/AudioRoutingNode.svelte (F24.13b). AudioMeter sigue siendo Svelte (isla).
+// Port de components/settings/tabs/AudioRoutingNode.svelte (F24.13b). AudioMeter es un port React directo (F24.24b).
 export interface AudioRoutingNodeProps {
     id: string
     name: string
@@ -230,7 +229,7 @@ export function AudioRoutingNode({
                 ) : null}
             </div>
 
-            {id !== "network_default" && id !== "output_window" && isEnabled && (nodeType === "input" || hasInputConnection) ? <SvelteIsland component={AudioMeter} props={{ channelId: id }} /> : null}
+            {id !== "network_default" && id !== "output_window" && isEnabled && (nodeType === "input" || hasInputConnection) ? <AudioMeter channelId={id} /> : null}
 
             {nodeType !== "output" && (type !== "output_window" || isSubNode) ? (
                 isSubNode && nodeType === "input" && channels > 1 ? (
