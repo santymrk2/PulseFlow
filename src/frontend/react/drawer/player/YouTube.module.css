@@ -1,0 +1,14 @@
+.main {
+    pointer-events: initial;
+}
+
+.main,
+.main :global(.yt),
+.main :global(iframe) {
+    height: 100%;
+    width: 100%;
+}
+
+.hide :global(.yt) {
+    display: none;
+}

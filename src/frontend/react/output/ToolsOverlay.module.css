@@ -1,0 +1,55 @@
+.list {
+    display: flex;
+    flex-direction: column;
+}
+.title {
+    padding: 6px 12px 4px;
+    font-size: var(--text-2xs);
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    border-top: 1px solid var(--border);
+}
+.row {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    width: 100%;
+    height: 28px;
+    padding: 0 12px;
+    border: 0;
+    border-left: 2px solid transparent;
+    background: transparent;
+    color: var(--text);
+    font-size: var(--text-sm);
+    text-align: start;
+}
+.row:hover:not(:disabled) {
+    background: var(--bg-hover);
+}
+/* en el aire: relleno y barra de acento, como la fila activa de las listas del panel izquierdo */
+.row.active {
+    background: var(--secondary-opacity);
+    border-left-color: var(--secondary);
+}
+.row:disabled {
+    opacity: 0.5;
+}
+.name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.category {
+    font-size: var(--text-xs);
+    color: var(--text-muted);
+}
+.empty {
+    padding: 12px;
+    opacity: 0.5;
+}
