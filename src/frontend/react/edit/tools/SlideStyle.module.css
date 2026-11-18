@@ -1,0 +1,7 @@
+.tools {
+    padding: 8px 5px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
