@@ -1,0 +1,68 @@
+.item {
+    outline: 5px solid rgb(255 255 255 / 0.2);
+    outline-offset: 0;
+    transition: background-color 0.3s;
+    overflow: hidden;
+}
+.item.selected {
+    overflow: visible;
+}
+.item.showOverflow {
+    overflow: visible !important;
+}
+.item.selected :global(.align) {
+    outline: 5px solid var(--secondary-opacity);
+    overflow: visible !important;
+}
+
+.item.chords {
+    overflow: visible;
+}
+
+.item.isDisabledVariable {
+    opacity: 0.5;
+}
+
+.item:hover {
+    background-color: rgb(255 255 255 / 0.05);
+    backdrop-filter: blur(20px);
+}
+.item.isShiftPressed,
+.item.isShiftPressed :global(.edit),
+.item.isShiftPressed :global(.line) {
+    cursor: move !important;
+}
+.item.isShiftPressed :global(.edit) {
+    pointer-events: none !important;
+    user-select: none !important;
+}
+
+.mediaFrame {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+.mediaFrame.showOverflow {
+    overflow: visible;
+}
+
+.item.decoration:not(.selected) {
+    pointer-events: none;
+    outline: none !important;
+}
+
+.tip {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    background-color: rgb(0 0 0 / 0.5);
+    padding: 12px;
+
+    font-family: unset;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.32em;
+    text-shadow: none;
+
+    transform: inherit;
+}

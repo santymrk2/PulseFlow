@@ -1,0 +1,54 @@
+/* Port del <style> de EditboxChords.svelte (F24.21c). */
+.chords,
+.break {
+    width: 100%;
+}
+
+.chords :global(.chord) {
+    position: absolute;
+    transform: translateY(-100%);
+    background-color: var(--primary-darker);
+    /* color: var(--text); */
+    font-size: 0.8em;
+    border: 5px solid var(--secondary);
+    text-shadow: none;
+    z-index: 3;
+
+    pointer-events: all;
+
+    --move-up: 40%;
+}
+.chords :global(.chord):hover {
+    filter: brightness(1.2);
+}
+.chords :global(.chord)::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    width: 5px;
+    /* this height works best as 100px font size */
+    height: calc(100% + var(--move-up) - 5px);
+    background-color: var(--secondary);
+    /* background-color: var(--secondary-opacity); */
+}
+
+.edit.chords :global(.invisible) {
+    opacity: 1;
+    font-size: var(--font-size);
+    line-height: 1.1em;
+    background-color: rgb(255 255 255 / 0.1);
+}
+.edit.chords :global(.invisible):hover {
+    /* opacity: 0.8; */
+    background-color: var(--secondary-opacity);
+}
+.edit.chords :global(.chord) {
+    transform: translate(-50%, calc(var(--move-up) * -1));
+    z-index: 2;
+    font-size: 45px !important;
+}
+.edit {
+    position: relative;
+}
