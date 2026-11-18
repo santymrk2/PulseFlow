@@ -4,6 +4,7 @@ import { focusArea, logerror, mainClick } from "../utils/common"
 import { keydown } from "../utils/shortcuts"
 import { startup, startupAppEffects } from "../utils/startup"
 import { getContrast } from "../components/helpers/color"
+import { cssTextToStyle } from "./helpers/cssTextToStyle"
 import { useStore } from "./hooks/useStore"
 import { Loader } from "./main/Loader"
 import { MenuBar } from "./main/MenuBar"
@@ -83,7 +84,7 @@ export function App() {
         <>
             {isWindows ? <MenuBar /> : null}
 
-            <main style={parseInlineStyle(globalStyle)} className={`${styles.main}${closeAdValue ? ` ${styles.closeAd}` : ""}`}>
+            <main style={cssTextToStyle(globalStyle)} className={`${styles.main}${closeAdValue ? ` ${styles.closeAd}` : ""}`}>
                 <ContextMenu />
                 <TooltipManager />
 
@@ -110,18 +111,4 @@ export function App() {
             </main>
         </>
     )
-}
-
-function parseInlineStyle(style: string): Record<string, string> {
-    const out: Record<string, string> = {}
-    for (const decl of style.split(";")) {
-        const idx = decl.indexOf(":")
-        if (idx === -1) continue
-        const prop = decl.slice(0, idx).trim()
-        const value = decl.slice(idx + 1).trim()
-        if (!prop) continue
-        const camel = prop.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
-        out[camel] = value
-    }
-    return out
 }

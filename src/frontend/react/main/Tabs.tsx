@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import type { TabsObj } from "../../../types/Tabs"
 import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../stores"
 import { translateText } from "../../utils/language"
+import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { useStore } from "../hooks/useStore"
 import { Icon } from "../helpers/Icon"
 import { Button } from "../ui/button/Button"
@@ -51,18 +52,11 @@ export function Tabs({ tabs, active, onActiveChange, labels, style }: TabsProps)
     const firstOverflowIndex = entries.findIndex(([, tab]) => tab.overflow)
 
     return (
-        <div className={styles.tabs} style={style ? parseInlineStyle(style) : undefined}>
+        <div className={styles.tabs} style={style ? cssTextToStyle(style) : undefined}>
             {entries.map(([id, tab]) => {
                 if (tab.remove === true || (tab.overflow && overflowHidden)) return null
                 return (
-                    <Button
-                        key={id}
-                        style={{ borderBottom: "2px solid var(--primary-darker)", ...(style ? parseInlineStyle(style) : {}) }}
-                        onClick={() => setActive(id, true)}
-                        isActive={active === id}
-                        disabled={tab.disabled}
-                        title={tab.tooltip || dict.tooltip?.[id] || tab.name}
-                    >
+                    <Button key={id} style={{ borderBottom: "2px solid var(--primary-darker)", ...(style ? cssTextToStyle(style) : {}) }} onClick={() => setActive(id, true)} isActive={active === id} disabled={tab.disabled} title={tab.tooltip || dict.tooltip?.[id] || tab.name}>
                         <Icon id={tab.icon} white={active === id} />
                         {showLabels ? (
                             <span>
@@ -89,18 +83,4 @@ export function Tabs({ tabs, active, onActiveChange, labels, style }: TabsProps)
             ) : null}
         </div>
     )
-}
-
-function parseInlineStyle(style: string): Record<string, string> {
-    const out: Record<string, string> = {}
-    for (const decl of style.split(";")) {
-        const idx = decl.indexOf(":")
-        if (idx === -1) continue
-        const prop = decl.slice(0, idx).trim()
-        const value = decl.slice(idx + 1).trim()
-        if (!prop) continue
-        const camel = prop.replace(/-([a-z])/g, (_, c: string) => c.toUpperCase())
-        out[camel] = value
-    }
-    return out
 }
