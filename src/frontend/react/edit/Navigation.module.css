@@ -1,0 +1,17 @@
+.title {
+    background-color: var(--primary-darker);
+    text-align: center;
+    padding: 3px 8px;
+    overflow: initial;
+}
+.title h3 {
+    color: var(--text);
+    font-size: 1em;
+}
+
+.edited {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: auto;
+}

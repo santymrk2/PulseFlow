@@ -1,0 +1,29 @@
+.more {
+    position: relative;
+    display: flex;
+}
+/* el menú se abre hacia arriba: la barra está pegada abajo */
+.more :global(.more-menu) {
+    top: auto;
+    bottom: 100%;
+    margin-top: 0;
+    margin-bottom: 6px;
+    max-height: 50vh;
+    overflow-y: auto;
+}
+.preview {
+    margin-inline-start: 8px;
+    font-size: var(--text-xs);
+    opacity: 0.5;
+    max-width: 90px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.label {
+    font-size: var(--text-sm);
+    white-space: nowrap;
+}
+:global(.addItem) {
+    gap: 6px;
+}

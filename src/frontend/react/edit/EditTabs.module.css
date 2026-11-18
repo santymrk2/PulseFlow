@@ -1,0 +1,13 @@
+.tabs {
+    display: flex;
+    flex-wrap: wrap;
+    background-color: var(--primary-darker);
+    z-index: 1;
+}
+
+.tabs :global(button) {
+    flex: auto;
+
+    padding: 0.3em 0.5em;
+    border-radius: 0;
+}

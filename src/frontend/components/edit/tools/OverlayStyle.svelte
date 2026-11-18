@@ -1,20 +1,10 @@
 <script lang="ts">
+    // Migrado a React en F24.21a. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import { OverlayStyle } from "../../../react/edit/tools/OverlayStyle"
     import type { Item } from "../../../../types/Show"
-    import ItemsList from "./ItemsList.svelte"
 
     export let allSlideItems: Item[]
 </script>
 
-<div class="tools">
-    <ItemsList bind:allSlideItems />
-</div>
-
-<style>
-    .tools {
-        padding: 8px 5px;
-
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-</style>
+<ReactIsland component={OverlayStyle} props={{ allSlideItems }} />
