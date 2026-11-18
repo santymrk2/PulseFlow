@@ -1823,6 +1823,20 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [ ] **F24.24** Sacar Svelte.
 - [ ] **F24.25** Aceptación (usuario).
 
+## F25 — Reestructuración
+
+> Las fases F25.1–F25.5 (`docs/propuestas/division-modulos.md`) se ejecutan **después de
+> F24.25**: mover archivos mientras todavía quedan `.svelte` en uso obligaría a rehacer los
+> imports dos veces. F25.6 es independiente y puede ejecutarse en paralelo.
+
+- [x] **F25.0** Propuesta de división en módulos (`docs/propuestas/division-modulos.md`).
+- [ ] **F25.1** `src/core/`: stores, IPC y tipos (sin UI ni dominio).
+- [ ] **F25.2** `src/domain/`: núcleo.
+- [ ] **F25.3** `src/domain/helpers/` y clasificación de `utils/`.
+- [ ] **F25.4** `src/ui/`: componentes y estilos.
+- [ ] **F25.5** `src-tauri/src/engine/` y `platform/`.
+- [ ] **F25.6** Reducir los idiomas de `public/lang/` a `en` y `es` (`docs/propuestas/idiomas.md`).
+
 ---
 
 ## Deuda registrada (sin tarea)
