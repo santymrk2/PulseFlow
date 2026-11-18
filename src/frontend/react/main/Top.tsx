@@ -54,13 +54,13 @@ export function Top({ isWindows = false }: TopProps) {
     const lookOptions = Object.entries((looksValue || {}) as Record<string, Look>).map(([id, look]) => ({ id, label: look?.name || id, value: id }))
     const users = getCloudUsers(cloudUsersValue)
 
-    function goToUser(user: (typeof users)[number]) {
+    function goToUser(user: (typeof users)[number] & { activePage?: string; activeProject?: string | null; activeShow?: { id?: string; type?: string } | null }) {
         if (user.activePage) activePage.set(user.activePage as TopViews)
         if (user.activeProject) activeProject.set(user.activeProject)
         if (user.activeShow) {
-            activeShow.set(user.activeShow)
-            if (user.activeShow.type === "image" || user.activeShow.type === "video") activeEdit.set({ id: user.activeShow.id, type: "media", items: [] })
-            else activeEdit.set({ type: "show", slide: 0, items: [], showId: user.activeShow.id })
+            activeShow.set(user.activeShow as typeof activeShowRef)
+            if (user.activeShow.type === "image" || user.activeShow.type === "video") activeEdit.set({ id: user.activeShow.id || "", type: "media", items: [] })
+            else activeEdit.set({ type: "show", slide: 0, items: [], showId: user.activeShow.id || "" })
         }
     }
 
@@ -182,13 +182,7 @@ export function Top({ isWindows = false }: TopProps) {
                         {users.map((user, i) => {
                             const name = user.displayName || DEFAULT_DISPLAY_NAME
                             return (
-                                <button
-                                    key={user.deviceId || `${name}-${i}`}
-                                    className={`${styles.user}${activeShowRef && user.activeShow?.id === activeShowRef?.id ? ` ${styles.isSameArea}` : ""}`}
-                                    title={name}
-                                    style={{ backgroundColor: user.color || "" }}
-                                    onClick={() => goToUser(user)}
-                                >
+                                <button key={user.deviceId || `${name}-${i}`} className={`${styles.user}${activeShowRef && user.activeShow?.id === activeShowRef?.id ? ` ${styles.isSameArea}` : ""}`} title={name} style={{ backgroundColor: user.color || "" }} onClick={() => goToUser(user)}>
                                     {name === DEFAULT_DISPLAY_NAME ? <Icon id="profiles" size={0.9} white /> : name.charAt(0)}
                                 </button>
                             )

@@ -1813,13 +1813,13 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [x] **F24.19a** Stage.
 - [x] **F24.19b** Línea de tiempo.
 - [x] **F24.20a** Show (sin `left/`).
-- [ ] **F24.20b** Controles de `components/output/`.
-- [ ] **F24.20c** Vista previa de `components/output/`.
-- [ ] **F24.21a** Editor: paneles.
-- [ ] **F24.21b** Editor: editores de medios y otros.
-- [ ] **F24.21c** Editor: edición de texto (`contenteditable`).
-- [ ] **F24.22** Lo que queda: menú contextual, búsqueda rápida, acciones y restos.
-- [ ] **F24.23** La raíz pasa a React.
+- [x] **F24.20b** Controles de `components/output/`. (2026-11-18, integrado en `main`)
+- [x] **F24.20c** Vista previa de `components/output/`. (2026-11-18, integrado en `main`)
+- [x] **F24.21a** Editor: paneles. (2026-11-18, integrado en `main`)
+- [x] **F24.21b** Editor: editores de medios y otros. (2026-11-18, integrado en `main`)
+- [x] **F24.21c** Editor: edición de texto (`contenteditable`). (2026-11-18, integrado en `main`)
+- [x] **F24.22** Lo que queda: menú contextual, búsqueda rápida, acciones y restos. (2026-11-18, integrado en `main`)
+- [x] **F24.23** La raíz pasa a React. (2026-11-18, integrado en `main`)
 - [ ] **F24.24** Sacar Svelte.
 - [ ] **F24.25** Aceptación (usuario).
 

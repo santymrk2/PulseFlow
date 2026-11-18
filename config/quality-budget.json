@@ -1,7 +1,7 @@
 {
-    "svelteCheckErrors": 11,
-    "anyCount": 1777,
+    "svelteCheckErrors": 3,
+    "anyCount": 1628,
     "hexColors": 418,
-    "rgbColors": 244,
+    "rgbColors": 241,
     "excludedColorPaths": []
 }

@@ -2,26 +2,6 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
-function createStore<T>(initial: T) {
-    let value = initial
-    const subs = new Set<(v: T) => void>()
-    return {
-        subscribe(fn: (v: T) => void) {
-            fn(value)
-            subs.add(fn)
-            return () => subs.delete(fn)
-        },
-        set(v: T) {
-            value = v
-            subs.forEach((fn) => fn(value))
-        },
-        update(fn: (v: T) => T) {
-            value = fn(value)
-            subs.forEach((sub) => sub(value))
-        }
-    }
-}
-
 const mocks = vi.hoisted(() => ({
     spotifyState: null as any,
     spotifyIsFading: null as any,
@@ -89,7 +69,13 @@ vi.mock("../../IPC/main", () => ({ sendMain: (...args: unknown[]) => mocks.sendM
 vi.mock("../../../types/IPC/Main", () => ({ Main: { URL: "URL" } }))
 vi.mock("../helpers/Icon", () => ({ Icon: () => <span data-testid="icon" /> }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
-vi.mock("../ui/button/Button", () => ({ Button: ({ children, onClick, title, disabled }: any) => <button title={title} disabled={disabled} onClick={onClick}>{children}</button> }))
+vi.mock("../ui/button/Button", () => ({
+    Button: ({ children, onClick, title, disabled }: any) => (
+        <button title={title} disabled={disabled} onClick={onClick}>
+            {children}
+        </button>
+    )
+}))
 
 import { SpotifyController } from "./SpotifyController"
 
