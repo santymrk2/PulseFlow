@@ -1,0 +1,59 @@
+/* Port literal del <style> de Textbox.svelte (F24.18b). */
+.item {
+    /* WIP this is for scrolling, but hides overflow text even on scroll */
+    overflow: hidden;
+
+    /* click events */
+    pointer-events: initial;
+
+    /* WIP custom time based on transition duration */
+    transition:
+        filter 500ms,
+        /* not supported */ backdrop-filter 500ms;
+}
+
+.item.isStage {
+    width: 100%;
+    height: 100%;
+}
+
+.item.stageNoAuto,
+.item.stageNoAuto :global(.break),
+.item.stageNoAuto :global(span.textContainer) {
+    font-size: unset;
+}
+
+.item.reveal {
+    outline: 1px solid red;
+    opacity: 0.6;
+}
+
+.clickable {
+    cursor: pointer;
+}
+
+.clickable:active {
+    filter: brightness(0.8);
+}
+
+.item.hidden {
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+.white {
+    filter: grayscale(1) brightness(20);
+}
+
+.key {
+    filter: grayscale(1);
+}
+
+.item.isDisabledVariable {
+    display: none;
+}
+
+.item.chords,
+.item.chords :global(.align) {
+    overflow: visible;
+}

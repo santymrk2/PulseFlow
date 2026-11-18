@@ -1,45 +1,11 @@
-<script context="module" lang="ts">
-    const sharedCallbacks = new WeakMap<Element, (rect: DOMRectReadOnly) => void>()
-    let sharedObserver: ResizeObserver | null = null
-
-    function observeResize(node: Element, cb: (rect: DOMRectReadOnly) => void) {
-        let prevWidth = 0
-        let prevHeight = 0
-
-        if (!sharedObserver && typeof ResizeObserver !== "undefined") {
-            sharedObserver = new ResizeObserver((entries) => {
-                for (const entry of entries) {
-                    sharedCallbacks.get(entry.target)?.(entry.contentRect)
-                }
-            })
-        }
-
-        sharedCallbacks.set(node, (rect) => {
-            if (prevWidth !== rect.width || prevHeight !== rect.height) {
-                prevWidth = rect.width
-                prevHeight = rect.height
-                cb(rect)
-            }
-        })
-        sharedObserver?.observe(node)
-        return {
-            destroy() {
-                sharedCallbacks.delete(node)
-                sharedObserver?.unobserve(node)
-            }
-        }
-    }
-</script>
-
 <script lang="ts">
+    // Migrado a React en F24.18b. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
     import type { Cropping, Resolution } from "../../../types/Settings"
-    import { outputs, styles, previewOutputId } from "../../stores"
-    import { DEFAULT_BOUNDS, getActiveOutputs, getOutputResolution, getResolution } from "../helpers/output"
+    import ReactIsland from "../../react/bridge/ReactIsland.svelte"
+    import { Zoomed } from "../../react/slide/Zoomed"
 
     export let id = ""
-    $: outputId = id || getActiveOutputs($outputs, true, true, true)[0]
-
-    export let background: string = $styles[$outputs[outputId]?.style || ""]?.background || "#000000"
+    export let background: string = "#000000"
     export let backgroundDuration = 800
     export let center = false
     export let zoom = true
@@ -49,196 +15,51 @@
     export let checkered = false
     export let border = false
     export let align = ""
-
     export let outline = ""
     export let disabled = false
-
     export let relative = false
     export let aspectRatio = true
     export let hideOverflow = true
     export let customZoom = 1
-    // recorte por pantalla (sólo ventana de salida; en las previsualizaciones de la UI se ignora)
     export let cropping: Cropping | undefined = { top: 0, right: 0, bottom: 0, left: 0 }
     export let styleIdOverride = ""
-    export let resolution: Resolution = getResolution(null, { $outputs, $styles, $previewOutputId }, false, outputId, styleIdOverride)
-    $: if (!isStage) resolution = getResolution(resolution, { $outputs, $styles }, false, outputId, styleIdOverride)
-    $: outputRes = isStage ? resolution : getOutputResolution(outputId, $outputs)
-
-    $: stylesRatio = getResolution(null, $styles, false, outputId, styleIdOverride)
-    $: styleAspectRatio = stylesRatio.width / stylesRatio.height
-    const defaultRatio = DEFAULT_BOUNDS.width / DEFAULT_BOUNDS.height
-
-    // cropping affects aspect ratio if "outputResolutionAsRatio"
-    $: currentStyleId = styleIdOverride || $outputs[outputId]?.style || ""
-    $: styleRatioData = ($styles[currentStyleId]?.aspectRatio || $styles[currentStyleId]?.resolution) as any
-    $: outputResolutionAsRatio = !isStage && !!styleRatioData?.outputResolutionAsRatio
-
-    let elemWidth = 0
-    let elemHeight = 0
-    let slideWidth = 0
-    let slideHeight = 0
-
+    export let resolution: Resolution | undefined = undefined
     export let ratio = 1
-    $: shouldUseHeightRatio = outputRes.width < outputRes.height && stylesRatio.width > stylesRatio.height && styleAspectRatio === defaultRatio
-    $: ratio = Math.max(0.01, shouldUseHeightRatio ? slideHeight / outputRes.height : slideWidth / outputRes.width) / customZoom
+    export let style = ""
 
-    $: croppedStyle = getCropping(cropping, resolution, outputRes, outputResolutionAsRatio)
-    function getCropping(cropping, res, outRes, isOutputResolutionAsRatio = false) {
-        let style = ""
-        if (!cropping || mirror) return ""
-
-        // values may be stored as strings — parse to numbers to avoid string concatenation
-        let top = Number(cropping.top) || 0
-        let bottom = Number(cropping.bottom) || 0
-        let left = Number(cropping.left) || 0
-        let right = Number(cropping.right) || 0
-
-        let minusHeight = top + bottom
-        let minusWidth = right + left
-
-        if (isOutputResolutionAsRatio) {
-            if (!minusHeight && !minusWidth) return ""
-
-            style += `margin-top: ${top}px;`
-            style += `margin-bottom: ${bottom}px;`
-            style += `margin-inline-start: ${left}px;`
-            style += `margin-inline-end: ${right}px;`
-            style += `width: calc(100% - ${minusWidth}px);`
-            style += `height: calc(100% - ${minusHeight}px);`
-            style += `aspect-ratio: auto;`
-
-            return style
-        }
-
-        let paddingSides = 0
-        let paddingTops = 0
-        let slideAR = res.width / res.height
-        let availableWidth = outRes.width - minusWidth
-        let availableHeight = outRes.height - minusHeight
-        let availableAR = availableWidth / availableHeight
-
-        if (availableAR >= slideAR) {
-            // slide is constrained by available height — compute leftover horizontal space on each side
-            paddingSides = (availableWidth - availableHeight * slideAR) / 2
-        } else {
-            // slide is constrained by available width — compute leftover vertical space on each side
-            paddingTops = (availableHeight - availableWidth / slideAR) / 2
-        }
-
-        // nothing to apply
-        if (!minusHeight && !minusWidth && !paddingSides && !paddingTops) return ""
-
-        style += `margin-top: ${top + paddingTops}px;`
-        style += `margin-bottom: ${bottom + paddingTops}px;`
-
-        let totalHorizontalMargin = minusWidth + paddingSides * 2
-        style += `width: calc(100% - ${totalHorizontalMargin}px);`
-        style += `margin-inline-end: ${right + paddingSides}px;`
-        style += `margin-inline-start: ${left + paddingSides}px;`
-        style += `height: auto;`
-
-        return style
-    }
-
-    $: alignStyle = align ? ($$props.style?.includes("width") ? `align-items: ${align};` : `justify-content: ${align};`) : ""
-
-    $: canOverflow = false // $special.textCanOverflow !== false
+    let slotHost: HTMLDivElement | undefined
 </script>
 
-<div
-    id={outputId}
-    class:center
-    class:disabled
-    class="zoomed"
-    style="width: 100%;height: 100%;{outline ? `border: 2px solid ${outline};` : ''}{alignStyle}{center ? 'display: flex;justify-content: safe center;align-items: safe center;overflow: visible;' : ''}"
-    use:observeResize={(r) => {
-        elemWidth = r.width
-        elemHeight = r.height
+<ReactIsland
+    component={Zoomed}
+    props={{
+        id,
+        background,
+        backgroundDuration,
+        center,
+        zoom,
+        mirror,
+        disableStyle,
+        isStage,
+        checkered,
+        border,
+        align,
+        outline,
+        disabled,
+        relative,
+        aspectRatio,
+        hideOverflow,
+        customZoom,
+        cropping,
+        styleIdOverride,
+        resolution,
+        style,
+        slotHost,
+        onRatioChange: (value: number) => (ratio = value)
     }}
->
-    <div
-        use:observeResize={(r) => {
-            slideWidth = r.width
-            slideHeight = r.height
-        }}
-        class="slide"
-        class:landscape={resolution.width / resolution.height > elemWidth / elemHeight}
-        class:hideOverflow
-        class:canOverflow
-        class:disableStyle
-        class:relative
-        class:checkered
-        class:border
-        style="{$$props.style || ''}{typeof background === 'string' && background.includes('-gradient') ? `background-image: ${background};` : `background-color: ${background};`}transition: {backgroundDuration}ms background-color;{aspectRatio ? `aspect-ratio: ${resolution.width}/${resolution.height};${croppedStyle}` : ''};"
-    >
-        {#if zoom}
-            <span class="zoom" style="zoom: {ratio};">
-                <slot {ratio} />
-            </span>
-        {:else}
-            <slot ratio={1} />
-        {/if}
-    </div>
+/>
+
+<!-- El contenido del slot se monta aquí y React lo reubica dentro del `.slide`. -->
+<div bind:this={slotHost} style="display: contents">
+    <slot {ratio} />
 </div>
-
-<style>
-    .disabled {
-        opacity: 0.5;
-    }
-
-    .slide {
-        position: relative;
-        transition: 800ms background-color;
-    }
-    .slide.border {
-        outline: 2px solid var(--primary-lighter);
-        outline-offset: 0;
-    }
-
-    .slide:not(.relative) :global(.item) {
-        position: absolute;
-        /* display: inline-flex; */
-    }
-    .slide:not(.relative) :global(.item .align) {
-        overflow: hidden;
-    }
-
-    .slide.canOverflow :global(.item),
-    .slide.canOverflow :global(.item .align) {
-        overflow: visible;
-    }
-
-    .slide:not(.disableStyle) :global(.item) {
-        font-family: "CMGSans";
-        text-shadow: 2px 2px 10px #000000;
-    }
-    .slide :global(.item) {
-        color: white;
-        font-size: 100px;
-        line-height: 1.1;
-        -webkit-text-stroke-color: #000000;
-        paint-order: stroke fill;
-
-        border-style: solid;
-        border-width: 0px;
-        border-color: #ffffff;
-
-        height: 150px;
-        width: 400px;
-    }
-
-    .hideOverflow {
-        overflow: hidden;
-    }
-
-    .center .slide {
-        margin: auto;
-        flex: 0 0 auto;
-    }
-
-    /* .zoom {
-        transition:
-            0.2s inset-inline-start,
-            0.2s top;
-    } */
-</style>

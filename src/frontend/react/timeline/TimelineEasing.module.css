@@ -1,0 +1,151 @@
+/* Port literal del <style> de TimelineEasing.svelte (F24.19b). */
+.track-header {
+    position: absolute;
+    left: 0;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    pointer-events: auto;
+    gap: 6px;
+}
+
+.easing {
+    background-color: var(--primary-darkest);
+    border-bottom: 2px solid var(--border);
+    border-top: 2px solid var(--border);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    z-index: 198;
+    overflow: visible;
+}
+
+.easing-line {
+    pointer-events: none;
+    z-index: 3;
+}
+
+.easing-control-point {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: var(--secondary);
+    cursor: pointer;
+    transform: translate(-50%, -50%);
+    z-index: 3;
+}
+
+.action-marker {
+    position: absolute;
+    top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(-50%);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.action-marker:not(.faded) > * {
+    pointer-events: auto;
+}
+
+.action-marker.faded {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.action-head {
+    width: 18px;
+    height: 18px;
+    background-color: var(--secondary-opacity);
+    border-radius: 50%;
+    border: 2px solid var(--secondary);
+    box-shadow: 0 0 4px rgb(0 0 0 / 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7em;
+    font-weight: bold;
+}
+
+.action-marker.slide .action-head {
+    border-radius: 4px;
+}
+
+.action-marker.style .action-head {
+    border-radius: 2px;
+    transform: rotate(45deg);
+    width: 12px;
+    height: 12px;
+    font-size: 0.5em;
+}
+
+.action-marker.selected .action-head {
+    border-color: var(--text);
+}
+
+.action-label {
+    margin-top: 4px;
+    font-size: 0.8em;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2px 4px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+.easing-context-menu {
+    position: fixed;
+    background-color: var(--primary-darker);
+    border: 1px solid var(--primary-lighter);
+    border-radius: 4px;
+    box-shadow: var(--shadow-float);
+    z-index: 9999;
+    min-width: 120px;
+}
+
+.easing-context-menu-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 0.85em;
+    transition: background-color 0.15s ease;
+    user-select: none;
+    border: none;
+    background: none;
+    color: inherit;
+    font-family: inherit;
+    text-align: left;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.preset-preview {
+    flex-shrink: 0;
+    opacity: 0.7;
+    border: 1px solid var(--border);
+    background-color: var(--primary-darkest);
+    border-radius: 3px;
+    padding: 2px;
+    box-sizing: content-box;
+}
+
+.easing-context-menu-item:hover .preset-preview {
+    opacity: 1;
+}
+
+.easing-context-menu-item:hover {
+    background-color: var(--hover);
+    color: var(--text);
+}
+
+.easing-context-menu-item:first-child {
+    border-radius: 3px 3px 0 0;
+}
+
+.easing-context-menu-item:last-child {
+    border-radius: 0 0 3px 3px;
+}

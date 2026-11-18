@@ -1,0 +1,36 @@
+.icons {
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    inset-inline-end: 2px;
+    z-index: 1;
+    font-size: 0.9em;
+
+    height: 80%;
+    flex-wrap: wrap-reverse;
+    place-items: end;
+}
+
+.icons div {
+    opacity: 0.9;
+    display: flex;
+}
+
+.icons .button {
+    background-color: rgb(0 0 0 / 0.6);
+    pointer-events: all;
+}
+
+.button:not(.white) :global(svg) {
+    fill: #ff5050;
+}
+
+.button p {
+    pointer-events: all;
+    background-color: rgb(0 0 0 / 0.4);
+    padding-inline-end: 5px;
+    font-size: 0.8em;
+    font-weight: normal;
+    max-width: 60px;
+}

@@ -1,0 +1,10 @@
+.events {
+    text-align: start;
+    height: 100%;
+    /* line-height: 0.8em; */
+}
+
+.events :global(p) {
+    overflow: unset;
+    white-space: unset;
+}

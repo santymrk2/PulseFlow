@@ -1,0 +1,40 @@
+.align {
+    display: flex;
+    justify-content: center;
+    /* stage align */
+    justify-content: var(--text-align);
+    height: 100%;
+    align-items: center;
+}
+
+.line {
+    height: 100%;
+    background-color: white;
+    transition: 1s width linear;
+}
+
+.circle {
+    --percentage: 100;
+    --lineWidth: 22px;
+    --color: white;
+
+    height: 100%;
+    width: 100%;
+}
+
+.circle::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(farthest-side, var(--color) 98%, #0000) top / var(--lineWidth) var(--lineWidth) no-repeat,
+        conic-gradient(var(--color) calc(var(--percentage) * 1%), #0000 0);
+    background-size:
+        0 0,
+        auto;
+}
+
+.circle.mask::before {
+    -webkit-mask: radial-gradient(farthest-side, #0000 calc(99% - var(--lineWidth)), #000 calc(100% - var(--lineWidth)));
+    mask: radial-gradient(farthest-side, #0000 calc(99% - var(--lineWidth)), #000 calc(100% - var(--lineWidth)));
+}

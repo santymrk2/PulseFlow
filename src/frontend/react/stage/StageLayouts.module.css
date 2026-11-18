@@ -1,0 +1,18 @@
+/* Port literal del <style> de StageLayouts.svelte (F24.19a). */
+.main {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    overflow: auto;
+    background-color: var(--primary-darker);
+}
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px;
+    width: 100%;
+    height: 100%;
+    align-content: flex-start;
+}

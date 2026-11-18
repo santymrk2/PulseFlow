@@ -1,0 +1,53 @@
+.disabled {
+    opacity: 0.5;
+}
+
+.slide {
+    position: relative;
+    transition: 800ms background-color;
+}
+.border {
+    outline: 2px solid var(--primary-lighter);
+    outline-offset: 0;
+}
+
+.slide:not(.relative) :global(.item) {
+    position: absolute;
+    /* display: inline-flex; */
+}
+.slide:not(.relative) :global(.item .align) {
+    overflow: hidden;
+}
+
+.slide.canOverflow :global(.item),
+.slide.canOverflow :global(.item .align) {
+    overflow: visible;
+}
+
+.slide:not(.disableStyle) :global(.item) {
+    font-family: "CMGSans";
+    text-shadow: 2px 2px 10px #000000;
+}
+.slide :global(.item) {
+    color: white;
+    font-size: 100px;
+    line-height: 1.1;
+    -webkit-text-stroke-color: #000000;
+    paint-order: stroke fill;
+
+    border-style: solid;
+    border-width: 0px;
+    border-color: #ffffff;
+
+    height: 150px;
+    width: 400px;
+}
+
+.hideOverflow {
+    overflow: hidden;
+}
+
+.center .slide {
+    margin: auto;
+    flex: 0 0 auto;
+}

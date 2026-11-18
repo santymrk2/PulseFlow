@@ -1,0 +1,28 @@
+/* Port literal del <style> de StageLayout.svelte (F24.19a). */
+.stageArea {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.parent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* padding: 10px; */
+    overflow: auto;
+}
+
+.noOverflow {
+    overflow: hidden;
+}
+
+/* disable "glitchy" scroll bars */
+.noOverflow :global(.droparea) {
+    overflow: hidden;
+}

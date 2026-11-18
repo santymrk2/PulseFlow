@@ -1,0 +1,217 @@
+/* Port literal del <style> de TextboxLines.svelte (F24.18b). */
+.align {
+    height: 100%;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.align.hidden {
+    visibility: hidden !important;
+    opacity: 0 !important;
+}
+
+/* should match .edit in Editbox.svelte */
+.lines {
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: center;
+
+    transition: var(--transition);
+}
+
+.break {
+    width: 100%;
+
+    font-size: 0;
+
+    overflow-wrap: break-word;
+
+    text-wrap: balance;
+    white-space: pre-wrap;
+}
+
+/* normal wrap if "Text on one line (nowrap)" or Justify aligned */
+.break.normalWrap {
+    text-wrap: unset;
+}
+
+.lines .break.reveal {
+    outline: 1px solid red;
+    outline-offset: -10px;
+    opacity: 0.7;
+}
+
+*:global(.wj) {
+    color: #ff5050;
+}
+
+/* not sure what this is used for? */
+.break:not(.stageChords) :global(span.textContainer) {
+    font-size: 100px;
+    min-height: 50px;
+
+    transition: var(--transition);
+}
+.break.smallFontSize :global(span) {
+    font-size: var(--font-size) !important;
+}
+
+/* bible parts */
+.break :global(span.uncertain) {
+    opacity: 0.7;
+    font-size: 0.8em;
+    font-style: italic;
+}
+.break :global(span.undertitle) {
+    display: inline-block;
+    width: 100%;
+    color: var(--secondary);
+    font-weight: 600;
+}
+
+/* Cutout Shape */
+.align.hasShapeOutside {
+    display: block !important;
+    height: 100% !important;
+    width: 100% !important;
+}
+.lines.hasShapeOutside {
+    display: block !important;
+    height: 100% !important;
+    width: 100% !important;
+    padding-top: var(--shape-offset-top, 0px) !important;
+    box-sizing: border-box !important;
+}
+.lines.hasShapeOutside .break {
+    text-wrap: unset !important;
+}
+.shapeOutsideFloat {
+    float: left;
+    width: 100%;
+    height: calc(100% + var(--shape-offset-top, 0px));
+    margin-top: calc(-1 * var(--shape-offset-top, 0px));
+    pointer-events: none;
+}
+
+/* scrolling */
+.scrolling {
+    overflow: visible !important;
+}
+
+/* chords */
+.break.chords :global(.invisible) {
+    opacity: 0;
+    font-size: var(--font-size);
+}
+.break.chords :global(.chord) {
+    position: absolute;
+    color: var(--chord-color);
+    font-size: var(--chord-size) !important;
+    font-weight: bold;
+
+    transform: translateY(calc(-1 * var(--offsetY)));
+    line-height: 1;
+    z-index: 2;
+}
+.align.isStage .break.chords :global(.chord) {
+    transform: translateY(calc(-1 * var(--offsetY)));
+}
+.break.chords {
+    height: calc(var(--chord-size) * 1.02);
+    line-height: 0;
+    max-height: none;
+    position: relative;
+    pointer-events: none;
+
+    font-weight: normal;
+    font-style: normal;
+}
+.break.chords.chordOnly {
+    line-height: 1.1;
+    max-height: unset;
+    overflow-wrap: normal;
+    text-wrap: unset;
+    white-space: nowrap;
+}
+.break.chords.chordOnly :global(.chord) {
+    display: inline-block;
+    line-height: 1.1;
+    position: static;
+    transform: none !important;
+}
+
+.scrollWrapper {
+    display: flex;
+    flex-wrap: nowrap;
+}
+.scrollContent {
+    flex-shrink: 0;
+}
+.topBottomContinuousScrolling {
+    animation: topBottomContinuous calc(var(--scrollSpeed) / var(--copyCountVertical)) linear infinite normal;
+    flex-direction: column;
+    height: max-content;
+}
+.bottomTopContinuousScrolling {
+    animation: bottomTopContinuous calc(var(--scrollSpeed) / var(--copyCountVertical)) linear infinite normal;
+    flex-direction: column;
+    height: max-content;
+}
+.leftRightContinuousScrolling {
+    animation: leftRightContinuous calc(var(--scrollSpeed) / var(--copyCountHorizontal)) linear infinite normal;
+    flex-direction: row;
+    width: max-content;
+}
+.rightLeftContinuousScrolling {
+    animation: rightLeftContinuous calc(var(--scrollSpeed) / var(--copyCountHorizontal)) linear infinite normal;
+    flex-direction: row;
+    width: max-content;
+}
+
+.leftRightContinuousScrolling .break,
+.rightLeftContinuousScrolling .break {
+    white-space: nowrap;
+    width: auto;
+    text-wrap: none;
+}
+
+@keyframes rightLeftContinuous {
+    from {
+        transform: translateX(0);
+    }
+    to {
+        transform: translateX(calc(-100% / var(--copyCountHorizontal)));
+    }
+}
+
+@keyframes leftRightContinuous {
+    from {
+        transform: translateX(calc(-100% / var(--copyCountHorizontal)));
+    }
+    to {
+        transform: translateX(0);
+    }
+}
+
+@keyframes bottomTopContinuous {
+    from {
+        transform: translateY(0);
+    }
+    to {
+        transform: translateY(calc(-100% / var(--copyCountVertical)));
+    }
+}
+
+@keyframes topBottomContinuous {
+    from {
+        transform: translateY(calc(-100% / var(--copyCountVertical)));
+    }
+    to {
+        transform: translateY(0);
+    }
+}
