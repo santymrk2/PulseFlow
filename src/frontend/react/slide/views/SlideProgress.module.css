@@ -1,0 +1,67 @@
+.progress {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    --accent: var(--secondary);
+}
+
+.progress.barBG {
+    justify-content: flex-start;
+}
+
+.bar {
+    height: 100%;
+    background-color: var(--accent);
+    transition: width 0.5s;
+}
+
+.align {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* stage align */
+    justify-content: var(--text-align);
+    outline: none !important;
+}
+
+.groups {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.groups.column {
+    flex-direction: column;
+    text-align: start;
+    width: 100%;
+}
+
+.group {
+    transition: color 0.2s;
+}
+
+.group.active {
+    color: var(--accent);
+}
+
+.projectGroups.align {
+    align-items: var(--text-align);
+    justify-content: center;
+}
+
+.projectGroups {
+    flex-direction: column;
+    flex-wrap: nowrap;
+    gap: 0;
+    white-space: pre-wrap;
+    text-align: var(--text-align);
+}
+
+.projectItem {
+    display: block;
+    min-height: 1em;
+}
