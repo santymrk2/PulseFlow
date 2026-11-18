@@ -141,7 +141,7 @@ export function NavigationSections({ sections, active, onRename, section0, secti
                                   if (typeof category === "string") {
                                       return (
                                           <div key={`separator-${categoryIndex}`} className={styles.separator}>
-                                              <hr />
+                                              <hr className={styles.divider} />
                                           </div>
                                       )
                                   }
@@ -159,7 +159,7 @@ export function NavigationSections({ sections, active, onRename, section0, secti
                                       return (
                                           <div key={`separator-${categoryIndex}`} className={styles.separator}>
                                               {category.label ? <div className={styles.sepLabel}>{translateText(category.label, dict)}</div> : null}
-                                              <hr />
+                                              <hr className={styles.divider} />
                                           </div>
                                       )
                                   }

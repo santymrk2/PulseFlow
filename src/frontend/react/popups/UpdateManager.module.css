@@ -31,7 +31,7 @@
     overflow-y: auto;
 }
 
-h3 {
+.title {
     color: var(--text);
     text-decoration: underline solid var(--secondary);
     margin-bottom: 8px;

@@ -60,7 +60,7 @@
     padding-inline-start: 5px;
 }
 
-h4 {
+.heading {
     overflow: visible;
     text-align: center;
     color: var(--text);

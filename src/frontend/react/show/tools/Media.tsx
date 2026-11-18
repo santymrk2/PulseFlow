@@ -243,8 +243,12 @@ export function Media() {
                                             <HoverPlay style={mediaItemStyle()} icon="play" size={3} onClick={() => playBackground(background, found)}>
                                                 <MediaLoader name={background.name} path={found.path || background.path} thumbnailPath={found.thumbnail} type={background.type} mediaStyle={getMediaStyle(found.data, outputStyle)} />
                                             </HoverPlay>
-                                            <p data-title={encodeFilePath(found.path || background.path)}>{background.name}</p>
-                                            <span style={countStyle(background.count)}>{background.count}</span>
+                                            <p className={styles.label} data-title={encodeFilePath(found.path || background.path)}>
+                                                {background.name}
+                                            </p>
+                                            <span className={styles.label} style={countStyle(background.count)}>
+                                                {background.count}
+                                            </span>
                                             {background.type === "video" ? (
                                                 <>
                                                     <Button style={smallButtonStyle()} title={translateText("media._loop" + (background.loop !== false ? ": settings.enabled" : ""))} onClick={() => setBG(background.id || "", "loop", background.loop === false)}>
@@ -262,7 +266,7 @@ export function Media() {
 
                             {similarBgs.length ? (
                                 <>
-                                    <h5>
+                                    <h5 className={styles.heading}>
                                         <T id="media.recommended" />
                                     </h5>
                                     {similarBgs.map((background) => {
@@ -281,7 +285,9 @@ export function Media() {
                                                     >
                                                         <MediaLoader name={background.name} path={background.path} type={type} mediaStyle={mediaStyle} />
                                                     </HoverPlay>
-                                                    <p data-title={background.path}>{background.name}</p>
+                                                    <p className={styles.label} data-title={background.path}>
+                                                        {background.name}
+                                                    </p>
                                                 </div>
                                             </SelectElem>
                                         )
@@ -293,7 +299,7 @@ export function Media() {
 
                     {showOverlays.length ? (
                         <>
-                            <h5>
+                            <h5 className={styles.heading}>
                                 <T id="preview.overlays" />
                             </h5>
                             {showOverlays.map((overlay) => {
@@ -308,8 +314,12 @@ export function Media() {
                                                     ))}
                                                 </Zoomed>
                                             </HoverPlay>
-                                            <p data-title={overlay.name}>{overlay.name}</p>
-                                            <span style={countStyle(overlay.count)}>{overlay.count}</span>
+                                            <p className={styles.label} data-title={overlay.name}>
+                                                {overlay.name}
+                                            </p>
+                                            <span className={styles.label} style={countStyle(overlay.count)}>
+                                                {overlay.count}
+                                            </span>
                                         </div>
                                     </SelectElem>
                                 )
@@ -319,7 +329,7 @@ export function Media() {
 
                     {audio.length ? (
                         <>
-                            <h5>
+                            <h5 className={styles.heading}>
                                 <T id="preview.audio" />
                             </h5>
                             {audio.map((file) => {
@@ -338,8 +348,12 @@ export function Media() {
                                             bold={false}
                                         >
                                             <Icon id={playing?.paused === true ? "play" : playing?.paused === false ? "pause" : "music"} size={1.2} right />
-                                            <p style={{ width: "100%", textAlign: "start" }}>{file.name?.includes(".") ? file.name.slice(0, file.name.lastIndexOf(".")) : file.name}</p>
-                                            <span style={countStyle(file.count)}>{file.count}</span>
+                                            <p className={styles.label} style={{ width: "100%", textAlign: "start" }}>
+                                                {file.name?.includes(".") ? file.name.slice(0, file.name.lastIndexOf(".")) : file.name}
+                                            </p>
+                                            <span className={styles.label} style={countStyle(file.count)}>
+                                                {file.count}
+                                            </span>
                                         </Button>
                                     </SelectElem>
                                 )
@@ -349,15 +363,19 @@ export function Media() {
 
                     {mics.length ? (
                         <>
-                            <h5>
+                            <h5 className={styles.heading}>
                                 <T id="live.microphones" />
                             </h5>
                             {mics.map((mic) => (
                                 <SelectElem key={mic.id} id="microphone" data={{ id: mic.id, type: "microphone", name: mic.name } as never} draggable>
                                     <Button align="start" style={{ padding: 8, width: "100%" }} bold={false} onClick={() => AudioMicrophone.start(mic.id, { name: mic.name }, { pauseIfPlaying: true })}>
                                         <Icon id="microphone" white={!currentPlayingAudio[mic.id]} right />
-                                        <p style={{ width: "100%", textAlign: "start" }}>{mic.name}</p>
-                                        <span style={countStyle(mic.count)}>{mic.count}</span>
+                                        <p className={styles.label} style={{ width: "100%", textAlign: "start" }}>
+                                            {mic.name}
+                                        </p>
+                                        <span className={styles.label} style={countStyle(mic.count)}>
+                                            {mic.count}
+                                        </span>
                                     </Button>
                                 </SelectElem>
                             ))}
@@ -366,7 +384,7 @@ export function Media() {
 
                     {actions.length ? (
                         <>
-                            <h5>
+                            <h5 className={styles.heading}>
                                 <T id="tabs.actions" />
                             </h5>
                             {actions.map((action, index) => {
@@ -378,9 +396,13 @@ export function Media() {
                                     <SelectElem key={index} id="action" data={action as never} draggable>
                                         <Button align="start" onClick={() => runAction(action, { source: "click" })} style={{ padding: 8, width: "100%" }} title={action.name} bold={false}>
                                             <Icon id={customData.icon || "actions"} size={1.1} style={{ marginInlineStart: "0.5em" }} right />
-                                            <p>
+                                            <p className={styles.label}>
                                                 <T id={customData.name || ""} />
-                                                {customName ? <span style={{ padding: 0, opacity: 0.7, fontSize: "0.8em" }}>: {customName}</span> : null}
+                                                {customName ? (
+                                                    <span className={styles.label} style={{ padding: 0, opacity: 0.7, fontSize: "0.8em" }}>
+                                                        : {customName}
+                                                    </span>
+                                                ) : null}
                                             </p>
                                         </Button>
                                     </SelectElem>

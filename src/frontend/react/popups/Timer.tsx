@@ -270,7 +270,7 @@ export function Timer() {
                     </p>
 
                     <div>
-                        <input ref={timeInput} type="time" step="2" value={effectiveTime} />
+                        <input ref={timeInput} className={styles.timeInput} type="time" step="2" value={effectiveTime} />
                     </div>
                 </div>
             ) : timer.type === "event" ? (

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type F
 import { groups } from "../../../stores"
 import { getGlobalGroup } from "../../../components/helpers/show"
 import { translateText } from "../../../utils/language"
+import { cn } from "../../../lib/utils"
 import { usePropState } from "../../hooks/usePropState"
 import { useStore } from "../../hooks/useStore"
 import styles from "./HighlightedNotes.module.css"
@@ -81,7 +82,7 @@ export function HighlightedNotes({ value: valueProp, placeholder = "", disabled 
             <div className={styles.backdrop}>
                 <div className={styles["highlight-overlay"]} style={style} dangerouslySetInnerHTML={{ __html: highlightedText }} />
             </div>
-            <textarea placeholder={placeholder || translateText("empty.text...")} className={`edit ${styles.edit} ${className || ""}`} rows={lines} style={style} value={value} disabled={disabled} autoFocus={autofocus} onChange={(event) => setValue(event.currentTarget.value)} onInput={input} onBlur={change} onKeyDown={onKeydown} onScroll={handleScroll} />
+            <textarea placeholder={placeholder || translateText("empty.text...")} className={cn("edit", styles.edit, styles.textarea, className)} rows={lines} style={style} value={value} disabled={disabled} autoFocus={autofocus} onChange={(event) => setValue(event.currentTarget.value)} onInput={input} onBlur={change} onKeyDown={onKeydown} onScroll={handleScroll} />
         </div>
     )
 }

@@ -4,7 +4,7 @@
     height: 100%;
 }
 
-h5 {
+.heading {
     overflow: visible;
     text-align: center;
     padding: 5px;
@@ -43,8 +43,7 @@ h5 {
     outline-offset: -2px;
 }
 
-p,
-span {
+.label {
     padding: 0 10px;
 }
 

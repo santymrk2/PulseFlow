@@ -63,12 +63,12 @@
     background-color: rgb(128 128 128 / 0.4) !important;
 }
 
-textarea::placeholder {
+.textarea::placeholder {
     color: var(--text, white);
     opacity: 0.5;
 }
 
-textarea:disabled {
+.textarea:disabled {
     opacity: 0.5;
 }
 
