@@ -1,0 +1,335 @@
+/* Port literal del <style> de Timeline.svelte (F24.19b). */
+.timeline {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.time-display {
+    width: 100%;
+    min-width: 120px;
+    padding: 5px 8px;
+
+    border: none;
+    outline: none;
+    background: inherit;
+
+    font-size: 1.25em;
+    font-weight: bold;
+    color: var(--text);
+    text-align: center;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}
+.time-display:focus {
+    border-color: var(--focus);
+}
+
+.timeline-grid {
+    display: grid;
+    grid-template-columns: var(--header-width, 120px) 1fr;
+    grid-template-rows: 30px 1fr;
+    height: 100%;
+    overflow: hidden;
+    background-color: var(--primary-darker);
+}
+.ruler-container {
+    grid-column: 2;
+    grid-row: 1;
+    overflow: hidden;
+    position: relative;
+    background-color: var(--primary-darker);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.4);
+    z-index: 15;
+}
+.headers-container {
+    grid-column: 1;
+    grid-row: 2;
+    overflow: hidden;
+    position: relative;
+    background: var(--primary-darker);
+    border-right: 1px solid var(--border);
+    z-index: 10;
+}
+.timeline-track-wrapper {
+    grid-column: 2;
+    grid-row: 2;
+    overflow: auto; /* Scrollbars appear here */
+    position: relative;
+    background-color: var(--primary-darker);
+}
+
+.timeline-track {
+    position: relative;
+    height: 100%;
+    min-height: 150px;
+    /* cursor: pointer; */
+}
+
+.grid {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+.grid-line {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    border-left: 1px solid var(--border);
+}
+
+.grid-line.minor {
+    border-left: 1px solid var(--border);
+}
+
+.ruler {
+    position: absolute;
+    top: 0;
+    height: 30px;
+}
+
+.tick {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    /* border-left: 1px solid rgba(255, 255, 255, 0.3); */
+    pointer-events: none;
+}
+
+.tick.minor {
+    bottom: auto;
+    border-left: 1px solid var(--border-strong);
+}
+
+.tick-label {
+    font-size: 0.7em;
+    padding-left: 2px;
+    color: var(--text);
+    opacity: 0.5;
+    position: absolute;
+    top: 10px;
+}
+
+.track-headers {
+    position: absolute; /* Changed from sticky */
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* height: 100%; */
+    pointer-events: none;
+}
+
+.track-header {
+    position: absolute;
+    left: 0;
+    /* width: 120px; */
+    height: 60px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    /* background: rgba(0, 0, 0, 0.6); */
+    border-bottom: 1px solid var(--border);
+    border-top: 1px solid var(--border);
+    pointer-events: auto; /* Allow interaction if needed */
+
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.playhead {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    pointer-events: none;
+    z-index: 110;
+}
+
+.playhead-line {
+    position: absolute;
+    width: 2px;
+    background-color: var(--secondary);
+    box-shadow: 0 0 2px rgb(0 0 0 / 0.6);
+    top: 0;
+    bottom: 0;
+    left: -1px;
+}
+
+.playhead-knob {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 10px solid var(--secondary);
+    z-index: 111;
+    /* cursor: ew-resize; */
+}
+
+.action-marker {
+    position: absolute;
+    top: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transform: translateX(-50%);
+    z-index: 5;
+    pointer-events: none;
+}
+
+.action-marker:not(.faded) > * {
+    pointer-events: auto;
+}
+
+.action-marker.faded {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.action-head {
+    width: 18px;
+    height: 18px;
+    background-color: var(--secondary-opacity);
+    border-radius: 50%;
+    border: 2px solid var(--secondary);
+    box-shadow: 0 0 4px rgb(0 0 0 / 0.6);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* cursor: ew-resize; */
+    font-size: 0.7em;
+    font-weight: bold;
+}
+.action-marker.slide .action-head {
+    border-radius: 4px;
+}
+.action-marker.style .action-head {
+    border-radius: 2px;
+    transform: rotate(45deg);
+    width: 12px;
+    height: 12px;
+    font-size: 0.5em;
+}
+
+.slide-action-bar {
+    position: absolute;
+    transform: translateY(15px);
+    height: 8px;
+    width: 100%;
+
+    border-radius: 4px;
+    background-color: var(--secondary);
+    opacity: 0.3;
+}
+
+.action-clip {
+    position: absolute;
+    top: 35px;
+    height: 60px;
+    background-color: var(--secondary-opacity);
+    color: var(--secondary-text);
+    border: 2px solid var(--secondary);
+    border-radius: 4px;
+    box-shadow: 0 0 4px rgb(0 0 0 / 0.4);
+
+    z-index: 4;
+    /* cursor: move; */
+    /* cursor: ew-resize; */
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.action-clip-content {
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+    padding: 0 5px;
+    position: relative;
+}
+
+.clip-label {
+    background: none;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex: 1;
+    padding: 4px 6px;
+    z-index: 1;
+    position: relative;
+    font-size: 0.8em;
+}
+
+.waveform-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    /* align-items: center; */
+    align-items: flex-end; /* at bottom */
+    opacity: 0.3;
+    pointer-events: none;
+    color: var(--secondary-text);
+}
+.waveform-container :global(.wave-bar) {
+    background-color: var(--secondary-text);
+}
+
+.action-clip.selected {
+    border: 2px solid var(--text);
+}
+
+.action-marker.selected .action-head {
+    border-color: var(--text);
+}
+
+.selection-box {
+    position: absolute;
+    background-color: var(--bg-selected);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    pointer-events: none;
+    z-index: 100;
+}
+
+.action-label {
+    margin-top: 4px;
+    font-size: 0.8em;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 2px 4px;
+    border-radius: 3px;
+    white-space: nowrap;
+}
+
+/* CLOSED */
+
+.closed {
+    display: flex;
+}
+
+.closed .timeline-track-wrapper {
+    overflow: hidden;
+    background-color: var(--primary-darkest);
+}
+.closed .timeline-track {
+    min-height: 0;
+    height: 100%;
+}
+
+.closed .action-clip {
+    cursor: default;
+}
+.closed .action-clip-content {
+    align-items: center;
+}
