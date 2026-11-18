@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../types/Show"
 import { slidesOptions } from "../../stores"
 import autosize from "../../components/edit/scripts/autosize"
-import { clearIslands } from "../test/islandMock"
+import { clearIslands, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { SlideItems } from "./SlideItems"
 
@@ -24,7 +24,7 @@ vi.mock("./views/MediaItem", () => ({ MediaItem: viewMock("MediaItem") }))
 vi.mock("./views/Website", () => ({ Website: viewMock("Website") }))
 vi.mock("./views/Timer", () => ({ Timer: viewMock("Timer") }))
 vi.mock("../system/Clock", () => ({ Clock: viewMock("Clock") }))
-vi.mock("../output/Window", () => ({ Window: () => <span data-island="Window" /> }))
+vi.mock("../output/Window", () => ({ Window: () => <span data-isla="Window" /> }))
 vi.mock("./views/SlideProgress", () => ({ SlideProgress: viewMock("SlideProgress") }))
 vi.mock("./views/DynamicEvents", () => ({ DynamicEvents: viewMock("DynamicEvents") }))
 vi.mock("./views/Weather", () => ({ Weather: viewMock("Weather") }))
@@ -38,8 +38,8 @@ vi.mock("./views/Table", () => ({ Table: viewMock("Table") }))
 vi.mock("./views/QrCode", () => ({ QrCode: viewMock("QrCode") }))
 vi.mock("../drawer/live/BMDStream", async () => ({ BMDStream: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("BMDStream") }))
 vi.mock("../drawer/live/Cam", async () => ({ Cam: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Cam") }))
-vi.mock("../../components/drawer/live/NDIStream.svelte", () => ({ default: { name: "NDIStream" } }))
-vi.mock("../../components/drawer/live/OMTStream.svelte", () => ({ default: { name: "OMTStream" } }))
+vi.mock("../drawer/live/NDIStream", async () => ({ NDIStream: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("NDIStream") }))
+vi.mock("../drawer/live/OMTStream", async () => ({ OMTStream: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("OMTStream") }))
 
 let restore: () => void = () => {}
 beforeEach(() => {
@@ -97,18 +97,21 @@ describe("SlideItems", () => {
         for (const [type, name] of [
             ["screen", "Window"],
             ["ndi", "NDIStream"],
-            ["omt", "OMTStream"]
-        ]) {
-            const container = renderItem({ type: "camera", device: { id: "d1", name: "Cámara", type } })
-            expect(container.querySelector(`[data-island='${name}']`)).toBeTruthy()
-            cleanup()
-        }
-        for (const [type, name] of [
+            ["omt", "OMTStream"],
             ["blackmagic", "BMDStream"],
             ["camera", "Cam"]
         ]) {
             const container = renderItem({ type: "camera", device: { id: "d1", name: "Cámara", type } })
             expect(container.querySelector(`[data-isla='${name}']`)).toBeTruthy()
+            cleanup()
+        }
+    })
+
+    it("pasa_outputId_y_background_a_los_ports_de_streams", () => {
+        for (const type of ["ndi", "omt"]) {
+            renderItem({ type: "camera", device: { id: "d2", name: "Stream", type } }, { outputId: "out7" })
+            const name = type === "ndi" ? "NDIStream" : "OMTStream"
+            expect(islands[name]?.props).toMatchObject({ background: true, outputId: "out7" })
             cleanup()
         }
     })

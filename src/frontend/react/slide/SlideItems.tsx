@@ -4,12 +4,11 @@ import { slidesOptions } from "../../stores"
 import { MetronomeVisualizer } from "../drawer/audio/MetronomeVisualizer"
 import { BMDStream } from "../drawer/live/BMDStream"
 import { Cam } from "../drawer/live/Cam"
-import NDIStream from "../../components/drawer/live/NDIStream.svelte"
-import OMTStream from "../../components/drawer/live/OMTStream.svelte"
+import { NDIStream } from "../drawer/live/NDIStream"
+import { OMTStream } from "../drawer/live/OMTStream"
 import autosize from "../../components/edit/scripts/autosize"
 import { getCropState } from "../../components/helpers/cropping"
 import { getStyles } from "../../components/helpers/style"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { useStore } from "../hooks/useStore"
 import { Window as WindowView } from "../output/Window"
@@ -87,7 +86,7 @@ export function SlideItems({ item, edit = false, itemElem, slideIndex = 0, previ
         const screen = { id: item.device?.id || "", name: item.device?.name || "" }
         return (
             <div className="mediaContainer" style={cssTextToStyle(cameraCropState.mediaContainerStyle)}>
-                {screenType === "screen" ? <WindowView key={item.device?.id} id={screen.id} style={cameraStyleString} /> : screenType === "ndi" ? <SvelteIsland key={item.device?.id} component={NDIStream} props={{ screen, background: true, outputId, style: cameraStyleString }} /> : <SvelteIsland key={item.device?.id} component={OMTStream} props={{ screen, background: true, outputId, style: cameraStyleString }} />}
+                {screenType === "screen" ? <WindowView key={item.device?.id} id={screen.id} style={cameraStyleString} /> : screenType === "ndi" ? <NDIStream key={item.device?.id} screen={screen} background outputId={outputId} style={cameraStyleString} /> : <OMTStream key={item.device?.id} screen={screen} background outputId={outputId} style={cameraStyleString} />}
             </div>
         )
     }

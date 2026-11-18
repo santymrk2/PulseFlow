@@ -3,17 +3,16 @@ import { activeProject, activeShow, autoOpenedTimeline, outLocked, projects, res
 import { DEFAULT_WIDTH } from "../../utils/common"
 import { createGlobalTimerFromLocalTimer } from "../../components/drawer/timers/timers"
 import { setOutput } from "../../components/helpers/output"
-import NdiStreamSvelte from "../../components/drawer/live/NDIStream.svelte"
 import { Splash } from "../main/Splash"
 import { Camera } from "../output/Camera"
 import { Layouts } from "../slide/Layouts"
 import { Timeline } from "../timeline/Timeline"
 import { Resizeable } from "../system/Resizeable"
 import { HoverPlay } from "../system/HoverPlay"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
 import { AudioPreview } from "./AudioPreview"
 import { Capture } from "../drawer/live/Capture"
+import { NDIStream } from "../drawer/live/NDIStream"
 import { EffectPreview } from "./effect/EffectPreview"
 import { FolderShow } from "./folder/FolderShow"
 import { MediaPreview } from "./media/MediaPreview"
@@ -124,7 +123,7 @@ export function Show() {
                                     if (!currentOutLocked) setOutput("background", { id: show.id, type: show.type })
                                 }}
                             >
-                                <SvelteIsland component={NdiStreamSvelte} props={{ screen: { id: show.id, name: show.name || "" }, background: true }} />
+                                <NDIStream screen={{ id: show.id, name: show.name || "" }} background />
                             </HoverPlay>
                         ) : show.type === "folder" ? (
                             <div key={show.id}>
