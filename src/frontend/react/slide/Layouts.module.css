@@ -1,0 +1,19 @@
+.layouts {
+    display: flex;
+    overflow-x: auto;
+}
+
+.divider {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    background-color: var(--primary-darkest);
+}
+
+.divider :global(button) {
+    min-height: 28px;
+    padding: 0 0.8em !important;
+}
+.divider :global(button.active) {
+    background-color: var(--primary) !important;
+}
