@@ -1808,7 +1808,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [ ] **F24.17g** Cajón, tanda g: `pages/*`.
 - [ ] **F24.17h** Cajón, tanda h: `player/*`, `calendar/*`, `effects/*`, `timers/*` y `system/Player`.
 - [ ] **F24.17i** Cajón, tanda i: `bible/Scripture`.
-- [x] **F24.18a** Slides: `views/*` y relojes de `system/`.
+- [ ] **F24.18a** Slides: `views/*` y relojes de `system/`.
 - [ ] **F24.18b** Slides: textbox, slide, layouts, íconos y acciones.
 - [ ] **F24.19a** Stage.
 - [ ] **F24.19b** Línea de tiempo.
