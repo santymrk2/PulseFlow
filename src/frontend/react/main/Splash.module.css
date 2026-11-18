@@ -1,0 +1,64 @@
+.center {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    overflow-y: auto;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.brandLogo {
+    width: 48px;
+    height: 48px;
+    filter: brightness(0) invert(1);
+}
+
+.brandName {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.center p {
+    overflow: initial;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.buttons :global(button) {
+    justify-content: start;
+    padding: 8px 12px;
+}
+
+.votd {
+    padding: 0 10px;
+    max-width: 580px;
+    white-space: normal;
+    text-align: left;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+.votd :global(a) {
+    text-decoration: none;
+}
+
+@media screen and (max-height: 500px) {
+    .brandLogo {
+        width: 40px;
+        height: 40px;
+    }
+}

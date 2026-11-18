@@ -1,0 +1,50 @@
+.profiles h1 {
+    font-size: 5em;
+    overflow: initial;
+}
+
+.profiles p {
+    font-size: 1.2em;
+    overflow: initial;
+}
+
+.profiles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+
+    background-color: var(--primary);
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    z-index: 200;
+}
+
+.flex {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+
+    padding: 0;
+}
+
+.profile p {
+    font-size: 1.3em;
+
+    max-width: 180px;
+    overflow: hidden;
+}

@@ -1,0 +1,93 @@
+.modalBackdrop {
+    position: absolute;
+    inset: 0;
+    z-index: 5000;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 16px;
+
+    background-color: var(--backdrop);
+    backdrop-filter: blur(2px);
+}
+
+.modal {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    width: min(var(--modal-width), calc(100vw - 32px));
+    height: min(var(--modal-height), calc(100vh - 32px));
+
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-modal, 8px);
+    box-shadow: var(--shadow-float);
+
+    overflow: hidden;
+    outline: none;
+}
+
+.modalHeader {
+    flex: 0 0 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+
+    padding: 0 8px 0 16px;
+    border-bottom: 1px solid var(--border);
+}
+
+.modalTitle {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.modalClose {
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+    padding: 0;
+
+    color: var(--text);
+    background: none;
+    border: none;
+    border-radius: var(--radius, 4px);
+    cursor: pointer;
+}
+.modalClose:hover {
+    background-color: var(--primary-lightest, var(--bg-selected));
+}
+
+.modalBody {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    overflow: hidden;
+}
+
+.modalFooter {
+    flex: 0 0 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 8px;
+
+    padding: 0 16px;
+    border-top: 1px solid var(--border);
+}

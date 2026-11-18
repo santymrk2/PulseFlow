@@ -1,0 +1,150 @@
+.popup h2 {
+    color: var(--text);
+}
+
+.popup {
+    position: absolute;
+    background-color: var(--backdrop);
+    width: 100%;
+    height: 100%;
+    padding: 20px var(--navigation-width);
+    z-index: 5000;
+
+    backdrop-filter: blur(2px);
+
+    font-size: 1em;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.popup.isOptimized {
+    background-color: color-mix(in srgb, black 80%, transparent);
+}
+
+@media screen and (max-width: 1000px) {
+    .popup {
+        padding: 20px;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, calc(-50% + 12px));
+    }
+}
+
+.card {
+    position: relative;
+    background-color: var(--bg-elevated);
+
+    border-radius: var(--radius-modal, 8px);
+
+    min-width: 50%;
+    min-height: 50px;
+    max-width: 100%;
+    max-height: 100%;
+
+    border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-float);
+}
+
+.headerContent {
+    position: relative;
+    display: flex;
+
+    z-index: 1;
+
+    transition: 0.2s box-shadow ease;
+
+    min-height: 44px;
+}
+.headerMargin {
+    margin: 0 16px;
+    position: relative;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+}
+
+.scroll {
+    overflow: auto;
+    overflow-x: hidden;
+    max-height: calc(100vh - 99.2px - var(--top-height));
+}
+
+.body {
+    display: flex;
+    flex-direction: column;
+    margin: 16px;
+    min-width: 38vw;
+}
+
+.card :global(.popup-close),
+.card :global(.popup-back),
+.card :global(.popup-options),
+.card :global(.popup-reset) {
+    position: absolute;
+    inset-inline-end: -10px;
+    top: 0;
+    height: 100%;
+    padding: 0.4em !important;
+    border-radius: var(--radius, 4px);
+    aspect-ratio: 1;
+    justify-content: center;
+
+    z-index: 1;
+}
+
+.card :global(.popup-back) {
+    left: 0;
+
+    max-height: 35.2px;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+.card:has(.popup-back) h2 {
+    margin-left: 35px;
+}
+
+.card :global(.popup-options) {
+    inset-inline-end: 42px;
+
+    max-height: 35.2px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.card :global(.popup-options.active) {
+    color: var(--secondary) !important;
+    background-color: var(--primary-darkest) !important;
+}
+
+.card :global(.popup-options .state) {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--primary-darkest);
+    color: var(--text);
+    padding: 2px;
+    border-radius: 50%;
+
+    font-size: 0.65em;
+    opacity: 0.8;
+
+    width: 18px;
+    height: 18px;
+
+    pointer-events: none;
+}
+
+.card :global(.popup-reset) {
+    inset-inline-end: 85px;
+
+    max-height: 35.2px;
+    margin-top: 10px;
+    margin-right: 10px;
+}

@@ -1,0 +1,23 @@
+.toast {
+    position: absolute;
+    bottom: 0;
+    inset-inline-end: 4px;
+    max-width: calc(var(--navigation-width) - 6px);
+    z-index: 5000;
+
+    background-color: var(--primary-darker);
+    color: var(--text);
+    border: 2px solid var(--secondary);
+
+    border-radius: 8px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    border-bottom: none;
+
+    font-size: 1.2em;
+    padding: 8px 16px;
+
+    overflow-x: auto;
+
+    box-shadow: var(--shadow-float);
+}
