@@ -7,6 +7,8 @@ export default defineConfig({
     plugins: [react({ babel: { plugins: [["babel-plugin-react-compiler", {}]] } }), tailwindcss()],
     // `public/` holds static assets (global.css, fonts, …) copied as-is.
     publicDir: "public",
+    // los .module.css portados de Svelte usan clases kebab-case; el código React las lee como styles.camelCase
+    css: { modules: { localsConvention: "camelCase" } },
     // The SPA entry is the root `index.html` (dev + build).
     server: {
         port: 1420,
