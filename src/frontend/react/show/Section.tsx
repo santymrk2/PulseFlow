@@ -3,9 +3,8 @@ import { actions, activeProject, editingProjectTemplate, projects, projectTempla
 import { getActionIcon, runAction } from "../../components/actions/actions"
 import { keysToID, sortByName } from "../../components/helpers/array"
 import { translateText } from "../../utils/language"
-import Tip from "../../components/main/Tip.svelte"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
+import { Tip } from "../main/Tip"
 import { FloatingBar } from "../ui/floating-bar/FloatingBar"
 import { InputRow } from "../ui/input-row/InputRow"
 import { Title } from "../ui/title/Title"
@@ -139,7 +138,7 @@ export function Section({ section }: SectionProps) {
         return (
             <div className={styles.settings}>
                 <Title label="popup.action" icon="actions" />
-                <SvelteIsland component={Tip as never} props={{ type: "info", value: "settings.section_trigger_action", style: "justify-content: left;", bottom: 10 }} />
+                <Tip type="info" value="settings.section_trigger_action" style="justify-content: left;" bottom={10} />
                 <InputRow>
                     <SelectField label="groups.global" disabled={!!localAction && !!currentActions[localAction]} options={actionOptions} value={currentSpecial.sectionTriggerAction || ""} onChange={updateTrigger} allowEmpty />
                     <SelectField label="groups.current" options={actionOptions} value={localAction} onChange={updateTriggerLocal} allowEmpty />

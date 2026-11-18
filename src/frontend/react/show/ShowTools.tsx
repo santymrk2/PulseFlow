@@ -4,12 +4,11 @@ import type { TabsObj } from "../../../types/Tabs"
 import { activeShow, labelsDisabled, outputs, showsCache, slideTimers } from "../../stores"
 import { translateText } from "../../utils/language"
 import { getActiveOutputs } from "../../components/helpers/output"
-import Audio from "../../components/output/tools/Audio.svelte"
-import Overlay from "../../components/output/tools/Overlay.svelte"
-import TimerControls from "../../components/output/tools/TimerControls.svelte"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
+import { Audio } from "../output/Audio"
 import { NextTimer } from "../output/NextTimer"
+import { TimerControls } from "../output/TimerControls"
+import { ToolsOverlay } from "../output/ToolsOverlay"
 import { Media } from "./tools/Media"
 import { Metadata } from "./tools/Metadata"
 import { SlideGroups } from "./tools/SlideGroups"
@@ -57,14 +56,14 @@ export function ShowTools({ tabs, active, tabsHost }: ShowToolsProps) {
                         <>
                             {active === "audio" ? (
                                 <div className={styles.content}>
-                                    <SvelteIsland component={Audio} />
+                                    <Audio />
                                 </div>
                             ) : active === "overlays" ? (
                                 <div className={styles.content}>
-                                    <SvelteIsland component={Overlay} props={{ currentOutput }} />
+                                    <ToolsOverlay currentOutput={currentOutput} />
                                 </div>
                             ) : active === "timers" ? (
-                                <div className={styles.content}>{slideTimer?.timer ? <NextTimer currentOutput={currentOutput} timer={{ time: slideTimer.time ?? 0, paused: slideTimer.paused ?? true, timer: slideTimer.timer }} /> : <SvelteIsland component={TimerControls} />}</div>
+                                <div className={styles.content}>{slideTimer?.timer ? <NextTimer currentOutput={currentOutput} timer={{ time: slideTimer.time ?? 0, paused: slideTimer.paused ?? true, timer: slideTimer.timer }} /> : <TimerControls />}</div>
                             ) : active === "groups" ? (
                                 <SlideGroups />
                             ) : active === "media" ? (

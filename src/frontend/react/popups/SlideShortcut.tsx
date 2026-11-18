@@ -1,14 +1,13 @@
 // Port de components/main/popups/SlideShortcut.svelte. Lee (una vez, al montar) popupData.index/mode/revert/active/value/trigger/existingShortcuts
 // y el layout activo. Escribe: popupData (mode: "" o {}) y activePopup al montar; history SHOW_LAYOUT o trigger(key) al asignar, y activePopup = revert || null.
-// Tip sigue siendo Svelte (isla).
+// Tip usa el port React.
 import { useEffect, useState } from "react"
 import { get } from "svelte/store"
 import { history } from "../../components/helpers/history"
 import { getLayoutRef } from "../../components/helpers/show"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import type { Popups } from "../../../types/Main"
 import { activePopup, popupData } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Button } from "../ui/button/Button"
 import styles from "./SlideShortcut.module.css"
 
@@ -86,7 +85,7 @@ export function SlideShortcut() {
         <>
             {data.revert ? <Button className="popup-back" icon="back" iconSize={1.3} title="actions.back" onClick={() => activePopup.set(data.revert as unknown as Popups)} /> : null}
 
-            {existing ? <SvelteIsland component={Tip} props={{ type: "warning", value: "actions.shortcut_existing" }} /> : <SvelteIsland component={Tip} props={{ value: "actions.press_to_assign" }} />}
+            {existing ? <Tip type="warning" value="actions.shortcut_existing" /> : <Tip value="actions.press_to_assign" />}
 
             {currentShortcut ? <div className={styles.shortcut}>{currentShortcut}</div> : null}
         </>

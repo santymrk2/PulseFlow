@@ -1,5 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, render, waitFor } from "@testing-library/react"
+import type { CSSProperties } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../../types/Show"
 import { audioChannelsData, currentWindow, media as mediaStore, outputs, styles } from "../../../stores"
@@ -11,8 +12,20 @@ import { MediaItem } from "./MediaItem"
 vi.mock("../../../utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ props }: { props: { src: string; style: string } }) => <img data-testid="island" data-src={props.src} data-style={props.style} />
+vi.mock("../../drawer/media/Image", () => ({
+    Image: ({ src, style }: { src: string; style?: CSSProperties | string }) => (
+        <img
+            data-testid="island"
+            data-src={src}
+            data-style={
+                typeof style === "string"
+                    ? style
+                    : Object.entries(style || {})
+                          .map(([key, value]) => `${key}: ${String(value)}`)
+                          .join(";")
+            }
+        />
+    )
 }))
 vi.mock("../../../components/helpers/media", () => ({
     encodeFilePath: (path: string) => `file://${path}`,

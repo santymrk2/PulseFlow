@@ -114,7 +114,7 @@ vi.mock("../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: a
 vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-testid="island" /> }))
 vi.mock("./editors/SlideEditor", () => ({ SlideEditor: () => <div data-testid="slide-editor" /> }))
 vi.mock("../show/TextEditor", () => ({ TextEditor: () => <div data-testid="text-editor" /> }))
-vi.mock("../../components/main/Splash.svelte", () => ({ default: {} }))
+vi.mock("../main/Splash", () => ({ Splash: () => <div /> }))
 vi.mock("../../components/edit/editors/OverlayEditor.svelte", () => ({ default: {} }))
 vi.mock("../../components/edit/editors/TemplateEditor.svelte", () => ({ default: {} }))
 vi.mock("../../components/edit/editors/MediaEditor.svelte", () => ({ default: {} }))

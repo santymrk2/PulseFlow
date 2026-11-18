@@ -13,7 +13,7 @@ import css from "./ManageIcons.module.css"
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("uid", () => ({ uid: () => "id-nuevo" }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/main/Tip.svelte", () => ({ default: { isla: "Tip" } }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 const ids = Object.keys(customIcons)
 const coloreado = ids.find((id) => customIconsColors[id]) as string

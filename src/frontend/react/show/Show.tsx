@@ -4,8 +4,8 @@ import { DEFAULT_WIDTH } from "../../utils/common"
 import { createGlobalTimerFromLocalTimer } from "../../components/drawer/timers/timers"
 import { setOutput } from "../../components/helpers/output"
 import CameraSvelte from "../../components/output/Camera.svelte"
-import SplashSvelte from "../../components/main/Splash.svelte"
 import NdiStreamSvelte from "../../components/drawer/live/NDIStream.svelte"
+import { Splash } from "../main/Splash"
 import { Layouts } from "../slide/Layouts"
 import { Timeline } from "../timeline/Timeline"
 import { Resizeable } from "../system/Resizeable"
@@ -142,7 +142,7 @@ export function Show() {
                         )}
                     </>
                 ) : (
-                    <SvelteIsland component={SplashSvelte} />
+                    <Splash />
                 )}
             </div>
 

@@ -5,11 +5,10 @@ import type { Template, TemplateStyleOverride } from "../../../types/Show"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"
 import { DEFAULT_ITEM_STYLE } from "../../components/edit/scripts/itemHelpers"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import { TemplateHelper } from "../../utils/templates"
 import { activeEdit, activePage, activePopup, globalRegexes, popupData, templates } from "../../stores"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
@@ -21,7 +20,7 @@ import { Center } from "../system/Center"
 // Port de components/main/popups/TemplateStyleOverrides.svelte. Lee (al montar) popupData.templateId y, en el render, templates y globalRegexes.
 // Escribe: history UPDATE de la plantilla en cada cambio de reglas, templates al crear una, globalRegexes al crear/borrar regex,
 // activeEdit + activePage + activePopup para editar plantillas, popupData + activePopup ("regex_manager") y activePopup = null.
-// Tip sigue siendo Svelte (isla). `on:new` entregaba e.detail: acá onNew entrega directamente el nombre creado.
+// Tip usa el port React. `on:new` entregaba e.detail: acá onNew entrega directamente el nombre creado.
 const PRE_STYLE = "paint-order: stroke fill;"
 const RESET_STYLE = ";font-size: unset;"
 const BORDER_STYLE = { borderLeft: "3px solid var(--primary-lighter) !important" }
@@ -123,7 +122,7 @@ export function TemplateStyleOverrides() {
 
     return (
         <section>
-            <SvelteIsland component={Tip} props={{ type: "info", value: "edit.style_overrides_tip", bottom: 20 }} />
+            <Tip type="info" value="edit.style_overrides_tip" bottom={20} />
 
             {overrides.length ? (
                 overrides.map((override) => {

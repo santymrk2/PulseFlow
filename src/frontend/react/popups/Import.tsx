@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react"
 import { get } from "svelte/store"
 import { Main } from "../../../types/IPC/Main"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import { importFromClipboard } from "../../converters/importHelpers"
 import { sendMain } from "../../IPC/main"
 import { activePopup, alertMessage, os, popupData } from "../../stores"
 import { translateText } from "../../utils/language"
 import { presentationExtensions } from "../../values/extensions"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { Button } from "../ui/button/Button"
 import { HRule } from "../ui/h-rule/HRule"
@@ -18,7 +17,7 @@ import styles from "./Import.module.css"
 // Escribe popupData = {} al montar. Cada botón manda lo mismo que el Svelte:
 //   sendMain(Main.IMPORT, { channel: <id>, format }) (los de texto y FreeShow con { ...format, name: traducido }) y luego tutorial -> alertMessage + activePopup "alert",
 //   o activePopup = null. PowerPoint "slides": Main.IMPORT canal "powerpoint" y cierra; PDF: Main.PPT_TO_PDF (no cierra); online: Main.URL y cierra;
-//   controlador: Main.IMPORT canal "powerkey" (no cierra). Portapapeles: importFromClipboard() y cierra. Tip sigue siendo Svelte (isla).
+//   controlador: Main.IMPORT canal "powerkey" (no cierra). Portapapeles: importFromClipboard() y cierra. Tip usa el port React.
 // Los selectores `div`/`img` del <style> del Svelte pasan a las clases `box`/`img` de cada elemento. Sin key en el original: la posición.
 interface ImportFormat {
     name: string
@@ -186,7 +185,7 @@ export function Import() {
                     ))}
                 </div>
 
-                <SvelteIsland component={Tip} props={{ value: "The best option would generally be to get a hold of the presentation as PDF format in the first place.", top: 20 }} />
+                <Tip value="The best option would generally be to get a hold of the presentation as PDF format in the first place." top={20} />
             </>
         )
     }

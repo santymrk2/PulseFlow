@@ -4,12 +4,11 @@ import { get } from "svelte/store"
 import { Main } from "../../../types/IPC/Main"
 import { AudioAnalyser } from "../../audio/audioAnalyser"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import { sendMain } from "../../IPC/main"
 import { cn } from "../../lib/utils"
 import { activePopup, maxConnections, os, outputs, popupData, ports, serverData, special } from "../../stores"
 import { startRemoteController, stopRemoteController } from "../../utils/remoteController"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
@@ -24,7 +23,7 @@ import styles from "./Connect.module.css"
 // Port de components/main/popups/Connect.svelte. Lee (al montar): popupData.id/ip/remoteController y special.remoteControllerId; después ports, os, special, serverData, outputs y maxConnections.
 // Escribe: popupData = {} al montar; ports[id]; serverData[id][clave] (+ Main.SERVER_DATA con el store completo; la contraseña de companion reinicia el WebSocket); maxConnections;
 // special.connectionHostname; y, sin id de control remoto, un id nuevo en special.remoteControllerId (+ startRemoteController; stopRemoteController del anterior al regenerar).
-// Un clic en un link cierra el popup. Tip es Svelte (isla). Los NumberField pueden emitir null: se ignora (guarda defensiva).
+// Un clic en un link cierra el popup. Tip usa el port React. Los NumberField pueden emitir null: se ignora (guarda defensiva).
 type PortId = "remote" | "stage" | "controller" | "output_stream" | "companion"
 
 const DEFAULT_PORTS: Record<PortId, number> = { remote: 5510, stage: 5511, controller: 5512, output_stream: 5513, companion: 5505 }
@@ -214,7 +213,7 @@ export function Connect() {
                             <T id="remote.password" />: <b>{password}</b>
                         </p>
                     ) : remoteController ? (
-                        <SvelteIsland component={Tip} props={{ value: "With this you don't need to connect to the same router.", top: 15 }} />
+                        <Tip value="With this you don't need to connect to the same router." top={15} />
                     ) : null}
                 </div>
             )}

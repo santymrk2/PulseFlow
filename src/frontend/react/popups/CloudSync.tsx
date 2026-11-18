@@ -1,13 +1,12 @@
 import { useRef, useState } from "react"
 import { get } from "svelte/store"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import { popupData } from "../../stores"
 import { chooseTeam } from "../../utils/cloudSync"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { ChoiceGrid, type ChoiceOption } from "../ui/choice-grid/ChoiceGrid"
 
 // Port de components/main/popups/CloudSync.svelte. Lee (al montar): popupData.type y popupData.teams.
-// Escribe: chooseTeam({ ...team, count }) al elegir (una sola vez). Tip sigue siendo Svelte (isla).
+// Escribe: chooseTeam({ ...team, count }) al elegir (una sola vez). Tip usa el port React.
 interface Team extends ChoiceOption {
     churchId: string
 }
@@ -32,7 +31,7 @@ export function CloudSync() {
 
     return (
         <>
-            <SvelteIsland component={Tip} props={{ type: "info", value: "Select a team where you want to sync the data.", bottom: 20 }} />
+            <Tip type="info" value="Select a team where you want to sync the data." bottom={20} />
 
             <ChoiceGrid options={teams} onClick={teamChosen} highlightFirst={false} />
         </>

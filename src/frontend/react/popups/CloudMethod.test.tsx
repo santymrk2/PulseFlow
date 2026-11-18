@@ -12,7 +12,7 @@ import { CloudMethod } from "./CloudMethod"
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../utils/cloudSync", () => ({ syncWithCloud: vi.fn() }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/main/Tip.svelte", () => ({ default: { isla: "Tip" } }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 let restaurar: () => void = () => {}
 function montar() {

@@ -1,12 +1,11 @@
 import { useState } from "react"
 import { get } from "svelte/store"
 import type { Metadata } from "../../../types/Settings"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import { clone } from "../../components/helpers/array"
 import { metadataDisplayValues } from "../../components/helpers/show"
 import { activeEdit, activePage, activePopup, categories, currentMetadataPopupData, popupData, styles, templates } from "../../stores"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
@@ -18,7 +17,7 @@ import stylesModule from "./MetadataDisplay.module.css"
 // Port de components/main/popups/MetadataDisplay.svelte. Lee: popupData (al montar), currentMetadataPopupData, categories, styles y templates.
 // Escribe: currentMetadataPopupData al montar; categories/styles en cada cambio; activeEdit/activePage/activePopup al editar plantilla;
 // trigger del popup (cuando no es categoría ni estilo) y activePopup = null si se elige el display ya activo.
-// Tip sigue siendo Svelte (isla); Icon usa el helper React ya migrado.
+// Tip usa el port React; Icon usa el helper React ya migrado.
 interface MetadataPopupData {
     type?: string
     id?: string
@@ -141,7 +140,7 @@ export function MetadataDisplay() {
             </div>
 
             {display === "default" ? (
-                <SvelteIsland component={Tip} props={{ value: "tips.display_metadata", top: 20 }} />
+                <Tip value="tips.display_metadata" top={20} />
             ) : display !== "never" ? (
                 <>
                     <Button className={`popup-options ${showMore ? "active" : ""}`} icon="options" iconSize={1.3} title={showMore ? "actions.close" : "create_show.more_options"} onClick={() => setShowMore(!showMore)} white />
@@ -168,7 +167,7 @@ export function MetadataDisplay() {
 
                         {showMore ? <ToggleField label="meta.ignore_empty" checked={currentValue.ignoreEmpty} defaultValue={false} onChange={(value) => changeMetadata("ignoreEmpty", value)} /> : null}
 
-                        <SvelteIsland component={Tip} props={{ value: "tips.metadata_customize", top: 20 }} />
+                        <Tip value="tips.metadata_customize" top={20} />
                     </div>
                 </>
             ) : null}

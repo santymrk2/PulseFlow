@@ -2,15 +2,14 @@ import { useEffect, useState } from "react"
 import { get } from "svelte/store"
 import type { ContentProviderId } from "../../../types/ContentProvider"
 import { Main } from "../../../types/IPC/Main"
-import Tip from "../../components/main/Tip.svelte"
 import { checkWindowCapture } from "../../components/helpers/output"
 import { requestMain, sendMain } from "../../IPC/main"
 import { activePage, activePopup, activeShow, activeTriggerFunction, cloudSyncData, connections, contentProviderData, disabledServers, maxConnections, notFound, obsData, outputs, popupData, ports, providerConnections, saved, serverData, special } from "../../stores"
 import { startRemoteController, stopRemoteController } from "../../utils/remoteController"
 import { contentProviderSync } from "../../utils/startup"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
+import { Tip } from "../main/Tip"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
 import { InputRow } from "../ui/input-row/InputRow"
@@ -21,7 +20,7 @@ import { Title } from "../ui/title/Title"
 import { ToggleField } from "../ui/toggle-field/ToggleField"
 import styles from "./Connection.module.css"
 
-// Port de components/settings/tabs/Connection.svelte (F24.13a). Tip sigue siendo Svelte (isla) hasta que se migre.
+// Port de components/settings/tabs/Connection.svelte (F24.13a).
 const servers = [
     { id: "remote", name: "RemoteShow", icon: "connection", enabledByDefault: true },
     { id: "stage", name: "StageShow", icon: "stage", enabledByDefault: true },
@@ -327,7 +326,7 @@ export function Connection() {
 
                     <SelectField label="Song origin" options={providerOriginOptions} value={contentProviderDataValue.churchApps?.songOrigin || ""} onChange={(value) => updateProvider("churchApps", "songOrigin", value)} />
 
-                    {cloudSyncDataValue.enabled ? <SvelteIsland component={Tip} props={{ type: "warning", value: "This is unrelated to the Cloud sync found in 'Files'. This is for the content manager / curriculum.", top: 20 }} /> : null}
+                    {cloudSyncDataValue.enabled ? <Tip type="warning" value="This is unrelated to the Cloud sync found in 'Files'. This is for the content manager / curriculum." top={20} /> : null}
                 </>
             ) : providerConnectionsValue.amazinglife ? (
                 <>
@@ -393,7 +392,7 @@ export function Connection() {
                 />
             </InputRow>
 
-            {obsDataValue.enabled && obsWasDisabled ? <SvelteIsland component={Tip} props={{ value: "edit.position: guide_title.drawer > tabs.functions > OBS Studio", top: 15 }} /> : null}
+            {obsDataValue.enabled && obsWasDisabled ? <Tip value="edit.position: guide_title.drawer > tabs.functions > OBS Studio" top={15} /> : null}
         </>
     )
 }

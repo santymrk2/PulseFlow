@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react"
 import { get } from "svelte/store"
 import { defaultColors, defaultGradients } from "../../components/helpers/color"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import { special } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"
 import { ColorField } from "../ui/color-field/ColorField"
@@ -11,7 +10,7 @@ import { ColorField } from "../ui/color-field/ColorField"
 // Port de components/main/popups/ManageColors.svelte. Lee special.customColors (al leer el portapapeles). Escribe special: customColors / disabledColors /
 // customColorsGradient / disabledColorsGradient (agrega el color o lo saca si ya estaba; se muta en el lugar y se re-emite, como el Svelte).
 // Al montar lee el portapapeles (navigator.clipboard.readText): los colores válidos y que no estén en customColors se ofrecen con "pegar".
-// Tip sigue siendo Svelte (isla). Se omite el `{console.log(clipboardColors)}` de depuración (y el <span> invisible que lo envolvía).
+// Tip usa el port React. Se omite el `{console.log(clipboardColors)}` de depuración (y el <span> invisible que lo envolvía).
 function isValidColor(color: string) {
     const style = new Option().style
     style.color = color
@@ -71,7 +70,7 @@ export function ManageColors() {
 
     return (
         <>
-            <SvelteIsland component={Tip} props={{ value: "actions.click_disable", bottom: 20 }} />
+            <Tip value="actions.click_disable" bottom={20} />
 
             <ColorField label="" value="" onChange={(value) => changeColor(value || "")} alwaysVisible editMode />
 

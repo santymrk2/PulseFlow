@@ -15,7 +15,7 @@ vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/actions/midi", () => ({ midiInListen: vi.fn() }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../../components/actions/MidiValues.svelte", () => ({ default: { isla: "MidiValues" } }))
-vi.mock("../../components/main/Tip.svelte", () => ({ default: { isla: "Tip" } }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 let restaurar: () => void = () => {}
 const montarSlideMidi = (data: object = {}, actionsData: object = {}): ReturnType<typeof render> => {

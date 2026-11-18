@@ -14,7 +14,7 @@ vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn() }))
 vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/main/Tip.svelte", () => ({ default: { isla: "Tip" } }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 let restaurar: () => void = () => {}
 function montar(data: object, customAction = "") {

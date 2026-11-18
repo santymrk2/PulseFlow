@@ -9,7 +9,7 @@ import { Metadata } from "./Metadata"
 vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../components/helpers/show", () => ({ getCustomMetadata: () => ({ number: "", title: "" }), initializeMetadata: () => ({ number: "", title: "" }) }))
-vi.mock("../../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-island="Tip" /> }))
+vi.mock("../../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Tip") }))
 vi.mock("../../ui/text-field/TextField", () => ({ TextField: ({ label, value }: { label: string; value: string }) => <label data-field={label}>{value}</label> }))
 vi.mock("../../ui/number-field/NumberField", () => ({ NumberField: ({ label }: { label: string }) => <label data-field={label} /> }))
 
@@ -25,7 +25,7 @@ describe("Metadata", () => {
         restore = setStoresForTest([looseEntry(activeShow, { id: "show1", type: "show" }), looseEntry(showsCache, { show1: { name: "1 Intro", meta: { title: "Intro" }, quickAccess: { duration: 5 } } }), looseEntry(customMetadata, {}), looseEntry(dictionary, {})])
         const { container } = render(<Metadata />)
         expect(container.querySelector("[data-field='title']")).toBeTruthy()
-        expect(container.querySelector("[data-island='Tip']")).toBeTruthy()
+        expect(container.querySelector("[data-isla='Tip']")).toBeTruthy()
         expect(container.querySelector("[data-field='transition.duration (s)']")).toBeTruthy()
     })
 

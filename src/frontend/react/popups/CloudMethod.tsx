@@ -1,15 +1,14 @@
 import { activePopup, cloudSyncData } from "../../stores"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import { syncWithCloud } from "../../utils/cloudSync"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"
 
 // Port de components/main/popups/CloudMethod.svelte. Escribe: cloudSyncData.cloudMethod (en el lugar) + syncWithCloud(true) + activePopup = null; "cancelar": cloudSyncData = {} + activePopup = null.
 // En el Svelte `showMore` era una constante `true` (el botón que la cambiaba está comentado), así que las 4 opciones salen siempre y `multipleTeams` no influía: se omiten.
-// Tip sigue siendo Svelte (isla).
+// Tip usa el port React.
 type CloudMethodId = "merge" | "read_only" | "upload" | "replace"
 
 const OPTIONS: { name: string; description: string; icon: string; method: CloudMethodId }[] = [
@@ -36,7 +35,7 @@ function cancel() {
 export function CloudMethod() {
     return (
         <>
-            <SvelteIsland component={Tip} props={{ type: "info", value: "cloud.choose_method_tip", bottom: 20 }} />
+            <Tip type="info" value="cloud.choose_method_tip" bottom={20} />
 
             <div style={{ display: "flex", flexDirection: "column", gap: "5px" }}>
                 {OPTIONS.map((option, i) => (

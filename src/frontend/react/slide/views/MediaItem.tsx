@@ -1,8 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import type { Item } from "../../../../types/Show"
 import { audioChannelsData, currentWindow, media as mediaStore, outputs, styles } from "../../../stores"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
-import Image from "../../../components/drawer/media/Image.svelte"
+import { Image } from "../../drawer/media/Image"
 import { getCropState } from "../../../components/helpers/cropping"
 import { encodeFilePath, getExtension, getMedia, getMediaType, getThumbnailPath, mediaSize } from "../../../components/helpers/media"
 import { defaultLayers } from "../../../components/helpers/output"
@@ -185,7 +184,7 @@ export function MediaItem({ item, outputId = "", slideRef = {}, preview = false,
     const isVideo = !!mediaPath && getMediaType(getExtension(mediaPath)) === "video"
 
     function imageIsland(style: string, key: string) {
-        return <SvelteIsland key={key} component={Image} props={{ style, src: mediaPath, updater, alt: "", transition }} />
+        return <Image key={key} style={cssTextToStyle(style)} src={mediaPath} updater={updater} alt="" transition={transition} />
     }
 
     if (!mediaPath) return null

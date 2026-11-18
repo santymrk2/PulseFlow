@@ -2,10 +2,9 @@ import { useEffect, useState } from "react"
 import { get } from "svelte/store"
 import { uid } from "uid"
 import type { Popups } from "../../../types/Main"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import { activePopup, customizedIcons, popupData } from "../../stores"
 import { customIcons, customIconsColors } from "../../values/customIcons"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useFreshStore } from "../hooks/useFreshStore"
@@ -78,7 +77,7 @@ export function ManageIcons() {
         <>
             {back ? <Button className="popup-back" icon="back" iconSize={1.3} title="actions.back" onClick={() => activePopup.set(back)} /> : null}
 
-            <SvelteIsland component={Tip} props={{ value: "actions.click_disable", bottom: 20 }} />
+            <Tip value="actions.click_disable" bottom={20} />
 
             <div className={styles.grid}>
                 {iconIds.map((icon) => {

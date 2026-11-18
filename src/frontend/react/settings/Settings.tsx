@@ -1,12 +1,11 @@
 import { useEffect, useState, type CSSProperties, type UIEvent } from "react"
 import { resetAudioRouting } from "../../audio/routing/audioRoutingInit"
 import { AudioRouting } from "./audio/AudioRouting"
-import Tip from "../../components/main/Tip.svelte"
 import { activePopup, dictionary, settingsTab } from "../../stores"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
+import { Tip } from "../main/Tip"
 import { Connection } from "./Connection"
 import { Files } from "./Files"
 import { FilesButtons } from "./FilesButtons"
@@ -44,7 +43,7 @@ export function Settings() {
                 <h2 className={styles.heading}>{translateText(`settings.${tabId}`, dict)}</h2>
 
                 <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                    {hints[tabId] ? <SvelteIsland component={Tip} props={{ type: "info", value: translateText(hints[tabId]), style: "opacity: 0.7;", hiddenText: true, white: true }} /> : null}
+                    {hints[tabId] ? <Tip type="info" value={translateText(hints[tabId])} style="opacity: 0.7;" hiddenText={true} white={true} /> : null}
 
                     {tabId === "audio" ? <Button title="actions.reset" icon="reset" onClick={() => resetAudioRouting()} /> : tabId === "profiles" ? <ProfilesButtons /> : null}
                 </div>

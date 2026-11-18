@@ -2,8 +2,6 @@ import { useState } from "react"
 import { fadeinAllPlayingAudio, fadeoutAllPlayingAudio, isAllAudioFading } from "../../../audio/audioFading"
 import { activeAudioEffects, activePopup, dataPath, special } from "../../../stores"
 import { VideoPlayer } from "../../../components/media/video/videoPlayer"
-import AudioMixers from "../../../components/drawer/audio/AudioMixers.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
 import { T } from "../../helpers/T"
 import { Button } from "../../ui/button/Button"
@@ -13,8 +11,9 @@ import { Icon } from "../../helpers/Icon"
 import { NumberField } from "../../ui/number-field/NumberField"
 import { ToggleField } from "../../ui/toggle-field/ToggleField"
 import { AudioEffects } from "../audio/effects/AudioEffects"
+import { AudioMixers } from "../audio/AudioMixers"
 
-// Port de components/drawer/info/AudioInfo.svelte. AudioMixers sigue en Svelte (F24.17c no lo migró).
+// Port de components/drawer/info/AudioInfo.svelte.
 export function AudioInfo() {
     const currentEffects = useStore(activeAudioEffects)
     const path = useStore(dataPath)
@@ -60,7 +59,7 @@ export function AudioInfo() {
             ) : currentEffects ? (
                 <AudioEffects />
             ) : (
-                <SvelteIsland component={AudioMixers} />
+                <AudioMixers />
             )}
 
             {!currentEffects ? (

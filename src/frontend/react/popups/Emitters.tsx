@@ -9,7 +9,7 @@ import { getDynamicValue } from "../../components/edit/scripts/itemHelpers"
 import FormInputs from "../../components/form/FormInputs.svelte"
 import { getValues } from "../../components/form/inputs"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import { requestMain } from "../../IPC/main"
 import { activePopup, emitters, popupData } from "../../stores"
 import { SvelteIsland } from "../bridge/SvelteIsland"
@@ -24,7 +24,7 @@ import styles from "./Emitters.module.css"
 // Port de components/main/popups/Emitters.svelte. Lee `emitters` (y popupData al montar: id / name / actionData para crear desde el desplegable de acciones).
 // Escribe `emitters` (crear, borrar, nombre, descripción, tipo, señal, plantillas y sus valores: se muta en el lugar y se re-emite, como el Svelte) y, con la flecha
 // de "volver" de acción, popupData = actionData y activePopup = "action". IPC: Main.GET_MIDI_OUTPUTS (sin payload) para llenar las salidas MIDI.
-// Islas Svelte (temporales): Tip, FormInputs, MidiValues. Sus eventos se toman al montar, así que van por `live` (siempre el último render).
+// Islas Svelte (temporales): FormInputs, MidiValues. Sus eventos se toman al montar, así que van por `live` (siempre el último render).
 // Desvío: el Svelte volvía a pedir GET_MIDI_OUTPUTS con cada emisión del store; acá sólo al entrar a un emisor MIDI o cambiar de tipo (el resultado es el mismo).
 // alias de tipo (no interface): DynamicList pide ítems con firma de índice
 type TemplateInput = { id: string; name: string; value: EmitterTemplateValue["value"] }
@@ -282,7 +282,7 @@ export function Emitters() {
         <>
             {backButton}
 
-            {!emittersList.length ? <SvelteIsland component={Tip} props={{ type: "info", value: "emitters.tip", bottom: 20 }} /> : null}
+            {!emittersList.length ? <Tip type="info" value="emitters.tip" bottom={20} /> : null}
 
             <DynamicList items={emittersList} onOpen={setEditEmitter} onDelete={deleteEmitter} onAdd={() => createEmitter()}>
                 {(item) => (

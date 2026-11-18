@@ -3,7 +3,6 @@ import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Show } from "../../../types/Show"
 import { dictionary } from "../../stores"
-import { clearIslands, islands } from "../test/islandMock"
 import { clearFields, fire } from "../test/kitMocks"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
@@ -15,8 +14,7 @@ vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
-vi.mock("../../components/export/Pdf.svelte", () => ({ default: { isla: "Pdf" } }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
+vi.mock("../export/Pdf", () => ({ Pdf: (props: Record<string, unknown>) => <div data-isla="Pdf" data-props={JSON.stringify(props)} /> }))
 vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/checkbox-field/CheckboxField", async () => ({ CheckboxField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
@@ -38,6 +36,11 @@ const showWithChords = {
     slides: { s1: { group: null, color: null, settings: {}, notes: "", items: [{ lines: [{ chords: [{ key: "C" }] }] }] } }
 } as unknown as Show
 
+function pdfProps(): { shows?: unknown[]; options?: PdfOptions } {
+    const marker = document.querySelector("[data-isla='Pdf']") as HTMLElement | null
+    return JSON.parse(marker?.getAttribute("data-props") || "{}") as { shows?: unknown[]; options?: PdfOptions }
+}
+
 let restaurar: () => void = () => {}
 function montar(props: { pdfOptions?: PdfOptions; previewShow?: Show | null; exportType?: string; onChange?: (o: PdfOptions) => void } = {}) {
     restaurar = setStoresForTest([storeEntry(dictionary, dict)] as never)
@@ -46,7 +49,6 @@ function montar(props: { pdfOptions?: PdfOptions; previewShow?: Show | null; exp
 beforeEach(() => {
     vi.clearAllMocks()
     clearFields()
-    clearIslands()
 })
 afterEach(() => {
     cleanup()
@@ -73,7 +75,7 @@ describe("PdfExport", () => {
         fire("clock.type", "onChange", "media")
         expect(onChange).toHaveBeenCalledWith(expect.objectContaining({ type: "media" }))
         expect(document.querySelector('[data-field="export.metadata"]')).toBeNull()
-        expect(islands.Pdf.props.options).toMatchObject({ type: "media" })
+        expect(pdfProps().options).toMatchObject({ type: "media" })
     })
 
     it("muestra_la_opción_chord_sheet_sólo_si_el_show_tiene_acordes", () => {
@@ -101,7 +103,7 @@ describe("PdfExport", () => {
 
     it("el_preview_recibe_el_show_y_los_botones_desplazan_el_papel", () => {
         montar({ pdfOptions: { type: "media" }, previewShow: showWithChords })
-        expect(islands.Pdf.props.shows).toHaveLength(1)
+        expect(pdfProps().shows).toHaveLength(1)
         const scrollBy = vi.fn()
         const paper = document.querySelector("[class*='paper']") as HTMLElement
         Object.defineProperty(paper, "scrollBy", { value: scrollBy })

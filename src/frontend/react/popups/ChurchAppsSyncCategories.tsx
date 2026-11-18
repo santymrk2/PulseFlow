@@ -1,16 +1,15 @@
 import { useState } from "react"
 import { get } from "svelte/store"
 import { keysToID, sortByName } from "../../components/helpers/array"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import { categories, contentProviderData, shows } from "../../stores"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { CheckboxField } from "../ui/checkbox-field/CheckboxField"
 import { useFreshStore } from "../hooks/useFreshStore"
 import styles from "./ChurchAppsSyncCategories.module.css"
 
 // Port de components/main/popups/ChurchAppsSyncCategories.svelte. Lee: categories y shows (una vez, al montar) y contentProviderData.churchApps.syncCategories.
-// Escribe: contentProviderData.churchApps.syncCategories (en el lugar, como el original). Tip sigue siendo Svelte (isla).
+// Escribe: contentProviderData.churchApps.syncCategories (en el lugar, como el original). Tip usa el port React.
 // Las filas no tenían key en el Svelte: se usa la posición.
 interface CategoryOption {
     id: string
@@ -53,7 +52,7 @@ export function ChurchAppsSyncCategories() {
 
     return (
         <>
-            <SvelteIsland component={Tip} props={{ type: "info", value: "settings.sync_categories_tip", bottom: 20 }} />
+            <Tip type="info" value="settings.sync_categories_tip" bottom={20} />
 
             <div className={styles.categories}>
                 {categoryOptions.map(({ id, name, count }, i) => (

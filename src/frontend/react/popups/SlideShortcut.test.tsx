@@ -14,7 +14,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/helpers/show", () => ({ getLayoutRef: () => [{ id: "s1", data: { actions: {} } }] }))
-vi.mock("../../components/main/Tip.svelte", () => ({ default: { isla: "Tip" } }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 
 const trigger = vi.fn()

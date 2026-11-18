@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 import type { Show } from "../../../types/Show"
 import { clone } from "../../components/helpers/array"
-import Pdf from "../../components/export/Pdf.svelte"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+import { Pdf } from "../export/Pdf"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"
 import { CheckboxField } from "../ui/checkbox-field/CheckboxField"
@@ -14,7 +13,7 @@ import styles from "./PdfExport.module.css"
 
 // Port de components/main/popups/export/PdfExport.svelte. No lee stores directamente; recibe pdfOptions/previewShow/showCount/exportType por props y
 // devuelve cada cambio con onChange(options) (el dispatch "change" del Svelte, con JSON.parse/JSON.stringify).
-// Pdf.svelte sigue siendo Svelte (isla). Se conserva: oneFile forzado a true para proyectos, losdefaults cuando llegan opciones vacías y el preview con scroll.
+// Pdf es un componente React directo. Se conserva: oneFile forzado a true para proyectos, los defaults cuando llegan opciones vacías y el preview con scroll.
 // Se omite el console.log("Shows:", showCount) del original (sólo diagnóstico).
 export interface PdfOptions {
     type?: string
@@ -171,7 +170,7 @@ export function PdfExport({ pdfOptions, previewShow, exportType = "", onChange }
             <div className={styles.previewBox}>
                 <div style={{ flex: 1, display: "flex", flexDirection: "column", margin: "10px", borderRadius: "4px", overflow: "hidden" }}>
                     <div ref={paper} className={styles.paper} style={{ "--paper-aspect-ratio": type === "media" ? "1920/1080" : "210/297" } as CSSProperties}>
-                        <SvelteIsland component={Pdf} props={{ shows: previewShow ? [previewShow] : [], options }} />
+                        <Pdf shows={previewShow ? [previewShow] : []} options={options} />
                     </div>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", height: "100%", backgroundColor: "var(--primary-darkest)" }}>

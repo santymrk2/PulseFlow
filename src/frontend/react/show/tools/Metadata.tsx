@@ -3,8 +3,7 @@ import { activeShow, customMetadata, dictionary, shows, showsCache } from "../..
 import { history } from "../../../components/helpers/history"
 import { getCustomMetadata, initializeMetadata } from "../../../components/helpers/show"
 import { translateText } from "../../../utils/language"
-import Tip from "../../../components/main/Tip.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
+import { Tip } from "../../main/Tip"
 import { TextField } from "../../ui/text-field/TextField"
 import { NumberField } from "../../ui/number-field/NumberField"
 import { useStore } from "../../hooks/useStore"
@@ -100,7 +99,7 @@ export function Metadata() {
                 })}
                 <NumberField label="transition.duration (s)" value={Number(currentShow.quickAccess?.duration || 0)} onChange={(next) => changeValue(next ?? "", "duration")} hideWhenZero />
             </div>
-            <SvelteIsland component={Tip as never} props={{ value: "tips.display_metadata", style: "margin: 0 10px;", bottom: 10 }} />
+            <Tip value="tips.display_metadata" style="margin: 0 10px;" bottom={10} />
         </section>
     )
 }

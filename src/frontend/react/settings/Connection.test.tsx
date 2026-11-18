@@ -18,9 +18,8 @@ vi.mock("../../utils/remoteController", () => ({ startRemoteController: vi.fn(),
 vi.mock("../../utils/startup", () => ({ contentProviderSync: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-// Tip sigue siendo Svelte: acá sólo importa con qué props se monta
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} /> }))
-vi.mock("../../components/main/Tip.svelte", () => ({ default: { isla: "Tip" } }))
+// El port Tip se mockea como isla: acá sólo importa con qué props se monta.
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 const respuestas: { ip?: string[]; teams: { id: string; name: string; current: boolean }[]; switchTeam: { success: boolean }; disconnect: { success: boolean } } = { ip: undefined, teams: [], switchTeam: { success: true }, disconnect: { success: true } }
 

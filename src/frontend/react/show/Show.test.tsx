@@ -3,7 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeShow, autoOpenedTimeline, outLocked, projects, resized, showsCache, special, templateApplied } from "../../stores"
-import { islands, clearIslands } from "../test/islandMock"
+import { clearIslands } from "../test/islandMock"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Show } from "./Show"
 
@@ -13,7 +13,7 @@ vi.mock("../../utils/common", () => ({ DEFAULT_WIDTH: 250 }))
 vi.mock("../../components/drawer/timers/timers", () => ({ createGlobalTimerFromLocalTimer: vi.fn() }))
 vi.mock("../../components/helpers/output", () => ({ setOutput: vi.fn() }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/main/Splash.svelte", () => ({ default: { isla: "Splash" } }))
+vi.mock("../main/Splash", () => ({ Splash: () => <div data-isla="Splash" /> }))
 vi.mock("../../components/output/Camera.svelte", () => ({ default: { isla: "Camera" } }))
 vi.mock("../../components/drawer/live/NDIStream.svelte", () => ({ default: { isla: "NdiStream" } }))
 vi.mock("../slide/Layouts", () => ({ Layouts: () => <div data-testid="layouts" /> }))
@@ -41,7 +41,7 @@ describe("Show", () => {
     it("muestra el splash cuando no hay show activo", () => {
         setStores()
         render(<Show />)
-        expect(islands.Splash).toBeTruthy()
+        expect(document.querySelector('[data-isla="Splash"]')).toBeTruthy()
         expect(screen.queryByTestId("slides")).toBeNull()
     })
 

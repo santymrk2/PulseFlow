@@ -15,7 +15,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("svelte", async () => vi.importActual("../../../../node_modules/svelte/src/index-client.js"))
 vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: () => null }))
-vi.mock("../../components/main/Tip.svelte", () => ({ default: {} }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
 let restaurar: () => void = () => {}

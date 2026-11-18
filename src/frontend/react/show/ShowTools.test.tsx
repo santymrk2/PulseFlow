@@ -3,7 +3,6 @@ import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeShow, labelsDisabled, outputs, showsCache, slideTimers } from "../../stores"
 import { getActiveOutputs } from "../../components/helpers/output"
-import { clearIslands, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ShowTools } from "./ShowTools"
 
@@ -11,10 +10,9 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../components/helpers/output", () => ({ getActiveOutputs: vi.fn(() => []) }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/output/tools/Audio.svelte", () => ({ default: { isla: "Audio" } }))
-vi.mock("../../components/output/tools/Overlay.svelte", () => ({ default: { isla: "Overlay" } }))
-vi.mock("../../components/output/tools/TimerControls.svelte", () => ({ default: { isla: "TimerControls" } }))
+vi.mock("../output/Audio", () => ({ Audio: () => <div data-isla="Audio" /> }))
+vi.mock("../output/ToolsOverlay", () => ({ ToolsOverlay: () => <div data-isla="Overlay" /> }))
+vi.mock("../output/TimerControls", () => ({ TimerControls: () => <div data-isla="TimerControls" /> }))
 vi.mock("../output/NextTimer", () => ({
     NextTimer: (props: Record<string, unknown>) => <div data-isla="NextTimer" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
 }))
@@ -28,7 +26,6 @@ let restore: () => void = () => {}
 afterEach(() => {
     cleanup()
     restore()
-    clearIslands()
     vi.clearAllMocks()
 })
 
@@ -42,7 +39,7 @@ describe("ShowTools", () => {
         setStores()
         render(<ShowTools tabs={tabs} active="audio" />)
         expect(screen.getByText("tools.audio")).toBeTruthy()
-        expect(islands.Audio).toBeTruthy()
+        expect(document.querySelector('[data-isla="Audio"]')).toBeTruthy()
     })
 
     it("muestra el port React de Media cuando la pestaña es media", () => {
@@ -61,6 +58,6 @@ describe("ShowTools", () => {
         setStores("lessons")
         render(<ShowTools tabs={tabs} active="audio" />)
         expect(screen.queryByText("tools.audio")).toBeNull()
-        expect(islands.Audio).toBeUndefined()
+        expect(document.querySelector('[data-isla="Audio"]')).toBeNull()
     })
 })

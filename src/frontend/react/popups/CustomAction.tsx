@@ -1,9 +1,8 @@
 import { useState } from "react"
 import { get } from "svelte/store"
 import { _show } from "../../components/helpers/shows"
-import Tip from "../../components/main/Tip.svelte"
+import { Tip } from "../main/Tip"
 import { actions, activePopup, activeShow, popupData, scenes, showsCache } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
 import { InputRow } from "../ui/input-row/InputRow"
@@ -11,7 +10,7 @@ import { SelectField } from "../ui/select-field/SelectField"
 
 // Port de components/main/popups/CustomAction.svelte. Lee: popupData.mode/sceneId (al montar), scenes, la acción del show activo y actions (lista tomada al montar; el botón editar sí sigue el store).
 // Escribe: modo "scene" -> scenes[sceneId].action + modified; modo "show" -> showsCache[show activo].settings.customAction (en el lugar, como el Svelte).
-// Editar: popupData = { id } + activePopup = "action". Tip sigue siendo Svelte (isla).
+// Editar: popupData = { id } + activePopup = "action". Tip usa el port React.
 export function CustomAction() {
     const actionsValue = useStore(actions)
     const [{ type, sceneId }] = useState(() => {
@@ -54,7 +53,7 @@ export function CustomAction() {
 
     return (
         <>
-            <SvelteIsland component={Tip} props={{ type: "info", value: type === "show" ? "show.custom_action_tip" : "tips.custom_action", bottom: 20 }} />
+            <Tip type="info" value={type === "show" ? "show.custom_action_tip" : "tips.custom_action"} bottom={20} />
 
             <InputRow>
                 <SelectField label="midi.start_action" options={actionOptions.map((a) => ({ label: a.name, value: a.id }))} value={currentAction} allowEmpty onChange={(value) => updateValue(value ?? "")} />

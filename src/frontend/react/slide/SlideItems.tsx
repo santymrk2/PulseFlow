@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 import type { Item } from "../../../types/Show"
 import { slidesOptions } from "../../stores"
-import MetronomeVisualizer from "../../components/drawer/audio/MetronomeVisualizer.svelte"
+import { MetronomeVisualizer } from "../drawer/audio/MetronomeVisualizer"
 import BMDStream from "../../components/drawer/live/BMDStream.svelte"
 import Cam from "../../components/drawer/live/Cam.svelte"
 import NDIStream from "../../components/drawer/live/NDIStream.svelte"
@@ -137,7 +137,7 @@ export function SlideItems({ item, edit = false, itemElem, slideIndex = 0, previ
     if (item.type === "visualizer") return <Visualizer item={item} preview={preview} edit={edit} />
     if (item.type === "captions") return <Captions item={item} />
     if (item.type === "icon") return <IconItem item={item} ratio={ratio} />
-    if (item.type === "metronome") return <SvelteIsland component={MetronomeVisualizer} props={{ isItem: true }} />
+    if (item.type === "metronome") return <MetronomeVisualizer isItem />
     if (item.type === "variable") {
         return <Variable item={item} style={variableStyleString} ref={{ ...ref, slideIndex }} hideText={edit ? false : preview} edit={edit} />
     }

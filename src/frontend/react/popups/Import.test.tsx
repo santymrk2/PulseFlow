@@ -15,7 +15,7 @@ vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../converters/importHelpers", () => ({ importFromClipboard: vi.fn() }))
 vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} /> }))
-vi.mock("../../components/main/Tip.svelte", () => ({ default: { isla: "Tip" } }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 const dict = { formats: { show: "Show", project: "Proyecto", template: "Plantilla", overlay: "Overlay", action: "Acción", text: "Texto", clipboard: "Portapapeles" }, stage: { stage_layout: "Stage" }, create_show: { more_options: "Más" }, info: { slides: "Diapositivas" } }
 let restaurar: () => void = () => {}

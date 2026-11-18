@@ -26,7 +26,7 @@ import styles from "./Drawer.module.css"
 // window registrados una vez, con cleanup. Los handlers leen los stores con `get()` (como `$store` en Svelte),
 // así que no hace falta volver a registrarlos cuando cambian.
 const MIN_HEIGHT = 40
-const TOP_HEIGHT = 48 // Top.svelte
+const TOP_HEIGHT = 48 // altura de la barra superior
 const TABS = keysToID(drawerTabs)
 const VALID_TABS = drawerTabs as Record<string, unknown>
 const HIDDEN_IN_FOCUS_MODE: readonly string[] = ["templates", "calendar"]

@@ -30,7 +30,7 @@ vi.mock("./views/Weather", () => ({ Weather: viewMock("Weather") }))
 vi.mock("./views/Visualizer", () => ({ Visualizer: viewMock("Visualizer") }))
 vi.mock("./views/Captions", () => ({ Captions: viewMock("Captions") }))
 vi.mock("./views/IconItem", () => ({ IconItem: viewMock("IconItem") }))
-vi.mock("../../components/drawer/audio/MetronomeVisualizer.svelte", () => ({ default: { name: "MetronomeVisualizer" } }))
+vi.mock("../drawer/audio/MetronomeVisualizer", () => ({ MetronomeVisualizer: () => <span data-island="MetronomeVisualizer" /> }))
 vi.mock("./views/Variable", () => ({ Variable: viewMock("Variable") }))
 vi.mock("./views/Chart", () => ({ Chart: viewMock("Chart") }))
 vi.mock("./views/Table", () => ({ Table: viewMock("Table") }))
@@ -131,7 +131,7 @@ describe("SlideItems", () => {
         }
     })
 
-    it("renderiza_el_metronomo_como_isla_svelte", () => {
+    it("renderiza_el_metronomo", () => {
         const container = renderItem({ type: "metronome" })
         expect(container.querySelector("[data-island]")).toBeTruthy()
     })

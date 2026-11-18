@@ -10,13 +10,16 @@ vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../components/helpers/output", () => ({ findMatchingOut: vi.fn(() => null), setOutput: vi.fn() }))
-vi.mock("../../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ props, events, slots }: { props: Record<string, unknown>; events?: Record<string, () => void>; slots?: Record<string, unknown> }) => (
-        <div data-island="HoverPlay" data-props={JSON.stringify(props)}>
-            <button data-testid="hover" onClick={() => events?.click?.()} />
-            {slots?.default as never}
+vi.mock("../../system/HoverPlay", () => ({
+    HoverPlay: ({ icon, size, onClick, children }: { icon: string; size?: number; onClick?: () => void; children?: unknown }) => (
+        <div data-isla="HoverPlay" data-props={JSON.stringify({ icon, size })}>
+            <button data-testid="hover" onClick={onClick} />
+            {children as never}
         </div>
     )
+}))
+vi.mock("../../bridge/SvelteIsland", () => ({
+    SvelteIsland: ({ children }: { children?: unknown }) => <>{children as never}</>
 }))
 vi.mock("../../slide/Zoomed", () => ({ Zoomed: ({ children }: { children: unknown }) => <div data-view="Zoomed">{children as never}</div> }))
 
@@ -32,7 +35,7 @@ describe("EffectPreview", () => {
         restore = setStoresForTest([looseEntry(outputs, {})])
         const { container, getAllByTestId } = render(<EffectPreview show={{ id: "fx1" } as never} />)
         expect(container.firstElementChild!.className).toContain("effectPreview")
-        expect(JSON.parse(container.querySelector("[data-props]")!.getAttribute("data-props")!).icon).toBe("play")
+        expect(JSON.parse(container.querySelector('[data-isla="HoverPlay"]')!.getAttribute("data-props")!).icon).toBe("play")
         getAllByTestId("hover")[0].click()
         expect(setOutput).toHaveBeenCalledWith("effects", "fx1", true)
     })
@@ -41,6 +44,6 @@ describe("EffectPreview", () => {
         vi.mocked(findMatchingOut).mockReturnValue("out1")
         restore = setStoresForTest([looseEntry(outputs, {})])
         const { container } = render(<EffectPreview show={{ id: "fx1" } as never} />)
-        expect(JSON.parse(container.querySelector("[data-props]")!.getAttribute("data-props")!).icon).toBe("clear")
+        expect(JSON.parse(container.querySelector('[data-isla="HoverPlay"]')!.getAttribute("data-props")!).icon).toBe("clear")
     })
 })

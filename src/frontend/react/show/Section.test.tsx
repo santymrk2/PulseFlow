@@ -7,7 +7,7 @@ import { Section } from "./Section"
 
 vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../components/actions/actions", () => ({ getActionIcon: vi.fn(() => "play"), runAction: vi.fn() }))
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-island="Tip" /> }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 vi.mock("../helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
 vi.mock("../ui/button/Button", () => ({
     Button: ({ children, onClick, title }: { children: unknown; onClick?: () => void; title?: string }) => (
@@ -44,7 +44,7 @@ describe("Section", () => {
         restore = setStoresForTest([looseEntry(actions, {}), looseEntry(activeProject, "project1"), looseEntry(projects, { project1: { shows: [{ id: "sec1" }] } }), looseEntry(special, { sectionTriggerAction: "" })])
         const { container, getByTitle } = render(<Section section={{ id: "sec1", index: 0 }} />)
         fireEvent.click(getByTitle("menu.settings"))
-        expect(container.querySelector("[data-island='Tip']")).toBeTruthy()
+        expect(container.querySelector("[data-isla='Tip']")).toBeTruthy()
         expect(container.querySelectorAll("[data-select]")).toHaveLength(2)
     })
 })

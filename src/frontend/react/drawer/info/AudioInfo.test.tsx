@@ -3,7 +3,6 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "svelte/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeAudioEffects, activePopup, dataPath, special } from "../../../stores"
-import { clearIslands, islands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { AudioInfo } from "./AudioInfo"
 
@@ -17,8 +16,7 @@ vi.mock("../../../audio/audioFading", () => ({
 }))
 vi.mock("../../../components/media/video/videoPlayer", () => ({ VideoPlayer: { hasAudibleVideo: () => fading.audible } }))
 vi.mock("../../../IPC/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn() }))
-vi.mock("../../../components/drawer/audio/AudioMixers.svelte", () => ({ default: { isla: "AudioMixers" } }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
+vi.mock("../audio/AudioMixers", () => ({ AudioMixers: () => <div data-isla="AudioMixers" /> }))
 vi.mock("../audio/effects/AudioEffects", () => ({ AudioEffects: () => <div data-testid="efectos" /> }))
 vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {}, wait: () => Promise.resolve() }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
@@ -35,13 +33,12 @@ beforeEach(() => {
 afterEach(() => {
     cleanup()
     restaurar()
-    clearIslands()
 })
 
 describe("AudioInfo", () => {
     it("monta AudioMixers y la barra de ajustes cuando no hay efectos activos", () => {
         render(<AudioInfo />)
-        expect(islands["AudioMixers"]).toBeTruthy()
+        expect(document.querySelector('[data-isla="AudioMixers"]')).toBeTruthy()
         expect(document.querySelector('[data-title="audio.settings"]')).toBeTruthy()
     })
 

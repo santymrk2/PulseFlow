@@ -16,11 +16,11 @@ import { StatusIndicator } from "./main/StatusIndicator"
 import { Toast } from "./main/Toast"
 import { TooltipManager } from "./main/TooltipManager"
 import { MainLayout } from "./MainLayout"
-import ContextMenu from "../components/context/ContextMenu.svelte"
-import Pdf from "../components/export/Pdf.svelte"
-import Guide from "../components/guide/Guide.svelte"
-import QuickSearch from "../components/quicksearch/QuickSearch.svelte"
 import SettingsModal from "../components/settings/SettingsModal.svelte"
+import { ContextMenu } from "./context/ContextMenu"
+import { Pdf } from "./export/Pdf"
+import { Guide } from "./guide/Guide"
+import { QuickSearch } from "./quicksearch/QuickSearch"
 import styles from "./App.module.css"
 
 let startupCalled = false
@@ -68,7 +68,7 @@ export function App() {
     }, [isLoaded])
 
     if (windowType === "pdf") {
-        return <SvelteIsland component={Pdf} />
+        return <Pdf />
     }
 
     const isWindows = !windowType && osValue.platform === "win32"
@@ -84,18 +84,18 @@ export function App() {
             {isWindows ? <MenuBar /> : null}
 
             <main style={parseInlineStyle(globalStyle)} className={`${styles.main}${closeAdValue ? ` ${styles.closeAd}` : ""}`}>
-                <SvelteIsland component={ContextMenu} />
+                <ContextMenu />
                 <TooltipManager />
 
                 {isLoaded ? (
                     <>
                         <SvelteIsland component={SettingsModal} />
                         <Popup />
-                        <SvelteIsland component={QuickSearch} />
+                        <QuickSearch />
                         <Toast />
                         <StatusIndicator />
                         <Recorder />
-                        <SvelteIsland component={Guide} />
+                        <Guide />
                         <ProgressPanel />
 
                         <MainLayout />

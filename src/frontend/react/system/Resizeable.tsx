@@ -121,7 +121,7 @@ export function Resizeable({ id, side: originalSide = "left", defaultWidth = DEF
         if (next > defaultWidth - 20 && next < defaultWidth + 20) return defaultWidth
         if (next > maxWidth) return maxWidth
         if (side === "bottom") {
-            const availableHeight = window.innerHeight - (get(os).platform === "win32" ? 25 : 0) - get(drawer).height - 48 // 48: Top.svelte
+            const availableHeight = window.innerHeight - (get(os).platform === "win32" ? 25 : 0) - get(drawer).height - 48 // 48: altura de la barra superior
             if (next > availableHeight) return availableHeight
         }
         move.current = true

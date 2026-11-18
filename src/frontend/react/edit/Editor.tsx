@@ -12,6 +12,7 @@ import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"
 import { FloatingBar } from "../ui/floating-bar/FloatingBar"
 import { SvelteIsland } from "../bridge/SvelteIsland"
+import { Splash } from "../main/Splash"
 import { SlideEditor } from "./editors/SlideEditor"
 import { TextEditor } from "../show/TextEditor"
 import { useStore } from "../hooks/useStore"
@@ -22,7 +23,6 @@ import { AudioEditor } from "./AudioEditor"
 import { ItemAddMenu } from "./ItemAddMenu"
 import styles from "./Editor.module.css"
 
-import SplashSvelte from "../../components/main/Splash.svelte"
 import OverlayEditorSvelte from "../../components/edit/editors/OverlayEditor.svelte"
 import TemplateEditorSvelte from "../../components/edit/editors/TemplateEditor.svelte"
 import MediaEditorSvelte from "../../components/edit/editors/MediaEditor.svelte"
@@ -224,7 +224,7 @@ export function Editor() {
             </>
         )
     } else {
-        content = <SvelteIsland component={SplashSvelte} props={{}} />
+        content = <Splash />
     }
 
     return <div className={`editor ${styles.editor}`}>{content}</div>
