@@ -17,7 +17,7 @@ vi.mock("../../components/helpers/setShow", () => ({ loadShows: vi.fn(async () =
 vi.mock("../../components/edit/scripts/textStyle", () => ({ getTextLines: (slide: { lines: string[] }) => slide.lines }))
 vi.mock("../../components/helpers/time", () => ({ dateToString: (d: number) => `fecha:${d}` }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/main/Loader.svelte", () => ({ default: { isla: "Loader" } }))
+vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 vi.mock("../ui/textarea-field/TextareaField", async () => ({ TextareaField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 
 const cache = (...lines: string[]) => ({ slides: { s: { lines } } })

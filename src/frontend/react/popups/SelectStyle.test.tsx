@@ -7,7 +7,7 @@ import { getResolution } from "../../components/helpers/output"
 import { openSettings } from "../../components/settings/openSettings"
 import { activePopup, activeStyle, currentOutputSettings, dictionary, outputs, popupData, styles } from "../../stores"
 import { commonMock } from "../test/mockCommon"
-import { clearIslands, emit, islands } from "../test/islandMock"
+import { clearIslands, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SelectStyle } from "./SelectStyle"
 
@@ -18,8 +18,15 @@ vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("../../components/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/drawer/Card.svelte", () => ({ default: { isla: "Card" } }))
+vi.mock("../drawer/Card", async () => {
+    const { islands } = await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")
+    return {
+        Card: (props: Record<string, unknown>) => {
+            islands.Card = { props }
+            return <div data-isla="Card" onClick={props.onClick as () => void} />
+        }
+    }
+})
 vi.mock("../output/Output", async () => ({ Output: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Output") }))
 
 const trigger = vi.fn()
@@ -51,8 +58,8 @@ describe("SelectStyle", () => {
     })
 
     it("elegir un estilo dispara el trigger, escribe popupData y cierra", () => {
-        montar({ trigger })
-        emit("Card", "click", {})
+        const { container } = montar({ trigger })
+        fireEvent.click(container.querySelectorAll('[data-isla="Card"]')[1] as HTMLElement)
         expect(trigger).toHaveBeenCalledWith("s2")
         expect(get(popupData)).toMatchObject({ id: "select_style", value: "s2" })
         act(() => vi.advanceTimersByTime(0))

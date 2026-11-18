@@ -1,7 +1,6 @@
 import { useState, type CSSProperties, type MouseEvent, type ReactNode } from "react"
 import type { Resolution } from "../../../types/Settings"
-import { SvelteIsland } from "../bridge/SvelteIsland"
-import Loader from "../../components/main/Loader.svelte"
+import { Loader } from "../main/Loader"
 import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
 import { cn } from "../../lib/utils"
 import { dictionary, mediaOptions, outputs, previewOutputId, styles as stylesStore } from "../../stores"
@@ -14,7 +13,7 @@ import styles from "./Card.module.css"
 
 // Port de components/drawer/Card.svelte. `class`/`style` de $$props → className/style (van al div .card, como en el original).
 // `on:mousedown/click/dblclick` y `on:mouseenter/leave/move` reenviados → props con el evento DOM; `on:keydown={triggerClickOnEnterSpace}`
-// no se reenvía (tenía handler local). `<slot />` → children. Loader sigue siendo Svelte (isla).
+// no se reenvía (tenía handler local). `<slot />` → children. Loader es el port React.
 export interface CardProps {
     loaded?: boolean
     preview?: boolean
@@ -71,7 +70,7 @@ export function Card({ loaded = true, preview = false, active = false, outlineCo
                 <div data-title={showPlayOnHover ? translateText(active ? "clear.general" : "media.play", dict) : ""} data-media={mediaData} className={cn(styles.card, className, checkered && "checkered")} style={cardStyle} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave} onMouseMove={onMouseMove}>
                     {!loaded ? (
                         <div className={styles.loader}>
-                            <SvelteIsland component={Loader} />
+                            <Loader />
                         </div>
                     ) : showPlayOnHover ? (
                         <div className={styles.overlayIcon}>

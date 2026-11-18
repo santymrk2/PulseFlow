@@ -13,7 +13,7 @@ vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
 // Loader sigue siendo Svelte: acá sólo importa que se monte
 vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component }: { component: { isla: string } }) => <div data-isla={component.isla} /> }))
-vi.mock("../../components/main/Loader.svelte", () => ({ default: { isla: "Loader" } }))
+vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 
 let restaurar: () => void = () => {}
 function montar(mensaje: string) {

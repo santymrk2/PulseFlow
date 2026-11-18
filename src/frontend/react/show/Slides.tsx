@@ -12,8 +12,7 @@ import { getActiveOutputs, refreshOut, setOutput } from "../../components/helper
 import { getCachedShow } from "../../components/helpers/show"
 import { checkActionTrigger, getFewestOutputLines, getFewestOutputLinesReveal, getItemWithMostLines, updateOut } from "../../components/helpers/showActions"
 import { _show } from "../../components/helpers/shows"
-import Loader from "../../components/main/Loader.svelte"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+import { Loader } from "../main/Loader"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { SkeletonSlide } from "../slide/SkeletonSlide"
@@ -492,7 +491,7 @@ export function Slides({ showId, layout = "", projectIndex = -1 }: SlidesProps) 
                         {!currentFocusMode ? <ShowHeader showId={showId} hideOptions={!layoutSlides?.length} /> : null}
 
                         {currentShowsCache[showId] === undefined ? (
-                            <Center faded={!loading}>{loading ? <SvelteIsland component={Loader} /> : <T id="error.no_show" />}</Center>
+                            <Center faded={!loading}>{loading ? <Loader /> : <T id="error.no_show" />}</Center>
                         ) : (
                             <div className={styles.grid} style={currentFocusMode ? undefined : { paddingBottom: 60 }}>
                                 {layoutSlides.length ? (

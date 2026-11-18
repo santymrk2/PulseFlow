@@ -2,10 +2,9 @@ import { useEffect, useState } from "react"
 import { NDI } from "../../../../types/Channels"
 import { special } from "../../../stores"
 import { destroy, receive, send } from "../../../utils/request"
-import Loader from "../../../components/main/Loader.svelte"
+import { Loader } from "../../main/Loader"
 import { T } from "../../helpers/T"
 import { Center } from "../../system/Center"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
 import { NDIStream } from "./NDIStream"
 import type { InputSelectDetail, Screen } from "./types"
@@ -14,7 +13,7 @@ export interface NDIStreamsProps {
     onClick?: (detail: InputSelectDetail) => void
 }
 
-// Port de components/drawer/live/NDIStreams.svelte. Loader no tiene port React: sigue como isla.
+// Port de components/drawer/live/NDIStreams.svelte. Loader es el port React.
 export function NDIStreams({ onClick }: NDIStreamsProps) {
     const [loading, setLoading] = useState(true)
     const [sources, setSources] = useState<Screen[]>([])
@@ -42,7 +41,7 @@ export function NDIStreams({ onClick }: NDIStreamsProps) {
     if (loading) {
         return (
             <Center>
-                <SvelteIsland component={Loader} />
+                <Loader />
             </Center>
         )
     }

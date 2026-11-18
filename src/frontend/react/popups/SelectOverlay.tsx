@@ -2,12 +2,11 @@ import { useEffect, useRef, useState } from "react"
 import { get } from "svelte/store"
 import { uid } from "uid"
 import type { Item } from "../../../types/Show"
-import Card from "../../components/drawer/Card.svelte"
+import { Card } from "../drawer/Card"
 import { keysToID, sortByName } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"
 import { getResolution } from "../../components/helpers/output"
 import { activePopup, outputs, overlays, popupData, previewOutputId, styles } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Textbox } from "../slide/Textbox"
@@ -20,7 +19,7 @@ import stylesCSS from "./SelectOverlay.module.css"
 // Port de components/main/popups/SelectOverlay.svelte. Lee: popupData (active, hide, trigger), outputs, styles,
 // previewOutputId (resolución) y overlays. Escribe: el trigger, popupData = { id: "select_overlay", value },
 // activePopup = null (500 ms después), popupData = {} y un history UPDATE al crear.
-// Card sigue siendo Svelte (isla); Zoomed y Textbox se importan directamente desde sus ports React.
+// Card, Zoomed y Textbox son ports React directos.
 // Como el Zoomed original no recibía slots, Textbox se renderiza como hermano suyo (F24.24 P8g).
 interface OverlayItem {
     id: string
@@ -106,7 +105,7 @@ export function SelectOverlay() {
                     <div className={stylesCSS.grid}>
                         {filteredOverlays.map((overlay, i) => (
                             <div key={overlay.id}>
-                                <SvelteIsland component={Card} props={{ width: 25, active: active === overlay.id, label: overlay.name, color: overlay.color, resolution }} events={{ click: () => select(overlay.id) }} />
+                                <Card width={25} active={active === overlay.id} label={overlay.name || ""} color={overlay.color} resolution={resolution} onClick={() => select(overlay.id)} />
                                 {loaded || i < lazyLoader ? (
                                     <>
                                         <Zoomed resolution={resolution} background={overlay.items?.length ? "var(--primary);" : overlay.color || "var(--primary);"} checkered={!!overlay.items?.length} />

@@ -12,7 +12,7 @@ import { NDIStreams } from "./NDIStreams"
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../utils/request", () => ({ send: vi.fn(), receive: vi.fn(), destroy: vi.fn() }))
 vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../../components/main/Loader.svelte", () => ({ default: { isla: "Loader" } }))
+vi.mock("../../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Loader") }))
 vi.mock("./NDIStream", () => ({ NDIStream: ({ screen: item, onClick }: { screen: { id: string; name: string }; onClick?: (e: MouseEvent<HTMLButtonElement>) => void }) => <button onClick={onClick}>{item.name}</button> }))
 
 let restaurar: () => void = () => {}

@@ -4,7 +4,7 @@ import { get } from "svelte/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, activeStyle, dictionary, drawerTabsData, outputs, popupData, previewOutputId, scriptures, styles, templates } from "../../stores"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
-import { clearIslands, emit, islands } from "../test/islandMock"
+import { clearIslands, islands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SelectTemplate } from "./SelectTemplate"
@@ -14,7 +14,15 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/drawer/Card.svelte", () => ({ default: { isla: "Card" } }))
+vi.mock("../drawer/Card", async () => {
+    const { islands } = await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")
+    return {
+        Card: (props: Record<string, unknown>) => {
+            islands.Card = { props }
+            return <div data-isla="Card" data-props={JSON.stringify(props)} onClick={props.onClick as () => void} />
+        }
+    }
+})
 vi.mock("../../components/drawer/pages/TemplateSlide.svelte", () => ({ default: { isla: "TemplateSlide" } }))
 vi.mock("../ui/text-field/TextField", () => ({
     TextField: ({ label, onInput }: { label: string; onInput?: (v: string) => void }) => <input data-label={label} onChange={(e) => onInput?.(e.currentTarget.value)} />
@@ -94,8 +102,8 @@ describe("SelectTemplate", () => {
     })
 
     it("elegir una plantilla llama al trigger, cierra y limpia popupData a los 500 ms", () => {
-        montar({ trigger })
-        emit("Card", "click", undefined)
+        const { container } = montar({ trigger })
+        fireEvent.click(container.querySelectorAll('[data-isla="Card"]')[1] as HTMLElement)
         expect(trigger).toHaveBeenCalledWith("t2")
         act(() => vi.advanceTimersByTime(0))
         expect(get(activePopup)).toBeNull()
@@ -116,7 +124,7 @@ describe("SelectTemplate", () => {
         const { container } = montar({ revert: "select_show", trigger })
         fireEvent.click(container.querySelector("button.popup-back") as HTMLElement)
         expect(get(activePopup)).toBe("select_show")
-        emit("Card", "click", undefined)
+        fireEvent.click(container.querySelectorAll('[data-isla="Card"]')[1] as HTMLElement)
         act(() => vi.advanceTimersByTime(500))
         expect(get(activePopup)).toBe("select_show")
         expect(get(popupData).revert).toBe("select_show")
@@ -128,7 +136,8 @@ describe("SelectTemplate", () => {
         expect(selector).toBeTruthy()
         fireEvent.change(selector, { target: { value: "_2" } })
         expect((selector as HTMLSelectElement).value).toBe("_2")
-        emit("Card", "click", undefined)
+        const card = document.querySelector('[data-isla="Card"][data-props*="Escritura 2"]') as HTMLElement
+        fireEvent.click(card)
         expect(trigger).toHaveBeenCalledWith({ value: "sc2", type: "_2" })
     })
 

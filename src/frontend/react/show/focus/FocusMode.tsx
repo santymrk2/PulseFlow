@@ -4,8 +4,7 @@ import { activeFocus, activeProject, outputs, projects, resized } from "../../..
 import { getAllProjectItems } from "../../../components/show/focus/focus"
 import { getActiveOutputs } from "../../../components/helpers/output"
 import { hasNewerUpdate } from "../../../utils/common"
-import Loader from "../../../components/main/Loader.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
+import { Loader } from "../../main/Loader"
 import { Icon } from "../../helpers/Icon"
 import { T } from "../../helpers/T"
 import { useStore } from "../../hooks/useStore"
@@ -196,7 +195,7 @@ export function FocusMode() {
     if (loading) {
         return (
             <Center>
-                <SvelteIsland component={Loader} />
+                <Loader />
             </Center>
         )
     }

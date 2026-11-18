@@ -7,7 +7,7 @@ import type { Show } from "../../../types/Show"
 import { exportProject } from "../../components/export/project"
 import { clone } from "../../components/helpers/array"
 import { loadShows } from "../../components/helpers/setShow"
-import Loader from "../../components/main/Loader.svelte"
+import { Loader } from "../main/Loader"
 import { convertShowSlidesToImages, exportFormats, exportTypes, getActiveShowId, getShowIdsFromType } from "../../components/main/popups/export/exportHelper"
 import { sendMain } from "../../IPC/main"
 import { activePopup, activeProject, projects, shows, showsCache, special } from "../../stores"
@@ -16,7 +16,6 @@ import { translateText } from "../../utils/language"
 import { setPopupSubmit } from "../../utils/popup"
 import { send } from "../../utils/request"
 import { save } from "../../utils/save"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Center } from "../system/Center"
@@ -284,7 +283,7 @@ export function Export() {
 
             {loading ? (
                 <Center padding={10}>
-                    <SvelteIsland component={Loader} />
+                    <Loader />
                 </Center>
             ) : null}
 

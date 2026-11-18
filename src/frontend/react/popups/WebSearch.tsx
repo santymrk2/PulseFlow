@@ -2,12 +2,11 @@ import { useEffect, useRef, useState } from "react"
 import { get } from "svelte/store"
 import { Main } from "../../../types/IPC/Main"
 import type { LyricSearchResult } from "../../../types/Main"
-import Loader from "../../components/main/Loader.svelte"
+import { Loader } from "../main/Loader"
 import { destroyMain, receiveMain, sendMain } from "../../IPC/main"
 import { special } from "../../stores"
 import { newToast } from "../../utils/common"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"
@@ -16,7 +15,7 @@ import styles from "./WebSearch.module.css"
 
 // Port de components/main/popups/createShow/WebSearch.svelte. Lee y escribe `special.blockedArtists`;
 // IPC: SEARCH_LYRICS (pedido y receptor) y GET_LYRICS (pedido y receptor), con ambos receptores dados de baja al desmontar.
-// `update` (antes `dispatch("update")`) entrega la letra elegida o "" cuando no hay resultados/letra. Loader sigue siendo Svelte (isla).
+// `update` (antes `dispatch("update")`) entrega la letra elegida o "" cuando no hay resultados/letra. Loader es el port React.
 export interface LyricData {
     lyrics: string
     source: string
@@ -140,7 +139,7 @@ export function WebSearch({ query, onUpdate }: WebSearchProps) {
     if (loading) {
         return (
             <Center style={{ overflow: "hidden" }}>
-                <SvelteIsland component={Loader} />
+                <Loader />
             </Center>
         )
     }

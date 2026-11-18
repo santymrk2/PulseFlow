@@ -1,6 +1,5 @@
-import Loader from "../../components/main/Loader.svelte"
+import { Loader } from "../main/Loader"
 import { activePopup, popupData } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
@@ -9,7 +8,7 @@ import styles from "./CloudUpdate.module.css"
 
 // Port de components/main/popups/CloudUpdate.svelte. Lee: popupData (lista de cambios, que escribe utils/receivers.ts). Escribe: activePopup = null.
 // change.action: "upload" | "download" | "upload_failed" | "download_failed"; change.type: "show" | "config" | "bible"; change.count: shows cambiados.
-// Loader sigue siendo Svelte (isla). Las filas no tenían key en el Svelte: se usa la posición.
+// Loader es el port React. Las filas no tenían key en el Svelte: se usa la posición.
 interface CloudChange {
     name: string
     action: string
@@ -41,7 +40,7 @@ export function CloudUpdate() {
     return (
         <div className={styles.loading}>
             <Center>
-                <SvelteIsland component={Loader} />
+                <Loader />
             </Center>
         </div>
     )

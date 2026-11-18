@@ -4,8 +4,7 @@ import { sendMain } from "../../IPC/main"
 import { activePopup, alertMessage } from "../../stores"
 import { translateText } from "../../utils/language"
 import { setPopupSubmit } from "../../utils/popup"
-import { SvelteIsland } from "../bridge/SvelteIsland"
-import Loader from "../../components/main/Loader.svelte"
+import { Loader } from "../main/Loader"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
@@ -13,7 +12,6 @@ import { Link } from "../ui/link/Link"
 import styles from "./Alert.module.css"
 
 // Port de components/main/popups/Alert.svelte. Lee: alertMessage. Escribe: activePopup = null (botón o Enter, menos con "actions.closing").
-// Loader sigue siendo Svelte (isla) hasta que se migre.
 export function Alert() {
     const alertValue = useStore(alertMessage)
 
@@ -42,7 +40,7 @@ export function Alert() {
         return (
             <div className={styles.centered}>
                 {translateText(msg)}
-                <SvelteIsland component={Loader} />
+                <Loader />
             </div>
         )
     }

@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react"
 import { get } from "svelte/store"
 import { Main } from "../../../types/IPC/Main"
-import Loader from "../../components/main/Loader.svelte"
+import { Loader } from "../main/Loader"
 import { destroyMain, receiveMain, requestMain, sendMain } from "../../IPC/main"
 import { activePage, activePopup, deletedShows, popupData, shows, showsCache } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useFreshStore } from "../hooks/useFreshStore"
 import { Button } from "../ui/button/Button"
@@ -15,7 +14,7 @@ import styles from "./CleaningUtility.module.css"
 // Port de components/main/popups/CleaningUtility.svelte. Lee: popupData.type (al montar), shows, showsCache, deletedShows.
 // Escribe: popupData = {} al montar (y { id: "delete_duplicated_shows", data } al abrir ese popup), activePage = "show", activePopup = "delete_duplicated_shows".
 // IPC: FULL_SHOWS_LIST (envío + receptor, que se quita al desmontar), GET_EMPTY_SHOWS ({ cached }, 60 s), DELETE_SHOWS_NI ({ shows }), DELETE_SHOWS ({ shows: vacíos }).
-// Loader sigue siendo Svelte (isla). Las listas no tenían key en el Svelte: se usa la posición.
+// Loader es el port React. Las listas no tenían key en el Svelte: se usa la posición.
 interface EmptyShow {
     id: string
     name: string
@@ -143,7 +142,7 @@ export function CleaningUtility() {
                 </InputRow>
             ) : loadingEmpty ? (
                 <Center padding={10}>
-                    <SvelteIsland component={Loader} />
+                    <Loader />
                 </Center>
             ) : null}
 

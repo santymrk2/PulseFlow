@@ -13,9 +13,8 @@ import { useStore } from "../../hooks/useStore"
 import { Button } from "../../ui/button/Button"
 import { FloatingBar } from "../../ui/floating-bar/FloatingBar"
 import { ZoomControl } from "../../ui/zoom-control/ZoomControl"
-import Loader from "../../../components/main/Loader.svelte"
+import { Loader } from "../../main/Loader"
 import { clearBackground } from "../../../components/output/clear"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import stylesModule from "./PdfPreview.module.css"
 
 GlobalWorkerOptions.workerSrc = "./assets/pdf.worker.min.mjs"
@@ -243,7 +242,7 @@ export function PdfPreview({ show, index }: PdfPreviewProps) {
 
                 {loading ? (
                     <div className={stylesModule.load}>
-                        <SvelteIsland component={Loader as never} />
+                        <Loader />
                     </div>
                 ) : null}
             </div>

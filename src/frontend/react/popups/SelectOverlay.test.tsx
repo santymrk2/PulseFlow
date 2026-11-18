@@ -6,7 +6,7 @@ import { history } from "../../components/helpers/history"
 import { getResolution } from "../../components/helpers/output"
 import { activePopup, dictionary, outputs, overlays, popupData, previewOutputId, styles } from "../../stores"
 import { commonMock } from "../test/mockCommon"
-import { clearIslands, emit, islands } from "../test/islandMock"
+import { clearIslands, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SelectOverlay } from "./SelectOverlay"
 
@@ -15,8 +15,15 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/drawer/Card.svelte", () => ({ default: { isla: "Card" } }))
+vi.mock("../drawer/Card", async () => {
+    const { islands } = await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")
+    return {
+        Card: (props: Record<string, unknown>) => {
+            islands.Card = { props }
+            return <div data-isla="Card" onClick={props.onClick as () => void} />
+        }
+    }
+})
 vi.mock("../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Textbox") }))
 vi.mock("../slide/Zoomed", async () => ({ Zoomed: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Zoomed") }))
 vi.mock("../ui/text-field/TextField", () => ({
@@ -53,8 +60,8 @@ describe("SelectOverlay", () => {
     })
 
     it("elegir un overlay llama al trigger, escribe popupData y cierra con el timeout de 500ms", () => {
-        montar({ trigger })
-        emit("Card", "click", {})
+        const { container } = montar({ trigger })
+        fireEvent.click(container.querySelectorAll('[data-isla="Card"]')[1] as HTMLElement)
         expect(trigger).toHaveBeenCalledWith("o1")
         expect(get(popupData)).toMatchObject({ id: "select_overlay", value: "o1" })
         act(() => vi.advanceTimersByTime(0))

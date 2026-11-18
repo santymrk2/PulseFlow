@@ -3,7 +3,7 @@ import { get } from "svelte/store"
 import { uid } from "uid"
 import type { OutData } from "../../../types/Output"
 import type { Styles } from "../../../types/Settings"
-import Card from "../../components/drawer/Card.svelte"
+import { Card } from "../drawer/Card"
 import { DEFAULT_ITEM_STYLE } from "../../components/edit/scripts/itemHelpers"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"
@@ -12,7 +12,6 @@ import { Output } from "../output/Output"
 import { openSettings } from "../../components/settings/openSettings"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
 import { activePopup, activeStyle, currentOutputSettings, outputs, popupData, styles } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Center } from "../system/Center"
@@ -23,7 +22,7 @@ import stylesCSS from "./SelectStyle.module.css"
 // Port de components/main/popups/SelectStyle.svelte. Lee: styles, currentOutputSettings, outputs y popupData (active, skip, trigger).
 // Escribe: el trigger con el id elegido, popupData = { id: "select_style", value }, activePopup = null (200 ms después),
 // y al crear: history UPDATE, activeStyle = id y openSettings("styles").
-// Card sigue siendo Svelte (isla); como SvelteIsland no pasa slots, se renderiza como hermano de Output.
+// Card es un port React; se renderiza como hermano de Output, como en el original.
 interface StyleItem extends Styles {
     id: string
 }
@@ -86,7 +85,7 @@ export function SelectStyle() {
                             const out = outputData?.slide ? outputData : getOverride(style)
                             return (
                                 <div key={style.id}>
-                                    <SvelteIsland component={Card} props={{ width: 25, active: active === style.id, label: style.name, resolution }} events={{ click: () => select(style.id) }} />
+                                    <Card width={25} active={active === style.id} label={style.name} resolution={resolution} onClick={() => select(style.id)} />
                                     <Output outputId={outputId} style={getStyleResolution(resolution, resolution.width, resolution.height, "fit")} styleIdOverride={style.id} outOverride={out} mirror />
                                 </div>
                             )

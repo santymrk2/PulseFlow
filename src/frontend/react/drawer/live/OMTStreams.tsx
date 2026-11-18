@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react"
 import { OMT } from "../../../../types/Channels"
 import { destroy, receive, send } from "../../../utils/request"
-import Loader from "../../../components/main/Loader.svelte"
+import { Loader } from "../../main/Loader"
 import { T } from "../../helpers/T"
 import { Center } from "../../system/Center"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { OMTStream } from "./OMTStream"
 import type { InputSelectDetail, Screen } from "./types"
 
@@ -41,7 +40,7 @@ export function OMTStreams({ onClick }: OMTStreamsProps) {
     if (loading) {
         return (
             <Center>
-                <SvelteIsland component={Loader} />
+                <Loader />
             </Center>
         )
     }

@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react"
-import Loader from "../../components/main/Loader.svelte"
+import { Loader } from "../main/Loader"
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../IPC/main"
 import { alertUpdates, special, version } from "../../stores"
 import { getUpdateData } from "../../utils/checkForUpdates"
 import { setPopupSubmit } from "../../utils/popup"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
@@ -14,7 +13,7 @@ import { ToggleField } from "../ui/toggle-field/ToggleField"
 import styles from "./UpdateManager.module.css"
 
 // Port de components/main/popups/UpdateManager.svelte. Lee: version, special y alertUpdates; escribe special y
-// Main.URL al descargar. Loader sigue siendo Svelte (isla). El changelog es el mismo HTML saneado por la fuente del Svelte.
+// Main.URL al descargar. Loader es el port React. El changelog es el mismo HTML saneado por la fuente del Svelte.
 export function UpdateManager() {
     const versionValue = useStore(version)
     const specialValue = useStore(special)
@@ -112,7 +111,7 @@ export function UpdateManager() {
 
             {loading ? (
                 <div className={styles.loading}>
-                    <SvelteIsland component={Loader} />
+                    <Loader />
                 </div>
             ) : hasError || hasUpdate ? (
                 <div className={styles.changelog}>

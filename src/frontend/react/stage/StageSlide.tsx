@@ -5,14 +5,13 @@ import { translateText } from "../../utils/language"
 import { getAccess } from "../../utils/profile"
 import { getSortedStageItems, shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
 import { getStageOutputId, getStageResolution } from "../../components/helpers/output"
-import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
 import { getSlideTextItems, stageItemToItem } from "../../components/stage/stage"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { Icon } from "../helpers/Icon"
 import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
 import { useStore } from "../hooks/useStore"
 import { SelectElem } from "../system/SelectElem"
+import { HiddenInput, type HiddenInputEdit } from "../ui/hidden-input/HiddenInput"
 import { Zoomed } from "../slide/Zoomed"
 import { Stagebox } from "./Stagebox"
 import styles from "./StageSlide.module.css"
@@ -42,9 +41,9 @@ export function StageSlide({ layout, id, columns = 1, active = false, list = fal
     const resolution = getStageResolution(stageOutputId, currentOutputs)
     const stageItems = getSortedStageItems(id, currentStageShows[id])
 
-    function edit(event: CustomEvent<{ value: string }>) {
+    function edit(detail: HiddenInputEdit) {
         if (readOnly) return
-        const name = event.detail.value
+        const name = detail.value
         stageShows.update((all) => {
             if (!all[id]) return all
             all[id].name = name
@@ -84,7 +83,7 @@ export function StageSlide({ layout, id, columns = 1, active = false, list = fal
                                 </span>
                             ) : null}
                             <span className={`text ${styles.text}`}>
-                                <SvelteIsland component={HiddenInput as never} props={{ value: layout.name, id: `stage_${id}`, allowEmpty: false, allowEdit: !readOnly }} events={{ edit }} />
+                                <HiddenInput value={layout.name} id={`stage_${id}`} allowEmpty={false} allowEdit={!readOnly} onEdit={edit} />
                             </span>
                         </div>
                     </SelectElem>

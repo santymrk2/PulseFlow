@@ -3,8 +3,7 @@ import type { Tree } from "../../../types/Projects"
 import { activeProfile, activeProject, folders, labelsDisabled, openedFolders, projects } from "../../stores"
 import { history } from "../../components/helpers/history"
 import { isProjectLinked, openProject } from "../../components/show/project"
-import Loader from "../../components/main/Loader.svelte"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+import { Loader } from "../main/Loader"
 import { T } from "../helpers/T"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
@@ -137,7 +136,7 @@ export function ProjectList({ tree, readOnly = false, selectedId }: ProjectListP
     if (!startLoading)
         return (
             <Center>
-                <SvelteIsland component={Loader as never} />
+                <Loader />
             </Center>
         )
 

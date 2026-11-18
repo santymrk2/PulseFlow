@@ -2,11 +2,10 @@ import { useState } from "react"
 import { AudioPlayer } from "../../../audio/audioPlayer"
 import { audioStreams, playingAudio } from "../../../stores"
 import { keysToID, sortByName } from "../../../components/helpers/array"
-import Loader from "../../../components/main/Loader.svelte"
+import { Loader } from "../../main/Loader"
 import { T } from "../../helpers/T"
 import { Center } from "../../system/Center"
 import { SelectElem } from "../../system/SelectElem"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { Button } from "../../ui/button/Button"
 import { useStore } from "../../hooks/useStore"
 import styles from "./AudioStreams.module.css"
@@ -45,7 +44,7 @@ export function AudioStreams() {
                     <Button className="context #audio_stream" style={{ flex: 1 }} showOutline={Object.keys(playing).includes(stream.value)} onClick={() => loadStream(stream.id)} bold={false} align="start">
                         <div className={styles.stream}>
                             <div className={styles.loader} style={{ overflow: "hidden" }}>
-                                {loadingStreams.has(stream.id) ? <SvelteIsland component={Loader} props={{ size: 0.3 }} /> : null}
+                                {loadingStreams.has(stream.id) ? <Loader size={0.3} /> : null}
                             </div>
                             <span style={{ paddingInlineStart: 5 }}>
                                 <p>{stream.name}</p>

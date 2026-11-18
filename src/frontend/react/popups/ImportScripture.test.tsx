@@ -14,7 +14,7 @@ import { ImportScripture } from "./ImportScripture"
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../IPC/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))
 vi.mock("../../components/drawer/bible/scripture", () => ({ getApiBiblesList: vi.fn(), customBibleData: (a: object) => ({ ...a }) }))
-vi.mock("../../components/main/Loader.svelte", () => ({ default: { isla: "Loader" } }))
+vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 vi.mock("uid", () => ({ uid: () => "nuevo" }))
 vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component }: { component: { isla: string } }) => <div data-isla={component.isla} /> }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))

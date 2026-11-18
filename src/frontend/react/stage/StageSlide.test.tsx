@@ -20,10 +20,10 @@ vi.mock("../../components/helpers/output", () => ({
     getStageResolution: vi.fn(() => ({ width: 1920, height: 1080 }))
 }))
 vi.mock("../../components/stage/stage", () => ({ getSlideTextItems: vi.fn(() => []), stageItemToItem: vi.fn((item) => item) }))
-vi.mock("../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ component, props, events }: { component: { name?: string }; props: Record<string, unknown>; events?: Record<string, (event: unknown) => void> }) => (
-        <span data-island={component?.name || "svelte"} data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))}>
-            <button data-testid={props.allowEmpty !== undefined ? "edit-HiddenInput" : "edit-Stagebox"} onClick={() => events?.edit?.({ detail: { value: "Nuevo nombre" } })} />
+vi.mock("../ui/hidden-input/HiddenInput", () => ({
+    HiddenInput: ({ onEdit }: { onEdit?: (detail: { value: string; id: string }) => void }) => (
+        <span>
+            <button data-testid="edit-HiddenInput" onClick={() => onEdit?.({ value: "Nuevo nombre", id: "stage_st1" })} />
         </span>
     )
 }))

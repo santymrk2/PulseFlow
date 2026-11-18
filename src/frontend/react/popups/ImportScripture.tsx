@@ -5,11 +5,10 @@ import { uid } from "uid"
 import { Main } from "../../../types/IPC/Main"
 import { customBibleData, getApiBiblesList } from "../../components/drawer/bible/scripture"
 import { sortByName } from "../../components/helpers/array"
-import Loader from "../../components/main/Loader.svelte"
+import { Loader } from "../main/Loader"
 import { requestMain, sendMain } from "../../IPC/main"
 import { scriptures } from "../../stores"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Center } from "../system/Center"
@@ -153,7 +152,7 @@ export function ImportScripture() {
                                 ) : null
                             ) : (
                                 <Center>
-                                    <SvelteIsland component={Loader} />
+                                    <Loader />
                                 </Center>
                             )}
                         </div>

@@ -20,7 +20,7 @@ vi.mock("../../utils/language", () => ({ translateText: (value: string) => value
 vi.mock("../../utils/checkForUpdates", () => ({ getUpdateData: vi.fn() }))
 vi.mock("../../utils/popup", () => ({ setPopupSubmit: vi.fn(() => () => {}) }))
 vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
-vi.mock("../../components/main/Loader.svelte", () => ({ default: { isla: "Loader" } }))
+vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 

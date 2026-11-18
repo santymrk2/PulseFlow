@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { get } from "svelte/store"
 import type { DropdownOptions } from "../../../types/Input"
 import type { Popups } from "../../../types/Main"
-import Card from "../../components/drawer/Card.svelte"
+import { Card } from "../drawer/Card"
 import TemplateSlide from "../../components/drawer/pages/TemplateSlide.svelte"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"
 import { getResolution } from "../../components/helpers/output"
@@ -24,7 +24,7 @@ import stylesCSS from "./SelectTemplate.module.css"
 // trigger, doubleClick), templates, scriptures, styles, activeStyle, drawerTabsData, outputs y previewOutputId
 // (resolución). Escribe: el trigger con { value, type } o value, popupData = {} 500 ms después (si no hay revert)
 // y activePopup = revert o null. Enter registra la búsqueda con setPopupSubmit.
-// Card y TemplateSlide siguen siendo Svelte (islas); al no pasar slots se renderizan como hermanos.
+// Card es port React; TemplateSlide sigue siendo Svelte (isla). Al no pasar slots se renderizan como hermanos.
 interface TemplateItem {
     id: string
     name?: string
@@ -201,7 +201,7 @@ export function SelectTemplate() {
                     <div className={stylesCSS.grid}>
                         {allowEmpty || (customTypes && selectedType !== types[0]?.value) ? (
                             <>
-                                <SvelteIsland component={Card} props={{ active: !value, label: translateText(allowEmpty ? "main.none" : "example.default"), icon: "templates", resolution }} events={{ click: () => selectTemplate("") }} />
+                                <Card active={!value} label={translateText(allowEmpty ? "main.none" : "example.default")} icon="templates" resolution={resolution} onClick={() => selectTemplate("")} />
                                 <Center faded>
                                     <Icon id="close" size={2} white />
                                 </Center>
@@ -210,7 +210,7 @@ export function SelectTemplate() {
 
                         {templatesList.map((template, i) => (
                             <div key={template.id}>
-                                <SvelteIsland component={Card} props={{ preview: !!(searchValue.length && i === 0), active: value === template.id, label: template.name, color: template.color, resolution }} events={{ click: () => selectTemplate(template) }} />
+                                <Card preview={!!(searchValue.length && i === 0)} active={value === template.id} label={template.name || ""} color={template.color} resolution={resolution} onClick={() => selectTemplate(template)} />
                                 {loaded || i < lazyLoader ? <SvelteIsland component={TemplateSlide} props={{ templateId: template.id, template, preview: true }} /> : null}
                             </div>
                         ))}

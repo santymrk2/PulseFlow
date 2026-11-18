@@ -5,9 +5,8 @@ import { getTextLines } from "../../components/edit/scripts/textStyle"
 import { history } from "../../components/helpers/history"
 import { loadShows } from "../../components/helpers/setShow"
 import { dateToString } from "../../components/helpers/time"
-import Loader from "../../components/main/Loader.svelte"
+import { Loader } from "../main/Loader"
 import { activePopup, popupData, shows, showsCache } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Center } from "../system/Center"
@@ -23,7 +22,7 @@ import styles from "./DeleteDuplicatedShows.module.css"
 // después cierra el popup a los 500 ms si sigue siendo este (el timeout no se cancela al desmontar, como el Svelte). Cerrar sin elegir no borra nada.
 // El Svelte mutaba `data` (alias de popupData.data) al borrar en modo manual; aquí se trabaja sobre una copia de los grupos: popupData.data ya no cambia
 // (sólo se lee al abrir, y CleaningUtility lo reescribe al volver a abrirlo). "oldest"/"newest" se calculan una vez, al montar.
-// Loader es Svelte (isla). Las filas del modo manual y las listas desplegables van con key por posición/id, como el original sin key.
+// Loader es el port React. Las filas del modo manual y las listas desplegables van con key por posición/id, como el original sin key.
 type Group = { ids: string[] }
 
 function getShowText(show: Show | undefined) {
@@ -251,7 +250,7 @@ export function DeleteDuplicatedShows() {
     if (loading) {
         return (
             <Center style={{ overflow: "hidden" }}>
-                <SvelteIsland component={Loader} />
+                <Loader />
             </Center>
         )
     }
