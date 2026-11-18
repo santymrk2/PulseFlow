@@ -1,0 +1,88 @@
+/* Port literal del <style> de EditboxChords.svelte (F24.21c). */
+.chords,
+.break {
+    width: 100%;
+}
+
+.chords :global(.chord) {
+    position: absolute;
+    transform: translateY(-100%);
+    background-color: var(--primary-darker);
+    /* color: var(--text); */
+    font-size: 0.8em;
+    border: 5px solid var(--secondary);
+    text-shadow: none;
+    z-index: 3;
+
+    pointer-events: all;
+
+    --move-up: 40%;
+}
+.chords :global(.chord):hover {
+    filter: brightness(1.2);
+}
+.chords :global(.chord)::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translate(-50%, 100%);
+    width: 5px;
+    /* this height works best as 100px font size */
+    height: calc(100% + var(--move-up) - 5px);
+    background-color: var(--secondary);
+    /* background-color: var(--secondary-opacity); */
+}
+/* .chordsText {
+  position: absolute;
+  width: 100%;
+  color: transparent !important;
+  user-select: none;
+}
+.chordsText:first-child {
+  width: 100%;
+} */
+
+/* chords */
+.edit.chords :global(.invisible) {
+    opacity: 1;
+    font-size: var(--font-size);
+    line-height: 1.1em;
+    background-color: rgb(255 255 255 / 0.1);
+}
+.edit.chords :global(.invisible):hover {
+    /* opacity: 0.8; */
+    background-color: var(--secondary-opacity);
+}
+.edit.chords :global(.chord) {
+    /* color: var(--chord-color);
+      font-size: var(--chord-size) !important; */
+    /* bottom: 0; */
+    transform: translate(-50%, calc(var(--move-up) * -1));
+    z-index: 2;
+    font-size: 45px !important;
+
+    line-height: initial;
+    opacity: 0.9;
+}
+.edit.chords {
+    /* line-height: 0.5em; */
+    /* font-size: inherit; */
+    position: absolute;
+    z-index: 3; /* show over line box */
+    /* pointer-events: none; */
+}
+
+.chordsBreak {
+    position: relative;
+    line-height: 0;
+
+    /* fix letter spacing */
+    /* letter-spacing: 0.3px; */ /* can't be lower */
+    /* font-kerning: none; */
+}
+
+.chordsBreak :global(.drop-target) {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    outline: 2px dashed var(--secondary);
+}

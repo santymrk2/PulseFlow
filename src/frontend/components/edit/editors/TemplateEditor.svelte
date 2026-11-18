@@ -1,29 +1,19 @@
 <script lang="ts">
+    // Migrado a React en F24.21b. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
     import { onDestroy } from "svelte"
-    import { activeEdit, activePopup, popupData, templates } from "../../../stores"
-    import { translateText } from "../../../utils/language"
-    import TemplateSlide from "../../drawer/pages/TemplateSlide.svelte"
-    import Icon from "../../helpers/Icon.svelte"
-    import T from "../../helpers/T.svelte"
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import { TemplateEditor } from "../../../react/edit/TemplateEditor"
+    import { activeEdit, templates } from "../../../stores"
     import { clone } from "../../helpers/array"
     import { history } from "../../helpers/history"
     import { getStyles } from "../../helpers/style"
-    import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
-    import Button from "../../../lib/components/ui/button/button.svelte"
-    import ZoomControl from "../../../lib/components/ui/zoom-control/zoom-control.svelte"
-    import Center from "../../system/Center.svelte"
-    import DropArea from "../../system/DropArea.svelte"
-    import { centerZoom } from "../scripts/zoom"
+    import TemplateSlide from "../../drawer/pages/TemplateSlide.svelte"
 
-    const update = () => (Slide = clone($templates[currentId]))
-    $: currentId = $activeEdit.id!
-    $: if (currentId) update()
-    let Slide = clone($templates[currentId])
-    const unsubscribe = templates.subscribe((a) => clone((Slide = a[currentId])))
-    onDestroy(unsubscribe)
+    let currentId = $activeEdit.id || ""
+    $: currentId = $activeEdit.id || ""
 
     let newStyles: { [key: string]: string | number } = {}
-    $: active = $activeEdit.items
+    $: active = $activeEdit.items || []
 
     let lastActiveIds = ""
     $: if (active.join(",") !== lastActiveIds) {
@@ -31,129 +21,64 @@
         lastActiveIds = active.join(",")
     }
 
+    let width = 0
+    let height = 0
+    let zoom = 1
     let ratio = 1
+
+    let templateSlideHost: HTMLDivElement | undefined
+
+    $: slide = clone($templates[currentId])
 
     $: {
         if (active.length) updateStyles()
-        else newStyles = {}
+        else {
+            // no-op
+        }
     }
 
     function updateStyles() {
-        if (!Object.keys(newStyles).length) return
+        if (!Object.keys(newStyles).length || !slide?.items) return
 
-        let items = Slide.items
+        let items = slide.items
         let values: string[] = []
         active.forEach((id) => {
             let item = items[id]
+            if (!item) return
             let styles = getStyles(item.style)
             let textStyles = ""
 
             const itemNewStyles = (newStyles as any).__multiPositions ? (newStyles as any).__multiPositions[id] || {} : newStyles
-            Object.entries(itemNewStyles).forEach(([key, value]) => (styles[key] = (value as any).toString()))
+
+            Object.entries(itemNewStyles).forEach(([key, value]) => (styles[key] = String(value)))
             Object.entries(styles).forEach((obj) => (textStyles += obj[0] + ":" + obj[1] + ";"))
 
             values.push(textStyles)
         })
 
+        if (!values.length) return
         let override = "template_items#" + $activeEdit.id + "indexes#" + active.join(",")
         history({ id: "UPDATE", newData: { key: "items", indexes: active, subkey: "style", data: values }, oldData: { id: $activeEdit.id }, location: { page: "edit", id: "template_items", override } })
     }
 
-    let width = 0
-    let height = 0
-
-    // ZOOM
-    let scrollElem: HTMLDivElement | undefined
-    let zoom = 1
-    let zoomOrigin: { x: number; y: number } | null = null
-    function updateZoom(e: any) {
-        zoom = e.detail
-        const origin = zoomOrigin
-        zoomOrigin = null
-        centerZoom(origin, scrollElem, ".droparea")
-    }
-
-    $: styleOverrides = (Slide?.settings?.styleOverrides || []).filter((a) => (a.globalRegex || a.pattern) && a.templateId).length
+    onDestroy(() => {})
 </script>
 
-{#if Slide?.isDefault}
-    <div class="default" data-title={translateText("example.default")}>
-        <Icon id="protected" white />
-    </div>
-{/if}
+<ReactIsland
+    component={TemplateEditor}
+    props={{
+        newStyles,
+        onZoomChange: (value) => (zoom = value),
+        onSizeChange: (size) => {
+            width = size.width
+            height = size.height
+        },
+        templateSlideHost
+    }}
+/>
 
-<div class="editArea">
-    <div class="parent" class:noOverflow={zoom >= 1} bind:this={scrollElem} bind:offsetWidth={width} bind:offsetHeight={height}>
-        <!--  && (!Slide.isDefault) -->
-        {#if Slide}
-            <DropArea id="edit" file>
-                <TemplateSlide bind:newStyles templateId={currentId} template={Slide} edit {width} {height} {zoom} bind:ratio />
-            </DropArea>
-        {:else}
-            <Center size={2} faded>
-                <T id="empty.slide" />
-            </Center>
-        {/if}
-    </div>
-
-    <FloatingBar side="left">
-        <ZoomControl columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} on:change={updateZoom} on:origin={(e) => (zoomOrigin = e.detail)} />
-
-        {#if styleOverrides > 0}
-            <div class="divider"></div>
-
-            <Button
-                icon="text"
-                on:click={() => {
-                    popupData.set({ templateId: currentId })
-                    activePopup.set("template_style_overrides")
-                }}
-            >
-                {translateText("popup.template_style_overrides")}
-                <span style="font-size: 0.8em;opacity: 0.5;">{styleOverrides}</span>
-            </Button>
-        {/if}
-    </FloatingBar>
+<div bind:this={templateSlideHost} style="display: contents">
+    {#if $templates[currentId]}
+        <TemplateSlide bind:newStyles templateId={currentId} template={$templates[currentId]} edit {width} {height} {zoom} bind:ratio />
+    {/if}
 </div>
-
-<style>
-    .default {
-        position: absolute;
-        top: 10px;
-        left: 10px;
-
-        width: 42px;
-        height: 42px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background-color: var(--primary-darkest);
-        border: 1px solid var(--primary-lighter);
-
-        padding: 10px;
-        border-radius: 50%;
-
-        z-index: 999;
-    }
-
-    .editArea {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-    }
-
-    .parent {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        overflow: auto;
-    }
-
-    /* disable "glitchy" scroll bars */
-    .parent.noOverflow {
-        overflow: hidden;
-    }
-</style>

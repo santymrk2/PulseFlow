@@ -1,0 +1,21 @@
+.editArea {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+}
+
+.parent {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    overflow: auto;
+}
+
+.scenePreviewContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+}

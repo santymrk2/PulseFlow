@@ -1,0 +1,90 @@
+/* Port literal del <style> de EditboxCropping.svelte (F24.21c). */
+.cropOverlay {
+    position: absolute;
+    inset: 0;
+    z-index: 4;
+    cursor: move;
+}
+
+.cropMask {
+    position: absolute;
+    background-color: rgb(0 0 0 / 0.35);
+    z-index: 5;
+    pointer-events: none;
+}
+.cropMask.top {
+    top: 0;
+    left: 0;
+    right: 0;
+}
+.cropMask.right {
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+.cropMask.bottom {
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+.cropMask.left {
+    top: 0;
+    left: 0;
+    bottom: 0;
+}
+
+.cropHandle {
+    position: absolute;
+    z-index: 6;
+    background-color: rgb(255 255 255 / 0.9);
+    border: 0.5px solid rgb(0 0 0 / 0.8);
+}
+.cropHandle.top,
+.cropHandle.bottom {
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 10px;
+    cursor: ns-resize;
+}
+.cropHandle.top {
+    transform: translate(-50%, -50%);
+}
+.cropHandle.bottom {
+    transform: translate(-50%, 50%);
+}
+.cropHandle.left,
+.cropHandle.right {
+    top: 50%;
+    transform: translateY(-50%);
+    width: 10px;
+    height: 50px;
+    cursor: ew-resize;
+}
+.cropHandle.left {
+    transform: translate(-50%, -50%);
+}
+.cropHandle.right {
+    transform: translate(50%, -50%);
+}
+
+.cropHandle.corner {
+    width: 12px;
+    height: 12px;
+}
+.cropHandle.corner.topLeft {
+    transform: translate(-50%, -50%);
+    cursor: nwse-resize;
+}
+.cropHandle.corner.topRight {
+    transform: translate(50%, -50%);
+    cursor: nesw-resize;
+}
+.cropHandle.corner.bottomRight {
+    transform: translate(50%, 50%);
+    cursor: nwse-resize;
+}
+.cropHandle.corner.bottomLeft {
+    transform: translate(-50%, 50%);
+    cursor: nesw-resize;
+}
