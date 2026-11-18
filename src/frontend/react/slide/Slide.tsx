@@ -15,12 +15,11 @@ import { referenceOutputId } from "../../components/helpers/outputAspect"
 import { allOutputsHasStyleTemplate, getActiveOutputs, getFirstActiveOutput, getResolution, getSlideFilter, setTemplateStyle } from "../../components/helpers/output"
 import { getGroupName, isSlideLocked } from "../../components/helpers/show"
 import { _show } from "../../components/helpers/shows"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
 import { SelectElem } from "../system/SelectElem"
-import MediaLoader from "../../components/drawer/media/MediaLoader.svelte"
+import { MediaLoader } from "../drawer/media/MediaLoader"
 import { Actions } from "./Actions"
 import { BreakCountdown } from "./BreakCountdown"
 import { Editbox } from "../edit/editbox/Editbox"
@@ -314,20 +313,7 @@ export function Slide({ showId, slide, layoutSlide, layoutSlides = [], show, col
                         <Zoomed background={finalZoomedBackground} checkered={!!checkered} resolution={resolution} zoom={viewMode !== "lyrics" || noQuickEdit} aspectRatio={viewMode !== "lyrics" || noQuickEdit} disableStyle={viewMode === "lyrics" && !noQuickEdit} relative={viewMode === "lyrics" && !noQuickEdit} onRatioChange={setRatio}>
                             {!altKeyPressed && bg && (viewMode !== "lyrics" || noQuickEdit) && (background || layers.includes("background")) ? (
                                 <div key={String(currentRefreshThumbnails)} className={`background ${css.background} ${!background ? `ghost ${css.ghost}` : ""}`} style={cssTextToStyle(`zoom: ${1 / ratio};${slideFilter}`)}>
-                                    <SvelteIsland
-                                        component={MediaLoader}
-                                        props={{
-                                            name: translateText("error.load"),
-                                            ghost: !background,
-                                            path: mediaPath,
-                                            thumbnailPath,
-                                            cameraGroup: bg.cameraGroup || "",
-                                            type: bg.type !== "player" ? bg.type : null,
-                                            mediaStyle,
-                                            duration,
-                                            getDuration: false
-                                        }}
-                                    />
+                                    <MediaLoader name={translateText("error.load")} ghost={!background} path={mediaPath} thumbnailPath={thumbnailPath} cameraGroup={bg.cameraGroup || ""} type={bg.type !== "player" ? bg.type : null} mediaStyle={mediaStyle} duration={duration} getDuration={false} />
                                 </div>
                             ) : null}
 

@@ -11,8 +11,7 @@ import { Button } from "../../ui/button/Button"
 import { clearBackground, clearSlide } from "../../../components/output/clear"
 import { SelectElem } from "../../system/SelectElem"
 import { Card } from "../Card"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
-import MediaLoader from "../../../components/drawer/media/MediaLoader.svelte"
+import { MediaLoader } from "./MediaLoader"
 import { useStore } from "../../hooks/useStore"
 import styles from "./MediaCard.module.css"
 
@@ -267,22 +266,7 @@ export function MediaCard({ name, path, credits = {}, type, active, shiftRange =
                     </div>
                 ) : thumbnail ? (
                     thumbnailPath || loadFullImage ? (
-                        <SvelteIsland
-                            component={MediaLoader}
-                            props={{
-                                loaded,
-                                hover,
-                                duration,
-                                videoElem: videoElemRef.current,
-                                resolution: { width: 16, height: 9 },
-                                type,
-                                path,
-                                thumbnailPath,
-                                name,
-                                mediaStyle,
-                                loadFullImage
-                            }}
-                        />
+                        <MediaLoader loaded={loaded} hover={hover} duration={duration} videoElem={videoElemRef.current} resolution={{ width: 16, height: 9 }} type={type} path={path} thumbnailPath={thumbnailPath} name={name} mediaStyle={mediaStyle} loadFullImage={loadFullImage} />
                     ) : null
                 ) : (
                     <div className={styles.icon}>

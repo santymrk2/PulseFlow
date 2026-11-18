@@ -40,6 +40,9 @@ vi.mock("../../components/helpers/shows", () => ({
 vi.mock("../bridge/SvelteIsland", () => ({
     SvelteIsland: ({ component, props }: { component: { name?: string }; props: Record<string, unknown> }) => <span data-island={component?.name || "svelte"} data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
 }))
+vi.mock("../drawer/media/MediaLoader", () => ({
+    MediaLoader: (props: Record<string, unknown>) => <span data-view="MediaLoader" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
+}))
 vi.mock("../edit/editbox/Editbox", async () => ({ Editbox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Editbox") }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Effect") }))
