@@ -1,0 +1,95 @@
+import { useEffect, useState, type CSSProperties } from "react"
+import type { StageLayout } from "../../../types/Stage"
+import { allOutputs, outputs, stageShows } from "../../stores"
+import { translateText } from "../../utils/language"
+import { getAccess } from "../../utils/profile"
+import { getSortedStageItems, shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
+import { getStageOutputId, getStageResolution } from "../../components/helpers/output"
+import HiddenInput from "../../lib/components/ui/hidden-input/hidden-input.svelte"
+import Stagebox from "../../components/stage/Stagebox.svelte"
+import { getSlideTextItems, stageItemToItem } from "../../components/stage/stage"
+import { SvelteIsland } from "../bridge/SvelteIsland"
+import { cssTextToStyle } from "../helpers/cssTextToStyle"
+import { Icon } from "../helpers/Icon"
+import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
+import { useStore } from "../hooks/useStore"
+import { SelectElem } from "../system/SelectElem"
+import { Zoomed } from "../slide/Zoomed"
+import styles from "./StageSlide.module.css"
+
+export interface StageSlideProps {
+    layout: StageLayout
+    id: string
+    columns?: number
+    active?: boolean
+    list?: boolean
+    selectable?: boolean
+    onClick?: () => void
+}
+
+// Port de components/stage/StageSlide.svelte (F24.19a).
+export function StageSlide({ layout, id, columns = 1, active = false, list = false, selectable = true, onClick }: StageSlideProps) {
+    const currentOutputs = useStore(outputs)
+    const currentAllOutputs = useStore(allOutputs)
+    const currentStageShows = useStore(stageShows)
+
+    const [ratio, setRatio] = useState(1)
+    const [conditionsUpdater, setConditionsUpdater] = useState(0)
+
+    const profile = getAccess("stage") as Record<string, string>
+    const readOnly = profile.global === "read" || profile[id] === "read"
+    const stageOutputId = getStageOutputId(currentOutputs)
+    const resolution = getStageResolution(stageOutputId, currentOutputs)
+    const stageItems = getSortedStageItems(id, currentStageShows[id])
+
+    function edit(event: CustomEvent<{ value: string }>) {
+        if (readOnly) return
+        const name = event.detail.value
+        stageShows.update((all) => {
+            if (!all[id]) return all
+            all[id].name = name
+            all[id].modified = Date.now()
+            return all
+        })
+    }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if (!Array.isArray(stageItems)) return
+            if (stageItems.some((item) => item?.conditions)) setConditionsUpdater((value) => value + 1)
+        }, 1000)
+        return () => clearInterval(interval)
+        // eslint-disable-next-line react-hooks/exhaustive-deps -- el Svelte original sólo verificaba los ítems vigentes
+    }, [stageItems])
+
+    const mainStyle: CSSProperties = { width: `${100 / columns}%` }
+    const slideClass = `slide context #stage_slide${readOnly ? "_readonly" : ""}`
+
+    return (
+        <div className={`main ${styles.main} ${list ? `list ${styles.list}` : ""} ${active ? `active ${styles.active}` : ""}`} style={mainStyle}>
+            <div className={`${slideClass} ${styles.slide} ${layout.disabled ? `disabled ${styles.disabled}` : ""}`} style={cssTextToStyle(layout.settings.color ? `background-color: ${layout.settings.color};` : "")} tabIndex={0} role="button" onClick={onClick} onKeyDown={triggerClickOnEnterSpace}>
+                <div style={{ width: "100%" }}>
+                    <SelectElem id="stage" data={{ id }} selectable={selectable}>
+                        <Zoomed background={layout.items.length ? "black" : "transparent"} style="width: 100%;" resolution={resolution} id={stageOutputId} isStage disableStyle center onRatioChange={setRatio}>
+                            {stageItems.map((item) => {
+                                const showItem = (item.type || item.enabled !== false) && (!item.conditions?.showItem && !(item as { bindings?: unknown[] }).bindings?.length ? true : shouldItemBeShown(stageItemToItem(item), item.type === "slide_text" ? getSlideTextItems(layout, item, currentOutputs || currentAllOutputs) : [], { type: "stage" }, conditionsUpdater))
+                                if (!showItem) return null
+                                return <SvelteIsland key={item.id} component={Stagebox as never} props={{ id: item.id, item, ratio, stageLayout: layout, disableStagePreview: true }} />
+                            })}
+                        </Zoomed>
+                        <div className={`label ${styles.label}`} style={{ position: "relative" }} data-title={layout.name}>
+                            {layout.password ? (
+                                <span style={{ position: "absolute", left: "5px" }} data-title={translateText("remote.password")}>
+                                    <Icon id="locked" size={0.8} style={cssTextToStyle("opacity: 0.5;")} white />
+                                </span>
+                            ) : null}
+                            <span className={`text ${styles.text}`}>
+                                <SvelteIsland component={HiddenInput as never} props={{ value: layout.name, id: `stage_${id}`, allowEmpty: false, allowEdit: !readOnly }} events={{ edit }} />
+                            </span>
+                        </div>
+                    </SelectElem>
+                </div>
+            </div>
+        </div>
+    )
+}
