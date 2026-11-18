@@ -21,7 +21,7 @@ vi.mock("../../../components/helpers/history", () => ({ history: historyMock }))
 vi.mock("../../../components/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock }))
 vi.mock("../../../components/helpers/overlayOutput", () => ({ toggleOverlayOutput: toggleOverlayOutputMock }))
 vi.mock("../../../converters/project", () => ({ addProjectItem: addProjectItemMock }))
-vi.mock("../../../components/drawer/effects/Effects.svelte", () => ({ default: { isla: "Effects" } }))
+vi.mock("../effects/Effects", () => ({ Effects: () => <div data-isla="Effects" /> }))
 vi.mock("../../../components/slide/Zoomed.svelte", () => ({ default: { isla: "Zoomed" } }))
 vi.mock("../../../components/slide/Textbox.svelte", () => ({ default: { isla: "Textbox" } }))
 vi.mock("../../bridge/SvelteIsland", () => ({

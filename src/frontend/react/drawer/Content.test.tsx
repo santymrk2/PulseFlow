@@ -27,7 +27,7 @@ const { mediaProps, audioProps, showsProps } = vi.hoisted(() => ({
 
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../../components/drawer/bible/Scripture.svelte", () => ({ default: { isla: "Scripture" } }))
-vi.mock("../../components/drawer/calendar/Calendar.svelte", () => ({ default: { isla: "Calendar" } }))
+vi.mock("./calendar/Calendar", () => ({ Calendar: () => <div data-page="Calendar" /> }))
 vi.mock("./audio/Audio", () => ({
     Audio: ({ active }: AudioPropsMock) => {
         audioProps.current = { active }
@@ -51,7 +51,7 @@ vi.mock("./pages/Shows", () => ({
     }
 }))
 vi.mock("./pages/Variables", () => ({ Variables: () => <div data-page="Variables" /> }))
-vi.mock("../../components/drawer/timers/Timers.svelte", () => ({ default: { isla: "Timers" } }))
+vi.mock("./timers/Timers", () => ({ Timers: () => <div data-page="Timers" /> }))
 
 let restaurar: () => void = () => {}
 function montar(id: string, active: string | null = null, extra: StoreEntry[] = []) {
@@ -80,14 +80,14 @@ describe("Content", () => {
         expect(showsProps.current?.active).toBe("all")
     })
 
-    it("scripture y calendar siguen como islas con el sub-tab activo", () => {
-        const casos: Record<string, string> = { scripture: "Scripture", calendar: "Calendar" }
-        for (const [id, nombre] of Object.entries(casos)) {
-            montar(id, "all")
-            expect(isla()).toBe(nombre)
-            expect(islands[nombre].props.active).toBe("all")
-            cleanup()
-        }
+    it("scripture sigue como isla y calendar ya es React", () => {
+        montar("scripture", "all")
+        expect(isla()).toBe("Scripture")
+        expect(islands["Scripture"].props.active).toBe("all")
+
+        cleanup()
+        montar("calendar", "all")
+        expect(document.querySelector('[data-page="Calendar"]')).toBeTruthy()
     })
 
     it("media monta el componente React con el sub-tab activo", () => {
@@ -113,7 +113,7 @@ describe("Content", () => {
         const casos: Record<string, string> = { actions: "Actions", timer: "Timers", variables: "Variables", scenes: "Scenes", interactions: "Interactions", obs: "OBS" }
         for (const [active, nombre] of Object.entries(casos)) {
             montar("functions", active)
-            expect(nombre === "Timers" ? isla() : pagina()).toBe(nombre)
+            expect(pagina()).toBe(nombre)
             cleanup()
         }
     })

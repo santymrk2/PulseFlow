@@ -2,13 +2,11 @@
 import { act, cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { actionHistory, activeTimers, drawerTabsData } from "../../../stores"
-import { clearIslands, islands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { FunctionsInfo } from "./FunctionsInfo"
 
 vi.mock("../pages/InteractionsInfo", () => ({ InteractionsInfo: () => <div data-testid="interactions" /> }))
-vi.mock("../../../components/drawer/timers/TimerInfo.svelte", () => ({ default: { isla: "TimerInfo" } }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
+vi.mock("../timers/TimerInfo", () => ({ TimerInfo: () => <div data-testid="timer-info" /> }))
 vi.mock("./OBSInfo", () => ({ OBSInfo: () => <div data-testid="obs" /> }))
 vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
@@ -22,7 +20,6 @@ beforeEach(() => {
 afterEach(() => {
     cleanup()
     restaurar()
-    clearIslands()
 })
 
 describe("FunctionsInfo", () => {
@@ -36,7 +33,7 @@ describe("FunctionsInfo", () => {
         restaurar()
         restaurar = setStoresForTest([looseEntry(drawerTabsData, { functions: { activeSubTab: "timer" } }), looseEntry(actionHistory, []), looseEntry(activeTimers, [{ id: "t1" }])])
         render(<FunctionsInfo />)
-        expect(islands["TimerInfo"]).toBeTruthy()
+        expect(screen.getByTestId("timer-info")).toBeTruthy()
     })
 
     it("no muestra nada en la pestaña timer sin temporizadores", () => {

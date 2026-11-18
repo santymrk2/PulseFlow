@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react"
 import { actionHistory, activeTimers, drawerTabsData } from "../../../stores"
-import TimerInfo from "../../../components/drawer/timers/TimerInfo.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
 import { InteractionsInfo } from "../pages/InteractionsInfo"
+import { TimerInfo } from "../timers/TimerInfo"
 import { OBSInfo } from "./OBSInfo"
 import { ScenesInfo } from "./ScenesInfo"
 import styles from "./FunctionsInfo.module.css"
 
-// Port de components/drawer/info/FunctionsInfo.svelte. TimerInfo sigue en Svelte hasta F24.17h.
+// Port de components/drawer/info/FunctionsInfo.svelte.
 export function FunctionsInfo() {
     const tabsData = useStore(drawerTabsData)
     const history = useStore(actionHistory)
@@ -45,7 +44,7 @@ export function FunctionsInfo() {
         )
     }
 
-    if (type === "timer") return timers.length ? <SvelteIsland component={TimerInfo} /> : null
+    if (type === "timer") return timers.length ? <TimerInfo /> : null
     if (type === "scenes") return <ScenesInfo />
     if (type === "interactions") return <InteractionsInfo />
     if (type === "obs") return <OBSInfo />

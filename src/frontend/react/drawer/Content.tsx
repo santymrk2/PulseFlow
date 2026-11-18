@@ -1,7 +1,6 @@
 import { useEffect, useRef, type ReactNode } from "react"
 import Scripture from "../../components/drawer/bible/Scripture.svelte"
-import Calendar from "../../components/drawer/calendar/Calendar.svelte"
-import Timers from "../../components/drawer/timers/Timers.svelte"
+import { Calendar } from "./calendar/Calendar"
 import { drawerTabsData } from "../../stores"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
@@ -11,12 +10,13 @@ import { OBS } from "./pages/OBS"
 import { Scenes } from "./pages/Scenes"
 import { Shows } from "./pages/Shows"
 import { Variables } from "./pages/Variables"
+import { Timers } from "./timers/Timers"
 import { Audio } from "./audio/Audio"
 import { Media } from "./media/Media"
 import styles from "./Content.module.css"
 
-// Port de components/drawer/Content.svelte. Las páginas del cajón ya son React; Timers, Scripture y Calendar
-// siguen como islas Svelte hasta F24.17h/17i.
+// Port de components/drawer/Content.svelte. Las páginas del cajón ya son React; Scripture
+// siguen como islas Svelte hasta F24.17i/17h.
 // `bind:streams` de Media se conserva pasando el mismo array (los hijos Svelte hacen push sobre él).
 export interface ContentProps {
     id: string
@@ -37,14 +37,14 @@ export function Content({ id }: ContentProps) {
         if (id === "media") return <Media active={active} streams={streams.current} />
         if (id === "audio") return <Audio active={active} />
         if (id === "scripture") return <SvelteIsland component={Scripture} props={{ active }} />
-        if (id === "calendar") return <SvelteIsland component={Calendar} props={{ active }} />
+        if (id === "calendar") return <Calendar active={active} />
         if (id !== "functions" || !active) return null
 
         switch (active) {
             case "actions":
                 return <Actions />
             case "timer":
-                return <SvelteIsland component={Timers} />
+                return <Timers />
             case "variables":
                 return <Variables />
             case "scenes":

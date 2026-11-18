@@ -8,7 +8,6 @@ import { clone, keysToID, sortByName } from "../../../components/helpers/array"
 import { history } from "../../../components/helpers/history"
 import { findMatchingOut, getResolution } from "../../../components/helpers/output"
 import { toggleOverlayOutput } from "../../../components/helpers/overlayOutput"
-import Effects from "../../../components/drawer/effects/Effects.svelte"
 import Textbox from "../../../components/slide/Textbox.svelte"
 import Zoomed from "../../../components/slide/Zoomed.svelte"
 import { SvelteIsland } from "../../bridge/SvelteIsland"
@@ -21,11 +20,12 @@ import { SelectElem } from "../../system/SelectElem"
 import { Button } from "../../ui/button/Button"
 import { FloatingBar } from "../../ui/floating-bar/FloatingBar"
 import { Card } from "../Card"
+import { Effects } from "../effects/Effects"
 import { OverlayActions } from "./OverlayActions"
 import styles from "./Overlays.module.css"
 
 // Port de components/drawer/pages/Overlays.svelte: grilla de overlays con carga por lotes.
-// `Effects.svelte` (pestaña de efectos), `Zoomed.svelte` y `Textbox.svelte` siguen en Svelte y se montan como islas.
+// `Zoomed.svelte` y `Textbox.svelte` siguen en Svelte y se montan como islas.
 export interface OverlaysProps {
     active: string | null
     // Overlay editor: lista de una columna en el panel izquierdo; un clic abre el overlay para editarlo
@@ -143,7 +143,7 @@ export function Overlays({ active, columns = null, editOnClick = false }: Overla
         <>
             <div style={{ position: "relative", height: "100%", overflowY: "auto" }} className="context #drawer_overlays" onWheel={wheel}>
                 {active === "effects" ? (
-                    <SvelteIsland component={Effects} />
+                    <Effects />
                 ) : (
                     <DropArea id="overlays">
                         {fullFilteredOverlays.length ? (

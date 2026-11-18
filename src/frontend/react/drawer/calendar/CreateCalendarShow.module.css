@@ -1,0 +1,9 @@
+/* Port de components/drawer/calendar/CreateCalendarShow.svelte. `border` es global. */
+
+.main {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: 100%;
+}

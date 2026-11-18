@@ -1,0 +1,12 @@
+/* Port de components/drawer/effects/Effects.svelte. La clase `grid` es literal porque el componente la busca con querySelector. */
+:global(.grid) {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    padding: 5px;
+    place-content: flex-start;
+}
+
+:global(.grid .isSelected) {
+    outline: 5px solid var(--text) !important;
+}

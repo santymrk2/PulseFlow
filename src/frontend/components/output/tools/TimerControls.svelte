@@ -1,5 +1,6 @@
 <script lang="ts">
-    import Timers from "../../drawer/timers/Timers.svelte"
+    import { Timers } from "../../../react/drawer/timers/Timers"
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
 </script>
 
-<Timers onlyPlaying />
+<ReactIsland component={Timers} props={{ onlyPlaying: true }} />

@@ -11,7 +11,7 @@ import { countFolderMediaItems, getExtension, getFileName, getMediaType, isMedia
 import { getFirstActiveOutput, setOutput } from "../../../components/helpers/output"
 import { clearBackground } from "../../../components/output/clear"
 import { translateText } from "../../../utils/language"
-import PlayerVideosSvelte from "../../../components/drawer/player/PlayerVideos.svelte"
+import { PlayerVideos } from "../player/PlayerVideos"
 import { BMDStreams } from "../live/BMDStreams"
 import { Cameras } from "../live/Cameras"
 import { NDIStreams } from "../live/NDIStreams"
@@ -19,7 +19,6 @@ import { OMTStreams } from "../live/OMTStreams"
 import { Screens } from "../live/Screens"
 import { Windows } from "../live/Windows"
 import type { InputSelectDetail } from "../live/types"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { Icon } from "../../helpers/Icon"
 import { T } from "../../helpers/T"
 import { useStore } from "../../hooks/useStore"
@@ -39,7 +38,7 @@ import { loadFromPixabay } from "../../../components/drawer/media/pixabay"
 import { loadFromUnsplash } from "../../../components/drawer/media/unsplash"
 import styles from "./Media.module.css"
 
-// Port de components/drawer/media/Media.svelte. Las listas de live/* son ports React; PlayerVideos sigue como SvelteIsland.
+// Port de components/drawer/media/Media.svelte. Las listas de live/* son ports React.
 export interface MediaProps {
     active: string | null
     streams: MediaStream[]
@@ -494,7 +493,7 @@ export function Media({ active, streams }: MediaProps) {
         if (active === "online" && (onlineTab === "youtube" || onlineTab === "vimeo")) {
             return (
                 <div className={`${styles.gridgap} context #player`}>
-                    <SvelteIsland component={PlayerVideosSvelte} props={{ active: onlineTab }} />
+                    <PlayerVideos active={onlineTab} />
                 </div>
             )
         }
