@@ -61,8 +61,9 @@ describe("NowPlaying", () => {
         document.body.appendChild(textarea)
         textarea.value = "Hola mundo"
         act(() => {
-            textarea.selectionStart = 5
-            textarea.selectionEnd = 5
+            // El caret va antes del espacio (índice 4): "Hola{year} mundo"
+            textarea.selectionStart = 4
+            textarea.selectionEnd = 4
         })
         const token = screen.getByText("{year}")
         fireEvent.click(token)

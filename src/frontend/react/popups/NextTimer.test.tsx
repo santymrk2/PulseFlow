@@ -89,6 +89,8 @@ describe("NextTimer", () => {
     it("un_item_de_proyecto_escribe_timer_en_projects_y_cierra", () => {
         montar({ type: "folder", indexes: [], count: 1, totalTime: 0 })
         fire("timer.seconds", "onChange", 9)
+        // La rama "todas las diapositivas" sólo guarda al confirmar (Enter/botón), igual que el Svelte original
+        triggerPopupSubmit()
         expect(get(projects).p1.shows[0].data.timer).toBe(9)
         expect(get(activePopup)).toBeNull()
     })

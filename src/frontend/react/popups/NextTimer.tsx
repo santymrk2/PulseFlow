@@ -60,11 +60,13 @@ export function NextTimer() {
                 const index = get(activeShow)?.index ?? -1
                 const projectId = get(activeProject)
                 if (!projectId || !a[projectId]?.shows?.[index] || index < 0) return a
-
-                if (!a[projectId].shows[index].data) a[projectId].shows[index].data = {}
-                a[projectId].shows[index].data.timer = nextValue || 0
-
-                return a
+                const showsList = a[projectId].shows
+                const item = showsList[index]
+                const data = item.data ? { ...item.data } : {}
+                data.timer = nextValue || 0
+                const nextShows = [...showsList]
+                nextShows[index] = { ...item, data }
+                return { ...a, [projectId]: { ...a[projectId], shows: nextShows } }
             })
 
             activePopup.set(null)

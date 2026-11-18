@@ -133,7 +133,8 @@ describe("SelectTemplate", () => {
     })
 
     it("en scripture_drawer recorta las plantillas de conteo incorrecto", () => {
-        montar({ id: "scripture_drawer" }, { sc: { id: "scripture", name: "Uno", category: "scripture" }, sc3: { id: "scripture_3", name: "Tres", category: "scripture" } }, { bib: { collection: { versions: ["a", "b"] } } }, {}, { scripture: { activeSubTab: "bib" } })
+        // Tres versiones → sufijo _3 → se conserva la plantilla "Tres" (dos versiones conservarían _2)
+        montar({ id: "scripture_drawer" }, { sc: { id: "scripture", name: "Uno", category: "scripture" }, sc3: { id: "scripture_3", name: "Tres", category: "scripture" } }, { bib: { collection: { versions: ["a", "b", "c"] } } }, {}, { scripture: { activeSubTab: "bib" } })
         expect(islands.Card.props.label).toBe("Tres")
         expect(document.querySelectorAll('[data-isla="Card"]')).toHaveLength(1)
     })
