@@ -1,6 +1,6 @@
 import { useEffect, useState, type ComponentType } from "react"
 
-// Port de components/helpers/LazyLoad.svelte: carga el módulo la primera vez que `show` es true y renderiza su `default` sin props.
+// Carga el módulo la primera vez que `show` es true y renderiza su `default` sin props.
 export interface LazyLoadProps {
     component: () => Promise<{ default: ComponentType }>
     show?: boolean

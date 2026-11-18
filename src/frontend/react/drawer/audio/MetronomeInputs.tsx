@@ -4,7 +4,7 @@ import { InputRow } from "../../ui/input-row/InputRow"
 import { NumberField } from "../../ui/number-field/NumberField"
 import { ToggleField } from "../../ui/toggle-field/ToggleField"
 
-// Port de components/drawer/audio/MetronomeInputs.svelte. dispatch("change", values) → onChange(values).
+// dispatch("change", values) → onChange(values).
 export type MetronomeValues = API_metronome & MetronomeSettings
 
 export interface MetronomeInputsProps {

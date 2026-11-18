@@ -4,7 +4,6 @@ import { Card } from "../Card"
 import { Icon } from "../../helpers/Icon"
 import styles from "./Folder.module.css"
 
-// Port de components/drawer/media/Folder.svelte.
 export interface FolderProps {
     name: string
     path: string

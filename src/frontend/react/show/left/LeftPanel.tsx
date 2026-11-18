@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from "react"
 
-// Port de components/show/left/LeftPanel.svelte: marco de panel con barra de título propia y cuerpo con scroll.
+// Marco de panel con barra de título propia y cuerpo con scroll.
 // Dos padres Svelte todavía pasan snippets: su shell crea HTMLElement y acá se insertan con refs (nunca dangerouslySetInnerHTML).
 export interface LeftPanelProps {
     title: string

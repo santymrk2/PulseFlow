@@ -16,7 +16,7 @@ import { useStore } from "../hooks/useStore"
 import { SelectElem } from "../system/SelectElem"
 import styles from "./DrawerTab.module.css"
 
-// Port de components/drawer/DrawerTab.svelte. `dispatch("rename", {id, value})` → onRename({id, value}).
+// Port de DrawerTab. `dispatch("rename", {id, value})` → onRename({id, value}).
 // `<svelte:self>` → recursión directa. El `id` de SelectElem y las clases `context #…` se conservan.
 export interface DrawerTabOption {
     title: string

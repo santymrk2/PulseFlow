@@ -1,4 +1,4 @@
-/* Portado de DrawerTab.svelte: los :global(…) se conservan tal cual. La regla `div { … }` se mapea a una clase compartida (CSS modules no permite scoped por elemento). */
+/* Portado de DrawerTab: los :global(…) se conservan tal cual. La regla `div { … }` se mapea a una clase compartida (CSS modules no permite scoped por elemento). */
 .div {
     display: flex;
     align-items: center;
