@@ -234,6 +234,7 @@ export function PdfPreview({ show, index }: PdfPreviewProps) {
                                     ref={(element) => {
                                         canvases.current[i] = element || undefined
                                     }}
+                                    className={stylesModule.canvas}
                                 />
                             </div>
                         </div>

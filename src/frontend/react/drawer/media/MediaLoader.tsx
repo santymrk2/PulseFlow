@@ -12,6 +12,7 @@ import { Camera } from "../../output/Camera"
 import { Capture } from "../live/Capture"
 import { NDIStream } from "../live/NDIStream"
 import { OMTStream } from "../live/OMTStream"
+import { cn } from "../../../lib/utils"
 import styles from "./MediaLoader.module.css"
 
 // Port de components/drawer/media/MediaLoader.svelte.
@@ -251,8 +252,8 @@ export function MediaLoader({ name = "", path, thumbnailPath = "", loadFullImage
                 <>
                     {!(ghost && !thumbnailPath) && (mediaType !== "video" || (thumbnailPath && retryCount <= MAX_RETRIES)) ? (
                         <div key={retryCount}>
-                            {mediaStyle.fit === "blur" ? <img src={mediaType !== "video" && useOriginal ? (croppingActive ? croppedImage : encodeFilePath(path)) : encodeFilePath(thumbnailPath)} alt={name} style={{ ...parseStyle(mediaStyleBlurString) }} loading="lazy" className={loaded ? "" : styles.loading} /> : null}
-                            <img src={mediaType !== "video" && useOriginal ? (croppingActive ? croppedImage : encodeFilePath(path)) : encodeFilePath(thumbnailPath)} alt={name} style={{ ...parseStyle(mediaStyleString) }} loading="lazy" className={`${loaded ? "" : styles.loading} ${ghost ? styles.hideError : ""}`} onError={reload} onLoad={() => setLoaded(true)} />
+                            {mediaStyle.fit === "blur" ? <img src={mediaType !== "video" && useOriginal ? (croppingActive ? croppedImage : encodeFilePath(path)) : encodeFilePath(thumbnailPath)} alt={name} style={{ ...parseStyle(mediaStyleBlurString) }} loading="lazy" className={cn(styles.image, !loaded && styles.loading)} /> : null}
+                            <img src={mediaType !== "video" && useOriginal ? (croppingActive ? croppedImage : encodeFilePath(path)) : encodeFilePath(thumbnailPath)} alt={name} style={{ ...parseStyle(mediaStyleString) }} loading="lazy" className={cn(styles.image, !loaded && styles.loading, ghost && styles.hideError)} onError={reload} onLoad={() => setLoaded(true)} />
                         </div>
                     ) : null}
                     {mediaType === "video" && useOriginal && !ghost ? (

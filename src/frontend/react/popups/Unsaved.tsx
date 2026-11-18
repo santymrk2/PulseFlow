@@ -57,12 +57,12 @@ export function Unsaved() {
         <div className={styles.list}>
             <Button variant="outline" style={{ width: "100%" }} onClick={cancel}>
                 <T id="popup.cancel" />
-                <span>N</span>
+                <span className={styles.shortcut}>N</span>
             </Button>
             {savedValue ? (
                 <Button variant="default" style={{ marginTop: "8px", width: "100%" }} onClick={saveAndQuit}>
                     <T id="popup.save_quit" />
-                    <span>Y</span>
+                    <span className={styles.shortcut}>Y</span>
                 </Button>
             ) : (
                 <>
@@ -70,11 +70,11 @@ export function Unsaved() {
                         <div style={{ opacity: 0.7 }}>
                             <T id="popup.quit" />
                         </div>
-                        <span>Q</span>
+                        <span className={styles.shortcut}>Q</span>
                     </Button>
                     <Button variant="default" style={{ marginTop: "8px", width: "100%" }} onClick={saveAndQuit}>
                         <T id="popup.save_quit" />
-                        <span>Y</span>
+                        <span className={styles.shortcut}>Y</span>
                     </Button>
                 </>
             )}

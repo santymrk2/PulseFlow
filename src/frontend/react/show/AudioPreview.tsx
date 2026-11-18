@@ -183,7 +183,7 @@ export function AudioPreview({ active }: AudioPreviewProps) {
 
     return (
         <>
-            {!currentFocusMode ? <canvas ref={setCanvas} /> : null}
+            {!currentFocusMode ? <canvas ref={setCanvas} className={styles.canvas} /> : null}
             <div id={path} ref={mediaElem} className={`${styles.main} media context #audio_preview`}>
                 <div className={styles.buttons}>
                     <Button
@@ -212,7 +212,7 @@ export function AudioPreview({ active }: AudioPreviewProps) {
 
                         <Slider disabled={isMic} value={currentTime} max={duration} onInput={handleSliderInput} onChange={(event) => setTime((event.target as HTMLInputElement).value)} />
 
-                        <span style={isMic ? { opacity: 0.5 } : fullLength || !currentTime ? undefined : { color: "var(--secondary)" }} role="button" tabIndex={0} onClick={() => setFullLength((value) => !value)} onKeyDown={(event) => triggerClickOnEnterSpace(event.nativeEvent)}>
+                        <span className={styles.toggle} style={isMic ? { opacity: 0.5 } : fullLength || !currentTime ? undefined : { color: "var(--secondary)" }} role="button" tabIndex={0} onClick={() => setFullLength((value) => !value)} onKeyDown={(event) => triggerClickOnEnterSpace(event.nativeEvent)}>
                             {remainingText}
                         </span>
                     </div>

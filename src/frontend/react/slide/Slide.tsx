@@ -401,7 +401,7 @@ export function Slide({ showId, slide, layoutSlide, layoutSlides = [], show, col
 
             {viewMode === "list" && !noQuickEdit ? (
                 <>
-                    <hr />
+                    <hr className={css.divider} />
                     <div className={`quickEdit ${css.quickEdit}`} style={{ fontSize: `${(-1.1 * currentSlidesOptions.columns + 12) / 6}em` }} data-index={index}>
                         {currentRefreshListBoxes >= 0 && currentRefreshListBoxes !== index ? slide.items?.map((item, itemIndex) => (item?.lines ? <Editbox key={itemIndex} item={item} ref={{ showId, id: layoutSlide.id }} editIndex={index} index={itemIndex} plain /> : null)) : null}
                     </div>

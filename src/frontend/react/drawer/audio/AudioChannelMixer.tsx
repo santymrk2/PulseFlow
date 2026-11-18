@@ -8,6 +8,7 @@ import { Slider } from "../../ui/slider/Slider"
 import { Stepper } from "../../ui/stepper/Stepper"
 import { useStore } from "../../hooks/useStore"
 import { AudioMeter } from "./AudioMeter"
+import { cn } from "../../../lib/utils"
 import styles from "./AudioChannelMixer.module.css"
 
 // Port de components/drawer/audio/AudioChannelMixer.svelte.
@@ -54,7 +55,7 @@ export function AudioChannelMixer({ channelId, label, color, inactive = false }:
     const outputStyle = { "--color": color || "var(--secondary)" } as CSSProperties
 
     return (
-        <section className="context #audio_channel_mixer" id={channelId}>
+        <section className={cn(styles.mixer, "context #audio_channel_mixer")} id={channelId}>
             <div className={`${styles.output} ${inactive ? styles.inactive : ""}`} style={outputStyle}>
                 <div className={styles.label} style={{ marginRight: 7 }}>
                     <p style={{ opacity: 0.9 }}>{label || ""}</p>

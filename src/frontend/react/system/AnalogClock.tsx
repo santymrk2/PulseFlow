@@ -15,7 +15,7 @@ export function AnalogClock({ date, h, m, s, seconds = true }: AnalogClockProps)
     const sweep = Math.trunc(date.getTime() / 1000 - start)
 
     return (
-        <svg viewBox="-50 -50 100 100">
+        <svg className={styles.clock} viewBox="-50 -50 100 100">
             <circle className={styles.clockFace} r="48" />
 
             {[0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55].map((minute) => (

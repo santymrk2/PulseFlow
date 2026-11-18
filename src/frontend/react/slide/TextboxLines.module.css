@@ -46,7 +46,7 @@
     opacity: 0.7;
 }
 
-*:global(.wj) {
+.align :global(.wj) {
     color: #ff5050;
 }
 

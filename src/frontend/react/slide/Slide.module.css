@@ -189,7 +189,7 @@
     text-align: left;
 }
 
-hr {
+.divider {
     height: 100%;
     width: 3px;
     border: none;

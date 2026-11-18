@@ -136,7 +136,7 @@ export function Effect({ effect, preview = false, edit = false }: EffectProps) {
 
     return (
         <>
-            <canvas ref={canvasElem} />
+            <canvas ref={canvasElem} className={styles.canvas} />
             {edit
                 ? items.map((item, i) => {
                       const movable = item as MovableItem

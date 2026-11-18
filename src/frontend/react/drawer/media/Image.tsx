@@ -52,5 +52,5 @@ export function Image({ src, updater = 0, alt, transition = false, className, st
         ...(transitionStyle ? { transition: transitionStyle } : {})
     }
 
-    return <img key={retryCount} ref={imageRef} style={mergedStyle} src={`${encodeFilePath(src)}${updater ? "?" + updater : ""}`} alt={alt} draggable={false} className={cn(className, loaded && styles.loaded)} onLoad={hasLoaded} onError={reload} />
+    return <img key={retryCount} ref={imageRef} style={mergedStyle} src={`${encodeFilePath(src)}${updater ? "?" + updater : ""}`} alt={alt} draggable={false} className={cn(styles.image, className, loaded && styles.loaded)} onLoad={hasLoaded} onError={reload} />
 }

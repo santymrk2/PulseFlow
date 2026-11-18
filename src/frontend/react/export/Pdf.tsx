@@ -8,6 +8,7 @@ import { useStore } from "../hooks/useStore"
 import { Zoomed } from "../slide/Zoomed"
 import { Textbox } from "../slide/Textbox"
 import { MediaItem } from "../slide/views/MediaItem"
+import { cn } from "../../lib/utils"
 import styles from "./Pdf.module.css"
 
 interface PdfProps {
@@ -266,7 +267,7 @@ export function Pdf({ shows: showsProp = [], options: optionsProp = {}, path: pa
     const mainClass = [options?.type === "slides" ? "flow" : "", options?.type === "chordSheet" ? "chord-sheet" : ""].filter(Boolean).join(" ")
 
     return (
-        <main className={mainClass}>
+        <main className={cn(styles.main, mainClass)}>
             {shows.length ? (
                 options?.type === "media" ? (
                     renderedShows.map((show: unknown, si: number) => (
