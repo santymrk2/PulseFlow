@@ -8,4 +8,6 @@
 </script>
 
 <span>Hola {nombre}</span>
+<slot />
+<slot name="extra" />
 <button on:click={() => dispatch("saludo", nombre)}>Saludar</button>

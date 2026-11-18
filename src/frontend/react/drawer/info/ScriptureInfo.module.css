@@ -1,0 +1,33 @@
+.scroll {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.scroll :global(.zoomed) {
+    height: initial !important;
+}
+
+.settings {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    flex: 1;
+}
+
+.settings :global(.dropdown) {
+    width: 160%;
+    inset-inline-end: 0;
+}
+
+.attributionString {
+    position: absolute;
+    bottom: 15px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 28px;
+    font-style: italic;
+    opacity: 0.7;
+}

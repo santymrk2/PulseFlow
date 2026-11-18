@@ -1803,7 +1803,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [x] **F24.17b** Cajón, tanda b: `media/*`.
 - [x] **F24.17c** Cajón, tanda c: `audio/` (paneles y metrónomo).
 - [x] **F24.17d** Cajón, tanda d: `audio/` (efectos).
-- [ ] **F24.17e** Cajón, tanda e: `info/*`.
+- [x] **F24.17e** Cajón, tanda e: `info/*`.
 - [ ] **F24.17f** Cajón, tanda f: `live/*`.
 - [ ] **F24.17g** Cajón, tanda g: `pages/*`.
 - [ ] **F24.17h** Cajón, tanda h: `player/*`, `calendar/*`, `effects/*`, `timers/*` y `system/Player`.

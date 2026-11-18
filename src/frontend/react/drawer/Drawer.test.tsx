@@ -5,7 +5,7 @@ import { get } from "svelte/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { DrawerTabIds } from "../../../types/Tabs"
 import { activeDrawerTab, activeEdit, activePage, activeShow, drawer, drawerTabsData, focusMode, mediaFolders, mediaOptions, os, previousShow, selected } from "../../stores"
-import { clearIslands, islands } from "../test/islandMock"
+import { clearIslands } from "../test/islandMock"
 import { looseEntry, setStoresForTest, storeEntry, type StoreEntry } from "../test/storeTestKit"
 import { Drawer } from "./Drawer"
 import styles from "./Drawer.module.css"
@@ -19,8 +19,7 @@ vi.mock("../../utils/shortcuts", () => ({ getNormalizedKey: (e: KeyboardEvent) =
 vi.mock("../system/Resizeable", () => ({
     Resizeable: ({ children }: { children?: ReactNode | ((width: number) => ReactNode) }) => <div data-resizeable="">{typeof children === "function" ? children(600) : children}</div>
 }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/drawer/info/Info.svelte", () => ({ default: { isla: "Info" } }))
+vi.mock("./info/Info", () => ({ Info: ({ id }: { id: string }) => <div data-isla="Info" data-id={id} /> }))
 vi.mock("./Navigation", () => ({ Navigation: ({ id }: { id: string }) => <div data-isla="Navigation" data-id={id} /> }))
 vi.mock("./Content", () => ({ Content: ({ id }: { id: string }) => <div data-isla="Content" data-id={id} /> }))
 
@@ -61,7 +60,7 @@ describe("Drawer", () => {
         expect(handle().getAttribute("title")).toBe("_ resizable")
         expect(document.querySelector("[data-isla='Navigation']")?.getAttribute("data-id")).toBe("media")
         expect(document.querySelector("[data-isla='Content']")?.getAttribute("data-id")).toBe("media")
-        expect(islands["Info"]).toBeTruthy()
+        expect(document.querySelector("[data-isla='Info']")?.getAttribute("data-id")).toBe("media")
     })
 
     it("oculta shows, pestañas deshabilitadas, sin acceso y las de focus mode", () => {

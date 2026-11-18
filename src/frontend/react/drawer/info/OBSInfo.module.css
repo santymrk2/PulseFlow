@@ -1,0 +1,117 @@
+/* Port de los estilos en línea de OBSInfo.svelte: panel oscuro propio del monitor de OBS. */
+.root {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+}
+
+.preview {
+    background: #101216;
+    position: relative;
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.previewImage {
+    width: 100%;
+    display: block;
+}
+
+.previewPlaceholder {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    font-size: 0.9em;
+    font-weight: 500;
+}
+
+.spacer {
+    flex: 1;
+}
+
+.metrics {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    justify-items: center;
+    text-align: center;
+    gap: 0.5em;
+    background: #1f232a;
+    padding: 0.5em 0.75em;
+    border-radius: 6px;
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+.statusCell {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    gap: 0.35em;
+    margin-bottom: 5px;
+}
+
+.statusLabel {
+    font-size: 0.7em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.labelActive {
+    color: #f1f3f5;
+}
+
+.labelInactive {
+    color: #94a3b8;
+}
+
+.dot {
+    display: inline-block;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    transition: all 0.3s;
+}
+
+.dotActive {
+    background: var(--danger);
+    box-shadow: 0 0 6px var(--danger);
+}
+
+.dotInactive {
+    background: rgb(255 255 255 / 0.2);
+}
+
+.metric {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15em;
+}
+
+.metricLabel {
+    color: #64748b;
+    font-size: 0.65em;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.metricValue {
+    color: #cbd5e1;
+    font-size: 0.95em;
+    font-weight: 700;
+}
+
+.liveValue {
+    color: var(--danger);
+    font-size: 0.95em;
+    font-weight: 700;
+}
+
+.liveDivider {
+    width: 100%;
+    height: 1px;
+    background: #2b303c;
+    margin: 0.15em 0;
+}

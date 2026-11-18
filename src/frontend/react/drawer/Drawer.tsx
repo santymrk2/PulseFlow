@@ -2,7 +2,6 @@ import { Fragment, useEffect, useRef, useState, type MouseEvent as ReactMouseEve
 import { get } from "svelte/store"
 import type { DrawerTabIds } from "../../../types/Tabs"
 import { getBreadcrumbs } from "../../components/drawer/breadcrumb"
-import Info from "../../components/drawer/info/Info.svelte"
 import { keysToID } from "../../components/helpers/array"
 import { cn } from "../../lib/utils"
 import { activeDrawerTab, activeEdit, activePage, activeShow, audioFolders, audioPlaylists, categories, drawer, drawerOpenedInEdit, drawerTabsData, focusMode, mediaFolders, mediaOptions, os, overlayCategories, previousShow, scriptures, selected, templateCategories } from "../../stores"
@@ -13,13 +12,13 @@ import { getAccess } from "../../utils/profile"
 import { getNormalizedKey } from "../../utils/shortcuts"
 import { isTypingTarget } from "../../utils/shortcutsHelper"
 import { drawerTabs } from "../../values/tabs"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
 import { Resizeable } from "../system/Resizeable"
 import { Button } from "../ui/button/Button"
 import { Slider } from "../ui/slider/Slider"
 import { Content } from "./Content"
+import { Info } from "./info/Info"
 import { Navigation } from "./Navigation"
 import styles from "./Drawer.module.css"
 
@@ -301,7 +300,7 @@ export function Drawer() {
                 <Resizeable id="rightPanelDrawer" side="right">
                     {(width) => (
                         <div className={cn(styles.right, width > DEFAULT_WIDTH * 1.8 && styles.row)}>
-                            <SvelteIsland component={Info} props={{ id: tabValue }} />
+                            <Info id={tabValue} />
                         </div>
                     )}
                 </Resizeable>
