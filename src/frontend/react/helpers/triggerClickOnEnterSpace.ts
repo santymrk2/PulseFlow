@@ -14,3 +14,8 @@ export function triggerClickOnEnterSpace(event: KeyboardEvent<Element>) {
         event.currentTarget.dispatchEvent(new MouseEvent("click", { bubbles: true }))
     }
 }
+
+// Equivalente a createKeydownHandler de utils/clickable.ts para eventos de React.
+export function createKeydownHandler(callback: (event: React.KeyboardEvent<Element>) => void) {
+    return (event: React.KeyboardEvent<Element>) => callback(event)
+}

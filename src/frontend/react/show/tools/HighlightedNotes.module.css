@@ -1,0 +1,83 @@
+.paper {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
+.backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1;
+    scrollbar-width: none;
+}
+
+.backdrop::-webkit-scrollbar {
+    display: none;
+}
+
+.highlight-overlay {
+    min-height: 100%;
+    width: 100%;
+    box-sizing: border-box;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-word;
+    color: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    padding: 10px;
+}
+
+.edit {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    outline: none;
+    border: none;
+    color: transparent;
+    caret-color: var(--text, white);
+    font-size: inherit;
+    font-family: inherit;
+    background-color: transparent;
+    resize: none;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.edit::selection {
+    background-color: color-mix(in srgb, var(--secondary, #3a97f9) 30%, transparent) !important;
+}
+
+:global(body.unfocused) .edit::selection {
+    background-color: rgb(128 128 128 / 0.4) !important;
+}
+
+textarea::placeholder {
+    color: var(--text, white);
+    opacity: 0.5;
+}
+
+textarea:disabled {
+    opacity: 0.5;
+}
+
+:global(.bracket-symbol) {
+    color: var(--text, white);
+    opacity: 0.4;
+}
+
+:global(.bracket-content) {
+    color: var(--secondary, #3a97f9) !important;
+    font-weight: normal;
+}

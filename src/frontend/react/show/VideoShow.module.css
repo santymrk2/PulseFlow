@@ -1,0 +1,7 @@
+.scroll {
+    display: flex;
+    overflow-x: auto;
+}
+.scroll :global(button) {
+    overflow: initial;
+}

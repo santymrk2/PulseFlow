@@ -1,0 +1,20 @@
+.title {
+    font-size: 2em;
+}
+
+.title :global(input) {
+    background-color: var(--primary-darkest);
+}
+/* ::placeholder opacity does not work for some reason */
+.title.empty :global(input::placeholder) {
+    color: rgb(255 255 255 / 0.4);
+}
+
+.settings {
+    margin: 10px;
+    padding: 10px;
+
+    margin-block-end: auto;
+    border: 1px solid var(--primary-lighter);
+    border-radius: 8px;
+}

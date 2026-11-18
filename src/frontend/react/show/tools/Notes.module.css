@@ -1,0 +1,28 @@
+.paper {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+}
+
+.edit {
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    outline: none;
+    border: none;
+    color: inherit;
+    font-size: inherit;
+    font-family: inherit;
+    background-color: inherit;
+    resize: none;
+}
+
+textarea::placeholder {
+    color: inherit;
+    opacity: 0.5;
+}
+
+textarea:disabled {
+    opacity: 0.5;
+}

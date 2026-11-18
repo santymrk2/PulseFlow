@@ -1,46 +1,7 @@
 <script lang="ts">
-    import { activePopup, activeProject, activeShow, popupData, projects } from "../../../stores"
-    import { translateText } from "../../../utils/language"
-    import { history } from "../../helpers/history"
-    import Button from "../../../lib/components/ui/button/button.svelte"
-    import Center from "../../system/Center.svelte"
-    import DropArea from "../../system/DropArea.svelte"
-
-    $: projectId = $activeProject || ""
-    $: project = $projects[projectId]
-
-    function replace() {
-        popupData.set({
-            action: "select_show",
-            trigger: (showId: string) => {
-                const showTemplateIndex = project.shows?.findIndex((s, i) => s.id === $activeShow?.id && (($activeShow?.index ?? -1) > -1 ? i === $activeShow?.index : true))
-                if (showTemplateIndex < 0) return
-
-                const newShows = [...(project?.shows || [])]
-                newShows[showTemplateIndex] = { id: showId, type: "show" }
-
-                history({
-                    id: "UPDATE",
-                    newData: { key: "shows", data: newShows },
-                    oldData: { id: projectId },
-                    location: { page: "show", id: "project_key" }
-                })
-
-                activeShow.set({ id: showId, type: "show", index: showTemplateIndex })
-            }
-        })
-        activePopup.set("select_show")
-    }
+    // Migrado a React en F24.20a. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import { ProjectShowPlaceholder } from "../../../react/show/placeholder/ProjectShowPlaceholder"
 </script>
 
-<DropArea id="project" hoverTimeout={150}>
-    <Center>
-        {#if project}
-            <Button variant="default" icon="slide" style="font-size: 1.1em;" on:click={replace}>
-                {translateText("popup.select_show")}
-            </Button>
-        {:else}
-            <p style="opacity: 0.6;">{translateText("empty.project_select")}</p>
-        {/if}
-    </Center>
-</DropArea>
+<ReactIsland component={ProjectShowPlaceholder} />

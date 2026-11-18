@@ -1,20 +1,13 @@
 <script lang="ts">
+    // Migrado a React en F24.20a. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
     import type { TabsObj } from "../../../types/Tabs"
-    import type { Output } from "../../../types/Output"
-    import { activeShow, labelsDisabled, outputs, showsCache, slideTimers } from "../../stores"
-    import { translateText } from "../../utils/language"
-    import { getActiveOutputs } from "../helpers/output"
+    import { activeShow, showsCache } from "../../stores"
     import { _show } from "../helpers/shows"
     import Tabs from "../main/Tabs.svelte"
-    import Audio from "../output/tools/Audio.svelte"
-    import Overlay from "../output/tools/Overlay.svelte"
-    import TimerControls from "../output/tools/TimerControls.svelte"
-    import NextTimer from "../output/tools/NextTimer.svelte"
-    import Media from "./tools/Media.svelte"
-    import Metadata from "./tools/Metadata.svelte"
-    import SlideGroups from "./tools/SlideGroups.svelte"
+    import ReactIsland from "../../react/bridge/ReactIsland.svelte"
+    import { ShowTools } from "../../react/show/ShowTools"
 
-    const tabs: TabsObj = {
+    let tabs: TabsObj = {
         audio: { name: "tabs.audio", icon: "audio" },
         overlays: { name: "clear.overlays", icon: "overlays" },
         timers: { name: "tools.timers", icon: "clock" },
@@ -22,87 +15,28 @@
         metadata: { name: "tools.metadata", icon: "info" },
         media: { name: "tools.media", icon: "media", remove: true }
     }
-    let active: string = "audio"
+    let active = "audio"
 
     $: showId = $activeShow?.id
     $: currentShow = $showsCache[showId || ""]
-    $: currentOutput = (() => {
-        const id = getActiveOutputs($outputs, true, true, true)[0]
-        return id ? $outputs[id] || {} : ({} as Output)
-    })()
-
-    // media
     $: if (currentShow) checkMedia()
     function checkMedia() {
-        let refs = _show().layouts().ref()
-
+        const refs = _show().layouts().ref()
         let disableMedia = true
-
         if (refs.some((ref) => ref.some((slide) => slide.data.background))) disableMedia = false
         else if (refs.some((ref) => ref.some((slide) => slide.data.overlays?.length))) disableMedia = false
         else if (refs.some((ref) => ref.some((slide) => slide.data.audio))) disableMedia = false
         else if (refs.some((ref) => ref.some((slide) => slide.data.mics))) disableMedia = false
         else if (refs.some((ref) => ref.some((slide) => slide.data.actions?.slideActions?.length))) disableMedia = false
-
-        tabs.media.remove = disableMedia
+        tabs = { ...tabs, media: { ...tabs.media, remove: disableMedia } }
     }
 
-    $: reference = currentShow?.reference?.type
-
-    let slideTimer: any = {}
-    $: slideTimer = currentOutput?.id ? $slideTimers[currentOutput.id] || {} : {}
+    let tabsHost: HTMLDivElement | undefined
 </script>
 
-<div class="main border" class:labels={!$labelsDisabled}>
-    {#if reference === "lessons"}
-        <!-- nothing needed -->
-    {:else}
-        <Tabs {tabs} bind:active labels={false} />
-        <div class="tabTitle">{translateText(tabs[active]?.name || "")}</div>
+<ReactIsland component={ShowTools} props={{ tabs, active, tabsHost }} />
 
-        {#if currentShow}
-            {#if active === "audio"}
-                <div class="content"><Audio /></div>
-            {:else if active === "overlays"}
-                <div class="content"><Overlay {currentOutput} /></div>
-            {:else if active === "timers"}
-                <div class="content">
-                    {#if slideTimer?.timer}
-                        <NextTimer {currentOutput} timer={slideTimer?.timer ? slideTimer : { time: 0, paused: true, timer: {} }} />
-                    {:else}
-                        <TimerControls />
-                    {/if}
-                </div>
-            {:else if active === "groups"}
-                <SlideGroups />
-            {:else if active === "media"}
-                <div class="content"><Media /></div>
-            {:else if active === "metadata"}
-                <div class="content"><Metadata /></div>
-            {/if}
-        {/if}
-    {/if}
+<!-- Tabs usa bind:active: se monta acá y React lo reubica. -->
+<div bind:this={tabsHost} style="display: contents">
+    <Tabs {tabs} bind:active labels={false} />
 </div>
-
-<style>
-    .main {
-        display: flex;
-        flex-direction: column;
-        overflow: hidden;
-        height: 100%;
-    }
-    .tabTitle {
-        padding: 4px 10px;
-        font-size: var(--text-xs);
-        font-weight: 600;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-        opacity: 0.6;
-        border-bottom: 1px solid var(--border);
-    }
-    .content {
-        height: 100%;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
-</style>

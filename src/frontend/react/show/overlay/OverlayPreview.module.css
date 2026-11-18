@@ -1,0 +1,11 @@
+.overlayPreview {
+    width: 100%;
+    height: 100%;
+}
+
+.overlayPreview :global(.slide:not(.landscape)) {
+    height: 100%;
+}
+.overlayPreview :global(.slide.landscape) {
+    width: 100%;
+}
