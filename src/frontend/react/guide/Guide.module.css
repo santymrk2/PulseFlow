@@ -1,0 +1,67 @@
+.guide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+
+    overflow: hidden;
+    z-index: 5999;
+
+    color: var(--text);
+}
+
+.focus {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    box-shadow: 0 0 0 8000px rgb(0 0 0 / 40%);
+
+    transition: 0.8s all;
+
+    border-radius: 2px;
+}
+
+.text {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translateY(-70px);
+
+    max-width: 100vw;
+    width: max-content;
+
+    background-color: rgb(0 0 0 / 70%);
+    padding: 8px 12px;
+
+    border-radius: 4px;
+}
+.flip {
+    inset-inline-start: initial;
+    inset-inline-end: 0;
+}
+.text p {
+    white-space: normal;
+}
+
+.title {
+    font-size: 1.5em;
+    font-weight: 600;
+}
+
+.guideButtons {
+    position: absolute;
+    bottom: 20px;
+    inset-inline-end: 20px;
+
+    display: flex;
+    gap: 10px;
+
+    background-color: rgb(0 0 0 / 70%);
+    padding: 10px;
+
+    pointer-events: initial;
+
+    border-radius: 4px;
+}

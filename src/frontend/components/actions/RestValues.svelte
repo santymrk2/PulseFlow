@@ -1,83 +1,21 @@
 <script lang="ts">
+    // Migrado a React en F24.22. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
     import { createEventDispatcher } from "svelte"
-
-    import SelectField from "../../lib/components/ui/select-field/select-field.svelte"
-    import TextField from "../../lib/components/ui/text-field/text-field.svelte"
     import type { API_rest_command } from "./api"
-    import InputRow from "../../lib/components/ui/input-row/input-row.svelte"
+    import ReactIsland from "../../react/bridge/ReactIsland.svelte"
+    import { RestValues } from "../../react/actions/RestValues"
 
     export let value: API_rest_command
     export let emitter = false
-    $: rest = value
 
-    // const REST_MESSAGE_INPUTS: Input[] = [
-    //     {name: "inputs.url", id: "url", type: "string", value: ""},
-    //     {name: "inputs.method", id: "method", type: "dropdown", value: "GET", options: [{ name: "GET" }, { name: "POST" }, { name: "PUT" }, { name: "DELETE" }]},
-    //     {name: "inputs.contentType", id: "contentType", type: "string", value: "application/json"},
-    //     {name: "inputs.payload", id: "payload", type: "string", value: "{}"},
-    // ]
-
-    /**
-     * onChange Handler for URL component
-     * This is a TextInput, so `e.target.value`
-     * @param e onChange Event
-     */
-    function updateUrl(e) {
-        rest.url = e.detail
-        change()
-    }
-
-    /**
-     * onChange Handler for Method component
-     * This is a Dropdown, so `e.detail.name`
-     * @param e onChange Event
-     */
-    function updateMethod(e) {
-        rest.method = e.detail
-        change()
-    }
-
-    /**
-     * onChange Handler for Payload component
-     * This is a TextInput, so `e.target.value`
-     * @param e onChange Event
-     */
-    function updatePayload(e) {
-        rest.payload = e.detail
-        change()
-    }
-
-    /**
-     * onChange Handler for ContentType component
-     * This is a TextInput, so `e.target.value`
-     * @param e onChange Event
-     */
-    function updateContentType(e) {
-        rest.contentType = e.detail
-        change()
-    }
-
-    let dispatch = createEventDispatcher()
-    function change() {
-        dispatch("change", rest)
-    }
-
-    let dropdownInputs = [
-        { value: "GET", label: "GET" },
-        { value: "POST", label: "POST" },
-        { value: "PUT", label: "PUT" },
-        { value: "DELETE", label: "DELETE" }
-    ]
+    const dispatch = createEventDispatcher<{ change: API_rest_command }>()
 </script>
 
-<TextField label="inputs.url" value={rest.url || ""} placeholder="127.0.0.1" on:change={updateUrl} />
-
-<InputRow>
-    <SelectField label="inputs.method" value={rest.method || "GET"} options={dropdownInputs} on:change={updateMethod} />
-    <TextField label="inputs.contentType" disabled={emitter} value={rest.contentType || "application/json"} placeholder="application/json" on:change={updateContentType} />
-</InputRow>
-
-<!-- Body -->
-{#if !emitter}
-    <TextField label="inputs.payload" disabled={emitter} value={rest.payload || ""} placeholder={"{}"} on:change={updatePayload} />
-{/if}
+<ReactIsland
+    component={RestValues}
+    props={{
+        value,
+        emitter,
+        onChange: (next: API_rest_command) => dispatch("change", next)
+    }}
+/>

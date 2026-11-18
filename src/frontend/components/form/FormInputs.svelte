@@ -1,26 +1,21 @@
 <script lang="ts">
+    // Migrado a React en F24.22. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
     import { createEventDispatcher } from "svelte"
     import type { Input as TInput } from "../../../types/Input"
-    import { clone } from "../helpers/array"
-    import HRule from "../../lib/components/ui/h-rule/h-rule.svelte"
-    import FormInput from "./FormInput.svelte"
+    import ReactIsland from "../../react/bridge/ReactIsland.svelte"
+    import { FormInputs } from "../../react/form/FormInputs"
 
     export let inputs: TInput[]
     export let title = ""
 
-    let dispatch = createEventDispatcher()
-    function changed(e: any, input: TInput) {
-        let value = e.detail
-        dispatch("change", clone({ ...input, value }))
-    }
+    const dispatch = createEventDispatcher<{ change: TInput }>()
 </script>
 
-{#if title}
-    <HRule {title} />
-{/if}
-
-{#each inputs as input}
-    {#if input?.type}
-        <FormInput {input} on:change={(e) => changed(e, input)} />
-    {/if}
-{/each}
+<ReactIsland
+    component={FormInputs}
+    props={{
+        inputs,
+        title,
+        onChange: (value: TInput) => dispatch("change", value)
+    }}
+/>
