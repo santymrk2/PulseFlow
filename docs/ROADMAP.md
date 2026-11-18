@@ -1811,7 +1811,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [x] **F24.18a** Slides: `views/*` y relojes de `system/`.
 - [x] **F24.18b** Slides: textbox, slide, layouts, íconos y acciones.
 - [x] **F24.19a** Stage.
-- [ ] **F24.19b** Línea de tiempo.
+- [x] **F24.19b** Línea de tiempo.
 - [ ] **F24.20a** Show (sin `left/`).
 - [ ] **F24.20b** Controles de `components/output/`.
 - [ ] **F24.20c** Vista previa de `components/output/`.
