@@ -13,6 +13,7 @@
 
 use super::scene::ScenePayload;
 use super::snapshot::render_snapshot_rgba;
+use std::sync::atomic::{AtomicUsize, Ordering};
 
 /// Carpeta de los PNG de referencia (relativa a la raíz del crate).
 const GOLDEN_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/tests/golden/scene");
@@ -273,12 +274,17 @@ fn overlays(image_path: &str) -> ScenePayload {
     }))
 }
 
+static TEMP_PNG_SEQ: AtomicUsize = AtomicUsize::new(0);
+
 /// Escribe en la carpeta temporal una imagen de 4 cuadrantes (rojo/verde/azul/blanco)
 /// y devuelve su ruta. Es determinista, así el golden del fondo no depende de assets.
+/// Cada llamada usa su propio PNG: varios tests leen esta referencia en paralelo y en
+/// Windows uno podía abrir el archivo mientras otro lo sobrescribía.
 fn reference_background() -> String {
-    let dir = std::env::temp_dir().join("pulseflow-golden");
+    let dir = std::env::temp_dir().join(format!("pulseflow-golden-{}", std::process::id()));
     std::fs::create_dir_all(&dir).expect("carpeta temporal de goldens");
-    let path = dir.join("cuadrantes.png");
+    let seq = TEMP_PNG_SEQ.fetch_add(1, Ordering::Relaxed);
+    let path = dir.join(format!("cuadrantes-{seq}.png"));
 
     let (w, h) = (32u32, 18u32);
     let mut image = image::RgbaImage::new(w, h);
@@ -552,8 +558,51 @@ fn subrayado_sigue_el_padding_y_la_opacidad_de_la_caja() {
         serde_json::json!({ "box": { "padding": { "top": 0, "left": 100, "right": 0, "bottom": 0 }, "opacity": 0.5 } }),
     );
     let base = fila_base(&texto_decorado(serde_json::json!({}), serde_json::json!({ "box": { "padding": { "top": 0, "left": 100, "right": 0, "bottom": 0 } } })));
-    let y = base + 5;
-    assert_eq!((0..100).filter(|&x| pixel_at(&con_caja, 320, x, y)[0] > 0).count(), 0, "el subrayado no invade el padding izquierdo");
-    let [r, ..] = pixel_at(&con_caja, 320, 120, y);
-    assert!((90..=200).contains(&r), "la opacidad 0.5 atenúa el subrayado (canal rojo {r})");
+    // Las métricas de la fuente del sistema desplazan el subrayado uno o dos píxeles:
+    // se localiza su fila real en la franja en vez de asumir `base + 5`.
+    // Con opacidad 0.5 el rojo baja a ~127, así que `es_rojo` (r > 200) no sirve acá.
+    let rojos_atenuados = |y: u32| {
+        (0..320)
+            .filter(|&x| {
+                let [r, g, b] = pixel_at(&con_caja, 320, x, y);
+                r > 0 && r > g + 40 && r > b + 40
+            })
+            .count()
+    };
+    let banda: Vec<(u32, usize)> = (base + 1..=base + 9).map(|y| (y, rojos_atenuados(y))).collect();
+    let (fila, pixeles) = banda.iter().max_by_key(|(_, n)| *n).expect("hay filas en la franja");
+    assert!(*pixeles > 0, "el subrayado debe dibujar rojo bajo la línea base ({banda:?})");
+    for y in base + 1..=base + 9 {
+        let invade = (0..100).filter(|&x| pixel_at(&con_caja, 320, x, y)[0] > 0).count();
+        assert_eq!(invade, 0, "el subrayado no invade el padding izquierdo (fila {y})");
+    }
+    let r = (100..320).map(|x| pixel_at(&con_caja, 320, x, *fila)[0]).max().expect("hay píxeles en la caja");
+    assert!((90..=200).contains(&r), "la opacidad 0.5 atenúa el subrayado (canal rojo {r} en la fila {fila})");
+}
+
+/// F25.7 cambió `chunks_exact(4)` por `as_chunks::<4>().0` para Clippy 1.100: comprueba
+/// que la rewrite conserva longitud, índices, conteo y medias, incluso con restos.
+#[test]
+fn as_chunks_iguala_a_chunks_exact_en_rgba() {
+    for len in [0, 1, 3, 4, 5, 7, 8, 11, 12, 13] {
+        let datos: Vec<u8> = (0..len).map(|i| (i as u8).wrapping_mul(37)).collect();
+        // Referencia manual de `chunks_exact(4)`: sólo grupos completos, en orden.
+        let exactos: Vec<&[u8]> = (0..len / 4).map(|i| &datos[i * 4..i * 4 + 4]).collect();
+        let por_cuatro: Vec<[u8; 4]> = datos.as_chunks::<4>().0.to_vec();
+        assert_eq!(exactos.len(), por_cuatro.len(), "cantidad de píxeles con {len} bytes");
+        for (a, b) in exactos.iter().zip(por_cuatro.iter()) {
+            assert_eq!(*a, b.as_slice(), "contenido del píxel con {len} bytes");
+        }
+    }
+
+    let rgba = [10u8, 20, 30, 255, 40, 50, 60, 255, 70, 80, 90, 255, 99];
+    assert_eq!(count_pixels(&rgba, |_| true), 3, "el byte suelto no cuenta como píxel");
+    assert_eq!(count_pixels(&rgba, |[r, _, _]| r > 35), 2, "predicado sobre el canal rojo");
+    assert_eq!(cell_mean(&rgba, 2, 0, 0, 2, 1), [25, 35, 45], "media de la celda completa");
+    assert_eq!(cell_mean(&rgba, 2, 1, 0, 1, 1), [40, 50, 60], "celda de la segunda columna");
+}
+
+#[test]
+fn cada_referencia_usa_su_propio_png() {
+    assert_ne!(reference_background(), reference_background());
 }
