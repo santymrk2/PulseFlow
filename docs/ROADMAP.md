@@ -1902,6 +1902,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - En el stage, un timer sin padding que cambia de largo ("9:59" → "10:00") cambia el tamaño del autoajuste y provoca una transición puntual (F23.19).
 - `setLanguage()` no maneja el `fetch` fallido (sin `.catch()`); con `public/lang/` reducido a `en`/`es` sigue aplicando el fallback a `en` (F25.6).
 - Falta un test de paridad entre `en.json` y `es.json`: hoy hay una clave presente en inglés y ausente en español (F25.6), cubierta en Runtime por el fallback del diccionario.
+- Flakiness en paralelo de los tests de `render::media` (`request_returns_immediately_while_loading` y `presupuesto_expulsa_la_menos_usada`): pasan aislados y en rerun; no afectan al CI (F25.7).
 
 ## Fuera de alcance por ahora
 
