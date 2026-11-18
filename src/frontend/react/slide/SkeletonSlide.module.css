@@ -1,0 +1,39 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    padding: 2px;
+}
+
+.main.active {
+    outline: 2px solid var(--secondary-opacity);
+    outline-offset: -1px;
+}
+
+.slide {
+    background-color: black;
+    z-index: 0;
+    outline-offset: 0;
+    width: 100%;
+    position: relative;
+    display: flex;
+}
+
+.label {
+    justify-content: space-between;
+    position: relative;
+    background-color: var(--primary-darkest);
+    display: flex;
+    padding: 5px;
+    padding-bottom: 3px;
+    font-size: 0.8em;
+    font-weight: bold;
+    align-items: center;
+}
+
+.label .text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
