@@ -196,20 +196,20 @@ fn decode_loop(path: &str, sink: &dyn FrameSink, running: &AtomicBool, state: &P
         // F23.3: si el driver perdió el dispositivo, el anillo de texturas
         // compartidas y el lector de Media Foundation eran del dispositivo
         // perdido: se rehacen con el contexto nuevo.
-        if let Ok(current) = crate::render::gpu::shared() {
-            if !Arc::ptr_eq(&current, &gpu) {
-                match D3dInterop::new(&current).map_err(|e| e.to_string()) {
-                    Ok(fresh) => match Source::open(path, &fresh) {
-                        Ok(fresh_source) => {
-                            log::warn!("[VideoEngine] el dispositivo se perdió: se rehace el interop D3D de {path}");
-                            gpu = current;
-                            interop = fresh;
-                            source = fresh_source;
-                        }
-                        Err(err) => log::warn!("[VideoEngine] no se pudo reabrir {path} tras perder el dispositivo: {err}"),
-                    },
-                    Err(err) => log::warn!("[VideoEngine] no se pudo rehacer el interop D3D de {path}: {err}"),
-                }
+        if let Ok(current) = crate::render::gpu::shared()
+            && !Arc::ptr_eq(&current, &gpu)
+        {
+            match D3dInterop::new(&current).map_err(|e| e.to_string()) {
+                Ok(fresh) => match Source::open(path, &fresh) {
+                    Ok(fresh_source) => {
+                        log::warn!("[VideoEngine] el dispositivo se perdió: se rehace el interop D3D de {path}");
+                        gpu = current;
+                        interop = fresh;
+                        source = fresh_source;
+                    }
+                    Err(err) => log::warn!("[VideoEngine] no se pudo reabrir {path} tras perder el dispositivo: {err}"),
+                },
+                Err(err) => log::warn!("[VideoEngine] no se pudo rehacer el interop D3D de {path}: {err}"),
             }
         }
 

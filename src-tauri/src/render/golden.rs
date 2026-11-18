@@ -107,7 +107,7 @@ fn cell_mean(rgba: &[u8], width: u32, x: u32, y: u32, w: u32, h: u32) -> [i32; 3
     let mut sum = [0i64; 3];
     for row in y..y + h {
         let start = ((row * width + x) * 4) as usize;
-        for px in rgba[start..start + (w * 4) as usize].chunks_exact(4) {
+        for px in rgba[start..start + (w * 4) as usize].as_chunks::<4>().0 {
             sum[0] += i64::from(px[0]);
             sum[1] += i64::from(px[1]);
             sum[2] += i64::from(px[2]);
@@ -125,7 +125,7 @@ fn pixel_at(rgba: &[u8], width: u32, x: u32, y: u32) -> [u8; 3] {
 
 /// Cuenta los píxeles cuyo RGB cumple `predicate`.
 fn count_pixels(rgba: &[u8], predicate: impl Fn([u8; 3]) -> bool) -> usize {
-    rgba.chunks_exact(4).filter(|p| predicate([p[0], p[1], p[2]])).count()
+    rgba.as_chunks::<4>().0.iter().filter(|p| predicate([p[0], p[1], p[2]])).count()
 }
 
 /// Luminosidad aproximada (suma de canales) de un píxel.

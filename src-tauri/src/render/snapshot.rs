@@ -351,7 +351,7 @@ mod tests {
         // y el resto de la escena debe quedar en negro.
         let mut lit_in_text_zone = 0usize;
         let mut lit_outside = 0usize;
-        for (i, pixel) in rgba.chunks_exact(4).enumerate() {
+        for (i, pixel) in rgba.as_chunks::<4>().0.iter().enumerate() {
             let y = (i as u32) / width;
             let luminosity = u32::from(pixel[0]) + u32::from(pixel[1]) + u32::from(pixel[2]);
             let lit = luminosity > 60;
@@ -431,7 +431,9 @@ mod tests {
         let rgba = render_snapshot_rgba(&scene, 320, 180).expect("render del snapshot");
         // El clear del render pass es negro opaco: RGB en 0 (el alfa puede ser 255).
         let all_black = rgba
-            .chunks_exact(4)
+            .as_chunks::<4>()
+            .0
+            .iter()
             .all(|pixel| pixel[0] == 0 && pixel[1] == 0 && pixel[2] == 0);
         assert!(all_black, "Una escena vacía debe ser todo negro");
     }

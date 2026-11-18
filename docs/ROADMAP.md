@@ -1836,7 +1836,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [ ] **F25.4** `src/ui/`: componentes y estilos.
 - [ ] **F25.5** `src-tauri/src/engine/` y `platform/`.
 - [x] **F25.6** Reducir los idiomas de `public/lang/` a `en` y `es` (`docs/propuestas/idiomas.md`).
-- [ ] **F25.7** Corregir el CI de Rust: Clippy 1.100 falla en macOS y Windows con `-D warnings`.
+- [x] **F25.7** Corregir el CI de Rust: Clippy 1.100 falla en macOS y Windows con `-D warnings`.
 
 ---
 
