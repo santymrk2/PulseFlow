@@ -1,28 +1,12 @@
 <script lang="ts">
+    // Migrado a React en F24.20c. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
     import type { Transition } from "../../../../types/Show"
-    import { effects } from "../../../stores"
-    import OutputTransition from "../transitions/OutputTransition.svelte"
-    import Effect from "./Effect.svelte"
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import EffectOutputReact from "../../../react/output/EffectOutput"
 
     export let ids: string[]
     export let transition: Transition
     export let mirror = false
-
-    // $: transitionEnabled = !!((transition.type !== "none" && transition.duration) || transition.in || transition.out)
-
-    // don't update real time??
-    // let currentEffect: any = null
-    // $: if (id) updateEffect()
-    // function updateEffect() {
-    //     currentEffect = $effects[id] ? { id, ...$effects[id] } : null
-    // }
 </script>
 
-{#each ids as id (id)}
-    {@const effect = $effects[id]}
-    {#if effect}
-        <OutputTransition transition={mirror ? undefined : transition} inTransition={mirror ? null : transition.in || transition} outTransition={mirror ? null : transition.out || transition}>
-            <Effect effect={{ id, ...effect }} />
-        </OutputTransition>
-    {/if}
-{/each}
+<ReactIsland component={EffectOutputReact} props={{ ids, transition, mirror }} />

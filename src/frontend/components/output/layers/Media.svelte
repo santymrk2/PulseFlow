@@ -1,86 +1,46 @@
 <script lang="ts">
+    // Migrado a React en F24.20c. Cascarón temporal: conserva la API Svelte (export let/bind/on:*) mientras los padres se migran.
+    import { createEventDispatcher } from "svelte"
     import type { MediaStyle } from "../../../../types/Main"
     import type { OutBackground } from "../../../../types/Show"
-    import { downloadOnlineMedia, getExtension, getMediaType } from "../../helpers/media"
-    import Image from "../../media/Image.svelte"
-    import Video from "../../media/Video.svelte"
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import MediaReact from "../../../react/output/Media"
 
     export let outputId: string = ""
     export let path: string
     export let path2 = ""
     export let data: OutBackground = {}
-
     export let animationStyle = ""
     export let mediaStyle: MediaStyle = {}
     export let mirror = false
     export let fadingOut = false
-
     export let video: HTMLVideoElement | null = null
-    // for previews that are not outputted
-    export let videoData: any = { paused: false, muted: true, duration: 0, loop: data.loop === true }
+    export let videoData: { paused: boolean; muted: boolean; duration: number; loop?: boolean } = { paused: false, muted: true, duration: 0, loop: data.loop === true }
     export let videoTime = 0
 
-    $: extension = getExtension(path)
-    $: type = data.type || getMediaType(extension)
-
-    let currentSyncPath = ""
-    $: if (typeof path === "string") {
-        if (path.startsWith("http")) currentSyncPath = path
-        else currentSyncPath = path
-    }
-
-    $: if (typeof path === "string" && path.startsWith("http")) download()
-    async function download() {
-        currentSyncPath = path
-        path = await downloadOnlineMedia(path)
-    }
-
-    // retry on error
-    let retryCount = 0
-    $: if (path) retryCount = 0
-    let timeout: NodeJS.Timeout | null = null
-    let useAlternative = false
-    function reload() {
-        const croppingActive = mediaStyle.cropping?.bottom || mediaStyle.cropping?.left || mediaStyle.cropping?.top || mediaStyle.cropping?.right
-        if (croppingActive) return
-        if (retryCount > 4) useAlternative = true
-        if (retryCount > 4 || timeout) return
-
-        timeout = setTimeout(
-            () => {
-                if (!path || !type) return
-                retryCount++
-                timeout = null
-            },
-            (retryCount + 1) * 200
-        )
-    }
+    const dispatch = createEventDispatcher()
 </script>
 
-{#key retryCount}
-    {#if type === "video"}
-        <div class="video">
-            <Video {outputId} {path} syncPath={currentSyncPath || path} bind:video bind:videoData bind:videoTime startAt={data.startAt} {mediaStyle} {animationStyle} {mirror} {fadingOut} on:loaded on:ended on:error={reload} />
-        </div>
-    {:else if type === "image"}
-        <div class="image" style="height: 100%;{animationStyle}">
-            <Image path={useAlternative ? path2 : path} {mediaStyle} on:error={reload} on:loaded />
-        </div>
-    {/if}
-{/key}
-
-<style>
-    .video {
-        height: 100%;
-        transition: opacity 0.5s;
-    }
-
-    .image {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100%;
-        height: 100%;
-        transform: translate(-50%, -50%);
-    }
-</style>
+<ReactIsland
+    component={MediaReact}
+    props={{
+        outputId,
+        path,
+        path2,
+        data,
+        animationStyle,
+        mediaStyle,
+        mirror,
+        fadingOut,
+        video,
+        videoData,
+        videoTime,
+        onVideoChange: (value: HTMLVideoElement | null) => (video = value),
+        onVideoDataChange: (value: typeof videoData) => (videoData = value),
+        onVideoTimeChange: (value: number) => (videoTime = value),
+        onPathChange: (value: string) => (path = value),
+        onLoaded: (e: unknown) => dispatch("loaded", e),
+        onEnded: (e: unknown) => dispatch("ended", e),
+        onError: (e: unknown) => dispatch("error", e)
+    }}
+/>

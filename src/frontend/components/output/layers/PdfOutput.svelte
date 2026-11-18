@@ -1,91 +1,12 @@
 <script lang="ts">
-    import { getDocument, GlobalWorkerOptions, type PDFDocumentLoadingTask, type PDFDocumentProxy, type RenderTask } from "pdfjs-dist"
+    // Migrado a React en F24.20c. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
     import type { Transition } from "../../../../types/Show"
-    import OutputTransition from "../transitions/OutputTransition.svelte"
-    import { onDestroy } from "svelte"
-    import { encodeFilePath, locateMediaFile } from "../../helpers/media"
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import PdfOutputReact from "../../../react/output/PdfOutput"
 
-    export let slide
-    export let currentStyle
+    export let slide: unknown
+    export let currentStyle: unknown
     export let transition: Transition
-
-    $: path = slide.id
-    $: console.log(currentStyle)
-
-    GlobalWorkerOptions.workerSrc = "./assets/pdf.worker.min.mjs"
-
-    let canvasElem: HTMLCanvasElement | undefined
-
-    $: pageNum = (slide.page || 0) + 1
-    $: loadPage(pageNum, path, canvasElem)
-
-    let loadingTask: PDFDocumentLoadingTask | null = null
-    let loadedDoc: PDFDocumentProxy | null = null
-    let loadedPath = ""
-    let renderTask: RenderTask | null = null
-
-    onDestroy(() => {
-        renderTask?.cancel()
-        loadingTask?.destroy()
-    })
-
-    async function loadPage(pageNumber: number, currentPath: string, canvas: HTMLCanvasElement | undefined) {
-        if (!canvas || !currentPath) return
-
-        renderTask?.cancel()
-
-        const located = await locateMediaFile(currentPath)
-        const targetPath = located?.path || currentPath
-
-        if (loadedPath !== targetPath || !loadedDoc) {
-            loadingTask?.destroy()
-            loadingTask = getDocument(encodeFilePath(targetPath))
-            loadedDoc = await loadingTask.promise
-            loadedPath = targetPath
-        }
-        if (!loadedDoc || canvas !== canvasElem) return
-
-        const page = await loadedDoc.getPage(pageNumber)
-        const context = canvas?.getContext("2d")
-        if (!context || canvas !== canvasElem) return
-
-        const viewportAtScale1 = page.getViewport({ scale: 1 })
-        const scaleW = (window.innerWidth * window.devicePixelRatio) / viewportAtScale1.width
-        const scaleH = (window.innerHeight * window.devicePixelRatio) / viewportAtScale1.height
-        const scale = Math.min(scaleW, scaleH)
-
-        const viewport = page.getViewport({ scale })
-        canvas.height = viewport.height
-        canvas.width = viewport.width
-
-        renderTask = page.render({ canvas, canvasContext: context, viewport })
-        try {
-            await renderTask.promise
-        } catch {}
-    }
-
-    let update = 0
-    let prevSlide = ""
-    $: {
-        const slideKey = `${slide?.id}_${slide?.page}`
-        if (prevSlide !== slideKey) {
-            prevSlide = slideKey
-            update++
-        }
-    }
 </script>
 
-{#key update}
-    <OutputTransition {transition} inTransition={transition.in} outTransition={transition.out}>
-        <canvas bind:this={canvasElem} />
-    </OutputTransition>
-{/key}
-
-<style>
-    canvas {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        pointer-events: none;
-    }
-</style>
+<ReactIsland component={PdfOutputReact} props={{ slide, currentStyle, transition }} />
