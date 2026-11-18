@@ -13,7 +13,7 @@ vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
 vi.mock("../../../components/show/LibraryAddMenu.svelte", () => ({ default: { isla: "LibraryAddMenu" } }))
-vi.mock("../../../components/show/ProjectContentList.svelte", () => ({ default: { isla: "ProjectContentList" } }))
+vi.mock("../ProjectContentList", () => ({ ProjectContentList: () => <div data-testid="project-content-list" /> }))
 vi.mock("./LibraryShowList", () => ({
     LibraryShowList: ({ shows, searching }: { shows: { id: string }[]; searching: boolean }) => (
         <div data-testid="shows" data-searching={String(searching)}>
@@ -93,7 +93,7 @@ describe("ItemsPanel", () => {
         expect(screen.getByText("Mi lista")).toBeTruthy()
         expect(screen.getByText("2")).toBeTruthy()
         expect(screen.getByTestId("options").textContent).toBe("p1")
-        expect(islands.ProjectContentList.props).toEqual({ tree: [], recentlyUsedList: [] })
+        expect(screen.getByTestId("project-content-list")).toBeTruthy()
         fireEvent.click(document.querySelector('[data-title="Agregar shows"]') as HTMLElement)
         expect(get(activePopup)).toBe("add_shows")
     })

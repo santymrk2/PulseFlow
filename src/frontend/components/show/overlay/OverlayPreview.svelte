@@ -1,42 +1,10 @@
 <script lang="ts">
-    import { outLocked, outputs, overlays } from "../../../stores"
-    import { findMatchingOut, getActiveOutputs, setOutput } from "../../helpers/output"
-    import HoverPlay from "../../helpers/HoverPlay.svelte"
+    // Migrado a React en F24.20a. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
+    import type { Show } from "../../../../types/Show"
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import { OverlayPreview } from "../../../react/show/overlay/OverlayPreview"
 
-    import Overlay from "../../output/layers/Overlay.svelte"
-    import Zoomed from "../../slide/Zoomed.svelte"
-
-    export let show: any
-
-    $: isOutputted = findMatchingOut(show.id, $outputs) !== null
-
-    const outputId = getActiveOutputs($outputs, true, true, true)[0]
+    export let show: Show
 </script>
 
-<div class="overlayPreview context #overlay_preview">
-    <HoverPlay
-        icon={isOutputted ? "clear" : "play"}
-        size={isOutputted ? 8 : 10}
-        on:click={() => {
-            if (!$outLocked) setOutput("overlays", show.id, true)
-        }}
-    >
-        <Zoomed background="transparent" checkered center mirror>
-            <Overlay overlay={$overlays[show.id]} id={show.id} {outputId} mirror transition={{ type: "none", duration: 0, easing: "" }} preview />
-        </Zoomed>
-    </HoverPlay>
-</div>
-
-<style>
-    .overlayPreview {
-        width: 100%;
-        height: 100%;
-    }
-
-    .overlayPreview :global(.slide:not(.landscape)) {
-        height: 100%;
-    }
-    .overlayPreview :global(.slide.landscape) {
-        width: 100%;
-    }
-</style>
+<ReactIsland component={OverlayPreview} props={{ show }} />

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react"
 import LibraryAddMenu from "../../../components/show/LibraryAddMenu.svelte"
-import ProjectContentList from "../../../components/show/ProjectContentList.svelte"
 import { filterShows, showsOfLibrary, UNLABELED_LIBRARY_ID } from "../../../components/show/leftSource"
 import { activePopup, activeProfile, categories, leftSource, projects, sortedShowsList } from "../../../stores"
 import { translateText } from "../../../utils/language"
@@ -9,6 +8,7 @@ import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
 import { Button } from "../../ui/button/Button"
 import { Input } from "../../ui/input/Input"
+import { ProjectContentList } from "../ProjectContentList"
 import { LeftPanel } from "./LeftPanel"
 import { LibraryShowList } from "./LibraryShowList"
 import { PlaylistOptionsMenu } from "./PlaylistOptionsMenu"
@@ -75,7 +75,7 @@ export function ItemsPanel() {
                     </div>
                 </div>
             ) : playlistId ? (
-                <SvelteIsland component={ProjectContentList} props={{ tree: [], recentlyUsedList: [] }} />
+                <ProjectContentList tree={[]} recentlyUsedList={[]} />
             ) : null}
         </LeftPanel>
     )

@@ -1,0 +1,55 @@
+.fullTree {
+    display: flex;
+    flex-direction: column;
+}
+
+.rootFolder {
+    overflow: hidden;
+}
+
+.title {
+    font-weight: 500;
+    padding: 6px 14px 4px;
+    font-size: var(--text-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.45;
+    color: var(--text);
+    background: var(--primary-darkest);
+    border-bottom: 1px solid var(--border-color, var(--primary-lighter));
+}
+
+.projectItem :global(button.tab) {
+    height: 28px;
+    min-height: 28px;
+    padding-block: 0 !important;
+    border-radius: 0 !important;
+    border-left: 2px solid transparent !important;
+}
+.projectItem :global(button.tab.isActive) {
+    background-color: var(--secondary-opacity) !important;
+    border-left-color: var(--secondary) !important;
+}
+.projectItem :global(button.tab):not(:disabled):not(.isActive):hover {
+    background-color: var(--hover, var(--bg-hover)) !important;
+}
+
+.grow {
+    flex: 1;
+    min-width: 0;
+    text-align: start;
+}
+
+.count {
+    opacity: 0.5;
+    font-size: 0.78em;
+    min-width: 28px;
+    text-align: end;
+    font-weight: normal;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+.indented {
+    border-inline-start: 1px solid var(--primary-lighter);
+}

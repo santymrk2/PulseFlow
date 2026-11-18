@@ -1,0 +1,51 @@
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 5px;
+
+    height: 100%;
+    align-content: start;
+
+    overflow-y: auto;
+    padding-bottom: 60px;
+}
+
+/* icons */
+
+.icons {
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    z-index: 1;
+    font-size: 0.9em;
+
+    height: 80%;
+    flex-wrap: wrap;
+    place-items: start;
+    left: 0;
+}
+.right {
+    /* inset-inline-end: 2px; */
+    flex-wrap: wrap-reverse;
+    place-items: end;
+    inset-inline-end: 0;
+}
+
+.icons div {
+    opacity: 0.9;
+    display: flex;
+}
+.button {
+    background-color: rgb(0 0 0 / 0.6);
+    pointer-events: all;
+}
+.icons span {
+    pointer-events: all;
+    background-color: rgb(0 0 0 / 0.6);
+    padding: 3px;
+    font-size: 0.75em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}

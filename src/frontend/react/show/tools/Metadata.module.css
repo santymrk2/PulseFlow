@@ -1,0 +1,8 @@
+.section {
+    display: flex;
+    flex-direction: column;
+}
+
+.section :global(.title) {
+    margin: 5px 0;
+}

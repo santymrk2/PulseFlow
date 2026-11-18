@@ -1,11 +1,10 @@
-import ProjectList from "../../../components/show/ProjectList.svelte"
 import { buildProjectTree } from "../../../components/show/projectTree"
 import { activeProfile, folders, leftSource, projects, sorted } from "../../../stores"
 import { translateText } from "../../../utils/language"
 import { getAccess } from "../../../utils/profile"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
 import { DropArea } from "../../system/DropArea"
+import { ProjectList } from "../ProjectList"
 import { LeftPanel } from "./LeftPanel"
 import { PlaylistAddMenu } from "./PlaylistAddMenu"
 
@@ -39,7 +38,7 @@ export function PlaylistsPanel() {
             {/* El Svelte original no tiene bloque <style>: el contexto y el alto vienen de utilidades y del tema. */}
             <div className={readOnly ? "" : "context #projects"} style={{ minHeight: "100%" }}>
                 <DropArea id="projects">
-                    <SvelteIsland component={ProjectList} props={{ tree, readOnly, selectedId }} />
+                    <ProjectList tree={tree} readOnly={readOnly} selectedId={selectedId} />
                 </DropArea>
             </div>
         </LeftPanel>

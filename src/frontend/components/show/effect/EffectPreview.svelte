@@ -1,46 +1,10 @@
 <script lang="ts">
-    import { effects, outLocked, outputs } from "../../../stores"
-    import { findMatchingOut, setOutput } from "../../helpers/output"
-    import HoverPlay from "../../helpers/HoverPlay.svelte"
+    // Migrado a React en F24.20a. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
+    import type { Show } from "../../../../types/Show"
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import { EffectPreview } from "../../../react/show/effect/EffectPreview"
 
-    import Effect from "../../output/effects/Effect.svelte"
-    import Zoomed from "../../slide/Zoomed.svelte"
-
-    export let show: any
-
-    $: isOutputted = findMatchingOut(show.id, $outputs) !== null
+    export let show: Show
 </script>
 
-<div class="effectPreview context #effect_preview">
-    <HoverPlay
-        icon={isOutputted ? "clear" : "play"}
-        size={isOutputted ? 8 : 10}
-        on:click={() => {
-            if (!$outLocked) setOutput("effects", show.id, true)
-        }}
-    >
-        <Zoomed background="transparent" checkered center mirror zoom={false}>
-            <Effect effect={$effects[show.id]} preview={false} />
-        </Zoomed>
-    </HoverPlay>
-</div>
-
-<style>
-    .effectPreview {
-        width: 100%;
-        height: 100%;
-    }
-
-    .effectPreview :global(.slide:not(.landscape)) {
-        height: 100%;
-    }
-    .effectPreview :global(.slide.landscape) {
-        width: 100%;
-    }
-
-    .effectPreview :global(canvas) {
-        max-width: 100%;
-        max-height: 100%;
-        align-self: center;
-    }
-</style>
+<ReactIsland component={EffectPreview} props={{ show }} />

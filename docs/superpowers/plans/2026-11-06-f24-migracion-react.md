@@ -625,7 +625,7 @@ Receta sobre:
 
 Verificación extra: poner en vivo, avanzar y limpiar (los cuatro botones de limpiar y "Limpiar todo"); la barra de
 transporte del video (con F23.14, la pausa y la posición llegan al proyector).
-- [ ] 20a · - [ ] 20b · - [ ] 20c
+- [x] 20a · - [ ] 20b · - [ ] 20c
 
 ### Task F24.21: Editor
 
