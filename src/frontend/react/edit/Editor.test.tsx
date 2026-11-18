@@ -3,10 +3,12 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { Editor } from "./Editor"
 
+const editState = vi.hoisted(() => ({ value: { slide: 0 as number | null | undefined, items: [] as number[], type: "show" as string, id: "" } }))
+
 vi.mock("../../stores", () => ({
     activeEdit: {
         subscribe: (r: any) => {
-            r({ slide: 0, items: [], type: "show" })
+            r(editState.value)
             return () => {}
         },
         set: vi.fn()
@@ -111,24 +113,37 @@ vi.mock("../helpers/Icon", () => ({ Icon: () => <span /> }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: any) => <span>{id}</span> }))
 vi.mock("../ui/button/Button", () => ({ Button: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button> }))
 vi.mock("../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: any) => <div>{children}</div> }))
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-testid="island" /> }))
 vi.mock("./editors/SlideEditor", () => ({ SlideEditor: () => <div data-testid="slide-editor" /> }))
 vi.mock("../show/TextEditor", () => ({ TextEditor: () => <div data-testid="text-editor" /> }))
 vi.mock("../main/Splash", () => ({ Splash: () => <div /> }))
-vi.mock("../../components/edit/editors/OverlayEditor.svelte", () => ({ default: {} }))
-vi.mock("../../components/edit/editors/TemplateEditor.svelte", () => ({ default: {} }))
-vi.mock("../../components/edit/editors/MediaEditor.svelte", () => ({ default: {} }))
+vi.mock("./OverlayEditor", () => ({ OverlayEditor: () => <div data-testid="overlay-editor" /> }))
+vi.mock("./TemplateEditor", () => ({ TemplateEditor: () => <div data-testid="template-editor" /> }))
+vi.mock("./MediaEditor", () => ({ MediaEditor: () => <div data-testid="media-editor" /> }))
 vi.mock("./SceneEditor", () => ({ SceneEditor: () => <div /> }))
 vi.mock("./EffectEditor", () => ({ EffectEditor: () => <div /> }))
 vi.mock("./CameraEditor", () => ({ CameraEditor: () => <div /> }))
 vi.mock("./AudioEditor", () => ({ AudioEditor: () => <div /> }))
 vi.mock("./ItemAddMenu", () => ({ ItemAddMenu: () => <div /> }))
 
-afterEach(cleanup)
+afterEach(() => {
+    cleanup()
+    editState.value = { slide: 0, items: [], type: "show", id: "" }
+})
 
 describe("Editor", () => {
     it("renderiza el contenedor principal del editor", () => {
         const { container } = render(<Editor />)
         expect(container.querySelector(".editor")).toBeTruthy()
+    })
+
+    it.each([
+        ["overlay", "overlay-editor"],
+        ["template", "template-editor"],
+        ["media", "media-editor"]
+    ])("usa el port React de %s sin islas Svelte", (type, testId) => {
+        editState.value = { slide: 0, items: [], type, id: "x" }
+        const { getByTestId, queryByTestId } = render(<Editor />)
+        expect(getByTestId(testId)).toBeTruthy()
+        expect(queryByTestId("island")).toBeNull()
     })
 })

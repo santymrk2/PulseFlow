@@ -11,7 +11,6 @@ import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"
 import { FloatingBar } from "../ui/floating-bar/FloatingBar"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Splash } from "../main/Splash"
 import { SlideEditor } from "./editors/SlideEditor"
 import { TextEditor } from "../show/TextEditor"
@@ -21,11 +20,10 @@ import { EffectEditor } from "./EffectEditor"
 import { CameraEditor } from "./CameraEditor"
 import { AudioEditor } from "./AudioEditor"
 import { ItemAddMenu } from "./ItemAddMenu"
+import { OverlayEditor } from "./OverlayEditor"
+import { TemplateEditor } from "./TemplateEditor"
+import { MediaEditor } from "./MediaEditor"
 import styles from "./Editor.module.css"
-
-import OverlayEditorSvelte from "../../components/edit/editors/OverlayEditor.svelte"
-import TemplateEditorSvelte from "../../components/edit/editors/TemplateEditor.svelte"
-import MediaEditorSvelte from "../../components/edit/editors/MediaEditor.svelte"
 
 // Port de components/edit/Editor.svelte (F24.21c).
 // Incluye lógica de tabs equivalente a components/main/Tabs.svelte sincronizada con editMode.
@@ -127,14 +125,14 @@ export function Editor() {
     if (currentActiveEdit.type === "overlay") {
         content = (
             <>
-                <SvelteIsland component={OverlayEditorSvelte} props={{}} />
+                <OverlayEditor />
                 <ItemAddMenu />
             </>
         )
     } else if (currentActiveEdit.type === "template") {
         content = (
             <>
-                <SvelteIsland component={TemplateEditorSvelte} props={{}} />
+                <TemplateEditor />
                 <ItemAddMenu />
             </>
         )
@@ -152,7 +150,7 @@ export function Editor() {
             </>
         )
     } else if (currentActiveEdit.type === "media") {
-        content = <SvelteIsland component={MediaEditorSvelte} props={{}} />
+        content = <MediaEditor />
     } else if (currentActiveEdit.type === "camera") {
         content = <CameraEditor key={currentActiveEdit.id} />
     } else if (currentActiveEdit.type === "audio") {

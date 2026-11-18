@@ -3,6 +3,8 @@ import type { MediaStyle } from "../../../types/Main"
 import type { OutBackground } from "../../../types/Show"
 import { downloadOnlineMedia, getExtension, getMediaType } from "../../components/helpers/media"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
+import { Image } from "../media/Image"
+import { Video } from "../media/Video"
 import styles from "./Media.module.css"
 
 export interface VideoData {
@@ -25,7 +27,7 @@ export interface MediaProps {
     video?: HTMLVideoElement | null
     videoData?: VideoData
     videoTime?: number
-    /** Nodo del cascarón Svelte con `<Video>`/`<Image>` y sus `bind:` originales. */
+    /** Nodo legacy con `<Video>`/`<Image>`; si se omite, el port renderiza sus propios hijos React. */
     slotHost?: HTMLElement | null
     onVideoChange?: (video: HTMLVideoElement | null) => void
     onVideoDataChange?: (data: VideoData) => void
@@ -38,7 +40,7 @@ export interface MediaProps {
 
 // Port de components/output/layers/Media.svelte (F24.20c).
 // Los hijos `Video`/`Image` siguen en Svelte y conservan sus `bind:` en el cascarón; React reubica ese nodo.
-export function Media({ outputId = "", path, path2 = "", data = {}, animationStyle = "", mediaStyle = {}, mirror = false, fadingOut = false, slotHost, onPathChange, onRetryCountChange, onTypeChange, onUseAlternativeChange }: MediaProps) {
+export function Media({ outputId = "", path, path2 = "", data = {}, animationStyle = "", mediaStyle = {}, mirror = false, fadingOut = false, video, videoData, videoTime, slotHost, onVideoChange, onVideoDataChange, onVideoTimeChange, onPathChange, onRetryCountChange, onTypeChange, onUseAlternativeChange }: MediaProps) {
     const [currentPath, setCurrentPath] = useState(path)
     const [retryCount, setRetryCount] = useState(0)
     const [useAlternative, setUseAlternative] = useState(false)
@@ -103,16 +105,26 @@ export function Media({ outputId = "", path, path2 = "", data = {}, animationSty
         }
     }, [slotHost, wrapperReady, type, retryCount, useAlternative])
 
-    // `outputId`, `path2`, `mirror`, `fadingOut` y el cambio de path se consumen en el cascarón Svelte que conserva los `bind:`.
-    void outputId
-    void path2
-    void mirror
-    void fadingOut
+    const currentVideoData: VideoData = videoData || { paused: false, muted: true, duration: 0, loop: data.loop === true }
+
+    function handleVideoDataChange(next: NonNullable<Parameters<typeof Video>[0]["videoData"]>) {
+        onVideoDataChange?.({ ...currentVideoData, ...next } as VideoData)
+    }
 
     return (
         <>
             <span hidden data-media-type={type} data-retry-count={retryCount} data-use-alternative={useAlternative ? "true" : "false"} data-output-id={outputId} data-path2={path2} />
-            {type === "video" ? <div className={styles.video} ref={wrapper} /> : type === "image" ? <div className={styles.image} style={cssTextToStyle(`height: 100%;${animationStyle}`) as CSSProperties} ref={wrapper} /> : <div ref={wrapper} />}
+            {type === "video" ? (
+                <div className={styles.video} ref={wrapper}>
+                    {slotHost ? null : <Video outputId={outputId} path={currentPath} syncPath={currentPath} video={video} videoData={currentVideoData as NonNullable<Parameters<typeof Video>[0]["videoData"]>} videoTime={videoTime} startAt={data.startAt} mediaStyle={mediaStyle} animationStyle={animationStyle} mirror={mirror} fadingOut={fadingOut} onVideoChange={onVideoChange} onVideoDataChange={handleVideoDataChange} onVideoTimeChange={onVideoTimeChange} onError={reload} />}
+                </div>
+            ) : type === "image" ? (
+                <div className={styles.image} style={cssTextToStyle(`height: 100%;${animationStyle}`) as CSSProperties} ref={wrapper}>
+                    {slotHost ? null : <Image path={useAlternative ? path2 : currentPath} mediaStyle={mediaStyle} onError={reload} />}
+                </div>
+            ) : (
+                <div ref={wrapper} />
+            )}
         </>
     )
 }

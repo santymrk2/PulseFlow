@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react"
-import { activeEdit, activePopup, popupData, templates } from "../../stores"
 import { clone } from "../../components/helpers/array"
+import { history } from "../../components/helpers/history"
+import { getStyles } from "../../components/helpers/style"
 import { translateText } from "../../utils/language"
+import { activeEdit, activePopup, popupData, templates } from "../../stores"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { observeResize } from "../slide/observeResize"
+import { TemplateSlide } from "../drawer/pages/TemplateSlide"
 import { DropArea } from "../system/DropArea"
 import { Button } from "../ui/button/Button"
 import { FloatingBar } from "../ui/floating-bar/FloatingBar"
@@ -13,62 +16,81 @@ import { ZoomControl } from "../ui/zoom-control/ZoomControl"
 import { centerZoom } from "./centerZoom"
 import stylesModule from "./TemplateEditor.module.css"
 
-export interface TemplateEditorProps {
-    newStyles: { [key: string]: string | number }
-    onZoomChange?: (zoom: number) => void
-    onSizeChange?: (size: { width: number; height: number }) => void
-    templateSlideHost?: HTMLElement | null
-}
+type NewStyles = { [key: string]: string | number }
 
-function useHost(host: HTMLElement | null | undefined, ref: { current: HTMLDivElement | null }) {
-    useEffect(() => {
-        const container = ref.current
-        if (!container || !host) return
-        container.appendChild(host)
-        return () => {
-            if (host.parentNode === container) container.removeChild(host)
-        }
-    }, [host, ref])
-}
-
-// Port de components/edit/editors/TemplateEditor.svelte. TemplateSlide (Svelte, con binds de newStyles/ratio)
-// se monta en el cascarón y React lo reubica en el área de edición.
-export function TemplateEditor({ newStyles, onZoomChange, onSizeChange, templateSlideHost }: TemplateEditorProps) {
+// Port autocontenedor del editor de plantillas: TemplateSlide, su estado de estilos
+// y la persistencia en el historial se gestionan aquí, sin cascarón Svelte.
+export function TemplateEditor() {
     const currentActiveEdit = useStore(activeEdit)
     const currentTemplates = useStore(templates)
 
     const currentId = currentActiveEdit.id || ""
-    const slide = clone(currentTemplates[currentId])
+    const storedTemplate = currentTemplates[currentId]
+    const slide = clone(storedTemplate)
     const active = currentActiveEdit.items || []
+    const activeKey = active.join(",")
 
+    const [newStyles, setNewStyles] = useState<NewStyles>({})
     const [zoom, setZoom] = useState(1)
     const [zoomOrigin, setZoomOrigin] = useState<{ x: number; y: number } | null>(null)
-    const scrollElemRef = useRef<HTMLDivElement | null>(null)
+    const [size, setSize] = useState({ width: 0, height: 0 })
+    const [ratio, setRatio] = useState(1)
+
     const parentRef = useRef<HTMLDivElement | null>(null)
-    const hostRef = useRef<HTMLDivElement | null>(null)
-    const prevActiveKey = useRef("")
+    const lastActiveIds = useRef("")
+    const activeChanged = activeKey !== lastActiveIds.current
+    const latest = useRef({ currentId, slide, active })
+    latest.current = { currentId, slide, active }
+
+    useEffect(() => {
+        if (activeKey !== lastActiveIds.current) {
+            setNewStyles({})
+            lastActiveIds.current = activeKey
+        }
+    }, [activeKey])
 
     useEffect(() => {
         const parent = parentRef.current
         if (!parent) return
-        const obs = observeResize(parent, (rect) => onSizeChange?.({ width: rect.width, height: rect.height }))
+        const obs = observeResize(parent, (rect) => setSize({ width: rect.width, height: rect.height }))
         return () => obs.destroy()
-    }, [onSizeChange])
+    }, [])
 
-    // La persistencia de estilos y el reinicio al cambiar la selección los realiza el cascarón Svelte.
-    void newStyles
-    void prevActiveKey
-    void active
+    useEffect(() => {
+        if (activeChanged) return
+        const { currentId, slide, active } = latest.current
+        if (!active.length || !Object.keys(newStyles).length || !slide?.items) return
+
+        const values: string[] = []
+        const multi = (newStyles as { __multiPositions?: { [key: string]: NewStyles } }).__multiPositions
+        active.forEach((id) => {
+            const item = slide.items[id]
+            if (!item) return
+            const itemStyles = getStyles(item.style)
+            const itemNewStyles = multi ? multi[id] || {} : newStyles
+            let textStyles = ""
+            Object.entries(itemNewStyles).forEach(([key, value]) => (itemStyles[key] = String(value)))
+            Object.entries(itemStyles).forEach(([key, value]) => (textStyles += `${key}:${value};`))
+            values.push(textStyles)
+        })
+        if (!values.length) return
+
+        history({
+            id: "UPDATE",
+            newData: { key: "items", indexes: active, subkey: "style", data: values },
+            oldData: { id: currentId },
+            location: { page: "edit", id: "template_items", override: `template_items#${currentId}indexes#${active.join(",")}` }
+        })
+        // `slide` se clona en cada render; se lee desde `latest` para no reiniciar el efecto.
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [newStyles, activeKey])
 
     function updateZoom(detail: number) {
         setZoom(detail)
-        onZoomChange?.(detail)
         const origin = zoomOrigin
         setZoomOrigin(null)
-        void centerZoom(origin, scrollElemRef.current || undefined, ".droparea")
+        void centerZoom(origin, parentRef.current || undefined, ".droparea")
     }
-
-    useHost(templateSlideHost, hostRef)
 
     const styleOverrides = (slide?.settings?.styleOverrides || []).filter((a: { globalRegex?: unknown; pattern?: unknown; templateId?: unknown }) => (a.globalRegex || a.pattern) && a.templateId).length
 
@@ -81,16 +103,10 @@ export function TemplateEditor({ newStyles, onZoomChange, onSizeChange, template
             ) : null}
 
             <div className={stylesModule.editArea}>
-                <div
-                    ref={(el) => {
-                        scrollElemRef.current = el
-                        parentRef.current = el
-                    }}
-                    className={`${stylesModule.parent} ${zoom >= 1 ? stylesModule.noOverflow : ""}`}
-                >
-                    {slide ? (
+                <div ref={parentRef} className={`${stylesModule.parent} ${zoom >= 1 ? stylesModule.noOverflow : ""}`}>
+                    {storedTemplate ? (
                         <DropArea id="edit" file>
-                            <div ref={hostRef} style={{ display: "contents" }} />
+                            <TemplateSlide templateId={currentId} template={storedTemplate} edit width={size.width} height={size.height} zoom={zoom} ratio={ratio} newStyles={newStyles} onRatioChange={setRatio} onNewStylesChange={setNewStyles} />
                         </DropArea>
                     ) : (
                         <div style={{ display: "flex", width: "100%", height: "100%", alignItems: "center", justifyContent: "center", opacity: 0.5 }}>
