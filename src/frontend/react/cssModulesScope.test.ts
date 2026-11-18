@@ -142,8 +142,7 @@ function findLeaks(): Leak[] {
 }
 
 describe("CSS Modules: sin selectores de elemento globales", () => {
-    // it.fails hasta cerrar las fugas de F24.25
-    it.fails("cada selector de un *.module.css tiene una clase o está en :global / :root", () => {
+    it("cada selector de un *.module.css tiene una clase o está en :global / :root", () => {
         const leaks = findLeaks()
         const report = leaks.map(({ file, line, selector }) => `${file}:${line}  ${selector}`)
         expect(report).toEqual([])
