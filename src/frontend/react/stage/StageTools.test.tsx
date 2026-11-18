@@ -61,22 +61,9 @@ vi.mock("../../components/helpers/style", () => ({
         return result
     })
 }))
-vi.mock("../../components/stage/tools/BoxStyle.svelte", () => ({
-    default: function BoxStyle() {
-        return null
-    }
-}))
-vi.mock("../../components/stage/tools/ItemStyle.svelte", () => ({
-    default: function ItemStyle() {
-        return null
-    }
-}))
-vi.mock("../../components/stage/tools/SlideStyle.svelte", () => ({
-    default: function SlideStyle() {
-        return null
-    }
-}))
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component }: { component: { name?: string } }) => <span data-island={component?.name || "svelte"} /> }))
+vi.mock("./tools/BoxStyle", () => ({ BoxStyle: () => <span data-testid="box-style" /> }))
+vi.mock("./tools/ItemStyle", () => ({ ItemStyle: () => <span data-testid="item-style" /> }))
+vi.mock("./tools/SlideStyle", () => ({ SlideStyle: () => <span data-testid="slide-style" /> }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
 vi.mock("../system/Center", () => ({ Center: ({ children }: { children: ReactNode }) => <div data-testid="center">{children}</div> }))
 vi.mock("../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: ReactNode }) => <div data-testid="floating-bar">{children}</div> }))
@@ -113,16 +100,16 @@ describe("StageTools", () => {
         const { container } = render(<StageTools />)
         const tabs = [...container.querySelectorAll("[data-testid='tab-button']")].map((button) => button.getAttribute("data-title"))
         expect(tabs).toEqual(["Tooltip texto", "tools.item", "tooltipoptions", "actions.reset"])
-        expect(container.querySelector("[data-island]")?.getAttribute("data-island")).toContain("BoxStyle")
+        expect(container.querySelector("[data-testid='box-style']")).toBeTruthy()
         expect(translateText).toHaveBeenCalledWith("items.text")
     })
 
     it("cambia de pestaña y muestra la herramienta correspondiente", () => {
         const { container } = render(<StageTools />)
         fireEvent.click(container.querySelectorAll("[data-testid='tab-button']")[1])
-        expect(container.querySelector("[data-island]")?.getAttribute("data-island")).toContain("ItemStyle")
+        expect(container.querySelector("[data-testid='item-style']")).toBeTruthy()
         fireEvent.click(container.querySelectorAll("[data-testid='tab-button']")[2])
-        expect(container.querySelector("[data-island]")?.getAttribute("data-island")).toContain("SlideStyle")
+        expect(container.querySelector("[data-testid='slide-style']")).toBeTruthy()
     })
 
     it("muestra el mensaje vacío sin items y deshabilita las pestañas", () => {
@@ -156,7 +143,7 @@ describe("StageTools", () => {
         expect(activeStage.set).toHaveBeenCalledWith({ id: "st1", items: [] })
 
         act(() => openToolsTab.set("slide"))
-        expect(container.querySelector("[data-island]")?.getAttribute("data-island")).toContain("SlideStyle")
+        expect(container.querySelector("[data-testid='slide-style']")).toBeTruthy()
     })
 
     it("resetea el estilo del texto desde el botón de la barra", () => {

@@ -8,15 +8,14 @@ import { itemBoxes } from "../../components/edit/values/boxes"
 import { history } from "../../components/helpers/history"
 import { getStageOutputId, getStageResolution } from "../../components/helpers/output"
 import { getStyles } from "../../components/helpers/style"
-import BoxStyle from "../../components/stage/tools/BoxStyle.svelte"
-import ItemStyle from "../../components/stage/tools/ItemStyle.svelte"
-import SlideStyle from "../../components/stage/tools/SlideStyle.svelte"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Center } from "../system/Center"
 import { Button } from "../ui/button/Button"
 import { FloatingBar } from "../ui/floating-bar/FloatingBar"
+import { BoxStyle } from "./tools/BoxStyle"
+import { ItemStyle } from "./tools/ItemStyle"
+import { SlideStyle } from "./tools/SlideStyle"
 import styles from "./StageTools.module.css"
 
 interface StageTab {
@@ -231,7 +230,7 @@ export function StageTools() {
                     {active === "text" ? (
                         <div className={styles.content}>
                             {activeItemId ? (
-                                <SvelteIsland component={BoxStyle as never} />
+                                <BoxStyle />
                             ) : (
                                 <Center faded>
                                     <T id="empty.items" />
@@ -241,12 +240,12 @@ export function StageTools() {
                     ) : null}
                     {active === "item" ? (
                         <div className={styles.content}>
-                            <SvelteIsland component={ItemStyle as never} />
+                            <ItemStyle />
                         </div>
                     ) : null}
                     {active === "slide" ? (
                         <div className={styles.content}>
-                            <SvelteIsland component={SlideStyle as never} />
+                            <SlideStyle />
                         </div>
                     ) : null}
 
