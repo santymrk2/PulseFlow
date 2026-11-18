@@ -9,7 +9,7 @@ import { SelectElem } from "../../system/SelectElem"
 import { Button } from "../button/Button"
 import styles from "./Tabs.module.css"
 
-// Port de ui/tabs/tabs.svelte. dispatch("open", id) → onOpen(id); dispatch("create", detail) → onCreate(detail).
+// dispatch("open", id) → onOpen(id); dispatch("create", detail) → onCreate(detail).
 // `<slot {tab} />` → children como función (render prop) que recibe la pestaña.
 export interface TabsProps<T extends { id: string; stageOutput?: boolean }> {
     id: SelectIds

@@ -19,7 +19,7 @@ interface ShowWithMeta {
     quickAccess?: { number?: string | number; duration?: string | number; metadata?: Record<string, string | number> }
 }
 
-// Port de components/show/tools/Metadata.svelte (F24.20a). `on:change` → onChange(value, key).
+// (F24.20a). `on:change` → onChange(value, key).
 export function Metadata() {
     const currentActiveShow = useStore(activeShow)
     const currentShowsCache = useStore(showsCache)

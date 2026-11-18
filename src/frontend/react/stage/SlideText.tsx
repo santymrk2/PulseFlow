@@ -54,7 +54,7 @@ function combineSlideItems(items: Item[], itemNumber: number) {
     return oneItem ? [oneItem] : []
 }
 
-// Port de components/stage/items/SlideText.svelte (F24.19a).
+// (F24.19a).
 export function SlideText({ currentSlide, slideOffset = 0, chords = false, style = false, textStyle = "", autoSize = false, fontSize = 0, stageItem, ref }: SlideTextProps) {
     const currentShows = useStore(showsCache)
     const currentOutputs = useStore(outputs)

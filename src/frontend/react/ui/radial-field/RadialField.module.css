@@ -1,4 +1,4 @@
-/* Portado de radial-field.svelte. `:global(…)` se conserva; los selectores de elemento llevan su clase (elemento.clase). */
+/* Portado de radial-field. `:global(…)` se conserva; los selectores de elemento llevan su clase (elemento.clase). */
 /* Keep your original textfield style */
 .textfield {
     position: relative;

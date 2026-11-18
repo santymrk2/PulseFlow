@@ -5,7 +5,7 @@ import { activePopup, quickSearchActive } from "../../stores"
 import { disablePopupClose, keydown } from "../../utils/shortcuts"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 
-// Initialize no decide si se puede cerrar: lo hace el marco (Esc en shortcuts.ts; clic afuera y X en Popup.svelte, que usan la misma lista).
+// Initialize no decide si se puede cerrar: lo hace el marco (Esc en shortcuts.ts; clic afuera y X, que usan la misma lista).
 // shortcuts.ts arrastra módulos de audio que crean AudioContext al cargarse: un doble que acepta cualquier uso
 vi.hoisted(() => {
     const any = (): unknown => new Proxy(function () {}, { get: () => any(), apply: () => any(), construct: () => any() as object })

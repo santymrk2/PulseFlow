@@ -623,7 +623,7 @@ export async function togglePlayingMedia(e: Event | null = null, back = false, a
     }
 }
 
-// FolderShow.svelte shortcuts
+// Atajos de la vista de carpeta de show
 export async function playFolder(path: string, back = false) {
     const currentOutput = getFirstActiveOutput()
     const currentlyPlaying = currentOutput?.out?.background?.path

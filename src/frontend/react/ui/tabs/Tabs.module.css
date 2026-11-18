@@ -1,4 +1,4 @@
-/* Portado de tabs.svelte. `:global(…)` se conserva; selectores de elemento → `elemento.clase` (button.tab ya lo era). */
+/* Portado de tabs. `:global(…)` se conserva; selectores de elemento → `elemento.clase` (button.tab ya lo era). */
 .row {
     display: flex;
     width: 100%;

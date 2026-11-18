@@ -1,4 +1,4 @@
-/* Portado de floating-bar.svelte. `:global(…)` se conserva. */
+/* Portado de floating-bar. `:global(…)` se conserva. */
 /* barra flotante: rectángulo con borde de 1 px (docs/design/kit.md); sin píldora, degradé ni botón redondo */
 .row {
     --size: 32px;

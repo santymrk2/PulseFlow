@@ -30,7 +30,7 @@ export interface EditboxCroppingProps {
     handleRef?: { current: EditboxCroppingHandle | null } | null
 }
 
-// Port de components/edit/editbox/EditboxCropping.svelte (F24.21c).
+// (F24.21c).
 export function EditboxCropping({ item, index, ref, itemElem, plain = false, isLocked = false, selected = false, onCropActiveChange, onCropPreviewChange, handleRef }: EditboxCroppingProps) {
     const currentActiveShow = useStore(activeShow)
 

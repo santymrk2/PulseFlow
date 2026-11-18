@@ -9,7 +9,7 @@ import { Icon } from "../../helpers/Icon"
 import { Button } from "../button/Button"
 import styles from "./FolderField.module.css"
 
-// Port de ui/folder-field/folder-field.svelte. dispatch("change", string) → onChange(string) (la ruta elegida, o "" al borrar).
+// dispatch("change", string) → onChange(string) (la ruta elegida, o "" al borrar).
 // Mismas llamadas IPC: sendMain(OPEN_FOLDER, { channel: PICK_ID, title, path }), sendMain(OPEN_FOLDER_PATH, value) y la escucha de OPEN_FOLDER2.
 // El aviso de Linux ("el diálogo puede quedar detrás de la ventana") no se porta: AGENTS.md prohíbe código específico de Linux y la app no corre allí.
 export interface FolderFieldProps {

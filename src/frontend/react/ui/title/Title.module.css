@@ -1,4 +1,4 @@
-/* Portado de title.svelte. Elemento → `h3.title`. */
+/* Portado de title. Elemento → `h3.title`. */
 h3.title {
     color: var(--text);
     text-transform: uppercase;

@@ -9,7 +9,7 @@ import { useStore } from "../../hooks/useStore"
 import { Button } from "../button/Button"
 import styles from "./ZoomControl.module.css"
 
-// Port de ui/zoom-control/zoom-control.svelte. dispatch("change", number) → onChange(number); dispatch("origin", {x, y}) → onOrigin.
+// dispatch("change", number) → onChange(number); dispatch("origin", {x, y}) → onOrigin.
 // `transition:slide` (150 ms) con useSlide. mousedown y wheel van en window, como <svelte:window>.
 export interface ZoomOrigin {
     x: number

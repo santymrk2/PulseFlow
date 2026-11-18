@@ -11,7 +11,7 @@ export interface SlideNotesProps {
     autoSize?: number
 }
 
-// Port de components/stage/items/SlideNotes.svelte (F24.19a).
+// (F24.19a).
 export function SlideNotes({ currentSlide, slideOffset = 0, autoSize = 100 }: SlideNotesProps) {
     const currentShows = useStore(showsCache)
     const showRef = currentSlide ? getLayoutRef(currentSlide.id) : []

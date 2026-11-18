@@ -6,7 +6,7 @@ import { useStore } from "../../hooks/useStore"
 import { Button } from "../button/Button"
 import styles from "./FloatingBar.module.css"
 
-// Port de ui/floating-bar/floating-bar.svelte. `<slot {open} />` → children (nodo o función de `open`); `<slot name="menu" />` → menu;
+// `<slot {open} />` → children (nodo o función de `open`); `<slot name="menu" />` → menu;
 // `on:mousedown` reenviado → onMouseDown; `$$props.style` → style.
 export interface FloatingBarProps {
     side?: "right" | "left" | "center"

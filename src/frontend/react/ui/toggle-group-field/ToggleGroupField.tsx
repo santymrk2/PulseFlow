@@ -7,7 +7,7 @@ import { Button } from "../button/Button"
 import { InputRow } from "../input-row/InputRow"
 import styles from "./ToggleGroupField.module.css"
 
-// Port de ui/toggle-group-field/toggle-group-field.svelte. dispatch("change", string[]) → onChange(string[]).
+// dispatch("change", string[]) → onChange(string[]).
 // Svelte mutaba el array de la prop con splice; acá se arma un array nuevo (mismo contenido en el detail, sin mutar al padre).
 export interface ToggleGroupOption {
     label: string

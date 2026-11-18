@@ -1,4 +1,4 @@
-/* Portado de checkbox-field.svelte. `:global(…)` se conserva. */
+/* Portado de checkbox-field. `:global(…)` se conserva. */
 .checkboxfield {
     position: relative;
     display: flex;

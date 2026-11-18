@@ -42,7 +42,7 @@ export interface TimelineEasingProps {
 const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(max, value))
 const Y_OFFSET = 12
 
-// Port de components/timeline/TimelineEasing.svelte (F24.19b).
+// (F24.19b).
 // `dispatch("clearSelection")` pasa a la prop `onClearSelection`; el resto de props son idénticas.
 export function TimelineEasing({ groupedActions, actions, selectedActionIds, selectedItemIndexes, activeGroupIndex, zoomLevel, sectionHeight, sectionGap, sectionTop, onActionDrag, onClearSelection, timeline }: TimelineEasingProps) {
     const [contextMenuState, setContextMenuState] = useState<ContextMenuState | null>(null)

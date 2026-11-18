@@ -6,7 +6,7 @@ import { ToggleField } from "../../ui/toggle-field/ToggleField"
 import { ModalBase } from "./ModalBase"
 import styles from "./PlaylistOptionsModal.module.css"
 
-// Port de components/show/left/PlaylistOptionsModal.svelte: modal completo. Popup.svelte lo monta directo
+// Port de components/show/left/PlaylistOptionsModal.svelte: modal completo, se monta directo
 // (FULL_MODALS), así que la base (backdrop, tarjeta, header y cierre) vive en ModalBase.
 function updateSpecial(value: string | boolean | null, key: string, allowEmpty = false) {
     special.update((a) => {

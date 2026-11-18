@@ -19,7 +19,7 @@ interface QuickAccess {
     tags?: string[]
 }
 
-// Port de components/show/Tags.svelte (F24.20a). El orden es nombre y después color, igual que en Svelte.
+// (F24.20a). El orden es nombre y después color, igual que en Svelte.
 export function Tags({ list = false }: TagsProps) {
     const currentActiveShow = useStore(activeShow)
     const currentShows = useStore(shows)

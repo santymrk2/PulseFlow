@@ -1,4 +1,4 @@
-/* Portado de h-rule.svelte. Los estilos no tienen elementos, así que no cambian de forma.
+/* Portado de h-rule. Los estilos no tienen elementos, así que no cambian de forma.
    `.label` reemplaza al `style="opacity: 0.8;"` del span (valor fijo, no necesita style inline). */
 .title {
     display: flex;

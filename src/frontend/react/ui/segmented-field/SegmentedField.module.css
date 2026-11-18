@@ -1,4 +1,4 @@
-/* Portado de segmented-field.svelte. `:global(…)` se conserva. */
+/* Portado de segmented-field. `:global(…)` se conserva. */
 .toggles {
     position: relative;
     width: 100%;

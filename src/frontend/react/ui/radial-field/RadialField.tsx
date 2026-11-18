@@ -4,7 +4,7 @@ import { translateText } from "../../../utils/language"
 import { useDerivedState } from "../../hooks/useDerivedState"
 import styles from "./RadialField.module.css"
 
-// Port de ui/radial-field/radial-field.svelte. dispatch("input", number) → onInput(number); dispatch("change", number) → onChange(number): siempre juntos
+// dispatch("input", number) → onInput(number); dispatch("change", number) → onChange(number): siempre juntos
 // (input y luego change) y con el ángulo ya normalizado a 0–360. `on:input` del Svelte es el evento por tecla (el onInput de React también).
 // `bind:value={numberValue}` en un input numérico deja `null` si se borra el texto: se conserva (numberValue puede ser null).
 // El arrastre usa listeners de window como el original (con la diferencia de que se quitan también al desmontar). La rueda es un listener nativo no pasivo.

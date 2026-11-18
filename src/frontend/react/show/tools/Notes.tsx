@@ -18,7 +18,7 @@ export interface NotesProps {
 
 const TIME = 100
 
-// Port de components/show/tools/Notes.svelte (F24.20a). `dispatch("edit"/"change")` → onEdit/onChange.
+// (F24.20a). `dispatch("edit"/"change")` → onEdit/onChange.
 export function Notes({ value: valueProp, placeholder = "", disabled = false, lines = 4, autofocus = false, className, style, onEdit, onChange, onKeydown }: NotesProps) {
     const [value, setValue] = usePropState(valueProp)
     const timeout = useRef<ReturnType<typeof setTimeout> | null>(null)

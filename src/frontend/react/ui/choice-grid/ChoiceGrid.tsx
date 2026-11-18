@@ -3,7 +3,7 @@ import { Icon } from "../../helpers/Icon"
 import { Button } from "../button/Button"
 import styles from "./ChoiceGrid.module.css"
 
-// Port de ui/choice-grid/choice-grid.svelte. dispatch("click", id: string) → onClick(id); con canDeselect, volver a elegir el activo despacha "".
+// dispatch("click", id: string) → onClick(id); con canDeselect, volver a elegir el activo despacha "".
 export interface ChoiceOption {
     id: string
     name: string

@@ -7,7 +7,7 @@ import { Button } from "../button/Button"
 import { InputRow } from "../input-row/InputRow"
 import styles from "./SegmentedField.module.css"
 
-// Port de ui/segmented-field/segmented-field.svelte. dispatch("click", string) → onClick(string): el `value` de la opción elegida.
+// dispatch("click", string) → onClick(string): el `value` de la opción elegida.
 export interface SegmentedOption {
     value: string
     label: string

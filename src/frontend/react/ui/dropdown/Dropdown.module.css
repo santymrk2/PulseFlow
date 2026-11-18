@@ -1,4 +1,4 @@
-/* Portado de dropdown.svelte. Elemento → `elemento.clase` para conservar la especificidad que daba el scope de Svelte. */
+/* Portado de dropdown. Elemento → `elemento.clase` para conservar la especificidad que daba el scope de Svelte. */
 .root.flags {
     font-family:
         "NotoColorEmojiLimited",

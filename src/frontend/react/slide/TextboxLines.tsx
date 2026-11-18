@@ -110,7 +110,7 @@ function getLineText(line: RenderLine) {
     return line.text?.reduce((value, text) => value + (text.value || ""), "") || ""
 }
 
-// Port de components/slide/TextboxLines.svelte (F24.18b).
+// (F24.18b).
 export function TextboxLines({
     item,
     slideIndex = 0,

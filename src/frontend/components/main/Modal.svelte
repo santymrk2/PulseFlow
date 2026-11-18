@@ -7,7 +7,7 @@
     import Icon from "../helpers/Icon.svelte"
 
     // Base única de modales de pantalla completa (F12.1): "Configuración de pantallas" y "Looks".
-    // Vive fuera de Popup.svelte, que sólo sirve para diálogos chicos.
+    // Es la base de modales full; los diálogos chicos usan otro marco.
 
     export let title = ""
     export let width = 960

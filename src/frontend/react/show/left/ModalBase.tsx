@@ -7,7 +7,7 @@ import { useStore } from "../../hooks/useStore"
 import styles from "./ModalBase.module.css"
 
 // Port del marco de components/main/Modal.svelte (F12.1). Los modales FULL_MODALS montados desde reactPopups
-// no reciben el cascarón de Popup.svelte, así que traen su propio backdrop, tarjeta, header y cierre (Esc / clic afuera).
+// no reciben un cascarón, así que traen su propio backdrop, tarjeta, header y cierre (Esc / clic afuera).
 export interface ModalBaseProps {
     title: string
     width?: number

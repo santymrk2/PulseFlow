@@ -25,7 +25,7 @@ export interface PlayerProps {
     onEnded?: () => void
 }
 
-// Port de components/system/Player.svelte (F24.20c, rezagado F24.17h).
+// (F24.20c, rezagado F24.17h).
 export function Player({ id, outputId = "", preview = false, videoData = { muted: true, paused: false, loop: false, duration: 0 }, onVideoDataChange, videoTime = 0, onVideoTimeChange, onLoaded, onEnded }: PlayerProps) {
     const currentActiveShow = useStore(activeShow)
     const currentPlayerVideos = useStore(playerVideos)

@@ -29,7 +29,7 @@ export interface FolderShowProps {
     index: number
 }
 
-// Port de components/show/folder/FolderShow.svelte (F24.20a).
+// (F24.20a).
 export function FolderShow({ path, index }: FolderShowProps) {
     const currentProjects = useStore(projects)
     const currentActiveProject = useStore(activeProject)

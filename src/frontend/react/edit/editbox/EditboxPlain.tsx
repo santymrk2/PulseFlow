@@ -34,7 +34,7 @@ const actions = [
     { id: "hideTimer", label: "actions.hide_timer", icon: "time_out" }
 ]
 
-// Port de components/edit/editbox/EditboxPlain.svelte (F24.21c).
+// (F24.21c).
 export function EditboxPlain({ item, index, ratio, hideMovebox = false }: EditboxPlainProps) {
     const currentActiveEdit = useStore(activeEdit)
     const activeShowValue = useStore(activeShow)

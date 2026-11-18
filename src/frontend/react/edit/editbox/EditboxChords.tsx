@@ -30,7 +30,7 @@ export interface EditboxChordsProps {
     chordsAction?: string
 }
 
-// Port de components/edit/editbox/EditboxChords.svelte (F24.21c).
+// (F24.21c).
 export function EditboxChords({ item, autoSize = 0, index, ref, chordsMode = false, chordsAction = "" }: EditboxChordsProps) {
     useStore(activeDropId)
     const currentStoredChordsData = useStore(storedChordsData)

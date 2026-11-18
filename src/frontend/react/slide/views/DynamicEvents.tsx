@@ -21,7 +21,7 @@ export interface DynamicEventsProps {
     toTime?: string
 }
 
-// Port de components/slide/views/DynamicEvents.svelte (F24.18a). El HTML de cada evento se concatena en un solo
+// (F24.18a). El HTML de cada evento se concatena en un solo
 // dangerouslySetInnerHTML para conservar exactamente el DOM que producían los `{@html}` del Svelte.
 function getEventElement(event: { time?: boolean; from?: string; name?: string; location?: string; notes?: string }, textSize = 80): string {
     let html = "<p>"

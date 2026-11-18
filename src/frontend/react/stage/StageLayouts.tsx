@@ -13,7 +13,7 @@ import { SkeletonStageSlide } from "./SkeletonStageSlide"
 import { StageSlide } from "./StageSlide"
 import styles from "./StageLayouts.module.css"
 
-// Port de components/stage/StageLayouts.svelte (F24.19a).
+// (F24.19a).
 export function StageLayouts() {
     const currentActiveStage = useStore(activeStage)
     const currentLabelsDisabled = useStore(labelsDisabled)

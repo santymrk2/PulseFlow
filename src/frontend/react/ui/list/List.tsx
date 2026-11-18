@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from "react"
 import styles from "./List.module.css"
 
-// Port de ui/list/list.svelte (lista de inputs de opciones). `$$props.style` → style; bottom/top en px.
+// (lista de inputs de opciones). `$$props.style` → style; bottom/top en px.
 export interface ListProps {
     bottom?: number
     top?: number

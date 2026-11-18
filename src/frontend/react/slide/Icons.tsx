@@ -29,7 +29,7 @@ export interface IconsProps {
     style: string
 }
 
-// Port de components/slide/Icons.svelte (F24.18b).
+// (F24.18b).
 export function Icons({ slide, timer, layoutSlide, background, backgroundCount = 0, duration, columns, index, style }: IconsProps) {
     const currentShows = useStore(shows)
     const currentActiveShow = useStore(activeShow)

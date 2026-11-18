@@ -49,7 +49,7 @@ function parseChartData(evaluatedGrid: string[][]): ChartDatum[] {
     return parsed.length > 0 ? parsed : []
 }
 
-// Port de components/slide/views/Chart.svelte (F24.18a).
+// (F24.18a).
 export function Chart({ item, ref = {} }: ChartProps) {
     const type = item.chart?.type || "bar"
     const [updateDynamic, setUpdateDynamic] = useState(0)

@@ -39,7 +39,7 @@ import EditHeaderSvelte from "../../../components/edit/EditHeader.svelte"
 import { useStore } from "../../hooks/useStore"
 import css from "./SlideEditor.module.css"
 
-// Port de components/edit/editors/SlideEditor.svelte (F24.21c).
+// (F24.21c).
 export function SlideEditor() {
     const currentActiveEdit = useStore(activeEdit)
     const currentActiveShow = useStore(activeShow)

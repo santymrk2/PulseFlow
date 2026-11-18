@@ -613,7 +613,7 @@ export interface TimelineProps {
     isClosed?: boolean
 }
 
-// Port de components/timeline/Timeline.svelte (F24.19b).
+// (F24.19b).
 // El estado local reactivo pasa a useState; los listeners globales y el arrastre viven en TimelineEngine.
 export function Timeline({ type, isClosed = false }: TimelineProps) {
     const [actions, setActions] = useState<TimelineAction[]>([])

@@ -1,7 +1,7 @@
 import { translateText } from "../../../utils/language"
 import styles from "./HRule.module.css"
 
-// Port de ui/h-rule/h-rule.svelte: línea con un título centrado. Sin título, sólo la línea.
+// Línea con un título centrado. Sin título, sólo la línea.
 export interface HRuleProps {
     title?: string
 }

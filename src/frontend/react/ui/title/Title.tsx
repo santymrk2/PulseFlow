@@ -5,7 +5,7 @@ import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
 import styles from "./Title.module.css"
 
-// Port de ui/title/title.svelte: título de sección con ícono. `title` es el tooltip (data-title).
+// Título de sección con ícono. `title` es el tooltip (data-title).
 export interface TitleProps {
     label: string
     icon: string

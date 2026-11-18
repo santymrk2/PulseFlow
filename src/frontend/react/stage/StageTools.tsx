@@ -29,7 +29,7 @@ interface StageTab {
     data?: string | number
 }
 
-// Port de components/stage/StageTools.svelte (F24.19a).
+// (F24.19a).
 // `components/main/Tabs.svelte` no tiene port propio: sus pestañas se renderizan aquí como botones React.
 export function StageTools() {
     const currentActiveStage = useStore(activeStage)

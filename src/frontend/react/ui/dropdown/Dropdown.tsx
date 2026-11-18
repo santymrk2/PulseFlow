@@ -10,7 +10,7 @@ import { triggerClickOnEnterSpace } from "../../helpers/triggerClickOnEnterSpace
 import { useStore } from "../../hooks/useStore"
 import styles from "./Dropdown.module.css"
 
-// Port de ui/dropdown/dropdown.svelte. `on:click` (dispatch "click" con la Option elegida) → onClick(option).
+// `on:click` (dispatch "click" con la Option elegida) → onClick(option).
 // `transition:slide` (200 ms) con useSlide. Cierra con mousedown afuera, como <svelte:window on:mousedown>.
 export interface DropdownProps {
     options: Option[]

@@ -28,7 +28,7 @@ interface LayoutInfo {
     name?: string
 }
 
-// Port de components/slide/Layouts.svelte (F24.18b).
+// (F24.18b).
 export function Layouts() {
     const currentActiveShow = useStore(activeShow)
     const currentShowsCache = useStore(showsCache)

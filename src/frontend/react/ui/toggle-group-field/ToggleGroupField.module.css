@@ -1,4 +1,4 @@
-/* Portado de toggle-group-field.svelte. `:global(…)` se conserva. */
+/* Portado de toggle-group-field. `:global(…)` se conserva. */
 .toggles {
     position: relative;
     width: 100%;

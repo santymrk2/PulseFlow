@@ -15,7 +15,7 @@ import styles from "./AddShowsModal.module.css"
 
 // Port de components/show/left/AddShowsModal.svelte: bibliotecas a la izquierda, shows con casillas a la derecha.
 // Lo marcado se conserva al cambiar de biblioteca y se agrega al final de la playlist en un solo paso.
-// FULL_MODAL: Popup.svelte monta este componente sin cascarón, así que el marco sale de ModalBase.
+// FULL_MODAL: se monta sin cascarón, así que el marco sale de ModalBase.
 interface ShowsAccess {
     global?: string
     [id: string]: string | undefined

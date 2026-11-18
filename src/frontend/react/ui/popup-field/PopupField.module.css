@@ -1,4 +1,4 @@
-/* Portado de popup-field.svelte. `:global(…)` se conserva; los selectores de elemento llevan su clase (elemento.clase). */
+/* Portado de popup-field. `:global(…)` se conserva; los selectores de elemento llevan su clase (elemento.clase). */
 .textfield {
     position: relative;
     width: 100%;

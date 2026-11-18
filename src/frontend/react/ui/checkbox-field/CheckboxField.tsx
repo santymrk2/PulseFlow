@@ -5,7 +5,7 @@ import { Icon } from "../../helpers/Icon"
 import { usePropState } from "../../hooks/usePropState"
 import styles from "./CheckboxField.module.css"
 
-// Port de ui/checkbox-field/checkbox-field.svelte. dispatch("change", boolean) → onChange(boolean).
+// dispatch("change", boolean) → onChange(boolean).
 export interface CheckboxFieldProps {
     checked?: boolean
     defaultValue?: boolean | null

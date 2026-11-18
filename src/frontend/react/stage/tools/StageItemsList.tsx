@@ -13,7 +13,7 @@ import { useStore } from "../../hooks/useStore"
 import { Button } from "../../ui/button/Button"
 import styles from "./StageItemsList.module.css"
 
-// Port de components/stage/tools/StageItemsList.svelte (F24.19a).
+// (F24.19a).
 export function StageItemsList() {
     const currentActiveStage = useStore(activeStage)
     const currentDictionary = useStore(dictionary)

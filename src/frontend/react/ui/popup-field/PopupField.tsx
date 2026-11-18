@@ -7,7 +7,7 @@ import { Icon } from "../../helpers/Icon"
 import { Button } from "../button/Button"
 import styles from "./PopupField.module.css"
 
-// Port de ui/popup-field/popup-field.svelte. dispatch("change", any) → onChange(any) (null al borrar, defaultValue al restablecer, el valor
+// dispatch("change", any) → onChange(any) (null al borrar, defaultValue al restablecer, el valor
 // previo al deshacer, lo que mande el popup vía `trigger`). Abre `popupId` con los mismos stores: popupData = { ...data, active: value, id, trigger }
 // y activePopup = popupId, o llama a `openEvent` si existe. Sin useStore(dictionary): el Svelte tampoco se suscribe.
 export interface PopupFieldProps<T> {

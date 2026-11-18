@@ -399,7 +399,7 @@ export function startFolderTimer(folderPath: string, file: { type: string; path:
     const timer = Number(projectItems?.[projectItemIndex]?.data?.timer ?? 10)
     if (!timer || (file.type !== "image" && file.type !== "pdf")) return
 
-    // newSlideTimer played from Preview.svelte
+    // newSlideTimer played from the preview output
     setOutput("transition", { duration: timer, folderPath })
 }
 

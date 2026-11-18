@@ -66,7 +66,7 @@ function setActiveShowById(showId: string) {
     activeShow.set(projectIndex >= 0 ? { ...projectShows[projectIndex], index: projectIndex } : { id: showId, type: "show" })
 }
 
-// WIP duplicate of Preview.svelte checkGroupShortcuts()
+// WIP duplicate of PreviewImpl.svelte checkGroupShortcuts()
 export function gotoGroup(dataGroupId: string) {
     if (get(outLocked)) return
 

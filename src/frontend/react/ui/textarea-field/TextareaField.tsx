@@ -4,7 +4,7 @@ import { translateText } from "../../../utils/language"
 import { usePropState } from "../../hooks/usePropState"
 import styles from "./TextareaField.module.css"
 
-// Port de ui/textarea-field/textarea-field.svelte. dispatch("input", string) → onInput(string); dispatch("change", string) → onChange(string).
+// dispatch("input", string) → onInput(string); dispatch("change", string) → onChange(string).
 // `change` es el evento NATIVO (al perder el foco), como `on:change` de Svelte; `input` es por tecla. `class` → className.
 export interface TextareaFieldProps {
     value?: string

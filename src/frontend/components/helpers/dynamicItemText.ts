@@ -1,11 +1,11 @@
 // F23.17: texto de los ítems dinámicos (contador de slides, eventos, variables), sin stores, para que el
 // proyector (sceneGraph.ts) y la vista previa (.svelte) muestren lo mismo.
 //
-// Inventario de lo que calculaba cada .svelte (slide/views/):
+// Inventario de lo que calculaba cada vista original (slide/views/):
 // - SlideProgress.svelte: tracker.type "number" (default) -> "<índice+1>/<total de la capa del layout>", con el
 //   número en color --accent. "bar" (ancho %), "group" (nombres de grupo, la activa resaltada) y "project"
 //   (lista de ítems del proyecto) son gráficos: slideTrackerText devuelve null y ya no llegan al proyector.
-// - DynamicEvents.svelte: de $events (type "event") filtra por fecha de inicio (hoy + startDaysFromToday, o
+// - DynamicEvents: de $events (type "event") filtra por fecha de inicio (hoy + startDaysFromToday, o
 //   startDate+startTime), opcional franja de un día (justOneDay, fromTime-toTime), ordena por inicio y corta a
 //   maxEvents; por evento dibuja "HH:MM " (si event.time), nombre, " - lugar", ":" si hay notas y las notas en
 //   otra línea con 4 nbsp. Depende de la hora actual (los eventos terminados desaparecen).
@@ -106,7 +106,7 @@ export interface EventSpan {
     family?: string
 }
 
-/** Una lista de tramos por línea, con el formato de DynamicEvents.svelte. */
+/** Una lista de tramos por línea, con el formato de la vista DynamicEvents. */
 export function eventsLines(options: DynamicEventsOptions, list: CalendarEvent[], now: Date): EventSpan[][] {
     const lines: EventSpan[][] = []
     visibleEvents(options, list, now).forEach((event) => {

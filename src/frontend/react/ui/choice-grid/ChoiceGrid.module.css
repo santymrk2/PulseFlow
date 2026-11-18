@@ -1,4 +1,4 @@
-/* Portado de choice-grid.svelte. `:global(button)` y `:global(button.first)` se conservan (los botones son del kit). */
+/* Portado de choice-grid. `:global(button)` y `:global(button.first)` se conservan (los botones son del kit). */
 .choice {
     display: flex;
     justify-content: center; /* space-evenly; */

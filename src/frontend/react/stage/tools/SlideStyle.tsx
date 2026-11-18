@@ -11,7 +11,7 @@ import { TextField } from "../../ui/text-field/TextField"
 import { StageItemsList } from "./StageItemsList"
 import styles from "./SlideStyle.module.css"
 
-// Port de components/stage/tools/SlideStyle.svelte (F24.19a).
+// (F24.19a).
 // Los campos de UI despachan el valor directo (no un CustomEvent), así que `updateStageSettings` recibe el valor.
 export function SlideStyle() {
     const currentActiveStage = useStore(activeStage)

@@ -10,7 +10,7 @@ import { Icon } from "../../helpers/Icon"
 import { Button } from "../button/Button"
 import styles from "./FileField.module.css"
 
-// Port de ui/file-field/file-field.svelte. dispatch("change", string | string[]) → onChange (la lista si `multiple`, si no el primer archivo; "" al borrar).
+// dispatch("change", string | string[]) → onChange (la lista si `multiple`, si no el primer archivo; "" al borrar).
 // Mismas llamadas IPC: sendMain(OPEN_FILE, { channel: "MEDIA", id: PICK_ID, filter, multiple }) y la escucha de OPEN_FILE2.
 export interface FileFieldProps {
     label: string

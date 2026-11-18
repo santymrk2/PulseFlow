@@ -1,4 +1,4 @@
-/* Portado de textarea-field.svelte. El elemento `label` sube a `label.label` para igualar la especificidad del scope de Svelte. */
+/* Portado de textarea-field. El elemento `label` sube a `label.label` para igualar la especificidad del scope de Svelte. */
 .textfield {
     position: relative;
     width: 100%;
