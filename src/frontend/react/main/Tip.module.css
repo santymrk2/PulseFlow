@@ -1,0 +1,19 @@
+.tip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.tip p {
+    font-size: 0.75em;
+    white-space: initial;
+
+    opacity: 0.7;
+}
+
+.tip :global(.tip-word) {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    cursor: help;
+}

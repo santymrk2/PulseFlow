@@ -1,0 +1,6 @@
+.recorder {
+    position: fixed;
+    opacity: 0;
+    pointer-events: none;
+    z-index: -1;
+}

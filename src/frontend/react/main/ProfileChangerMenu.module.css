@@ -1,0 +1,17 @@
+.profileChangerMenu {
+    position: absolute;
+    bottom: 1em;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background-color: var(--primary-darkest);
+    padding: 0.5em 1.2em;
+
+    border-radius: 8px;
+    box-shadow: var(--shadow-float);
+
+    display: flex;
+    gap: 1.2em;
+
+    z-index: 4999;
+}

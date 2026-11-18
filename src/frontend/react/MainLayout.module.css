@@ -1,0 +1,57 @@
+.column,
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.column {
+    flex-direction: column;
+    height: 100%;
+}
+
+.row {
+    flex: 1;
+    overflow: hidden;
+}
+
+.center {
+    position: relative;
+
+    flex: 1;
+    background-color: var(--primary-darker);
+    overflow: auto;
+
+    scroll-behavior: smooth;
+}
+
+.left,
+.right {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.rowRight {
+    flex-direction: row-reverse;
+}
+
+.right :global(.border) {
+    border: none;
+    border-top: 1px solid var(--border-color, var(--primary-lighter));
+    margin: 0 12px;
+}
+.rowRight :global(.border) {
+    border: none;
+    border-inline-end: 1px solid var(--border-color, var(--primary-lighter));
+    margin: 12px 0;
+    min-width: 50%;
+}
+
+.rowRight :global(.textfield .picker) {
+    left: unset !important;
+    right: 0;
+}

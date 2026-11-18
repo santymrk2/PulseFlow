@@ -1,0 +1,122 @@
+.main :global(button) {
+    opacity: 0.7;
+    cursor: default !important;
+    font-weight: normal !important;
+}
+
+.main {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--primary-darkest);
+    font-size: 0.9em;
+    height: 25px;
+    -webkit-app-region: drag;
+}
+
+.main div,
+.main div :global(div) {
+    display: flex;
+    -webkit-app-region: no-drag;
+}
+
+.window :global(button) {
+    width: 48px;
+}
+
+.main :global(.menu),
+.main :global(button) {
+    border-radius: 0px !important;
+}
+
+.window :global(#close):hover {
+    background-color: var(--red);
+}
+.window :global(#close):active,
+.window :global(#close):focus {
+    background-color: var(--red);
+}
+.window :global(#close):hover :global(svg) {
+    fill: white;
+}
+
+.menu {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    min-width: 250px;
+    background-color: var(--primary-darker);
+    box-shadow: var(--shadow-float);
+    border-radius: 4px;
+    padding: 8px 0;
+    z-index: 6000;
+    -webkit-app-region: no-drag;
+}
+
+.contextMenu {
+    display: flex;
+    flex-direction: column;
+}
+
+.hr {
+    margin: 8px 0;
+    height: 1px;
+    border: none;
+    background-color: var(--primary);
+}
+
+.check {
+    opacity: 0.9;
+}
+
+.liveGroup {
+    display: flex;
+    flex-direction: column;
+}
+
+.liveItems {
+    display: flex;
+    flex-direction: column;
+    padding-inline-start: 22px;
+}
+
+.liveLook {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 6px 16px;
+    border: none;
+    background: none;
+    color: var(--text);
+    font: inherit;
+    cursor: pointer;
+    text-align: start;
+}
+
+.liveLook:hover {
+    background-color: color-mix(in srgb, black 20%, transparent);
+}
+
+.liveLook.active {
+    color: var(--secondary);
+}
+
+.empty {
+    padding: 6px 16px;
+    opacity: 0.5;
+    font-style: italic;
+}
+
+.info {
+    pointer-events: none;
+
+    font-size: 0.8em;
+    opacity: 0.7;
+
+    display: flex;
+    align-items: center;
+}
+
+.menus {
+    display: flex;
+}

@@ -1,8 +1,8 @@
 // ----- FreeShow -----
-// Svelte app entry point
+// React app entry point (F24.23)
 
-import { mount } from "svelte"
-import App from "./App.svelte"
+import { createRoot } from "react-dom/client"
+import { App } from "./react/App"
 import "./app.css"
 import "@fontsource-variable/geist"
 import "@fontsource-variable/geist-mono"
@@ -17,6 +17,7 @@ initMenuActions()
 // solo en desarrollo: abrir kit_demo / kit_demo_react desde la consola al comparar el kit (F24.10)
 if (import.meta.env.DEV) (window as unknown as { activePopup: typeof activePopup }).activePopup = activePopup
 
-const app = mount(App, { target: document.body })
+const rootElement = document.getElementById("root")
+if (!rootElement) throw new Error("Root element #root not found")
 
-export default app
+createRoot(rootElement).render(<App />)
