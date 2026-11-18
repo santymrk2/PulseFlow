@@ -1,0 +1,14 @@
+.auto_update {
+    max-width: 650px;
+    font-size: 0.9em;
+}
+
+.changelog {
+    margin-top: 20px;
+    max-height: 300px;
+    overflow-y: auto;
+
+    padding: 20px;
+    background-color: var(--primary-darker);
+    border-radius: 8px;
+}

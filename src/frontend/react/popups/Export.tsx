@@ -7,7 +7,6 @@ import type { Show } from "../../../types/Show"
 import { exportProject } from "../../components/export/project"
 import { clone } from "../../components/helpers/array"
 import { loadShows } from "../../components/helpers/setShow"
-import PdfExport from "../../components/main/popups/export/PdfExport.svelte"
 import Loader from "../../components/main/Loader.svelte"
 import { convertShowSlidesToImages, exportFormats, exportTypes, getActiveShowId, getShowIdsFromType } from "../../components/main/popups/export/exportHelper"
 import { sendMain } from "../../IPC/main"
@@ -25,6 +24,7 @@ import { Button } from "../ui/button/Button"
 import { ChoiceGrid } from "../ui/choice-grid/ChoiceGrid"
 import { HRule } from "../ui/h-rule/HRule"
 import { ToggleField } from "../ui/toggle-field/ToggleField"
+import { PdfExport } from "./PdfExport"
 
 // Port de components/main/popups/export/Export.svelte. Lee: activeProject, projects, shows, showsCache, special.projectIncludeMedia, selected/activeShow (por exportHelper).
 // Escribe: special.projectIncludeMedia (ToggleField) y activePopup = null al terminar. "Exportar" (botón o Enter), tras save() + 500 ms:
@@ -32,9 +32,9 @@ import { ToggleField } from "../ui/toggle-field/ToggleField"
 //   formato project -> exportProject(project, activeProject) (proyecto activo, o uno armado con los shows elegidos);
 //   imagen -> sendMain(Main.SAVE_IMAGE, { base64, filePath: ["Images", nombre, `${i + 1}.jpg`], format: "jpg", openFolder: i === 0 }) por diapositiva;
 //   pdf -> send(EXPORT, ["GENERATE"], { type, showIds, showNames, options, projectItems }); resto -> send(EXPORT, ["GENERATE"], { type, showIds, showNames }).
-// PdfExport sigue siendo Svelte (isla). Como una isla no devuelve `bind:pdfOptions`, se le agregó un evento `change` con las opciones (temporal, hasta migrarlo en 15f) y
-// acá se guardan; los valores iniciales son los mismos que PdfExport.svelte arma cuando recibe `{}`. Para proyecto + PDF el Svelte mutaba `pdfOptions` (oneFile, name):
-// acá se manda una copia con esos dos campos y el estado no cambia (el popup se cierra enseguida; sin efecto observable).
+// PdfExport ya es React: recibe las opciones por prop y devuelve cada cambio con onChange (antes era una isla con un evento "change" agregado).
+// Los valores iniciales siguen siendo los mismos que el Svelte arma cuando recibe `{}`. Para proyecto + PDF se manda una copia con oneFile/name y el estado no cambia
+// (el popup se cierra enseguida; sin efecto observable).
 // `exportTypesList` se calcula una sola vez, como el `$:` del Svelte (no depende de ningún store en su sintaxis).
 type PdfOptions = Record<string, unknown>
 
@@ -276,7 +276,7 @@ export function Export() {
             {exportFormat === "pdf" ? (
                 <>
                     <HRule />
-                    <SvelteIsland component={PdfExport} props={{ pdfOptions, previewShow, showCount: showIds.length, exportType }} events={{ change: (event) => pdfOptionsChanged(event.detail) }} />
+                    <PdfExport pdfOptions={pdfOptions} previewShow={previewShow} showCount={showIds.length} exportType={exportType} onChange={pdfOptionsChanged} />
                 </>
             ) : exportFormat === "project" ? (
                 <ToggleField label="export.include_media" style={{ marginTop: "20px" }} checked={specialValue.projectIncludeMedia ?? true} defaultValue={true} onChange={(value) => setSpecial(value, "projectIncludeMedia")} />

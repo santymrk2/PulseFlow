@@ -1795,9 +1795,9 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [ ] **F24.15c** Popups, tanda c (ConditionsBox → DisplayDuration).
 - [ ] **F24.15d** Popups, tanda d (DynamicValues → ImportScripture).
 - [ ] **F24.15e** Popups, tanda e (Initialize → MaxLines), con `KitDemo` reemplazado por `KitDemoReact`.
-- [ ] **F24.15f** Popups, tanda f (MediaFit → Rename).
-- [ ] **F24.15g** Popups, tanda g (ResetAll → SlideMidi).
-- [ ] **F24.15h** Popups, tanda h (SlideShortcut → WebSearch).
+- [x] **F24.15f** Popups, tanda f (MediaFit → Rename).
+- [x] **F24.15g** Popups, tanda g (ResetAll → SlideMidi).
+- [x] **F24.15h** Popups, tanda h (SlideShortcut → WebSearch).
 - [x] **F24.16** Columna izquierda.
 - [x] **F24.17a** Cajón, tanda a: raíz de `drawer/`, `navigation/*`.
 - [x] **F24.17b** Cajón, tanda b: `media/*`.
@@ -1827,8 +1827,9 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 
 ## Deuda registrada (sin tarea)
 
-- **MaxLines (F24.15e):** no tiene ningún punto de apertura (ni antes ni después de F24); sin
-  `styleId`, "mostrar atenuado" tira TypeError; decidir si se borra o se conecta (F24.15e).
+- **MaxLines (F24.15e, resuelto en F24.15f):** no tenía ningún punto de apertura (ni antes ni
+  después de F24) y sin `styleId`, "mostrar atenuado" tiraba TypeError. Se borró el `.svelte` y
+  en F24.15f se quitó la referencia muerta que quedaba en `react/popups/registry.ts`.
 - **F24.15d, popups migrados con deuda heredada de FreeShow** (se portó igual, sin arreglar):
   (a) sin test de `format("find_replace")` en `menuClick.ts`: alcance, mayúsculas y deshacer
   sin cubrir (F24.15d); (b) EditEvent `updateTime("to")`: con "hasta" entre 10:00 y 10:59 y

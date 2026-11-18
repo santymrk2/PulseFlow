@@ -98,6 +98,7 @@ export function Button({ variant = "ghost", size = "sm", title = "", info = "", 
         <button
             {...rest}
             ref={button}
+            title={title || undefined}
             data-title={title ? translateText(title, dict) : undefined}
             className={cn(styles.btn, styles[variant === "outline" ? "outlined" : variant], styles[size], className, pointerFocus && styles.pointerFocus, isActive && styles.isActive, isActive && "isActive", showOutline && styles.showOutline, white && styles.white, tab && styles.tab, red && styles.red, redHover && styles.redHover, bold && styles.bold, align === "start" && styles.start, !children && icon && styles.iconOnly)}
             tabIndex={disabled ? -1 : 0}

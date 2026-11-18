@@ -1,0 +1,18 @@
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+span {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+
+    position: absolute;
+    inset-inline-end: 15px;
+
+    color: var(--text);
+    opacity: 0.6;
+    font-size: 0.9em;
+}

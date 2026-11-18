@@ -54,6 +54,38 @@ import { ManageTags } from "./ManageTags"
 import { KitDemoReact } from "./KitDemoReact"
 import { AddShowsModal } from "../show/left/AddShowsModal"
 import { PlaylistOptionsModal } from "../show/left/PlaylistOptionsModal"
+import { MediaFit } from "./MediaFit"
+import { MetadataDisplay } from "./MetadataDisplay"
+import { NewUpdate } from "./NewUpdate"
+import { NextTimer } from "./NextTimer"
+import { NodeOptions } from "./NodeOptions"
+import { NowPlaying } from "./NowPlaying"
+import { OutputSelector } from "./OutputSelector"
+import { OutputSetup } from "./OutputSetup"
+import { RegexManager } from "./RegexManager"
+import { Rename } from "./Rename"
+import { ResetAll } from "./ResetAll"
+import { Restore } from "./Restore"
+import { SelectLook } from "./SelectLook"
+import { SelectOverlay } from "./SelectOverlay"
+import { SelectShow } from "./SelectShow"
+import { SelectStageLayout } from "./SelectStageLayout"
+import { SelectStyle } from "./SelectStyle"
+import { SelectTemplate } from "./SelectTemplate"
+import { SetTime } from "./SetTime"
+import { Shortcuts } from "./Shortcuts"
+import { SlideMidi } from "./SlideMidi"
+import { SlideShortcut } from "./SlideShortcut"
+import { TemplateInfo } from "./TemplateInfo"
+import { TemplateStyleOverrides } from "./TemplateStyleOverrides"
+import { Timecode } from "./Timecode"
+import { TimelineSettings } from "./TimelineSettings"
+import { Timer } from "./Timer"
+import { Transition } from "./Transition"
+import { Unsaved } from "./Unsaved"
+import { UpdateManager } from "./UpdateManager"
+import { Variable } from "./Variable"
+import { Translate } from "./Translate"
 
 // Popups que ya viven en React. Al migrar uno, sale del mapa `popups` de components/main/popupComponents.ts y entra acá (nunca en los dos).
 export const reactPopups: Partial<Record<Popups, ElementType>> = {
@@ -110,5 +142,37 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     manage_metadata: ManageMetadata,
     manage_tags: ManageTags,
     playlist_options: PlaylistOptionsModal,
-    kit_demo_react: KitDemoReact
+    kit_demo_react: KitDemoReact,
+    media_fit: MediaFit,
+    metadata_display: MetadataDisplay,
+    new_update: NewUpdate,
+    next_timer: NextTimer,
+    node_options: NodeOptions,
+    now_playing: NowPlaying,
+    output_selector: OutputSelector,
+    choose_output_type: OutputSetup,
+    regex_manager: RegexManager,
+    rename: Rename,
+    reset_all: ResetAll,
+    restore: Restore,
+    select_look: SelectLook,
+    select_overlay: SelectOverlay,
+    select_show: SelectShow,
+    select_stage_layout: SelectStageLayout,
+    select_style: SelectStyle,
+    select_template: SelectTemplate,
+    set_time: SetTime,
+    assign_shortcut: SlideShortcut,
+    translate: Translate,
+    shortcuts: Shortcuts,
+    unsaved: Unsaved,
+    slide_midi: SlideMidi,
+    timeline: TimelineSettings,
+    timecode: Timecode,
+    template_info: TemplateInfo,
+    template_style_overrides: TemplateStyleOverrides,
+    timer: Timer,
+    transition: Transition,
+    update_manager: UpdateManager,
+    variable: Variable
 }

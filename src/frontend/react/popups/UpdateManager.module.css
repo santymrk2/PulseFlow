@@ -1,0 +1,42 @@
+.settings {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.versions {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    margin-top: 5px;
+}
+
+.value {
+    color: var(--text);
+    font-weight: 600;
+}
+
+.loading {
+    margin-top: 15px;
+    display: flex;
+    justify-content: center;
+}
+
+.changelog {
+    margin-top: 15px;
+    padding: 16px;
+    background-color: var(--primary-darker);
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+h3 {
+    color: var(--text);
+    text-decoration: underline solid var(--secondary);
+    margin-bottom: 8px;
+}
+
+.changelog-content {
+    line-height: 1.4;
+}

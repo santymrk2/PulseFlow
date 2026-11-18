@@ -1,0 +1,11 @@
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    padding: 5px;
+    place-content: flex-start;
+}
+
+.grid :global(.main) {
+    align-self: center;
+}

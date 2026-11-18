@@ -1,0 +1,19 @@
+.types {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 5px;
+}
+
+.types :global(button) {
+    font-weight: normal;
+    border: 2px solid var(--primary-lighter) !important;
+
+    padding: 0.6em;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.options {
+    margin-top: 20px;
+}
