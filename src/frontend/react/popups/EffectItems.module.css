@@ -1,0 +1,15 @@
+/* Portado de components/main/popups/EffectItems.svelte (estilo inline + .grid). */
+.container {
+    position: relative;
+    height: 100%;
+    width: calc(100vw - (var(--navigation-width) + 20px) * 2);
+    overflow-y: auto;
+}
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    padding: 5px;
+    place-content: flex-start;
+}

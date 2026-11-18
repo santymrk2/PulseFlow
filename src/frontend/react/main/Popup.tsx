@@ -7,12 +7,10 @@ import { MENU_BAR_HEIGHT } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { clearPopupSubmit } from "../../utils/popup"
 import { disablePopupClose } from "../../utils/shortcuts"
-import { popups } from "../../components/main/popupComponents"
 import { reactPopups } from "../popups/registry"
 import { useStore } from "../hooks/useStore"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import styles from "./Popup.module.css"
 
 const FULL_MODALS: Popups[] = ["looks", "screen_config", "add_shows", "playlist_options"]
@@ -74,20 +72,11 @@ export function Popup() {
     if (popupId === null) return null
 
     const ReactPopup = reactPopups[popupId] as ComponentType | undefined
-    const SveltePopup = popups[popupId]
 
-    if (FULL_MODALS.includes(popupId)) {
-        if (ReactPopup) return <ReactPopup />
-        if (SveltePopup) return <SvelteIsland component={SveltePopup} />
-        return null
-    }
+    if (FULL_MODALS.includes(popupId)) return ReactPopup ? <ReactPopup /> : null
 
     return (
-        <div
-            style={isWindows ? { height: `calc(100% - ${MENU_BAR_HEIGHT}px)` } : undefined}
-            className={`${styles.popup}${isOptimized ? ` ${styles.isOptimized}` : ""}`}
-            onMouseDown={mousedown}
-        >
+        <div style={isWindows ? { height: `calc(100% - ${MENU_BAR_HEIGHT}px)` } : undefined} className={`${styles.popup}${isOptimized ? ` ${styles.isOptimized}` : ""}`} onMouseDown={mousedown}>
             <div className={styles.card}>
                 {popupId !== "alert" ? (
                     <div className={styles.headerContent} style={{ borderBottom: "1px solid var(--border-color, var(--primary-lighter))", ...(scrolled ? { boxShadow: "2px 2px 4px 5px color-mix(in srgb, black 10%, transparent)" } : {}) }}>
@@ -112,7 +101,7 @@ export function Popup() {
                 ) : null}
 
                 <div className={styles.scroll} style={{ ["--top-height" as string]: `${isWindows ? MENU_BAR_HEIGHT : 0}px` }} onScroll={onScroll}>
-                    <div className={styles.body}>{ReactPopup ? <ReactPopup /> : SveltePopup ? <SvelteIsland component={SveltePopup} /> : null}</div>
+                    <div className={styles.body}>{ReactPopup ? <ReactPopup /> : null}</div>
                 </div>
             </div>
         </div>

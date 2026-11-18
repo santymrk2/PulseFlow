@@ -36,6 +36,7 @@ import { DynamicValues } from "./DynamicValues"
 import { EditChart } from "./EditChart"
 import { EditEvent } from "./EditEvent"
 import { Emitters } from "./Emitters"
+import { EffectItems } from "./EffectItems"
 import { Export } from "./Export"
 import { FindReplace } from "./FindReplace"
 import { History } from "./History"
@@ -52,6 +53,7 @@ import { ManageIcons } from "./ManageIcons"
 import { ManageMetadata } from "./ManageMetadata"
 import { ManageTags } from "./ManageTags"
 import { KitDemoReact } from "./KitDemoReact"
+import { LooksWindow } from "./LooksWindow"
 import { AddShowsModal } from "../show/left/AddShowsModal"
 import { PlaylistOptionsModal } from "../show/left/PlaylistOptionsModal"
 import { MediaFit } from "./MediaFit"
@@ -86,8 +88,9 @@ import { Unsaved } from "./Unsaved"
 import { UpdateManager } from "./UpdateManager"
 import { Variable } from "./Variable"
 import { Translate } from "./Translate"
+import { ScreenConfig } from "../screens/ScreenConfig"
 
-// Popups que ya viven en React. Al migrar uno, sale del mapa `popups` de components/main/popupComponents.ts y entra acá (nunca en los dos).
+// Registro único de popups React: los últimos cuatro salieron de components/main/popupComponents.ts.
 export const reactPopups: Partial<Record<Popups, ElementType>> = {
     about: About,
     add_shows: AddShowsModal,
@@ -125,6 +128,7 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     dynamic_values: DynamicValues,
     edit_chart: EditChart,
     edit_event: EditEvent,
+    effect_items: EffectItems,
     manage_emitters: Emitters,
     export: Export,
     find_replace: FindReplace,
@@ -142,7 +146,10 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     manage_metadata: ManageMetadata,
     manage_tags: ManageTags,
     playlist_options: PlaylistOptionsModal,
+    kit_demo: KitDemoReact,
     kit_demo_react: KitDemoReact,
+    looks: LooksWindow,
+    screen_config: ScreenConfig,
     media_fit: MediaFit,
     metadata_display: MetadataDisplay,
     new_update: NewUpdate,

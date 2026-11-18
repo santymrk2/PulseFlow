@@ -11,14 +11,14 @@ import { translateText } from "../../utils/language"
 import { send } from "../../utils/request"
 import { useStore } from "../hooks/useStore"
 import { useFreshStore } from "../hooks/useFreshStore"
+import { Modal } from "../main/Modal"
 import { ScreenDetail } from "./ScreenDetail"
 import { ScreenList } from "./ScreenList"
 import { SystemDisplays } from "./SystemDisplays"
 import styles from "./ScreenConfig.module.css"
 
-// Cuerpo de components/screens/ScreenConfig.svelte (F24.14). El `Modal` (marco, Esc, transiciones) sigue siendo Svelte y
-// necesita un <slot> que una isla React no puede llenar: ScreenConfig.svelte queda como cascarón (igual que SettingsModal).
-// Se retira junto con Modal.svelte cuando éste se migre.
+// Port completo de components/screens/ScreenConfig.svelte: el cuerpo de F24.14 más el marco
+// (Modal de React), que antes aportaba el cascarón Svelte. Registrado como `screen_config`.
 const firstOutputId = () => sortObject(sortByName(keysToID(get(outputs))), "stageOutput")[0]?.id || null
 
 export function ScreenConfig() {
@@ -92,21 +92,23 @@ export function ScreenConfig() {
     }
 
     return (
-        <div className={styles.container}>
-            <div className={styles.left}>
-                <ScreenList selectedOutputId={selectedOutputId} onSelect={select} onAddAudience={addAudience} onAddStage={addStage} />
-                <div className={styles.system}>
-                    <div className={styles["system-header"]}>{translateText("screen_config.system")}</div>
-                    <SystemDisplays displays={displays} onRefresh={loadDisplays} onIdentify={identify} />
-                    <div className={styles["ndi-section"]}>
-                        <div className={styles["ndi-title"]}>NDI</div>
-                        <button className={styles["ndi-btn"]} onClick={newNdi}>
-                            {translateText("screen_config.new_ndi")} ›
-                        </button>
+        <Modal title="screen_config.title" width={960} height={620}>
+            <div className={styles.container}>
+                <div className={styles.left}>
+                    <ScreenList selectedOutputId={selectedOutputId} onSelect={select} onAddAudience={addAudience} onAddStage={addStage} />
+                    <div className={styles.system}>
+                        <div className={styles["system-header"]}>{translateText("screen_config.system")}</div>
+                        <SystemDisplays displays={displays} onRefresh={loadDisplays} onIdentify={identify} />
+                        <div className={styles["ndi-section"]}>
+                            <div className={styles["ndi-title"]}>NDI</div>
+                            <button className={styles["ndi-btn"]} onClick={newNdi}>
+                                {translateText("screen_config.new_ndi")} ›
+                            </button>
+                        </div>
                     </div>
                 </div>
+                <div className={styles.right}>{selectedOutputId && outputsValue[selectedOutputId] ? <ScreenDetail outputId={selectedOutputId} displays={displays} onRefreshDisplays={loadDisplays} /> : <div className={styles.empty}>{translateText("screen_config.no_outputs")}</div>}</div>
             </div>
-            <div className={styles.right}>{selectedOutputId && outputsValue[selectedOutputId] ? <ScreenDetail outputId={selectedOutputId} displays={displays} onRefreshDisplays={loadDisplays} /> : <div className={styles.empty}>{translateText("screen_config.no_outputs")}</div>}</div>
-        </div>
+        </Modal>
     )
 }

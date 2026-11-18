@@ -1,0 +1,108 @@
+/* Portado de components/looks/LooksWindow.svelte. */
+.window {
+    display: flex;
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+}
+
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    flex: 0 0 240px;
+    width: 240px;
+    min-height: 0;
+    background-color: var(--primary-darker);
+    border-inline-end: 1px solid var(--border-color, var(--primary-lighter));
+}
+
+.live {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    font-size: 12px;
+    border-bottom: 1px solid var(--border-color, var(--primary-lighter));
+    min-width: 0;
+}
+.live span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.presets {
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    padding: 4px 0;
+}
+
+.dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--success);
+}
+
+.sidebarFooter {
+    padding: 8px;
+    border-top: 1px solid var(--border-color, var(--primary-lighter));
+}
+
+.detail {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+}
+
+.detailHeader {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nameInput {
+    flex: 1;
+    min-width: 0;
+    height: 32px;
+    padding: 0 8px;
+    background-color: var(--primary-darker);
+    color: var(--text);
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    border-radius: var(--radius, 4px);
+}
+
+.scroll {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
+}
+
+.hint {
+    opacity: 0.6;
+    font-size: 13px;
+}
+
+.transition {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+    min-width: 0;
+    font-size: 12px;
+}
+.label {
+    flex-shrink: 0;
+    color: var(--text);
+    opacity: 0.8;
+}
+.value {
+    flex-shrink: 0;
+    width: 44px;
+    text-align: end;
+    opacity: 0.8;
+}

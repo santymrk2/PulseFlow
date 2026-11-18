@@ -13,7 +13,7 @@ import { send } from "../../utils/request"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ScreenConfig } from "./ScreenConfig"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 36 }))
 vi.mock("../../IPC/main", () => ({ requestMain: vi.fn() }))
 vi.mock("../../IPC/tauri", () => ({ invokeCommand: vi.fn() }))
 vi.mock("../../utils/request", () => ({ send: vi.fn() }))
@@ -56,6 +56,8 @@ const fila = (texto: string) => screen.getByText(texto)
 describe("ScreenConfig", () => {
     it("renderiza_lo_principal_lista_sistema_ndi_y_el_detalle_de_la_salida_actual", async () => {
         await montar()
+        expect(screen.getByRole("dialog")).toBeTruthy()
+        expect(screen.getByText("screen_config.title")).toBeTruthy()
         expect(fila("Alfa")).toBeTruthy()
         expect(screen.getByText("screen_config.system")).toBeTruthy()
         expect(screen.getByText("screen_config.new_ndi ›")).toBeTruthy()
