@@ -6,7 +6,7 @@ import { clearIslands, islands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { FunctionsInfo } from "./FunctionsInfo"
 
-vi.mock("../../../components/drawer/pages/InteractionsInfo.svelte", () => ({ default: { isla: "InteractionsInfo" } }))
+vi.mock("../pages/InteractionsInfo", () => ({ InteractionsInfo: () => <div data-testid="interactions" /> }))
 vi.mock("../../../components/drawer/timers/TimerInfo.svelte", () => ({ default: { isla: "TimerInfo" } }))
 vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
 vi.mock("./OBSInfo", () => ({ OBSInfo: () => <div data-testid="obs" /> }))
@@ -49,7 +49,7 @@ describe("FunctionsInfo", () => {
     it("monta InteractionsInfo y OBSInfo en sus pestañas", () => {
         const { rerender } = render(<FunctionsInfo />)
         act(() => drawerTabsData.set({ functions: { activeSubTab: "interactions" } } as never))
-        expect(islands["InteractionsInfo"]).toBeTruthy()
+        expect(screen.getByTestId("interactions")).toBeTruthy()
         act(() => drawerTabsData.set({ functions: { activeSubTab: "obs" } } as never))
         expect(screen.getByTestId("obs")).toBeTruthy()
         rerender(<FunctionsInfo />)

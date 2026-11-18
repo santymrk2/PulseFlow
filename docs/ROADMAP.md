@@ -1805,7 +1805,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [x] **F24.17d** Cajón, tanda d: `audio/` (efectos).
 - [x] **F24.17e** Cajón, tanda e: `info/*`.
 - [x] **F24.17f** Cajón, tanda f: `live/*`.
-- [ ] **F24.17g** Cajón, tanda g: `pages/*`.
+- [x] **F24.17g** Cajón, tanda g: `pages/*` (12/13: `TemplateSlide.svelte` queda para F24.21c porque edita con `bind:` de `Snaplines`/`Editbox`, que `SvelteIsland` no puede expresar).
 - [ ] **F24.17h** Cajón, tanda h: `player/*`, `calendar/*`, `effects/*`, `timers/*` y `system/Player`.
 - [ ] **F24.17i** Cajón, tanda i: `bible/Scripture`.
 - [ ] **F24.18a** Slides: `views/*` y relojes de `system/`.

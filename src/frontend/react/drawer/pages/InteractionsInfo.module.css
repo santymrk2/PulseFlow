@@ -1,0 +1,10 @@
+/* Portado de components/drawer/pages/InteractionsInfo.svelte. */
+.padding {
+    padding: 10px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    box-sizing: border-box;
+}

@@ -1,6 +1,7 @@
 <script lang="ts">
     import { activeEdit, outputs, scenes, styles, previewOutputId } from "../../../stores"
-    import ScenePreview from "../../drawer/pages/ScenePreview.svelte"
+    import { ScenePreview } from "../../../react/drawer/pages/ScenePreview"
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
     import { getResolution } from "../../helpers/output"
     import T from "../../helpers/T.svelte"
     import FloatingBar from "../../../lib/components/ui/floating-bar/floating-bar.svelte"
@@ -38,7 +39,7 @@
         {#if scene}
             <div class="scene-preview-container">
                 <Zoomed background="transparent" border {resolution} styleIdOverride={sceneStyleId} style={widthOrHeight} center>
-                    <ScenePreview {scene} />
+                    <ReactIsland component={ScenePreview} props={{ scene }} />
                 </Zoomed>
             </div>
         {:else}

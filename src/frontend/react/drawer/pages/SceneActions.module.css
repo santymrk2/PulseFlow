@@ -1,0 +1,55 @@
+/* Portado de components/drawer/pages/SceneActions.svelte. El marcador `.white` (sin reglas propias en el original) pasa a `.whiteButton`. */
+.icons {
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    top: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    z-index: 5;
+    font-size: 0.9em;
+
+    height: 80%;
+    flex-wrap: wrap;
+}
+.icons div {
+    opacity: 0.9;
+    display: flex;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+.icons .button {
+    background-color: rgb(0 0 0 / 0.6);
+    pointer-events: all;
+    max-width: 100%;
+}
+.icons .button :global(button) {
+    max-width: 100%;
+    overflow: hidden;
+}
+.icons p {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.button p {
+    padding-inline-start: 4px;
+    font-size: 0.8em;
+}
+.icons span {
+    pointer-events: all;
+    background-color: rgb(0 0 0 / 0.6);
+    padding: 3px;
+    font-size: 0.75em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.button:not(.whiteButton) :global(svg) {
+    fill: var(--danger);
+}

@@ -15,9 +15,14 @@ interface AudioPropsMock {
     active: string | null
 }
 
-const { mediaProps, audioProps } = vi.hoisted(() => ({
+interface ShowsPropsMock {
+    active: string | null
+}
+
+const { mediaProps, audioProps, showsProps } = vi.hoisted(() => ({
     mediaProps: { current: null as MediaPropsMock | null },
-    audioProps: { current: null as AudioPropsMock | null }
+    audioProps: { current: null as AudioPropsMock | null },
+    showsProps: { current: null as ShowsPropsMock | null }
 }))
 
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
@@ -35,12 +40,17 @@ vi.mock("./media/Media", () => ({
         return <div data-testid="media-react" />
     }
 }))
-vi.mock("../../components/drawer/pages/Actions.svelte", () => ({ default: { isla: "Actions" } }))
-vi.mock("../../components/drawer/pages/Interactions.svelte", () => ({ default: { isla: "Interactions" } }))
-vi.mock("../../components/drawer/pages/OBS.svelte", () => ({ default: { isla: "OBS" } }))
-vi.mock("../../components/drawer/pages/Scenes.svelte", () => ({ default: { isla: "Scenes" } }))
-vi.mock("../../components/drawer/pages/Shows.svelte", () => ({ default: { isla: "Shows" } }))
-vi.mock("../../components/drawer/pages/Variables.svelte", () => ({ default: { isla: "Variables" } }))
+vi.mock("./pages/Actions", () => ({ Actions: () => <div data-page="Actions" /> }))
+vi.mock("./pages/Interactions", () => ({ Interactions: () => <div data-page="Interactions" /> }))
+vi.mock("./pages/OBS", () => ({ OBS: () => <div data-page="OBS" /> }))
+vi.mock("./pages/Scenes", () => ({ Scenes: () => <div data-page="Scenes" /> }))
+vi.mock("./pages/Shows", () => ({
+    Shows: ({ active }: { active: string | null }) => {
+        showsProps.current = { active }
+        return <div data-page="Shows" />
+    }
+}))
+vi.mock("./pages/Variables", () => ({ Variables: () => <div data-page="Variables" /> }))
 vi.mock("../../components/drawer/timers/Timers.svelte", () => ({ default: { isla: "Timers" } }))
 
 let restaurar: () => void = () => {}
@@ -49,6 +59,7 @@ function montar(id: string, active: string | null = null, extra: StoreEntry[] = 
     clearIslands() // el registro del mock es state compartido entre renders
     mediaProps.current = null
     audioProps.current = null
+    showsProps.current = null
     restaurar = setStoresForTest([storeEntry(drawerTabsData, { [id]: { enabled: true, activeSubTab: active } } as never), ...extra])
     return render(<Content id={id} />)
 }
@@ -60,10 +71,17 @@ afterEach(() => {
 })
 
 const isla = () => document.querySelector("[data-isla]")?.getAttribute("data-isla") ?? null
+const pagina = () => document.querySelector("[data-page]")?.getAttribute("data-page") ?? null
 
 describe("Content", () => {
-    it("cada pestaña principal monta su isla con el sub-tab activo", () => {
-        const casos: Record<string, string> = { shows: "Shows", scripture: "Scripture", calendar: "Calendar" }
+    it("shows monta la página React con el sub-tab activo", () => {
+        montar("shows", "all")
+        expect(pagina()).toBe("Shows")
+        expect(showsProps.current?.active).toBe("all")
+    })
+
+    it("scripture y calendar siguen como islas con el sub-tab activo", () => {
+        const casos: Record<string, string> = { scripture: "Scripture", calendar: "Calendar" }
         for (const [id, nombre] of Object.entries(casos)) {
             montar(id, "all")
             expect(isla()).toBe(nombre)
@@ -95,13 +113,14 @@ describe("Content", () => {
         const casos: Record<string, string> = { actions: "Actions", timer: "Timers", variables: "Variables", scenes: "Scenes", interactions: "Interactions", obs: "OBS" }
         for (const [active, nombre] of Object.entries(casos)) {
             montar("functions", active)
-            expect(isla()).toBe(nombre)
+            expect(nombre === "Timers" ? isla() : pagina()).toBe(nombre)
             cleanup()
         }
     })
 
     it("functions con un sub-tab desconocido no monta nada", () => {
         montar("functions", "otro")
+        expect(pagina()).toBeNull()
         expect(isla()).toBeNull()
     })
 

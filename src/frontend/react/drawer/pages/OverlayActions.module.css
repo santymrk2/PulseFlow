@@ -1,0 +1,36 @@
+/* Portado de components/drawer/pages/OverlayActions.svelte. El marcador `.white` (sin reglas propias en el original) pasa a `.whiteButton`. */
+.icons {
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    /* right: 2px; */
+    z-index: 1;
+    font-size: 0.9em;
+
+    height: 80%;
+    flex-wrap: wrap; /* -reverse; */
+    /* place-items: end; */
+}
+.icons div {
+    opacity: 0.9;
+    display: flex;
+}
+.icons .button {
+    background-color: rgb(0 0 0 / 0.6);
+    pointer-events: all;
+}
+.icons span {
+    pointer-events: all;
+    background-color: rgb(0 0 0 / 0.6);
+    padding: 3px;
+    font-size: 0.75em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}
+
+.button:not(.whiteButton) :global(svg) {
+    fill: var(--danger);
+}

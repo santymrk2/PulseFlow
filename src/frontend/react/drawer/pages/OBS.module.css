@@ -1,0 +1,130 @@
+/* Port de components/drawer/pages/OBS.svelte: todas las clases son literales en OBS.tsx, así que cada regla va en :global(). */
+:global(.obs-docks-container) {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 4px;
+    margin: 6px;
+    height: calc(100% - 12px);
+    font-family: "Segoe UI", system-ui, sans-serif;
+}
+:global(.obs-dock) {
+    background: #1f232a;
+    border-radius: 6px;
+    padding: 0;
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    box-shadow: var(--shadow-float);
+}
+:global(.obs-dock-header) {
+    width: 100%;
+    background: #2b303c;
+    font-size: 0.9em;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    padding: 0.3em 0.7em;
+    display: flex;
+    align-items: center;
+}
+:global(.obs-dock-title) {
+    color: #f1f3f5;
+    margin: 0;
+    font-size: 0.9em;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    opacity: 0.9;
+}
+:global(.obs-dock-list) {
+    list-style: none;
+    padding: 0.5em;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.3em;
+    flex: 1;
+    overflow-y: auto;
+}
+:global(.obs-dock-body) {
+    padding: 0.5em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3em;
+    flex: 1;
+    justify-content: flex-start;
+}
+:global(.obs-dock-row) {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    width: 100%;
+}
+:global(.obs-btn-icon) {
+    width: auto !important;
+    padding: 0.3em 0.5em !important;
+    justify-content: center !important;
+    text-align: center !important;
+    background: #2b303c !important;
+    border-radius: 4px !important;
+    box-shadow: none !important;
+    transition:
+        background-color 0.2s,
+        border-color 0.2s !important;
+}
+:global(.obs-btn-icon:hover) {
+    background-color: #3d4454 !important;
+    border-color: #4c5468 !important;
+}
+
+:global(.obs-btn) {
+    width: 100% !important;
+    text-align: left !important;
+    border-radius: 4px !important;
+    box-shadow: none !important;
+    justify-content: flex-start !important;
+    padding: 0.5em 0.7em !important;
+    font-size: 0.9em !important;
+    font-weight: normal !important;
+    background: #2b303c !important;
+    border: 1px solid #101216 !important;
+    border-color: transparent !important;
+    color: #cbd5e1 !important;
+    transition:
+        background-color 0.2s,
+        border-color 0.2s,
+        color 0.2s !important;
+}
+:global(.obs-btn-control) {
+    justify-content: center !important;
+    text-align: center !important;
+    padding: 0.75em 1.2em !important;
+    font-weight: normal !important;
+    color: white !important;
+}
+:global(.obs-docks-container .obs-dock .obs-dock-list .obs-btn.active-scene) {
+    background-color: #2072ec !important;
+    background: #2072ec !important;
+    border-color: #2072ec !important;
+    color: white !important;
+}
+:global(.obs-docks-container .obs-dock .obs-dock-list .obs-btn.active-scene:hover) {
+    background-color: #3b82f6 !important;
+    background: #3b82f6 !important;
+    border-color: #3b82f6 !important;
+}
+:global(.obs-btn-danger) {
+    background: var(--danger) !important;
+    border-color: var(--danger) !important;
+}
+:global(.obs-btn:not(.active-scene):hover) {
+    background-color: #3d4454 !important;
+    border-color: #4c5468 !important;
+    color: white !important;
+}
+:global(.obs-btn-danger:hover) {
+    background-color: #f87171 !important;
+    border-color: var(--danger) !important;
+}
