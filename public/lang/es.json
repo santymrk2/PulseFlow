@@ -607,6 +607,7 @@
         "saving": "Guardando...",
         "saved": "Guardado",
         "feature_unavailable": "Esta función todavía no está disponible en PulseFlow.",
+        "save_error": "No se pudieron guardar los cambios. Revise los permisos de la carpeta e inténtelo de nuevo.",
         "autosize_disabled": "Cambio de tamaño automático desactivado",
         "error_media": "No se pudieron obtener los archivos multimedia.",
         "empty_styles": "Sin estilos",

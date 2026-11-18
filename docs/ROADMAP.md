@@ -1838,7 +1838,11 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [x] **F25.6** Reducir los idiomas de `public/lang/` a `en` y `es` (`docs/propuestas/idiomas.md`).
 - [x] **F25.7** Corregir el CI de Rust: Clippy 1.100 falla en macOS y Windows con `-D warnings`.
 - [ ] **F25.8** Estabilizar los tests de `render::media` que fallan en paralelo y pasan aislados.
-- [ ] **F25.9** Cerrar deudas de F25.6: `.catch()` en `setLanguage` y paridad de claves `en`/`es`.
+- [x] **F25.9** Cerrar deudas de F25.6: `.catch()` en `setLanguage` y paridad de claves `en`/`es`.
+  (2026-11-18: `toast.save_error` agregada a `es.json` con traducción propia; paridad 1808/1808
+  verificada en ambos sentidos por test. Ante un fallo de fetch, `setLanguage` activa `en`, usa
+  en.json como diccionario —o conserva el anterior si tampoco carga— y mantiene `ltr`, sin
+  tocar settings. Tests con fetch mockeado: 4 de resiliencia + 2 de paridad.)
 
 ---
 
@@ -1902,8 +1906,8 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - `{@html}` con datos de terceros fuera de la biblia (eventos ICS, changelog, notas, shows importados) sin filtro: la defensa hoy es la CSP (F23.10).
 - Overlays con variable, eventos o contador no se dibujan en el proyector (F23.17).
 - En el stage, un timer sin padding que cambia de largo ("9:59" → "10:00") cambia el tamaño del autoajuste y provoca una transición puntual (F23.19).
-- `setLanguage()` no maneja el `fetch` fallido (sin `.catch()`); con `public/lang/` reducido a `en`/`es` sigue aplicando el fallback a `en` (F25.6).
-- Falta un test de paridad entre `en.json` y `es.json`: hoy hay una clave presente en inglés y ausente en español (F25.6), cubierta en Runtime por el fallback del diccionario.
+- **Resuelto en F25.9:** `setLanguage()` no manejaba el `fetch` fallido (sin `.catch()`); ahora cae a `en` sin rejection sin manejar.
+- **Resuelto en F25.9:** faltaba un test de paridad entre `en.json` y `es.json` (una clave ausente en español, hoy traducida y cubierta en ambos sentidos).
 - Flakiness en paralelo de los tests de `render::media` (`request_returns_immediately_while_loading` y `presupuesto_expulsa_la_menos_usada`): pasan aislados y en rerun; no afectan al CI (F25.7).
 
 ## Fuera de alcance por ahora

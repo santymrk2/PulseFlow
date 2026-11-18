@@ -17,6 +17,38 @@ const defaultPath = "./lang/en.json"
 // const dir = derived(language, ($locale) => ($locale === "ar" ? "rtl" : "ltr"))
 
 let loadingLocale = ""
+
+// F25.9: ante un fallo de red se cae al inglés (como en F25.6): idioma activo "en",
+// diccionario en.json (o el anterior si tampoco carga) y `localeDirection` se mantiene
+// "ltr", acorde con "en". No se escribe settings: eso lo hace updateSettings.
+function isDictionary(value: unknown): value is Dictionary {
+    return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+async function fetchDictionary(path: string): Promise<Dictionary> {
+    const response = await fetch(path)
+    if (!response.ok) throw new Error(`No se pudo cargar ${path}: ${response.status}`)
+    const messages: unknown = await response.json()
+    if (!isDictionary(messages)) throw new Error(`JSON inválido en ${path}`)
+    return messages
+}
+
+async function fallbackToEnglish(requestedLocale: string): Promise<void> {
+    if (loadingLocale !== requestedLocale) return
+
+    language.set("en")
+    loadingLocale = "en"
+
+    try {
+        const messages = await fetchDictionary(defaultPath)
+        if (loadingLocale !== "en") return
+        dictionary.set(messages)
+    } catch {
+        // Sin red ni siquiera para el inglés: se conserva el diccionario ya cargado
+        // (o `{}` en el arranque) y translateText deja las claves visibles.
+    }
+}
+
 function setLanguage(locale = "", init = false) {
     if (!locale) {
         // locale = getLocaleFromHostname(/^(.*?)\./) || getLocaleFromPathname(/^\/(.*?)\//) || getLocaleFromNavigator() || getLocaleFromHash('lang') || 'en';
@@ -35,16 +67,17 @@ function setLanguage(locale = "", init = false) {
 
     loadingLocale = locale
     const url = defaultPath.replace("en", locale)
-    fetch(url)
-        .then((response) => response.json())
+    fetchDictionary(url)
         .then(returnedFile)
+        // F25.9: este catch cubre tanto el fetch del idioma como el de en.json en returnedFile.
+        .catch(() => fallbackToEnglish(locale))
 
     async function returnedFile(messages: Dictionary) {
         if (loadingLocale !== locale) return
 
         // replace any missing keys in dictionary with fallback english string
         if (locale !== "en") {
-            const defaultStrings = await (await fetch(defaultPath)).json()
+            const defaultStrings = await fetchDictionary(defaultPath)
             if (loadingLocale !== locale) return
 
             Object.keys(defaultStrings).forEach((key) => {
