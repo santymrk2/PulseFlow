@@ -605,7 +605,7 @@ function Waveform({ path }: { path: string }) {
     useEffect(() => {
         if (node.current && path) void createWaveform(node.current, path, WAVEFORM_SETTINGS)
     }, [path])
-    return <div ref={node} className={cn("waveform-container", styles.waveformContainer)} />
+    return <div ref={node} className={cn("waveform-container", styles["waveform-container"])} />
 }
 
 export interface TimelineProps {
@@ -751,33 +751,33 @@ export function Timeline({ type, isClosed = false }: TimelineProps) {
                         </Button>
                     ) : null}
 
-                    <div className={cn("time-display", styles.timeDisplay)} style={{ display: "flex", alignItems: "center", width: "auto" }}>
+                    <div className={cn("time-display", styles["time-display"])} style={{ display: "flex", alignItems: "center", width: "auto" }}>
                         {timeString}
                     </div>
 
-                    <div ref={(node) => engine.attachTrackWrapper(node)} className={cn("timeline-track-wrapper", styles.timelineTrackWrapper)} onMouseDown={(e) => engine.startRulerScrub(e.nativeEvent)} onScroll={() => engine.handleScroll()}>
-                        <div className={cn("timeline-track", styles.timelineTrack)} style={{ width: `${(timelineDuration / 1000) * zoomLevel}px` }}>
+                    <div ref={(node) => engine.attachTrackWrapper(node)} className={cn("timeline-track-wrapper", styles["timeline-track-wrapper"])} onMouseDown={(e) => engine.startRulerScrub(e.nativeEvent)} onScroll={() => engine.handleScroll()}>
+                        <div className={cn("timeline-track", styles["timeline-track"])} style={{ width: `${(timelineDuration / 1000) * zoomLevel}px` }}>
                             {actions.map((action) => {
                                 const duration = action.duration || (type === "project" && action.type === "show" ? projectShowDurations[action.data.id || ""] : 0) || 0
                                 const selected = selectedActionIds.includes(action.id)
                                 if (duration) {
                                     return (
-                                        <div key={action.id} className={cn("action-clip", "context", "#timeline_node", styles.actionClip, selected && "selected", selected && styles.selected)} style={clipStyle(action, 0, 0, duration, { top: "50%", transform: "translateY(-50%)", height: "100%", opacity: 0.3 })} data-title={action.name}>
-                                            <div className={cn("action-clip-content", styles.actionClipContent)}>
-                                                <div className={cn("clip-label", styles.clipLabel)}>{action.name}</div>
+                                        <div key={action.id} className={cn("action-clip", "context", "#timeline_node", styles["action-clip"], selected && "selected", selected && styles.selected)} style={clipStyle(action, 0, 0, duration, { top: "50%", transform: "translateY(-50%)", height: "100%", opacity: 0.3 })} data-title={action.name}>
+                                            <div className={cn("action-clip-content", styles["action-clip-content"])}>
+                                                <div className={cn("clip-label", styles["clip-label"])}>{action.name}</div>
                                             </div>
                                         </div>
                                     )
                                 }
                                 return (
-                                    <div key={action.id} className={cn("action-marker", action.type, "context", "#timeline_node", styles.actionMarker, selected && "selected", selected && styles.selected)} style={{ left: `${(action.time / 1000) * zoomLevel}px`, top: "50%", transform: "translate(-50%, -50%)" }} data-title={translateText(action.name)}>
-                                        <div className={cn("action-head", styles.actionHead)}>{action.type === "action" ? <Icon id={triggerIcon(action)} size={0.9} white /> : typeof action.data?.index === "number" ? action.data.index + 1 : null}</div>
+                                    <div key={action.id} className={cn("action-marker", action.type, "context", "#timeline_node", styles["action-marker"], selected && "selected", selected && styles.selected)} style={{ left: `${(action.time / 1000) * zoomLevel}px`, top: "50%", transform: "translate(-50%, -50%)" }} data-title={translateText(action.name)}>
+                                        <div className={cn("action-head", styles["action-head"])}>{action.type === "action" ? <Icon id={triggerIcon(action)} size={0.9} white /> : typeof action.data?.index === "number" ? action.data.index + 1 : null}</div>
                                     </div>
                                 )
                             })}
 
                             <div className={cn("playhead", styles.playhead)} style={{ left: `${(currentTime / 1000) * zoomLevel}px` }}>
-                                <div className={cn("playhead-line", styles.playheadLine)} />
+                                <div className={cn("playhead-line", styles["playhead-line"])} />
                             </div>
                         </div>
                     </div>
@@ -788,12 +788,12 @@ export function Timeline({ type, isClosed = false }: TimelineProps) {
                 </div>
             ) : (
                 <>
-                    <div className={cn("timeline-grid", styles.timelineGrid)}>
+                    <div className={cn("timeline-grid", styles["timeline-grid"])}>
                         <div className="corner" style={{ width: `${USED_HEADER_WIDTH}px`, ...CORNER_STYLE }}>
-                            <input className={cn("time-display", styles.timeDisplay)} value={timeString} onChange={(e) => engine.handleTimeChange(e)} onKeyDown={(e) => engine.handleTimeKeydown(e)} />
+                            <input className={cn("time-display", styles["time-display"])} value={timeString} onChange={(e) => engine.handleTimeChange(e)} onKeyDown={(e) => engine.handleTimeKeydown(e)} />
                         </div>
 
-                        <div ref={(node) => engine.attachRuler(node)} className={cn("ruler-container", styles.rulerContainer)} onMouseDown={(e) => engine.startRulerScrub(e.nativeEvent)}>
+                        <div ref={(node) => engine.attachRuler(node)} className={cn("ruler-container", styles["ruler-container"])} onMouseDown={(e) => engine.startRulerScrub(e.nativeEvent)}>
                             <div className={cn("ruler", styles.ruler)} style={{ width: `${(timelineDuration / 1000) * zoomLevel}px` }}>
                                 {Array.from({ length: visibleTickCount }, (_, i) => {
                                     const tickIndex = i + visibleTicksStartIndex
@@ -801,21 +801,21 @@ export function Timeline({ type, isClosed = false }: TimelineProps) {
                                     return (
                                         <div key={tickIndex}>
                                             <div className={cn("tick", styles.tick)} style={{ left: `${pos}px` }}>
-                                                <span className={cn("tick-label", styles.tickLabel)}>{formatTime(tickIndex * tickInterval * 1000, type, currentTimeline)}</span>
+                                                <span className={cn("tick-label", styles["tick-label"])}>{formatTime(tickIndex * tickInterval * 1000, type, currentTimeline)}</span>
                                             </div>
                                             {tickIndex < totalTickCount ? Array.from({ length: 10 }, (_, j) => <div key={j} className={cn("tick", "minor", styles.tick, styles.minor)} style={{ left: `${pos + j * (tickInterval / 10) * zoomLevel}px`, height: j === 0 ? "20px" : j === 5 ? "10px" : "8px" }} />) : null}
                                         </div>
                                     )
                                 })}
-                                <div className={cn("playhead-knob", styles.playheadKnob)} style={{ left: `${(currentTime / 1000) * zoomLevel}px` }} />
+                                <div className={cn("playhead-knob", styles["playhead-knob"])} style={{ left: `${(currentTime / 1000) * zoomLevel}px` }} />
                             </div>
                         </div>
 
-                        <div ref={(node) => engine.attachHeaders(node)} className={cn("headers-container", styles.headersContainer)} style={{ width: `${USED_HEADER_WIDTH}px`, minWidth: `${USED_HEADER_WIDTH}px` }}>
-                            <div className={cn("track-headers", styles.trackHeaders)} style={{ height: `${totalTrackHeight}px` }}>
+                        <div ref={(node) => engine.attachHeaders(node)} className={cn("headers-container", styles["headers-container"])} style={{ width: `${USED_HEADER_WIDTH}px`, minWidth: `${USED_HEADER_WIDTH}px` }}>
+                            <div className={cn("track-headers", styles["track-headers"])} style={{ height: `${totalTrackHeight}px` }}>
                                 {type === "slide"
                                     ? groupedActions.map((group, i) => (
-                                          <div key={i} className={cn("track-header", styles.trackHeader)} style={{ top: `${TIMELINE_SECTION_TOP + i * (SECTION_HEIGHT + SECTION_GAP)}px`, height: `${SECTION_HEIGHT}px`, width: "100%" }}>
+                                          <div key={i} className={cn("track-header", styles["track-header"])} style={{ top: `${TIMELINE_SECTION_TOP + i * (SECTION_HEIGHT + SECTION_GAP)}px`, height: `${SECTION_HEIGHT}px`, width: "100%" }}>
                                               <Icon id={group[0]?.data?.type === "text" ? "text" : "item"} white />
                                               <span className="track-name">{translateText(group[0]?.name)}</span>
                                               <Button title="timeline.toggle_curve_editor" style={EASING_BUTTON_STYLE} isActive={easingActive === i} onClick={() => setEasingActive(easingActive === null || easingActive !== i ? i : null)}>
@@ -826,7 +826,7 @@ export function Timeline({ type, isClosed = false }: TimelineProps) {
                                     : Array.from({ length: maxTrackIndex }, (_, i) => {
                                           const track = engine.getTrackData(i)
                                           return (
-                                              <div key={i} className={cn("track-header", styles.trackHeader)} style={{ top: `${TIMELINE_SECTION_TOP + i * (SECTION_HEIGHT + SECTION_GAP)}px`, height: `${SECTION_HEIGHT}px`, width: "100%", ...(track.hasData ? {} : { opacity: 0.3 }) }}>
+                                              <div key={i} className={cn("track-header", styles["track-header"])} style={{ top: `${TIMELINE_SECTION_TOP + i * (SECTION_HEIGHT + SECTION_GAP)}px`, height: `${SECTION_HEIGHT}px`, width: "100%", ...(track.hasData ? {} : { opacity: 0.3 }) }}>
                                                   <Icon id={track.icon} white />
                                                   <span className="track-name">{translateText(track.name)}</span>
                                               </div>
@@ -835,16 +835,16 @@ export function Timeline({ type, isClosed = false }: TimelineProps) {
                             </div>
                         </div>
 
-                        <div ref={(node) => engine.attachTrackWrapper(node)} className={cn("timeline-track-wrapper", styles.timelineTrackWrapper)} onScroll={() => engine.handleScroll()} onDragOver={(e) => engine.handleDragOver(e)} onDrop={(e) => engine.handleDrop(e)}>
-                            <div className={cn("timeline-track", styles.timelineTrack)} style={{ width: `${(timelineDuration / 1000) * zoomLevel}px`, height: `${totalTrackHeight}px` }} onMouseDown={(e) => engine.startContentInteraction(e.nativeEvent)}>
+                        <div ref={(node) => engine.attachTrackWrapper(node)} className={cn("timeline-track-wrapper", styles["timeline-track-wrapper"])} onScroll={() => engine.handleScroll()} onDragOver={(e) => engine.handleDragOver(e)} onDrop={(e) => engine.handleDrop(e)}>
+                            <div className={cn("timeline-track", styles["timeline-track"])} style={{ width: `${(timelineDuration / 1000) * zoomLevel}px`, height: `${totalTrackHeight}px` }} onMouseDown={(e) => engine.startContentInteraction(e.nativeEvent)}>
                                 <div className={cn("grid", styles.grid)}>
                                     {Array.from({ length: visibleTickCount }, (_, i) => {
                                         const tickIndex = i + visibleTicksStartIndex
                                         const pos = tickIndex * tickInterval * zoomLevel
                                         return (
                                             <div key={tickIndex}>
-                                                <div className={cn("grid-line", styles.gridLine)} style={{ left: `${pos}px` }} />
-                                                {tickIndex < totalTickCount ? Array.from({ length: 10 }, (_, j) => <div key={j} className={cn("grid-line", "minor", styles.gridLine, styles.minor)} style={{ left: `${pos + j * (tickInterval / 10) * zoomLevel}px` }} />) : null}
+                                                <div className={cn("grid-line", styles["grid-line"])} style={{ left: `${pos}px` }} />
+                                                {tickIndex < totalTickCount ? Array.from({ length: 10 }, (_, j) => <div key={j} className={cn("grid-line", "minor", styles["grid-line"], styles.minor)} style={{ left: `${pos + j * (tickInterval / 10) * zoomLevel}px` }} />) : null}
                                             </div>
                                         )
                                     })}
@@ -852,7 +852,7 @@ export function Timeline({ type, isClosed = false }: TimelineProps) {
 
                                 {firstSlideAction ? (
                                     <div
-                                        className={cn("slide-action-bar", styles.slideActionBar)}
+                                        className={cn("slide-action-bar", styles["slide-action-bar"])}
                                         style={{
                                             left: `${(firstSlideAction.time / 1000) * zoomLevel}px`,
                                             top: `${engine.getActionBaseY(firstSlideAction)}px`,
@@ -869,7 +869,7 @@ export function Timeline({ type, isClosed = false }: TimelineProps) {
                                         return (
                                             <div
                                                 key={action.id}
-                                                className={cn("action-clip", "context", "#timeline_node", styles.actionClip, selected && "selected", selected && styles.selected)}
+                                                className={cn("action-clip", "context", "#timeline_node", styles["action-clip"], selected && "selected", selected && styles.selected)}
                                                 style={clipStyle(action, baseY, SECTION_HEIGHT + 4, duration)}
                                                 data-title={`${formatTime(action.time, type, currentTimeline)}-${formatTime(duration * 1000, type, currentTimeline)}: ${action.name}`}
                                                 onMouseDown={(e) => {
@@ -877,9 +877,9 @@ export function Timeline({ type, isClosed = false }: TimelineProps) {
                                                     engine.startActionDrag(e.nativeEvent, action.id)
                                                 }}
                                             >
-                                                <div className={cn("action-clip-content", styles.actionClipContent)}>
+                                                <div className={cn("action-clip-content", styles["action-clip-content"])}>
                                                     {action.type === "audio" || action.type === "video" ? <Waveform path={action.data.path || ""} /> : null}
-                                                    <div className={cn("clip-label", styles.clipLabel)}>{action.name}</div>
+                                                    <div className={cn("clip-label", styles["clip-label"])}>{action.name}</div>
                                                 </div>
                                             </div>
                                         )
@@ -889,7 +889,7 @@ export function Timeline({ type, isClosed = false }: TimelineProps) {
                                     return (
                                         <div
                                             key={action.id}
-                                            className={cn("action-marker", action.type, "context", "#timeline_node", styles.actionMarker, selected && "selected", selected && styles.selected, faded && "faded", faded && styles.faded)}
+                                            className={cn("action-marker", action.type, "context", "#timeline_node", styles["action-marker"], selected && "selected", selected && styles.selected, faded && "faded", faded && styles.faded)}
                                             style={{ left: `${(action.time / 1000) * zoomLevel}px`, top: `${baseY + 10}px` }}
                                             data-title={`${formatTime(action.time, type, currentTimeline)}: ${action.name}`}
                                             onMouseDown={(e) => {
@@ -897,8 +897,8 @@ export function Timeline({ type, isClosed = false }: TimelineProps) {
                                                 engine.startActionDrag(e.nativeEvent, action.id)
                                             }}
                                         >
-                                            <div className={cn("action-head", styles.actionHead)}>{action.type === "action" ? <Icon id={triggerIcon(action)} size={0.9} white /> : typeof action.data?.index === "number" ? action.data.index + 1 : null}</div>
-                                            <div className={cn("action-label", styles.actionLabel)} style={cssTextToStyle(`${action.color ? `border-bottom: 1px solid ${action.color};` : ""}${type === "slide" ? "font-size: 0.7em;" : ""}`)}>
+                                            <div className={cn("action-head", styles["action-head"])}>{action.type === "action" ? <Icon id={triggerIcon(action)} size={0.9} white /> : typeof action.data?.index === "number" ? action.data.index + 1 : null}</div>
+                                            <div className={cn("action-label", styles["action-label"])} style={cssTextToStyle(`${action.color ? `border-bottom: 1px solid ${action.color};` : ""}${type === "slide" ? "font-size: 0.7em;" : ""}`)}>
                                                 {action.type === "style" ? (typeof action.data.value === "number" ? parseFloat(action.data.value.toFixed(1)) : action.data.value) : translateText(action.name)}
                                             </div>
                                         </div>
@@ -907,10 +907,10 @@ export function Timeline({ type, isClosed = false }: TimelineProps) {
 
                                 <TimelineEasing groupedActions={groupedActions} actions={actions} selectedActionIds={selectedActionIds} selectedItemIndexes={selectedItemIndexes} activeGroupIndex={easingActive} zoomLevel={zoomLevel} sectionHeight={SECTION_HEIGHT} sectionGap={SECTION_GAP} sectionTop={TIMELINE_SECTION_TOP} onActionDrag={(e, id) => engine.startActionDrag(e, id)} onClearSelection={() => engine.clearSelection()} timeline={engine.timeline} />
 
-                                {selectionRect ? <div className={cn("selection-box", styles.selectionBox)} style={{ left: `${selectionRect.x}px`, top: `${selectionRect.y}px`, width: `${selectionRect.w}px`, height: `${selectionRect.h}px` }} /> : null}
+                                {selectionRect ? <div className={cn("selection-box", styles["selection-box"])} style={{ left: `${selectionRect.x}px`, top: `${selectionRect.y}px`, width: `${selectionRect.w}px`, height: `${selectionRect.h}px` }} /> : null}
 
                                 <div className={cn("playhead", styles.playhead)} style={{ left: `${(currentTime / 1000) * zoomLevel}px` }}>
-                                    <div className={cn("playhead-line", styles.playheadLine)} />
+                                    <div className={cn("playhead-line", styles["playhead-line"])} />
                                 </div>
                             </div>
                         </div>

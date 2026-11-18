@@ -285,7 +285,7 @@ export function ShowButton({ id, show, data = null, index = null, isProject = fa
     return (
         <div id={`show_${id}`} className={`${styles.main} ${isProject ? styles.isProject : ""} ${show.played ? styles.played : ""}`}>
             <Button onClick={click} onDblClick={doubleClick} isActive={isActive} showOutline={outline} className={`context ${className}${readOnly ? "_readonly" : ""}`} style={buttonStyle} tab>
-                <div className="row" style={type === "show_placeholder" ? { fontStyle: "italic" } : undefined}>
+                <div className={`row ${styles.row}`} style={type === "show_placeholder" ? { fontStyle: "italic" } : undefined}>
                     <span className={styles.cell} style={isProject ? { width: "100%", maxWidth: show.layoutInfo?.name || show.scheduleLength ? "92%" : "100%" } : { width: "75%", minWidth: 120, maxWidth: `calc(100% ${showNumber ? "- var(--number-width)" : ""} - var(--modified-width, 0px))` }}>
                         <div className={`icon ${styles.icon} ${isMedia ? styles.isMedia : ""}`} style={{ position: "relative" }}>
                             {type === "show_placeholder" ? (

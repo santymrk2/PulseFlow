@@ -237,7 +237,7 @@ export function ProjectContentList({ tree, recentlyUsedList: _recentlyUsedList =
     }
 
     return (
-        <div id="projectArea" className={`list ${projectReadOnly ? "" : "context #project"}`}>
+        <div id="projectArea" className={`list ${styles.list} ${projectReadOnly ? "" : "context #project"}`}>
             <Autoscroll scrollElem={scrollElem} offset={offset} timeout={150}>
                 <DropArea id="project" selectChildren hoverTimeout={150}>
                     {(fileOver) =>
@@ -247,7 +247,7 @@ export function ProjectContentList({ tree, recentlyUsedList: _recentlyUsedList =
                                     const first = section.items[0]
                                     const isCollapsed = !!currentProject?.sectionsCollapsed && first?.type === "section" && !section.items.some((item) => (activeIndex === undefined ? item.id === activeId : item.index === activeIndex))
                                     return (
-                                        <div key={sectionIndex} className="listSection" style={{ ...(section.color ? { "--border-color": section.color } : {}), ...(isCollapsed && section.items.length > 1 ? { borderBottom: "3px solid var(--primary-lighter)" } : {}) } as CSSProperties}>
+                                        <div key={sectionIndex} className={`listSection ${styles.listSection}`} style={{ ...(section.color ? { "--border-color": section.color } : {}), ...(isCollapsed && section.items.length > 1 ? { borderBottom: "3px solid var(--primary-lighter)" } : {}) } as CSSProperties}>
                                             {section.items.map((show, index) => {
                                                 const itemIndex = show.index ?? -1
                                                 const sectionData = show.data as SectionData | undefined
@@ -300,11 +300,11 @@ export function ProjectContentList({ tree, recentlyUsedList: _recentlyUsedList =
                                                                     </span>
                                                                 ) : null}
                                                                 {isActive ? (
-                                                                    <span className="arrow">
+                                                                    <span className={`arrow ${styles.arrow}`}>
                                                                         <Icon id="next" white />
                                                                     </span>
                                                                 ) : isCollapsed && section.items.length > 1 ? (
-                                                                    <span className="arrow">
+                                                                    <span className={`arrow ${styles.arrow}`}>
                                                                         <Icon id="add" size={0.8} white />
                                                                     </span>
                                                                 ) : null}
@@ -339,8 +339,8 @@ export function ProjectContentList({ tree, recentlyUsedList: _recentlyUsedList =
                                                 <Icon id="clear" size={0.9} white />
                                             </Button>
                                         </div>
-                                        <div className="recommended">
-                                            <div className="listSection">
+                                        <div className={`recommended ${styles.recommended}`}>
+                                            <div className={`listSection ${styles.listSection}`}>
                                                 {recommended.map((path) => {
                                                     const name = getFileName(path)
                                                     const type = getMediaType(getExtension(name))
@@ -365,7 +365,7 @@ export function ProjectContentList({ tree, recentlyUsedList: _recentlyUsedList =
                                     <T id="empty.general" />
                                 </span>
                                 {shouldPasteText ? (
-                                    <span className="buttons" style={{ paddingTop: 20 }}>
+                                    <span className={`buttons ${styles.buttons}`} style={{ paddingTop: 20 }}>
                                         <Button variant="outline" title="actions.import: formats.clipboard" onClick={() => clipboardToProject()}>
                                             <Icon id="paste" white />
                                             <T id="formats.clipboard" />

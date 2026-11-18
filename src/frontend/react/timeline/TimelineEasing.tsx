@@ -196,7 +196,7 @@ export function TimelineEasing({ groupedActions, actions, selectedActionIds, sel
     function renderControlPoint(curveIndex: number, pin: 1 | 2, x: number, y: number) {
         return (
             <div
-                className={cn("easing-control-point", styles.easingControlPoint)}
+                className={cn("easing-control-point", styles["easing-control-point"])}
                 style={{ left: `${x}px`, top: `${y - Y_OFFSET}px` }}
                 onMouseDown={(e) => {
                     if (e.button === 1) {
@@ -222,7 +222,7 @@ export function TimelineEasing({ groupedActions, actions, selectedActionIds, sel
     return (
         <>
             {activeGroupIndex !== null && groupedActions && groupedActions[activeGroupIndex] ? (
-                <div className={cn("track-header easing", styles.trackHeader, styles.easing)} style={{ top: `${sectionTop + activeGroupIndex * (sectionHeight + sectionGap) + sectionHeight}px`, height: "120px", width: "100%" }} onMouseDown={(e) => e.button === 0 && onClearSelection?.()}>
+                <div className={cn("track-header easing", styles["track-header"], styles.easing)} style={{ top: `${sectionTop + activeGroupIndex * (sectionHeight + sectionGap) + sectionHeight}px`, height: "120px", width: "100%" }} onMouseDown={(e) => e.button === 0 && onClearSelection?.()}>
                     {points.length > 1 ? (
                         <svg className="easing-curve-svg" style={{ position: "absolute", left: 0, top: 0, width: "100%", height: "100%", zIndex: 2 }} width="100%" height="100%">
                             {points.slice(0, -1).map((p1, i) => {
@@ -236,8 +236,8 @@ export function TimelineEasing({ groupedActions, actions, selectedActionIds, sel
                     {points.map((p, i) =>
                         selectedActionIds.includes(p.id) ? (
                             <Fragment key={`lines-${p.id}`}>
-                                {i > 0 ? <div className={cn("easing-line", styles.easingLine)} style={cssTextToStyle(getLineStyle(easingCurvesPx[i - 1].x2, easingCurvesPx[i - 1].y2 - Y_OFFSET, points[i].x, points[i].y - Y_OFFSET))} /> : null}
-                                {i < points.length - 1 ? <div className={cn("easing-line", styles.easingLine)} style={cssTextToStyle(getLineStyle(easingCurvesPx[i].x1, easingCurvesPx[i].y1 - Y_OFFSET, points[i].x, points[i].y - Y_OFFSET))} /> : null}
+                                {i > 0 ? <div className={cn("easing-line", styles["easing-line"])} style={cssTextToStyle(getLineStyle(easingCurvesPx[i - 1].x2, easingCurvesPx[i - 1].y2 - Y_OFFSET, points[i].x, points[i].y - Y_OFFSET))} /> : null}
+                                {i < points.length - 1 ? <div className={cn("easing-line", styles["easing-line"])} style={cssTextToStyle(getLineStyle(easingCurvesPx[i].x1, easingCurvesPx[i].y1 - Y_OFFSET, points[i].x, points[i].y - Y_OFFSET))} /> : null}
                             </Fragment>
                         ) : null
                     )}
@@ -259,15 +259,15 @@ export function TimelineEasing({ groupedActions, actions, selectedActionIds, sel
                         return (
                             <div
                                 key={p.id}
-                                className={cn("action-marker", p.action.type, "context #timeline_node", styles.actionMarker, selectedActionIds.includes(p.action.id) && "selected", selectedActionIds.includes(p.action.id) && styles.selected)}
+                                className={cn("action-marker", p.action.type, "context #timeline_node", styles["action-marker"], selectedActionIds.includes(p.action.id) && "selected", selectedActionIds.includes(p.action.id) && styles.selected)}
                                 style={{ left: `${p.x}px`, top: `${p.y}px`, transform: "translate(-50%, -50%)" }}
                                 onMouseDown={(e) => {
                                     e.stopPropagation()
                                     if (e.button === 0) onActionDrag(e.nativeEvent, p.action.id)
                                 }}
                             >
-                                <div className={cn("action-head", styles.actionHead)}>{p.action.type === "action" ? <Icon id={triggerIcon || "actions"} size={0.9} white /> : typeof index === "number" ? index + 1 : null}</div>
-                                <div className={cn("action-label", styles.actionLabel)} style={cssTextToStyle(`${p.action.color ? `border-bottom: 1px solid ${p.action.color};` : ""}font-size: 0.7em;`)}>
+                                <div className={cn("action-head", styles["action-head"])}>{p.action.type === "action" ? <Icon id={triggerIcon || "actions"} size={0.9} white /> : typeof index === "number" ? index + 1 : null}</div>
+                                <div className={cn("action-label", styles["action-label"])} style={cssTextToStyle(`${p.action.color ? `border-bottom: 1px solid ${p.action.color};` : ""}font-size: 0.7em;`)}>
                                     {p.action.type === "style" ? (typeof value === "number" ? parseFloat(value.toFixed(1)) : value) : translateText(p.action.name)}
                                 </div>
                             </div>
@@ -277,15 +277,15 @@ export function TimelineEasing({ groupedActions, actions, selectedActionIds, sel
             ) : null}
 
             {contextMenuState ? (
-                <div className={cn("easing-context-menu", styles.easingContextMenu)} style={{ left: `${contextMenuState.x}px`, top: `${contextMenuState.y}px` }} onClick={(e) => e.stopPropagation()}>
-                    <button type="button" className={cn("easing-context-menu-item", styles.easingContextMenuItem)} onClick={() => applyCurvePinPreset(contextMenuState?.curveIndex ?? 0, contextMenuState?.pin ?? 1, "linear")}>
-                        <svg className={cn("preset-preview", styles.presetPreview)} viewBox="0 0 40 24" width="40" height="24" fill="none">
+                <div className={cn("easing-context-menu", styles["easing-context-menu"])} style={{ left: `${contextMenuState.x}px`, top: `${contextMenuState.y}px` }} onClick={(e) => e.stopPropagation()}>
+                    <button type="button" className={cn("easing-context-menu-item", styles["easing-context-menu-item"])} onClick={() => applyCurvePinPreset(contextMenuState?.curveIndex ?? 0, contextMenuState?.pin ?? 1, "linear")}>
+                        <svg className={cn("preset-preview", styles["preset-preview"])} viewBox="0 0 40 24" width="40" height="24" fill="none">
                             <path d="M 0,24 L 40,0" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" />
                         </svg>
                         <span>Linear</span>
                     </button>
-                    <button type="button" className={cn("easing-context-menu-item", styles.easingContextMenuItem)} onClick={() => applyCurvePinPreset(contextMenuState?.curveIndex ?? 0, contextMenuState?.pin ?? 1, "ease")}>
-                        <svg className={cn("preset-preview", styles.presetPreview)} viewBox="0 0 40 24" width="40" height="24" fill="none">
+                    <button type="button" className={cn("easing-context-menu-item", styles["easing-context-menu-item"])} onClick={() => applyCurvePinPreset(contextMenuState?.curveIndex ?? 0, contextMenuState?.pin ?? 1, "ease")}>
+                        <svg className={cn("preset-preview", styles["preset-preview"])} viewBox="0 0 40 24" width="40" height="24" fill="none">
                             {contextMenuState.pin === 1 ? <path d="M 0,24 C 20,0 36,0 40,0" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" /> : <path d="M 0,24 C 4,24 20,24 40,0" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round" />}
                         </svg>
                         <span>Ease</span>

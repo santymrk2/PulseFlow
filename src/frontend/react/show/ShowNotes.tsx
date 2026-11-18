@@ -77,7 +77,7 @@ export function ShowNotes() {
     if (active) {
         return (
             <Resizeable id="notes" side="bottom" defaultWidth={DEFAULT_WIDTH * 0.5} maxWidth={DEFAULT_WIDTH * 0.8} minWidth={47}>
-                <div className="dark" style={{ display: "contents" }}>
+                <div className={`dark ${styles.dark}`} style={{ display: "contents" }}>
                     <Notes value={note} autofocus onEdit={edit} />
                 </div>
                 <Button title="actions.close" onClick={() => showNotesActive.set(false)} style={{ position: "absolute", top: 9, right: "4.5px", opacity: 0.8, padding: 8 }} white>

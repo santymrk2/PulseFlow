@@ -124,24 +124,24 @@ export function SlideGroups() {
                             const groupInfo = currentGroups[slide.globalGroup || ""]
                             return (
                                 <SelectElem key={slide.id} id="group" data={{ id: slide.id } as never} draggable={!isLocked && !slide.locked}>
-                                    <div className={`slide ${isLocked ? "" : "context #group"}`} role="button" tabIndex={0} style={groupStyle(slide, true)} onClick={(event) => selectGroup(slide, event)} onKeyDown={createKeydownHandler((event) => selectGroup(slide, event.nativeEvent))}>
+                                    <div className={`slide ${styles.slide} ${isLocked ? "" : "context #group"}`} role="button" tabIndex={0} style={groupStyle(slide, true)} onClick={(event) => selectGroup(slide, event)} onKeyDown={createKeydownHandler((event) => selectGroup(slide, event.nativeEvent))}>
                                         <p data-title={slide.group}>
                                             {slide.locked ? (
-                                                <span className="info template" data-title={translateText("output.state_locked")}>
+                                                <span className={`info template ${styles.info} ${styles.template}`} data-title={translateText("output.state_locked")}>
                                                     <Icon id="lock" size={0.7} white />
                                                 </span>
                                             ) : groupInfo?.template ? (
-                                                <span className="info template" data-title={`${translateText("groups.group_template")}: <b>${currentTemplates[groupInfo.template || ""]?.name || ""}</b>`}>
+                                                <span className={`info template ${styles.info} ${styles.template}`} data-title={`${translateText("groups.group_template")}: <b>${currentTemplates[groupInfo.template || ""]?.name || ""}</b>`}>
                                                     <Icon id="templates" size={0.7} white />
                                                 </span>
                                             ) : displayGlobalGroups && currentGroups[slide.globalGroup || ""] ? (
-                                                <span className="info template" data-title={translateText("groups.global")}>
+                                                <span className={`info template ${styles.info} ${styles.template}`} data-title={translateText("groups.global")}>
                                                     <Icon id="bind" size={0.6} white />
                                                 </span>
                                             ) : null}
                                             {slide.group === "." ? "" : slide.group || "—"}
                                             {groupCount > 1 ? (
-                                                <span className="info shortcut" style={{ opacity: 0.5, fontStyle: "initial" }}>
+                                                <span className={`info shortcut ${styles.info} ${styles.shortcut}`} style={{ opacity: 0.5, fontStyle: "initial" }}>
                                                     {groupCount}
                                                 </span>
                                             ) : null}
@@ -167,15 +167,15 @@ export function SlideGroups() {
                             {sortedGroups.length ? (
                                 sortedGroups.map((slide) => (
                                     <SelectElem key={slide.id} id="global_group" data={{ slide } as never} draggable>
-                                        <div className="slide context #global_group" role="button" tabIndex={0} style={groupStyle(slide, false)} onClick={(event) => addGlobalGroup(slide, event)} onKeyDown={createKeydownHandler((event) => addGlobalGroup(slide, event.nativeEvent))}>
+                                        <div className={`slide ${styles.slide} context #global_group`} role="button" tabIndex={0} style={groupStyle(slide, false)} onClick={(event) => addGlobalGroup(slide, event)} onKeyDown={createKeydownHandler((event) => addGlobalGroup(slide, event.nativeEvent))}>
                                             <p data-title={slide.group}>
                                                 {currentGroups[slide.id]?.template ? (
-                                                    <span className="info template" data-title={`${translateText("groups.group_template")}: <b>${currentTemplates[currentGroups[slide.id].template || ""]?.name || ""}</b>`}>
+                                                    <span className={`info template ${styles.info} ${styles.template}`} data-title={`${translateText("groups.group_template")}: <b>${currentTemplates[currentGroups[slide.id].template || ""]?.name || ""}</b>`}>
                                                         <Icon id="templates" size={0.7} white />
                                                     </span>
                                                 ) : null}
                                                 {slide.group === "." ? "" : slide.group || "—"}
-                                                {currentGroups[slide.id]?.shortcut ? <span className="info shortcut">{currentGroups[slide.id].shortcut}</span> : null}
+                                                {currentGroups[slide.id]?.shortcut ? <span className={`info shortcut ${styles.info} ${styles.shortcut}`}>{currentGroups[slide.id].shortcut}</span> : null}
                                             </p>
                                         </div>
                                     </SelectElem>
