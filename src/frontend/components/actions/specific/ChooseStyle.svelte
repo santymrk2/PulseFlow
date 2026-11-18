@@ -1,57 +1,19 @@
 <script lang="ts">
+    // Migrado a React en F24.22. Cascarón temporal: conserva la API Svelte mientras los padres se migran.
     import { createEventDispatcher } from "svelte"
-    import { outputs, styles } from "../../../stores"
-    import { newToast } from "../../../utils/common"
-    import { translateText } from "../../../utils/language"
-    import { keysToID, sortByName } from "../../helpers/array"
-    import SelectField from "../../../lib/components/ui/select-field/select-field.svelte"
     import type { API_output_style } from "../api"
+    import ReactIsland from "../../../react/bridge/ReactIsland.svelte"
+    import { ChooseStyle } from "../../../react/actions/specific/ChooseStyle"
 
     export let value: API_output_style
 
-    let styleId: string = value.outputStyle || ""
-    $: if (!Object.keys($styles).length) newToast("toast.empty_styles")
-
-    let styleOutputs = value.styleOutputs || { type: "active" }
-
-    let outputsOptions = [
-        { value: "active", label: translateText("actions.active_outputs") },
-        { value: "all", label: translateText("actions.all_outputs") },
-        { value: "specific", label: translateText("actions.specific_outputs") }
-    ]
-    let outputsList = getList($outputs).filter((a) => !a.stageOutput)
-    let stylesList = getList($styles).map((a) => ({ value: a.id, label: a.name }))
-
-    function getList(list) {
-        return sortByName(keysToID(list))
-    }
-
-    let dispatch = createEventDispatcher()
-    function updateStyle(key: string, newValue: any) {
-        value[key] = newValue
-
-        if (key === "outputStyle") styleId = newValue
-        else styleOutputs = newValue
-
-        dispatch("change", value)
-    }
-
-    function setOutputStyle(outputId: string, styleId: string) {
-        let newOutputs = styleOutputs.outputs || {}
-
-        newOutputs[outputId] = styleId
-        if (!styleId) delete newOutputs[outputId]
-
-        updateStyle("styleOutputs", { type: "specific", outputs: newOutputs })
-    }
+    const dispatch = createEventDispatcher<{ change: API_output_style }>()
 </script>
 
-<SelectField label="settings.display_settings" options={outputsOptions} value={styleOutputs.type} on:change={(e) => updateStyle("styleOutputs", { type: e.detail, outputs: styleOutputs.outputs || {} })} />
-
-{#if styleOutputs.type === "specific"}
-    {#each outputsList as output}
-        <SelectField label={output.name} options={stylesList} value={styleOutputs.outputs[output.id]} on:change={(e) => setOutputStyle(output.id, e.detail)} allowEmpty />
-    {/each}
-{:else}
-    <SelectField label="edit.style" options={stylesList} value={styleId} on:change={(e) => updateStyle("outputStyle", e.detail)} allowEmpty />
-{/if}
+<ReactIsland
+    component={ChooseStyle}
+    props={{
+        value,
+        onChange: (next: API_output_style) => dispatch("change", next)
+    }}
+/>

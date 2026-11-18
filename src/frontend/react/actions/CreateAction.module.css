@@ -1,0 +1,43 @@
+.box {
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.part {
+    padding: 3px;
+    font-size: 0.8em;
+
+    background-color: var(--primary-darker);
+    border-bottom: 1px solid var(--primary-lighter);
+
+    display: flex;
+    justify-content: space-between;
+    gap: 5px;
+}
+
+/* list */
+
+.buttons {
+    display: flex;
+    flex-direction: column;
+
+    background-color: var(--primary-darker);
+    border: 1px solid var(--primary-lighter);
+    border-radius: 8px;
+    overflow: hidden;
+
+    padding: 10px 0;
+}
+.buttons :global(button:not(.active):nth-child(odd)) {
+    background-color: rgb(0 0 20 / 0.08) !important;
+}
+
+.menuIndent {
+    display: flex;
+    flex-direction: column;
+
+    border-left: 4px solid var(--primary-lighter);
+}

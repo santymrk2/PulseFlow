@@ -1,0 +1,36 @@
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 6px 20px;
+    cursor: pointer;
+}
+.item:hover {
+    background-color: rgb(0 0 0 / 0.2);
+}
+
+.inner {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 300px;
+}
+
+.bold {
+    font-weight: bold;
+    max-width: 300px;
+}
+
+.hr {
+    margin: 5px 0;
+    height: 1px;
+    border: none;
+    background-color: var(--primary-lighter);
+}
