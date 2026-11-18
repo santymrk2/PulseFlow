@@ -68,7 +68,7 @@ export function Splash() {
             {specialValue.splashText ? (
                 <p style={{ paddingTop: "30px" }}>
                     <span dangerouslySetInnerHTML={{ __html: splash?.text || "" }} />
-                    <span className={styles.links} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                    <span style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
                         {(splash?.links || []).map((link) => (
                             <Link key={link} url={link}>
                                 {link.replace(/^(https?:\/\/)/, "")}

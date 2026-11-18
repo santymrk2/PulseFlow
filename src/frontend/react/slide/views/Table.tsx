@@ -183,7 +183,7 @@ export function Table({ item, edit = false, ref = {}, ratio = 1, index = -1 }: T
     const textAlign = alignStyles["text-align"] || "center"
 
     return (
-        <div ref={containerRef} className={`${styles.container} ${edit ? styles.editMode : ""}`} style={{ "--ratio-zoom": ratio || 1 } as CSSProperties} onFocus={() => setIsAnyCellFocused(true)} onBlur={handleFocusOut}>
+        <div ref={containerRef} className={styles.container} style={{ "--ratio-zoom": ratio || 1 } as CSSProperties} onFocus={() => setIsAnyCellFocused(true)} onBlur={handleFocusOut}>
             <table style={{ border: `${borderWidth}px solid ${borderColor}`, borderCollapse: "collapse", width: "100%", height: "100%" }}>
                 <tbody>
                     {tableData.rows.map((row, rIdx) => (

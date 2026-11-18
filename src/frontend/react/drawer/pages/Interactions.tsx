@@ -282,7 +282,7 @@ export function Interactions() {
                     ) : null}
                 </div>
             ) : showHistory && !isActive ? (
-                <div className={styles.history} style={{ display: "flex", flexDirection: "column", gap: 8, padding: 10, overflow: "auto" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: 10, overflow: "auto" }}>
                     {clone(openedInteraction?.history || [])
                         .reverse()
                         .map((entry, entryIndex) => (

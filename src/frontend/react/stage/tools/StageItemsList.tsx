@@ -60,7 +60,7 @@ export function StageItemsList() {
                 </span>
             </div>
 
-            <div className={`items ${invertedItemList.length > 1 ? "context #items_list_item_stage" : ""} ${styles.items}`} style={{ display: "flex", flexDirection: "column" }} onMouseDown={selectOnRightClick}>
+            <div className={`items ${invertedItemList.length > 1 ? "context #items_list_item_stage" : ""}`} style={{ display: "flex", flexDirection: "column" }} onMouseDown={selectOnRightClick}>
                 {invertedItemList.map((currentItem, i) => {
                     const id = currentItem.id
                     const type = currentItem.type || "text"

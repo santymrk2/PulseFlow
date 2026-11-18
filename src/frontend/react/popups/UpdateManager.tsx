@@ -89,9 +89,7 @@ export function UpdateManager() {
             {!loading && !versionsMatch && latestVersion ? (
                 <div className={styles.versions}>
                     <span className={styles.value}>v{versionValue}</span>
-                    <span className={styles.label} style={{ color: "var(--secondary)", fontWeight: "bold" }}>
-                        →
-                    </span>
+                    <span style={{ color: "var(--secondary)", fontWeight: "bold" }}>→</span>
                     <span className={styles.value}>v{latestVersion}</span>
                 </div>
             ) : null}
@@ -102,9 +100,7 @@ export function UpdateManager() {
                 </Button>
             ) : !loading && !hasError ? (
                 <div className={styles.versions}>
-                    <span className={styles.label} style={{ color: "var(--secondary)", fontWeight: "bold" }}>
-                        ✓
-                    </span>
+                    <span style={{ color: "var(--secondary)", fontWeight: "bold" }}>✓</span>
                     <span className={styles.value}>v{latestVersion}</span>
                 </div>
             ) : null}

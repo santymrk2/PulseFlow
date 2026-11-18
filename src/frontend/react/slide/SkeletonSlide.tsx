@@ -36,7 +36,7 @@ export function SkeletonSlide({ slide, index, color, columns = 1, active = false
                 <div className={stylesCss.label} style={{ color, marginBottom: "5px" }}>
                     <span style={{ color: "var(--text)", opacity: 0.85, fontSize: "0.9em" }}>{index + 1}</span>
                     <span className={stylesCss.text} dangerouslySetInnerHTML={{ __html: name === null || name === "." ? "" : name || "—" }} />
-                    <div className={stylesCss.alignment} />
+                    <div />
                 </div>
             ) : null}
 
@@ -48,7 +48,7 @@ export function SkeletonSlide({ slide, index, color, columns = 1, active = false
                 <div className={stylesCss.label} style={{ color, borderBottom: `2px solid ${color || "var(--primary-darkest)"}` }}>
                     <span style={{ color: "var(--text)", opacity: 0.85, fontSize: "0.9em" }}>{index + 1}</span>
                     <span className={stylesCss.text} style={name === null ? { opacity: 0 } : undefined} dangerouslySetInnerHTML={{ __html: name === null ? "-" : name === "." ? "" : name || "—" }} />
-                    <div className={stylesCss.alignment} />
+                    <div />
                 </div>
             ) : null}
         </div>

@@ -724,7 +724,7 @@ export function EditboxLines({ item, ref, index, editIndex: editIndexProp = -1, 
     const alignStyle = plain ? undefined : itemAlign || undefined
     const justifyAlign = plain ? undefined : itemAlign.replace("align-items", "justify-content")
 
-    const editClass = ["edit", "context", plain ? "#editbox_text" : "#edit_box__editbox_text", styles.edit, chordsMode ? `hidden ${styles.hidden}` : "", shapeOutside ? `hasShapeOutside ${styles.hasShapeOutside}` : "", isAuto && autoSize && !plain ? `autoSize ${styles.autoSize}` : "", item.lines?.length < 2 && !item.lines?.[0]?.text?.[0]?.value?.length ? `height ${styles.height}` : "", chordsMode ? `tallLines ${styles.tallLines}` : ""].filter(Boolean).join(" ")
+    const editClass = ["edit", "context", plain ? "#editbox_text" : "#edit_box__editbox_text", styles.edit, chordsMode ? `hidden ${styles.hidden}` : "", shapeOutside ? `hasShapeOutside ${styles.hasShapeOutside}` : "", isAuto && autoSize && !plain ? `autoSize ${styles.autoSize}` : "", item.lines?.length < 2 && !item.lines?.[0]?.text?.[0]?.value?.length ? `height ${styles.height}` : ""].filter(Boolean).join(" ")
 
     const editInlineStyle: React.CSSProperties = {
         ...(shapeOutside ? ({ ["--shape-outside" as string]: shapeOutside, ["--shape-float" as string]: shapeFloatSide, ["--shape-offset-top" as string]: `${shapeOffsetTop}px` } as React.CSSProperties) : {}),

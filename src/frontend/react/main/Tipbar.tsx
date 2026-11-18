@@ -69,7 +69,7 @@ export function Tipbar() {
                 ) : null}
             </div>
 
-            <div className={styles.close}>
+            <div>
                 <Button style={{ padding: "6px" }} title="actions.close" icon="close" onClick={() => close()} />
             </div>
         </section>

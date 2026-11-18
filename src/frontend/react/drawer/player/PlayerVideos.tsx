@@ -101,7 +101,7 @@ export function PlayerVideos({ active }: PlayerVideosProps) {
                             <div className={styles.icons}>
                                 {videoTags.length ? (
                                     <div style={{ maxWidth: "100%" }}>
-                                        <div className={styles.button}>
+                                        <div className="button">
                                             <Button align="start" style={{ padding: "3px" }} redHover title={translateText("actions.remove")} onClick={() => removeStyle("tags", video.rid)}>
                                                 <Icon id="tag" size={0.9} white />
                                             </Button>

@@ -53,7 +53,7 @@ export function Modal({ title = "", width = 960, height = 620, closable = true, 
     }
 
     return (
-        <div className={`${styles.modalBackdrop}${isOptimized ? ` ${styles.isOptimized}` : ""}`} style={isWindows ? { height: `calc(100% - ${MENU_BAR_HEIGHT}px)` } : undefined} onMouseDown={backdropMouseDown}>
+        <div className={`${styles.modalBackdrop}${isOptimized ? " isOptimized" : ""}`} style={isWindows ? { height: `calc(100% - ${MENU_BAR_HEIGHT}px)` } : undefined} onMouseDown={backdropMouseDown}>
             <div
                 ref={cardRef}
                 className={styles.modal}

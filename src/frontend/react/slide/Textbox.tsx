@@ -697,7 +697,6 @@ export function Textbox({
                 isDisabledVariable && "isDisabledVariable",
                 isDisabledVariable && css.isDisabledVariable,
                 noTransition && "noTransition",
-                noTransition && css.noTransition,
                 chordLines.length > 0 && "chords",
                 chordLines.length > 0 && css.chords,
                 (item?.button?.press || item?.button?.release) && "clickable",

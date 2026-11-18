@@ -119,7 +119,7 @@ export function ShowHeader({ showId, hideOptions = false }: ShowHeaderProps) {
                     </div>
 
                     {layouts && activeLayout ? <span className={styles.layout}>· {currentShow?.layouts?.[activeLayout]?.name || activeLayout}</span> : null}
-                    {currentShow ? <span className={`${styles.layout} ${styles.count}`}>· {translateText(slideCount === 1 ? "ui.slide" : "ui.slides", null, [String(slideCount)])}</span> : null}
+                    {currentShow ? <span className={styles.layout}>· {translateText(slideCount === 1 ? "ui.slide" : "ui.slides", null, [String(slideCount)])}</span> : null}
 
                     {notes ? (
                         <span className={styles.notes} role="none" data-title={translateText(notes.title)} onClick={(event) => openTab(event, notes?.tab || "")}>

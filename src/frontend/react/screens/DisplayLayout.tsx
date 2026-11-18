@@ -58,7 +58,7 @@ export function DisplayLayout({ displays = [], width = 480, height = 320, assign
                         ) : null}
                         {item.width > 90 ? (
                             <span className={styles.meta}>
-                                <span className={styles.name}>{label}</span>
+                                <span>{label}</span>
                                 <span className={styles.res}>{`${w}×${h}`}</span>
                             </span>
                         ) : null}

@@ -398,7 +398,7 @@ export function Stagebox({ id, item, stageLayout = null, ratio, preview = false,
                             <>
                                 {(item.type ? item.includeMedia : !id.includes("_text")) && currentBackground ? (
                                     typeof (slideOffset === 0 ? currentBackground : slideOffset === 1 ? currentBackground.next : slideOffset === 2 ? currentBackground.next2 : null)?.path === "string" ? (
-                                        <div className={`image ${styles.image}`} style={cssTextToStyle("position: absolute;left: 0;top: 0;width: 100%;height: 100%;")}>
+                                        <div className="image" style={cssTextToStyle("position: absolute;left: 0;top: 0;width: 100%;height: 100%;")}>
                                             <Media
                                                 outputId={outputWindowId}
                                                 path={(slideOffset === 0 ? currentBackground : slideOffset === 1 ? currentBackground.next : slideOffset === 2 ? currentBackground.next2 : null)!.path || ""}

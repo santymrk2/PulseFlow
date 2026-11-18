@@ -1,7 +1,7 @@
 import { useState } from "react"
 import type { Output } from "../../../types/Output"
 import type { TabsObj } from "../../../types/Tabs"
-import { activeShow, labelsDisabled, outputs, showsCache, slideTimers } from "../../stores"
+import { activeShow, outputs, showsCache, slideTimers } from "../../stores"
 import { getActiveOutputs } from "../../components/helpers/output"
 import { _show } from "../../components/helpers/shows"
 import { translateText } from "../../utils/language"
@@ -21,7 +21,6 @@ export function ShowTools() {
     const [active, setActive] = useState("audio")
 
     const currentActiveShow = useStore(activeShow)
-    const currentLabelsDisabled = useStore(labelsDisabled)
     const currentOutputs = useStore(outputs)
     const currentShowsCache = useStore(showsCache)
     const currentSlideTimers = useStore(slideTimers)
@@ -46,7 +45,7 @@ export function ShowTools() {
     }
 
     return (
-        <div className={`main border ${styles.main} ${!currentLabelsDisabled ? styles.labels : ""}`}>
+        <div className={`main border ${styles.main}`}>
             {reference === "lessons" ? null : (
                 <>
                     <Tabs tabs={tabs} active={active} onActiveChange={setActive} labels={false} />

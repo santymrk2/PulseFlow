@@ -175,7 +175,7 @@ export function Chart({ item, ref = {} }: ChartProps) {
                             const y = yAxis - barHeight
                             return (
                                 <g key={i}>
-                                    <rect x={x} y={y} width={barWidth} height={barHeight} fill={datum.color} rx="4" className={styles.barRect} />
+                                    <rect x={x} y={y} width={barWidth} height={barHeight} fill={datum.color} rx="4" />
                                     <text x={paddingLeft + (i + 1) * spacing} y={y - 8} className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.valText}`} textAnchor="middle">
                                         {datum.value}%
                                     </text>
@@ -261,7 +261,7 @@ export function Chart({ item, ref = {} }: ChartProps) {
                             ))}
                         </g>
                         {showLegend && visibleSegments.length > 0 ? (
-                            <g transform={`translate(0, ${height - (visibleNumRows - 1) * rowGap - Math.max(20, fontSize * 0.5)})`} className={styles.chartLegend}>
+                            <g transform={`translate(0, ${height - (visibleNumRows - 1) * rowGap - Math.max(20, fontSize * 0.5)})`}>
                                 {visibleSegments.map((segment, i) => {
                                     const rowIdx = Math.floor(i / visibleItemsPerRow)
                                     const colIdx = i % visibleItemsPerRow

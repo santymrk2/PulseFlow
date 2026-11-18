@@ -212,7 +212,7 @@ export function MultiOutputs({ disableTransitions = false }: MultiOutputsProps) 
                                         const isStreaming = isRtmp ? output.rtmpData?.streaming : output.webrtcData?.streaming
                                         const unhealthy = isRtmp && isStreaming ? getUnhealthyDestinations(output.rtmpData, currentRtmpStatus[output.id]) : []
                                         return (
-                                            <div className={`${styles.badge} ${styles.live}`} style={{ backgroundColor: isStreaming ? (unhealthy.length ? "#ab8000" : "#b60707") : "var(--primary-darker)" }}>
+                                            <div className={styles.badge} style={{ backgroundColor: isStreaming ? (unhealthy.length ? "#ab8000" : "#b60707") : "var(--primary-darker)" }}>
                                                 <Button style={{ padding: "2px 3px", minHeight: 0 }} onClick={() => (isRtmp ? (output.rtmpData?.streaming ? stopRtmpStreaming(output.id, true) : startRtmpStreaming(output.id)) : output.webrtcData?.streaming ? stopStreaming(output.id, true) : startStreaming(output.id))} title={unhealthy.length ? `${unhealthy.join(", ")} not live` : isStreaming ? "output.stop_streaming" : "output.start_streaming"}>
                                                     {translateText(isStreaming ? "output.is_live" : "output.go_live", currentDictionary)}
                                                 </Button>
@@ -221,7 +221,7 @@ export function MultiOutputs({ disableTransitions = false }: MultiOutputsProps) 
                                     })() : null}
 
                                     {currentActiveRecording?.outputId === output.id || (currentActiveRecording?.isOutput && !currentActiveRecording.outputId && outs[0]?.id === output.id) ? (
-                                        <div className={`${styles.badge} ${styles.rec}`} style={{ backgroundColor: "#b60707" }}>
+                                        <div className={styles.badge} style={{ backgroundColor: "#b60707" }}>
                                             <Button style={{ padding: "2px 4px", minHeight: 0, gap: "4px" }} onClick={() => stopMediaRecorder()} title="actions.stop_recording">
                                                 <Icon id="record" size={0.7} white />
                                                 REC

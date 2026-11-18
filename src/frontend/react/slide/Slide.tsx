@@ -389,7 +389,7 @@ export function Slide({ showId, slide, layoutSlide, layoutSlides = [], show, col
                                 <span style={{ color: currentFullColors ? getContrast(displayColor || "") : "var(--text)", opacity: 0.85, fontSize: "0.9em" }}>{index + 1}</span>
                                 <span className={`text ${css.text}`} style={name === null || name === "." ? { opacity: 0 } : undefined} dangerouslySetInnerHTML={renderNameHtml("-")} />
                                 {isGroupLocked ? (
-                                    <span className={`lock ${css.lock}`}>
+                                    <span className="lock">
                                         <Icon id="lock" size={0.7} style={cssTextToStyle("color: var(--text);opacity: 0.3;")} white />
                                     </span>
                                 ) : null}

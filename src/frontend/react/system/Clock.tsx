@@ -93,7 +93,7 @@ export function Clock({ item = {}, style = true, fontStyle = "", type = "digital
                     <span className={styles.colored}>{pad(h)}</span>:<span className={styles.colored}>{pad(m)}</span>
                     {seconds ? <span style={{ fontSize: "0.5em" }}>:{pad(s)}</span> : null}
                     {twelve ? (
-                        <span className={cn(styles.amPm, pm && styles.colored)} style={{ fontSize: "0.3em", fontWeight: "bold" }}>
+                        <span className={pm ? styles.colored : undefined} style={{ fontSize: "0.3em", fontWeight: "bold" }}>
                             &nbsp;{pm ? "PM" : "AM"}
                         </span>
                     ) : null}

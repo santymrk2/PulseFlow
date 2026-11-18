@@ -408,7 +408,7 @@ export function TextboxLines({
                 <div key={lineIndex}>
                     {chords && chordLines[lineIndex] ? (
                         <div
-                            className={cn("break chords", styles.break, styles.chords, lineIndex === 0 && "first", lineIndex === 0 && styles.first, chordOnly && "chordOnly", chordOnly && styles.chordOnly, !!stageItem && "stageChords", !!stageItem && styles.stageChords)}
+                            className={cn("break chords", styles.break, styles.chords, lineIndex === 0 && "first", chordOnly && "chordOnly", chordOnly && styles.chordOnly, !!stageItem && "stageChords", !!stageItem && styles.stageChords)}
                             style={cssTextToStyle(`--font-size: ${fontSize || baseFontSize || defaultResolvedFontSize || 100}px;` + `--offsetY: ${(stageItem?.chords ? stageItem.chords.offsetY : item?.chords?.offsetY) || 0}px;` + (style ? line.align || "" : ""))}
                             dangerouslySetInnerHTML={{ __html: chordLines[lineIndex] }}
                         />

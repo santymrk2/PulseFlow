@@ -92,7 +92,7 @@ export function Reference({ showId, show }: ReferenceProps) {
                         <T id="menu.calendar" />: {getDaysString()}
                         {data.show && currentShows[data.show] ? ` + ${currentShows[data.show].name}` : null}
                     </p>
-                    <div className={styles.divider} />
+                    <div />
                     <Button style={buttonStyle} onClick={() => updateCalendar()}>
                         <Icon id="calendar" />
                         {!currentLabelsDisabled ? <T id="show.update" /> : null}
@@ -103,7 +103,7 @@ export function Reference({ showId, show }: ReferenceProps) {
                     <p data-title={data.version || ""}>
                         <T id="tabs.scripture" />: {data.version || ""}
                     </p>
-                    <div className={styles.divider} />
+                    <div />
                     <Button style={buttonStyle} onClick={() => openTab()}>
                         <Icon id="scripture" />
                         {!currentLabelsDisabled ? <T id="main.open" /> : null}
@@ -124,7 +124,7 @@ export function Reference({ showId, show }: ReferenceProps) {
                             </span>
                         ) : null}
                     </p>
-                    <div className={styles.divider} />
+                    <div />
                     <Button title="Open Lessons.church Website" style={{ whiteSpace: "nowrap", minWidth: "150px" }} onClick={() => openURL("https://lessons.church")}>
                         <Icon id="book" />
                         Lessons.church
@@ -133,7 +133,7 @@ export function Reference({ showId, show }: ReferenceProps) {
             ) : show?.reference?.type === "canva" ? (
                 <>
                     <p>Canva: {data.presentationName || show.name || ""}</p>
-                    <div className={styles.divider} />
+                    <div />
                     <Button title="show.update" icon="refresh" disabled={syncingCanva} onClick={() => refreshCanva()}>
                         <T id="show.update" />
                     </Button>
@@ -143,7 +143,7 @@ export function Reference({ showId, show }: ReferenceProps) {
                     <p>
                         <T id="tabs.interactions" />: {data.name || ""}
                     </p>
-                    <div className={styles.divider} />
+                    <div />
                     <Button title="main.open" onClick={() => openInteraction()}>
                         <Icon id="game" />
                         {!currentLabelsDisabled ? <T id="main.open" /> : null}

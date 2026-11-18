@@ -23,7 +23,7 @@ export function Tooltip({ x = 0, y = 0, visible = false, style = "", parsed = []
     if (!visible) return null
 
     return (
-        <div className={`${styles.tooltip}${isOptimized ? ` ${styles.isOptimized}` : ""}`} style={{ top: `${y}px`, left: `${x}px`, ...(style ? cssTextToStyle(style) : {}) }}>
+        <div className={`${styles.tooltip}${isOptimized ? " isOptimized" : ""}`} style={{ top: `${y}px`, left: `${x}px`, ...(style ? cssTextToStyle(style) : {}) }}>
             {parsed.map((part, i) => (
                 <span key={`${i}-${part.isShortcut}`} className={part.isShortcut ? styles.shortcut : ""} dangerouslySetInnerHTML={{ __html: part.text.replaceAll("\n", "<br>") }} />
             ))}

@@ -143,7 +143,7 @@ export function SceneTools() {
                         </span>
                     </div>
 
-                    <div className={stylesModule.items} style={{ display: "flex", flexDirection: "column" }}>
+                    <div style={{ display: "flex", flexDirection: "column" }}>
                         {overlaysList.map((overlayId, index) => {
                             const overlayObj = currentOverlays[overlayId]
                             const isHidden = ((content.hiddenOverlays || []) as string[]).includes(overlayId)

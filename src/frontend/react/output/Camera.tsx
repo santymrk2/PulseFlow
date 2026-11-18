@@ -68,7 +68,7 @@ export function Camera({ id, groupId, preview = false, onVideoElemChange, classN
     const cameraStyleString = `${cropState.mediaCropGeometry}object-fit: ${cropState.cropHasValues ? (mediaStyle.fit === "cover" ? "cover" : "fill") : mediaStyle.fit || "contain"};filter: ${mediaStyle.filter};transform: scale(${mediaStyle.flipped ? "-1" : "1"}, ${mediaStyle.flippedY ? "-1" : "1"});`
 
     return (
-        <div className={styles.mediaContainer} style={cssTextToStyle(cropState.mediaContainerStyle)}>
+        <div className="mediaContainer" style={cssTextToStyle(cropState.mediaContainerStyle)}>
             <video ref={video} className={cn(styles.video, className)} style={cssTextToStyle(cameraStyleString) as CSSProperties}>
                 <track kind="captions" />
             </video>

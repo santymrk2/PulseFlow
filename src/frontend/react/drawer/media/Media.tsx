@@ -613,8 +613,8 @@ export function Media({ active, streams }: MediaProps) {
     return (
         <>
             {renderTabs()}
-            <div ref={scrollElem} className={styles.scroll} style={{ flex: 1, overflowY: "auto" }}>
-                <div className={`${styles.grid} ${mediaOptionsValue.mode === "list" ? styles.list : ""}`} style={{ height: "100%" }}>
+            <div ref={scrollElem} className="scroll" style={{ flex: 1, overflowY: "auto" }}>
+                <div className={styles.grid} style={{ height: "100%" }}>
                     {renderMain()}
                 </div>
             </div>
