@@ -1,5 +1,6 @@
 import { useEffect, useRef, type CSSProperties, type FormEvent, type FocusEvent, type KeyboardEvent } from "react"
 import { translateText } from "../../../utils/language"
+import { cn } from "../../../lib/utils"
 import { usePropState } from "../../hooks/usePropState"
 import styles from "./Notes.module.css"
 
@@ -47,7 +48,7 @@ export function Notes({ value: valueProp, placeholder = "", disabled = false, li
 
     return (
         <div className={styles.paper}>
-            <textarea placeholder={placeholder || translateText("empty.text...")} className={`edit ${styles.edit} ${className || ""}`} name="" id="" cols={1} rows={lines} style={style} value={value} disabled={disabled} autoFocus={autofocus} onChange={(event) => setValue(event.currentTarget.value)} onInput={input} onBlur={change} onKeyDown={onKeydown} />
+            <textarea placeholder={placeholder || translateText("empty.text...")} className={cn("edit", styles.edit, styles.textarea, className)} name="" id="" cols={1} rows={lines} style={style} value={value} disabled={disabled} autoFocus={autofocus} onChange={(event) => setValue(event.currentTarget.value)} onInput={input} onBlur={change} onKeyDown={onKeydown} />
         </div>
     )
 }

@@ -114,7 +114,7 @@ export function SlideGroups() {
             <div className={styles.groupsScroll}>
                 <div className={styles.main} style={{ height: showGroups.length ? undefined : "100%", width: displayGlobalGroups ? "50%" : undefined }}>
                     {displayGlobalGroups ? (
-                        <h4>
+                        <h4 className={styles.heading}>
                             <T id="groups.current" />
                         </h4>
                     ) : null}
@@ -161,7 +161,7 @@ export function SlideGroups() {
                     <>
                         <div className={styles.separator} />
                         <div className={styles.main} style={{ width: "50%" }}>
-                            <h4>
+                            <h4 className={styles.heading}>
                                 <T id="groups.global" />
                             </h4>
                             {sortedGroups.length ? (

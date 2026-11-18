@@ -115,7 +115,7 @@ export function UpdateManager() {
                 </div>
             ) : hasError || hasUpdate ? (
                 <div className={styles.changelog}>
-                    <h3>
+                    <h3 className={styles.title}>
                         <T id="about.changes" />
                     </h3>
 

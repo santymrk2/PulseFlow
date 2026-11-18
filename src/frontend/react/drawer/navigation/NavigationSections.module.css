@@ -24,7 +24,7 @@
     color: var(--text);
 }
 
-hr {
+.divider {
     height: 1px;
     border: none;
     background-color: var(--primary-lighter);
