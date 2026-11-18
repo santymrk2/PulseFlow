@@ -1,0 +1,27 @@
+/* Port de components/drawer/timers/Timers.svelte. `timers`/`outline`/`project` son literales porque los leen otros componentes. */
+:global(.timers) {
+    flex: 1;
+    overflow: auto;
+}
+:global(.timers) :global(.selectElem:not(.isSelected):nth-child(even)) {
+    background-color: rgb(0 0 20 / 0.08);
+}
+
+:global(.timers) div.outline {
+    outline-offset: -2px;
+    outline: 2px solid var(--text-muted) !important;
+}
+
+:global(.timers) div.project {
+    background-color: var(--primary-darkest);
+}
+
+:global(.timers) h5 {
+    overflow: visible;
+    text-align: center;
+    padding: 5px;
+    background-color: var(--primary-darkest);
+    color: var(--text);
+    font-size: 0.8em;
+    text-transform: uppercase;
+}

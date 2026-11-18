@@ -565,7 +565,7 @@ Verificación extra (Review Focus 5): con una biblioteca de 5000 shows (generar 
 datos de prueba, **nunca** en la del usuario), el scroll es fluido y el filtro responde en menos de 100 ms (medir con
 el Performance de DevTools). Todo lo de F20.8: elegir biblioteca y playlist, buscar, agregar shows, arrastrar a una
 playlist, renombrar, menú contextual.
-- [ ] commit `F24.16: columna izquierda en React`
+- [x] commit `F24.16: columna izquierda en React`
 
 ### Task F24.17: Cajón (drawer, 9 tandas)
 
@@ -585,7 +585,7 @@ Receta sobre `components/drawer/`:
 
 Verificación extra: el audio sigue sonando y midiendo (WebAudio no cambia); medios con miniaturas; arrastrar un medio
 a la salida.
-- [ ] 17a · - [ ] 17b · - [ ] 17c · - [ ] 17d · - [ ] 17e · - [ ] 17f · - [ ] 17g · - [ ] 17h · - [ ] 17i
+- [x] 17a · - [ ] 17b · - [ ] 17c · - [ ] 17d · - [ ] 17e · - [ ] 17f · - [ ] 17g · - [ ] 17h · - [ ] 17i
 
 ### Task F24.18: Slides
 

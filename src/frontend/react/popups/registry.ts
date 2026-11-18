@@ -52,10 +52,13 @@ import { ManageIcons } from "./ManageIcons"
 import { ManageMetadata } from "./ManageMetadata"
 import { ManageTags } from "./ManageTags"
 import { KitDemoReact } from "./KitDemoReact"
+import { AddShowsModal } from "../show/left/AddShowsModal"
+import { PlaylistOptionsModal } from "../show/left/PlaylistOptionsModal"
 
 // Popups que ya viven en React. Al migrar uno, sale del mapa `popups` de components/main/popupComponents.ts y entra acá (nunca en los dos).
 export const reactPopups: Partial<Record<Popups, ElementType>> = {
     about: About,
+    add_shows: AddShowsModal,
     action: Action,
     action_history: ActionHistory,
     add_audio_effect: AddAudioEffect,
@@ -106,5 +109,6 @@ export const reactPopups: Partial<Record<Popups, ElementType>> = {
     manage_icons: ManageIcons,
     manage_metadata: ManageMetadata,
     manage_tags: ManageTags,
+    playlist_options: PlaylistOptionsModal,
     kit_demo_react: KitDemoReact
 }

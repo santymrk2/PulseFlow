@@ -1798,16 +1798,16 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [ ] **F24.15f** Popups, tanda f (MediaFit → Rename).
 - [ ] **F24.15g** Popups, tanda g (ResetAll → SlideMidi).
 - [ ] **F24.15h** Popups, tanda h (SlideShortcut → WebSearch).
-- [ ] **F24.16** Columna izquierda.
-- [ ] **F24.17a** Cajón, tanda a: raíz de `drawer/`, `navigation/*`.
-- [ ] **F24.17b** Cajón, tanda b: `media/*`.
-- [ ] **F24.17c** Cajón, tanda c: `audio/` (paneles y metrónomo).
-- [ ] **F24.17d** Cajón, tanda d: `audio/` (efectos).
-- [ ] **F24.17e** Cajón, tanda e: `info/*`.
-- [ ] **F24.17f** Cajón, tanda f: `live/*`.
-- [ ] **F24.17g** Cajón, tanda g: `pages/*`.
-- [ ] **F24.17h** Cajón, tanda h: `player/*`, `calendar/*`, `effects/*`, `timers/*` y `system/Player`.
-- [ ] **F24.17i** Cajón, tanda i: `bible/Scripture`.
+- [x] **F24.16** Columna izquierda.
+- [x] **F24.17a** Cajón, tanda a: raíz de `drawer/`, `navigation/*`.
+- [x] **F24.17b** Cajón, tanda b: `media/*`.
+- [x] **F24.17c** Cajón, tanda c: `audio/` (paneles y metrónomo).
+- [x] **F24.17d** Cajón, tanda d: `audio/` (efectos).
+- [x] **F24.17e** Cajón, tanda e: `info/*`.
+- [x] **F24.17f** Cajón, tanda f: `live/*`.
+- [x] **F24.17g** Cajón, tanda g: `pages/*` (12/13: `TemplateSlide.svelte` queda para F24.21c porque edita con `bind:` de `Snaplines`/`Editbox`, que `SvelteIsland` no puede expresar).
+- [x] **F24.17h** Cajón, tanda h: `player/*`, `calendar/*`, `effects/*`, `timers/*` y `system/Player` (9/13: `player/YouTube`, `player/Vimeo`, `player/YouTubePlayer` y `system/Player` quedan para F24.20c porque comparten `bind:` bidireccional con la salida).
+- [x] **F24.17i** Cajón, tanda i: `bible/Scripture`.
 - [x] **F24.18a** Slides: `views/*` y relojes de `system/`.
 - [x] **F24.18b** Slides: textbox, slide, layouts, íconos y acciones.
 - [x] **F24.19a** Stage.

@@ -1,0 +1,18 @@
+/* Portado de components/drawer/Content.svelte. */
+.main {
+    position: relative;
+
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    background-color: var(--primary-darker);
+}
+
+.warning {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--primary-darkest);
+}

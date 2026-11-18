@@ -5,7 +5,8 @@
     import { drawerTabsData, templates } from "../../stores"
     import { translateText } from "../../utils/language"
     import { getAccess } from "../../utils/profile"
-    import Templates from "../drawer/pages/Templates.svelte"
+    import { Templates } from "../../react/drawer/pages/Templates"
+    import ReactIsland from "../../react/bridge/ReactIsland.svelte"
     import { history } from "../helpers/history"
     import LeftPanel from "../show/left/LeftPanel.svelte"
     import CategoryPicker from "./CategoryPicker.svelte"
@@ -27,6 +28,6 @@
     <CategoryPicker kind="templates" />
 
     <div class="h-[calc(100%-62px)]">
-        <Templates {active} columns={1} editOnClick />
+        <ReactIsland component={Templates} props={{ active, columns: 1, editOnClick: true }} />
     </div>
 </LeftPanel>

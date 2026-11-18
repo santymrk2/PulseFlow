@@ -1,0 +1,264 @@
+/* Port de components/drawer/bible/Scripture.svelte. `.main` es local; el resto de las
+   clases (`verse`, `verses`, `grid`, `list`, `isActive`, ...) son literales que el
+   componente comparte con el resto del cajón, así que quedan globales dentro de `.main`. */
+
+.main {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+.main :global(div) {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-content: flex-start;
+
+    position: relative;
+    scroll-behavior: smooth;
+}
+.main :global(div:not(.verses):not(.grid):not(.list):not(.list .content):not(.grid div)) {
+    border-inline-end: 2px solid var(--border-color, var(--primary-lighter));
+}
+.main :global(div:not(.grid):not(.list):not(.list .content):not(.grid div)) {
+    padding-bottom: 60px;
+}
+.main :global(.verses) {
+    flex: 1;
+    flex-flow: wrap;
+}
+
+.main :global(.grid .verses.showFloatingButtons::after) {
+    content: "";
+    display: block;
+    width: 250px;
+    height: 50px;
+    flex-shrink: 0;
+}
+
+.main :global(div.center) {
+    display: flex;
+    align-content: center;
+    justify-content: center;
+}
+
+.main :global(span) {
+    padding: 4px 10px;
+}
+.main :global(span.isActive),
+.main :global(p.isActive) {
+    background-color: var(--focus);
+    outline: none;
+}
+.main :global(span:hover:not(.isActive):not(.v)),
+.main :global(p:hover:not(.isActive)) {
+    background-color: var(--hover);
+}
+.main :global(span:focus),
+.main :global(span:active:not(.isActive):not(.v)),
+.main :global(p:focus),
+.main :global(p:active:not(.isActive)) {
+    background-color: var(--focus);
+}
+
+.main :global(span.verse) {
+    width: 100%;
+    padding: 4px 10px;
+
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+.main :global(.list .v),
+.main :global(.verseList .v) {
+    color: var(--secondary);
+    font-weight: bold;
+    display: inline-block;
+    width: 45px;
+    margin-inline-end: 10px;
+    text-align: center;
+    white-space: nowrap;
+}
+.main :global(span.verse.showAllText) {
+    white-space: initial;
+}
+.main :global(.wj) {
+    color: var(--danger);
+}
+.main :global(.xt) {
+    position: absolute;
+    display: flex;
+    width: 400px;
+    white-space: initial;
+    background-color: var(--primary-lighter);
+    padding: 10px;
+
+    display: none;
+}
+.main :global(copy) {
+    opacity: 0.5;
+    padding: 32px 120px;
+    font-size: 0.8em;
+    font-style: italic;
+    width: 100%;
+    text-align: center;
+}
+
+/* bible parts */
+.main :global(.uncertain) {
+    opacity: 0.7;
+    font-size: 0.8em;
+    font-style: italic;
+}
+/* clip keeps the text baseline, hidden would align the box bottom */
+.main :global(span.verse span.undertitle) {
+    display: inline-block;
+    max-width: 35%;
+    overflow: clip;
+    text-overflow: ellipsis;
+    white-space: pre;
+    color: var(--secondary);
+    font-weight: 600;
+}
+
+/* LIST MODE */
+
+.main :global(.list) {
+    display: flex !important;
+    flex-direction: row !important;
+    width: 100%;
+}
+.main :global(.list .content) {
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+}
+
+/* GRID MODE */
+
+.main :global(.grid) {
+    display: flex;
+    flex-direction: column;
+}
+.main :global(.grid .books) {
+    border-bottom: 2px solid var(--border-color, var(--primary-lighter));
+}
+.main :global(.grid .chapters) {
+    border-inline-end: 2px solid var(--border-color, var(--primary-lighter));
+}
+
+.main :global(.grid .books),
+.main :global(.grid .content) {
+    flex-direction: row;
+    height: 50%;
+}
+.main :global(.grid .chapters),
+.main :global(.grid .verses) {
+    flex-direction: row;
+    width: 50%;
+}
+
+.main :global(.grid .books),
+.main :global(.grid .chapters),
+.main :global(.grid .verses) {
+    flex-wrap: wrap;
+    align-content: normal;
+}
+
+.main :global(.grid span) {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    min-width: 40px;
+    flex: 1;
+
+    font-weight: 600;
+}
+.main :global(.grid .verses .v span) {
+    display: inline;
+    flex: none;
+    min-width: 0;
+}
+.main :global(.grid .books span) {
+    min-width: 52px;
+}
+
+.main :global(.grid .verses) {
+    color: var(--secondary);
+    font-weight: bold;
+}
+
+/* Version */
+
+.version {
+    flex: 1;
+    padding: 0 10px;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+/* Collection multi-version display */
+.main :global(.verse.collection-verse) {
+    display: block !important;
+    flex: none !important;
+    height: auto !important;
+    min-height: 0 !important;
+}
+.main :global(.verse.collection-verse.showAllVersions) {
+    padding: 0 !important;
+}
+
+.main :global(.collection-versions) {
+    display: block !important;
+    width: 100%;
+    padding: 0 !important;
+    margin: 2px 0 0 0 !important;
+}
+
+.main :global(.version-item) {
+    display: block !important;
+    padding: 3px 6px 3px 8px !important;
+    margin: 0 0 2px 0 !important;
+    border-left: 4px solid var(--version-color, var(--secondary));
+    background: var(--version-bg, transparent);
+    border-radius: 0 4px 4px 0;
+    line-height: 1.2;
+}
+
+.main :global(.version-item:last-child) {
+    margin-bottom: 0 !important;
+}
+.main :global(.version-item.repeated) {
+    opacity: 0.38;
+}
+
+.main :global(.version-text) {
+    display: block;
+    font-size: 0.9em;
+    line-height: 1.2;
+    font-weight: normal;
+    padding: 0 !important;
+}
+.main :global(.verse:not(.showAllText) .version-text) {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+/* history */
+
+.main :global(.history-version) {
+    color: var(--text) !important;
+
+    margin-right: 5px !important;
+    width: initial !important;
+    min-width: 45px;
+
+    border: 1px solid var(--primary-lighter);
+    background-color: var(--primary-darkest);
+    font-size: 0.7em;
+    border-radius: 20px;
+    opacity: 0.9;
+}

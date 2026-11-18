@@ -1,0 +1,8 @@
+/* Portado de AudioMixers.svelte. */
+.mixers {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    margin: 10px;
+}

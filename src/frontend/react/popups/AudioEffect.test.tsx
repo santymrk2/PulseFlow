@@ -8,17 +8,22 @@ import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { AudioEffect } from "./AudioEffect"
 
 vi.mock("../../utils/common", () => commonMock())
-// Los efectos siguen siendo Svelte: acá sólo importa cuál se monta y con qué props
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} /> }))
-vi.mock("../../components/drawer/audio/effects/AudioCompressor.svelte", () => ({ default: { isla: "AudioCompressor" } }))
-vi.mock("../../components/drawer/audio/effects/AudioDelay.svelte", () => ({ default: { isla: "AudioDelay" } }))
-vi.mock("../../components/drawer/audio/effects/AudioEffectPresets.svelte", () => ({ default: { isla: "AudioEffectPresets" } }))
-vi.mock("../../components/drawer/audio/effects/AudioEqualizer.svelte", () => ({ default: { isla: "AudioEqualizer" } }))
-vi.mock("../../components/drawer/audio/effects/AudioFilter.svelte", () => ({ default: { isla: "AudioFilter" } }))
-vi.mock("../../components/drawer/audio/effects/AudioLimiter.svelte", () => ({ default: { isla: "AudioLimiter" } }))
-vi.mock("../../components/drawer/audio/effects/AudioNoiseGate.svelte", () => ({ default: { isla: "AudioNoiseGate" } }))
-vi.mock("../../components/drawer/audio/effects/AudioReverb.svelte", () => ({ default: { isla: "AudioReverb" } }))
-vi.mock("../../components/drawer/audio/effects/AudioStereoShaper.svelte", () => ({ default: { isla: "AudioStereoShaper" } }))
+vi.mock("../../audio/audioProcessor", () => ({}))
+vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+
+// Los efectos ya son React: verificamos cuál se monta y con qué props.
+vi.mock("../drawer/audio/effects/AudioCompressor", () => ({ AudioCompressor: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioCompressor" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioDelay", () => ({ AudioDelay: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioDelay" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioEqualizer", () => ({ AudioEqualizer: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioEqualizer" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioFilter", () => ({ AudioFilter: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioFilter" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioLimiter", () => ({ AudioLimiter: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioLimiter" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioNoiseGate", () => ({ AudioNoiseGate: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioNoiseGate" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioReverb", () => ({ AudioReverb: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioReverb" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioStereoShaper", () => ({ AudioStereoShaper: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioStereoShaper" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioEffectPresets", () => ({
+    AudioEffectPresets: ({ effectKey, channelId, effectId }: { effectKey?: string; channelId?: string; effectId?: string }) => <div data-efecto="AudioEffectPresets" data-effect-key={effectKey} data-channel-id={channelId} data-effect-id={effectId} />
+}))
 
 let restaurar: () => void = () => {}
 function montar(data: object, activo = "") {
@@ -32,34 +37,37 @@ afterEach(() => {
 })
 
 describe("AudioEffect", () => {
-    it("monta_el_efecto_de_popupData_con_effectId_y_channelId", () => {
-        const { container } = montar({ channelId: "ch1", effect: "reverb", effectId: "r1" })
-        const isla = container.querySelector("[data-isla='AudioReverb']") as HTMLElement
-        expect(JSON.parse(isla.dataset.props ?? "{}")).toEqual({ effectId: "r1", channelId: "ch1" })
+    it("monta el efecto de popupData con effectId y channelId", () => {
+        montar({ channelId: "ch1", effect: "reverb", effectId: "r1" })
+        const efecto = document.querySelector("[data-efecto='AudioReverb']")
+        expect(efecto?.getAttribute("data-effect-id")).toBe("r1")
+        expect(efecto?.getAttribute("data-channel-id")).toBe("ch1")
     })
 
-    it("sin_effect_usa_el_ecualizador_y_sin_canal_main", () => {
-        const { container } = montar({})
-        expect(container.querySelector("[data-isla='AudioEqualizer']")).toBeTruthy()
+    it("sin effect usa el ecualizador y sin canal main", () => {
+        montar({})
+        expect(document.querySelector("[data-efecto='AudioEqualizer']")).toBeTruthy()
         expect(get(activeAudioEffects)).toBe("main")
     })
 
-    it("un_efecto_desconocido_no_monta_nada", () => {
-        const { container } = montar({ effect: "nada" })
-        expect(container.querySelector("[data-isla]")).toBeNull()
+    it("un efecto desconocido no monta nada", () => {
+        montar({ effect: "nada" })
+        expect(document.querySelector("[data-efecto]")).toBeNull()
     })
 
-    it("el_canal_activo_se_sincroniza_con_el_del_popup", () => {
+    it("el canal activo se sincroniza con el del popup", () => {
         montar({ channelId: "ch2" }, "otro")
         expect(get(activeAudioEffects)).toBe("ch2")
     })
 
-    it("opciones_muestra_y_oculta_los_presets", () => {
-        const { container } = montar({ channelId: "ch1", effect: "delay", effectId: "d1" })
-        expect(container.querySelector("[data-isla='AudioEffectPresets']")).toBeNull()
-        fireEvent.click(container.querySelector("button.popup-options") as HTMLElement)
-        const presets = container.querySelector("[data-isla='AudioEffectPresets']") as HTMLElement
-        expect(JSON.parse(presets.dataset.props ?? "{}")).toEqual({ effectKey: "delay", channelId: "ch1", effectId: "d1" })
-        expect(container.querySelector("button.popup-options")?.classList.contains("active")).toBe(true)
+    it("opciones muestra los presets con el effectKey del popup", () => {
+        montar({ channelId: "ch1", effect: "delay", effectId: "d1" })
+        expect(document.querySelector("[data-efecto='AudioEffectPresets']")).toBeNull()
+        fireEvent.click(document.querySelector("button.popup-options") as HTMLElement)
+        const presets = document.querySelector("[data-efecto='AudioEffectPresets']")
+        expect(presets?.getAttribute("data-effect-key")).toBe("delay")
+        expect(presets?.getAttribute("data-channel-id")).toBe("ch1")
+        expect(presets?.getAttribute("data-effect-id")).toBe("d1")
+        expect(document.querySelector("button.popup-options")?.classList.contains("active")).toBe(true)
     })
 })

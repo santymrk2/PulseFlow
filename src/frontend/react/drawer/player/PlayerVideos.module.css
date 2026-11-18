@@ -1,0 +1,33 @@
+/* Port de components/drawer/player/PlayerVideos.svelte. `.button` es la clase raíz de Button (global). */
+
+.icons {
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    left: 0;
+    z-index: 1;
+    font-size: 0.9em;
+
+    height: 80%;
+    flex-wrap: wrap;
+
+    max-width: calc(100% - 21px);
+}
+.icons div {
+    opacity: 0.9;
+    display: flex;
+}
+.icons :global(.button) {
+    background-color: rgb(0 0 0 / 0.6);
+    pointer-events: all;
+}
+.icons span {
+    pointer-events: all;
+    background-color: rgb(0 0 0 / 0.6);
+    padding: 3px;
+    font-size: 0.75em;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+}

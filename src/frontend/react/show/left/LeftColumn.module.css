@@ -1,0 +1,29 @@
+/* Port tal cual del <style> de components/show/left/LeftColumn.svelte. */
+.column {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+}
+.panel {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    overflow: hidden;
+}
+.items {
+    flex: 1;
+}
+/* línea gruesa entre paneles; la franja de 6 px es el área de arrastre */
+.splitter {
+    position: relative;
+    flex: 0 0 2px;
+    background: var(--border-color, var(--primary-lighter));
+    cursor: row-resize;
+    z-index: 1;
+}
+.splitter::before {
+    content: "";
+    position: absolute;
+    inset: -3px 0;
+}

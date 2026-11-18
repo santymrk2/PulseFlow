@@ -1,0 +1,109 @@
+/* Estilos compartidos por las visualizaciones SVG de los efectos (portados de los <style> Svelte). */
+.container {
+    border-radius: 8px;
+    user-select: none;
+}
+
+.vizWrap {
+    background: var(--primary-darker);
+    border: 1px solid var(--primary-lighter);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+    font-family: monospace;
+}
+
+.vizWrapFlex {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    background: var(--primary-darker);
+    border: 1px solid var(--primary-lighter);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+    font-family: monospace;
+}
+
+.svgWrap {
+    width: 100%;
+}
+
+.svgWrapFlex {
+    flex: 1;
+    min-width: 0;
+}
+
+.svg {
+    display: block;
+}
+
+.meter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 32px;
+    height: 200px;
+    flex-shrink: 0;
+    padding: 4px 0;
+    gap: 2px;
+    background: var(--primary-darkest, var(--primary-darker));
+    border-left: 1px solid var(--primary-lighter);
+    position: relative;
+    overflow: hidden;
+}
+
+.meterBar {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 14px;
+    background: var(--accent);
+    opacity: 0.8;
+    border-radius: 2px 2px 0 0;
+    transition: height 0.05s linear;
+}
+
+.meterLabel {
+    position: absolute;
+    bottom: 14px;
+    font-size: 8px;
+    color: var(--text);
+    opacity: 0.7;
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.meterTitle {
+    position: absolute;
+    bottom: 4px;
+    font-size: 8px;
+    font-weight: bold;
+    color: var(--accent);
+    z-index: 1;
+}
+
+.status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 52px;
+    height: 100px;
+    flex-shrink: 0;
+    background: var(--primary-darkest, var(--primary-darker));
+    border-left: 1px solid var(--primary-lighter);
+    font-size: 9px;
+    font-weight: bold;
+    font-family: monospace;
+    color: #cc4444;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    transform: rotate(180deg);
+    transition: color 0.1s ease;
+}
+
+.statusOpen {
+    color: var(--accent);
+}

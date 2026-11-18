@@ -1,0 +1,58 @@
+/* secciones planas separadas por una línea, sin tarjetas redondeadas (igual que el panel izquierdo) */
+.tabSection {
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.section {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+
+    border-bottom: 1px solid var(--border-color, var(--primary-lighter));
+}
+
+.title {
+    font-weight: 600;
+    padding: 6px 12px 4px;
+    font-size: var(--text-2xs);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    color: var(--text);
+}
+
+hr {
+    height: 1px;
+    border: none;
+    background-color: var(--primary-lighter);
+    flex: 1;
+    opacity: 0.8;
+}
+
+.separator {
+    display: flex;
+    align-items: center;
+}
+.sepLabel {
+    font-size: var(--text-2xs);
+    color: var(--text);
+    opacity: 0.5;
+    padding: 6px 14px;
+    line-height: 1;
+}
+
+.add_button {
+    position: absolute;
+    top: 0;
+    right: 2px;
+}
+.add_button :global(div) {
+    padding: 0 !important;
+}
+.add_button :global(button) {
+    padding: 4px;
+    border: none;
+}

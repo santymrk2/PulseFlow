@@ -6,7 +6,8 @@
     import { drawerTabsData, effects, overlays } from "../../stores"
     import { translateText } from "../../utils/language"
     import { getAccess } from "../../utils/profile"
-    import Overlays from "../drawer/pages/Overlays.svelte"
+    import { Overlays } from "../../react/drawer/pages/Overlays"
+    import ReactIsland from "../../react/bridge/ReactIsland.svelte"
     import { history } from "../helpers/history"
     import LeftPanel from "../show/left/LeftPanel.svelte"
     import CategoryPicker from "./CategoryPicker.svelte"
@@ -29,6 +30,6 @@
     <CategoryPicker kind="overlays" extraOptions={[{ value: "effects", label: translateText("tabs.effects") }]} />
 
     <div class="h-[calc(100%-62px)]">
-        <Overlays {active} columns={1} editOnClick />
+        <ReactIsland component={Overlays} props={{ active, columns: 1, editOnClick: true }} />
     </div>
 </LeftPanel>

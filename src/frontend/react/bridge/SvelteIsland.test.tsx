@@ -39,4 +39,29 @@ describe("SvelteIsland", () => {
         unmount()
         expect(container.textContent).toBe("")
     })
+
+    it("renderiza los slots por defecto y con nombre, y actualiza su contenido", async () => {
+        const { rerender } = render(
+            createElement(SvelteIsland, {
+                component: Saludo,
+                props: { nombre: "Ana" },
+                slots: { default: createElement("em", null, "Hijo"), extra: createElement("strong", null, "Extra") }
+            })
+        )
+        expect(screen.getByText("Hijo").tagName).toBe("EM")
+        expect(screen.getByText("Extra").tagName).toBe("STRONG")
+
+        await act(async () => {
+            rerender(
+                createElement(SvelteIsland, {
+                    component: Saludo,
+                    props: { nombre: "Ana" },
+                    slots: { default: createElement("em", null, "Otro hijo"), extra: createElement("strong", null, "Otro extra") }
+                })
+            )
+            await tick()
+        })
+        expect(screen.getByText("Otro hijo")).toBeTruthy()
+        expect(screen.getByText("Otro extra")).toBeTruthy()
+    })
 })

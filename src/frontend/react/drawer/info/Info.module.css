@@ -1,0 +1,11 @@
+/* Port del <style> de Info.svelte. */
+div.root {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow-y: auto;
+}
+
+div.root :global(h2) {
+    color: var(--text);
+}

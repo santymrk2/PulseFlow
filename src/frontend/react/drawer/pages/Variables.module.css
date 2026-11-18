@@ -1,0 +1,91 @@
+/* Portado de components/drawer/pages/Variables.svelte. */
+.variables {
+    flex: 1;
+    overflow: auto;
+
+    padding-bottom: 60px;
+}
+.variables :global(.selectElem:not(.isSelected):nth-child(even)) {
+    background-color: rgb(0 0 20 / 0.08);
+}
+
+.variables .row {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 5px;
+    gap: 5px;
+}
+.variables .list {
+    display: flex;
+    flex-direction: column;
+}
+
+.variable {
+    padding: 3px 5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.variables .row .variable {
+    padding: 5px;
+}
+
+.variable span {
+    display: flex;
+    align-items: center;
+}
+
+.variable :global(input),
+.variable :global(.numberInput button) {
+    background-color: var(--primary-darkest);
+}
+
+.variables h5 {
+    overflow: visible;
+    text-align: center;
+    padding: 5px;
+    background-color: var(--primary-darkest);
+    color: var(--text);
+    font-size: 0.8em;
+    text-transform: uppercase;
+}
+
+/* number */
+
+.numberBox {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid var(--focus);
+
+    max-width: 100%;
+    position: relative;
+}
+
+.reset {
+    position: absolute;
+    top: 5px;
+    inset-inline-end: 5px;
+    z-index: 1;
+}
+.reset :global(button) {
+    padding: 5px !important;
+}
+
+.bigNumber {
+    font-size: 4em;
+}
+
+.buttons {
+    display: flex;
+    width: 100%;
+}
+
+.inputs {
+    display: flex;
+    width: 100%;
+    gap: 3px;
+
+    font-size: 0.8em;
+}

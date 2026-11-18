@@ -1,0 +1,9 @@
+/* Portado de Metronome.svelte. */
+.settings {
+    margin: 15px;
+    padding: 10px;
+
+    border: 1px solid var(--primary-lighter);
+
+    border-radius: 8px;
+}

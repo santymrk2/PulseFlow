@@ -1,0 +1,56 @@
+/* Portado de DrawerTab.svelte: los :global(…) se conservan tal cual. La regla `div { … }` se mapea a una clase compartida (CSS modules no permite scoped por elemento). */
+.div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    width: 100%;
+}
+
+/* filas planas de 28px: hover y activa como en LIBRARIES */
+.row > :global(button.tab) {
+    height: 28px;
+    min-height: 28px;
+    border-radius: 0 !important;
+    border-left: 2px solid transparent !important;
+}
+.row > :global(button.tab.isActive) {
+    background-color: var(--secondary-opacity) !important;
+    border-left-color: var(--secondary) !important;
+}
+.row > :global(button.tab):not(:disabled):not(.isActive):hover {
+    background-color: var(--hover, var(--bg-hover)) !important;
+}
+
+.div :global(input) {
+    padding: 6.5px;
+}
+
+.count {
+    opacity: 0.5;
+    font-size: 0.8em;
+    min-width: 28px;
+    text-align: end;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}
+
+.icons {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    width: auto;
+
+    opacity: 0.8;
+}
+
+.submenus {
+    border-top: 1px solid var(--primary-lighter);
+
+    /* margin-left: 20px; */
+    border-inline-start: 8px solid var(--primary-darkest);
+
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}

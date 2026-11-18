@@ -1,13 +1,13 @@
 import { useEffect, useState, type ReactNode } from "react"
 import { get } from "svelte/store"
-import BMDStreams from "../../components/drawer/live/BMDStreams.svelte"
-import Cameras from "../../components/drawer/live/Cameras.svelte"
-import NDIStreams from "../../components/drawer/live/NDIStreams.svelte"
-import OMTStreams from "../../components/drawer/live/OMTStreams.svelte"
-import Screens from "../../components/drawer/live/Screens.svelte"
-import Windows from "../../components/drawer/live/Windows.svelte"
 import { activePopup, popupData } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+import { BMDStreams } from "../drawer/live/BMDStreams"
+import { Cameras } from "../drawer/live/Cameras"
+import { NDIStreams } from "../drawer/live/NDIStreams"
+import { OMTStreams } from "../drawer/live/OMTStreams"
+import { Screens } from "../drawer/live/Screens"
+import { Windows } from "../drawer/live/Windows"
+import type { InputSelectDetail } from "../drawer/live/types"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
@@ -16,20 +16,13 @@ import styles from "./ChooseMediaInput.module.css"
 
 // Port de components/main/popups/ChooseMediaInput.svelte. Lee: popupData.active || popupData.value (pestaña inicial, cada vez que popupData cambia) y popupData.trigger.
 // Escribe: al elegir, trigger(device) o popupData = { ...popupData, value: device }; después activePopup = null.
-// Las listas (Cameras, Screens, Windows, NDI, OMT, Blackmagic) siguen siendo Svelte (islas). `streams` (bind en Screens/Windows) sólo se llena con push y nadie lo lee: un array compartido.
+// Las listas (Cameras, Screens, Windows, NDI, OMT, Blackmagic) son ports React con callbacks `onClick`. `streams` (bind en Screens/Windows) sólo se llena con push y nadie lo lee: un array compartido.
 interface Device {
     id: string
     name: string
     type: string
     group?: string
 }
-interface CameraDetail {
-    cam: { id: string; name: string; group?: string }
-}
-interface StreamDetail {
-    screen: { id: string; name: string }
-}
-
 const TYPES = ["cameras", "screens", "ndi", "omt", "blackmagic"] as const
 
 // `$: if (initialDevice?.type) activeType = …`: sin tipo conocido la pestaña no cambia
@@ -49,15 +42,17 @@ function selectDevice(device: Device) {
     activePopup.set(null)
 }
 
-function selectCamera({ detail }: CustomEvent<CameraDetail>) {
-    const camera = detail.cam
-    selectDevice({ id: camera.id, name: camera.name, group: camera.group, type: "camera" })
+function selectCamera({ cam }: InputSelectDetail) {
+    if (!cam) return
+    selectDevice({ id: cam.id, name: cam.name, group: cam.group, type: "camera" })
 }
 
-const selectStream = (type: string) => (event: CustomEvent<StreamDetail>) => {
-    const screen = event.detail.screen
-    selectDevice({ id: screen.id, name: screen.name, type })
-}
+const selectStream =
+    (type: string) =>
+    ({ screen }: InputSelectDetail) => {
+        if (!screen) return
+        selectDevice({ id: screen.id, name: screen.name, type })
+    }
 
 export function ChooseMediaInput() {
     const [activeType, setActiveType] = useState<string>(() => typeFromData(get(popupData)) ?? "cameras")
@@ -88,17 +83,17 @@ export function ChooseMediaInput() {
             </div>
 
             <div className={styles.devices}>
-                {activeType === "cameras" ? <SvelteIsland key="cameras" component={Cameras} props={{ showPlayOnHover: false }} events={{ click: selectCamera }} /> : null}
+                {activeType === "cameras" ? <Cameras showPlayOnHover={false} onClick={selectCamera} /> : null}
                 {activeType === "screens" ? (
                     <>
-                        <SvelteIsland key="screens" component={Screens} props={{ streams: streams }} events={{ click: selectStream("screen") }} />
+                        <Screens streams={streams} onClick={selectStream("screen")} />
                         <div style={{ width: "100%", height: "10px" }} />
-                        <SvelteIsland key="windows" component={Windows} props={{ streams: streams }} events={{ click: selectStream("screen") }} />
+                        <Windows streams={streams} onClick={selectStream("screen")} />
                     </>
                 ) : null}
-                {activeType === "ndi" ? <SvelteIsland key="ndi" component={NDIStreams} events={{ click: selectStream("ndi") }} /> : null}
-                {activeType === "omt" ? <SvelteIsland key="omt" component={OMTStreams} events={{ click: selectStream("omt") }} /> : null}
-                {activeType === "blackmagic" ? <SvelteIsland key="blackmagic" component={BMDStreams} events={{ click: selectStream("blackmagic") }} /> : null}
+                {activeType === "ndi" ? <NDIStreams onClick={selectStream("ndi")} /> : null}
+                {activeType === "omt" ? <OMTStreams onClick={selectStream("omt")} /> : null}
+                {activeType === "blackmagic" ? <BMDStreams onClick={selectStream("blackmagic")} /> : null}
             </div>
         </div>
     )
