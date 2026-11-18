@@ -1775,26 +1775,26 @@ Plan: docs/superpowers/plans/2026-11-06-f23-nucleo-engine-y-backend.md
 
 Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 
-- [ ] **F24.1** Base de React en el proyecto.
+- [x] **F24.1** Base de React en el proyecto.
 - [x] **F24.2** `useStore` y el kit de stores para tests.
 - [x] **F24.3** `ReactIsland`, React dentro de Svelte.
 - [x] **F24.4** `SvelteIsland`, Svelte dentro de React.
 - [x] **F24.5** Traducción e íconos en React.
-- [ ] **F24.6** Kit en React: base (`button`, `input`, `link`, `h-rule`, `title`, `section-header`, `capsule`, `list-row`).
-- [ ] **F24.7** Kit en React: controles (`dropdown`, `stepper`, `slider`, `tabs`, `menu`, `zoom-control`, `choice-grid`).
-- [ ] **F24.8** Kit en React: campos I (`text-field`, `number-field`, `textarea-field`, `select-field`, `toggle-field`, `checkbox-field`, `segmented-field`, `toggle-group-field`).
-- [ ] **F24.9** Kit en React: campos II (`color-field`, `colors-field`, `font-field`, `file-field`, `folder-field`, `time-field`, `date-field`, `radial-field`, `popup-field`).
-- [ ] **F24.10** Kit en React: distribución y demo (`input-row`, `floating-bar`, `list`, `dynamic-list`, `combined-input`, `hidden-input`) y popup `kit_demo_react`.
-- [ ] **F24.11** Componentes de sistema.
-- [ ] **F24.12** Configuración (I): general, archivos y otros.
-- [ ] **F24.13a** Configuración (II): perfiles y conexión.
-- [ ] **F24.13b** Configuración (II): ruteo de audio.
-- [ ] **F24.14** Pantallas y Looks.
-- [ ] **F24.15a** Popups, tanda a (About → ChooseChord).
-- [ ] **F24.15b** Popups, tanda b (ChooseMediaInput → Conditions).
-- [ ] **F24.15c** Popups, tanda c (ConditionsBox → DisplayDuration).
-- [ ] **F24.15d** Popups, tanda d (DynamicValues → ImportScripture).
-- [ ] **F24.15e** Popups, tanda e (Initialize → MaxLines), con `KitDemo` reemplazado por `KitDemoReact`.
+- [x] **F24.6** Kit en React: base (`button`, `input`, `link`, `h-rule`, `title`, `section-header`, `capsule`, `list-row`).
+- [x] **F24.7** Kit en React: controles (`dropdown`, `stepper`, `slider`, `tabs`, `menu`, `zoom-control`, `choice-grid`).
+- [x] **F24.8** Kit en React: campos I (`text-field`, `number-field`, `textarea-field`, `select-field`, `toggle-field`, `checkbox-field`, `segmented-field`, `toggle-group-field`).
+- [x] **F24.9** Kit en React: campos II (`color-field`, `colors-field`, `font-field`, `file-field`, `folder-field`, `time-field`, `date-field`, `radial-field`, `popup-field`).
+- [x] **F24.10** Kit en React: distribución y demo (`input-row`, `floating-bar`, `list`, `dynamic-list`, `combined-input`, `hidden-input`) y popup `kit_demo_react`.
+- [x] **F24.11** Componentes de sistema.
+- [x] **F24.12** Configuración (I): general, archivos y otros.
+- [x] **F24.13a** Configuración (II): perfiles y conexión.
+- [x] **F24.13b** Configuración (II): ruteo de audio.
+- [x] **F24.14** Pantallas y Looks.
+- [x] **F24.15a** Popups, tanda a (About → ChooseChord).
+- [x] **F24.15b** Popups, tanda b (ChooseMediaInput → Conditions).
+- [x] **F24.15c** Popups, tanda c (ConditionsBox → DisplayDuration).
+- [x] **F24.15d** Popups, tanda d (DynamicValues → ImportScripture).
+- [x] **F24.15e** Popups, tanda e (Initialize → MaxLines), con `KitDemo` reemplazado por `KitDemoReact`.
 - [x] **F24.15f** Popups, tanda f (MediaFit → Rename).
 - [x] **F24.15g** Popups, tanda g (ResetAll → SlideMidi).
 - [x] **F24.15h** Popups, tanda h (SlideShortcut → WebSearch).
