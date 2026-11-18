@@ -156,7 +156,7 @@ export function DrawerTab({ category, parentId = "", isSubmenu = false, active, 
             <SelectElem style={{ width: "100%" }} id={selectId} selectable={!noEdit} draggable={draggable} borders="center" trigger="column" data={id} className={styles.div}>
                 <div className={cn(styles.div, styles.row)}>
                     <Button className={contextClass} style={{ width: "100%", fontWeight: "normal", padding: `0 ${boxedIcon ? 0.64 : 0.8}em` }} isActive={isActive} showOutline={showOutline} onClick={click} onDblClick={dblclick} tab>
-                        <div style={innerStyle} data-title={translatedLabel}>
+                        <div className={styles.div} style={innerStyle} data-title={translatedLabel}>
                             <Icon id={icon} size={isSubmenu ? 0.85 : 1} color={isSubmenu ? category.color : boxedIcon ? customIconsColors[icon] || "" : ""} white custom={customIcon} boxed={isSubmenu || boxedIcon} />
 
                             {noEdit || isSubmenu ? <p style={{ margin: `${isSubmenu ? 3 : 5}px` }}>{label ? translatedLabel : <span style={{ opacity: 0.5, fontStyle: "italic", pointerEvents: "none" }}>{translateText("main.unnamed", dict)}</span>}</p> : <HiddenInput value={translatedLabel} id={`category_${drawerId}_${id}`} onEdit={rename} />}
