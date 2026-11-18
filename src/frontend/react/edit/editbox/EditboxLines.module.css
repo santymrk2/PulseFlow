@@ -1,4 +1,4 @@
-/* Port literal del <style> de EditboxLines.svelte (F24.21c). */
+/* Port del <style> de EditboxLines.svelte (F24.21c). */
 .align span.placeholder {
     opacity: 0.5;
     pointer-events: none;
@@ -10,7 +10,8 @@
     line-height: 1.5em;
     text-shadow: none;
 }
-.align.chords {
+.align.chords,
+.alignChords {
     overflow: visible !important;
 }
 
@@ -62,7 +63,6 @@
     visibility: hidden;
 }
 
-/* Cutout Shape */
 .edit.hasShapeOutside {
     display: block !important;
     height: 100% !important;
@@ -75,7 +75,6 @@
 }
 .edit.hasShapeOutside::before {
     content: "";
-    /* it gives a warning, but float must be used with the shape-outside property */
     float: var(--shape-float, right);
     width: 100%;
     height: calc(100% + var(--shape-offset-top, 0px));
@@ -85,16 +84,12 @@
 }
 
 .edit :global(.break) {
-    text-wrap: balance; /* balanced breaking, looks much cleaner */
-    white-space: pre-wrap; /* preserve special spaces from Text edit */
+    text-wrap: balance;
+    white-space: pre-wrap;
 }
 .edit :global(.break.normalWrap) {
     text-wrap: unset;
 }
-
-/* .edit.tallLines {
-  line-height: 200px;
-} */
 
 .plain .edit {
     font-size: 1.5em;
@@ -114,24 +109,17 @@
 }
 
 .edit :global(.break) {
-    /* display: contents; */
     width: 100%;
-    /* line-height: normal; */
 }
 
 .edit :global(.break span) {
-    /* text transform changes actual text on edit if set to e.g. Uppercase */
     text-transform: none !important;
 }
 
 .edit:not(.plain .edit) :global(span) {
     font-size: 100px;
-    /* min-height: 100px;
-  min-width: 100px;
-  display: inline-table; */
 }
 
-/* bible parts */
 .edit :global(.break span.uncertain) {
     opacity: 0.7;
     font-size: 0.8em;

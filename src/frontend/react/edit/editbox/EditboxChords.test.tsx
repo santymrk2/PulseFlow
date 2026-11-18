@@ -6,23 +6,17 @@ import { EditboxChords } from "./EditboxChords"
 
 vi.mock("../../../stores", () => ({
     activeDropId: {
-        subscribe: (run: (v: unknown) => void) => {
-            run("")
+        subscribe: (r: any) => {
+            r("")
             return () => {}
         },
         set: vi.fn()
     },
     popupData: { set: vi.fn() },
-    selected: {
-        subscribe: (run: (v: unknown) => void) => {
-            run({})
-            return () => {}
-        },
-        set: vi.fn()
-    },
+    selected: { set: vi.fn() },
     storedChordsData: {
-        subscribe: (run: (v: unknown) => void) => {
-            run({})
+        subscribe: (r: any) => {
+            r({})
             return () => {}
         },
         set: vi.fn()
@@ -37,15 +31,15 @@ vi.mock("../../../components/edit/scripts/chords", () => ({ addChords: vi.fn() }
 afterEach(cleanup)
 
 describe("EditboxChords", () => {
-    it("no renderiza nada sin líneas", () => {
-        const item = { type: "text" } as unknown as Item
-        const { container } = render(<EditboxChords item={item} autoSize={0} index={0} ref={{ id: "s1" }} />)
-        expect(container.firstChild).toBeNull()
+    it("renderiza contenedor de acordes para ítems con líneas", () => {
+        const item: Item = { lines: [{ align: "", text: [{ value: "Do", style: "" }], chords: [] }] } as any
+        const { container } = render(<EditboxChords item={item} index={0} ref={{ id: "s1" }} chordsMode />)
+        expect(container.querySelector(".edit.chords")).toBeTruthy()
     })
 
-    it("renderiza breaks cuando hay líneas y modo acordes", () => {
-        const item: Item = { type: "text", style: "", lines: [{ align: "", text: [{ value: "C", style: "" }] }] }
-        const { container } = render(<EditboxChords item={item} autoSize={0} index={0} ref={{ id: "s1" }} chordsMode />)
-        expect(container.querySelectorAll(".break").length).toBe(1)
+    it("no renderiza nada sin líneas", () => {
+        const item: Item = { type: "text" } as any
+        const { container } = render(<EditboxChords item={item} index={0} ref={{ id: "s1" }} />)
+        expect(container.firstChild).toBeNull()
     })
 })
