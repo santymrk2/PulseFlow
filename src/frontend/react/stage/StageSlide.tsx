@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from "react"
+import { useEffect, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from "react"
 import type { StageLayout } from "../../../types/Stage"
 import { allOutputs, outputs, stageShows } from "../../stores"
 import { translateText } from "../../utils/language"
@@ -24,7 +24,7 @@ export interface StageSlideProps {
     active?: boolean
     list?: boolean
     selectable?: boolean
-    onClick?: () => void
+    onClick?: (event: ReactMouseEvent<HTMLDivElement>) => void
 }
 
 // Port de components/stage/StageSlide.svelte (F24.19a).

@@ -1,3 +1,4 @@
+import type { MouseEvent as ReactMouseEvent } from "react"
 import type { StageLayout } from "../../../types/Stage"
 import { outputs } from "../../stores"
 import { translateText } from "../../utils/language"
@@ -12,7 +13,7 @@ export interface SkeletonStageSlideProps {
     columns?: number
     active?: boolean
     list?: boolean
-    onClick?: () => void
+    onClick?: (event: ReactMouseEvent<HTMLDivElement>) => void
 }
 
 // Port de components/stage/SkeletonStageSlide.svelte (F24.19a).
