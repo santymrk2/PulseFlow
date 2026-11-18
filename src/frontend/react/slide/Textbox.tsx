@@ -20,7 +20,7 @@ import { SlideItems } from "./SlideItems"
 import { TextboxLines, type HighlightedLine } from "./TextboxLines"
 import css from "./Textbox.module.css"
 
-interface TextboxRef {
+export interface TextboxRef {
     type?: "show" | "stage" | "overlay" | "template"
     showId?: string
     slideId?: string

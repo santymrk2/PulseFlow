@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "svelte/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activePage, activeScripture, drawerTabsData, scriptureSettings, templates } from "../../../stores"
-import { clearIslands, islands } from "../../test/islandMock"
+import { clearIslands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { ScriptureInfo } from "./ScriptureInfo"
 
@@ -28,9 +28,15 @@ vi.mock("../../../components/settings/openSettings", () => ({ openSettings: (id:
 vi.mock("../../../utils/createData", () => ({ setDefaultScriptureTemplates: () => mocks.defaultTemplates() }))
 vi.mock("../../../utils/popup", () => ({ confirmCustom: (message: string) => mocks.confirm(message) }))
 vi.mock("../../../IPC/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn(), requestMain: vi.fn() }))
-vi.mock("../../../components/output/layers/Media.svelte", () => ({ default: { isla: "Media" } }))
-vi.mock("../../../components/slide/Textbox.svelte", () => ({ default: { isla: "Textbox" } }))
-vi.mock("../../../components/slide/Zoomed.svelte", () => ({ default: { isla: "Zoomed" } }))
+vi.mock("../../output/Media", () => ({ Media: ({ path }: { path?: string }) => <div data-testid="media" data-path={path} /> }))
+vi.mock("../../slide/Textbox", () => ({ Textbox: ({ ref }: { ref?: { id?: string } }) => <div data-testid="textbox" data-ref-id={ref?.id} /> }))
+vi.mock("../../slide/Zoomed", () => ({
+    Zoomed: ({ background, children }: { background?: string; children?: React.ReactNode }) => (
+        <div data-testid="zoomed" data-background={background}>
+            {children}
+        </div>
+    )
+}))
 vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
 vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
@@ -61,13 +67,11 @@ async function montar(optionsOpen = false) {
 }
 
 describe("ScriptureInfo", () => {
-    it("monta Zoomed con el fondo y el slot de vista previa", async () => {
-        await montar()
-        expect(islands["Zoomed"]).toBeTruthy()
-        expect(islands["Zoomed"]?.props.background).toBe("#123456")
-        expect(islands["Zoomed"]?.slots?.default).toBeTruthy()
-        expect(islands["Media"]?.props.path).toBe("/bg.jpg")
-        expect(islands["Textbox"]?.props.ref).toEqual({ id: "scripture" })
+    it("monta el port Zoomed con el fondo y la vista previa React", async () => {
+        const { getByTestId } = await montar()
+        expect(getByTestId("zoomed").getAttribute("data-background")).toBe("#123456")
+        expect(getByTestId("media").getAttribute("data-path")).toBe("/bg.jpg")
+        expect(getByTestId("textbox").getAttribute("data-ref-id")).toBe("scripture")
         expect(screen.getByText("Biblia de prueba")).toBeTruthy()
     })
 

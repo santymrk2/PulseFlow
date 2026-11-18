@@ -9,10 +9,10 @@ import OMTStream from "../../components/drawer/live/OMTStream.svelte"
 import autosize from "../../components/edit/scripts/autosize"
 import { getCropState } from "../../components/helpers/cropping"
 import { getStyles } from "../../components/helpers/style"
-import Window from "../../components/output/Window.svelte"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { useStore } from "../hooks/useStore"
+import { Window as WindowView } from "../output/Window"
 import { Clock } from "../system/Clock"
 import { Captions } from "./views/Captions"
 import { Chart } from "./views/Chart"
@@ -83,11 +83,11 @@ export function SlideItems({ item, edit = false, itemElem, slideIndex = 0, previ
     const cameraStyleString = `${cameraCropState.mediaCropGeometry}object-fit: ${cameraCropState.cropHasValues ? (item.fit === "cover" ? "cover" : "fill") : item.fit || "contain"};filter: ${item.filter};transform: scale(${item.flipped ? "-1" : "1"}, ${item.flippedY ? "-1" : "1"});`
     const variableStyleString = typeof item.style === "string" ? (item.style.includes("font-size") && item.style.split("font-size:")[1].trim()[0] !== "0" ? "" : `font-size: ${edit ? autoSize : fontSize}px;`) : ""
 
-    function cameraContainer(screenType: "screen" | "ndi" | "omt", component: typeof Window | typeof NDIStream | typeof OMTStream) {
+    function cameraContainer(screenType: "screen" | "ndi" | "omt") {
         const screen = { id: item.device?.id || "", name: item.device?.name || "" }
         return (
             <div className="mediaContainer" style={cssTextToStyle(cameraCropState.mediaContainerStyle)}>
-                <SvelteIsland key={item.device?.id} component={component} props={{ ...(screenType === "screen" ? { id: screen.id } : { screen, background: true, outputId }), style: cameraStyleString }} />
+                {screenType === "screen" ? <WindowView key={item.device?.id} id={screen.id} style={cameraStyleString} /> : screenType === "ndi" ? <SvelteIsland key={item.device?.id} component={NDIStream} props={{ screen, background: true, outputId, style: cameraStyleString }} /> : <SvelteIsland key={item.device?.id} component={OMTStream} props={{ screen, background: true, outputId, style: cameraStyleString }} />}
             </div>
         )
     }
@@ -115,9 +115,9 @@ export function SlideItems({ item, edit = false, itemElem, slideIndex = 0, previ
         return <Clock item={item as unknown as { align?: string; alignX?: boolean; [key: string]: unknown }} fontStyle={noAutoSize ? "" : `font-size: ${edit ? autoSize : fontSize}px;`} style={false} {...clockProps} />
     }
     if (item.type === "camera" && item.device) {
-        if (item.device.type === "screen") return cameraContainer("screen", Window)
-        if (item.device.type === "ndi") return cameraContainer("ndi", NDIStream)
-        if (item.device.type === "omt") return cameraContainer("omt", OMTStream)
+        if (item.device.type === "screen") return cameraContainer("screen")
+        if (item.device.type === "ndi") return cameraContainer("ndi")
+        if (item.device.type === "omt") return cameraContainer("omt")
         if (item.device.type === "blackmagic") return blackmagicContainer()
         return <Cam cam={{ id: item.device.id, group: item.device.group || "", name: item.device.name }} item style={cameraStyleString} disablePreview={isTemplatePreview} cropping={item.cropping} cropPreviewMode={cropPreviewMode} preview={!outputId && (preview || isTemplatePreview)} itemStyle={item.style} />
     }

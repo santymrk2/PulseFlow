@@ -25,6 +25,7 @@ vi.mock("../../components/edit/scripts/itemHelpers", () => ({ isConditionMet: vi
 vi.mock("../../components/edit/scripts/textStyle", () => ({ getItemText: vi.fn(() => "Texto del item") }))
 vi.mock("../../components/helpers/media", () => ({
     getExtension: vi.fn((path: string) => path.split(".").pop() || ""),
+    getMediaType: vi.fn(() => "image"),
     loadThumbnail: vi.fn(async () => "thumb.jpg"),
     mediaSize: { big: 3, drawerSize: 1, slideSize: 2 }
 }))
@@ -63,6 +64,7 @@ vi.mock("../ui/button/Button", () => ({
 }))
 const serializeProps = (props: Record<string, unknown>) => JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))
 vi.mock("../edit/editbox/EditboxLines", () => ({ EditboxLines: (props: Record<string, unknown>) => <span data-view="EditboxLines" data-props={JSON.stringify(props)} /> }))
+vi.mock("../output/Media", () => ({ Media: (props: Record<string, unknown>) => <span data-view="Media" data-props={serializeProps(props)} /> }))
 vi.mock("../output/Output", () => ({ Output: (props: Record<string, unknown>) => <span data-view="Output" data-props={serializeProps(props)} /> }))
 vi.mock("../system/Clock", () => ({ Clock: (props: Record<string, unknown>) => <span data-view="Clock" data-props={serializeProps(props)} /> }))
 vi.mock("../system/Movebox", () => ({ Movebox: (props: Record<string, unknown>) => <span data-view="Movebox" data-props={serializeProps(props)} /> }))
@@ -170,7 +172,7 @@ describe("Stagebox", () => {
         })
         expect(container.querySelector("[data-view='SlideText']")).toBeTruthy()
         expect(loadThumbnail).toHaveBeenCalledWith("next.mp4", 3)
-        expect(container.querySelector("[data-island='Media']")).toBeTruthy()
+        expect(container.querySelector("[data-view='Media']")).toBeTruthy()
         const props = JSON.parse(container.querySelector("[data-view='SlideText']")!.getAttribute("data-props") || "{}")
         expect(props).toMatchObject({ slideOffset: 1, autoSize: true, fontSize: 0, ref: { type: "stage", id: "i1_slide" } })
     })

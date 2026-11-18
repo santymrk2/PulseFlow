@@ -6,12 +6,11 @@ import { checkConditionValue, isConditionMet } from "../../components/edit/scrip
 import { getItemText } from "../../components/edit/scripts/textStyle"
 import { clone } from "../../components/helpers/array"
 import { getLayoutRef } from "../../components/helpers/show"
-import Textbox from "../../components/slide/Textbox.svelte"
 import { getSlideTextItems } from "../../components/stage/stage"
 import { cn } from "../../lib/utils"
 import { activeEdit, activeShow, activeStage, overlays, popupData, showsCache, stageShows, templates } from "../../stores"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+import { Textbox } from "../slide/Textbox"
 import { Stagebox } from "../stage/Stagebox"
 import { Button } from "../ui/button/Button"
 import { ConditionsBox, type ConditionChange } from "./ConditionsBox"
@@ -27,7 +26,7 @@ import styles from "./Conditions.module.css"
 //   El único caso observable que eso cambia es el de un contextElem sin `.editItem` fuera del escenario: el Svelte alteraba el alias sin avisar al store; el menú contextual sólo ofrece
 //   "conditions" sobre `.editItem` o `.stage_item`, así que no es alcanzable.
 // `slide`, `item` e `itemText` eran lets no reactivos (foto al montar y al cambiar de item): viven en `view`. `itemOptions` se calcula una vez.
-// Textbox sigue siendo Svelte (isla): sus handlers se toman al montar, por eso sólo lee `live` (la vista más reciente), nunca el estado del render. Stagebox ya es React.
+// Textbox y Stagebox son ports React directos.
 // Los nodos no tenían key en el Svelte: se usa la posición.
 type Conditions = { [key: string]: Condition }
 type ConditionItem = Item | StageItem
@@ -275,7 +274,7 @@ export function Conditions() {
                     <SelectField label="tools.item" style={{ marginBottom: "10px" }} options={itemOptions} value={itemIndex.toString()} onChange={updateItemIndex} />
 
                     <div className={styles.preview} style={showItemState ? undefined : { opacity: 0.2 }}>
-                        <div className={styles.slide}>{ctx.isStage ? <Stagebox id={ctx.showId} item={item as StageItem | undefined} ratio={1} /> : <SvelteIsland component={Textbox} props={{ item, ref: { id: ctx.showId } }} />}</div>
+                        <div className={styles.slide}>{ctx.isStage ? <Stagebox id={ctx.showId} item={item as StageItem | undefined} ratio={1} /> : item ? <Textbox item={item as unknown as Item} ref={{ id: ctx.showId }} /> : null}</div>
                     </div>
                 </>
             ) : null}

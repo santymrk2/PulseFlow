@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
+import type { MediaStyle } from "../../../types/Main"
 import type { StageItem, StageLayout as TStageLayout } from "../../../types/Stage"
 import { activePopup, activeStage, activeTimers, allOutputs, dictionary, outputs, outputSlideCache, refreshEditSlide, stageShows, timers, variables } from "../../stores"
 import { startResizing } from "../../utils/cursor"
@@ -13,12 +14,11 @@ import { getActiveOutputs, getStageResolution, percentageStylePos } from "../../
 import { createCSSVariables, replaceDynamicValues } from "../../components/helpers/showActions"
 import { getStyles } from "../../components/helpers/style"
 import { getCustomStageLabel, getSlideTextItems, stageItemToItem } from "../../components/stage/stage"
-import Media from "../../components/output/layers/Media.svelte"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { EditboxLines } from "../edit/editbox/EditboxLines"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
+import { Media } from "../output/Media"
 import { Output } from "../output/Output"
 import { Clock } from "../system/Clock"
 import { Movebox } from "../system/Movebox"
@@ -65,7 +65,7 @@ type StageBackground = BackgroundFrame & { next?: BackgroundFrame; next2?: Backg
 const MAX_AUTOSIZE_RETRIES = 5
 
 // Port de components/stage/Stagebox.svelte (F24.19a). `bind:mouse` → onMouseChange.
-// La imagen de fondo (`Media`) aún se monta con SvelteIsland; el context Svelte `layoutMounted` se pasa como getLayoutMounted.
+// El context Svelte `layoutMounted` se pasa como getLayoutMounted.
 export function Stagebox({ id, item, stageLayout = null, ratio, preview = false, edit = false, disableStagePreview = false, onMouseChange, getLayoutMounted }: StageboxProps) {
     const currentActiveStage = useStore(activeStage)
     const currentActivePopup = useStore(activePopup)
@@ -399,15 +399,12 @@ export function Stagebox({ id, item, stageLayout = null, ratio, preview = false,
                                 {(item.type ? item.includeMedia : !id.includes("_text")) && currentBackground ? (
                                     typeof (slideOffset === 0 ? currentBackground : slideOffset === 1 ? currentBackground.next : slideOffset === 2 ? currentBackground.next2 : null)?.path === "string" ? (
                                         <div className={`image ${styles.image}`} style={cssTextToStyle("position: absolute;left: 0;top: 0;width: 100%;height: 100%;")}>
-                                            <SvelteIsland
-                                                component={Media as never}
-                                                props={{
-                                                    outputId: outputWindowId,
-                                                    path: (slideOffset === 0 ? currentBackground : slideOffset === 1 ? currentBackground.next : slideOffset === 2 ? currentBackground.next2 : null)!.path,
-                                                    path2: (slideOffset === 0 ? currentBackground : slideOffset === 1 ? currentBackground.next : slideOffset === 2 ? currentBackground.next2 : null)!.filePath,
-                                                    mediaStyle: (slideOffset === 0 ? currentBackground : slideOffset === 1 ? currentBackground.next : slideOffset === 2 ? currentBackground.next2 : null)!.mediaStyle || {},
-                                                    mirror: true
-                                                }}
+                                            <Media
+                                                outputId={outputWindowId}
+                                                path={(slideOffset === 0 ? currentBackground : slideOffset === 1 ? currentBackground.next : slideOffset === 2 ? currentBackground.next2 : null)!.path || ""}
+                                                path2={(slideOffset === 0 ? currentBackground : slideOffset === 1 ? currentBackground.next : slideOffset === 2 ? currentBackground.next2 : null)!.filePath}
+                                                mediaStyle={((slideOffset === 0 ? currentBackground : slideOffset === 1 ? currentBackground.next : slideOffset === 2 ? currentBackground.next2 : null)!.mediaStyle || {}) as MediaStyle}
+                                                mirror
                                             />
                                         </div>
                                     ) : null

@@ -11,7 +11,7 @@ import { Conditions } from "./Conditions"
 
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/slide/Textbox.svelte", () => ({ default: { isla: "Textbox" } }))
+vi.mock("../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Textbox") }))
 vi.mock("../stage/Stagebox", async () => ({ Stagebox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Stagebox") }))
 // ConditionsBox ya es React: el doble lo registra como las islas, para seguir usando islands/emit
 vi.mock("./ConditionsBox", async () => {

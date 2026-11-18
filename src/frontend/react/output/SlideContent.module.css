@@ -1,0 +1,11 @@
+/* park precompute textboxes far off-screen so they never flash during transitions */
+.autosizePrecompute {
+    position: absolute;
+    top: -10000px;
+    left: -10000px;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+    pointer-events: none;
+    visibility: hidden;
+}

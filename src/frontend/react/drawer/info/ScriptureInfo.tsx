@@ -11,12 +11,11 @@ import { clone } from "../../../components/helpers/array"
 import { history } from "../../../components/helpers/history"
 import { getMediaStyle } from "../../../components/helpers/media"
 import { getAllNormalOutputs, getFirstActiveOutput } from "../../../components/helpers/output"
-import MediaSvelte from "../../../components/output/layers/Media.svelte"
-import TextboxSvelte from "../../../components/slide/Textbox.svelte"
-import ZoomedSvelte from "../../../components/slide/Zoomed.svelte"
 import { createScriptureShow, getActiveScripturesContent, getMergedAttribution, getScriptureSlidesNew, textKeys, useOldScriptureSystem } from "../../../components/drawer/bible/scripture"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
+import { Media } from "../../output/Media"
+import { Textbox } from "../../slide/Textbox"
+import { Zoomed } from "../../slide/Zoomed"
 import { T } from "../../helpers/T"
 import { Button } from "../../ui/button/Button"
 import { ColorField } from "../../ui/color-field/ColorField"
@@ -28,8 +27,8 @@ import { PopupField } from "../../ui/popup-field/PopupField"
 import { ToggleField } from "../../ui/toggle-field/ToggleField"
 import css from "./ScriptureInfo.module.css"
 
-// Port de components/drawer/info/ScriptureInfo.svelte. La vista previa (Zoomed, Media y Textbox) sigue en Svelte
-// y se monta con islas; el contenido del slot de Zoomed se pasa con `slots` de SvelteIsland.
+// Port de components/drawer/info/ScriptureInfo.svelte. La vista previa compone directamente los ports
+// React de Zoomed, Media y Textbox.
 export interface ScriptureInfoProps {
     optionsOpen: boolean
 }
@@ -228,10 +227,10 @@ export function ScriptureInfo({ optionsOpen }: ScriptureInfoProps) {
 
     const preview: ReactNode = (
         <>
-            {bgPath ? <SvelteIsland component={MediaSvelte} props={{ path: bgPath, mediaStyle, videoData: { paused: false, muted: true, loop: true }, mirror: true }} /> : null}
+            {bgPath ? <Media path={bgPath} mediaStyle={mediaStyle} videoData={{ paused: false, muted: true, duration: 0, loop: true }} mirror /> : null}
             <Fragment key={JSON.stringify(currentOutputSlides)}>
                 {currentOutputSlides.map((item, i) => (
-                    <SvelteIsland key={i} component={TextboxSvelte} props={{ item, outputStyle, ref: { id: "scripture" } }} />
+                    <Textbox key={i} item={item} outputStyle={outputStyle} ref={{ id: "scripture" }} />
                 ))}
             </Fragment>
             {attributionString ? <p className={css.attributionString}>{attributionString.slice(0, 135)}</p> : null}
@@ -240,7 +239,9 @@ export function ScriptureInfo({ optionsOpen }: ScriptureInfoProps) {
 
     return (
         <div className={`${css.scroll} split scripture`} style={{ paddingBottom: "46px" }}>
-            <SvelteIsland component={ZoomedSvelte} props={{ style: "width: 100%;", background }} slots={{ default: preview }} />
+            <Zoomed style="width: 100%;" background={background}>
+                {preview}
+            </Zoomed>
 
             <div className={`settings border ${css.settings}`}>
                 {optionsOpen ? (
