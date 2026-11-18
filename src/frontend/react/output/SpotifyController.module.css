@@ -1,0 +1,184 @@
+.spotifyController {
+    margin: 5px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--bg-1, #1e1e1e);
+    background-image: linear-gradient(180deg, var(--dynamic-bg, transparent) 0%, transparent 100%);
+    border: 1px solid var(--border-1, #333);
+    border-radius: 8px;
+    padding: 9px 15px;
+    color: var(--text-1, var(--text));
+    box-sizing: border-box;
+    user-select: none;
+    -webkit-user-drag: none;
+    transition:
+        background-image 0.5s ease,
+        opacity 0.3s ease,
+        max-height 0.3s ease,
+        padding 0.3s ease;
+    max-height: 250px;
+    overflow: hidden;
+}
+
+.spotifyController.minimized {
+    max-height: 68px;
+    padding-bottom: 9px;
+}
+
+.spotifyController.fading {
+    opacity: 0.8;
+}
+
+.spotifyController.fading :not(.fade-btn) {
+    pointer-events: none;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 6px;
+    width: 100%;
+    transition:
+        margin-bottom 0.3s ease,
+        opacity 0.2s ease;
+}
+
+.header:hover {
+    opacity: 0.98;
+}
+.header:active {
+    opacity: 0.9;
+}
+
+.spotifyController.minimized .header {
+    margin-bottom: 0;
+}
+
+.albumArt {
+    width: 48px;
+    height: 48px;
+    border-radius: 4px;
+    object-fit: cover;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.info {
+    text-align: left;
+    flex: 1;
+    overflow: hidden;
+}
+
+.title {
+    font-weight: 600;
+    font-size: 14px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+.artist {
+    font-size: 12px;
+    color: var(--text-2, #aaa);
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-top: 2px;
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    width: 100%;
+    margin-bottom: 2px;
+}
+
+.progress {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    font-size: 11px;
+    color: var(--text-2, #aaa);
+    font-variant-numeric: tabular-nums;
+}
+
+.controls,
+.progress {
+    transition:
+        opacity 0.3s ease,
+        max-height 0.3s ease,
+        margin 0.3s ease,
+        padding 0.3s ease,
+        transform 0.3s ease;
+    opacity: 1;
+    max-height: 100px;
+    transform: translateY(0);
+}
+
+.spotifyController.minimized .controls,
+.spotifyController.minimized .progress {
+    opacity: 0;
+    max-height: 0;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: translateY(-10px);
+    pointer-events: none;
+}
+
+.fadeBtnWrap {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    margin: 0 !important;
+    padding: 0 !important;
+    transform: translateY(-5px);
+    pointer-events: none;
+    transition:
+        opacity 0.3s ease,
+        max-height 0.3s ease,
+        margin 0.3s ease,
+        transform 0.3s ease;
+}
+
+.fadeBtnWrap.showFade {
+    opacity: 1;
+    max-height: 50px;
+    margin-top: 5px !important;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.progress.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+.bar {
+    flex: 1;
+    height: 4px;
+    background: var(--bg-3, #333);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+}
+
+.bar:hover {
+    height: 6px;
+    margin: -1px 0;
+}
+
+.fill {
+    height: 100%;
+    background: #1db954; /* Spotify green */
+    border-radius: 2px;
+}
+
+/* clase usada en el Svelte para las etiquetas de tiempo */
+.time {
+}

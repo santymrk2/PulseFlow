@@ -1,0 +1,11 @@
+.group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.group :global(button) {
+    flex-grow: 1;
+    /* height: 40px; */
+
+    padding: 0.4em 0.8em !important;
+}

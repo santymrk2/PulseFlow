@@ -1,0 +1,25 @@
+.group {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+.group :global(button) {
+    flex-grow: 1;
+    /* height: 40px; */
+}
+
+/* .name {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+    opacity: 0.8;
+  } */
+
+/* estilos que en el Svelte iban como atributos style inline */
+.time {
+    color: var(--secondary);
+    padding: 0 10px;
+}
+.duration {
+    padding: 0 10px;
+}
