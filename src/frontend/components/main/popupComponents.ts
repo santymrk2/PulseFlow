@@ -7,8 +7,6 @@ import KitDemo from "./popups/KitDemo.svelte"
 import ScreenConfig from "../screens/ScreenConfig.svelte"
 
 export const popups: Partial<{ [key in Popups]: ComponentType }> = {
-
-
     effect_items: EffectItems,
     looks: LooksWindow,
     screen_config: ScreenConfig,
