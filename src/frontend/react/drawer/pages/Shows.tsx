@@ -8,11 +8,10 @@ import { clone } from "../../../components/helpers/array"
 import { history } from "../../../components/helpers/history"
 import { updateShowsList } from "../../../components/helpers/show"
 import { dateToString } from "../../../components/helpers/time"
-import ShowButton from "../../../components/show/ShowButton.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { T } from "../../helpers/T"
 import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
+import { ShowButton } from "../../show/ShowButton"
 import { Autoscroll } from "../../system/Autoscroll"
 import { Center } from "../../system/Center"
 import { SelectElem } from "../../system/SelectElem"
@@ -22,8 +21,8 @@ import { VirtualList } from "../VirtualList"
 import styles from "./Shows.module.css"
 
 // Port de components/drawer/pages/Shows.svelte: lista virtualizada de shows con orden por columnas y filtro por etiquetas.
-// ShowButton sigue siendo Svelte (no tiene port): se monta como isla. El `<div on:click>` que abría el popup al tocar
-// el fondo no traía `detail` de botón (`e.detail` nativo es un número), así que ese camino siempre abre el popup igual.
+// ShowButton ya es React: se importa directamente. El `<div on:click>` que abría el popup al tocar el fondo no traía
+// `detail` de botón (`e.detail` nativo es un número), así que ese camino siempre abre el popup igual.
 export interface ShowsProps {
     active: string | null
 }
@@ -221,7 +220,7 @@ export function Shows({ active }: ShowsProps) {
                                 activeIndex={filteredShows.findIndex((a) => a.id === activeShowValue?.id)}
                                 render={(show) => (
                                     <SelectElem id="show_drawer" data={{ id: show.id }} shiftRange={filteredShows} draggable>
-                                        <SvelteIsland component={ShowButton} props={{ id: show.id, show, data: secondaryText(show, sortType), class: "#drawer_show_button" }} />
+                                        <ShowButton id={show.id} show={show} data={secondaryText(show, sortType)} className="#drawer_show_button" />
                                     </SelectElem>
                                 )}
                             />

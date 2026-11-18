@@ -7,9 +7,10 @@ import { history } from "../../components/helpers/history"
 import { getAccess } from "../../utils/profile"
 import { activePage, activePopup, currentOutputSettings, dictionary, popupData, stageShows } from "../../stores"
 import { commonMock } from "../test/mockCommon"
-import { clearIslands, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SelectStageLayout } from "./SelectStageLayout"
+
+const { portProps } = vi.hoisted(() => ({ portProps: {} as Record<string, Record<string, unknown>> }))
 
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
@@ -17,9 +18,18 @@ vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("uid", () => ({ uid: vi.fn(() => "layout-nuevo") }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/stage/StageSlide.svelte", () => ({ default: { isla: "StageSlide" } }))
-vi.mock("../../components/stage/SkeletonStageSlide.svelte", () => ({ default: { isla: "SkeletonStageSlide" } }))
+vi.mock("../stage/StageSlide", () => ({
+    StageSlide: (props: Record<string, unknown>) => {
+        portProps.StageSlide = props
+        return <div data-isla="StageSlide" />
+    }
+}))
+vi.mock("../stage/SkeletonStageSlide", () => ({
+    SkeletonStageSlide: (props: Record<string, unknown>) => {
+        portProps.SkeletonStageSlide = props
+        return <div data-isla="SkeletonStageSlide" />
+    }
+}))
 
 const layouts = {
     a: { name: "Alfa", items: { i: { currentOutput: { source: "out1" } } } },
@@ -36,7 +46,7 @@ function montar(data: object = {}, shows: object = layouts, access: object = {})
 
 beforeEach(() => {
     vi.clearAllMocks()
-    clearIslands()
+    Object.keys(portProps).forEach((key) => delete portProps[key])
     vi.useFakeTimers()
 })
 afterEach(() => {
@@ -49,14 +59,14 @@ describe("SelectStageLayout", () => {
     it("filtra los layouts sin acceso y los que usan la salida actual, ordenados por nombre", () => {
         const { container } = montar()
         expect(container.querySelectorAll("div[role='button']")).toHaveLength(2)
-        expect(islands.SkeletonStageSlide.props.layout).toMatchObject({ name: "Charlie" })
+        expect(portProps.SkeletonStageSlide.layout).toMatchObject({ name: "Charlie" })
     })
 
     it("el lazy loader pasa de skeletons a StageSlide a los 80 ms", () => {
         montar()
-        expect(islands.StageSlide).toBeUndefined()
+        expect(portProps.StageSlide).toBeUndefined()
         act(() => vi.advanceTimersByTime(80))
-        expect(islands.StageSlide.props).toMatchObject({ id: "c", selectable: false })
+        expect(portProps.StageSlide).toMatchObject({ id: "c", selectable: false })
     })
 
     it("elegir un layout llama al trigger, escribe popupData y cierra con el reset de 200 ms", () => {

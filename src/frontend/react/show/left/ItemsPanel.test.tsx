@@ -5,14 +5,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, activeProfile, categories, dictionary, leftSource, projects, sortedShowsList } from "../../../stores"
 import { getAccess } from "../../../utils/profile"
 import { commonMock } from "../../test/mockCommon"
-import { clearIslands, islands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { ItemsPanel } from "./ItemsPanel"
 
+const { libraryAddMenuProps } = vi.hoisted(() => ({ libraryAddMenuProps: { current: {} as Record<string, unknown> } }))
+
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../../components/show/LibraryAddMenu.svelte", () => ({ default: { isla: "LibraryAddMenu" } }))
+vi.mock("../LibraryAddMenu", () => ({
+    LibraryAddMenu: (props: Record<string, unknown>) => {
+        libraryAddMenuProps.current = props
+        return <div data-isla="LibraryAddMenu" />
+    }
+}))
 vi.mock("../ProjectContentList", () => ({ ProjectContentList: () => <div data-testid="project-content-list" /> }))
 vi.mock("./LibraryShowList", () => ({
     LibraryShowList: ({ shows, searching }: { shows: { id: string }[]; searching: boolean }) => (
@@ -48,7 +53,7 @@ function montar(opciones: { perfil?: boolean; acceso?: Record<string, string>; f
 
 beforeEach(() => {
     vi.clearAllMocks()
-    clearIslands()
+    libraryAddMenuProps.current = {}
 })
 afterEach(() => {
     cleanup()
@@ -63,7 +68,7 @@ describe("ItemsPanel", () => {
         expect(screen.getByText("2")).toBeTruthy()
         expect(screen.getByTestId("shows").textContent).toBe("s1,s2")
         expect(screen.getByTestId("shows").getAttribute("data-searching")).toBe("false")
-        expect(islands.LibraryAddMenu.props).toEqual({ readOnly: false })
+        expect(libraryAddMenuProps.current).toEqual({ readOnly: false })
     })
 
     it("la_búsqueda_filtra_y_marca_searching_cuando_no_hay_resultados", () => {

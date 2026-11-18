@@ -15,8 +15,7 @@ import { createCSSVariables } from "../../../components/helpers/showActions"
 import { getItemStyle, getStyles } from "../../../components/helpers/style"
 import { getShapeGuideStyle } from "../../../components/edit/scripts/shapeOutside"
 import { Button } from "../../ui/button/Button"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
-import SlideItemsSvelte from "../../../components/slide/SlideItems.svelte"
+import { SlideItems } from "../../slide/SlideItems"
 import { useStore } from "../../hooks/useStore"
 import { cssTextToStyle } from "../../helpers/cssTextToStyle"
 import { EditboxCropping, type EditboxCroppingHandle } from "./EditboxCropping"
@@ -342,12 +341,12 @@ export function Editbox({ item, filter = "", backdropFilter = "", ref, index, ed
             ) : previewItem ? (
                 previewItem.type === "media" || previewItem.type === "camera" ? (
                     <div className={`mediaFrame ${styles.mediaFrame} ${cropActive ? `showOverflow ${styles.showOverflow}` : ""}`}>
-                        <SvelteIsland component={SlideItemsSvelte} props={{ item: previewItem, ratio, ref: refPayload, itemElem: itemElemRef.current, slideIndex, edit: true, cropPreviewMode: cropActive }} />
+                        <SlideItems item={previewItem} ratio={ratio} ref={refPayload} itemElem={itemElemRef.current ?? undefined} slideIndex={slideIndex} edit={true} cropPreviewMode={cropActive} />
                     </div>
                 ) : previewItem.type === "table" ? (
-                    <SvelteIsland component={SlideItemsSvelte} props={{ item: previewItem, ratio, ref: refPayload, itemElem: itemElemRef.current, slideIndex, index, edit: true }} />
+                    <SlideItems item={previewItem} ratio={ratio} ref={refPayload} itemElem={itemElemRef.current ?? undefined} slideIndex={slideIndex} index={index} edit={true} />
                 ) : (
-                    <SvelteIsland component={SlideItemsSvelte} props={{ item: previewItem, ratio, ref: refPayload, itemElem: itemElemRef.current, slideIndex, edit: true }} />
+                    <SlideItems item={previewItem} ratio={ratio} ref={refPayload} itemElem={itemElemRef.current ?? undefined} slideIndex={slideIndex} edit={true} />
                 )
             ) : null}
 

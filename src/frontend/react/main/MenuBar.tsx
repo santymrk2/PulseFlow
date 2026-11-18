@@ -1,20 +1,18 @@
 import { useEffect, useRef, useState } from "react"
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../IPC/main"
-import { activeLook, activePopup, activeProfile, looks, profiles, saved, topContextActive, windowState } from "../../stores"
+import { activeLook, activeProfile, looks, profiles, saved, topContextActive, windowState } from "../../stores"
 import type { Look } from "../../../types/Settings"
 import { translateText } from "../../utils/language"
 import { initializeClosing } from "../../utils/save"
 import { applyLook } from "../../components/helpers/looks"
-import { getAllNormalOutputs, getAllStageOutputs, toggleOutputs } from "../../components/helpers/output"
 import { contextMenuItems, contextMenuLayouts } from "../../components/context/contextMenus"
 import { useStore } from "../hooks/useStore"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"
-import { SvelteIsland } from "../bridge/SvelteIsland"
-import ContextChild from "../../components/context/ContextChild.svelte"
-import ContextItem from "../../components/context/ContextItem.svelte"
+import { ContextChild } from "../context/ContextChild"
+import { ContextItem } from "../context/ContextItem"
 import styles from "./MenuBar.module.css"
 
 const menus = ["file", "edit", "view", "help", "screens"] as const
@@ -76,12 +74,6 @@ export function MenuBar() {
         setActiveMenu(id === "screens" ? screensMenu : (contextMenuLayouts as Record<string, string[]>)[id] || [])
     }
 
-    function toggleScreens(type: "audience" | "stage") {
-        const ids = (type === "stage" ? getAllStageOutputs() : getAllNormalOutputs()).map((a) => a.id)
-        if (ids.length) toggleOutputs(ids)
-        closeTopMenu()
-    }
-
     useEffect(() => {
         function onClick(e: MouseEvent) {
             const target = e.target as HTMLElement | null
@@ -109,9 +101,9 @@ export function MenuBar() {
                     {activeMenu.map((id, i) => {
                         if (id === "SEPARATOR") return <hr key={`sep-${i}`} className={styles.hr} />
                         if ((contextMenuItems as Record<string, { items?: unknown[] }>)[id]?.items) {
-                            return <SvelteIsland key={`${id}-${i}`} component={ContextChild} props={{ id, topBar: true, contextElem: menuRef.current }} />
+                            return <ContextChild key={`${id}-${i}`} id={id} topBar={true} contextElem={menuRef.current} />
                         }
-                        return <SvelteIsland key={`${id}-${i}`} component={ContextItem} props={{ id, topBar: true, contextElem: menuRef.current }} />
+                        return <ContextItem key={`${id}-${i}`} id={id} topBar={true} contextElem={menuRef.current} />
                     })}
                 </div>
             ) : null}
@@ -126,40 +118,14 @@ export function MenuBar() {
 
             {activeID === "screens" ? (
                 <div ref={menuRef} className={`${styles.contextMenu} ${styles.menu} contextMenu menu`} style={{ insetInlineStart: `${x}px`, top: `${y}px` }}>
-                    <SvelteIsland
-                        component={ContextItem}
-                        props={{ contextElem: menuRef.current, topBar: true, id: "screens_toggle_audience", menu: screensMenuItems.screens_toggle_audience }}
-                        events={{ click: () => toggleScreens("audience") }}
-                    />
-                    <SvelteIsland
-                        component={ContextItem}
-                        props={{ contextElem: menuRef.current, topBar: true, id: "screens_toggle_stage", menu: screensMenuItems.screens_toggle_stage }}
-                        events={{ click: () => toggleScreens("stage") }}
-                    />
+                    <ContextItem contextElem={menuRef.current} topBar={true} id="screens_toggle_audience" menu={screensMenuItems.screens_toggle_audience} />
+                    <ContextItem contextElem={menuRef.current} topBar={true} id="screens_toggle_stage" menu={screensMenuItems.screens_toggle_stage} />
                     <hr className={styles.hr} />
-                    <SvelteIsland
-                        component={ContextItem}
-                        props={{ contextElem: menuRef.current, topBar: true, id: "screens_config", menu: screensMenuItems.screens_config }}
-                        events={{
-                            click: () => {
-                                activePopup.set("screen_config")
-                                closeTopMenu()
-                            }
-                        }}
-                    />
-                    <SvelteIsland
-                        component={ContextItem}
-                        props={{ contextElem: menuRef.current, topBar: true, id: "screens_looks", menu: screensMenuItems.screens_looks }}
-                        events={{
-                            click: () => {
-                                activePopup.set("looks")
-                                closeTopMenu()
-                            }
-                        }}
-                    />
+                    <ContextItem contextElem={menuRef.current} topBar={true} id="screens_config" menu={screensMenuItems.screens_config} />
+                    <ContextItem contextElem={menuRef.current} topBar={true} id="screens_looks" menu={screensMenuItems.screens_looks} />
                     <hr className={styles.hr} />
                     <div className={styles.liveGroup}>
-                        <SvelteIsland component={ContextItem} props={{ contextElem: menuRef.current, topBar: true, id: "screens_live", menu: screensMenuItems.screens_live }} />
+                        <ContextItem contextElem={menuRef.current} topBar={true} id="screens_live" menu={screensMenuItems.screens_live} />
                         <div className={styles.liveItems}>
                             {Object.keys(looksValue || {}).length ? (
                                 Object.entries((looksValue || {}) as Record<string, Look>).map(([lookId, look]) => (

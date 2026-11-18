@@ -30,7 +30,7 @@ function getAnalysers(): AnalyserLike[] {
     return (AudioAnalyser.getAnalysers() as AnalyserLike[] | undefined) || []
 }
 
-// Port de components/slide/views/Visualizer.svelte (F24.18a).
+// Port (F24.18a).
 export function Visualizer({ item, preview = false, edit = false }: VisualizerProps) {
     const canvasRef = useRef<HTMLCanvasElement | null>(null)
     const canvasInstanceRef = useRef<HTMLCanvasElement | null>(null)

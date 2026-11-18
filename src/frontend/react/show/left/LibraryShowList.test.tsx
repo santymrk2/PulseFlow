@@ -14,9 +14,8 @@ import styles from "./LibraryShowList.module.css"
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../components/show/ShowButton.svelte", () => ({ default: { isla: "ShowButton" } }))
-vi.mock("../../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} />
+vi.mock("../ShowButton", () => ({
+    ShowButton: (props: Record<string, unknown>) => <div data-isla="ShowButton" data-props={JSON.stringify(props)} />
 }))
 vi.mock("../../drawer/VirtualList", () => ({
     VirtualList: ({ items, activeIndex, render }: { items: ShowList[]; activeIndex?: number | null; render: (item: ShowList, index: number) => ReactNode }) => (
@@ -60,7 +59,7 @@ describe("LibraryShowList", () => {
         expect(list.classList.contains("#drawer_show")).toBe(true)
         expect(islas()).toHaveLength(2)
         expect(propsDe(islas()[0]).id).toBe("a")
-        expect(propsDe(islas()[0])["class"]).toBe("#drawer_show_button")
+        expect(propsDe(islas()[0]).className).toBe("#drawer_show_button")
         expect(document.querySelector("#show_drawer")?.getAttribute("data-item")).toBe('{"id":"a"}')
     })
 

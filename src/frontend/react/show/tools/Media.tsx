@@ -55,7 +55,7 @@ interface LoadedMedia {
     data?: MediaStyle
 }
 
-// Port de components/show/tools/Media.svelte (F24.20a).
+// Port (F24.20a).
 export function Media() {
     const currentActiveShow = useStore(activeShow)
     const currentMedia = useStore(media)

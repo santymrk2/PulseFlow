@@ -14,8 +14,10 @@ vi.mock("../../components/helpers/output", () => ({ getActiveOutputs: vi.fn(() =
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../../components/output/tools/Audio.svelte", () => ({ default: { isla: "Audio" } }))
 vi.mock("../../components/output/tools/Overlay.svelte", () => ({ default: { isla: "Overlay" } }))
-vi.mock("../../components/output/tools/NextTimer.svelte", () => ({ default: { isla: "NextTimer" } }))
 vi.mock("../../components/output/tools/TimerControls.svelte", () => ({ default: { isla: "TimerControls" } }))
+vi.mock("../output/NextTimer", () => ({
+    NextTimer: (props: Record<string, unknown>) => <div data-isla="NextTimer" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
+}))
 vi.mock("./tools/Media", () => ({ Media: () => <div data-testid="media-tools" /> }))
 vi.mock("./tools/Metadata", () => ({ Metadata: () => <div data-testid="metadata-tools" /> }))
 vi.mock("./tools/SlideGroups", () => ({ SlideGroups: () => <div data-testid="slide-groups" /> }))

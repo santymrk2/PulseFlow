@@ -4,7 +4,6 @@ import { get } from "svelte/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
 import { activeRecording, activeShow, cloudSyncData, drawerTabsData, special } from "../../../stores"
-import { clearIslands, islands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { MediaInfo } from "./MediaInfo"
 
@@ -15,9 +14,8 @@ vi.mock("../../../components/helpers/media", async () => {
     return { ...actual, getMediaInfo: vi.fn(() => Promise.resolve(null)) }
 })
 vi.mock("../live/LiveInfo", () => ({ LiveInfo: ({ optionsOpen }: { optionsOpen: boolean }) => <div data-testid="live-info" data-open={optionsOpen} /> }))
-vi.mock("../../../components/system/Clock.svelte", () => ({ default: { isla: "Clock" } }))
-vi.mock("../../../components/system/Date.svelte", () => ({ default: { isla: "Date" } }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
+vi.mock("../../system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
+vi.mock("../../system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
 vi.mock("./PlayerInfo", () => ({ PlayerInfo: ({ optionsOpen }: { optionsOpen: boolean }) => <div data-testid="player" data-open={optionsOpen} /> }))
 vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
@@ -32,14 +30,13 @@ beforeEach(() => {
 afterEach(() => {
     cleanup()
     restaurar()
-    clearIslands()
 })
 
 describe("MediaInfo", () => {
     it("muestra reloj y fecha cuando no hay ningún archivo activo", () => {
         render(<MediaInfo optionsOpen={false} />)
-        expect(islands["Clock"]).toBeTruthy()
-        expect(islands["Date"]).toBeTruthy()
+        expect(document.querySelector('[data-isla="Clock"]')).toBeTruthy()
+        expect(document.querySelector('[data-isla="Date"]')).toBeTruthy()
     })
 
     it("muestra los metadatos del archivo activo con la información de FILE_INFO", async () => {

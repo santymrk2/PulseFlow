@@ -1,13 +1,12 @@
 import { useEffect, useRef, useState } from "react"
-import LibraryAddMenu from "../../../components/show/LibraryAddMenu.svelte"
 import { filterShows, showsOfLibrary, UNLABELED_LIBRARY_ID } from "../../../components/show/leftSource"
 import { activePopup, activeProfile, categories, leftSource, projects, sortedShowsList } from "../../../stores"
 import { translateText } from "../../../utils/language"
 import { getAccess } from "../../../utils/profile"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
 import { Button } from "../../ui/button/Button"
 import { Input } from "../../ui/input/Input"
+import { LibraryAddMenu } from "../LibraryAddMenu"
 import { ProjectContentList } from "../ProjectContentList"
 import { LeftPanel } from "./LeftPanel"
 import { LibraryShowList } from "./LibraryShowList"
@@ -60,7 +59,7 @@ export function ItemsPanel() {
             actions={
                 <>
                     {playlistId ? <PlaylistOptionsMenu projectId={playlistId} /> : null}
-                    {library ? <SvelteIsland component={LibraryAddMenu} props={{ readOnly }} /> : playlistId ? <Button variant="ghost" size="icon-sm" icon="add" iconSize={0.9} title="ui.add_shows" disabled={readOnly} onNativeClick={() => activePopup.set("add_shows")} /> : null}
+                    {library ? <LibraryAddMenu readOnly={readOnly} /> : playlistId ? <Button variant="ghost" size="icon-sm" icon="add" iconSize={0.9} title="ui.add_shows" disabled={readOnly} onNativeClick={() => activePopup.set("add_shows")} /> : null}
                 </>
             }
         >

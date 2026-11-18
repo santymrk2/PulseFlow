@@ -5,12 +5,11 @@ import { keysToID, sortByName } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"
 import { activePage, activePopup, currentOutputSettings, popupData, stageShows } from "../../stores"
 import { getAccess } from "../../utils/profile"
-import SkeletonStageSlide from "../../components/stage/SkeletonStageSlide.svelte"
-import StageSlide from "../../components/stage/StageSlide.svelte"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
+import { SkeletonStageSlide } from "../stage/SkeletonStageSlide"
+import { StageSlide } from "../stage/StageSlide"
 import { Center } from "../system/Center"
 import { Button } from "../ui/button/Button"
 import styles from "./SelectStageLayout.module.css"
@@ -19,7 +18,7 @@ import styles from "./SelectStageLayout.module.css"
 // currentOutputSettings y el permiso "stage" del perfil (getAccess, una sola vez como en el Svelte).
 // Escribe: el trigger con el id elegido, popupData = { id: "select_stage_layout", value }, activePopup = null
 // (y popupData = {} 200 ms después si sigue cerrado), un history UPDATE + activePage = "stage" al crear.
-// StageSlide y SkeletonStageSlide siguen siendo Svelte (islas); al no pasar slots se renderizan como hermanos.
+// StageSlide y SkeletonStageSlide son ports React; al no pasar slots se renderizan como hermanos.
 export function SelectStageLayout() {
     const stageShowsValue = useStore(stageShows)
     const currentOutputSettingsValue = useStore(currentOutputSettings)
@@ -76,7 +75,7 @@ export function SelectStageLayout() {
                     <div className={styles.grid}>
                         {stageLayouts.map((layout, i) => (
                             <div key={layout.id} className={styles.stageLayout} role="button" tabIndex={0} onClick={() => select(layout.id)} onKeyDown={triggerClickOnEnterSpace}>
-                                {loaded || i < lazyLoader ? <SvelteIsland component={StageSlide} props={{ id: layout.id, layout, active: active === layout.id, selectable: false }} /> : <SvelteIsland component={SkeletonStageSlide} props={{ layout, active: active === layout.id }} />}
+                                {loaded || i < lazyLoader ? <StageSlide id={layout.id} layout={layout} active={active === layout.id} selectable={false} /> : <SkeletonStageSlide layout={layout} active={active === layout.id} />}
                             </div>
                         ))}
                     </div>

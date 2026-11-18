@@ -10,8 +10,7 @@ import { openSettings } from "../../components/settings/openSettings"
 import { getSlideTextItems, stageItemToItem, updateStageShow } from "../../components/stage/stage"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
 import { getAccess } from "../../utils/profile"
-import ItemAddMenu from "../../components/edit/ItemAddMenu.svelte"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+import { ItemAddMenu } from "../edit/ItemAddMenu"
 import { T } from "../helpers/T"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
@@ -230,7 +229,7 @@ export function StageLayout({ outputId = "", stageId = "", preview = false, edit
                         <ZoomControl hidden={!hasStageOutput} columns={zoom} min={0.2} max={4} defaultValue={1} addValue={0.1} onChange={updateZoom} onOrigin={(origin) => (zoomOriginRef.current = origin)} />
                     </FloatingBar>
 
-                    <SvelteIsland component={ItemAddMenu as never} props={{ isLocked }} />
+                    <ItemAddMenu isLocked={isLocked} />
                 </>
             ) : null}
         </div>

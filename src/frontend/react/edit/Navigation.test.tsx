@@ -6,7 +6,6 @@ import { activeEdit, activePage, activeShow, editHistory, editMode, effects, foc
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Navigation } from "./Navigation"
 
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-island="slides" /> }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
 vi.mock("../system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))

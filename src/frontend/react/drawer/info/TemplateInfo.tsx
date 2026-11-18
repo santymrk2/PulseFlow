@@ -1,14 +1,13 @@
 import { special } from "../../../stores"
 import { useStore } from "../../hooks/useStore"
 import { Center } from "../../system/Center"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
-import Clock from "../../../components/system/Clock.svelte"
-import Date from "../../../components/system/Date.svelte"
+import { Clock } from "../../system/Clock"
+import { Date } from "../../system/Date"
 import { TextField } from "../../ui/text-field/TextField"
 import { ToggleField } from "../../ui/toggle-field/ToggleField"
 import styles from "./TemplateInfo.module.css"
 
-// Port de components/drawer/info/TemplateInfo.svelte. Clock y Date se migran en F24.18a: siguen como islas.
+// Port de components/drawer/info/TemplateInfo.svelte. Clock y Date son ports React (F24.18a).
 export interface TemplateInfoProps {
     optionsOpen: boolean
 }
@@ -33,8 +32,8 @@ export function TemplateInfo({ optionsOpen }: TemplateInfoProps) {
                 </main>
             ) : (
                 <Center>
-                    <SvelteIsland component={Clock} />
-                    <SvelteIsland component={Date} />
+                    <Clock />
+                    <Date />
                 </Center>
             )}
         </div>

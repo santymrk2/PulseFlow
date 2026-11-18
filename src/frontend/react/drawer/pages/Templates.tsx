@@ -9,12 +9,12 @@ import { getFirstActiveOutput, getResolution } from "../../../components/helpers
 import { deselect } from "../../../components/helpers/select"
 import { getLayoutRef } from "../../../components/helpers/show"
 import { _show } from "../../../components/helpers/shows"
-import Actions from "../../../components/slide/Actions.svelte"
 import TemplateSlide from "../../../components/drawer/pages/TemplateSlide.svelte"
 import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { T } from "../../helpers/T"
 import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
+import { Actions } from "../../slide/Actions"
 import { Center } from "../../system/Center"
 import { DropArea } from "../../system/DropArea"
 import { SelectElem } from "../../system/SelectElem"
@@ -24,7 +24,7 @@ import { Card } from "../Card"
 import styles from "./Templates.module.css"
 
 // Port de components/drawer/pages/Templates.svelte: grilla de plantillas con carga por lotes.
-// `slide/Actions.svelte` y `TemplateSlide.svelte` siguen en Svelte y se montan como islas.
+// `TemplateSlide.svelte` sigue en Svelte y se monta como isla; `slide/Actions` ya es port React.
 export interface TemplatesProps {
     active: string | null
     // Theme editor: lista de una columna en el panel izquierdo; un clic abre la plantilla para editarla (no la aplica al show)
@@ -245,7 +245,7 @@ export function Templates({ active, columns = null, editOnClick = false }: Templ
                                             {lazy.loaded || i < lazy.count ? (
                                                 <>
                                                     {/* icons */}
-                                                    {template.settings?.actions?.length ? <SvelteIsland component={Actions} props={{ columns: gridColumns, templateId: template.id, actions: { slideActions: template.settings?.actions } }} /> : null}
+                                                    {template.settings?.actions?.length ? <Actions columns={gridColumns} templateId={template.id} actions={{ slideActions: template.settings?.actions }} /> : null}
 
                                                     <SvelteIsland component={TemplateSlide} props={{ templateId: template.id, template, preview: true }} />
                                                 </>

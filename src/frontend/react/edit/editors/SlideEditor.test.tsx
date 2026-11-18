@@ -140,8 +140,7 @@ vi.mock("../../drawer/media/MediaLoader", () => ({ MediaLoader: () => <div /> })
 vi.mock("../../show/tools/Notes", () => ({ Notes: () => <div /> }))
 vi.mock("../../timeline/Timeline", () => ({ Timeline: () => <div /> }))
 vi.mock("../editbox/Editbox", () => ({ Editbox: () => <div data-testid="editbox" /> }))
-vi.mock("../../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-testid="island" /> }))
-vi.mock("../../../components/edit/EditHeader.svelte", () => ({ default: {} }))
+vi.mock("../EditHeader", () => ({ EditHeader: () => <div /> }))
 
 afterEach(cleanup)
 

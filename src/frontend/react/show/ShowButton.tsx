@@ -23,7 +23,7 @@ interface ShowButtonShow {
     id: string
     type?: ShowType
     name?: string
-    category?: string
+    category?: null | string
     data?: { id?: string; name?: string; type?: string }
     layoutInfo?: { name?: string }
     scheduleLength?: number

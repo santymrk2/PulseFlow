@@ -34,8 +34,7 @@ import { MediaLoader } from "../../drawer/media/MediaLoader"
 import { Notes } from "../../show/tools/Notes"
 import { Timeline } from "../../timeline/Timeline"
 import { Editbox } from "../editbox/Editbox"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
-import EditHeaderSvelte from "../../../components/edit/EditHeader.svelte"
+import { EditHeader } from "../EditHeader"
 import { useStore } from "../../hooks/useStore"
 import css from "./SlideEditor.module.css"
 
@@ -363,7 +362,7 @@ export function SlideEditor() {
 
     return (
         <>
-            {currentShow ? <SvelteIsland component={EditHeaderSvelte} props={{ showId: currentShowId }} /> : null}
+            {currentShow ? <EditHeader showId={currentShowId} /> : null}
 
             <div className={`editArea ${css.editArea}`}>
                 <div ref={parentRef} className={`parent ${zoom >= 1 ? `noOverflow ${css.noOverflow}` : ""} ${css.parent}`} style={{ overflow: "auto" }}>

@@ -17,7 +17,7 @@ vi.mock("../../../components/helpers/output", () => ({ getResolution: () => ({ w
 vi.mock("../../../components/helpers/show", () => ({ getLayoutRef: () => [] }))
 vi.mock("../../../components/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [] }) }) }))
 vi.mock("../../../components/helpers/select", () => ({ deselect: deselectMock }))
-vi.mock("../../../components/slide/Actions.svelte", () => ({ default: { isla: "Actions" } }))
+vi.mock("../../slide/Actions", () => ({ Actions: (props: Record<string, unknown>) => <div data-isla="Actions" data-props={JSON.stringify(props ?? {})} /> }))
 vi.mock("../../../components/drawer/pages/TemplateSlide.svelte", () => ({ default: { isla: "TemplateSlide" } }))
 vi.mock("../../bridge/SvelteIsland", () => ({
     SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} />

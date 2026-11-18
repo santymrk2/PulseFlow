@@ -1,18 +1,17 @@
 import type { ShowList } from "../../../../types/Show"
 import { dateToString } from "../../../components/helpers/time"
-import ShowButton from "../../../components/show/ShowButton.svelte"
 import { cn } from "../../../lib/utils"
 import { activeShow, focusedArea, sorted } from "../../../stores"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { VirtualList } from "../../drawer/VirtualList"
 import { T } from "../../helpers/T"
 import { useStore } from "../../hooks/useStore"
+import { ShowButton } from "../ShowButton"
 import { Center } from "../../system/Center"
 import { SelectElem } from "../../system/SelectElem"
 import styles from "./LibraryShowList.module.css"
 
 // Port de components/show/left/LibraryShowList.svelte: lista de shows de una biblioteca, sin columnas de orden.
-// ShowButton sigue siendo Svelte (no tiene port): se monta como isla. El texto secundario usa el mismo sortType del store `sorted`.
+// ShowButton ya es React: se importa directamente. El texto secundario usa el mismo sortType del store `sorted`.
 export interface LibraryShowListProps {
     shows: ShowList[]
     searching?: boolean
@@ -51,7 +50,7 @@ export function LibraryShowList({ shows, searching = false }: LibraryShowListPro
                     activeIndex={activeIndex}
                     render={(show) => (
                         <SelectElem id="show_drawer" data={{ id: show.id }} shiftRange={shows} draggable>
-                            <SvelteIsland component={ShowButton} props={{ id: show.id, show, data: secondaryText(show, sortType), class: "#drawer_show_button" }} />
+                            <ShowButton id={show.id} show={show} data={secondaryText(show, sortType)} className="#drawer_show_button" />
                         </SelectElem>
                     )}
                 />

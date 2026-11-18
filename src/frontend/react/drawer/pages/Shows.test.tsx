@@ -17,9 +17,8 @@ vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../classes/Show", () => ({ ShowObj: class ShowObj {} }))
 vi.mock("../../../components/helpers/history", () => ({ history: historyMock }))
 vi.mock("../../../components/helpers/show", () => ({ updateShowsList: updateShowsListMock }))
-vi.mock("../../../components/show/ShowButton.svelte", () => ({ default: { isla: "ShowButton" } }))
-vi.mock("../../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} />
+vi.mock("../../show/ShowButton", () => ({
+    ShowButton: (props: Record<string, unknown>) => <div data-isla="ShowButton" data-props={JSON.stringify(props)} />
 }))
 vi.mock("../../drawer/VirtualList", () => ({
     VirtualList: ({ items, activeIndex, className, render }: { items: ShowList[]; activeIndex?: number | null; className?: string; render: (item: ShowList, index: number) => ReactNode }) => (
@@ -89,7 +88,7 @@ describe("Shows", () => {
         montar()
         expect(islas()).toHaveLength(2)
         expect(propsDe(islas()[0]).id).toBe("a")
-        expect(propsDe(islas()[0])["class"]).toBe("#drawer_show_button")
+        expect(propsDe(islas()[0]).className).toBe("#drawer_show_button")
         expect(document.querySelector("[data-class]")?.getAttribute("data-class")).toContain("list")
         expect(document.querySelector("#show_drawer")?.getAttribute("data-item")).toBe('{"id":"a"}')
     })

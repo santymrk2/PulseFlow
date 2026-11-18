@@ -26,7 +26,7 @@ import { ShowNotes } from "./ShowNotes"
 import { Slides } from "./Slides"
 import styles from "./Show.module.css"
 
-// Port de components/show/Show.svelte (F24.20a).
+// Port (F24.20a).
 export function Show() {
     const currentActiveShow = useStore(activeShow)
     const currentActiveProject = useStore(activeProject)

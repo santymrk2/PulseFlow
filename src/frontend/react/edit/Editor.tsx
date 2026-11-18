@@ -15,17 +15,17 @@ import { SvelteIsland } from "../bridge/SvelteIsland"
 import { SlideEditor } from "./editors/SlideEditor"
 import { TextEditor } from "../show/TextEditor"
 import { useStore } from "../hooks/useStore"
+import { SceneEditor } from "./SceneEditor"
+import { EffectEditor } from "./EffectEditor"
+import { CameraEditor } from "./CameraEditor"
+import { AudioEditor } from "./AudioEditor"
+import { ItemAddMenu } from "./ItemAddMenu"
 import styles from "./Editor.module.css"
 
 import SplashSvelte from "../../components/main/Splash.svelte"
 import OverlayEditorSvelte from "../../components/edit/editors/OverlayEditor.svelte"
 import TemplateEditorSvelte from "../../components/edit/editors/TemplateEditor.svelte"
-import SceneEditorSvelte from "../../components/edit/editors/SceneEditor.svelte"
-import EffectEditorSvelte from "../../components/edit/editors/EffectEditor.svelte"
 import MediaEditorSvelte from "../../components/edit/editors/MediaEditor.svelte"
-import CameraEditorSvelte from "../../components/edit/editors/CameraEditor.svelte"
-import AudioEditorSvelte from "../../components/edit/editors/AudioEditor.svelte"
-import ItemAddMenuSvelte from "../../components/edit/ItemAddMenu.svelte"
 
 // Port de components/edit/Editor.svelte (F24.21c).
 // Incluye lógica de tabs equivalente a components/main/Tabs.svelte sincronizada con editMode.
@@ -128,22 +128,22 @@ export function Editor() {
         content = (
             <>
                 <SvelteIsland component={OverlayEditorSvelte} props={{}} />
-                <SvelteIsland component={ItemAddMenuSvelte} props={{}} />
+                <ItemAddMenu />
             </>
         )
     } else if (currentActiveEdit.type === "template") {
         content = (
             <>
                 <SvelteIsland component={TemplateEditorSvelte} props={{}} />
-                <SvelteIsland component={ItemAddMenuSvelte} props={{}} />
+                <ItemAddMenu />
             </>
         )
     } else if (currentActiveEdit.type === "scene") {
-        content = <SvelteIsland component={SceneEditorSvelte} props={{}} />
+        content = <SceneEditor />
     } else if (currentActiveEdit.type === "effect") {
         content = (
             <>
-                <SvelteIsland component={EffectEditorSvelte} props={{}} />
+                <EffectEditor />
                 <FloatingBar>
                     <Button className="addButton" title="edit.add_items" onClick={() => activePopup.set("effect_items")}>
                         <Icon id="add" size={1} white />
@@ -154,9 +154,9 @@ export function Editor() {
     } else if (currentActiveEdit.type === "media") {
         content = <SvelteIsland component={MediaEditorSvelte} props={{}} />
     } else if (currentActiveEdit.type === "camera") {
-        content = <SvelteIsland key={currentActiveEdit.id} component={CameraEditorSvelte} props={{}} />
+        content = <CameraEditor key={currentActiveEdit.id} />
     } else if (currentActiveEdit.type === "audio") {
-        content = <SvelteIsland component={AudioEditorSvelte} props={{}} />
+        content = <AudioEditor />
     } else if (currentActiveEdit.slide !== undefined) {
         content = (
             <>
@@ -217,7 +217,7 @@ export function Editor() {
                     ) : (
                         <>
                             <SlideEditor />
-                            {currentEditMode === "default" && !currentSlideNotesActive && !currentSpecial.slideTimelineActive && !currentFocusMode ? <SvelteIsland component={ItemAddMenuSvelte} props={{ isLocked }} /> : null}
+                            {currentEditMode === "default" && !currentSlideNotesActive && !currentSpecial.slideTimelineActive && !currentFocusMode ? <ItemAddMenu isLocked={isLocked} /> : null}
                         </>
                     )}
                 </div>

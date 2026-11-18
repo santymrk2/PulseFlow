@@ -117,12 +117,12 @@ vi.mock("../show/TextEditor", () => ({ TextEditor: () => <div data-testid="text-
 vi.mock("../../components/main/Splash.svelte", () => ({ default: {} }))
 vi.mock("../../components/edit/editors/OverlayEditor.svelte", () => ({ default: {} }))
 vi.mock("../../components/edit/editors/TemplateEditor.svelte", () => ({ default: {} }))
-vi.mock("../../components/edit/editors/SceneEditor.svelte", () => ({ default: {} }))
-vi.mock("../../components/edit/editors/EffectEditor.svelte", () => ({ default: {} }))
 vi.mock("../../components/edit/editors/MediaEditor.svelte", () => ({ default: {} }))
-vi.mock("../../components/edit/editors/CameraEditor.svelte", () => ({ default: {} }))
-vi.mock("../../components/edit/editors/AudioEditor.svelte", () => ({ default: {} }))
-vi.mock("../../components/edit/ItemAddMenu.svelte", () => ({ default: {} }))
+vi.mock("./SceneEditor", () => ({ SceneEditor: () => <div /> }))
+vi.mock("./EffectEditor", () => ({ EffectEditor: () => <div /> }))
+vi.mock("./CameraEditor", () => ({ CameraEditor: () => <div /> }))
+vi.mock("./AudioEditor", () => ({ AudioEditor: () => <div /> }))
+vi.mock("./ItemAddMenu", () => ({ ItemAddMenu: () => <div /> }))
 
 afterEach(cleanup)
 

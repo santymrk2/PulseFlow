@@ -8,14 +8,13 @@ import { history } from "../../components/helpers/history"
 import { getExtension, getFileName, getMediaType } from "../../components/helpers/media"
 import { getLayoutRef } from "../../components/helpers/show"
 import { _show } from "../../components/helpers/shows"
-import Slides from "../../components/edit/Slides.svelte"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Center } from "../system/Center"
 import { Button } from "../ui/button/Button"
 import { FloatingBar } from "../ui/floating-bar/FloatingBar"
+import { Slides } from "./Slides"
 import styles from "./Navigation.module.css"
 
 interface NavHistoryEntry {
@@ -175,13 +174,13 @@ export function Navigation() {
                     <Icon id="back" right />
                     <T id="actions.back" />
                 </Button>
-                {currentShowId ? <SvelteIsland component={Slides as never} /> : null}
+                {currentShowId ? <Slides /> : null}
             </>
         )
     }
 
     if (currentFocusMode && currentShowId) {
-        return <SvelteIsland component={Slides as never} />
+        return <Slides />
     }
 
     if (showRecent) {
@@ -216,7 +215,7 @@ export function Navigation() {
     if (currentActiveShow && (currentActiveShow.type === undefined || currentActiveShow.type === "show")) {
         return (
             <>
-                <SvelteIsland component={Slides as never} />
+                <Slides />
                 <FloatingBar onlyOne>
                     <Button disabled={isLocked} icon="add" title="new.slide" onClick={(detail) => addSlide({ detail } as ClickEvent)}>
                         {!currentLabelsDisabled ? <T id="new.slide" /> : null}

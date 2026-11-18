@@ -3,13 +3,11 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "svelte/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { special } from "../../../stores"
-import { clearIslands, islands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { TemplateInfo } from "./TemplateInfo"
 
-vi.mock("../../../components/system/Clock.svelte", () => ({ default: { isla: "Clock" } }))
-vi.mock("../../../components/system/Date.svelte", () => ({ default: { isla: "Date" } }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
+vi.mock("../../system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
+vi.mock("../../system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
 vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
@@ -22,14 +20,13 @@ beforeEach(() => {
 afterEach(() => {
     cleanup()
     restaurar()
-    clearIslands()
 })
 
 describe("TemplateInfo", () => {
-    it("muestra el reloj y la fecha como islas cuando no hay opciones", () => {
+    it("muestra el reloj y la fecha cuando no hay opciones", () => {
         render(<TemplateInfo optionsOpen={false} />)
-        expect(islands["Clock"]).toBeTruthy()
-        expect(islands["Date"]).toBeTruthy()
+        expect(document.querySelector('[data-isla="Clock"]')).toBeTruthy()
+        expect(document.querySelector('[data-isla="Date"]')).toBeTruthy()
     })
 
     it("escribe las palabras a capitalizar", () => {

@@ -7,20 +7,19 @@ import { send } from "../../../utils/request"
 import { keysToID, sortByName } from "../../../components/helpers/array"
 import { updateCachedShows } from "../../../components/helpers/show"
 import { _show } from "../../../components/helpers/shows"
-import Clock from "../../../components/system/Clock.svelte"
-import Date from "../../../components/system/Date.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
 import { Icon } from "../../helpers/Icon"
 import { T } from "../../helpers/T"
 import { Button } from "../../ui/button/Button"
 import { Center } from "../../system/Center"
+import { Clock } from "../../system/Clock"
+import { Date } from "../../system/Date"
 import { InputRow } from "../../ui/input-row/InputRow"
 import { ToggleField } from "../../ui/toggle-field/ToggleField"
 import { InfoMetadata, type InfoMetadataEntry } from "./InfoMetadata"
 import styles from "./ShowInfo.module.css"
 
-// Port de components/drawer/info/ShowInfo.svelte. Clock y Date se migran en F24.18a.
+// Port de components/drawer/info/ShowInfo.svelte. Clock y Date son ports React (F24.18a).
 export interface ShowInfoProps {
     optionsOpen: boolean
 }
@@ -155,8 +154,8 @@ export function ShowInfo({ optionsOpen }: ShowInfoProps) {
                     <InfoMetadata title={show?.name} info={info} />
                 ) : (
                     <Center>
-                        <SvelteIsland component={Clock} />
-                        <SvelteIsland component={Date} />
+                        <Clock />
+                        <Date />
                     </Center>
                 )}
             </div>

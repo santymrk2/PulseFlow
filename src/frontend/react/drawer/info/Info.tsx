@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react"
 import { activeShow, focusMode, forceClock } from "../../../stores"
-import Clock from "../../../components/system/Clock.svelte"
-import Date from "../../../components/system/Date.svelte"
 import { cn } from "../../../lib/utils"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
 import { Center } from "../../system/Center"
+import { Clock } from "../../system/Clock"
+import { Date } from "../../system/Date"
 import { Button } from "../../ui/button/Button"
 import { FloatingBar } from "../../ui/floating-bar/FloatingBar"
 import { AudioInfo } from "./AudioInfo"
@@ -18,7 +17,7 @@ import { ShowInfo } from "./ShowInfo"
 import { TemplateInfo } from "./TemplateInfo"
 import styles from "./Info.module.css"
 
-// Port de components/drawer/info/Info.svelte. Clock y Date siguen en Svelte (F24.18a) y se montan como islas.
+// Port de components/drawer/info/Info.svelte. Clock y Date son ports React (F24.18a).
 export interface InfoProps {
     id: string
 }
@@ -52,8 +51,8 @@ export function Info({ id }: InfoProps) {
                 <FunctionsInfo />
             ) : (
                 <Center>
-                    <SvelteIsland component={Clock} />
-                    <SvelteIsland component={Date} />
+                    <Clock />
+                    <Date />
                 </Center>
             )}
 

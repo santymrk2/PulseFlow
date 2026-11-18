@@ -39,7 +39,7 @@ export interface SlidesProps {
     projectIndex?: number
 }
 
-// Port de components/show/Slides.svelte (F24.20a).
+// Port (F24.20a).
 export function Slides({ showId, layout = "", projectIndex = -1 }: SlidesProps) {
     const currentShowsCache = useStore(showsCache)
     const currentCachedShowsData = useStore(cachedShowsData)

@@ -117,7 +117,7 @@ export function searchMenuItems(query: string, flatMenuItems: FlatMenuItem[], tr
     const enabledItems = flatMenuItems.filter((item) => !item.disabled)
 
     const getLabel = (item: FlatMenuItem) => {
-        // contextMenuItems.label may have been updated in ContextItem.svelte
+        // contextMenuItems.label may have been updated in ContextItem (React port)
         const latestMenu = contextMenuItems[item.id]
         return latestMenu?.label || item.label
     }

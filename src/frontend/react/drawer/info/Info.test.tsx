@@ -2,13 +2,11 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeShow, focusMode, forceClock } from "../../../stores"
-import { clearIslands, islands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { Info } from "./Info"
 
-vi.mock("../../../components/system/Clock.svelte", () => ({ default: { isla: "Clock" } }))
-vi.mock("../../../components/system/Date.svelte", () => ({ default: { isla: "Date" } }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
+vi.mock("../../system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
+vi.mock("../../system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
 
 // Declaración de función (no const): las fábricas de vi.mock se evalúan antes que las inicializaciones de módulo.
 function child(name: string) {
@@ -34,7 +32,6 @@ beforeEach(() => {
 afterEach(() => {
     cleanup()
     restaurar()
-    clearIslands()
 })
 
 const TABS = ["shows", "media", "audio", "templates", "scripture", "calendar", "functions"]
@@ -49,16 +46,16 @@ describe("Info", () => {
     it("muestra reloj y fecha con forceClock, sin panel ni opciones", () => {
         forceClock.set(true)
         render(<Info id="media" />)
-        expect(islands["Clock"]).toBeTruthy()
-        expect(islands["Date"]).toBeTruthy()
+        expect(document.querySelector('[data-isla="Clock"]')).toBeTruthy()
+        expect(document.querySelector('[data-isla="Date"]')).toBeTruthy()
         expect(screen.queryByTestId("media")).toBeNull()
         expect(document.querySelector('[data-title="edit.options"]')).toBeNull()
     })
 
     it("muestra reloj y fecha para una pestaña sin panel", () => {
         render(<Info id="other" />)
-        expect(islands["Clock"]).toBeTruthy()
-        expect(islands["Date"]).toBeTruthy()
+        expect(document.querySelector('[data-isla="Clock"]')).toBeTruthy()
+        expect(document.querySelector('[data-isla="Date"]')).toBeTruthy()
     })
 
     it("abre y cierra las opciones del panel desde la barra flotante", () => {

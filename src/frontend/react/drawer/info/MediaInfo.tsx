@@ -5,21 +5,20 @@ import { activeRecording, activeShow, cloudSyncData, drawerTabsData, special } f
 import { videoExtensions } from "../../../values/extensions"
 import { formatBytes } from "../../../components/helpers/bytes"
 import { getExtension, getFileName, getMediaInfo, removeExtension } from "../../../components/helpers/media"
-import Clock from "../../../components/system/Clock.svelte"
-import Date from "../../../components/system/Date.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { LiveInfo } from "../live/LiveInfo"
 import { useStore } from "../../hooks/useStore"
 import { T } from "../../helpers/T"
 import { Button } from "../../ui/button/Button"
 import { Center } from "../../system/Center"
+import { Clock } from "../../system/Clock"
+import { Date } from "../../system/Date"
 import { InputRow } from "../../ui/input-row/InputRow"
 import { ToggleField } from "../../ui/toggle-field/ToggleField"
 import { InfoMetadata, type InfoMetadataEntry } from "./InfoMetadata"
 import { PlayerInfo } from "./PlayerInfo"
 import styles from "./MediaInfo.module.css"
 
-// Port de components/drawer/info/MediaInfo.svelte. LiveInfo es port React; Clock y Date siguen en Svelte.
+// Port de components/drawer/info/MediaInfo.svelte. LiveInfo, Clock y Date son ports React.
 export interface MediaInfoProps {
     optionsOpen: boolean
 }
@@ -113,8 +112,8 @@ export function MediaInfo({ optionsOpen }: MediaInfoProps) {
                 <InfoMetadata title={name} info={info} />
             ) : (
                 <Center>
-                    <SvelteIsland component={Clock} />
-                    <SvelteIsland component={Date} />
+                    <Clock />
+                    <Date />
                 </Center>
             )}
         </div>

@@ -117,8 +117,8 @@ vi.mock("../../../components/edit/editbox/EditboxHelper", () => ({
 vi.mock("../../../components/edit/editbox/EditboxPaste", () => ({ EditboxPaste: { handlePaste: vi.fn(), handleCopy: vi.fn(), handleCut: vi.fn(), paste: vi.fn() } }))
 vi.mock("../../../components/media/video/videoPlayer", () => ({}))
 vi.mock("../../../components/timeline/TimelinePlayback", () => ({}))
-vi.mock("../../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ props }: { props?: Record<string, unknown> }) => <div data-testid="slide-items" data-edit={String(props?.edit ?? false)} />
+vi.mock("../../slide/SlideItems", () => ({
+    SlideItems: ({ edit }: { edit?: boolean }) => <div data-testid="slide-items" data-edit={String(edit ?? false)} />
 }))
 
 afterEach(cleanup)

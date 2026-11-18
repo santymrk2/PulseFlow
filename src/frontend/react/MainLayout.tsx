@@ -17,16 +17,16 @@ import { Timeline } from "./timeline/Timeline"
 import { ProfileChangerMenu } from "./main/ProfileChangerMenu"
 import { Tipbar } from "./main/Tipbar"
 import { Top } from "./main/Top"
-import Navigation from "../components/edit/Navigation.svelte"
-import OverlayNavigation from "../components/edit/OverlayNavigation.svelte"
-import ThemeNavigation from "../components/edit/ThemeNavigation.svelte"
-import Editor from "../components/edit/Editor.svelte"
-import EditTools from "../components/edit/EditTools.svelte"
+import { Navigation } from "./edit/Navigation"
+import { OverlayNavigation } from "./edit/OverlayNavigation"
+import { ThemeNavigation } from "./edit/ThemeNavigation"
+import { Editor } from "./edit/Editor"
+import { EditTools } from "./edit/EditTools"
 import ShowTools from "../components/show/ShowTools.svelte"
-import AudioTools from "../components/edit/AudioTools.svelte"
-import EffectTools from "../components/edit/EffectTools.svelte"
-import MediaTools from "../components/edit/MediaTools.svelte"
-import SceneTools from "../components/edit/SceneTools.svelte"
+import { AudioTools } from "./edit/AudioTools"
+import { EffectTools } from "./edit/EffectTools"
+import { MediaTools } from "./edit/MediaTools"
+import { SceneTools } from "./edit/SceneTools"
 import styles from "./MainLayout.module.css"
 
 export function MainLayout() {
@@ -74,11 +74,11 @@ export function MainLayout() {
                             </div>
                         ) : page === "edit" ? (
                             activeEditValue.type === "template" ? (
-                                <SvelteIsland component={ThemeNavigation} />
+                                <ThemeNavigation />
                             ) : activeEditValue.type === "overlay" || activeEditValue.type === "effect" ? (
-                                <SvelteIsland component={OverlayNavigation} />
+                                <OverlayNavigation />
                             ) : (
-                                <SvelteIsland component={Navigation} />
+                                <Navigation />
                             )
                         ) : page === "stage" ? (
                             <StageLayouts />
@@ -86,15 +86,7 @@ export function MainLayout() {
                     </div>
                 </Resizeable>
 
-                <div className={styles.center}>
-                    {page === "show" ? (
-                        focusModeValue ? <FocusMode /> : <Show />
-                    ) : page === "edit" ? (
-                        <SvelteIsland component={Editor} />
-                    ) : page === "stage" ? (
-                        <StageLayout />
-                    ) : null}
-                </div>
+                <div className={styles.center}>{page === "show" ? focusModeValue ? <FocusMode /> : <Show /> : page === "edit" ? <Editor /> : page === "stage" ? <StageLayout /> : null}</div>
 
                 <Resizeable id="rightPanel" side="right">
                     {(width) => (
@@ -102,19 +94,21 @@ export function MainLayout() {
                             <Preview />
 
                             {page === "show" ? (
-                                activeShowValue && (activeShowValue.type === "show" || activeShowValue.type === undefined) && !focusModeValue ? <SvelteIsland component={ShowTools} /> : null
+                                activeShowValue && (activeShowValue.type === "show" || activeShowValue.type === undefined) && !focusModeValue ? (
+                                    <SvelteIsland component={ShowTools} />
+                                ) : null
                             ) : page === "edit" ? (
                                 activeEditValue.type === "media" || activeEditValue.type === "camera" ? (
-                                    <SvelteIsland component={MediaTools} />
+                                    <MediaTools />
                                 ) : activeEditValue.type === "audio" ? (
-                                    <SvelteIsland component={AudioTools} />
+                                    <AudioTools />
                                 ) : activeEditValue.type === "effect" ? (
-                                    <SvelteIsland component={EffectTools} />
+                                    <EffectTools />
                                 ) : activeEditValue.type === "scene" ? (
-                                    <SvelteIsland component={SceneTools} />
+                                    <SceneTools />
                                 ) : showRightEditTools ? (
                                     hideGeneralEditTools ? null : (
-                                        <SvelteIsland component={EditTools} />
+                                        <EditTools />
                                     )
                                 ) : null
                             ) : page === "stage" && activeStageValue.id ? (

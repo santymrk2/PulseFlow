@@ -4,7 +4,6 @@ import { get } from "svelte/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { EXPORT } from "../../../../types/Channels"
 import { activePopup, activeShow, activeTagFilter, categories, globalTags, popupData, shows, showsCache, special, templates, usageLog } from "../../../stores"
-import { clearIslands, islands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { ShowInfo } from "./ShowInfo"
 
@@ -13,9 +12,8 @@ vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: (
 vi.mock("../../../utils/request", () => ({ send: mocks.send }))
 vi.mock("../../../components/helpers/show", () => ({ updateCachedShows: vi.fn() }))
 vi.mock("../../../components/helpers/shows", () => ({ _show: () => ({ slides: () => ({ items: () => ({ lines: () => ({ get: () => mocks.lines }) }) }) }) }))
-vi.mock("../../../components/system/Clock.svelte", () => ({ default: { isla: "Clock" } }))
-vi.mock("../../../components/system/Date.svelte", () => ({ default: { isla: "Date" } }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
+vi.mock("../../system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
+vi.mock("../../system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
@@ -30,14 +28,13 @@ beforeEach(() => {
 afterEach(() => {
     cleanup()
     restaurar()
-    clearIslands()
 })
 
 describe("ShowInfo", () => {
     it("muestra reloj y fecha sin show activo", () => {
         render(<ShowInfo optionsOpen={false} />)
-        expect(islands["Clock"]).toBeTruthy()
-        expect(islands["Date"]).toBeTruthy()
+        expect(document.querySelector('[data-isla="Clock"]')).toBeTruthy()
+        expect(document.querySelector('[data-isla="Date"]')).toBeTruthy()
     })
 
     it("muestra metadatos, categoría, etiquetas y palabras del show activo", async () => {

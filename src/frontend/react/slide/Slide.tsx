@@ -66,7 +66,7 @@ function fadeColorValue(hexColor: string | null, alpha = 0.7) {
     return `rgba(${rgb.r} ${rgb.g} ${rgb.b} / ${alpha})`
 }
 
-// Port de components/slide/Slide.svelte (F24.18b).
+// Port (F24.18b).
 export function Slide({ showId, slide, layoutSlide, layoutSlides = [], show, color = slide.color, index, columns = 1, output = null, active = false, focused = false, list = false, endIndex = null, icons = false, noQuickEdit = false, altKeyPressed = false, disableThumbnails = false, centerPreview = false, onClick }: SlideProps) {
     const currentActivePage = useStore(activePage)
     const currentActiveEdit = useStore(activeEdit)
