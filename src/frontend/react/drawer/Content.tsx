@@ -1,8 +1,7 @@
 import { useEffect, useRef, type ReactNode } from "react"
-import Scripture from "../../components/drawer/bible/Scripture.svelte"
+import { Scripture } from "./bible/Scripture"
 import { Calendar } from "./calendar/Calendar"
 import { drawerTabsData } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
 import { Actions } from "./pages/Actions"
 import { Interactions } from "./pages/Interactions"
@@ -15,8 +14,7 @@ import { Audio } from "./audio/Audio"
 import { Media } from "./media/Media"
 import styles from "./Content.module.css"
 
-// Port de components/drawer/Content.svelte. Las páginas del cajón ya son React; Scripture
-// siguen como islas Svelte hasta F24.17i/17h.
+// Port de components/drawer/Content.svelte. Todas las páginas del cajón ya son React.
 // `bind:streams` de Media se conserva pasando el mismo array (los hijos Svelte hacen push sobre él).
 export interface ContentProps {
     id: string
@@ -36,7 +34,7 @@ export function Content({ id }: ContentProps) {
         if (id === "shows") return <Shows active={active} />
         if (id === "media") return <Media active={active} streams={streams.current} />
         if (id === "audio") return <Audio active={active} />
-        if (id === "scripture") return <SvelteIsland component={Scripture} props={{ active }} />
+        if (id === "scripture") return <Scripture active={active} />
         if (id === "calendar") return <Calendar active={active} />
         if (id !== "functions" || !active) return null
 

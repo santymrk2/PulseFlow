@@ -2,7 +2,7 @@
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { drawerTabsData } from "../../stores"
-import { clearIslands, islands } from "../test/islandMock"
+import { clearIslands } from "../test/islandMock"
 import { setStoresForTest, type StoreEntry, storeEntry } from "../test/storeTestKit"
 import { Content } from "./Content"
 
@@ -26,7 +26,7 @@ const { mediaProps, audioProps, showsProps } = vi.hoisted(() => ({
 }))
 
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/drawer/bible/Scripture.svelte", () => ({ default: { isla: "Scripture" } }))
+vi.mock("./bible/Scripture", () => ({ Scripture: ({ active }: { active: string | null }) => <div data-page="Scripture" data-active={active ?? ""} /> }))
 vi.mock("./calendar/Calendar", () => ({ Calendar: () => <div data-page="Calendar" /> }))
 vi.mock("./audio/Audio", () => ({
     Audio: ({ active }: AudioPropsMock) => {
@@ -80,10 +80,9 @@ describe("Content", () => {
         expect(showsProps.current?.active).toBe("all")
     })
 
-    it("scripture sigue como isla y calendar ya es React", () => {
+    it("scripture ya es React y calendar también", () => {
         montar("scripture", "all")
-        expect(isla()).toBe("Scripture")
-        expect(islands["Scripture"].props.active).toBe("all")
+        expect(document.querySelector('[data-page="Scripture"]')?.getAttribute("data-active")).toBe("all")
 
         cleanup()
         montar("calendar", "all")
