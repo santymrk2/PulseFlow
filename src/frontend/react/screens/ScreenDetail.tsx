@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { OUTPUT } from "../../../types/Channels"
 import type { Output, RemoveScreenPayload } from "../../../types/Output"
 import { clone } from "../../components/helpers/array"

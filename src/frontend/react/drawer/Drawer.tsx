@@ -1,5 +1,5 @@
 import { Fragment, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { DrawerTabIds } from "../../../types/Tabs"
 import { getBreadcrumbs } from "../../components/drawer/breadcrumb"
 import { keysToID } from "../../components/helpers/array"

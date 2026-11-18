@@ -12,15 +12,10 @@ export interface Writable<T> extends Readable<T> {
     update(updater: Updater<T>): void
 }
 
-export type StartStopNotifier<T> = (
-    set: (value: T) => void,
-    update: (fn: Updater<T>) => void
-) => void | (() => void)
+export type StartStopNotifier<T> = (set: (value: T) => void, update: (fn: Updater<T>) => void) => void | (() => void)
 
 type Stores = Readable<unknown> | readonly Readable<unknown>[]
-export type StoresValues<S> = S extends Readable<infer T>
-    ? T
-    : { [K in keyof S]: S[K] extends Readable<infer T> ? T : never }
+export type StoresValues<S> = S extends Readable<infer T> ? T : { [K in keyof S]: S[K] extends Readable<infer T> ? T : never }
 
 const subscriberQueue: Array<{
     subscriber: Subscriber<unknown>
@@ -29,7 +24,7 @@ const subscriberQueue: Array<{
 }> = []
 
 function safeNotEqual(a: unknown, b: unknown): boolean {
-    return a !== b || ((a !== null && typeof a === "object") || typeof a === "function")
+    return a !== a ? b === b : a !== b || (a !== null && typeof a === "object") || typeof a === "function"
 }
 
 function noop(): void {}
@@ -85,17 +80,13 @@ export function writable<T>(value?: T, start: StartStopNotifier<T> = noop): Writ
     return { set, update, subscribe }
 }
 
-export function readable<T>(value: T | undefined, start: StartStopNotifier<T>): Readable<T> {
+export function readable<T>(value: T | undefined, start: StartStopNotifier<T> = noop): Readable<T> {
     return {
         subscribe: writable(value, start).subscribe
     }
 }
 
-export function derived<S extends Stores, T>(
-    stores: S,
-    fn: ((values: StoresValues<S>) => T) | ((values: StoresValues<S>, set: (value: T) => void, update?: (fn: Updater<T>) => void) => void | (() => void)),
-    initial?: T
-): Readable<T> {
+export function derived<S extends Stores, T>(stores: S, fn: ((values: StoresValues<S>) => T) | ((values: StoresValues<S>, set: (value: T) => void, update?: (fn: Updater<T>) => void) => void | (() => void)), initial?: T): Readable<T> {
     const single = !Array.isArray(stores)
     const storesArray: readonly Readable<unknown>[] = single ? [stores as Readable<unknown>] : (stores as readonly Readable<unknown>[])
 
@@ -114,11 +105,7 @@ export function derived<S extends Stores, T>(
             if (auto) {
                 set((fn as (values: StoresValues<S>) => T)(single ? (values[0] as StoresValues<S>) : (values as StoresValues<S>)))
             } else {
-                cleanup = (fn as (values: StoresValues<S>, set: (value: T) => void, update: (fn: Updater<T>) => void) => void | (() => void))(
-                    single ? (values[0] as StoresValues<S>) : (values as StoresValues<S>),
-                    set,
-                    update
-                ) || noop
+                cleanup = (fn as (values: StoresValues<S>, set: (value: T) => void, update: (fn: Updater<T>) => void) => void | (() => void))(single ? (values[0] as StoresValues<S>) : (values as StoresValues<S>), set, update) || noop
             }
         }
 

@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { ChangeEvent, FormEvent, ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { AudioAnalyser } from "../../audio/audioAnalyser"

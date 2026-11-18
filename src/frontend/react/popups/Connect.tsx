@@ -1,6 +1,6 @@
 import qrcode from "qrcode-generator"
 import { useEffect, useState, type MouseEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { Main } from "../../../types/IPC/Main"
 import { AudioAnalyser } from "../../audio/audioAnalyser"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"

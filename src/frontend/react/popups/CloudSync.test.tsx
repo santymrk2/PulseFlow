@@ -10,7 +10,6 @@ import { CloudSync } from "./CloudSync"
 
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../utils/cloudSync", () => ({ chooseTeam: vi.fn() }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 const teams = [

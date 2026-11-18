@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { History, HistoryNew, HistoryTypes } from "../../../types/History"
 import { activePage, activeProject, activeShow, contextActive, historyCacheCount, isDev, projects, undoHistory } from "../../stores"
 import { redoHistory } from "./../../stores"

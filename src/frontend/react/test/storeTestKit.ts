@@ -1,4 +1,4 @@
-import { get, type Writable } from "svelte/store"
+import { get, type Writable } from "../../lib/store"
 
 export interface StoreEntry {
     apply: () => () => void

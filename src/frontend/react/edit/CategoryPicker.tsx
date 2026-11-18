@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react"
-import type { Writable } from "svelte/store"
+import type { Writable } from "../../lib/store"
 import { uid } from "uid"
 import { activePopup, drawerTabsData, overlayCategories, selected, templateCategories } from "../../stores"
 import { setExampleEffects, setExampleOverlays, setExampleTemplates } from "../../utils/createData"

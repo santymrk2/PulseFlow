@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { EXPORT } from "../../../../types/Channels"
 import { activePopup, activeShow, activeTagFilter, categories, globalTags, popupData, shows, showsCache, special, templates, usageLog } from "../../../stores"

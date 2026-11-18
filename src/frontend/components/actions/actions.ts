@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import { gainToDb, MIN_DB } from "../../audio/dBUtils"
 import { actionHistory, actions, audioPlaylists, audioRouting, audioStreams, looks, outputs, runningActions, scenes, shows, stageShows, styles } from "../../stores"

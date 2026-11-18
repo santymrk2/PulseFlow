@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activePage, activePopup, activeProfile, activeShow, categories, dictionary, labelsDisabled, mediaOptions, previewOutputId, profiles, selected, showsCache, special, styles, templateApplied, templateCategories, templates, outputs } from "../../../stores"
 import { commonMock } from "../../test/mockCommon"

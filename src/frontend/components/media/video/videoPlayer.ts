@@ -1,6 +1,6 @@
 // plays the audio part of any given video element, and syncs the visible video to this
 
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { Main } from "../../../../types/IPC/Main"
 import { AudioAnalyser } from "../../../audio/audioAnalyser"
 import { fadeinAllPlayingAudio, fadeoutAllPlayingAudio } from "../../../audio/audioFading"

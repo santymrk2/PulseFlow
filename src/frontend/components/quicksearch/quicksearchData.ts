@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { Main } from "../../../types/IPC/Main"
 import type { FileFolder } from "../../../types/Main"
 import type { ShowList } from "../../../types/Show"

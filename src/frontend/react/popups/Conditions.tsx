@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Condition, ConditionValue, Item } from "../../../types/Show"
 import type { StageItem, StageLayout } from "../../../types/Stage"
 import { checkConditionValue, isConditionMet } from "../../components/edit/scripts/itemHelpers"

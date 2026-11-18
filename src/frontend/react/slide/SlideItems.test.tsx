@@ -12,9 +12,6 @@ vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/edit/scripts/autosize", () => ({ default: vi.fn(() => 42) }))
-vi.mock("../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ component }: { component: { name?: string } }) => <span data-island={component?.name || "svelte"} />
-}))
 
 function viewMock(name: string) {
     return ({ ...props }: Record<string, unknown>) => <span data-view={name} data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />

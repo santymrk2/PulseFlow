@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { Tip } from "../main/Tip"
 import { actions, activePopup, categories, popupData } from "../../stores"
 import { useStore } from "../hooks/useStore"

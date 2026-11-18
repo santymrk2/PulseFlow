@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../../lib/store"
 import type { Option } from "../../../../../types/Main"
 import { activeProject, activeShow, projects, selected, shows, showsCache } from "../../../../stores"
 import { getSlideThumbnail } from "../../../helpers/media"

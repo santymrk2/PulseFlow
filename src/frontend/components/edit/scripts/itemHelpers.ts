@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { uid } from "uid"
 import { OUTPUT } from "../../../../types/Channels"
 import type { Condition, ConditionValue, Item, ItemType, Slide } from "../../../../types/Show"

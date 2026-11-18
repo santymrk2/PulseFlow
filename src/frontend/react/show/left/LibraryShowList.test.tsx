@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { ReactNode } from "react"
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { ShowList } from "../../../../types/Show"
 import { dateToString } from "../../../components/helpers/time"

@@ -1,6 +1,6 @@
 // const captureFrameRate = 24
 
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { Main } from "../../types/IPC/Main"
 import { customActionActivation } from "../components/actions/actions"
 import { encodeFilePath, getFileName, isLocalFile, locateMediaFile, removeExtension } from "../components/helpers/media"

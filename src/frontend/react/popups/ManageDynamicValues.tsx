@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { clone } from "../../components/helpers/array"
 import { special } from "../../stores"
 import { translateText } from "../../utils/language"

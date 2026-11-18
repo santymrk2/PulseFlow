@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { Main } from "../../../types/IPC/Main"
 import { Loader } from "../main/Loader"
 import { destroyMain, receiveMain, requestMain, sendMain } from "../../IPC/main"

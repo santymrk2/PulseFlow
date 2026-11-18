@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { uid } from "uid"
 import { DEFAULT_ITEM_STYLE } from "../components/edit/scripts/itemHelpers"
 import { setQuickAccessMetadata } from "../components/helpers/setShow"

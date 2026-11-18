@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { CustomFont } from "../../../types/Show"
 import { defaultFonts, getSystemFontsList, loadCustomFont } from "../../components/helpers/fonts"
 import { customFonts, special } from "../../stores"

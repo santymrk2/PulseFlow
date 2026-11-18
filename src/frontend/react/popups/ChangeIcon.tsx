@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Categories } from "../../../types/Tabs"
 import { addItem } from "../../components/edit/scripts/itemHelpers"
 import { activePopup, categories, customizedIcons, mediaFolders, overlayCategories, popupData, selected, templateCategories } from "../../stores"

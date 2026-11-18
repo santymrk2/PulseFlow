@@ -2,7 +2,7 @@
 // y el layout activo. Escribe: popupData (mode: "" o {}) y activePopup al montar; history SHOW_LAYOUT o trigger(key) al asignar, y activePopup = revert || null.
 // Tip usa el port React.
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { history } from "../../components/helpers/history"
 import { getLayoutRef } from "../../components/helpers/show"
 import { Tip } from "../main/Tip"

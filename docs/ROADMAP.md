@@ -1820,14 +1820,14 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [x] **F24.21c** Editor: edición de texto (`contenteditable`). (2026-11-18, integrado en `main`)
 - [x] **F24.22** Lo que queda: menú contextual, búsqueda rápida, acciones y restos. (2026-11-18, integrado en `main`)
 - [x] **F24.23** La raíz pasa a React. (2026-11-18, integrado en `main`)
-- [ ] **F24.24** Sacar Svelte.
+- [x] **F24.24** Sacar Svelte. (2026-11-18, integrado en `main`: 0 `.svelte`, 0 dependencias y 0 scripts de Svelte; los stores usan `src/frontend/lib/store.ts`.)
 - [ ] **F24.25** Aceptación (usuario).
 
 ## F25 — Reestructuración
 
 > Las fases F25.1–F25.5 (`docs/propuestas/division-modulos.md`) se ejecutan **después de
-> F24.25**: mover archivos mientras todavía quedan `.svelte` en uso obligaría a rehacer los
-> imports dos veces. F25.6 es independiente y puede ejecutarse en paralelo.
+> F24.25**: primero hay que validar la app migrada antes de mover archivos. F25.6 es
+> independiente y puede ejecutarse en paralelo.
 
 - [x] **F25.0** Propuesta de división en módulos (`docs/propuestas/division-modulos.md`).
 - [ ] **F25.1** `src/core/`: stores, IPC y tipos (sin UI ni dominio).

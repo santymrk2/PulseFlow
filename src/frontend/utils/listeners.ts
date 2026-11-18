@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { OUTPUT, REMOTE, STAGE } from "../../types/Channels"
 import { AudioPlayer } from "../audio/audioPlayer"
 import { midiInListen } from "../components/actions/midi"

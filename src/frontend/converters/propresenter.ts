@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { uid } from "uid"
 import type { Item, Layout, Line, Slide, SlideData, Timeline } from "../../types/Show"
 import { DEFAULT_ITEM_STYLE } from "../components/edit/scripts/itemHelpers"

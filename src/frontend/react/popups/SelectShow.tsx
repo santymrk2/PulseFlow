@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { ShowList } from "../../../types/Show"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"
 import { activePopup, popupData, shows, sortedShowsList } from "../../stores"

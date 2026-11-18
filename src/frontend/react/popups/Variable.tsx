@@ -1,5 +1,5 @@
 import { useEffect, useState, type KeyboardEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import type { Variable } from "../../../types/Main"
 import { clone, moveToPos } from "../../components/helpers/array"

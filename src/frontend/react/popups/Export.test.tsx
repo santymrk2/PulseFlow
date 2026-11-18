@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { EXPORT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
@@ -35,7 +35,6 @@ vi.mock("./PdfExport", () => ({
     }
 }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 
 const dict = { export: { option_type: "Tipo", option_format: "Formato", export_as: "Exportar como {}", export: "Exportar", current_project: "Proyecto actual", selected_shows: "Shows elegidos", all_shows: "Todos", project: "Proyecto", include_media: "Incluir media" }, formats: { show: "Show" }, edit: { text: "Texto" }, items: { image: "Imagen" } }

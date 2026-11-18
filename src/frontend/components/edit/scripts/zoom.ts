@@ -1,5 +1,3 @@
-import { tick } from "svelte"
-
 export async function centerZoom(zoomOrigin: { x: number; y: number } | null, scrollElem: HTMLElement | undefined, selector: string = ".droparea") {
     if (!scrollElem) return
 
@@ -20,7 +18,7 @@ export async function centerZoom(zoomOrigin: { x: number; y: number } | null, sc
         contentY = origin.y - slideRect.top
     }
 
-    await tick()
+    await new Promise<void>((resolve) => (typeof requestAnimationFrame === "function" ? requestAnimationFrame(() => resolve()) : setTimeout(resolve, 0)))
 
     const newElem = selector ? (scrollElem.querySelector(selector) as HTMLElement) : scrollElem
     const newSlide = newElem?.querySelector(".slide") as HTMLElement

@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { SettingsTabs } from "../../../types/Tabs"
 import { activePopup, activeProfile, profiles, settingsOpen, settingsTab } from "../../stores"
 import { settingsTabs } from "../../values/tabs"

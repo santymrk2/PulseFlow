@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { requestMain, sendMain } from "../../IPC/main"
@@ -17,7 +17,7 @@ vi.mock("../../IPC/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))
 vi.mock("../../utils/createData", () => ({ createData: vi.fn() }))
 // el módulo real arrastra un ciclo con common/stores al mockearlo parcialmente: se reemplaza entero con un translateText mínimo
 vi.mock("../../utils/language", async () => {
-    const { get } = await vi.importActual<typeof import("svelte/store")>("svelte/store")
+    const { get } = await vi.importActual<typeof import("../../lib/store")>("../../lib/store")
     const { dictionary: dict } = await vi.importActual<typeof import("../../stores")>("../../stores")
     const translateText = (text: string) => text.replace(/\$?([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+)/g, (match, a, b) => get(dict)[a]?.[b] || match)
     return { setLanguage: vi.fn(), getLanguageList: () => [{ value: "en", label: "English" }], translateText }

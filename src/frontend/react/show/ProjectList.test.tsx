@@ -12,7 +12,6 @@ import { ProjectList } from "./ProjectList"
 vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/show/project", () => ({ isProjectLinked: vi.fn(() => false), openProject: vi.fn() }))
 vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-testid="loader" /> }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
 vi.mock("../ui/button/Button", () => ({

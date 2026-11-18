@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { _show } from "../../components/helpers/shows"
 import { actions, activePopup, activeShow, dictionary, popupData, scenes, showsCache } from "../../stores"
@@ -13,7 +13,6 @@ import { CustomAction } from "./CustomAction"
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn() }))
 vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 let restaurar: () => void = () => {}

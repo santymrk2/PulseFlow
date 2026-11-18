@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { language } from "../../stores"
 import { translateText } from "../../utils/language"
 

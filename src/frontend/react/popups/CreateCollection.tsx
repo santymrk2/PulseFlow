@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import { getShortBibleName } from "../../components/drawer/bible/scripture"
 import { keysToID, sortByName } from "../../components/helpers/array"

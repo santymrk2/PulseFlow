@@ -1,4 +1,4 @@
-import { get, type Unsubscriber } from "svelte/store"
+import { get, type Unsubscriber } from "../../lib/store"
 import type { LayoutRef } from "../../../types/Show"
 import { actions, activeShow, outputs, showsCache, timelineRecordingAction } from "../../stores"
 import { actionData } from "../actions/actionData"

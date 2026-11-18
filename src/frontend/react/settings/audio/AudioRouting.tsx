@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { uid } from "uid"
 import type { AudioRoutingConfig } from "../../../../types/AudioRouting"
 import { AudioMicrophone } from "../../../audio/audioMicrophone"

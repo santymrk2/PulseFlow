@@ -21,7 +21,6 @@ vi.mock("../../utils/clickable", () => ({ triggerClickOnEnterSpace: vi.fn() }))
 vi.mock("../../utils/language", () => ({ translateText: (t: string) => t }))
 vi.mock("../../components/helpers/media", () => ({ getFileName: (p: string) => p, removeExtension: (p: string) => p }))
 vi.mock("../../components/helpers/time", () => ({ joinTime: () => "0:00", secondsToTime: () => ({}) }))
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-testid="island" /> }))
 
 afterEach(cleanup)
 

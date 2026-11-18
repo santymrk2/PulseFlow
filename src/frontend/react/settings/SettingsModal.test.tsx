@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activePopup, settingsOpen } from "../../stores"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"

@@ -25,7 +25,6 @@ const { mediaProps, audioProps, showsProps } = vi.hoisted(() => ({
     showsProps: { current: null as ShowsPropsMock | null }
 }))
 
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("./bible/Scripture", () => ({ Scripture: ({ active }: { active: string | null }) => <div data-page="Scripture" data-active={active ?? ""} /> }))
 vi.mock("./calendar/Calendar", () => ({ Calendar: () => <div data-page="Calendar" /> }))
 vi.mock("./audio/Audio", () => ({

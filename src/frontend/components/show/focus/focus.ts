@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import type { ProjectShowRef } from "../../../../types/Projects"
 import { categories, overlays, playerVideos, showsCache } from "../../../stores"
 import { translateText } from "../../../utils/language"

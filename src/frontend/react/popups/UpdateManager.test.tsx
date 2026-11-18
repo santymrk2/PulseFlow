@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, render, screen, waitFor } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../IPC/main"
@@ -21,7 +21,6 @@ vi.mock("../../utils/checkForUpdates", () => ({ getUpdateData: vi.fn() }))
 vi.mock("../../utils/popup", () => ({ setPopupSubmit: vi.fn(() => () => {}) }))
 vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 
 const UPDATE = { latestVersion: "2.0.0", changelog: "- nuevo\r\n- arreglos", hasUpdate: true }

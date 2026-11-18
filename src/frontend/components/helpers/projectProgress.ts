@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { shows } from "../../stores"
 import { getFileName, removeExtension } from "./media"
 import { loadShows } from "./setShow"

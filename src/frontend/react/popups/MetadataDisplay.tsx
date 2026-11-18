@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Metadata } from "../../../types/Settings"
 import { Tip } from "../main/Tip"
 import { clone } from "../../components/helpers/array"

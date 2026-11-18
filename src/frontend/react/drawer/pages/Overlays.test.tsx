@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activePage, activeProfile, activeShow, dictionary, labelsDisabled, mediaOptions, overlayCategories, outputs, overlays, previewOutputId, profiles, styles } from "../../../stores"
 import { commonMock } from "../../test/mockCommon"
@@ -36,13 +36,6 @@ vi.mock("../../slide/Zoomed", async () => {
         )
     }
 })
-vi.mock("../../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ component, props, slots = {} }: { component: { isla: string }; props?: object; slots?: Record<string, unknown> }) => (
-        <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})}>
-            {slots.default as never}
-        </div>
-    )
-}))
 
 const dict = {
     empty: { general: "Vacío", search: "Sin resultados" },

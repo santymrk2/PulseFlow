@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Input } from "../../../types/Input"
 import type { EmitterInputs, EmitterTemplateValue, EmitterTypes } from "../../../types/Show"
 import { emitters } from "../../stores"

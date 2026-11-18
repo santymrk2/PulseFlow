@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { special } from "../../stores"
 import { translateText } from "../../utils/language"
 import { TextareaField } from "../ui/textarea-field/TextareaField"

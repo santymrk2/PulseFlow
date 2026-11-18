@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { ReactNode } from "react"
 import { cleanup, render } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { getDefaultProjectName, getProjectName } from "../../../components/helpers/historyHelpers"
 import { special } from "../../../stores"

@@ -5,7 +5,7 @@
 // usa `requestMain`, `newToast` y los stores de sincronización en estas ramas.
 
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { writable } from "svelte/store"
+import { writable } from "../lib/store"
 
 const mocks = vi.hoisted(() => ({ requestMain: vi.fn(), newToast: vi.fn(), contentProviderSync: vi.fn() }))
 

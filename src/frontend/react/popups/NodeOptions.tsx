@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { AudioRoutingConfig, AudioRoutingItem } from "../../../types/AudioRouting"
 import { AudioMicrophone } from "../../audio/audioMicrophone"
 import { AudioPlayer } from "../../audio/audioPlayer"

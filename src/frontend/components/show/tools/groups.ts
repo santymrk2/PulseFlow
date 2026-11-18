@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import type { Show, Slide } from "../../../../types/Show"
 import { cachedShowsData, groups, refreshEditSlide, showsCache } from "../../../stores"
 import { clone, sortByName } from "../../helpers/array"

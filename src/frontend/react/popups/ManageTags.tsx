@@ -1,5 +1,5 @@
 import { Fragment, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import type { Tag } from "../../../types/Show"
 import { keysToID, sortByName } from "../../components/helpers/array"

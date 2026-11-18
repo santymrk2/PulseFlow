@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { Main } from "../../../types/IPC/Main"
 import { requestMain, sendMain } from "../../IPC/main"
 import { activePopup, dataPath, dictionary, guideActive, language, popupData, timeFormat } from "../../stores"

@@ -1,6 +1,6 @@
 /* eslint no-shadow: 0 */
 
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import type { History } from "../../../types/History"
 import { Main } from "../../../types/IPC/Main"

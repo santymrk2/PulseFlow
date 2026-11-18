@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { activePopup, popupData } from "../../stores"
 import { setPopupSubmit } from "../../utils/popup"
 import { Icon } from "../helpers/Icon"

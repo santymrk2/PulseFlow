@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { ShowList } from "../../types/Show"
 import { textCache } from "../stores"
 import { formatSearch, tokenize } from "./search"

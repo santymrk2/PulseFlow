@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { OUTPUT } from "../../../types/Channels"
 import { outputs, showsCache, websiteAction } from "../../stores"
 import { send } from "../../utils/request"
@@ -6,10 +6,7 @@ import { clone } from "./array"
 import { getAllActiveOutputIds } from "./output"
 import { _show } from "./shows"
 
-export type WebsiteAction =
-    | { src: string; type: "key"; keyCode: string }
-    | { src: string; type: "reload" }
-    | { src: string; type: "mute"; muted: boolean }
+export type WebsiteAction = { src: string; type: "key"; keyCode: string } | { src: string; type: "reload" } | { src: string; type: "mute"; muted: boolean }
 
 export function triggerWebsiteAction(action: WebsiteAction) {
     send(OUTPUT, ["WEBSITE_ACTION"], action)

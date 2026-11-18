@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { splitGradientValue } from "../../components/helpers/color"
 import { activePopup, popupData } from "../../stores"
 import { translateText } from "../../utils/language"

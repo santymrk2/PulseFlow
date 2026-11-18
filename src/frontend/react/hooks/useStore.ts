@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get, type Readable } from "svelte/store"
+import { get, type Readable } from "../../lib/store"
 
 export function useStore<T>(store: Readable<T>): T {
     const [box, setBox] = useState(() => ({ value: get(store) }))

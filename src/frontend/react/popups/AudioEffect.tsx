@@ -1,5 +1,5 @@
 import { useEffect, useState, type ComponentType } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { EffectType } from "../../audio/effects/audioEffectsHelpers"
 import { activeAudioEffects, popupData } from "../../stores"
 import { useStore } from "../hooks/useStore"

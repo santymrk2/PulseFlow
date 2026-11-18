@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import type { OutData } from "../../../types/Output"
 import type { Styles } from "../../../types/Settings"

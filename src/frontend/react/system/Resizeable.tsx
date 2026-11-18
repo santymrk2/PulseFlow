@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type ReactNode } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { cn } from "../../lib/utils"
 import { drawer, editColumns, localeDirection, os, resized } from "../../stores"
 import { DEFAULT_WIDTH } from "../../utils/common"

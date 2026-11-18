@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { uid } from "uid"
 import type { Item, Layout, LayoutRef, Line, Show, Slide, SlideData } from "../../types/Show"
 import { getItemText, getLineText } from "../components/edit/scripts/textStyle"

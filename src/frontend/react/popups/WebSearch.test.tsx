@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import type { LyricSearchResult } from "../../../types/Main"
@@ -15,7 +15,6 @@ vi.mock("../../IPC/main", () => ({ sendMain: vi.fn(), receiveMain: vi.fn((id: st
 vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../utils/language", () => ({ translateText: (value: string) => value }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 
 const SONG = (title: string, artist: string, source: LyricSearchResult["source"] = "Genius"): LyricSearchResult => ({ key: title, title, artist, source })
 const searchListener = () => vi.mocked(receiveMain).mock.calls[0][1] as (data: LyricSearchResult[]) => void

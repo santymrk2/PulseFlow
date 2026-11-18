@@ -1,4 +1,4 @@
-import { get, type Writable } from "svelte/store"
+import { get, type Writable } from "../../lib/store"
 import type { Selected } from "../../../types/Main"
 import type { Tag } from "../../../types/Show"
 import { activePopup, popupData } from "../../stores"

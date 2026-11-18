@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { activePopup, globalRegexes, popupData } from "../../stores"
 import { Button } from "../ui/button/Button"
 import { HRule } from "../ui/h-rule/HRule"

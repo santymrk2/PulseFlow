@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Selected, SelectIds } from "../../../types/Main"
 import { selected } from "../../stores"
 import { removeDuplicates } from "./array"

@@ -14,7 +14,7 @@ const assets: { name: string; url: string; title?: string }[] = [
     { name: "Pixabay (Web Images)", url: "https://pixabay.com/" },
     { name: "Unsplash (Web Images)", url: "https://unsplash.com/" },
     { name: "Electron (Cross-platform desktop apps)", url: "https://www.electronjs.org/" },
-    { name: "Svelte (DOM framework)", url: "https://svelte.dev/" },
+    { name: "React (DOM framework)", url: "https://react.dev/" },
     { name: "Rollup (Module bundler)", url: "https://rollupjs.org/" },
     { name: "Socket.io (LAN connections)", url: "https://socket.io/" },
     { name: "Express (Web framework)", url: "https://expressjs.com/" },

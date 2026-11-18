@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 // El mock inline de utils/common debe cargarse antes que utils/language, que lo importa.
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { uid } from "uid"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"

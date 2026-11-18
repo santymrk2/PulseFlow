@@ -1,5 +1,4 @@
-import { onDestroy } from "svelte"
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import type { Popups } from "../../types/Main"
 import { activePopup, popupData } from "../stores"
 
@@ -56,10 +55,6 @@ export function setPopupSubmit(submit: () => void): () => void {
     return () => {
         if (activeSubmit === submit) activeSubmit = null
     }
-}
-
-export function registerPopupSubmit(submit: () => void) {
-    onDestroy(setPopupSubmit(submit))
 }
 
 export function triggerPopupSubmit(e?: KeyboardEvent): boolean {

@@ -1,6 +1,6 @@
 // Trinquete de calidad (F13.2): `bun run test:budget`.
 //
-// Mide (1) errores de svelte-check, (2) `: any` / `as any` y (3) colores literales en .svelte, y los
+// Mide (1) `: any` / `as any` y (2) colores literales en `.tsx` y `react/ (*.module.css)`, y los
 // compara con `config/quality-budget.json`. Si algún número SUBE, falla; si BAJA, imprime el valor
 // nuevo para actualizar el json en el mismo commit (o `--update` lo escribe).
 //
@@ -9,7 +9,7 @@
 
 import { Glob } from "bun"
 import { readFileSync, writeFileSync } from "node:fs"
-import { compareToBudget, measureSources, parseSvelteCheckErrors, type Budget, type Measures } from "./qualityBudget"
+import { compareToBudget, measureSources, type Budget, type Measures } from "./qualityBudget"
 
 const BUDGET_PATH = "config/quality-budget.json"
 type BudgetFile = Budget & { excludedColorPaths?: string[] }
@@ -18,16 +18,11 @@ const budgetFile: BudgetFile = JSON.parse(readFileSync(BUDGET_PATH, "utf8"))
 const { excludedColorPaths = [], ...budget } = budgetFile
 
 const files: { path: string; text: string }[] = []
-for (const path of new Glob("src/**/*.{ts,tsx,svelte,css}").scanSync(".")) {
+for (const path of new Glob("src/**/*.{ts,tsx,css}").scanSync(".")) {
     files.push({ path, text: readFileSync(path, "utf8") })
 }
 
-// La salida `machine` termina con `COMPLETED <archivos> FILES <errores> ERRORS …`: es la única
-// con un resumen estable para medir (la `human` dice `svelte-check found N errors…`).
-const check = Bun.spawnSync(["bunx", "svelte-check", "--ignore", "docs", "--output", "machine"], { stdout: "pipe", stderr: "pipe" })
-const svelteCheckErrors = parseSvelteCheckErrors(check.stdout.toString() + check.stderr.toString())
-
-const current: Measures = { svelteCheckErrors, ...measureSources(files, excludedColorPaths) }
+const current: Measures = measureSources(files, excludedColorPaths)
 const { failures, improvements } = compareToBudget(budget, current)
 
 console.log("Presupuesto de calidad (actual / permitido):")

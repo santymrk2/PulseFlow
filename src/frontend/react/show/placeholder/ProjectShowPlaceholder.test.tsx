@@ -1,5 +1,5 @@
 // @vitest-environment happy-dom
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activePopup, activeProject, activeShow, popupData, projects } from "../../../stores"

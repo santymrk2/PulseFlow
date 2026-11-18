@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { DropdownOptions } from "../../../types/Input"
 import type { Popups } from "../../../types/Main"
 import type { Template } from "../../../types/Show"

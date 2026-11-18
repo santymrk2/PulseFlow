@@ -1,5 +1,5 @@
 import { useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { Tip } from "../main/Tip"
 import { popupData } from "../../stores"
 import { chooseTeam } from "../../utils/cloudSync"

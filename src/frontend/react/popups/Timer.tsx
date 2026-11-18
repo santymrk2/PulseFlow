@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import type { Timer as ShowTimer } from "../../../types/Show"
 import { getDateString } from "../../components/drawer/calendar/calendar"

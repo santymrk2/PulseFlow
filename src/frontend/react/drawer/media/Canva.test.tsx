@@ -11,7 +11,6 @@ vi.mock("../../../IPC/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() })
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
 
 let restaurar: () => void = () => {}
 

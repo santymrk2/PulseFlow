@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { activeEdit, activePage, drawerTabsData, effects, overlays, templates } from "../../../stores"
 
 // Theme editor y Overlay editor: la página Edit con una plantilla / overlay / efecto abierto. Se abre el que ya se estaba

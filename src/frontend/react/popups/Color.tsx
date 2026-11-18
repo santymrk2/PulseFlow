@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { setCalendarColor } from "../../components/drawer/calendar/calendars"
 import { history } from "../../components/helpers/history"
 import { getLayoutRef } from "../../components/helpers/show"

@@ -1,5 +1,5 @@
 import { os, version, deviceId, isDev, activePage, activeDrawerTab } from "../stores"
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 
 const MEASUREMENT_ID = "G-CEE6P1QXG6"
 const API_SECRET = atob("YlVwZE42bXpRVjYyWDc2d0Z3OGMwZw==")

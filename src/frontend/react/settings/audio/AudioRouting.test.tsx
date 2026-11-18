@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, waitFor } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, audioChannelsData, audioEffects, audioPlaylists, audioRouting, dictionary, outputs, popupData, selected, special } from "../../../stores"
 import type { AudioRoutingConfig } from "../../../../types/AudioRouting"
@@ -24,7 +24,6 @@ vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/routing/audioRoutingInit", () => ({ syncOutputAudioChannels: vi.fn(), deduplicateConnections: (c: unknown) => c }))
 vi.mock("../../../audio/routing/audioRoutingManager", () => ({ AudioRoutingManager: { sortChannels: vi.fn((a: unknown) => a) } }))
 vi.mock("../../../components/helpers/output", () => ({ getAllOutputs: vi.fn() }))
-vi.mock("../../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} /> }))
 vi.mock("../../drawer/audio/AudioMeter", () => ({ AudioMeter: () => <div data-meter /> }))
 
 const addDevice = vi.fn()

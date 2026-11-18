@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { CSSProperties, MouseEvent as ReactMouseEvent, ReactNode } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { actions, activeActionTagFilter, activeDrawerTab, activePlaylist, activeTimerTagFilter, activeVariableTagFilter, audioPlaylists, dictionary, drawerTabsData, outputs, templates } from "../../stores"
 import { commonMock } from "../test/mockCommon"

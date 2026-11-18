@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import type { AudioRoutingConnection } from "../../types/AudioRouting"
 import { audioRouting, channelSidechainMultipliers } from "../stores"
 import { dbToGain, MIN_DB } from "./dBUtils"

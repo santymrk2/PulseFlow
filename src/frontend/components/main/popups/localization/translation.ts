@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../../lib/store"
 import type { Item, Line } from "../../../../../types/Show"
 import { showsCache, templates } from "../../../../stores"
 import { newToast } from "../../../../utils/common"

@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import type { Popups } from "../../../../types/Main"
 import type { DrawerTabIds } from "../../../../types/Tabs"
 import { activeDrawerTab, activePage, activePopup, drawer, drawerTabsData } from "../../../stores"

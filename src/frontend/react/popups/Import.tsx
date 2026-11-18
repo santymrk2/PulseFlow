@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { Main } from "../../../types/IPC/Main"
 import { Tip } from "../main/Tip"
 import { importFromClipboard } from "../../converters/importHelpers"

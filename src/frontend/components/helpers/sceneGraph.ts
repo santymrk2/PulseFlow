@@ -10,7 +10,7 @@
 // F4.6: los items de las overlays activas viajan en `overlays`, una capa propia que el engine
 // dibuja encima de la slide (fondo → medios de la slide → texto de la slide → medios → texto de
 // los overlays). El engine no respeta el orden de apilado de la slide (fondo → medios → texto).
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import dayjs from "dayjs"
 import localizedFormat from "dayjs/plugin/localizedFormat"
 import { OUTPUT } from "../../../types/Channels"

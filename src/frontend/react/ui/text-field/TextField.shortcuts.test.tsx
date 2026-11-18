@@ -3,7 +3,7 @@
 // Sin vi.mock de utils/common: shortcuts.ts importa mucho de ahí. Si el ciclo de imports rompe, ver el reporte de F24.8.
 import { cleanup, render } from "@testing-library/react"
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { quickSearchActive } from "../../../stores"
 import { keydown as globalKeydown } from "../../../utils/shortcuts"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"

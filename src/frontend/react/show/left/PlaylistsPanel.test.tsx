@@ -10,7 +10,6 @@ vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HE
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
 let projectListProps: { tree?: unknown[]; readOnly?: boolean; selectedId?: string | null } = {}
 vi.mock("../ProjectList", () => ({
     ProjectList: (props: { tree?: unknown[]; readOnly?: boolean; selectedId?: string | null }) => {

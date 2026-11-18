@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import type { DropdownOptions } from "../../types/Input"
 import type { Dictionary } from "../../types/Settings"
 import { sortByName } from "../components/helpers/array"

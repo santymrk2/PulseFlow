@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { Main } from "../../../types/IPC/Main"
 import type { LyricSearchResult } from "../../../types/Main"
 import { Loader } from "../main/Loader"

@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { TemplateStyleOverride } from "../../../types/Show"
 import { globalRegexes } from "../../stores"
 import { TemplateHelper } from "../../utils/templates"

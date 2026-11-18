@@ -22,7 +22,7 @@ diferenciarse, usá `cfg(target_os = "macos")` / `cfg(target_os = "windows")`.
 | App completa | `bun run dev:tauri` (requiere `bun run setup:sidecars --only-host` una vez) |
 | Tests JS | `bun run test:unit` |
 | Tipos React | `bun run test:react` |
-| Tipos Svelte | `bun run test:svelte` (hay 56 errores heredados: **no aumentar**) |
+| Presupuesto de calidad | `bun run test:budget` |
 | Formato | `bunx prettier --config config/formatting/.prettierrc.yaml --check <archivos tocados en src/>` |
 | Rust | `cd src-tauri && cargo check && cargo clippy --all-targets -- -D warnings && cargo test --lib` |
 | Build | `bun run build` |
@@ -55,18 +55,15 @@ prettier sobre `.md`, `docs/` ni el resto de la configuración.
 - Crear archivos nuevos está permitido cuando una responsabilidad no encaja en uno
   existente; no fuerces código en un archivo sólo para no crear otro.
 
-## Reglas de Svelte
+## Reglas de UI
 
-- **No migrar componentes a runes (`$props`) masivamente.** Un componente que recibe
-  `on:click`/`on:*` de sus padres debe quedarse en modo legacy (`export let`) o
-  reenviar el evento explícitamente. Pasarlo a runes rompe esos handlers sin aviso
-  (pasó con `Button.svelte` y `HoverButton.svelte`).
 - La apariencia sale de las variables CSS del tema (`--primary`, `--secondary`,
   `--text`, …) definidas en `src/frontend/components/settings/tabs/defaultThemes.ts`
   y `public/global.css`. No hardcodear colores en componentes.
 - `docs/design-reference/` es **sólo referencia visual** (React, no se compila). No
   importar nada de ahí.
-- **Svelte en retirada (2026-11-06):** no se crean componentes .svelte nuevos; un .svelte sólo se toca para arreglar un bug o para reemplazarlo por su versión React (F24).
+- **Svelte retirado (F24.24):** no quedan componentes `.svelte` ni dependencias de
+  Svelte; los stores son propios (`src/frontend/lib/store.ts`).
 
 ## Reglas de React (F24, decidido 2026-11-06)
 

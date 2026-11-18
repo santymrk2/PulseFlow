@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { getUrlTimestamp, getVimeoData, getYouTubeData } from "../../components/drawer/player/playerHelper"
 import { addVideoMarker } from "../../components/helpers/media"

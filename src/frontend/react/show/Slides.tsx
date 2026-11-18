@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { activeEdit, activeFocus, activePage, activePopup, alertMessage, cachedShowsData, categories, focusMode, groups, lessonsLoaded, notFound, outLocked, outputs, outputSlideCache, showsCache, slidesOptions, special, templates } from "../../stores"
 import { hasNewerUpdate, wait } from "../../utils/common"
 import { getAccess } from "../../utils/profile"

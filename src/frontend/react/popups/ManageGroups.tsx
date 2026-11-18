@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { ShowGroups } from "../../../types/Show"
 import { clone, sortByName } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"

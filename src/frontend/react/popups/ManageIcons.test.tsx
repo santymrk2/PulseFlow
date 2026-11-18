@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, customizedIcons, popupData } from "../../stores"
 import { customIcons, customIconsColors } from "../../values/customIcons"
@@ -12,7 +12,6 @@ import css from "./ManageIcons.module.css"
 
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("uid", () => ({ uid: () => "id-nuevo" }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 const ids = Object.keys(customIcons)

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { popupData } from "../../stores"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"

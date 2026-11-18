@@ -1,6 +1,6 @@
 import "./testEnv"
 import { describe, expect, it, vi } from "vitest"
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { fixture } from "./converterTestKit"
 
 const { setActiveScripture } = vi.hoisted(() => ({ setActiveScripture: vi.fn() }))

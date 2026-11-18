@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activePage, activePopup, activeShow, outLocked, popupData, showsCache } from "../../stores"
 import { refreshOut, setOutput } from "../../components/helpers/output"
@@ -24,15 +24,7 @@ afterEach(() => {
 })
 
 function setStores(showType: string | undefined = "show") {
-    restore = setStoresForTest([
-        looseEntry(activeShow, showType ? { id: "s1", type: showType } : null),
-        looseEntry(activePage, "show"),
-        looseEntry(activeEdit, { slide: 0, items: [] }),
-        looseEntry(activePopup, null),
-        looseEntry(outLocked, false),
-        looseEntry(popupData, {}),
-        looseEntry(showsCache, { s1: { settings: { activeLayout: "l1" } } })
-    ])
+    restore = setStoresForTest([looseEntry(activeShow, showType ? { id: "s1", type: showType } : null), looseEntry(activePage, "show"), looseEntry(activeEdit, { slide: 0, items: [] }), looseEntry(activePopup, null), looseEntry(outLocked, false), looseEntry(popupData, {}), looseEntry(showsCache, { s1: { settings: { activeLayout: "l1" } } })])
     vi.mocked(getLayoutRef).mockReturnValue([])
 }
 

@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { activePopup, popupData } from "../../stores"
 import { BMDStreams } from "../drawer/live/BMDStreams"
 import { Cameras } from "../drawer/live/Cameras"

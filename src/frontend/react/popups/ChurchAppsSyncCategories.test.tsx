@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { categories, contentProviderData, dictionary, shows } from "../../stores"
 import { commonMock } from "../test/mockCommon"
@@ -9,7 +9,6 @@ import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ChurchAppsSyncCategories } from "./ChurchAppsSyncCategories"
 
 vi.mock("../../utils/common", () => commonMock())
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 let restaurar: () => void = () => {}

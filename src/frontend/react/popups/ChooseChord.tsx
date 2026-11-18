@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { chordTensions, chordTypes, keys, keysInverted, romanKeys } from "../../components/edit/values/chords"
 import { popupData, special, storedChordsData } from "../../stores"
 import { Icon } from "../helpers/Icon"

@@ -1,7 +1,7 @@
 import type { ExifData } from "exif"
 import type { ICommonTagsResult } from "music-metadata/lib/type"
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { OUTPUT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
 import type { Variable } from "../../../types/Main"

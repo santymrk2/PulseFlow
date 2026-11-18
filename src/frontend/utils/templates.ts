@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import type { Item, Template } from "../../types/Show"
 import { getItemText } from "../components/edit/scripts/textStyle"
 import { clone } from "../components/helpers/array"

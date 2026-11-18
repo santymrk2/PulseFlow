@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { mediaFitOptions } from "../../components/edit/values/boxes"
 import { activePopup, popupData, styles } from "../../stores"
 import { T } from "../helpers/T"

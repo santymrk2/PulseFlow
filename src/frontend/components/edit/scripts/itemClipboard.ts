@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import type { Item, ItemType } from "../../../../types/Show"
 import { activeEdit, activeShow, showsCache } from "../../../stores"
 import { wait } from "../../../utils/common"

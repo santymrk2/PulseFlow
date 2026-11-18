@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { LayoutRef } from "../../../types/Show"
 import { history } from "../../components/helpers/history"
 import { getLayoutRef } from "../../components/helpers/show"

@@ -1,7 +1,7 @@
 // Shared store helpers for audio effect integration layers.
 // Eliminates the repeated read/write boilerplate across effect modules.
 
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import { clone } from "../../components/helpers/array"
 import { activeAudioEffects, audioEffects, type AudioEffectInstance, type AudioEffectsConfig } from "../../stores"

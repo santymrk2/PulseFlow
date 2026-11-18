@@ -1,6 +1,6 @@
 // CROSSFADE
 
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { customActionActivation } from "../components/actions/actions"
 import { stopMetronome } from "../components/drawer/audio/metronome"
 import { activePlaylist, audioPlaylists, isFadingOut, playingAudio, special } from "../stores"

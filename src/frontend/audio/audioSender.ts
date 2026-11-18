@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { AUDIO } from "../../types/Channels"
 import { keysToID } from "../components/helpers/array"
 import { getFirstActiveOutput } from "../components/helpers/output"

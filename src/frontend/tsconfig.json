@@ -1,7 +1,9 @@
 {
-    "extends": "@tsconfig/svelte/tsconfig.json",
     "compilerOptions": {
-        "types": ["node", "svelte", "vite/client"],
+        "moduleResolution": "node",
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "types": ["node", "vite/client"],
         "sourceMap": true,
         "target": "ESNext",
         "jsx": "react-jsx",

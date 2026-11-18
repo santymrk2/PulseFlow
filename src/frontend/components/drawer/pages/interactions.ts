@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import type { Interaction as InteractionData } from "../../../../types/Main"
 import { activeInteractions, activePopup, alertMessage, interactions } from "../../../stores"
 import { clone, keysToID } from "../../helpers/array"

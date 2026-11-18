@@ -1,7 +1,7 @@
 // Resiliencia de `setLanguage` ante fallos de red (F25.9): los fetch se mockean
 // para cubrir el idioma pedido, el fallback a inglés y el arranque sin red.
 
-import { get, writable } from "svelte/store"
+import { get, writable } from "../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Dictionary } from "../../types/Settings"
 

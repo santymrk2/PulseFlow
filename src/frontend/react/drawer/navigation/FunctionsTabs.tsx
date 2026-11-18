@@ -1,5 +1,5 @@
 import { useEffect } from "react"
-import type { Writable } from "svelte/store"
+import type { Writable } from "../../../lib/store"
 import type { Tag } from "../../../../types/Show"
 import { keysToID, sortByName, sortObject } from "../../../components/helpers/array"
 import { actions, actionTags, activeActionTagFilter, activeTimerTagFilter, activeVariableTagFilter, drawerTabsData, obsData, timerTags, timers, variableTags, variables } from "../../../stores"

@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import type { Effect } from "../../types/Effects"
 import type { MainFilePaths } from "../../types/Main"
 import type { Overlay, Template } from "../../types/Show"

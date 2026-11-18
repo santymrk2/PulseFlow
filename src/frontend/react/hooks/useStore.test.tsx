@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { act, renderHook } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
-import { get, readable, writable } from "svelte/store"
+import { get, readable, writable } from "../../lib/store"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { useStore } from "./useStore"
 
@@ -32,7 +32,7 @@ describe("useStore", () => {
     })
 
     it("se_desuscribe_al_desmontar", () => {
-        // get() de svelte/store también arranca y detiene el store: por eso se mide "activo" (suscripciones abiertas), no sólo "alguna vez se detuvo"
+        // get() del store propio también arranca y detiene el store: por eso se mide "activo" (suscripciones abiertas), no sólo "alguna vez se detuvo"
         let activo = false
         const store = readable(0, () => {
             activo = true

@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { getApiBiblesList } from "../../components/drawer/bible/scripture"
@@ -16,7 +16,6 @@ vi.mock("../../IPC/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))
 vi.mock("../../components/drawer/bible/scripture", () => ({ getApiBiblesList: vi.fn(), customBibleData: (a: object) => ({ ...a }) }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 vi.mock("uid", () => ({ uid: () => "nuevo" }))
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component }: { component: { isla: string } }) => <div data-isla={component.isla} /> }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 
 const bible = (name: string, language: string, extra: object = {}) => ({ name, language, sourceKey: `k-${name}`, source: "api.bible", description: "", copyright: `c-${name}`, ...extra })

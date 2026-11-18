@@ -22,7 +22,6 @@ vi.mock("../../components/helpers/output", () => ({ getActiveOutputs: vi.fn(() =
 vi.mock("../../components/helpers/show", () => ({ getCachedShow: vi.fn(() => null) }))
 vi.mock("../../components/helpers/showActions", () => ({ checkActionTrigger: vi.fn(), getFewestOutputLines: vi.fn(() => 0), getFewestOutputLinesReveal: vi.fn(() => 0), getItemWithMostLines: vi.fn(() => null), updateOut: vi.fn() }))
 vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn() }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
 vi.mock("../slide/SkeletonSlide", () => ({ SkeletonSlide: () => <div data-testid="skeleton" /> }))
 vi.mock("../slide/Slide", () => ({ Slide: ({ index }: { index: number }) => <div data-testid="slide" data-index={index} /> }))

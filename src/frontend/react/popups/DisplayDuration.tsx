@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { drawerTabsData, effects, overlays, selected } from "../../stores"
 import { NumberField } from "../ui/number-field/NumberField"
 

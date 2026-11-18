@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import type { Item } from "../../../../types/Show"
 import type { StageItem } from "../../../../types/Stage"
 import { activePage, activeStage } from "../../../stores"
@@ -94,9 +94,9 @@ export function getLikelyPosition(currentItems: (Item | StageItem)[], defaultSty
         const centerXOfR = r.left + Math.floor(r.width / 2)
         const centerYOfR = r.top + Math.floor(r.height / 2)
         const centerOfR = c.axis === "x" ? centerXOfR : centerYOfR
-        
+
         gaps.sort((a, b) => Math.abs((a.s + a.e) / 2 - centerOfR) - Math.abs((b.s + b.e) / 2 - centerOfR))
-        
+
         for (const g of gaps) {
             const span = g.e - g.s
             if (span >= MIN) {

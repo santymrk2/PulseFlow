@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { _show } from "../../components/helpers/shows"
 import { Tip } from "../main/Tip"
 import { actions, activePopup, activeShow, popupData, scenes, showsCache } from "../../stores"

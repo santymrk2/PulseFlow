@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../IPC/main"
@@ -12,7 +12,6 @@ import { Alert } from "./Alert"
 vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
 // Loader sigue siendo Svelte: acá sólo importa que se monte
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: ({ component }: { component: { isla: string } }) => <div data-isla={component.isla} /> }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 
 let restaurar: () => void = () => {}

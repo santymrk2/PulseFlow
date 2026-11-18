@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Overlay } from "../../../types/Show"
 import { OUTPUT } from "../../../types/Channels"
 import { activeEdit, overlays, outputs, previewOutputId, styles as stylesStore } from "../../stores"

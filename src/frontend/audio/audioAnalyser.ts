@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { getFirstOutput } from "../components/helpers/output"
 import { disabledServers, media, playingAudio, playingVideos, serverData } from "../stores"
 import { AudioMicrophone } from "./audioMicrophone"

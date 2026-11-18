@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { uid } from "uid"
 import type { ContentFile, ContentProviderId } from "../../types/ContentProvider"
 import { Main } from "../../types/IPC/Main"

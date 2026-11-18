@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { ID, Show, Slide, SlideData } from "../../../types/Show"
 import { activeShow, showsCache, special } from "../../stores"
 import { getSlideText } from "../edit/scripts/textStyle"

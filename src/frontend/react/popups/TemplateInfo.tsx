@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { allOutputsHasStyleTemplate, getFirstActiveOutput } from "../../components/helpers/output"
 import { getLayoutRef, removeTemplatesFromShow } from "../../components/helpers/show"
 import { _show } from "../../components/helpers/shows"

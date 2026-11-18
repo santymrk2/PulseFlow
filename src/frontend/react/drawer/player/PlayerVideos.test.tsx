@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeFocus, activePlayerTagFilter, activeShow, dictionary, focusMode, outLocked, outputs, playerTags, playerVideos } from "../../../stores"
 import { commonMock } from "../../test/mockCommon"
@@ -20,7 +20,6 @@ vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock, setOutput: setOutputMock }))
 vi.mock("../../../components/output/clear", () => ({ clearBackground: clearBackgroundMock, clearSlide: clearSlideMock }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
 
 const dict = {
     empty: { player: "Sin videos", search: "Sin resultados" },

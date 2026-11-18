@@ -1,5 +1,5 @@
 import { useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { InteractionInput as StoredInput } from "../../../types/Main"
 import { clone } from "../../components/helpers/array"
 import { interactions, popupData } from "../../stores"

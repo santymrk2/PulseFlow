@@ -1,4 +1,4 @@
-import { get, Unsubscriber } from "svelte/store"
+import { get, Unsubscriber } from "../../lib/store"
 import { Main } from "../../../types/IPC/Main"
 import type { TimelineAction } from "../../../types/Show"
 import { sendMain } from "../../IPC/main"
@@ -19,7 +19,6 @@ import { SlideTimeline } from "./SlideTimeline"
 import { TimelineType } from "./TimelineActions"
 import { startListeningLTC, stopListeningLTC } from "./timecode"
 import { getProjectShowDurations } from "./timeline"
-import { tick } from "svelte"
 
 let activePlayback: TimelinePlayback | null = null
 export function getActiveTimelinePlayback(type: TimelineType | null = null) {
@@ -39,7 +38,7 @@ export async function startTimeline(type: TimelineType) {
     // open timeline if not already opened (temporary fix until the timeline can played without needing to be opened)
     special.update((a) => ({ ...a, timelineActive: true }))
     // wait until opened and mounted before starting
-    await tick()
+    await new Promise<void>((resolve) => (typeof requestAnimationFrame === "function" ? requestAnimationFrame(() => resolve()) : setTimeout(resolve, 0)))
 
     // const timeline = getOrCreateTimeline(type)
     // timeline.play()

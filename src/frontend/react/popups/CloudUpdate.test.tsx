@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, popupData } from "../../stores"
 import { commonMock } from "../test/mockCommon"
@@ -9,7 +9,6 @@ import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { CloudUpdate } from "./CloudUpdate"
 
 vi.mock("../../utils/common", () => commonMock())
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 
 let restaurar: () => void = () => {}

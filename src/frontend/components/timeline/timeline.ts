@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Timeline, TimelineAction } from "../../../types/Show"
 import { showsCache, timeline } from "../../stores"
 import { loadShows } from "../helpers/setShow"

@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { Main } from "../../../types/IPC/Main"
 import type { Popups } from "../../../types/Main"
 import { sendMain } from "../../IPC/main"

@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { runActionId } from "../components/actions/actions"
 import { activeProfile, profiles, showChangeProfileMenu, special } from "../stores"
 

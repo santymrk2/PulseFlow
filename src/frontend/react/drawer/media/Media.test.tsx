@@ -15,7 +15,6 @@ vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("./pixabay", () => ({ loadFromPixabay: vi.fn(() => Promise.resolve([])) }))
 vi.mock("./unsplash", () => ({ loadFromUnsplash: vi.fn(() => Promise.resolve([])) }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
 vi.mock("../../../components/drawer/media/pixabay", () => ({ loadFromPixabay: vi.fn(() => Promise.resolve([])) }))
 vi.mock("../../../components/drawer/media/unsplash", () => ({ loadFromUnsplash: vi.fn(() => Promise.resolve([])) }))
 

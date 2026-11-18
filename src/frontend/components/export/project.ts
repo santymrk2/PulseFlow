@@ -1,7 +1,7 @@
 // ----- FreeShow -----
 // Function for exporting project/shows as a project (.project)
 
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { EXPORT } from "../../../types/Channels"
 import type { Effects } from "../../../types/Effects"
 import type { Project, ProjectShowRef } from "../../../types/Projects"

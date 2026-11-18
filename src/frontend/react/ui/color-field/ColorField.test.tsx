@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { defaultColors, defaultGradients, getContrast } from "../../../components/helpers/color"
 import { activePopup, popupData, special } from "../../../stores"
@@ -19,7 +19,6 @@ vi.mock("../../../components/edit/scripts/edit", () => ({
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 // Vitest corre en node y Svelte resuelve su build de servidor (mount no existe); acá se fuerza el de cliente
-vi.mock("svelte", async () => vi.importActual("../../../../../node_modules/svelte/src/index-client.js"))
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 
 let restaurar: () => void = () => {}

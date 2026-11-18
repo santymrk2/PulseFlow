@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import type { Template, TemplateStyleOverride } from "../../../types/Show"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"

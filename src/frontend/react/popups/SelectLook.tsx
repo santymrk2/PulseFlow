@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { applyLook } from "../../components/helpers/looks"
 import { activeLook, activePopup, looks, popupData } from "../../stores"
 import { Icon } from "../helpers/Icon"

@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { outLocked, outputs, overlays, timelineRecordingAction } from "../../stores"
 import { runAction } from "../actions/actions"
 import { findMatchingOut, setOutput } from "./output"

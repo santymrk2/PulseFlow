@@ -1,4 +1,4 @@
-import { get, writable } from "svelte/store"
+import { get, writable } from "../../../lib/store"
 import { Main } from "../../../../types/IPC/Main"
 import type { SpotifyState } from "../../../../types/Main"
 import { requestMain } from "../../../IPC/main"

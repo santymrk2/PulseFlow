@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { BLACKMAGIC } from "../../../../types/Channels"
 import { outputs } from "../../../stores"
 import { findMatchingOut } from "../../../components/helpers/output"

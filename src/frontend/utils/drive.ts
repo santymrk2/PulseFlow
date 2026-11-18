@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { uid } from "uid"
 import { CLOUD } from "../../types/Channels"
 import type { DriveData } from "../../types/Main"

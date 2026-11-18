@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { getFirstActiveOutput, getFirstOutput, getOutputResolution } from "../components/helpers/output"
 import { OutputHelper } from "../components/helpers/OutputHelper"
 import { clearAll, clearSlide } from "../components/output/clear"

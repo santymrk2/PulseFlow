@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { getContrast } from "../../components/helpers/color"
 import { activeRename, dictionary, fullColors, templates } from "../../stores"

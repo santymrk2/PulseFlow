@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import type { ValidChannels } from "../../../../types/Channels"
 import type { StreamFrameData } from "../../../utils/streamPort"
 import { onStreamFrame } from "../../../utils/streamPort"

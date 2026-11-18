@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Item } from "../../../types/Show"
 import { clone } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"

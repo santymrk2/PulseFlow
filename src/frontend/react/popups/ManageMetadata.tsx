@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { initializeMetadata } from "../../components/helpers/show"
 import { customMetadata } from "../../stores"
 import { T } from "../helpers/T"

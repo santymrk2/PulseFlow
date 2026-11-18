@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { activePlaylist, audioPlaylists, media, outLocked, playingAudio } from "../stores"
 import { AudioPlayer } from "./audioPlayer"
 import { audioIsFading, clearAudio, fadeOutAudio, isAllAudioFading } from "./audioFading"

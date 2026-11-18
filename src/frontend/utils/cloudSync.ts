@@ -1,4 +1,4 @@
-import { get, type Unsubscriber } from "svelte/store"
+import { get, type Unsubscriber } from "../lib/store"
 import { Main } from "../../types/IPC/Main"
 import { clone } from "../components/helpers/array"
 import { generateLightRandomColor } from "../components/helpers/color"

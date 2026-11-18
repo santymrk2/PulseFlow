@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import { Main } from "../../../types/IPC/Main"
 import type { Emitter, EmitterTemplate, EmitterTemplateValue } from "../../../types/Show"

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { addEffectToStack, EFFECTS_LIST, type EffectType } from "../../audio/effects/audioEffectsHelpers"
 import { activeAudioEffects, activePopup, popupData } from "../../stores"
 import { translateText } from "../../utils/language"

@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { destroyMain, receiveMain, requestMain, sendMain } from "../../IPC/main"
@@ -12,7 +12,6 @@ import { CleaningUtility } from "./CleaningUtility"
 
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../IPC/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn(), receiveMain: vi.fn(() => "listener-1"), destroyMain: vi.fn() }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 
 const SHOWS = { a: { name: "Amazing Grace" }, b: { name: "Amazing Grace 2" }, c: { name: "Otra" }, d: { name: "" } }

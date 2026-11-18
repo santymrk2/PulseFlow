@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import type { TabsObj } from "../../../types/Tabs"
 import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../stores"

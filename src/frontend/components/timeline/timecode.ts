@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../IPC/main"
 import { timecode } from "../../stores"

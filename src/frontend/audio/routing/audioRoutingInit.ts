@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { AudioRoutingChannel, AudioRoutingConfig, AudioRoutingConnection } from "../../../types/AudioRouting"
 import { getAllOutputs, getFirstActiveOutput } from "../../components/helpers/output"
 import { audioRouting, dictionary, outputs } from "../../stores"

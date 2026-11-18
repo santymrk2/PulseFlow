@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import type { DropdownOptions } from "../../../../types/Input"
 import type { CustomFont } from "../../../../types/Show"
 import { getFontName, getFontStyleList, getSystemFontsList, mergeCustomFonts } from "../../../components/helpers/fonts"

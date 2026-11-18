@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Event } from "../../../types/Calendar"
 import { STAGE } from "../../../types/Channels"
 import { activeTimers, dictionary, events, nextActionEventPaused, nextActionEventStart, timers } from "../../stores"

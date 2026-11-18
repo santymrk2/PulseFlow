@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { convertText } from "../../converters/txt"
 import { history } from "../../components/helpers/history"
@@ -27,7 +27,6 @@ vi.mock("../../classes/Show", () => ({
         ) {}
     }
 }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("./WebSearch", () => ({
     WebSearch: (props: { query?: string; onUpdate?: (data: unknown) => void }) => {
         islands.WebSearch = { props: { query: props.query }, events: { update: (e: CustomEvent) => props.onUpdate?.(e.detail) } }

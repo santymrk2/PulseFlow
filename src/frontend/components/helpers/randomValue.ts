@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { randomNumberVariable, variables } from "../../stores"
 import { newToast, wait } from "../../utils/common"
 

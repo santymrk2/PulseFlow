@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { DropdownOptions } from "../../../types/Input"
 import type { CustomFont } from "../../../types/Show"
 import { customFonts, special } from "../../stores"

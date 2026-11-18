@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Line } from "../../../types/Show"
 import { clone } from "../../components/helpers/array"
 import { getLayoutRef } from "../../components/helpers/show"

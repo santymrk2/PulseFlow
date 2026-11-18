@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type FocusEvent, type KeyboardEvent, type MouseEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import type { Item } from "../../../../types/Show"
 import { activeEdit, showsCache } from "../../../stores"
 import { clone } from "../../../components/helpers/array"

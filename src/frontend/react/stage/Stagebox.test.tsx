@@ -51,9 +51,6 @@ vi.mock("../../components/stage/stage", () => ({
     getSlideTextItems: vi.fn(() => [{ id: "s1" }]),
     stageItemToItem: vi.fn((value: unknown) => value)
 }))
-vi.mock("../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ component, props }: { component: { name?: string }; props: Record<string, unknown> }) => <span data-island={component?.name || "svelte"} data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
-}))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../ui/button/Button", () => ({
     Button: ({ children, onClick }: { children: ReactNode; onClick?: () => void }) => (

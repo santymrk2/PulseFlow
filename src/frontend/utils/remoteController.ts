@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app"
 import { get, getDatabase, onValue, ref, remove, set } from "firebase/database"
-import { get as getStore } from "svelte/store"
+import { get as getStore } from "../lib/store"
 import { activePopup, alertMessage, special } from "../stores"
 import { OutputHelper } from "../components/helpers/OutputHelper"
 

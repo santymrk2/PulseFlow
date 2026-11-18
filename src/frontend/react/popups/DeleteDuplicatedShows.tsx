@@ -1,5 +1,5 @@
 import { Fragment, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Show } from "../../../types/Show"
 import { getTextLines } from "../../components/edit/scripts/textStyle"
 import { history } from "../../components/helpers/history"

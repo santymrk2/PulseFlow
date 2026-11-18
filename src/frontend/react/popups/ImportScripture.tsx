@@ -1,6 +1,6 @@
 import type { CustomBibleListContent } from "json-bible/lib/api/ApiBible"
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import { Main } from "../../../types/IPC/Main"
 import { customBibleData, getApiBiblesList } from "../../components/drawer/bible/scripture"

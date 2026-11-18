@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { CSSProperties, FormEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { toggleChannelRecording } from "../../../audio/audioChannelRecorder"
 import { AudioPlayer } from "../../../audio/audioPlayer"

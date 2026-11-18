@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import { ShowObj } from "../../classes/Show"
 import { clone, sortObject } from "../../components/helpers/array"

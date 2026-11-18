@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import type { Item } from "../../../../types/Show"
 import { variableText } from "../../../components/helpers/dynamicItemText"
 import { setDrawerTabData } from "../../../components/helpers/historyHelpers"

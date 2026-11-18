@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { EXPORT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
 import type { Project } from "../../../types/Projects"

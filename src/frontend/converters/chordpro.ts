@@ -1,7 +1,7 @@
 // homepage: https://www.chordpro.org/chordpro/
 // docs: https://github.com/martijnversluis/ChordSheetJS
 
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { uid } from "uid"
 import type { Slide } from "../../types/Show"
 import { ShowObj } from "../classes/Show"

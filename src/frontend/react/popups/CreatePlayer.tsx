@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import { getUrlTimestamp, getVimeoData, getYouTubeData, trimPlayerId } from "../../components/drawer/player/playerHelper"
 import { clone } from "../../components/helpers/array"

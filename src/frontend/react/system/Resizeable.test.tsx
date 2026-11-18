@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { editColumns, localeDirection, resized } from "../../stores"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Resizeable } from "./Resizeable"

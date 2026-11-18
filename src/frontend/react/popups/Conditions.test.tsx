@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { checkConditionValue, isConditionMet } from "../../components/edit/scripts/itemHelpers"
 import { activeEdit, activeShow, activeStage, dictionary, overlays, popupData, showsCache, stageShows, templates } from "../../stores"
@@ -10,7 +10,6 @@ import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Conditions } from "./Conditions"
 
 vi.mock("../../utils/common", () => commonMock())
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Textbox") }))
 vi.mock("../stage/Stagebox", async () => ({ Stagebox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Stagebox") }))
 // ConditionsBox ya es React: el doble lo registra como las islas, para seguir usando islands/emit

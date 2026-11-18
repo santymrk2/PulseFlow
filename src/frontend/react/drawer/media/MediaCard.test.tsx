@@ -9,7 +9,6 @@ import { MediaCard } from "./MediaCard"
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
 vi.mock("./MediaLoader", () => ({ MediaLoader: (props: Record<string, unknown>) => <span data-view="MediaLoader" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} /> }))
 vi.mock("../../../components/helpers/media", async () => {
     const actual = await vi.importActual<typeof import("../../../components/helpers/media")>("../../../components/helpers/media")

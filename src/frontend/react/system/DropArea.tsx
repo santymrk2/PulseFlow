@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type DragEvent as ReactDragEvent, type ReactNode, type TouchEvent as ReactTouchEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { cn } from "../../lib/utils"
 import { type DropAreas, ondrop, validateDrop } from "../../components/helpers/drop"
 import { deselect } from "../../components/helpers/select"

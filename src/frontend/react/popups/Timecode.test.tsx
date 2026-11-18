@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, render, waitFor } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { AudioMicrophone } from "../../audio/audioMicrophone"

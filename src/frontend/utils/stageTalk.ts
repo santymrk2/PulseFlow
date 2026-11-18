@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { STAGE } from "../../types/Channels"
 import type { OutSlide } from "../../types/Show"
 import { runAction } from "../components/actions/actions"

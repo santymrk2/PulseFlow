@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Project } from "../../../types/Projects"
 import { overlays, playerVideos, showsCache } from "../../stores"
 import { newToast } from "../../utils/common"

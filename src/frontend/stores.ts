@@ -11,7 +11,7 @@
 
 import type { Bible } from "json-bible/lib/Bible"
 import type { ICommonTagsResult } from "music-metadata"
-import { type Writable, writable } from "svelte/store"
+import { type Writable, writable } from "./lib/store"
 import type { ContentProviderId } from "../types/ContentProvider"
 import type { TimecodeMode } from "../types/Timecode"
 import type { AiFeatureStatus } from "../types/ai/Ai"

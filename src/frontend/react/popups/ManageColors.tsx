@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { defaultColors, defaultGradients } from "../../components/helpers/color"
 import { Tip } from "../main/Tip"
 import { special } from "../../stores"

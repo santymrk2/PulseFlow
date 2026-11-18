@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import type { Chords, Item, Line, Show, Slide, SlideData } from "../../../types/Show"
 import { VIRTUAL_BREAK_CHAR } from "../../show/slides"

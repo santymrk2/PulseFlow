@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { resetAudioRouting } from "../../audio/routing/audioRoutingInit"
 import { activePopup, dictionary, settingsTab } from "../../stores"

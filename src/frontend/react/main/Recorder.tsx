@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { activeRecording, currentRecordingStream } from "../../stores"
 import { createMediaRecorder } from "../../components/drawer/live/recorder"
 import { clone } from "../../components/helpers/array"

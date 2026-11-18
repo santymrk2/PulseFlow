@@ -1,7 +1,7 @@
 // Looks (F5/F10): presets de pantallas de audiencia (modelo ProPresenter).
 // Un Look tiene una celda LookScreen por pantalla de audiencia; el puente
 // (F10.2) traduce cada celda al formato viejo Styles para el resto del código.
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import type { Output, Outputs } from "../../../types/Output"
 import type { Look, LookScreen, Styles } from "../../../types/Settings"

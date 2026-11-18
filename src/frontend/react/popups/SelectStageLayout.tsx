@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import { keysToID, sortByName } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"

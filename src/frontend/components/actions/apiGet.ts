@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { Shows } from "../../../types/Show"
 import { actions, activePlaylist, audioPlaylists, outputs, playingAudio, playingVideos, playingVideoState, projects, shows, showsCache, variables } from "../../stores"
 import { getTextLines } from "../edit/scripts/textStyle"

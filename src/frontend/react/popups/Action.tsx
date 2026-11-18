@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import type { Action as ActionData } from "../../../types/Show"
 import { actionData } from "../../components/actions/actionData"

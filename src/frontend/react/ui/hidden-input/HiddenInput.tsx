@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type KeyboardEvent } from "react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import type { ActiveEdit } from "../../../../types/Main"
 import { cn } from "../../../lib/utils"
 import { activeEdit, activePage, activeProject, activeRename, dictionary, projectView } from "../../../stores"

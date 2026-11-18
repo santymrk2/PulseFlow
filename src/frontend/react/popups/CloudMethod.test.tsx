@@ -1,6 +1,6 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, cloudSyncData, dictionary } from "../../stores"
 import { syncWithCloud } from "../../utils/cloudSync"
@@ -11,7 +11,6 @@ import { CloudMethod } from "./CloudMethod"
 
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../utils/cloudSync", () => ({ syncWithCloud: vi.fn() }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 let restaurar: () => void = () => {}

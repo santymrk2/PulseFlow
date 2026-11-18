@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { format } from "../../components/context/menuClick"
 import { activePopup, popupData } from "../../stores"
 import { newToast } from "../../utils/common"

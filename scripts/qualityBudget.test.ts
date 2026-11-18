@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest"
-import { compareToBudget, countAny, countHex, countRgb, measureSources, parseSvelteCheckErrors } from "./qualityBudget"
+import { compareToBudget, countAny, countHex, countRgb, measureSources } from "./qualityBudget"
 
 describe("conteos", () => {
     test("any: cuenta `: any` y `as any` sin confundirlos con otras palabras", () => {
@@ -18,13 +18,12 @@ describe("conteos", () => {
 })
 
 describe("measureSources", () => {
-    test("any en .ts y .svelte; colores sólo en .svelte y fuera de lo excluido", () => {
+    test("any en .ts; colores sólo en .tsx y fuera de lo excluido", () => {
         const files = [
             { path: "src/a.ts", text: "let a: any = 1; const c = '#ffffff'" },
-            { path: "src/b.svelte", text: "<div style='color: #fff; background: rgb(0 0 0)'>{x as any}</div>" },
-            { path: "src/ejemplos/plantilla.svelte", text: "#aabbcc rgb(1 1 1)" }
+            { path: "src/ejemplos/plantilla.tsx", text: "<div className=\"bg-[#aabbcc]\">{x as any}</div>" }
         ]
-        expect(measureSources(files, ["src/ejemplos/"])).toEqual({ anyCount: 2, hexColors: 1, rgbColors: 1 })
+        expect(measureSources(files, ["src/ejemplos/"])).toEqual({ anyCount: 2, hexColors: 0, rgbColors: 0 })
     })
 
     test("un .tsx cuenta colores y any; un .module.css de react cuenta colores", () => {
@@ -45,36 +44,23 @@ describe("measureSources", () => {
     })
 })
 
-describe("parseSvelteCheckErrors", () => {
-    test("lee la línea COMPLETED de svelte-check (salida machine)", () => {
-        expect(parseSvelteCheckErrors("1792 COMPLETED 535 FILES 41 ERRORS 312 WARNINGS 140 FILES_WITH_PROBLEMS")).toBe(41)
-    })
-    test("lee el resumen de la salida human", () => {
-        expect(parseSvelteCheckErrors("svelte-check found 40 errors and 306 warnings in 138 files")).toBe(40)
-        expect(parseSvelteCheckErrors("svelte-check found 1 error and 0 warnings")).toBe(1)
-    })
-    test("sin resumen devuelve null (no se puede medir)", () => {
-        expect(parseSvelteCheckErrors("algo roto")).toBeNull()
-    })
-})
-
 describe("compareToBudget", () => {
-    const budget = { svelteCheckErrors: 41, anyCount: 100, hexColors: 50, rgbColors: 20 }
+    const budget = { anyCount: 100, hexColors: 50, rgbColors: 20 }
 
     test("igual o menor pasa; los que bajaron se informan para actualizar el json", () => {
-        const result = compareToBudget(budget, { svelteCheckErrors: 41, anyCount: 90, hexColors: 50, rgbColors: 20 })
+        const result = compareToBudget(budget, { anyCount: 90, hexColors: 50, rgbColors: 20 })
         expect(result.failures).toEqual([])
         expect(result.improvements).toEqual([{ key: "anyCount", from: 100, to: 90 }])
     })
 
     test("si algún número sube, falla nombrándolo", () => {
-        const result = compareToBudget(budget, { svelteCheckErrors: 42, anyCount: 101, hexColors: 50, rgbColors: 20 })
-        expect(result.failures.map((f) => f.key)).toEqual(["svelteCheckErrors", "anyCount"])
-        expect(result.failures[1]).toEqual({ key: "anyCount", from: 100, to: 101 })
+        const result = compareToBudget(budget, { anyCount: 101, hexColors: 51, rgbColors: 20 })
+        expect(result.failures.map((f) => f.key)).toEqual(["anyCount", "hexColors"])
+        expect(result.failures[1]).toEqual({ key: "hexColors", from: 50, to: 51 })
     })
 
     test("una medida que no se pudo tomar (null) falla en lugar de pasar en silencio", () => {
-        const result = compareToBudget(budget, { svelteCheckErrors: null, anyCount: 100, hexColors: 50, rgbColors: 20 })
-        expect(result.failures.map((f) => f.key)).toEqual(["svelteCheckErrors"])
+        const result = compareToBudget(budget, { anyCount: null, hexColors: 50, rgbColors: 20 })
+        expect(result.failures.map((f) => f.key)).toEqual(["anyCount"])
     })
 })

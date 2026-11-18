@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { AudioAnalyser } from "../../../audio/audioAnalyser"
 import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
 import { customMetadata, metronome, metronomeTimer, playingMetronome, special } from "../../../stores"

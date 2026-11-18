@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { obsData } from "../stores"
 import { promptCustom } from "./popup"
 

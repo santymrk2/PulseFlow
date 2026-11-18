@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { uid } from "uid"
 import type { Item, LayoutRef } from "../../../types/Show"
 import type { StageItem, StageLayout } from "../../../types/Stage"

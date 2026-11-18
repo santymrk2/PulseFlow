@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { uid } from "uid"
 import type { Timer } from "../../../../types/Show"
 import { activeTimers, events, timers } from "../../../stores"

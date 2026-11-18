@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, waitFor } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 
 const mocks = vi.hoisted(() => {
     function writable<T>(value: T) {

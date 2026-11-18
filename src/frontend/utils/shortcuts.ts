@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { OUTPUT } from "../../types/Channels"
 import { Main } from "../../types/IPC/Main"
 import type { ShowType } from "../../types/Show"
@@ -37,7 +37,7 @@ import { openSettings } from "../components/settings/openSettings"
 import { getAllNormalOutputs, getAllStageOutputs } from "../components/helpers/output"
 import { invoke } from "@tauri-apps/api/core"
 import { activeLook, looks } from "../stores"
-import { derived } from "svelte/store"
+import { derived } from "../lib/store"
 
 const menus: TopViews[] = ["show", "edit", "stage"]
 

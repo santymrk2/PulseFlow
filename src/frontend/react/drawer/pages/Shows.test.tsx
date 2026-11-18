@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import type { ReactNode } from "react"
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "svelte/store"
+import { get } from "../../../lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { ShowList } from "../../../../types/Show"
 import { activeEdit, activeProfile, activeShow, activeTagFilter, activePopup, categories, dictionary, drawer, focusMode, focusedArea, labelsDisabled, profiles, shows, sorted, sortedShowsList } from "../../../stores"

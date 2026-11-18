@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import { activePopup, alertUpdates, isDev, popupData, special } from "./../stores"
 
 interface UpdateData {

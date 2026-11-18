@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../lib/store"
 import type { ShowList } from "../../types/Show"
 import { sortObjectNumbers } from "../components/helpers/array"
 import { similarity } from "../converters/txt"

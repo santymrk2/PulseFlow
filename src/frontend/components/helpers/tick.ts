@@ -1,4 +1,4 @@
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import { outputs, slideTimers } from "../../stores"
 import { playFolder } from "../../utils/shortcuts"
 import { clone } from "./array"

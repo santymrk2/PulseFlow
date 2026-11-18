@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "svelte/store"
+import { get } from "../../lib/store"
 import type { ContentProviderId } from "../../../types/ContentProvider"
 import { Main } from "../../../types/IPC/Main"
 import { getTimeFromInterval, joinTimeBig } from "../../components/helpers/time"
