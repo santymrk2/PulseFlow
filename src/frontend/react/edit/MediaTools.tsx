@@ -1,7 +1,8 @@
 import { useEffect, useState, type MouseEvent } from "react"
 import type { TabsObj } from "../../../types/Tabs"
 import Tabs from "../../components/main/Tabs.svelte"
-import EditValues from "../../components/edit/tools/EditValues.svelte"
+import type { EditInput } from "../../components/edit/values/boxes"
+import { EditValues } from "./tools/EditValues"
 import { filterSections, mediaBoxes } from "../../components/edit/values/media"
 import { setBoxInputValue } from "../../components/edit/values/boxes"
 import { addFilterString } from "../../components/edit/scripts/textStyle"
@@ -112,8 +113,7 @@ export function MediaTools() {
         setOutput("background", bg)
     }
 
-    function onEditValuesChange(event: CustomEvent) {
-        const input = event.detail
+    function onEditValuesChange(input: EditInput & { input?: string }) {
         if (!input) return
         input.value = input.values.value
         input.input = input.type
@@ -134,8 +134,8 @@ export function MediaTools() {
             </div>
 
             <div className={styles.content}>
-                {active === "media" ? <SvelteIsland component={EditValues} props={{ sections: mediaSections, item: currentItem }} events={{ change: onEditValuesChange }} /> : null}
-                {active === "filters" ? <SvelteIsland component={EditValues} props={{ sections: clone(filterSections), item: currentItem }} events={{ change: onEditValuesChange }} /> : null}
+                {active === "media" ? <EditValues sections={mediaSections as never} item={currentItem as never} onChange={onEditValuesChange} /> : null}
+                {active === "filters" ? <EditValues sections={clone(filterSections) as never} item={currentItem as never} onChange={onEditValuesChange} /> : null}
             </div>
 
             <FloatingBar>

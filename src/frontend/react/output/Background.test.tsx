@@ -3,9 +3,8 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import Background from "./Background"
 
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-testid="bg-media" /> }))
 vi.mock("../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)) }))
-vi.mock("../../components/output/layers/BackgroundMedia.svelte", () => ({ default: {} }))
+vi.mock("./BackgroundMedia", async () => ({ BackgroundMedia: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("BackgroundMedia") }))
 
 afterEach(cleanup)
 

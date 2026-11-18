@@ -5,8 +5,7 @@ import { activeProject, outLocked, outputs, presentationData, projects, special 
 import { getFileName, removeExtension } from "../../../components/helpers/media"
 import { getAllActiveOutputIds } from "../../../components/helpers/output"
 import { triggerClickOnEnterSpace } from "../../helpers/triggerClickOnEnterSpace"
-import Window from "../../../components/output/Window.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
+import { Window as WindowView } from "../../output/Window"
 import { T } from "../../helpers/T"
 import { Center } from "../../system/Center"
 import { useStore } from "../../hooks/useStore"
@@ -106,7 +105,7 @@ export function ScreenCapture({ path = "" }: ScreenCaptureProps) {
     }
 
     function windowView(window: WindowInfo) {
-        return <SvelteIsland component={Window as never} props={{ id: window.id, class: "media", style: "width: 100%;height: 100%;pointer-events: none;position: absolute;" }} />
+        return <WindowView id={window.id} class="media" style="width: 100%;height: 100%;pointer-events: none;position: absolute;" />
     }
 
     if (chosenWindow) return <div style={{ width: "100%", height: "100%" }}>{windowView(chosenWindow)}</div>

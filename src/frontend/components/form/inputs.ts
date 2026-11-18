@@ -1,6 +1,6 @@
 import type { Input } from "../../../types/Input"
-import MidiValues from "../actions/MidiValues.svelte"
-import RestValues from "../actions/RestValues.svelte"
+import { MidiValues } from "../../react/actions/MidiValues"
+import { RestValues } from "../../react/actions/RestValues"
 import ColorField from "../../lib/components/ui/color-field/color-field.svelte"
 import ColorsField from "../../lib/components/ui/colors-field/colors-field.svelte"
 import DateField from "../../lib/components/ui/date-field/date-field.svelte"

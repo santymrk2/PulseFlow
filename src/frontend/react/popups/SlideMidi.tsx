@@ -3,15 +3,14 @@ import { get } from "svelte/store"
 import { uid } from "uid"
 import type { API_midi } from "../../components/actions/api"
 import { midiInListen } from "../../components/actions/midi"
-import MidiValues from "../../components/actions/MidiValues.svelte"
 import { clone } from "../../components/helpers/array"
+import { MidiValues } from "../actions/MidiValues"
 import { Tip } from "../main/Tip"
 import { actions, activeShow, popupData } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 
 // Port de components/main/popups/SlideMidi.svelte. Lee: popupData (id, index, indexes), actions y activeShow.
 // Escribe: popupData.id al montar si faltaba, actions[id] en cada cambio de MIDI y llama a midiInListen().
-// MidiValues sigue siendo Svelte (isla); Tip usa el port React.
+// MidiValues y Tip usan ports React (F24.24).
 interface SlideAction {
     name: string
     triggers?: string[]
@@ -65,7 +64,7 @@ export function SlideMidi() {
         saveAction()
     }
 
-    // Los handlers de la isla se toman al montar: leen siempre la versión más reciente.
+    // Los handlers del port leen siempre la versión más reciente.
     const live = useRef(updateValue)
     useEffect(() => {
         live.current = updateValue
@@ -88,7 +87,7 @@ export function SlideMidi() {
     return (
         <>
             <Tip type="info" value="actions.play_on_midi_tip" bottom={20} />
-            <SvelteIsland component={MidiValues} props={{ value: clone(action.midi || actionMidi), firstActionId: action.triggers?.[0], playSlide: true }} events={{ change: (e) => live.current("midi", e) }} />
+            <MidiValues value={clone(action.midi || actionMidi)} firstActionId={action.triggers?.[0]} playSlide onChange={(value) => live.current("midi", value)} />
         </>
     )
 }

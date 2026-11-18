@@ -6,7 +6,7 @@ import { createCustomCalendar } from "../../components/drawer/calendar/calendars
 import { history } from "../../components/helpers/history"
 import { activeDays, activePopup, calendars, dictionary, drawerTabsData, eventEdit, events, popupData } from "../../stores"
 import { clearFields, fields, fire } from "../test/kitMocks"
-import { clearIslands, emit, islands } from "../test/islandMock"
+import { clearIslands, islands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { uid } from "uid"
@@ -22,8 +22,7 @@ vi.mock("../../components/drawer/calendar/calendars", () => ({ createCustomCalen
 vi.mock("uid", () => ({ uid: vi.fn() }))
 vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/actions/actionData", () => ({ actionData: { start_show: { name: "Iniciar show" } } }))
-vi.mock("../../components/actions/CreateAction.svelte", () => ({ default: { isla: "CreateAction" } }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
+vi.mock("../actions/CreateAction", async () => ({ CreateAction: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("CreateAction") }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/color-field/ColorField", async () => ({ ColorField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
@@ -48,6 +47,12 @@ function montar(options: { edit?: string | null; events?: object; subTab?: strin
     ] as never)
     return render(<EditEvent />)
 }
+const disparar = (evento: "change" | "choose", detail?: unknown) =>
+    act(() => {
+        const props = islands.CreateAction.props
+        if (evento === "change") void (props.onChange as ((value: unknown) => void) | undefined)?.(detail)
+        else void (props.onChoose as (() => void) | undefined)?.()
+    })
 const guardar = (texto = "Crear") => screen.getByText(texto).closest("button") as HTMLButtonElement
 const stored = { id: "e1", type: "event", name: "Viejo", color: "#FF0000", time: true, from: new Date(2026, 0, 20, 9, 30).toString(), to: new Date(2026, 0, 20, 10, 30).toString(), repeat: false, repeatData: { type: "day", ending: "date", count: 1, endingDate: "", afterRepeats: 10 } }
 // el evento nuevo se resetea dos veces al montar (como el Svelte): el id que queda es el segundo
@@ -211,9 +216,9 @@ describe("EditEvent", () => {
 
     it("tipo_acción_muestra_CreateAction_y_necesita_un_id_para_guardar", () => {
         montar({ subTab: "action" })
-        expect(islands.CreateAction.props).toEqual({ actionId: "", actionValue: {}, mode: "calendar", choosePopup: true })
+        expect(islands.CreateAction.props).toMatchObject({ actionId: "", actionValue: {}, mode: "calendar", choosePopup: true })
         expect(guardar().disabled).toBe(true)
-        emit("CreateAction", "change", { id: "start_show", actionValue: undefined })
+        disparar("change", { id: "start_show", actionValue: undefined })
         expect(islands.CreateAction.props).toMatchObject({ actionId: "start_show" })
         expect(guardar().disabled).toBe(false)
         fireEvent.click(guardar())
@@ -223,24 +228,24 @@ describe("EditEvent", () => {
 
     it("tipo_acción_con_valores_los_guarda_en_data", () => {
         montar({ subTab: "action" })
-        emit("CreateAction", "change", { id: "x", actionValue: { id: "show9" } })
+        disparar("change", { id: "x", actionValue: { id: "show9" } })
         expect(islands.CreateAction.props).toMatchObject({ actionValue: { id: "show9" } })
     })
 
     it("elegir_abre_el_selector_completo_y_al_cambiar_vuelve", () => {
         const { container } = montar({ subTab: "action" })
-        emit("CreateAction", "choose", undefined)
+        disparar("choose")
         expect(islands.CreateAction.props).toMatchObject({ list: true, full: true, mode: "calendar", existingActions: [] })
         expect(container.querySelector("button.popup-back")).toBeTruthy()
         expect(container.querySelector("[data-field='sort.date']")).toBeNull()
-        emit("CreateAction", "change", { id: "start_show" })
+        disparar("change", { id: "start_show" })
         expect(islands.CreateAction.props).toMatchObject({ choosePopup: true, actionId: "start_show" })
         expect(container.querySelector("button.popup-back")).toBeNull()
     })
 
     it("volver_del_selector_regresa_al_formulario", () => {
         const { container } = montar({ subTab: "action" })
-        emit("CreateAction", "choose", undefined)
+        disparar("choose")
         fireEvent.click(container.querySelector("button.popup-back") as HTMLElement)
         expect(container.querySelector("[data-field='sort.date']")).toBeTruthy()
     })

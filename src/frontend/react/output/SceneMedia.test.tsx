@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import SceneMedia from "./SceneMedia"
 
 vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-testid="island" /> }))
+vi.mock("./Window", async () => ({ Window: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Window") }))
 vi.mock("../drawer/live/BMDStream", () => ({ BMDStream: () => <div data-testid="bmd" /> }))
 vi.mock("../drawer/live/NDIStream", () => ({ NDIStream: () => <div data-testid="ndi" /> }))
 vi.mock("../drawer/live/OMTStream", () => ({ OMTStream: () => <div data-testid="omt" /> }))
@@ -16,5 +16,10 @@ describe("SceneMedia", () => {
     it("no renderiza sin media", () => {
         const { container } = render(<SceneMedia />)
         expect(container.firstChild).toBeNull()
+    })
+
+    it("usa el port Window para media de pantalla", () => {
+        const { container } = render(<SceneMedia media={{ type: "screen", id: "screen1" }} />)
+        expect(container.querySelector('[data-isla="Window"]')).toBeTruthy()
     })
 })

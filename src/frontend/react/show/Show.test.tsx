@@ -14,7 +14,7 @@ vi.mock("../../components/drawer/timers/timers", () => ({ createGlobalTimerFromL
 vi.mock("../../components/helpers/output", () => ({ setOutput: vi.fn() }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../main/Splash", () => ({ Splash: () => <div data-isla="Splash" /> }))
-vi.mock("../../components/output/Camera.svelte", () => ({ default: { isla: "Camera" } }))
+vi.mock("../output/Camera", async () => ({ Camera: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Camera") }))
 vi.mock("../../components/drawer/live/NDIStream.svelte", () => ({ default: { isla: "NdiStream" } }))
 vi.mock("../slide/Layouts", () => ({ Layouts: () => <div data-testid="layouts" /> }))
 vi.mock("../timeline/Timeline", () => ({ Timeline: () => <div data-testid="timeline" /> }))
@@ -56,5 +56,11 @@ describe("Show", () => {
         render(<Show />)
         expect(screen.getByTestId("slides")).toBeTruthy()
         expect(screen.getByTestId("layouts")).toBeTruthy()
+    })
+
+    it("usa el port Camera para un show de cámara", () => {
+        setStores({ id: "c1", type: "camera", data: { groupId: "g1" } })
+        render(<Show />)
+        expect(document.querySelector('[data-isla="Camera"]')).toBeTruthy()
     })
 })

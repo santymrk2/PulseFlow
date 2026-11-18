@@ -4,14 +4,13 @@ import type { Styles } from "../../../types/Settings"
 import type { OutBackground, Transition } from "../../../types/Show"
 import { media, playerVideos, special } from "../../stores"
 import { getMediaStyle } from "../../components/helpers/media"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
 import { BMDStream } from "../drawer/live/BMDStream"
 import { NDIStream } from "../drawer/live/NDIStream"
 import { OMTStream } from "../drawer/live/OMTStream"
-import Window from "../../components/output/Window.svelte"
 import { Camera } from "./Camera"
 import { OutputTransition } from "./OutputTransition"
+import { Window as WindowView } from "./Window"
 import styles from "./BackgroundMedia.module.css"
 
 export interface BackgroundMediaProps {
@@ -56,7 +55,7 @@ export function BackgroundMedia({ outputId = "", data, transition, fadingOut = f
                     }}
                 />
             ) : null}
-            {type === "screen" ? <SvelteIsland component={Window} props={{ id, class: "media", style: "width: 100%;height: 100%;", "on:loaded": onLoaded }} /> : null}
+            {type === "screen" ? <WindowView id={id} class="media" style="width: 100%;height: 100%;" onLoaded={onLoaded} /> : null}
             {type === "ndi" ? <NDIStream key={id} screen={{ id, name: "" }} background mirror={mirror} outputId={outputId} /> : null}
             {type === "omt" ? <OMTStream key={id} screen={{ id, name: "" }} background mirror={mirror} outputId={outputId} /> : null}
             {type === "blackmagic" ? <BMDStream screen={{ id, name: "" }} background mirror={mirror} outputId={outputId} /> : null}

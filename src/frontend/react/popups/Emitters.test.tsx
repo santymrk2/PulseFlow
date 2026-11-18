@@ -17,7 +17,7 @@ vi.mock("uid", () => ({ uid: vi.fn(() => "uid1") }))
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 vi.mock("../../components/form/FormInputs.svelte", () => ({ default: { isla: "FormInputs" } }))
-vi.mock("../../components/actions/MidiValues.svelte", () => ({ default: { isla: "MidiValues" } }))
+vi.mock("../actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("MidiValues") }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getDynamicValue: (v: string) => `dyn(${v})` }))
 vi.mock("../../components/form/inputs", () => ({ getValues: (inputs: { id: string; value?: unknown }[], data: Record<string, unknown> | undefined) => inputs.map((i) => ({ ...i, value: data?.[i.id] ?? i.value })) }))
 vi.mock("../../components/actions/emitters", () => ({
@@ -42,6 +42,10 @@ function montar(data: object = {}, store: object = {}) {
     return render(<Emitters />)
 }
 const btn = (title: string) => document.querySelector(`[data-title='${title}']`) as HTMLElement
+const cambiarMidi = (value: unknown) =>
+    act(() => {
+        void (islands.MidiValues.props.onChange as ((next: unknown) => void) | undefined)?.(value)
+    })
 beforeEach(() => {
     vi.clearAllMocks()
     clearFields()
@@ -126,8 +130,8 @@ describe("Emitters", () => {
     it("plantilla_midi_usa_MidiValues_y_guarda_los_valores_en_la_primera_entrada", () => {
         montar({ id: "m1" }, { m1: { name: "Midi", type: "midi", signal: { output: "A" }, templates: { t: { name: "T", inputs: [] } } } })
         fireEvent.click(screen.getByText("T"))
-        expect(islands.MidiValues.props).toEqual({ value: { output: "A", values: {} }, type: "emitter" })
-        emit("MidiValues", "change", { values: { note: 60, velocity: 1, channel: 2 } })
+        expect(islands.MidiValues.props).toMatchObject({ value: { output: "A", values: {} }, type: "emitter" })
+        cambiarMidi({ values: { note: 60, velocity: 1, channel: 2 } })
         expect(get(emitters).m1.templates?.t.inputs).toEqual([{ name: "", value: { note: 60, velocity: 1, channel: 2 } }])
     })
 

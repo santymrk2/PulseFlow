@@ -4,12 +4,11 @@ import { get } from "svelte/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../components/helpers/history"
 import { actionMoreOptionsUsed, actions, activePopup, activeShow, dictionary, overlays, popupData } from "../../stores"
+import { clearIslands, islands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Action } from "./Action"
 
-type Isla = { props: Record<string, unknown>; events?: Record<string, (event: CustomEvent) => void> }
-const islas = vi.hoisted(() => ({}) as Record<string, Isla>)
 const layout = vi.hoisted(() => ({ ref: [] as { data?: { actions?: { slideActions?: { id: string; triggers?: string[] }[] } } }[] }))
 
 vi.mock("../../utils/common", () => commonMock())
@@ -19,14 +18,8 @@ vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
-vi.mock("../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ component, props, events }: { component: { isla: string }; props?: Record<string, unknown>; events?: Isla["events"] }) => {
-        islas[component.isla] = { props: props ?? {}, events }
-        return <div data-isla={component.isla} />
-    }
-}))
-vi.mock("../../components/actions/CreateAction.svelte", () => ({ default: { isla: "CreateAction" } }))
-vi.mock("../../components/actions/MidiValues.svelte", () => ({ default: { isla: "MidiValues" } }))
+vi.mock("../actions/CreateAction", async () => ({ CreateAction: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("CreateAction") }))
+vi.mock("../actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("MidiValues") }))
 vi.mock("../../components/actions/actionData", () => ({ actionData: { next_slide: { name: "actions.next_slide" }, start_show: {}, id_select_show: {}, multi: { canAddMultiple: true } } }))
 vi.mock("../../components/actions/customActivation", () => ({
     customActionActivations: [
@@ -50,15 +43,19 @@ function montar(data: object, extra: object = {}, usados = false) {
 const nombre = (c: HTMLElement) => c.querySelector("input") as HTMLInputElement
 const campo = (texto: string) => screen.getByText(texto).closest(".textfield") as HTMLElement
 const avanzar = (ms: number) => act(() => void vi.advanceTimersByTime(ms))
-const cambiar = (isla: string, detail: unknown) =>
+const cambiar = (nombre: string, detail: unknown) =>
     act(() => {
-        islas[isla].events?.change(new CustomEvent("change", { detail }))
+        void (islands[nombre].props.onChange as ((value: unknown) => void) | undefined)?.(detail)
+    })
+const elegir = (nombre: string) =>
+    act(() => {
+        void (islands[nombre].props.onChoose as (() => void) | undefined)?.()
     })
 
 beforeEach(() => {
     vi.useFakeTimers()
     vi.clearAllMocks()
-    for (const k of Object.keys(islas)) delete islas[k]
+    clearIslands()
     layout.ref = []
 })
 afterEach(() => {
@@ -72,7 +69,7 @@ describe("Action", () => {
         const { container } = montar({})
         expect(get(popupData).id).toMatch(/\w+/)
         expect(nombre(container)).toBeTruthy()
-        expect(islas.CreateAction.props).toMatchObject({ actionId: "", choosePopup: true })
+        expect(islands.CreateAction.props).toMatchObject({ actionId: "", choosePopup: true })
     })
 
     it("sin_nombre_no_se_guarda_y_con_nombre_se_guarda_a_los_50ms", () => {
@@ -90,7 +87,7 @@ describe("Action", () => {
     it("abre_una_accion_existente_con_su_nombre_y_un_CreateAction_por_trigger", () => {
         const { container } = montar({ id: "existente" })
         expect(nombre(container).value).toBe("Mi acción")
-        expect(islas.CreateAction.props).toMatchObject({ actionId: "next_slide", mainId: "existente", actionNameIndex: 1, choosePopup: true })
+        expect(islands.CreateAction.props).toMatchObject({ actionId: "next_slide", mainId: "existente", actionNameIndex: 1, choosePopup: true })
     })
 
     it("elegir_un_trigger_le_pone_nombre_automatico_si_estaba_vacio_y_guarda", () => {
@@ -107,15 +104,15 @@ describe("Action", () => {
         cambiar("CreateAction", { id: "next_slide" })
         avanzar(200)
         expect(get(actions).existente.triggers).toEqual(["next_slide"])
-        act(() => islas.CreateAction.events?.change(new CustomEvent("change", { detail: { id: "remove" } })))
+        cambiar("CreateAction", { id: "remove" })
         avanzar(60)
         expect(get(actions).existente.triggers).toEqual([])
     })
 
     it("choose_abre_el_selector_con_boton_volver", () => {
         montar({ id: "existente" })
-        act(() => islas.CreateAction.events?.choose(new CustomEvent("choose")))
-        expect(islas.CreateAction.props).toMatchObject({ actionId: "next_slide", full: true, list: true })
+        elegir("CreateAction")
+        expect(islands.CreateAction.props).toMatchObject({ actionId: "next_slide", full: true, list: true })
         fireEvent.click(document.querySelector("button.popup-back") as HTMLElement)
         expect(document.querySelector("button.popup-back")).toBeNull()
     })
@@ -151,7 +148,7 @@ describe("Action", () => {
 
     it("midiEnabled_muestra_MidiValues_y_su_change_actualiza_el_midi", () => {
         montar({ id: "m" }, { m: { name: "M", triggers: ["next_slide"], midiEnabled: true, customActivation: "startup", midi: { type: "noteon", values: { note: 1, velocity: 2, channel: 1 } } } })
-        expect(islas.MidiValues.props).toMatchObject({ firstActionId: "next_slide" })
+        expect(islands.MidiValues.props).toMatchObject({ firstActionId: "next_slide" })
         cambiar("MidiValues", { type: "noteoff", values: { note: 5, velocity: 0, channel: 2 } })
         avanzar(60)
         expect(get(actions).m.midi).toMatchObject({ type: "noteoff" })
@@ -160,7 +157,7 @@ describe("Action", () => {
     it("modo_slide_guarda_con_history_SHOW_LAYOUT_y_al_cerrar_quita_la_accion_vacia", () => {
         layout.ref = [{ data: { actions: { slideActions: [{ id: "s1" }] } } }]
         const { unmount } = montar({ id: "s1", mode: "slide", index: 0 })
-        expect(islas.CreateAction.props).toMatchObject({ mode: "slide", list: true, mainId: "s1" })
+        expect(islands.CreateAction.props).toMatchObject({ mode: "slide", list: true, mainId: "s1" })
         cambiar("CreateAction", { id: "next_slide" })
         avanzar(60)
         expect(history).toHaveBeenCalledWith({ id: "SHOW_LAYOUT", newData: { key: "actions", data: [{ slideActions: [{ id: "s1", name: "Siguiente slide", triggers: ["next_slide"] }] }], indexes: [0] } })

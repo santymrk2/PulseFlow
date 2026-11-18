@@ -1,12 +1,11 @@
 import { useEffect, useState } from "react"
 import { AudioPlayer } from "../../audio/audioPlayer"
-import EditValues from "../../components/edit/tools/EditValues.svelte"
+import { EditValues } from "./tools/EditValues"
 import { audioSections } from "../../components/edit/values/media"
 import { setBoxInputValue } from "../../components/edit/values/boxes"
 import { clone } from "../../components/helpers/array"
 import { removeStore, updateStore } from "../../components/helpers/update"
 import { activeEdit, activeShow, media } from "../../stores"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
 import { FloatingBar } from "../ui/floating-bar/FloatingBar"
@@ -83,7 +82,7 @@ export function AudioTools() {
     return (
         <div className={`main border editTools ${styles.main}`}>
             <div className={styles.content}>
-                <SvelteIsland component={EditValues} props={{ sections, item: mediaItem }} events={{ change: (event) => valueChanged((event as CustomEvent).detail) }} />
+                <EditValues sections={sections as never} item={mediaItem as never} onChange={(input) => valueChanged(input)} />
             </div>
 
             <FloatingBar>

@@ -1,11 +1,10 @@
 import type { CSSProperties } from "react"
-import Window from "../../components/output/Window.svelte"
 import { BMDStream } from "../drawer/live/BMDStream"
 import { NDIStream } from "../drawer/live/NDIStream"
 import { OMTStream } from "../drawer/live/OMTStream"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { Camera } from "./Camera"
+import { Window as WindowView } from "./Window"
 import styles from "./SceneMedia.module.css"
 
 interface SceneMediaData {
@@ -29,7 +28,7 @@ export function SceneMedia({ media, preview = false, className = "", style = "" 
     return (
         <div className={`${styles.layer} ${styles.mediaLayer} ${className}`} style={cssTextToStyle(style) as CSSProperties}>
             {media.type === "camera" ? <Camera id={media.id || ""} groupId={media.group || ""} className={styles.media} style="width: 100%;height: 100%;object-fit: cover;" preview={preview} /> : null}
-            {media.type === "screen" ? <SvelteIsland component={Window} props={{ id: media.id || "", class: styles.media, style: "width: 100%;height: 100%;" }} /> : null}
+            {media.type === "screen" ? <WindowView id={media.id || ""} class={styles.media} style="width: 100%;height: 100%;" /> : null}
             {media.type === "ndi" ? <NDIStream screen={{ id: media.id || "", name: media.name || "" }} background mirror={preview} /> : null}
             {media.type === "omt" ? <OMTStream screen={{ id: media.id || "", name: media.name || "" }} background mirror={preview} /> : null}
             {media.type === "blackmagic" ? <BMDStream screen={{ id: media.id || "", name: media.name || "" }} background mirror={preview} /> : null}

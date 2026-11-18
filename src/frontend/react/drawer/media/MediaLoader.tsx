@@ -7,9 +7,8 @@ import { videoExtensions } from "../../../values/extensions"
 import { cropImageToBase64, encodeFilePath, getExtension, isLocalFile } from "../../../components/helpers/media"
 import { getResolution } from "../../../components/helpers/output"
 import { getStyleResolution } from "../../../components/slide/getStyleResolution"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { useStore } from "../../hooks/useStore"
-import CameraSvelte from "../../../components/output/Camera.svelte"
+import { Camera } from "../../output/Camera"
 import { Capture } from "../live/Capture"
 import { NDIStream } from "../live/NDIStream"
 import { OMTStream } from "../live/OMTStream"
@@ -240,7 +239,7 @@ export function MediaLoader({ name = "", path, thumbnailPath = "", loadFullImage
         <div className={`${styles.main} ${className ?? ""}`} style={{ aspectRatio: `${customResolution.width}/${customResolution.height}`, ...style }} ref={mainElem}>
             {mediaType === "camera" ? (
                 <div style={{ height: "100%" }}>
-                    <SvelteIsland component={CameraSvelte} props={{ id: path, groupId: cameraGroup, class: "media", style: getStyleResolution({ width: videoElem?.videoWidth || 0, height: videoElem?.videoHeight || 0 }, width, height, "cover"), preview: true }} events={{ loaded: () => setLoaded(true) }} />
+                    <Camera id={path} groupId={cameraGroup} className="media" style={getStyleResolution({ width: videoElem?.videoWidth || 0, height: videoElem?.videoHeight || 0 }, width, height, "cover")} preview onLoaded={() => setLoaded(true)} />
                 </div>
             ) : mediaType === "screen" ? (
                 <Capture screen={{ id: path, name }} streams={[]} background />

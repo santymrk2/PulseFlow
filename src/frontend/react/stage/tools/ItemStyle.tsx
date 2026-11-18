@@ -10,14 +10,13 @@ import { history } from "../../../components/helpers/history"
 import { percentageToAspectRatio, stylePosToPercentage } from "../../../components/helpers/output"
 import { getStyles } from "../../../components/helpers/style"
 import { updateStageShow } from "../../../components/stage/stage"
-import EditValues from "../../../components/edit/tools/EditValues.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
+import { EditValues } from "../../edit/tools/EditValues"
 import { useStore } from "../../hooks/useStore"
 
 // El Svelte original escribía `input.relative` e `input.input` sobre el detail de EditValues (tipado como any).
 type ItemStyleInput = EditInput & { relative?: boolean; input?: string }
 
-// `EditValues` sigue en Svelte (F24.21a): se monta como isla y su `dispatch("change", input)` llega como events.change.
+// `EditValues` migrated to React (F24.24 P9c): `dispatch("change", input)` → `onChange(input)`.
 export function ItemStyle() {
     const currentActiveStage = useStore(activeStage)
     const currentStageShows = useStore(stageShows)
@@ -102,5 +101,5 @@ export function ItemStyle() {
         updateStyle(input)
     }
 
-    return <SvelteIsland component={EditValues as never} props={{ sections: currentItemSections, item, styles: data, isStage: true }} events={{ change: (event: CustomEvent<EditInput>) => updateStyle2(event.detail) }} />
+    return <EditValues sections={currentItemSections} item={item as never} styles={data} isStage={true} onChange={updateStyle2} />
 }

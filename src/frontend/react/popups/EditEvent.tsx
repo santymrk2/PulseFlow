@@ -3,7 +3,6 @@ import { get } from "svelte/store"
 import { uid } from "uid"
 import type { Event } from "../../../types/Calendar"
 import { cn } from "../../lib/utils"
-import CreateAction from "../../components/actions/CreateAction.svelte"
 import { getTime, isSameDay } from "../../components/drawer/calendar/calendar"
 import { createCustomCalendar, isCalendarImported } from "../../components/drawer/calendar/calendars"
 import { createRepeatedEvents, updateEventData } from "../../components/drawer/calendar/event"
@@ -11,7 +10,7 @@ import { history } from "../../components/helpers/history"
 import { changeTime } from "../../components/helpers/time"
 import { activeDays, activePopup, calendars, drawerTabsData, eventEdit, events, popupData } from "../../stores"
 import { translateText } from "../../utils/language"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+import { CreateAction } from "../actions/CreateAction"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
@@ -30,7 +29,7 @@ import styles from "./EditEvent.module.css"
 // ("event" | "action"), calendars, popupData.showId/event (vuelta de elegir un show). Escribe: popupData.event (refleja el evento en edición, salvo mientras hay showId),
 // delete popupData.showId, calendars (createCustomCalendar), y al guardar: history UPDATE { newData: { data }, oldData: { id } } (o createRepeatedEvents si repite y no
 // tiene grupo), "guardar todos": history UPDATE con todos los del grupo + createRepeatedEvents(data, true); luego activePopup = null y eventEdit = null.
-// Cerrar sin guardar no escribe nada (salvo el espejo popupData.event, igual que antes). CreateAction sigue siendo Svelte (isla); sus eventos van por `live`.
+// Cerrar sin guardar no escribe nada (salvo el espejo popupData.event, igual que antes). CreateAction ya es port React (F24.24); sus handlers van por `live`.
 // Se conserva del Svelte: el evento nuevo se resetea dos veces al montar (onMount y el `$:` de selectedType) y `editEvent.action` es el mismo objeto que
 // `actionData` (por eso un evento nuevo se guarda con `action: {}`); al editar una acción guardada, `actionData` es el objeto del evento en el store y se
 // muta en el lugar (cancelar no lo deshace), por eso `actionTarget`. Diferencia: `repeatData` de un evento ya guardado se copia (el Svelte lo mutaba en el store).
@@ -326,7 +325,7 @@ export function EditEvent() {
         updateEvent({ origin: newCalId, ...(color ? { color } : {}) })
     }
 
-    // Los handlers de la isla se toman al montar: leen siempre `live`
+    // Los handlers del port leen siempre `live`
     const live = useRef({ changeAction })
     useEffect(() => {
         live.current = { changeAction }
@@ -361,20 +360,22 @@ export function EditEvent() {
                     <>
                         <Button className="popup-back" icon="back" iconSize={1.3} title="actions.back" onClick={() => setActionSelector(null)} />
 
-                        <SvelteIsland
-                            component={CreateAction}
-                            props={{ actionId: actionData?.id || "", existingActions: actionData?.id ? [actionData.id] : [], actionValue: actionData?.data || {}, mode: "calendar", list: true, full: true }}
-                            events={{
-                                change: (event) => {
-                                    live.current.changeAction(event.detail)
-                                    setActionSelector(null)
-                                }
+                        <CreateAction
+                            actionId={actionData?.id || ""}
+                            existingActions={actionData?.id ? [actionData.id] : []}
+                            actionValue={actionData?.data || {}}
+                            mode="calendar"
+                            list
+                            full
+                            onChange={(data) => {
+                                live.current.changeAction(data as ActionChange)
+                                setActionSelector(null)
                             }}
                         />
                     </>
                 ) : (
                     // TODO: only choose actual "Actions"
-                    <SvelteIsland key={actionDataString} component={CreateAction} props={{ actionId: actionData?.id || "", actionValue: actionData?.data || {}, mode: "calendar", choosePopup: true }} events={{ change: (event) => live.current.changeAction(event.detail), choose: () => setActionSelector({ id: actionData?.id || "" }) }} />
+                    <CreateAction key={actionDataString} actionId={actionData?.id || ""} actionValue={actionData?.data || {}} mode="calendar" choosePopup onChange={(data) => live.current.changeAction(data as ActionChange)} onChoose={() => setActionSelector({ id: actionData?.id || "" })} />
                 )
             ) : null}
 

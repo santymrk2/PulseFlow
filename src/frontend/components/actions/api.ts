@@ -105,7 +105,7 @@ import { sendRestCommandSync } from "./rest"
 
 // 3. In actionData.ts add an entry with the action ID, "name", "icon" & "input"
 // 4. Add a string entry in en.json>"actions">ID, and find a fitting icon in icons.ts
-// 5. If it should be excluded from the default slide actions, add the ID in CreateAction.svelte
+// 5. If it should be excluded from the default slide actions, add the ID in CreateAction.tsx
 // 6. If a special custom "input" is needed, add it to CustomInput
 
 // Now you're all set! :)

@@ -10,7 +10,7 @@ import { MediaLoader } from "./MediaLoader"
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).SvelteIslandMock }))
+vi.mock("../../output/Camera", async () => ({ Camera: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Camera") }))
 
 beforeEach(() => {
     vi.clearAllMocks()
@@ -37,5 +37,10 @@ describe("MediaLoader", () => {
     it("usa_la_relacion_de_aspecto_de_la_resolucion", () => {
         const { container } = render(<MediaLoader path="/media/foto.jpg" resolution={{ width: 16, height: 9 }} />)
         expect((container.firstChild as HTMLElement).style.aspectRatio.replaceAll(" ", "")).toBe("16/9")
+    })
+
+    it("usa_el_port_Camera_para_camaras", () => {
+        const { container } = render(<MediaLoader path="cam1" type="camera" cameraGroup="g1" />)
+        expect(container.querySelector('[data-isla="Camera"]')).toBeTruthy()
     })
 })

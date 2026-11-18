@@ -2,8 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import type { Styles } from "../../../types/Settings"
 import type { OutBackground, Transition } from "../../../types/Show"
 import { clone } from "../../components/helpers/array"
-import { SvelteIsland } from "../bridge/SvelteIsland"
-import BackgroundMediaSvelte from "../../components/output/layers/BackgroundMedia.svelte"
+import { BackgroundMedia } from "./BackgroundMedia"
 import styles from "./Background.module.css"
 
 export interface BackgroundProps {
@@ -18,7 +17,7 @@ export interface BackgroundProps {
 }
 
 // Port de components/output/layers/Background.svelte (F24.20c).
-// La lógica de doble buffer/transición es delicada; delega el render de cada capa a BackgroundMedia (Svelte migrable) manteniendo el estado aquí.
+// La lógica de doble buffer/transición es delicada; delega el render de cada capa al port React BackgroundMedia manteniendo el estado aquí.
 export function Background({ data, outputId, transition, currentStyle = null, slideFilter = "", ratio = 1, animationStyle = "", mirror = false }: BackgroundProps) {
     const duration = transition.duration ?? 800
     const noTransition = transition.type === "none" || !duration
@@ -146,12 +145,12 @@ export function Background({ data, outputId, transition, currentStyle = null, sl
         <div className={styles.media} style={css(style)}>
             {background1 ? (
                 <div className={`${styles.media} ${!firstActive && (loading || noTransition) ? styles.hidden : ""}`.trim()}>
-                    <SvelteIsland component={BackgroundMediaSvelte} props={{ data: background1Data, fadingOut: firstFadingOut, outputId, transition: transition1, currentStyle, animationStyle: animation1, mirror }} events={{ loaded: () => loaded(true) }} />
+                    <BackgroundMedia data={background1Data} fadingOut={firstFadingOut} outputId={outputId} transition={transition1} currentStyle={currentStyle} animationStyle={animation1} mirror={mirror} onLoaded={() => loaded(true)} />
                 </div>
             ) : null}
             {background2 ? (
                 <div className={`${styles.media} ${firstActive && (loading || noTransition) ? styles.hidden : ""}`.trim()}>
-                    <SvelteIsland component={BackgroundMediaSvelte} props={{ data: background2Data, fadingOut: !firstFadingOut, outputId, transition: transition2, currentStyle, animationStyle: animation2, mirror }} events={{ loaded: () => loaded(false) }} />
+                    <BackgroundMedia data={background2Data} fadingOut={!firstFadingOut} outputId={outputId} transition={transition2} currentStyle={currentStyle} animationStyle={animation2} mirror={mirror} onLoaded={() => loaded(false)} />
                 </div>
             ) : null}
         </div>

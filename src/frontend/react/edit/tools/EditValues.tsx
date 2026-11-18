@@ -8,7 +8,7 @@ import { mediaExtensions } from "../../../values/extensions"
 import { getSortedTimers } from "../../../components/drawer/timers/timers"
 import { clone, keysToID, sortByName } from "../../../components/helpers/array"
 import { getFilters, getStyles } from "../../../components/helpers/style"
-import FormInput from "../../../components/form/FormInput.svelte"
+import { FormInput } from "../../form/FormInput"
 import { getIsoLanguages } from "../../../components/main/popups/localization/translation"
 import { SlideTimeline } from "../../../components/timeline/SlideTimeline"
 import { parseShadowValue } from "../../../components/edit/scripts/edit"
@@ -16,7 +16,6 @@ import { filterItemStyle, mergeWithStyle } from "../../../components/edit/script
 import { getShapeOutsideStyle, parseShapeOutsideValue } from "../../../components/edit/scripts/shapeOutside"
 import type { EditBoxSection, EditInput } from "../../../components/edit/values/boxes"
 import { captionTranslateLanguages } from "../../../components/edit/values/captionLanguages"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
 import { Button } from "../../ui/button/Button"
@@ -446,17 +445,7 @@ export function EditValues({ sections = {}, styles: styleValues = {}, customValu
                                               )
                                           }
 
-                                          return (
-                                              <SvelteIsland
-                                                  key={`${input.id}-${input.key}-${inputIndex}`}
-                                                  component={FormInput as never}
-                                                  props={{ input: { type: input.type, ...values, value }, hasTimelineAction }}
-                                                  events={{
-                                                      change: (event: CustomEvent) => changed(event, input, id),
-                                                      keyframe: (event: CustomEvent) => changed(event, input, id, true)
-                                                  }}
-                                              />
-                                          )
+                                          return <FormInput key={`${input.id}-${input.key}-${inputIndex}`} input={{ type: input.type, ...values, value }} hasTimelineAction={hasTimelineAction} onChange={(newValue) => changed(newValue, input, id)} onKeyframe={(newValue) => changed(newValue, input, id, true)} />
                                       })}
                                   </InputRow>
                               ))

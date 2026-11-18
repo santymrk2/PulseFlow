@@ -21,7 +21,7 @@ vi.mock("../../../components/edit/scripts/edit", () => ({ parseShadowValue: () =
 vi.mock("../../../components/edit/scripts/itemClipboard", () => ({ filterItemStyle: (s: string) => s || "", mergeWithStyle: (v: string) => v }))
 vi.mock("../../../components/edit/scripts/shapeOutside", () => ({ getShapeOutsideStyle: () => "", parseShapeOutsideValue: () => [] }))
 vi.mock("../../../components/edit/values/captionLanguages", () => ({ captionLanguages: [], captionTranslateLanguages: [] }))
-vi.mock("../../bridge/SvelteIsland", () => ({ SvelteIsland: () => <div data-island="form-input" /> }))
+vi.mock("../../form/FormInput", () => ({ FormInput: () => <div data-island="form-input" /> }))
 vi.mock("../../helpers/Icon", () => ({ Icon: () => <span /> }))
 vi.mock("../../ui/button/Button", () => ({
     Button: ({ children, onClick }: { children?: ReactNode; onClick?: () => void }) => (

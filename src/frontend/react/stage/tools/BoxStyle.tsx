@@ -11,13 +11,12 @@ import { getCustomMetadata } from "../../../components/helpers/show"
 import { getStyles } from "../../../components/helpers/style"
 import { updateStageShow } from "../../../components/stage/stage"
 import { slideTextSections } from "../../../components/stage/values/text"
-import EditValues from "../../../components/edit/tools/EditValues.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
+import { EditValues } from "../../edit/tools/EditValues"
 import { useStore } from "../../hooks/useStore"
 
 type StyleInput = Partial<EditInput> & { id: string; value: unknown; name?: string; key?: string; values?: { [key: string]: unknown } }
 
-// `EditValues` sigue en Svelte (F24.21a): se monta como isla y su `dispatch("change", input)` llega como events.change.
+// `EditValues` migrated to React (F24.24 P9c): `dispatch("change", input)` → `onChange(input)`.
 export function BoxStyle() {
     const currentActiveStage = useStore(activeStage)
     const currentStageShows = useStore(stageShows)
@@ -244,5 +243,5 @@ export function BoxStyle() {
         updateStyle(input)
     }
 
-    return <SvelteIsland component={EditValues as never} props={{ sections: stageSections, styles, item, customValues, isStage: true }} events={{ change: (event: CustomEvent<EditInput>) => updateStyle2(event.detail) }} />
+    return <EditValues sections={stageSections} styles={styles} item={item as never} customValues={customValues} isStage={true} onChange={updateStyle2} />
 }

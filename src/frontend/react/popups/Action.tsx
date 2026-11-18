@@ -2,8 +2,6 @@ import { useEffect, useRef, useState, type ReactNode } from "react"
 import { get } from "svelte/store"
 import { uid } from "uid"
 import type { Action as ActionData } from "../../../types/Show"
-import CreateAction from "../../components/actions/CreateAction.svelte"
-import MidiValues from "../../components/actions/MidiValues.svelte"
 import { actionData } from "../../components/actions/actionData"
 import type { API_midi } from "../../components/actions/api"
 import { customActionActivations } from "../../components/actions/customActivation"
@@ -16,7 +14,8 @@ import { _show } from "../../components/helpers/shows"
 import { actionMoreOptionsUsed, actions, activePopup, activeShow, drawerTabsData, groups, overlays, popupData, showsCache, templates, timers } from "../../stores"
 import { translateText } from "../../utils/language"
 import { imageExtensions } from "../../values/extensions"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+import { CreateAction } from "../actions/CreateAction"
+import { MidiValues } from "../actions/MidiValues"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
@@ -33,7 +32,7 @@ import styles from "./Action.module.css"
 // Lee: popupData { id, mode, index, indexes, overlayId, templateId, showId, actionIndex }, actions, overlays, templates, timers, groups, activePopup, actionMoreOptionsUsed.
 // Escribe: popupData.id (si no había), actions[id] (50 ms después de cada cambio), history UPDATE (overlay/plantilla) o SHOW_LAYOUT (slide), actionMoreOptionsUsed,
 // activePopup = null (overlay/plantilla borrados) y, al cerrar el popup por cualquier vía, quita del slide la acción que quedó sin trigger.
-// CreateAction y MidiValues siguen siendo Svelte (islas).
+// CreateAction y MidiValues ya son ports React (F24.24).
 // Desvío: el Svelte mutaba en el lugar el objeto del store (alias); acá se trabaja sobre una copia. updateAction (atajo) escribe en el store Y en la copia.
 type ActionDraft = Omit<ActionData, "midi"> & { midi?: API_midi; customData?: Record<string, Record<string, unknown>> }
 
@@ -72,7 +71,7 @@ export function Action() {
     const mode: string = popupDataValue.mode || ""
 
     const [action, setAction] = useState<ActionDraft>(EMPTY_ACTION)
-    // última copia confirmada: los handlers de las islas Svelte (que se montan una vez) y los temporizadores leen siempre ésta
+    // última copia confirmada: los handlers de los ports y los temporizadores leen siempre ésta
     const actionRef = useRef<ActionDraft>(EMPTY_ACTION)
     const [actionMidi] = useState<API_midi>(() => ({ type: "noteon", values: { note: 0, velocity: get(popupData).mode === "slide" ? 0 : -1, channel: 1 }, defaultValues: true }))
 
@@ -99,7 +98,7 @@ export function Action() {
         setAction(next)
     }
 
-    // Lo que leen los handlers de las islas (se montan una vez) sin quedarse con una versión vieja
+    // Lo que leen los handlers de los ports y los temporizadores sin quedarse con una versión vieja
     const live = useRef({ actionSelector, changeAction, updateValue })
     useEffect(() => {
         live.current = { actionSelector, changeAction, updateValue }
@@ -482,15 +481,15 @@ export function Action() {
     const firstActionId = action.triggers?.[0]
     const activationInputs = customActionActivations.find((a) => a.id === customActivation)?.inputs
 
-    // Los handlers de las islas se toman al montar: leen siempre `live` para no quedarse con el estado viejo
-    const triggerEvents = (actionId: string) => ({
-        change: (event: CustomEvent) => live.current.changeAction(event.detail, Math.max(actionRef.current.triggers?.indexOf(actionId) ?? -1, -1)),
-        choose: () => setActionSelector({ id: actionId, index: actionRef.current.triggers?.indexOf(actionId) })
+    // Los handlers de los ports leen siempre `live` para no quedarse con el estado viejo
+    const triggerProps = (actionId: string) => ({
+        onChange: (data: unknown) => live.current.changeAction(data as ActionChange, Math.max(actionRef.current.triggers?.indexOf(actionId) ?? -1, -1)),
+        onChoose: () => setActionSelector({ id: actionId, index: actionRef.current.triggers?.indexOf(actionId) })
     })
 
     let content: ReactNode
     if (mode === "slide" || mode === "template" || mode === "overlay") {
-        content = <SvelteIsland key="list" component={CreateAction} props={{ mainId: id, actionId: action.triggers?.[0] || "", existingActions: action.triggers || [], actionValue: action.actionValues?.[action.triggers?.[0] || ""] || {}, customData: action.customData?.[action.triggers?.[0] || ""] || {}, mode, list: true }} events={{ change: (event) => live.current.changeAction(event.detail) }} />
+        content = <CreateAction key="list" mainId={id} actionId={action.triggers?.[0] || ""} existingActions={action.triggers || []} actionValue={action.actionValues?.[action.triggers?.[0] || ""] || {}} customData={action.customData?.[action.triggers?.[0] || ""] || {}} mode={mode} list onChange={(data) => live.current.changeAction(data as ActionChange)} />
     } else {
         const busy = !!actionSelector || actionActivationSelector
 
@@ -526,15 +525,18 @@ export function Action() {
                     <>
                         <Button className="popup-back" icon="back" iconSize={1.3} title="actions.back" onClick={() => setActionSelector(null)} />
 
-                        <SvelteIsland
+                        <CreateAction
                             key="selector"
-                            component={CreateAction}
-                            props={{ mainId: id, actionId: actionSelector.id, existingActions: action.triggers, actionValue: action.actionValues?.[actionSelector.id] || {}, mode, list: true, full: true }}
-                            events={{
-                                change: (event) => {
-                                    live.current.changeAction(event.detail, live.current.actionSelector?.index)
-                                    setActionSelector(null)
-                                }
+                            mainId={id}
+                            actionId={actionSelector.id}
+                            existingActions={action.triggers}
+                            actionValue={action.actionValues?.[actionSelector.id] || {}}
+                            mode={mode}
+                            list
+                            full
+                            onChange={(data) => {
+                                live.current.changeAction(data as ActionChange, live.current.actionSelector?.index)
+                                setActionSelector(null)
                             }}
                         />
                     </>
@@ -574,7 +576,7 @@ export function Action() {
                                     {["timer_end", "timer_start", "group_start"].includes(customActivation) ? (
                                         <SelectField label={specificActivations[customActivation]?.name} options={getSpecificActivation(customActivation)} value={specificActivation} onChange={(value) => updateValue("specificActivation", `${customActivation}__${value}`)} />
                                     ) : customActivation === "midi_signal_received" ? (
-                                        <SvelteIsland key="midi-simple" component={MidiValues} props={{ value: midiValue, firstActionId, simple: true }} events={{ change: (event) => live.current.updateValue("midi", event.detail) }} />
+                                        <MidiValues key="midi-simple" value={midiValue} firstActionId={firstActionId} simple onChange={(value) => live.current.updateValue("midi", value)} />
                                     ) : null}
                                 </div>
                             }
@@ -606,10 +608,10 @@ export function Action() {
                         {/* multiple actions */}
                         <div>
                             {(action.triggers ?? []).map((actionId, i) => (
-                                <SvelteIsland key={`trigger-${actionId}`} component={CreateAction} props={{ mainId: id, actionId, existingActions: action.triggers, actionValue: action.actionValues?.[actionId], actionNameIndex: i + 1, mode, choosePopup: true }} events={triggerEvents(actionId)} />
+                                <CreateAction key={`trigger-${actionId}`} mainId={id} actionId={actionId} existingActions={action.triggers} actionValue={action.actionValues?.[actionId]} actionNameIndex={i + 1} mode={mode} choosePopup {...triggerProps(actionId)} />
                             ))}
                             {!action.triggers?.length || addTrigger ? (
-                                <SvelteIsland key="new-trigger" component={CreateAction} props={{ actionId: "", existingActions: action.triggers || [], mode, choosePopup: true }} events={{ change: (event) => live.current.changeAction(event.detail), choose: () => setActionSelector({ id: "" }) }} />
+                                <CreateAction key="new-trigger" actionId="" existingActions={action.triggers || []} mode={mode} choosePopup onChange={(data) => live.current.changeAction(data as ActionChange)} onChoose={() => setActionSelector({ id: "" })} />
                             ) : (
                                 <Button
                                     variant="outline"
@@ -633,7 +635,7 @@ export function Action() {
                             <T id="midi.midi" />
                         </h3>
 
-                        <SvelteIsland key="midi" component={MidiValues} props={{ value: midiValue, firstActionId }} events={{ change: (event) => live.current.updateValue("midi", event.detail) }} />
+                        <MidiValues key="midi" value={midiValue} firstActionId={firstActionId} onChange={(value) => live.current.updateValue("midi", value)} />
                     </>
                 ) : null}
             </>

@@ -4,7 +4,6 @@ import { uid } from "uid"
 import { Main } from "../../../types/IPC/Main"
 import type { Emitter, EmitterTemplate, EmitterTemplateValue } from "../../../types/Show"
 import { emitterData, formatData } from "../../components/actions/emitters"
-import MidiValues from "../../components/actions/MidiValues.svelte"
 import { getDynamicValue } from "../../components/edit/scripts/itemHelpers"
 import FormInputs from "../../components/form/FormInputs.svelte"
 import { getValues } from "../../components/form/inputs"
@@ -12,6 +11,7 @@ import { clone, keysToID, sortByName } from "../../components/helpers/array"
 import { Tip } from "../main/Tip"
 import { requestMain } from "../../IPC/main"
 import { activePopup, emitters, popupData } from "../../stores"
+import { MidiValues } from "../actions/MidiValues"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useFreshStore } from "../hooks/useFreshStore"
 import { Button } from "../ui/button/Button"
@@ -24,7 +24,7 @@ import styles from "./Emitters.module.css"
 // Port de components/main/popups/Emitters.svelte. Lee `emitters` (y popupData al montar: id / name / actionData para crear desde el desplegable de acciones).
 // Escribe `emitters` (crear, borrar, nombre, descripción, tipo, señal, plantillas y sus valores: se muta en el lugar y se re-emite, como el Svelte) y, con la flecha
 // de "volver" de acción, popupData = actionData y activePopup = "action". IPC: Main.GET_MIDI_OUTPUTS (sin payload) para llenar las salidas MIDI.
-// Islas Svelte (temporales): FormInputs, MidiValues. Sus eventos se toman al montar, así que van por `live` (siempre el último render).
+// Isla Svelte (temporal): FormInputs, con eventos que se toman al montar y van por `live` (siempre el último render). MidiValues ya es port React (F24.24).
 // Desvío: el Svelte volvía a pedir GET_MIDI_OUTPUTS con cada emisión del store; acá sólo al entrar a un emisor MIDI o cambiar de tipo (el resultado es el mismo).
 // alias de tipo (no interface): DynamicList pide ítems con firma de índice
 type TemplateInput = { id: string; name: string; value: EmitterTemplateValue["value"] }
@@ -223,7 +223,7 @@ export function Emitters() {
                 <HRule title="emitters.inputs" />
 
                 {emitter.type === "midi" ? (
-                    <SvelteIsland component={MidiValues} props={{ value: { ...emitter.signal, values: typeof templateInputs[0]?.value === "object" ? templateInputs[0].value : {} }, type: "emitter" }} events={{ change: (event) => live.current.updateMidiTemplateValue(event.detail) }} />
+                    <MidiValues value={{ ...emitter.signal, values: typeof templateInputs[0]?.value === "object" ? templateInputs[0].value : {} }} type="emitter" onChange={(value) => live.current.updateMidiTemplateValue(value)} />
                 ) : (
                     <DynamicList addDisabled={!!templateInputs.find((a) => !a.name && !a.value)} items={templateInputs} onAdd={createTemplateValue} onDelete={removeTemplateValue} allowOpen={false}>
                         {(input) => (

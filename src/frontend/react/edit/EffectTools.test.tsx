@@ -13,6 +13,9 @@ vi.mock("../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.p
 vi.mock("../bridge/SvelteIsland", () => ({
     SvelteIsland: () => <div data-testid="island" />
 }))
+vi.mock("./tools/EditValues", () => ({
+    EditValues: () => <div data-testid="edit-values" />
+}))
 
 afterEach(() => {
     cleanup()

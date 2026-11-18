@@ -76,11 +76,10 @@ vi.mock("../../../components/helpers/style", () => ({
 }))
 vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../components/stage/stage", () => ({ updateStageShow: vi.fn() }))
-vi.mock("../../../components/edit/tools/EditValues.svelte", () => ({ default: () => null }))
-vi.mock("../../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ props, events }: { props: EditValuesProps; events: { change: (event: ChangeEvent) => void } }) => {
+vi.mock("../../edit/tools/EditValues", () => ({
+    EditValues: (props: EditValuesProps & { onChange: (input: unknown) => void }) => {
         islandProps = props
-        onChange = events.change
+        onChange = (event: ChangeEvent) => props.onChange(event.detail)
         return null
     }
 }))

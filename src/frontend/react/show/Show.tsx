@@ -3,9 +3,9 @@ import { activeProject, activeShow, autoOpenedTimeline, outLocked, projects, res
 import { DEFAULT_WIDTH } from "../../utils/common"
 import { createGlobalTimerFromLocalTimer } from "../../components/drawer/timers/timers"
 import { setOutput } from "../../components/helpers/output"
-import CameraSvelte from "../../components/output/Camera.svelte"
 import NdiStreamSvelte from "../../components/drawer/live/NDIStream.svelte"
 import { Splash } from "../main/Splash"
+import { Camera } from "../output/Camera"
 import { Layouts } from "../slide/Layouts"
 import { Timeline } from "../timeline/Timeline"
 import { Resizeable } from "../system/Resizeable"
@@ -104,7 +104,7 @@ export function Show() {
                                     if (!currentOutLocked) setOutput("background", { id: show.id, type: show.type })
                                 }}
                             >
-                                <SvelteIsland component={CameraSvelte} props={{ id: show.id, groupId: show.data?.groupId, class: "media", preview: true }} />
+                                <Camera id={show.id} groupId={show.data?.groupId || ""} className="media" preview />
                             </HoverPlay>
                         ) : show.type === "screen" ? (
                             <HoverPlay

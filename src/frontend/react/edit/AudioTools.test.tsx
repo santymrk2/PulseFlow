@@ -5,8 +5,8 @@ import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { activeEdit, activeShow, media } from "../../stores"
 import { AudioTools } from "./AudioTools"
 
-vi.mock("../bridge/SvelteIsland", () => ({
-    SvelteIsland: () => <div data-testid="edit-values" />
+vi.mock("./tools/EditValues", () => ({
+    EditValues: () => <div data-testid="edit-values" />
 }))
 
 vi.mock("../../audio/audioPlayer", () => ({
@@ -19,6 +19,7 @@ vi.mock("../../audio/audioPlayer", () => ({
 }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../utils/language", () => ({ translateText: (id: string) => id }))
 
 afterEach(() => {
     cleanup()

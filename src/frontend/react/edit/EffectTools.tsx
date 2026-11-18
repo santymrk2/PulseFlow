@@ -2,7 +2,7 @@ import { useEffect, useState, type MouseEvent } from "react"
 import type { EffectItem } from "../../../types/Effects"
 import type { TabsObj } from "../../../types/Tabs"
 import Tabs from "../../components/main/Tabs.svelte"
-import EditValues from "../../components/edit/tools/EditValues.svelte"
+import { EditValues } from "./tools/EditValues"
 import { effectSections } from "../../components/edit/values/effects"
 import { clone } from "../../components/helpers/array"
 import { addToPos } from "../../components/helpers/mover"
@@ -94,7 +94,7 @@ export function EffectTools() {
 
                             return (
                                 <div key={`${index}-${moved}`} className={`item-row context #effect_item ${stylesModule.itemRow}`} id={String(index)} data-index={index} onMouseEnter={() => hoveredEffectItem.set(item.hidden ? null : index)} onMouseLeave={() => hoveredEffectItem.set(null)}>
-                                    <InputRow arrow={!!editContent} open={open} onOpenChange={(value) => setOpenedMenus((current) => ({ ...current, [String(index)]: value }))} menu={editContent ? <SvelteIsland component={EditValues} props={{ sections: editContent, item }} events={{ change: (event) => valueChanged((event as CustomEvent).detail, index) }} /> : null}>
+                                    <InputRow arrow={!!editContent} open={open} onOpenChange={(value) => setOpenedMenus((current) => ({ ...current, [String(index)]: value }))} menu={editContent ? <EditValues sections={editContent as never} item={item as never} onChange={(input) => valueChanged(input, index)} /> : null}>
                                         <div className={stylesModule.title} style={item.hidden ? { opacity: 0.5 } : undefined}>
                                             <p style={{ width: "100%" }}>
                                                 <T id={`effect.${(item.type as string) === "shape" ? (item as unknown as { shape?: string }).shape || (item.type as string) : (item.type as string)}`} />
