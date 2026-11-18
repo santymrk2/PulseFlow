@@ -39,7 +39,7 @@ interface StageItem {
     style?: string
 }
 
-interface HighlightedLine {
+export interface HighlightedLine {
     from: number
     to: number
     color: string
