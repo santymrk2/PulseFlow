@@ -1,9 +1,6 @@
 import { useRef, useState, type ButtonHTMLAttributes, type KeyboardEvent, type MouseEvent, type ReactNode } from "react"
 import { cn } from "../../../lib/utils"
-import { dictionary } from "../../../stores"
-import { translateText } from "../../../utils/language"
 import { Icon } from "../../helpers/Icon"
-import { useStore } from "../../hooks/useStore"
 import styles from "./Button.module.css"
 
 // Port de ui/button/button.svelte (F14.8a). Contrato de eventos (docs/design/kit.md): onClick y onDblClick reciben
@@ -61,7 +58,6 @@ export interface ButtonProps extends Omit<ButtonHTMLAttributes<HTMLButtonElement
 }
 
 export function Button({ variant = "ghost", size = "sm", title = "", info = "", icon = "", iconSize = 1, children, white = !children, isActive = false, showOutline = false, tab = false, red = false, redHover = false, bold = false, align = "center", disabled = false, className, style, onNativeClick, onClick, onDblClick, ...rest }: ButtonProps) {
-    const dict = useStore(dictionary)
     const button = useRef<HTMLButtonElement>(null)
     // El aro de foco es sólo para teclado: al volver de un diálogo nativo el foco queda con :focus-visible
     const [pointerFocus, setPointerFocus] = useState(false)
@@ -98,7 +94,8 @@ export function Button({ variant = "ghost", size = "sm", title = "", info = "", 
         <button
             {...rest}
             ref={button}
-            data-title={title ? translateText(title, dict) : undefined}
+            title={title || undefined}
+            data-title={title || undefined}
             className={cn(styles.btn, styles[variant === "outline" ? "outlined" : variant], styles[size], className, pointerFocus && styles.pointerFocus, isActive && styles.isActive, isActive && "isActive", showOutline && styles.showOutline, white && styles.white, tab && styles.tab, red && styles.red, redHover && styles.redHover, bold && styles.bold, align === "start" && styles.start, !children && icon && styles.iconOnly)}
             tabIndex={disabled ? -1 : 0}
             aria-disabled={disabled}

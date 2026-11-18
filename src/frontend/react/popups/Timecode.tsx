@@ -7,7 +7,7 @@ import { AudioPlayer } from "../../audio/audioPlayer"
 import { requestMain } from "../../IPC/main"
 import { timecode } from "../../stores"
 import { useStore } from "../hooks/useStore"
-import { InputRow } from "../ui/input-row/InputRow"
+import inputRowStyles from "../ui/input-row/InputRow.module.css"
 import { NumberField } from "../ui/number-field/NumberField"
 import { SelectField } from "../ui/select-field/SelectField"
 
@@ -32,10 +32,10 @@ const framerates = frameratesList.map((a) => ({ label: a.toString(), value: a.to
 
 export function Timecode() {
     const timecodeValue = useStore(timecode)
-    const type = timecodeValue.type || "send"
-    const mode = timecodeValue.mode || "LTC"
-    const framerate = timecodeValue.framerate || 25
-    const offset = timecodeValue.offset || 0
+    const type = timecodeValue.type ?? "send"
+    const mode = timecodeValue.mode ?? "LTC"
+    const framerate = timecodeValue.framerate ?? 25
+    const offset = timecodeValue.offset ?? 0
 
     const [audioOutputs, setAudioOutputs] = useState<Option[]>([])
     const [audioInputs, setAudioInputs] = useState<Option[]>([])
@@ -74,13 +74,13 @@ export function Timecode() {
 
     return (
         <>
-            <InputRow>
+            <div className={inputRowStyles.row}>
                 <SelectField label="sort.type" options={types} value={type} onChange={(value) => updateValue("type", value)} />
 
                 {type === "send" || mode === "LTC" ? <SelectField label="settings.frame_rate" options={framerates} value={framerate.toString()} defaultValue="25" onChange={(value) => updateValue("framerate", Number(value))} /> : null}
-            </InputRow>
+            </div>
 
-            <InputRow style={{ marginTop: 10 }}>
+            <div className={inputRowStyles.row} style={{ marginTop: 10 }}>
                 <SelectField label="actions.mode" options={modes} value={mode} onChange={(value) => updateValue("mode", value)} />
 
                 {mode === "LTC" ? (
@@ -96,7 +96,7 @@ export function Timecode() {
                         <SelectField label="midi.input" value={timecodeValue.midiInput || ""} options={midiInputs} onChange={(value) => updateValue("midiInput", value)} allowEmpty />
                     )
                 ) : null}
-            </InputRow>
+            </div>
 
             <NumberField label="edit.offset (ms)" value={offset} min={-60000} max={60000} step={100} defaultValue={0} onChange={(value) => updateValue("offset", value)} />
         </>

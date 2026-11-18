@@ -71,7 +71,7 @@ export function SelectShow() {
                         <VirtualList
                             items={searchedShows}
                             render={(show) => (
-                                <Button showOutline={active === show.id} style={{ width: "100%", fontWeight: "normal", justifyContent: "start", padding: "4px 12px" }} onClick={() => selectShow(show)}>
+                                <Button isActive={active === show.id} style={{ width: "100%", fontWeight: "normal", justifyContent: "start", padding: "4px 12px" }} onClick={() => selectShow(show)}>
                                     {show.private ? <Icon id="locked" right /> : null}
                                     {show.name}
                                 </Button>

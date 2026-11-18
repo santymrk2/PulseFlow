@@ -21,7 +21,7 @@ export function Shortcuts() {
         "main.search": `${ctrl} + f`,
         "actions.find_replace": `${ctrl} + f`, // only in editor
         "main.quick_search": `${ctrl} + g`, // also F8
-        "popup.history": `${ctrl} + h`,
+        "popup.history": `${ctrl} + ?`,
         "edit._title_italic": `${ctrl} + i`,
         "actions.import": `${ctrl} + i`,
         // "": `${ctrl} + j`,

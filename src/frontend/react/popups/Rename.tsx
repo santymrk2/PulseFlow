@@ -260,7 +260,8 @@ export function Rename() {
             {snapshot.list.length > 1 ? (
                 <>
                     <p>
-                        <T id="popup.change_name" />:
+                        <T id="popup.change_name" />
+                        <span>:</span>
                     </p>
                     <ul style={{ listStylePosition: "inside", marginBottom: "20px" }}>
                         {snapshot.list.map((text, i) => (

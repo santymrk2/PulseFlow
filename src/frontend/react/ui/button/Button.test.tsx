@@ -24,10 +24,12 @@ describe("Button", () => {
         expect(screen.getByRole("button", { name: "Guardar" })).toBeTruthy()
     })
 
-    it("traduce_el_title_en_data_title", () => {
+    it("expone_el_title_en_atributos_nativos_y_data", () => {
         restaurar = setStoresForTest([storeEntry(dictionary, { new: { slide: "Nueva diapositiva" } })])
         render(<Button title="new.slide" />)
-        expect(screen.getByRole("button").getAttribute("data-title")).toBe("Nueva diapositiva")
+        const btn = screen.getByRole("button")
+        expect(btn.getAttribute("title")).toBe("new.slide")
+        expect(btn.getAttribute("data-title")).toBe("new.slide")
     })
 
     it("click_llama_a_onClick_con_el_detail_y_el_evento", () => {

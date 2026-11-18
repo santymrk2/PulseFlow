@@ -103,6 +103,8 @@ export function NextTimer() {
 
             history({ id: "SHOW_LAYOUT", newData: { key: "end", data: !!nextValue, indexes: [indexes[indexes.length - 1]] }, location: { page: "show", override: "change_slide_action_loop" } })
             activePopup.set(null)
+        } else {
+            activePopup.set(null)
         }
     }
 

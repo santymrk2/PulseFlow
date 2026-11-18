@@ -25,7 +25,7 @@ export function UpdateManager() {
     const [latestVersion, setLatestVersion] = useState("")
     const [changelog, setChangelog] = useState("")
     const [hasUpdate, setHasUpdate] = useState(false)
-    const [updatesOpen, setUpdatesOpen] = useState(false)
+    const [updatesOpen, setUpdatesOpen] = useState(true)
 
     function updateSpecial(value: boolean, key: string) {
         special.update((a) => {
@@ -80,7 +80,7 @@ export function UpdateManager() {
     return (
         <>
             <div className={styles.settings}>
-                <InputRow arrow={!!alertUpdatesValue} open={updatesOpen} onOpenChange={setUpdatesOpen} menu={<ToggleField label="settings.alert_updates_beta" disabled={isBeta} checked={isBeta ? !!alertUpdatesValue : !!specialValue.betaVersionAlert} defaultValue={false} onChange={(value) => updateSpecial(value, "betaVersionAlert")} />}>
+                <InputRow arrow={true} open={updatesOpen} onOpenChange={setUpdatesOpen} menu={<ToggleField label="settings.alert_updates_beta" disabled={isBeta} checked={isBeta ? !!alertUpdatesValue : !!specialValue.betaVersionAlert} defaultValue={false} onChange={(value) => updateSpecial(value, "betaVersionAlert")} />}>
                     <ToggleField style={{ flex: 1 }} label="settings.alert_updates" checked={!!alertUpdatesValue} defaultValue={true} onChange={(value) => alertUpdates.set(value)} />
                 </InputRow>
 

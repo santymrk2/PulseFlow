@@ -62,18 +62,25 @@ export function SetTime() {
         })
 
         if (indexes.some((i) => !items[i])) return
-        const actions = indexes.map((i) => items[i].actions)
 
         const edit = get(activeEdit)
         if (type === "overlay" || type === "template") {
+            const actions = indexes.map((i) => items[i].actions)
             history({
                 id: "UPDATE",
                 oldData: { id: edit.id },
                 newData: { key: "items", subkey: "actions", data: actions, indexes },
                 location: { page: "edit", id: `${edit.type}_items`, override: `itemaction_${indexes.join(",")}` }
             })
-
             return
+        }
+
+        // show
+        let actions: any[]
+        if (value) {
+            actions = items.map((it) => it.actions)
+        } else {
+            actions = indexes.map((i) => items[i].actions)
         }
 
         history({

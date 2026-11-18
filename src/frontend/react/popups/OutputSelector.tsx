@@ -7,7 +7,6 @@ import { clone, keysToID } from "../../components/helpers/array"
 import PreviewOutput from "../../components/output/preview/PreviewOutput.svelte"
 import { openSettings } from "../../components/settings/openSettings"
 import { activePopup, currentOutputSettings, outputs } from "../../stores"
-import { translateText } from "../../utils/language"
 import { send } from "../../utils/request"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
@@ -96,7 +95,7 @@ export function OutputSelector() {
                             <div key={currentScreen.id} style={{ zIndex: currentScreen.enabled ? 1 : 0, opacity: currentScreen.enabled ? 1 : 0.8, position: "absolute", width: `${currentScreen.bounds?.width}px`, height: `${currentScreen.bounds?.height}px`, insetInlineStart: `${(currentScreen.bounds?.x ?? 0) - (minPosX || 0)}px`, top: `${(currentScreen.bounds?.y ?? 0) - (minPosY || 0)}px` }}>
                                 {!currentScreen.enabled ? <span style={{ zIndex: 2, position: "absolute", top: "50%", left: "50%", transform: "translate(-50%, -50%)", fontSize: "0.5em", pointerEvents: "none" }}>{currentScreen.name}</span> : null}
 
-                                <div data-title={translateText(`main.open: <b>${currentScreen.name}</b>`)} className={styles.screen} style={{ width: "100%", height: "100%", ...(currentScreen.screen && screens.find((a) => a.id.toString() === currentScreen.screen) ? { opacity: 1 } : {}) }} onClick={() => openOutput(currentScreen.id)} role="button" tabIndex={0} onKeyDown={triggerClickOnEnterSpace}>
+                                <div data-title={`main.open: <b>${currentScreen.name}</b>`} className={styles.screen} style={{ width: "100%", height: "100%", ...(currentScreen.screen && screens.find((a) => a.id.toString() === currentScreen.screen) ? { opacity: 1 } : {}) }} onClick={() => openOutput(currentScreen.id)} role="button" tabIndex={0} onKeyDown={triggerClickOnEnterSpace}>
                                     {currentScreen.enabled ? <SvelteIsland component={PreviewOutput} props={{ outputId: currentScreen.id, disableTransitions: true }} /> : null}
                                 </div>
                             </div>

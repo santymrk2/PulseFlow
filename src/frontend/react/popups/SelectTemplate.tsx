@@ -72,7 +72,11 @@ export function SelectTemplate() {
     const value = override.active ? override.value : derivedValue
 
     const hideIds = (popupDataValue.hideIds || []) as string[]
-    const sortedTemplates = sortByName(keysToID(templatesValue).filter((a) => !hideIds.includes(a.id) && a?.settings?.mode !== "text")) as TemplateItem[]
+    const sortedTemplates = sortByName(
+        keysToID(templatesValue)
+            .map((a) => ({ ...a, __rawId: (templatesValue as Record<string, any>)[a.id]?.id ?? a.id }))
+            .filter((a) => !hideIds.includes(a.id) && a?.settings?.mode !== "text")
+    ) as TemplateItem[]
     const defaultTemplates = clone(sortedTemplates)
     const [searchValue, setSearchValue] = useState("")
     const [searchedTemplates, setSearchedTemplates] = useState<TemplateItem[]>(() => clone(defaultTemplates))
@@ -103,7 +107,10 @@ export function SelectTemplate() {
         const keepId = "scripture" + countId
         const keepIdLT = "scriptureLT" + countId
         const toRemove = SCRIPTURE_IDS.filter((a) => a !== keepId && a !== keepIdLT)
-        return list.filter((a) => !toRemove.includes(a.id))
+        return list.filter((a) => {
+            const rawId = (a as TemplateItem & { __rawId?: string }).__rawId ?? a.id
+            return !toRemove.includes(rawId)
+        })
     }
 
     function search(valueToSearch: string | null = null) {
@@ -144,18 +151,19 @@ export function SelectTemplate() {
         const previousValue = value
         setOverride({ active: true, value: templateId })
 
-        setTimeout(() => {
-            const data = get(popupData)
-            if (data.trigger) {
-                if (selectedType) data.trigger({ value: templateId, type: selectedType })
-                else data.trigger(templateId)
-            }
+        const data = get(popupData)
+        if (data.trigger) {
+            if (selectedType) data.trigger({ value: templateId, type: selectedType })
+            else data.trigger(templateId)
+        }
 
-            if (data.doubleClick && !keyboard && previousValue !== templateId) return
+        setTimeout(() => {
+            const dataNow = get(popupData)
+            if (dataNow.doubleClick && !keyboard && previousValue !== templateId) return
 
             if (!revert) setTimeout(() => popupData.set({}), 500) // revert después de cerrar
             activePopup.set((revert || null) as Popups | null)
-        })
+        }, 0)
     }
 
     // `$: if (searchValue !== undefined || selectedType) { loaded = false; lazyLoader = 0 }`

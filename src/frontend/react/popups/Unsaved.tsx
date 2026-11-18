@@ -61,7 +61,7 @@ export function Unsaved() {
             </Button>
             {savedValue ? (
                 <Button variant="default" style={{ marginTop: "8px", width: "100%" }} onClick={saveAndQuit}>
-                    <T id="main.quit" />
+                    <T id="popup.save_quit" />
                     <span>Y</span>
                 </Button>
             ) : (
