@@ -1,5 +1,4 @@
 import { useEffect, useRef, type ReactNode } from "react"
-import Audio from "../../components/drawer/audio/Audio.svelte"
 import Scripture from "../../components/drawer/bible/Scripture.svelte"
 import Calendar from "../../components/drawer/calendar/Calendar.svelte"
 import Actions from "../../components/drawer/pages/Actions.svelte"
@@ -12,6 +11,7 @@ import Timers from "../../components/drawer/timers/Timers.svelte"
 import { drawerTabsData } from "../../stores"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
+import { Audio } from "./audio/Audio"
 import { Media } from "./media/Media"
 import styles from "./Content.module.css"
 
@@ -43,7 +43,7 @@ export function Content({ id }: ContentProps) {
     function renderPage(): ReactNode {
         if (id === "shows") return <SvelteIsland component={Shows} props={{ active }} />
         if (id === "media") return <Media active={active} streams={streams.current} />
-        if (id === "audio") return <SvelteIsland component={Audio} props={{ active }} />
+        if (id === "audio") return <Audio active={active} />
         if (id === "scripture") return <SvelteIsland component={Scripture} props={{ active }} />
         if (id === "calendar") return <SvelteIsland component={Calendar} props={{ active }} />
         if (id === "functions" && active && active in FUNCTION_COMPONENTS) {

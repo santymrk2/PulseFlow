@@ -11,12 +11,24 @@ interface MediaPropsMock {
     streams: MediaStream[]
 }
 
-const { mediaProps } = vi.hoisted(() => ({ mediaProps: { current: null as MediaPropsMock | null } }))
+interface AudioPropsMock {
+    active: string | null
+}
+
+const { mediaProps, audioProps } = vi.hoisted(() => ({
+    mediaProps: { current: null as MediaPropsMock | null },
+    audioProps: { current: null as AudioPropsMock | null }
+}))
 
 vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
-vi.mock("../../components/drawer/audio/Audio.svelte", () => ({ default: { isla: "Audio" } }))
 vi.mock("../../components/drawer/bible/Scripture.svelte", () => ({ default: { isla: "Scripture" } }))
 vi.mock("../../components/drawer/calendar/Calendar.svelte", () => ({ default: { isla: "Calendar" } }))
+vi.mock("./audio/Audio", () => ({
+    Audio: ({ active }: AudioPropsMock) => {
+        audioProps.current = { active }
+        return <div data-testid="audio-react" />
+    }
+}))
 vi.mock("./media/Media", () => ({
     Media: ({ active, streams }: MediaPropsMock) => {
         mediaProps.current = { active, streams }
@@ -36,6 +48,7 @@ function montar(id: string, active: string | null = null, extra: StoreEntry[] = 
     restaurar()
     clearIslands() // el registro del mock es state compartido entre renders
     mediaProps.current = null
+    audioProps.current = null
     restaurar = setStoresForTest([storeEntry(drawerTabsData, { [id]: { enabled: true, activeSubTab: active } } as never), ...extra])
     return render(<Content id={id} />)
 }
@@ -50,7 +63,7 @@ const isla = () => document.querySelector("[data-isla]")?.getAttribute("data-isl
 
 describe("Content", () => {
     it("cada pestaña principal monta su isla con el sub-tab activo", () => {
-        const casos: Record<string, string> = { shows: "Shows", audio: "Audio", scripture: "Scripture", calendar: "Calendar" }
+        const casos: Record<string, string> = { shows: "Shows", scripture: "Scripture", calendar: "Calendar" }
         for (const [id, nombre] of Object.entries(casos)) {
             montar(id, "all")
             expect(isla()).toBe(nombre)
@@ -63,6 +76,12 @@ describe("Content", () => {
         montar("media", "all")
         expect(document.querySelector("[data-testid='media-react']")).not.toBeNull()
         expect(mediaProps.current?.active).toBe("all")
+    })
+
+    it("audio monta el componente React con el sub-tab activo", () => {
+        montar("audio", "all")
+        expect(document.querySelector("[data-testid='audio-react']")).not.toBeNull()
+        expect(audioProps.current?.active).toBe("all")
     })
 
     it("media recibe el array de streams estable", () => {

@@ -1,0 +1,77 @@
+/* Portado de Audio.svelte. `:global(...)` se conserva. */
+.tabs {
+    display: flex;
+    position: relative;
+    background-color: var(--primary-darkest);
+    align-items: center;
+}
+
+.tabs :global(button) {
+    border-radius: 0;
+    border: none !important;
+    border-bottom: 1px solid var(--primary-lighter) !important;
+    padding: 8px;
+}
+.tabs :global(button.isActive) {
+    border-bottom: 1px solid var(--secondary) !important;
+}
+
+.scroll {
+    padding-bottom: 60px;
+}
+.scroll.full {
+    padding-bottom: 0;
+}
+
+.grid {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    place-content: flex-start;
+}
+
+.grid :global(button) {
+    padding: 6px 15px;
+    justify-content: space-between;
+}
+.grid :global(.selectElem:not(.isSelected):nth-child(even)) {
+    background-color: rgb(0 0 20 / 0.08);
+}
+
+.settings {
+    margin: 15px;
+    padding: 10px;
+
+    border: 1px solid var(--primary-lighter);
+
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.effects {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+
+    width: 100%;
+    min-height: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+}
+.effects :global(.selectElem button) {
+    background-color: var(--primary-darkest);
+}
+
+.time {
+    display: flex;
+    align-items: center;
+
+    font-size: 0.9em;
+    padding: 0 10px;
+    opacity: 0.8;
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,152 @@
+/* Portado de AudioMeter.svelte. `:global(.active)` se conserva: el código alterna esa clase vía DOM. */
+.background {
+    background-color: var(--primary-darkest);
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.background.preview {
+    background-color: transparent !important;
+    border-radius: 0;
+    padding: 0;
+    cursor: pointer;
+    width: 4px;
+    height: 100%;
+}
+.background.vertical {
+    height: 100%;
+}
+
+.main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+
+    position: relative;
+}
+
+.main.vertical {
+    height: 100%;
+    flex-direction: row;
+}
+
+.lines {
+    position: relative;
+    opacity: 0.8;
+}
+
+.line {
+    position: absolute;
+    width: 1px;
+    background-color: var(--text);
+    transform: translateX(-50%);
+}
+.line.major {
+    height: 7px;
+    width: 1.5px;
+    opacity: 0.8;
+}
+.line.sub {
+    height: 4px;
+    opacity: 0.4;
+}
+.line.micro {
+    height: 2px;
+    opacity: 0.2;
+}
+
+.lines p {
+    display: flex;
+    align-items: center;
+    flex: 2;
+
+    font-size: 0.7em;
+}
+
+.absolute {
+    position: absolute;
+    top: 0;
+    inset-inline-start: 5px;
+    transform: translate(-50%, 50%);
+}
+
+.highest {
+    position: absolute;
+    height: inherit;
+    width: 2px;
+
+    background-color: white !important;
+    opacity: 0.2;
+}
+
+.highest.vertical {
+    height: 2px;
+    width: 100%;
+}
+
+.lines-container {
+    position: relative;
+    margin-left: 5px;
+    width: calc(100% - 5px);
+}
+
+.lines p.end {
+    transform: translate(-4px, 50%);
+}
+
+.channel-row {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    width: 100%;
+}
+
+.channel-row.vertical {
+    height: 100%;
+    width: 100%;
+    gap: 0;
+    flex: 1;
+    flex-direction: column;
+}
+
+.signal-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 2px;
+    background-color: rgb(0, 200, 200);
+    opacity: 0.1;
+    flex-shrink: 0;
+}
+
+.signal-dot.vertical {
+    width: 100%;
+    height: 2px;
+}
+
+.signal-dot:global(.active) {
+    opacity: 1;
+}
+
+.meter {
+    background-image: linear-gradient(90deg, rgb(0, 200, 200) 0%, rgb(0, 255, 50) 55%, rgb(255, 200, 0) 84%, rgb(200, 0, 0) 100%);
+    height: 50%;
+
+    position: relative;
+    border-radius: 1px;
+    flex: 1;
+}
+
+.meter.vertical {
+    background-image: linear-gradient(0deg, rgb(0, 200, 200) 0%, rgb(0, 255, 50) 55%, rgb(255, 200, 0) 84%, rgb(200, 0, 0) 100%);
+    height: 100%;
+    width: 100%;
+    border-radius: 0;
+}
+
+.meter.isMuted {
+    filter: grayscale(1) brightness(0.7);
+}
+
+.meter div {
+    background-color: var(--primary-darker);
+}

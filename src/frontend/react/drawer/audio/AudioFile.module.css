@@ -1,0 +1,6 @@
+/* Portado de AudioFile.svelte. */
+.row {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
