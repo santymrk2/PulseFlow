@@ -239,7 +239,7 @@ export function Media() {
                                 const found = loadedMedia[background.path] || {}
                                 return (
                                     <SelectElem key={background.id} id="media" data={{ ...background, path: found.path || background.path } as never} draggable>
-                                        <div className={`media_item item context #show_media ${findMatchingOut(found.path || "", currentOutputs) ? styles.active : ""}`}>
+                                        <div className={`media_item item ${styles.media_item} ${styles.item} context #show_media ${findMatchingOut(found.path || "", currentOutputs) ? styles.active : ""}`}>
                                             <HoverPlay style={mediaItemStyle()} icon="play" size={3} onClick={() => playBackground(background, found)}>
                                                 <MediaLoader name={background.name} path={found.path || background.path} thumbnailPath={found.thumbnail} type={background.type} mediaStyle={getMediaStyle(found.data, outputStyle)} />
                                             </HoverPlay>
@@ -274,7 +274,7 @@ export function Media() {
                                         const type = getMediaType(getExtension(background.path)) || "video"
                                         return (
                                             <SelectElem key={background.path} id="media" data={{ ...background, type } as never} draggable>
-                                                <div className={`media_item item context #show_media ${findMatchingOut(background.path, currentOutputs) ? styles.active : ""}`}>
+                                                <div className={`media_item item ${styles.media_item} ${styles.item} context #show_media ${findMatchingOut(background.path, currentOutputs) ? styles.active : ""}`}>
                                                     <HoverPlay
                                                         style={mediaItemStyle()}
                                                         icon="play"
@@ -306,7 +306,7 @@ export function Media() {
                                 const isActive = findMatchingOut(overlay.id, currentOutputs) !== null
                                 return (
                                     <SelectElem key={overlay.id} id="overlay" data={overlay.id as never} draggable>
-                                        <div className={`media_item item context #show_overlay ${isActive ? styles.active : ""}`}>
+                                        <div className={`media_item item ${styles.media_item} ${styles.item} context #show_overlay ${isActive ? styles.active : ""}`}>
                                             <HoverPlay style={mediaItemStyle()} icon={isActive ? "clear" : "play"} size={3} onClick={() => playOverlay(overlay)}>
                                                 <Zoomed resolution={resolution} background={overlay.items?.length ? "var(--primary)" : overlay.color || "var(--primary)"} checkered={!!overlay.items?.length} center>
                                                     {(overlay.items || []).map((item, index) => (

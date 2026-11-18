@@ -34,7 +34,7 @@ export function PreviewOutput({ fullscreen = false, disableTransitions = false, 
     void getStyleResolution
 
     return (
-        <div className={`${styles.center} previewOutput ${disabled ? styles.disabled : ""}`.trim()} id={outputId} style={cssTextToStyle(`${style}${aspect}`)}>
+        <div className={`${styles.center} previewOutput ${styles.previewOutput} ${disabled ? styles.disabled : ""}`.trim()} id={outputId} style={cssTextToStyle(`${style}${aspect}`)}>
             {stageOutput ? (
                 <StageLayout outputId={outputId} stageId={stageOutput} preview={!disableTransitions} edit={false} />
             ) : (

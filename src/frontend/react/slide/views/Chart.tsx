@@ -176,10 +176,10 @@ export function Chart({ item, ref = {} }: ChartProps) {
                             return (
                                 <g key={i}>
                                     <rect x={x} y={y} width={barWidth} height={barHeight} fill={datum.color} rx="4" className={styles.barRect} />
-                                    <text x={paddingLeft + (i + 1) * spacing} y={y - 8} className={`chart-text ${styles.chartText} ${styles.valText}`} textAnchor="middle">
+                                    <text x={paddingLeft + (i + 1) * spacing} y={y - 8} className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.valText}`} textAnchor="middle">
                                         {datum.value}%
                                     </text>
-                                    <text x={paddingLeft + (i + 1) * spacing} y={yAxis + 12} className={`chart-text ${styles.chartText} ${styles.axisText}`} textAnchor="end" transform={`rotate(-45, ${paddingLeft + (i + 1) * spacing}, ${yAxis + 12})`}>
+                                    <text x={paddingLeft + (i + 1) * spacing} y={yAxis + 12} className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.axisText}`} textAnchor="end" transform={`rotate(-45, ${paddingLeft + (i + 1) * spacing}, ${yAxis + 12})`}>
                                         {datum.label.length > 12 ? `${datum.label.slice(0, 10)}...` : datum.label}
                                     </text>
                                 </g>
@@ -204,10 +204,10 @@ export function Chart({ item, ref = {} }: ChartProps) {
                         {points.map((p, i) => (
                             <g key={i}>
                                 <circle cx={p.x} cy={p.y} r={Math.max(5, fontSize * 0.25)} fill={data[i].colorHex} stroke="#1e293b" strokeWidth={Math.max(2, fontSize * 0.05)} />
-                                <text x={p.x} y={p.y - Math.max(8, fontSize * 0.25) - 4} className={`chart-text ${styles.chartText} ${styles.valText}`} textAnchor="middle">
+                                <text x={p.x} y={p.y - Math.max(8, fontSize * 0.25) - 4} className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.valText}`} textAnchor="middle">
                                     {data[i].value}%
                                 </text>
-                                <text x={p.x} y={yAxis + 12} className={`chart-text ${styles.chartText} ${styles.axisText}`} textAnchor="end" transform={`rotate(-45, ${p.x}, ${yAxis + 12})`}>
+                                <text x={p.x} y={yAxis + 12} className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.axisText}`} textAnchor="end" transform={`rotate(-45, ${p.x}, ${yAxis + 12})`}>
                                     {data[i].label.length > 15 ? `${data[i].label.slice(0, 12)}...` : data[i].label}
                                 </text>
                             </g>
@@ -230,29 +230,29 @@ export function Chart({ item, ref = {} }: ChartProps) {
                                         segment.isFull ? (
                                             segment.label && !(holeSize > 0) ? (
                                                 <>
-                                                    <text x="0" y={-fontSize * 0.4} className={`chart-text ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 1.1)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)", fontWeight: "bold" }}>
+                                                    <text x="0" y={-fontSize * 0.4} className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 1.1)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)", fontWeight: "bold" }}>
                                                         {segment.label}
                                                     </text>
-                                                    <text x="0" y={fontSize * 0.6} className={`chart-text ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 1.25)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)", fontWeight: 500 }}>
+                                                    <text x="0" y={fontSize * 0.6} className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 1.25)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)", fontWeight: 500 }}>
                                                         100%
                                                     </text>
                                                 </>
                                             ) : (
-                                                <text x="0" y="4" className={`chart-text ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 1.25)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
+                                                <text x="0" y="4" className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 1.25)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)" }}>
                                                     100%
                                                 </text>
                                             )
                                         ) : segment.showInside && segment.label && !(holeSize > 0) ? (
                                             <>
-                                                <text x={segment.textX} y={segment.textY - fontSize * 0.4} className={`chart-text ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 0.75)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)", fontWeight: "bold" }}>
+                                                <text x={segment.textX} y={segment.textY - fontSize * 0.4} className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 0.75)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)", fontWeight: "bold" }}>
                                                     {segment.label.length > 8 ? `${segment.label.slice(0, 7)}..` : segment.label}
                                                 </text>
-                                                <text x={segment.textX} y={segment.textY + fontSize * 0.5} className={`chart-text ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 0.85)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)", fontWeight: 500 }}>
+                                                <text x={segment.textX} y={segment.textY + fontSize * 0.5} className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 0.85)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)", fontWeight: 500 }}>
                                                     {segment.percentage}%
                                                 </text>
                                             </>
                                         ) : (
-                                            <text x={segment.textX} y={segment.textY + 2} className={`chart-text ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 0.85)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)", fontWeight: 500 }}>
+                                            <text x={segment.textX} y={segment.textY + 2} className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.valText}`} textAnchor="middle" dominantBaseline="middle" style={{ fontSize: "calc(var(--chart-font-size) * 0.85)", fill: "#ffffff", textShadow: "0 1px 2px rgba(0,0,0,0.5)", fontWeight: 500 }}>
                                                 {segment.percentage}%
                                             </text>
                                         )
@@ -277,7 +277,7 @@ export function Chart({ item, ref = {} }: ChartProps) {
                                             {segment.label ? (
                                                 <>
                                                     <rect x="0" y={-boxSize / 2} width={boxSize} height={boxSize} fill={segment.colorHex} rx="2" />
-                                                    <text x={boxSize + 6} y={boxSize / 2 - 1} className={`chart-text ${styles.chartText} ${styles.legendText}`} textAnchor="start">
+                                                    <text x={boxSize + 6} y={boxSize / 2 - 1} className={`chart-text ${styles["chart-text"]} ${styles.chartText} ${styles.legendText}`} textAnchor="start">
                                                         {labelText}
                                                     </text>
                                                 </>
