@@ -104,6 +104,7 @@ import {
 import { checkForUpdates } from "./checkForUpdates"
 import { isMainWindow, startAutosave } from "./common"
 import { setLanguage } from "./language"
+import { languages } from "./languageData"
 import { startRemoteController } from "./remoteController"
 import { send } from "./request"
 
@@ -320,8 +321,15 @@ const updateList: { [key in SaveListSettings | SaveListSyncedSettings]: any } = 
         }, 10)
     },
     language: (v: any) => {
-        language.set(v)
-        setLanguage(v)
+        // F25.6: public/lang/ sólo conserva en.json y es.json. Un valor persistido
+        // de los otros 29 idiomas se migra a "en", el mismo fallback que
+        // setLanguage() ya aplicaba a un locale no reconocido (decisión documentada
+        // en docs/propuestas/idiomas.md). Así la migración es explícita y no depende
+        // de que falle la carga de un JSON que ya no existe.
+        const saved: string = typeof v === "string" ? v : ""
+        const locale = Object.keys(languages).includes(saved) ? saved : "en"
+        language.set(locale)
+        setLanguage(locale)
     },
     customFonts: (v: any) => customFonts.set(v),
     alertUpdates: (v: any) => {

@@ -178,3 +178,27 @@ Razones:
   una mejora independiente de esta propuesta.
 - Si finalmente se eliminan idiomas, actualizar el inventario de esta tabla con el
   resultado real (y dejar constancia de la fecha de aprobación del producto).
+
+## Ejecución F25.6 (2026-11-18)
+
+La propuesta fue aprobada y ejecutada en F25.6. El estado «propuesta, no ejecutada»
+del encabezado se conserva como registro histórico del momento en que se escribió.
+
+- **Borrado y poda en el mismo commit:** 29 JSON eliminados (48.005 líneas y
+  2.067.496 bytes, ~1,97 MiB) y las tres tablas de `languageData.ts` reducidas a
+  `en` y `es`. `public/lang/` queda con `en.json` y `es.json` solamente.
+- **Migración de settings:** un valor persistido de `language` que ya no esté en
+  `languages` se convierte a **`en`**. Se eligió `en` y no `es` porque es el fallback
+  que `setLanguage()` ya aplicaba a cualquier locale no reconocido: la migración
+  hace explícito el comportamiento que el runtime ya tenía, sin introducir un
+  cambio de idioma adicional. Si el producto quiere español como defecto, el único
+  lugar a cambiar es el `language:` de `updateSettings.ts`.
+- **`createData.ts`:** se quitó el branch `language === "no"` (y los imports de
+  `language`/`scriptures` que sólo usaba), en lugar de dejar código muerto.
+- **`ImportScripture.tsx`:** se quitó el uso de `replace`. Las biblias de API.Bible
+  tienen códigos ISO propios (`eng`, `spa`, `nob`), independientes del selector de
+  la UI; ahora se compara el subtag principal del locale del navegador (`nb`/`nn`
+  se normalizan a `no`). El antiguo mapeo podía terminar en `""` y recomendar todas
+  las biblias cuando el locale traía región.
+- **`language.ts`:** se conservan `rtlLanguages` y `fullWidth` según la recomendación
+  de la tabla de impacto; con `en`/`es` no se activan, pero no cuestan nada.

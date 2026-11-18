@@ -58,6 +58,13 @@ describe("ImportScripture", () => {
         expect(container.querySelector("hr")).toBeTruthy()
     })
 
+    it("api_con_locale_regional_recomienda_por_subtag_no_por_region", async () => {
+        vi.spyOn(window.navigator, "language", "get").mockReturnValue("en-US")
+        const { container } = await abrirApi([bible("Otra", "fra"), bible("KJV", "eng")])
+        const nombres = [...container.querySelectorAll("[role=checkbox]")].map((c) => c.getAttribute("data-title"))
+        expect(nombres).toEqual(["KJV", "Otra"])
+    })
+
     it("marcar_una_biblia_la_agrega_a_scriptures_con_sus_datos_y_desmarcar_la_borra", async () => {
         vi.mocked(getApiBiblesList).mockResolvedValue([bible("RV", "es", { attributionRequired: true, attributionString: "(c) RV" })] as never)
         montar()

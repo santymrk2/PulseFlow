@@ -9,7 +9,6 @@ import Loader from "../../components/main/Loader.svelte"
 import { requestMain, sendMain } from "../../IPC/main"
 import { scriptures } from "../../stores"
 import { translateText } from "../../utils/language"
-import { replace } from "../../utils/languageData"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
@@ -65,26 +64,18 @@ export function ImportScripture() {
                 return bible
             })
 
-            // get list of bibles in language
-            let langCode = window.navigator.language.slice(-2).toLowerCase()
+            // F25.6: los códigos de API.Bible (eng, spa, nob…) son independientes del
+            // selector de idiomas de la UI: se compara el subtag principal del locale
+            // directamente, sin el mapa `replace` que se podó con los idiomas borrados.
+            // "nb"/"nn" se normalizan al prefijo "no" que usa API.Bible para el noruego.
+            const primary = window.navigator.language.split("-")[0].toLowerCase()
+            const langCodes = primary === "nb" || primary === "nn" ? [primary, "no"] : [primary]
             // if it needs attribution, it's probably more in demand!
             bibleList = sortByName(bibleList).sort((a, b) => Number(b.attributionRequired || b.attributionString) - Number(a.attributionRequired || a.attributionString))
             const newSorted: Bible[] = []
             bibleList.forEach((bible) => {
-                let lang = bible.language
-                if (lang === "nob" || lang === "nor" || lang === "nno") lang = "no"
-
                 newSorted.push(bible)
-                let match = false
-                // eng <> en
-                if (lang.includes(langCode)) match = true
-                else {
-                    const languages: { [key: string]: string[] } = replace
-                    langCode = languages[langCode] ? langCode : Object.entries(languages).find(([_id, r]) => r.includes(langCode))?.[0] || ""
-                    if (lang.includes(langCode)) match = true
-                }
-
-                if (match) {
+                if (langCodes.some((code) => bible.language.includes(code))) {
                     acumuladas.current.push({ ...bible, name: bible.nameLocal || bible.name, description: bible.nameLocal ? bible.name : bible.description })
                     newSorted.pop()
                 }
