@@ -1837,6 +1837,8 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [ ] **F25.5** `src-tauri/src/engine/` y `platform/`.
 - [x] **F25.6** Reducir los idiomas de `public/lang/` a `en` y `es` (`docs/propuestas/idiomas.md`).
 - [x] **F25.7** Corregir el CI de Rust: Clippy 1.100 falla en macOS y Windows con `-D warnings`.
+- [ ] **F25.8** Estabilizar los tests de `render::media` que fallan en paralelo y pasan aislados.
+- [ ] **F25.9** Cerrar deudas de F25.6: `.catch()` en `setLanguage` y paridad de claves `en`/`es`.
 
 ---
 
