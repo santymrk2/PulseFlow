@@ -1,0 +1,56 @@
+.tabs {
+    display: flex;
+    position: relative;
+    background-color: var(--primary-darkest);
+    align-items: stretch;
+}
+
+.onlineSearch {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+}
+
+.onlineSearch input {
+    width: 100%;
+}
+
+.tabs button {
+    border-radius: 0;
+    border: none !important;
+    border-bottom: 1px solid var(--primary-lighter) !important;
+    padding: 8px;
+}
+
+.tabs button.isActive {
+    border-bottom: 1px solid var(--secondary) !important;
+}
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    place-content: flex-start;
+}
+
+.grid .selectElem {
+    outline-offset: -3px;
+}
+
+.grid .isSelected {
+    border-radius: 0 !important;
+}
+
+.gridgap {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: flex-start;
+    padding: 5px;
+
+    width: 100%;
+    height: 100%;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-bottom: 60px;
+}

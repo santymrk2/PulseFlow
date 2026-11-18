@@ -1800,7 +1800,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [ ] **F24.15h** Popups, tanda h (SlideShortcut → WebSearch).
 - [x] **F24.16** Columna izquierda.
 - [x] **F24.17a** Cajón, tanda a: raíz de `drawer/`, `navigation/*`.
-- [ ] **F24.17b** Cajón, tanda b: `media/*`.
+- [x] **F24.17b** Cajón, tanda b: `media/*`.
 - [ ] **F24.17c** Cajón, tanda c: `audio/` (paneles y metrónomo).
 - [ ] **F24.17d** Cajón, tanda d: `audio/` (efectos).
 - [ ] **F24.17e** Cajón, tanda e: `info/*`.

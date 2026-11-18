@@ -2,7 +2,6 @@ import { useEffect, useRef, type ReactNode } from "react"
 import Audio from "../../components/drawer/audio/Audio.svelte"
 import Scripture from "../../components/drawer/bible/Scripture.svelte"
 import Calendar from "../../components/drawer/calendar/Calendar.svelte"
-import Media from "../../components/drawer/media/Media.svelte"
 import Actions from "../../components/drawer/pages/Actions.svelte"
 import Interactions from "../../components/drawer/pages/Interactions.svelte"
 import OBS from "../../components/drawer/pages/OBS.svelte"
@@ -13,6 +12,7 @@ import Timers from "../../components/drawer/timers/Timers.svelte"
 import { drawerTabsData } from "../../stores"
 import { SvelteIsland } from "../bridge/SvelteIsland"
 import { useStore } from "../hooks/useStore"
+import { Media } from "./media/Media"
 import styles from "./Content.module.css"
 
 // Port de components/drawer/Content.svelte. Todavía switchboard de Svelte: cada página sigue siendo una isla.
@@ -42,7 +42,7 @@ export function Content({ id }: ContentProps) {
 
     function renderPage(): ReactNode {
         if (id === "shows") return <SvelteIsland component={Shows} props={{ active }} />
-        if (id === "media") return <SvelteIsland component={Media} props={{ active, streams: streams.current }} />
+        if (id === "media") return <Media active={active} streams={streams.current} />
         if (id === "audio") return <SvelteIsland component={Audio} props={{ active }} />
         if (id === "scripture") return <SvelteIsland component={Scripture} props={{ active }} />
         if (id === "calendar") return <SvelteIsland component={Calendar} props={{ active }} />

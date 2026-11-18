@@ -1,0 +1,117 @@
+.content-library {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+.categories {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 5px;
+    padding: 5px;
+
+    overflow-y: auto;
+    align-content: start;
+}
+
+.category-card {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    background-color: var(--primary);
+    border: 1px solid var(--primary-lighter);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    overflow: hidden;
+}
+
+.category-card:hover {
+    background-color: var(--primary-lighter);
+    transform: translateY(-2px);
+}
+
+.category-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+}
+
+.placeholder {
+    width: 100%;
+    height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--primary-darker);
+    opacity: 0.5;
+}
+
+.category-name {
+    text-align: center;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 12px;
+    color: var(--text);
+}
+
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    flex: 1;
+    place-content: flex-start;
+    overflow-y: auto;
+}
+
+.grid.list {
+    display: block;
+}
+
+.categories.list {
+    display: block;
+}
+
+.categories.list .category-card,
+.grid.list .category-card {
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.categories.list .category-card img,
+.grid.list .category-card img,
+.categories.list .placeholder,
+.grid.list .placeholder {
+    width: 80px;
+    height: 45px;
+    flex-shrink: 0;
+}
+
+.categories.list .category-name,
+.grid.list .category-name {
+    flex: 1;
+    justify-content: flex-start;
+    text-align: start;
+}
+
+.categories.list .category-card:hover,
+.grid.list .category-card:hover {
+    transform: none;
+}
+
+.divider {
+    width: 1px;
+    height: 100%;
+    background-color: var(--text-muted);
+    opacity: 0.3;
+    margin: 0 5px;
+}
+
+.card {
+    /* wrapper for MediaCard island */
+}
