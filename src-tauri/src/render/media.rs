@@ -48,7 +48,7 @@ pub struct MediaTexture {
     pub bind_group: BindGroup,
     /// Memoria de video que ocupa (`width * height * 4`).
     pub bytes: u64,
-    /// Último uso, en ms desde la creación del store (heurística LRU; `Relaxed` alcanza).
+    /// Último uso, en ticket monotónico del store (heurística LRU; `Relaxed` alcanza).
     last_used: AtomicU64,
 }
 
@@ -218,8 +218,10 @@ pub struct MediaStore {
     retry_after: std::time::Duration,
     /// Tope de bytes de imágenes en `textures`: lo que pasa se expulsa (las que nadie usa).
     image_budget: u64,
-    /// Origen del reloj de `MediaTexture::last_used`.
-    started: std::time::Instant,
+    /// Origen de los tickets de `MediaTexture::last_used`. Un contador (y no ms)
+    /// evita que dos usos en el mismo milisegundo empaten y que se expulse la textura
+    /// recién insertada por el orden alfabético de su clave.
+    next_use: AtomicU64,
     /// Decodificaciones iniciadas (sólo tests: comprueba que se pidan una sola vez).
     #[cfg(test)]
     decodes: std::sync::atomic::AtomicUsize,
@@ -254,7 +256,7 @@ impl MediaStore {
             jobs: Mutex::new(HashMap::new()),
             retry_after,
             image_budget,
-            started: std::time::Instant::now(),
+            next_use: AtomicU64::new(0),
             #[cfg(test)]
             decodes: std::sync::atomic::AtomicUsize::new(0),
             #[cfg(test)]
@@ -335,12 +337,13 @@ impl MediaStore {
     /// Obtiene una textura previamente cargada en VRAM si ya existe.
     pub fn get(&self, id: &str) -> Option<Arc<MediaTexture>> {
         let texture = self.textures.read_safe().get(id).cloned()?;
-        texture.last_used.store(self.now_ms(), Ordering::Relaxed);
+        texture.last_used.store(self.next_use(), Ordering::Relaxed);
         Some(texture)
     }
 
-    fn now_ms(&self) -> u64 {
-        self.started.elapsed().as_millis() as u64
+    /// Ticket nuevo para cada uso: el más reciente siempre gana al expulsar.
+    fn next_use(&self) -> u64 {
+        self.next_use.fetch_add(1, Ordering::Relaxed)
     }
 
     /// Expulsa, de la menos a la más usada, las texturas que nadie más tiene hasta entrar en el
@@ -545,7 +548,7 @@ impl MediaStore {
             height,
             rgba,
         ));
-        media.last_used.store(self.now_ms(), Ordering::Relaxed);
+        media.last_used.store(self.next_use(), Ordering::Relaxed);
         let mut textures = self.textures.write_safe();
         Ok(Arc::clone(textures.entry(id.to_string()).or_insert(media)))
     }
@@ -811,10 +814,19 @@ pub fn shared_store() -> AppResult<Arc<MediaStore>> {
 mod tests {
     use super::*;
 
-    fn test_png(name: &str) -> std::path::PathBuf {
-        let dir = std::env::temp_dir().join("pulseflow-media-tests");
+    static TEMP_PNG_SEQ: std::sync::atomic::AtomicUsize = std::sync::atomic::AtomicUsize::new(0);
+
+    /// PNG único por llamada: si dos tests (o dos procesos) escriben la misma ruta,
+    /// un worker puede abrir el archivo mientras el otro lo sobrescribe.
+    fn temp_png(name: &str) -> std::path::PathBuf {
+        let dir = std::env::temp_dir().join(format!("pulseflow-media-tests-{}", std::process::id()));
         std::fs::create_dir_all(&dir).expect("carpeta temporal");
-        let path = dir.join(name);
+        let seq = TEMP_PNG_SEQ.fetch_add(1, std::sync::atomic::Ordering::Relaxed);
+        dir.join(format!("{seq}-{name}"))
+    }
+
+    fn test_png(name: &str) -> std::path::PathBuf {
+        let path = temp_png(name);
         image::RgbaImage::from_pixel(8, 8, image::Rgba([10, 20, 30, 255]))
             .save(&path)
             .expect("guardar PNG de prueba");
@@ -894,9 +906,7 @@ mod tests {
 
     /// PNG de `width × height` con ruido (para que decodificarlo no sea instantáneo).
     fn noisy_png(name: &str, width: u32, height: u32) -> std::path::PathBuf {
-        let dir = std::env::temp_dir().join("pulseflow-media-tests");
-        std::fs::create_dir_all(&dir).expect("carpeta temporal");
-        let path = dir.join(name);
+        let path = temp_png(name);
         let image = image::RgbaImage::from_fn(width, height, |x, y| {
             let n = x.wrapping_mul(2_654_435_761).wrapping_add(y.wrapping_mul(40_503));
             image::Rgba([n as u8, (n >> 8) as u8, (n >> 16) as u8, 255])
@@ -916,10 +926,19 @@ mod tests {
         }
     }
 
+    /// El primer `submit` crea el pool (hasta 8 hilos): se hace antes de cronometrar para
+    /// que los 50 ms midan `request_image`, no la inicialización perezosa del pool.
+    fn warm_up_workers() {
+        let (tx, rx) = std::sync::mpsc::channel();
+        super::super::workers::submit(move || { let _ = tx.send(()); });
+        rx.recv_timeout(std::time::Duration::from_secs(5)).expect("el pool de I/O arrancó");
+    }
+
     #[test]
     fn request_returns_immediately_while_loading() {
         let store = store();
         let path = noisy_png("grande.png", 3000, 3000);
+        warm_up_workers();
 
         let started = std::time::Instant::now();
         let first = store.request_image(&path);
@@ -995,9 +1014,7 @@ mod tests {
     #[test]
     fn a_failed_image_is_retried_after_the_cooldown() {
         let store = MediaStore::new_with_retry(super::super::gpu::shared().expect("GPU disponible"), std::time::Duration::from_millis(80));
-        let dir = std::env::temp_dir().join("pulseflow-media-tests");
-        std::fs::create_dir_all(&dir).expect("carpeta temporal");
-        let path = dir.join("aparece-despues.png");
+        let path = temp_png("aparece-despues.png");
         let _ = std::fs::remove_file(&path);
 
         // todavía no existe: falla y queda en Failed durante el enfriamiento
@@ -1056,5 +1073,43 @@ mod tests {
         assert!(store.get(&b.to_string_lossy()).is_none(), "B era la menos usada sin dueño");
         assert!(store.get(&c.to_string_lossy()).is_some());
         drop(held);
+    }
+
+    #[test]
+    fn cada_uso_de_una_textura_tiene_un_ticket_nuevo() {
+        let store = store();
+        let texture = ready(wait_until_settled(&store, &test_png("tickets.png")));
+        let mut tickets = vec![texture.last_used.load(Ordering::Relaxed)];
+        for _ in 0..64 {
+            let _ = store.get(&texture.id);
+            tickets.push(texture.last_used.load(Ordering::Relaxed));
+        }
+        assert!(
+            tickets.windows(2).all(|w| w[0] < w[1]),
+            "los usos se ordenan aunque caigan en el mismo milisegundo: {:?}",
+            &tickets[..8]
+        );
+    }
+
+    #[test]
+    fn la_ultima_textura_insertada_no_se_expulsa_por_un_empate() {
+        let store = MediaStore::with_image_budget(super::super::gpu::shared().expect("GPU disponible"), 40 * 1024);
+        let rgba = vec![0u8; 64 * 64 * 4];
+        // `load_image` llama a `evict_to_budget` después de insertar: se reproduce acá.
+        for id in ["empate-a", "empate-b", "empate-c"] {
+            drop(store.insert_rgba(id, 64, 64, &rgba).expect(id));
+            store.evict_to_budget();
+        }
+        assert!(store.get("empate-a").is_none(), "A era la menos usada");
+        let _ = store.get("empate-b");
+        let _ = store.get("empate-c");
+        drop(store.insert_rgba("empate-a", 64, 64, &rgba).expect("A otra vez"));
+        store.evict_to_budget();
+        assert!(store.get("empate-a").is_some(), "la recién insertada no puede ser la expulsada");
+    }
+
+    #[test]
+    fn los_png_de_prueba_usan_rutas_distintas() {
+        assert_ne!(test_png("unico.png"), test_png("unico.png"));
     }
 }

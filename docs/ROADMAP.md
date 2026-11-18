@@ -1837,7 +1837,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - [ ] **F25.5** `src-tauri/src/engine/` y `platform/`.
 - [x] **F25.6** Reducir los idiomas de `public/lang/` a `en` y `es` (`docs/propuestas/idiomas.md`).
 - [x] **F25.7** Corregir el CI de Rust: Clippy 1.100 falla en macOS y Windows con `-D warnings`.
-- [ ] **F25.8** Estabilizar los tests de `render::media` que fallan en paralelo y pasan aislados.
+- [x] **F25.8** Estabilizar los tests de `render::media` que fallan en paralelo y pasan aislados, y los tres fallos del CI post-F25.7 (`golden_fondo_imagen`, `subrayado_sigue_el_padding_y_la_opacidad_de_la_caja` y `pausing_shifts_the_clock_instead_of_jumping`).
 - [ ] **F25.9** Cerrar deudas de F25.6: `.catch()` en `setLanguage` y paridad de claves `en`/`es`.
 
 ---
@@ -1904,7 +1904,7 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - En el stage, un timer sin padding que cambia de largo ("9:59" → "10:00") cambia el tamaño del autoajuste y provoca una transición puntual (F23.19).
 - `setLanguage()` no maneja el `fetch` fallido (sin `.catch()`); con `public/lang/` reducido a `en`/`es` sigue aplicando el fallback a `en` (F25.6).
 - Falta un test de paridad entre `en.json` y `es.json`: hoy hay una clave presente en inglés y ausente en español (F25.6), cubierta en Runtime por el fallback del diccionario.
-- Flakiness en paralelo de los tests de `render::media` (`request_returns_immediately_while_loading` y `presupuesto_expulsa_la_menos_usada`): pasan aislados y en rerun; no afectan al CI (F25.7).
+- **Flakiness de tests de render (resuelto en F25.8):** `request_returns_immediately_while_loading` medía la inicialización perezosa del pool de I/O; `presupuesto_expulsa_la_menos_usada` usaba un LRU con resolución de 1 ms y desempate por clave, que expulsaba la textura recién insertada; `golden_fondo_imagen` compartía `cuadrantes.png` entre tests en paralelo; `subrayado_sigue_el_padding_y_la_opacidad_de_la_caja` asumía una fila fija de píxel pese a las métricas de cada fuente del sistema; `pausing_shifts_the_clock_instead_of_jumping` medía desde un reloj ajeno a la reanudación. Verificado con 10 corridas locales y 5 con la toolchain 1.100.0 del CI, más `--test-threads=1` en ambas. La rewrite de F25.7 de `chunks_exact(4)` a `as_chunks::<4>().0` quedó cubierta por un test de equivalencia: es inocua.
 
 ## Fuera de alcance por ahora
 

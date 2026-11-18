@@ -196,21 +196,29 @@ mod tests {
         pacer.wait(Duration::ZERO, &running);
 
         state.set_paused(true);
+        let (unpaused_tx, unpaused_rx) = std::sync::mpsc::channel();
         std::thread::scope(|scope| {
             scope.spawn(|| {
                 std::thread::sleep(Duration::from_millis(300));
+                // Se marca antes de reanudar para no sub-estimar el tiempo transcurrido.
+                let _ = unpaused_tx.send(Instant::now());
                 state.set_paused(false);
             });
             let started = Instant::now();
             // el frame de 50 ms sólo puede salir tras la pausa (300 ms) y sin reajustar el reloj por atraso
             assert!(pacer.wait(Duration::from_millis(50), &running));
             assert!(started.elapsed() >= Duration::from_millis(300), "esperó {:?}", started.elapsed());
-        });
 
-        // la pausa corrió el origen: el frame siguiente (+60 ms) se espera de verdad
-        let started = Instant::now();
-        assert!(pacer.wait(Duration::from_millis(110), &running));
-        assert!(started.elapsed() >= Duration::from_millis(55), "esperó {:?}", started.elapsed());
+            let unpaused_at = unpaused_rx.recv_timeout(Duration::from_secs(5)).expect("la pausa terminó");
+            // Se mide desde la reanudación real y sobre los dos frames juntos: si el primer
+            // sleep del runner se pasa, el segundo espera menos y la suma sigue siendo 110 ms.
+            assert!(pacer.wait(Duration::from_millis(110), &running));
+            let total = unpaused_at.elapsed();
+            assert!(
+                total >= Duration::from_millis(110),
+                "los frames en +50 y +110 ms deben espaciarse 110 ms desde la reanudación (esperó {total:?})"
+            );
+        });
     }
 
     #[test]
