@@ -1899,6 +1899,8 @@ Plan: docs/superpowers/plans/2026-11-06-f24-migracion-react.md
 - `{@html}` con datos de terceros fuera de la biblia (eventos ICS, changelog, notas, shows importados) sin filtro: la defensa hoy es la CSP (F23.10).
 - Overlays con variable, eventos o contador no se dibujan en el proyector (F23.17).
 - En el stage, un timer sin padding que cambia de largo ("9:59" → "10:00") cambia el tamaño del autoajuste y provoca una transición puntual (F23.19).
+- `setLanguage()` no maneja el `fetch` fallido (sin `.catch()`); con `public/lang/` reducido a `en`/`es` sigue aplicando el fallback a `en` (F25.6).
+- Falta un test de paridad entre `en.json` y `es.json`: hoy hay una clave presente en inglés y ausente en español (F25.6), cubierta en Runtime por el fallback del diccionario.
 
 ## Fuera de alcance por ahora
 
