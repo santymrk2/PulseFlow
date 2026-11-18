@@ -13,7 +13,6 @@ vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../drawer/Card", async () => {
     const { islands } = await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")
     return {
@@ -23,7 +22,7 @@ vi.mock("../drawer/Card", async () => {
         }
     }
 })
-vi.mock("../../components/drawer/pages/TemplateSlide.svelte", () => ({ default: { isla: "TemplateSlide" } }))
+vi.mock("../drawer/pages/TemplateSlide", async () => ({ TemplateSlide: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("TemplateSlide") }))
 vi.mock("../ui/text-field/TextField", () => ({
     TextField: ({ label, onInput }: { label: string; onInput?: (v: string) => void }) => <input data-label={label} onChange={(e) => onInput?.(e.currentTarget.value)} />
 }))

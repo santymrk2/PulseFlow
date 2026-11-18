@@ -7,16 +7,15 @@ import { requestMain } from "../../IPC/main"
 import { activePopup, dictionary, emitters, popupData } from "../../stores"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { commonMock } from "../test/mockCommon"
-import { clearIslands, emit, islands } from "../test/islandMock"
+import { clearIslands, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Emitters } from "./Emitters"
 
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../IPC/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("uid", () => ({ uid: vi.fn(() => "uid1") }))
-vi.mock("../bridge/SvelteIsland", async () => ({ SvelteIsland: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).SvelteIslandMock }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
-vi.mock("../../components/form/FormInputs.svelte", () => ({ default: { isla: "FormInputs" } }))
+vi.mock("../form/FormInputs", async () => ({ FormInputs: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("FormInputs") }))
 vi.mock("../actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("MidiValues") }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getDynamicValue: (v: string) => `dyn(${v})` }))
 vi.mock("../../components/form/inputs", () => ({ getValues: (inputs: { id: string; value?: unknown }[], data: Record<string, unknown> | undefined) => inputs.map((i) => ({ ...i, value: data?.[i.id] ?? i.value })) }))
@@ -45,6 +44,10 @@ const btn = (title: string) => document.querySelector(`[data-title='${title}']`)
 const cambiarMidi = (value: unknown) =>
     act(() => {
         void (islands.MidiValues.props.onChange as ((next: unknown) => void) | undefined)?.(value)
+    })
+const cambiarSignal = (value: unknown) =>
+    act(() => {
+        void (islands.FormInputs.props.onChange as ((next: unknown) => void) | undefined)?.(value)
     })
 beforeEach(() => {
     vi.clearAllMocks()
@@ -88,10 +91,11 @@ describe("Emitters", () => {
         expect(fields["midi.type"].disabled).toBe(true)
     })
 
-    it("la_señal_se_arma_con_los_valores_guardados_y_un_cambio_de_la_isla_se_fusiona", () => {
+    it("la_señal_se_arma_con_los_valores_guardados_y_un_cambio_del_port_se_fusiona", () => {
         montar({ id: "e1" }, { e1: { name: "Uno", type: "osc", signal: { host: "1.1.1.1", port: 5 } } })
-        expect(islands.FormInputs.props).toEqual({ inputs: [{ id: "host", type: "string", value: "1.1.1.1" }], title: "emitters.signal" })
-        emit("FormInputs", "change", { id: "host", type: "string", value: "9.9.9.9" })
+        expect(islands.FormInputs.props).toMatchObject({ inputs: [{ id: "host", type: "string", value: "1.1.1.1" }], title: "emitters.signal" })
+        expect(typeof islands.FormInputs.props.onChange).toBe("function")
+        cambiarSignal({ id: "host", type: "string", value: "9.9.9.9" })
         expect(get(emitters).e1.signal).toEqual({ host: "9.9.9.9", port: 5 })
     })
 

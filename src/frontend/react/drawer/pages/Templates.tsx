@@ -9,8 +9,6 @@ import { getFirstActiveOutput, getResolution } from "../../../components/helpers
 import { deselect } from "../../../components/helpers/select"
 import { getLayoutRef } from "../../../components/helpers/show"
 import { _show } from "../../../components/helpers/shows"
-import TemplateSlide from "../../../components/drawer/pages/TemplateSlide.svelte"
-import { SvelteIsland } from "../../bridge/SvelteIsland"
 import { T } from "../../helpers/T"
 import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
@@ -21,10 +19,11 @@ import { SelectElem } from "../../system/SelectElem"
 import { Button } from "../../ui/button/Button"
 import { FloatingBar } from "../../ui/floating-bar/FloatingBar"
 import { Card } from "../Card"
+import { TemplateSlide } from "./TemplateSlide"
 import styles from "./Templates.module.css"
 
 // Port de components/drawer/pages/Templates.svelte: grilla de plantillas con carga por lotes.
-// `TemplateSlide.svelte` sigue en Svelte y se monta como isla; `slide/Actions` ya es port React.
+// `TemplateSlide` y `slide/Actions` son ports React.
 export interface TemplatesProps {
     active: string | null
     // Theme editor: lista de una columna en el panel izquierdo; un clic abre la plantilla para editarla (no la aplica al show)
@@ -247,7 +246,7 @@ export function Templates({ active, columns = null, editOnClick = false }: Templ
                                                     {/* icons */}
                                                     {template.settings?.actions?.length ? <Actions columns={gridColumns} templateId={template.id} actions={{ slideActions: template.settings?.actions }} /> : null}
 
-                                                    <SvelteIsland component={TemplateSlide} props={{ templateId: template.id, template, preview: true }} />
+                                                    <TemplateSlide templateId={template.id} template={template} preview />
                                                 </>
                                             ) : null}
                                         </Card>

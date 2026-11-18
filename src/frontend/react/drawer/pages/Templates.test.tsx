@@ -18,10 +18,7 @@ vi.mock("../../../components/helpers/show", () => ({ getLayoutRef: () => [] }))
 vi.mock("../../../components/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [] }) }) }))
 vi.mock("../../../components/helpers/select", () => ({ deselect: deselectMock }))
 vi.mock("../../slide/Actions", () => ({ Actions: (props: Record<string, unknown>) => <div data-isla="Actions" data-props={JSON.stringify(props ?? {})} /> }))
-vi.mock("../../../components/drawer/pages/TemplateSlide.svelte", () => ({ default: { isla: "TemplateSlide" } }))
-vi.mock("../../bridge/SvelteIsland", () => ({
-    SvelteIsland: ({ component, props }: { component: { isla: string }; props?: object }) => <div data-isla={component.isla} data-props={JSON.stringify(props ?? {})} />
-}))
+vi.mock("./TemplateSlide", () => ({ TemplateSlide: (props: Record<string, unknown>) => <div data-isla="TemplateSlide" data-props={JSON.stringify(props ?? {})} /> }))
 
 const dict = {
     empty: { general: "Vacío", search: "Sin resultados" },
@@ -68,19 +65,19 @@ afterEach(() => {
     restaurar = () => {}
 })
 
-const islas = (name: string) => [...document.querySelectorAll(`[data-isla="${name}"]`)] as HTMLElement[]
-const propsDe = (isla: HTMLElement) => JSON.parse(isla.getAttribute("data-props") ?? "{}") as Record<string, unknown>
+const ports = (name: string) => [...document.querySelectorAll(`[data-isla="${name}"]`)] as HTMLElement[]
+const propsDe = (port: HTMLElement) => JSON.parse(port.getAttribute("data-props") ?? "{}") as Record<string, unknown>
 
 describe("Templates", () => {
-    it("lista las plantillas ordenadas y las monta como islas", () => {
+    it("lista las plantillas ordenadas y las monta con el port TemplateSlide", () => {
         vi.useFakeTimers()
         render(<Templates active="all" />)
         expect(screen.getByText("t1")).toBeTruthy()
         expect(screen.getByText("t2")).toBeTruthy()
 
         act(() => vi.runAllTimers())
-        expect(islas("TemplateSlide")).toHaveLength(2)
-        expect(propsDe(islas("TemplateSlide")[0]).preview).toBe(true)
+        expect(ports("TemplateSlide")).toHaveLength(2)
+        expect(propsDe(ports("TemplateSlide")[0])).toMatchObject({ templateId: "t1", preview: true })
     })
 
     it("filtra las plantillas de modo texto", () => {

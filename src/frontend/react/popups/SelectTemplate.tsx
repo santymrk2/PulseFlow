@@ -2,15 +2,15 @@ import { useEffect, useRef, useState } from "react"
 import { get } from "svelte/store"
 import type { DropdownOptions } from "../../../types/Input"
 import type { Popups } from "../../../types/Main"
+import type { Template } from "../../../types/Show"
 import { Card } from "../drawer/Card"
-import TemplateSlide from "../../components/drawer/pages/TemplateSlide.svelte"
+import { TemplateSlide } from "../drawer/pages/TemplateSlide"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"
 import { getResolution } from "../../components/helpers/output"
 import { activePopup, activeStyle, drawerTabsData, outputs, popupData, previewOutputId, scriptures, styles, templates } from "../../stores"
 import { translateText } from "../../utils/language"
 import { setPopupSubmit } from "../../utils/popup"
 import { formatSearch } from "../../utils/search"
-import { SvelteIsland } from "../bridge/SvelteIsland"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
@@ -24,13 +24,10 @@ import stylesCSS from "./SelectTemplate.module.css"
 // trigger, doubleClick), templates, scriptures, styles, activeStyle, drawerTabsData, outputs y previewOutputId
 // (resolución). Escribe: el trigger con { value, type } o value, popupData = {} 500 ms después (si no hay revert)
 // y activePopup = revert o null. Enter registra la búsqueda con setPopupSubmit.
-// Card es port React; TemplateSlide sigue siendo Svelte (isla). Al no pasar slots se renderizan como hermanos.
-interface TemplateItem {
+// Card y TemplateSlide son ports React. Al no pasar children se renderizan como hermanos.
+interface TemplateItem extends Template {
     id: string
-    name?: string
-    color?: string | null
-    category?: string
-    settings?: { mode?: string }
+    __rawId?: string
 }
 
 const SCRIPTURE_IDS = ["scripture", "scripture_2", "scripture_3", "scripture_4", "scriptureLT", "scriptureLT_2"]
@@ -74,7 +71,7 @@ export function SelectTemplate() {
     const hideIds = (popupDataValue.hideIds || []) as string[]
     const sortedTemplates = sortByName(
         keysToID(templatesValue)
-            .map((a) => ({ ...a, __rawId: (templatesValue as Record<string, any>)[a.id]?.id ?? a.id }))
+            .map((a) => ({ ...a, __rawId: (templatesValue as Record<string, Template & { id?: string }>)[a.id]?.id ?? a.id }))
             .filter((a) => !hideIds.includes(a.id) && a?.settings?.mode !== "text")
     ) as TemplateItem[]
     const defaultTemplates = clone(sortedTemplates)
@@ -108,7 +105,7 @@ export function SelectTemplate() {
         const keepIdLT = "scriptureLT" + countId
         const toRemove = SCRIPTURE_IDS.filter((a) => a !== keepId && a !== keepIdLT)
         return list.filter((a) => {
-            const rawId = (a as TemplateItem & { __rawId?: string }).__rawId ?? a.id
+            const rawId = a.__rawId ?? a.id
             return !toRemove.includes(rawId)
         })
     }
@@ -211,7 +208,7 @@ export function SelectTemplate() {
                         {templatesList.map((template, i) => (
                             <div key={template.id}>
                                 <Card preview={!!(searchValue.length && i === 0)} active={value === template.id} label={template.name || ""} color={template.color} resolution={resolution} onClick={() => selectTemplate(template)} />
-                                {loaded || i < lazyLoader ? <SvelteIsland component={TemplateSlide} props={{ templateId: template.id, template, preview: true }} /> : null}
+                                {loaded || i < lazyLoader ? <TemplateSlide templateId={template.id} template={template} preview /> : null}
                             </div>
                         ))}
                     </div>

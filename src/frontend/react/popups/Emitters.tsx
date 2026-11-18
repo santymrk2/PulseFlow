@@ -5,14 +5,13 @@ import { Main } from "../../../types/IPC/Main"
 import type { Emitter, EmitterTemplate, EmitterTemplateValue } from "../../../types/Show"
 import { emitterData, formatData } from "../../components/actions/emitters"
 import { getDynamicValue } from "../../components/edit/scripts/itemHelpers"
-import FormInputs from "../../components/form/FormInputs.svelte"
 import { getValues } from "../../components/form/inputs"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"
 import { Tip } from "../main/Tip"
 import { requestMain } from "../../IPC/main"
 import { activePopup, emitters, popupData } from "../../stores"
 import { MidiValues } from "../actions/MidiValues"
-import { SvelteIsland } from "../bridge/SvelteIsland"
+import { FormInputs } from "../form/FormInputs"
 import { useFreshStore } from "../hooks/useFreshStore"
 import { Button } from "../ui/button/Button"
 import { DynamicList } from "../ui/dynamic-list/DynamicList"
@@ -24,7 +23,7 @@ import styles from "./Emitters.module.css"
 // Port de components/main/popups/Emitters.svelte. Lee `emitters` (y popupData al montar: id / name / actionData para crear desde el desplegable de acciones).
 // Escribe `emitters` (crear, borrar, nombre, descripción, tipo, señal, plantillas y sus valores: se muta en el lugar y se re-emite, como el Svelte) y, con la flecha
 // de "volver" de acción, popupData = actionData y activePopup = "action". IPC: Main.GET_MIDI_OUTPUTS (sin payload) para llenar las salidas MIDI.
-// Isla Svelte (temporal): FormInputs, con eventos que se toman al montar y van por `live` (siempre el último render). MidiValues ya es port React (F24.24).
+// FormInputs y MidiValues son ports React; el cambio de señal va por `live` (último render) por los callbacks de IPC.
 // Desvío: el Svelte volvía a pedir GET_MIDI_OUTPUTS con cada emisión del store; acá sólo al entrar a un emisor MIDI o cambiar de tipo (el resultado es el mismo).
 // alias de tipo (no interface): DynamicList pide ítems con firma de índice
 type TemplateInput = { id: string; name: string; value: EmitterTemplateValue["value"] }
@@ -72,7 +71,7 @@ export function Emitters() {
     const signalInputs = editEmitter && emitter ? clone(getValues(emitterData[emitter.type]?.signal || [], emitter.signal)) : []
     const midiInputs = emitter?.type === "midi" && midiOutputs && signalInputs[0]?.type === "dropdown" ? [{ ...signalInputs[0], options: midiOutputs }, ...signalInputs.slice(1)] : signalInputs
 
-    // Los handlers de las islas se toman al montar y los callbacks de IPC llegan tarde: leen siempre `live` (el último render)
+    // Los callbacks de IPC llegan tarde: leen siempre `live` (el último render)
     const live = useRef({ editEmitter, changed, updateMidiTemplateValue })
     useEffect(() => {
         live.current = { editEmitter, changed, updateMidiTemplateValue }
@@ -261,7 +260,7 @@ export function Emitters() {
                     }}
                 />
 
-                <SvelteIsland component={FormInputs} props={{ inputs: midiInputs, title: "emitters.signal" }} events={{ change: (event) => live.current.changed(event.detail, "signal") }} />
+                <FormInputs inputs={midiInputs} title="emitters.signal" onChange={(value) => live.current.changed(value, "signal")} />
 
                 {/* TEMPLATES: */}
                 {/* WIP message templates only working for OSC/HTTP - MIDI should have a custom template... */}
