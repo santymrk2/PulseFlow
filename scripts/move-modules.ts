@@ -4,6 +4,11 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, rmdirSync, statSync, 
 import { dirname } from "node:path"
 import { buildFileMap, rewriteSpecifiers, type Move } from "./moveModules"
 
+if (process.argv.length < 3) {
+    console.error("uso: bun scripts/move-modules.ts <from>=<to> [<from>=<to> ...]")
+    process.exit(1)
+}
+
 const moves: Move[] = process.argv.slice(2).map((arg) => {
     const [from, to] = arg.split("=")
     if (!from || !to) throw new Error(`Par inválido "${arg}": se espera <from>=<to>`)

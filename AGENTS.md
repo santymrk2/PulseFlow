@@ -55,7 +55,9 @@ prettier sobre `.md` ni el resto de la configuración.
 
 - El código del frontend vive en `src/frontend/app/` (armazón: `main.tsx`, `App`, `MainLayout`, `main/`, `guide/`),
   `src/frontend/features/<x>/` (la UI en la raíz, la lógica en `logic/`) y `src/frontend/shared/` (`core`, `utils`,
-  `ui`, `test`). `shared/` no importa de `features/` ni de `app/` (ver `src/frontend/arch/sharedBoundary.test.ts`).
+  `ui`, `test`, `audio`). `shared/` no importa de `features/` ni de `app/`; las excepciones conocidas están en
+  `SHARED_EXCEPTIONS` de `src/frontend/arch/sharedBoundary.test.ts` (53 entradas hoy): la lista sólo puede achicarse y
+  el código nuevo no agrega entradas.
   Un componente por archivo `PascalCase.tsx` y su test al lado (`Nombre.test.tsx`, primera línea
   `// @vitest-environment happy-dom`).
 - React 19 con React Compiler: **prohibidos** `useMemo`, `useCallback` y `memo`. Imports nombrados

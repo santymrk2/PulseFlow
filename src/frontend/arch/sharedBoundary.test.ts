@@ -11,7 +11,7 @@ const ROOT = join(__dirname, "../../..")
 const SHARED_DIR = join(ROOT, "src/frontend/shared")
 const FORBIDDEN = /^src\/frontend\/(features|app)\//
 
-export const SHARED_EXCEPTIONS: string[] = [
+const SHARED_EXCEPTIONS: string[] = [
     "src/frontend/shared/audio/audioChannelRecorder.ts",
     "src/frontend/shared/audio/audioFading.ts",
     "src/frontend/shared/audio/audioPlayer.ts",
