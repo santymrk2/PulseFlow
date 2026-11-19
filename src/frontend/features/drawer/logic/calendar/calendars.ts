@@ -1,7 +1,7 @@
 import { get } from "../../../../shared/core/lib/store"
 import { uid } from "uid"
 import type { Event } from "../../../../../types/Calendar"
-import { convertCalendar } from "../../../../converters/calendar"
+import { convertCalendar } from "../../../import/calendar"
 import { calendars, events, special } from "../../../../shared/core/stores"
 import { translateText } from "../../../../shared/utils/language"
 import { confirmCustom } from "../../../../shared/utils/popup"

@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { convertText } from "../../converters/txt"
+import { convertText } from "../import/txt"
 import { history } from "../../shared/utils/helpers/history"
 import { activePopup, activeProject, activeShow, categories, dictionary, drawerTabsData, formatNewShow, quickTextCache, shows, special, splitLines } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
@@ -15,7 +15,7 @@ import { CreateShow } from "./CreateShow"
 vi.mock("../../app/wiring/shortcuts", () => ({ getNormalizedKey: (e: KeyboardEvent) => e.key }))
 vi.mock("uid", () => ({ uid: () => "cat-nueva" }))
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
-vi.mock("../../converters/txt", () => ({ convertText: vi.fn(), getQuickExample: () => "ejemplo", trimNameFromString: (t: string) => `nombre:${t.slice(0, 3)}` }))
+vi.mock("../import/txt", () => ({ convertText: vi.fn(), getQuickExample: () => "ejemplo", trimNameFromString: (t: string) => `nombre:${t.slice(0, 3)}` }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/show", () => ({ checkName: (n: string) => `check:${n}` }))
 vi.mock("../../shared/core/classes/Show", () => ({

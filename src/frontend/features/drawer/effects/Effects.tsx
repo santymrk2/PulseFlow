@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
 import type { Effect } from "../../../../types/Effects"
 import { activeEdit, activePage, activeShow, effects, mediaOptions, outputs, previewOutputId, styles as stylesStore } from "../../../shared/core/stores"
-import { addProjectItem } from "../../../converters/project"
+import { addProjectItem } from "../../import/project"
 import { clone, keysToID, sortByName } from "../../../shared/utils/helpers/array"
 import { findMatchingOut, getResolution } from "../../../shared/utils/helpers/output"
 import { toggleEffectOutput } from "../../../shared/utils/helpers/overlayOutput"

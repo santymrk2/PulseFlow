@@ -1,4 +1,4 @@
-import { xml2json } from "../../converters/xml"
+import { xml2json } from "../../features/import/xml"
 
 // rss: {
 //     channel: {

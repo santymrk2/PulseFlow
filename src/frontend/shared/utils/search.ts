@@ -1,7 +1,7 @@
 import { get } from "../core/lib/store"
 import type { ShowList } from "../../../types/Show"
 import { sortObjectNumbers } from "./helpers/array"
-import { similarity } from "../../converters/txt"
+import { similarity } from "../../features/import/txt"
 import { categories, drawerTabsData, textCache } from "../core/stores"
 
 const specialChars = /[.,\/#!?$%\^&\*;:{}=\-_'"´`~()]/g

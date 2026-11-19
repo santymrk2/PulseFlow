@@ -1,4 +1,4 @@
-import { addCanvaPresentationAsShow } from "../../../converters/canvaPresentation"
+import { addCanvaPresentationAsShow } from "../../import/canvaPresentation"
 import { activeCanvaPresentation } from "../../../shared/core/stores"
 import { useStore } from "../../../shared/ui/hooks/useStore"
 import { T } from "../../../shared/ui/helpers/T"

@@ -13,7 +13,7 @@ vi.mock("./helpers/array", () => ({
     sortObjectNumbers: (arr: any[], key: string, desc = false) => [...arr].sort((a, b) => (desc ? (b[key] || 0) - (a[key] || 0) : (a[key] || 0) - (b[key] || 0)))
 }))
 // mirror the real Levenshtein-based similarity so the test reflects production behaviour
-vi.mock("../../converters/txt", () => {
+vi.mock("../../features/import/txt", () => {
     const editDistance = (a: string, b: string) => {
         a = a.toLowerCase()
         b = b.toLowerCase()

@@ -21,7 +21,7 @@ vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock }))
 vi.mock("../../../shared/utils/helpers/overlayOutput", () => ({ toggleOverlayOutput: toggleOverlayOutputMock }))
-vi.mock("../../../converters/project", () => ({ addProjectItem: addProjectItemMock }))
+vi.mock("../../import/project", () => ({ addProjectItem: addProjectItemMock }))
 vi.mock("../effects/Effects", () => ({ Effects: () => <div data-isla="Effects" /> }))
 vi.mock("../../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Textbox") }))
 vi.mock("../../slide/Zoomed", async () => {

@@ -12,7 +12,7 @@ import { DynamicValues } from "./DynamicValues"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/utils/helpers/showActions", () => ({ getDynamicIds: vi.fn(), replaceDynamicValues: vi.fn(), dynamicValueText: (id: string) => `{${id}}` }))
-vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
+vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ get: () => "layout1" }) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ id: "slideA" }, { id: "slideB" }] }))
 vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))

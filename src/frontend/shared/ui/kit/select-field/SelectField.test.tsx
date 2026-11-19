@@ -11,7 +11,7 @@ import styles from "./SelectField.module.css"
 vi.mock("../../../utils/common", () => commonMock())
 // edit.ts arrastra medio frontend (libraryEditor, drawer…) y acá sólo se necesita el mapa newDropdown
 // utils/search.ts importa converters/txt, que arrastra el audio; formatSearch no lo usa
-vi.mock("../../../../converters/txt", () => ({ similarity: () => 0 }))
+vi.mock("../../../../features/import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../../utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 

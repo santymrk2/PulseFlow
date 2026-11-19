@@ -18,7 +18,7 @@ const details = vi.hoisted(() => ({
 }))
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
+vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../drawer/live/Cameras", () => ({ Cameras: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="Cameras" onClick={() => onClick?.(details.Cameras)} /> }))
 vi.mock("../drawer/live/Screens", () => ({ Screens: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="Screens" onClick={() => onClick?.(details.Screens)} /> }))

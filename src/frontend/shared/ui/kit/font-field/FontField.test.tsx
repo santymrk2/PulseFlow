@@ -8,7 +8,7 @@ import { setStoresForTest, storeEntry } from "../../../test/storeTestKit"
 import { FontField } from "./FontField"
 
 vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../../converters/txt", () => ({ similarity: () => 0 }))
+vi.mock("../../../../features/import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../../utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../../../components/edit/scripts/edit", () => ({ newDropdown: {} }))
 // fonts.ts pide la lista de fuentes al sistema (IPC): se mockea el borde

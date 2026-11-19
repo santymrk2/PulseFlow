@@ -11,7 +11,7 @@ import { OutputSetup } from "./OutputSetup"
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
+vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 

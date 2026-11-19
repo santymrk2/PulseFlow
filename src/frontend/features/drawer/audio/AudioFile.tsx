@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { AudioPlayer } from "../../../shared/audio/audioPlayer"
 import { AudioPlaylist } from "../../../shared/audio/audioPlaylist"
-import { addProjectItem } from "../../../converters/project"
+import { addProjectItem } from "../../import/project"
 import { activePlaylist, activeShow, media, outLocked, playingAudio } from "../../../shared/core/stores"
 import { joinTime, secondsToTime } from "../../../shared/utils/helpers/time"
 import { Icon } from "../../../shared/ui/helpers/Icon"

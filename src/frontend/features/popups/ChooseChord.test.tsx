@@ -8,7 +8,7 @@ import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ChooseChord } from "./ChooseChord"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
+vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 
 let restaurar: () => void = () => {}

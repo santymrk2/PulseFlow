@@ -19,7 +19,7 @@ import { Export } from "./Export"
 const pdf = vi.hoisted(() => ({ props: null as null | { pdfOptions: Record<string, unknown>; onChange?: (o: Record<string, unknown>) => void } }))
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, wait: () => Promise.resolve(), newToast: vi.fn() }))
-vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
+vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../app/wiring/save", () => ({ save: vi.fn() }))

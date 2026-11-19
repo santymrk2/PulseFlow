@@ -4,14 +4,14 @@ import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { actions, activeFocus, activeProject, activeShow, contextActive, drawer, editingProjectTemplate, focusMode, fullColors, playerVideos, projects, projectTemplates, recentFiles, selected, special } from "../../shared/core/stores"
 import { getAccess } from "../../shared/utils/profile"
-import { addProjectItem } from "../../converters/project"
+import { addProjectItem } from "../import/project"
 import { getTimeUntilClock } from "../drawer/logic/timers/timers"
 import { getFileName, removeExtension } from "../../shared/utils/helpers/media"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ProjectContentList } from "./ProjectContentList"
 
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
-vi.mock("../../converters/project", () => ({ addProjectItem: vi.fn(), addToProject: vi.fn(), updateRecentlyAddedFiles: vi.fn() }))
+vi.mock("../import/project", () => ({ addProjectItem: vi.fn(), addToProject: vi.fn(), updateRecentlyAddedFiles: vi.fn() }))
 vi.mock("../../components/actions/actions", () => ({ getActionIcon: vi.fn(() => "") }))
 vi.mock("../drawer/logic/timers/timers", () => ({ getTimeUntilClock: vi.fn(() => 0) }))
 vi.mock("../../shared/utils/helpers/array", () => ({ clone: vi.fn((value: unknown) => value) }))

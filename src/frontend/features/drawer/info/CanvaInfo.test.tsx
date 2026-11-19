@@ -1,12 +1,12 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { addCanvaPresentationAsShow } from "../../../converters/canvaPresentation"
+import { addCanvaPresentationAsShow } from "../../import/canvaPresentation"
 import { activeCanvaPresentation } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { CanvaInfo } from "./CanvaInfo"
 
-vi.mock("../../../converters/canvaPresentation", () => ({ addCanvaPresentationAsShow: vi.fn() }))
+vi.mock("../../import/canvaPresentation", () => ({ addCanvaPresentationAsShow: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

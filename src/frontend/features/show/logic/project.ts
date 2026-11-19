@@ -1,7 +1,7 @@
 import { get } from "../../../shared/core/lib/store"
 import { uid } from "uid"
 import type { Project, ProjectShowRef } from "../../../../types/Projects"
-import { similarity } from "../../../converters/txt"
+import { similarity } from "../../import/txt"
 import { activeEdit, activeProject, activeShow, leftSource, projects, projectView, saved, showRecentlyUsedProjects, shows, showsCache } from "../../../shared/core/stores"
 import { generateScriptureShowFromReference } from "../../drawer/logic/bible/scripture"
 import { keysToID, sortByTimeNew } from "../../../shared/utils/helpers/array"

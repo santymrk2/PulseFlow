@@ -1,7 +1,7 @@
 import { createElement, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
 import type { Verse } from "json-bible/lib/Bible"
 import type { VerseReference } from "json-bible/lib/reference"
-import { defaultBibleBookNames } from "../../../converters/bebliaBible"
+import { defaultBibleBookNames } from "../../import/bebliaBible"
 import { activeEdit, activeScripture, activeTriggerFunction, customScriptureBooks, notFound, openScripture, outLocked, outputs, resized, scriptureHistory, scriptureMode, scriptures, scriptureSettings, selected } from "../../../shared/core/stores"
 import { wait } from "../../../shared/utils/common"
 import { translateText } from "../../../shared/utils/language"

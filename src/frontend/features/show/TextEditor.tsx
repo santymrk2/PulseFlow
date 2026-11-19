@@ -1,6 +1,6 @@
 import { useEffect, useState, type KeyboardEvent } from "react"
 import type { Show } from "../../../types/Show"
-import { getQuickExample } from "../../converters/txt"
+import { getQuickExample } from "../import/txt"
 import { activePopup, textEditZoom } from "../../shared/core/stores"
 import { formatText } from "./logic/formatTextEditor"
 import { getPlainEditorText } from "./logic/getTextEditor"

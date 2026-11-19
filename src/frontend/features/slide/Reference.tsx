@@ -1,7 +1,7 @@
 import { useState } from "react"
 import type { Show } from "../../../types/Show"
 import { Main } from "../../../types/IPC/Main"
-import { syncCanvaShow } from "../../converters/canvaPresentation"
+import { syncCanvaShow } from "../import/canvaPresentation"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activeDrawerTab, activeShow, drawer, labelsDisabled, openedInteractionId, openScripture, scriptures, shows } from "../../shared/core/stores"
 import { createSlides, getDateString, getSelectedEvents, sortDays } from "../drawer/logic/calendar/calendar"

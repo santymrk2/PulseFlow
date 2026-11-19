@@ -8,7 +8,7 @@ import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { CategoryAction } from "./CategoryAction"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
+vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))

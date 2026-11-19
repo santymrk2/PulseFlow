@@ -13,7 +13,7 @@ import { uid } from "uid"
 import { EditEvent } from "./EditEvent"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
+vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../drawer/logic/calendar/calendar", () => ({
     getTime: (date: Date) => ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2),
     isSameDay: (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()

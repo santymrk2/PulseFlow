@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react"
 import type { ContentFile, ContentProviderId } from "../../../../types/ContentProvider"
 import type { ShowType } from "../../../../types/Show"
-import { addProjectItem } from "../../../converters/project"
+import { addProjectItem } from "../../import/project"
 import { activeShow, customMessageCredits, media, mediaOptions, mediaTags, outLocked, outputs, photoApiCredits, styles as stylesStore } from "../../../shared/core/stores"
 import { getKey } from "../../../shared/core/values/keys"
 import { Icon } from "../../../shared/ui/helpers/Icon"

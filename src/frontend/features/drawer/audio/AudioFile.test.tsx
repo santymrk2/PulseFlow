@@ -4,7 +4,7 @@ import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { AudioPlayer } from "../../../shared/audio/audioPlayer"
 import { AudioPlaylist } from "../../../shared/audio/audioPlaylist"
-import { addProjectItem } from "../../../converters/project"
+import { addProjectItem } from "../../import/project"
 import { activePlaylist, activeShow, media, outLocked, playingAudio } from "../../../shared/core/stores"
 import { commonMock } from "../../../shared/test/mockCommon"
 import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
@@ -27,7 +27,7 @@ vi.mock("../../../shared/audio/audioPlayer", () => ({
     }
 }))
 vi.mock("../../../shared/audio/audioPlaylist", () => ({ AudioPlaylist: { start: vi.fn() } }))
-vi.mock("../../../converters/project", () => ({ addProjectItem: vi.fn() }))
+vi.mock("../../import/project", () => ({ addProjectItem: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
 vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))

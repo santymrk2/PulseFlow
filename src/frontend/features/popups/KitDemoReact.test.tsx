@@ -5,7 +5,7 @@ import { commonMock } from "../../shared/test/mockCommon"
 import { KitDemoReact } from "./KitDemoReact"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
+vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 

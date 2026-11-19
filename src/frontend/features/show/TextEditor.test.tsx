@@ -11,7 +11,7 @@ vi.mock("../../app/wiring/shortcuts", () => ({ getNormalizedKey: vi.fn(() => "f"
 vi.mock("../../shared/utils/chordTranspose", () => ({ transposeText: vi.fn((text: string) => text) }))
 vi.mock("./logic/formatTextEditor", () => ({ formatText: vi.fn() }))
 vi.mock("./logic/getTextEditor", () => ({ getPlainEditorText: vi.fn(() => "Texto plano") }))
-vi.mock("../../converters/txt", () => ({ getQuickExample: vi.fn(() => "Ejemplo") }))
+vi.mock("../import/txt", () => ({ getQuickExample: vi.fn(() => "Ejemplo") }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
 vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick, disabled }: { children: unknown; onClick?: () => void; disabled?: boolean }) => (
