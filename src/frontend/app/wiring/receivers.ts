@@ -6,24 +6,7 @@ import { runAction } from "../../components/actions/actions"
 import { handleRecorderFrame } from "../../components/drawer/live/recorder"
 import { getDynamicValue } from "../../components/edit/scripts/itemHelpers"
 import { receiveMainGlobal } from "../../shared/core/ipc/main"
-import {
-    actions,
-    activePopup,
-    activeShow,
-    alertMessage,
-    audioChannelsData,
-    driveData,
-    focusMode,
-    ndiData,
-    omtData,
-    outputDisplay,
-    outputs,
-    outputState,
-    popupData,
-    previewBuffers,
-    shows,
-    showsCache,
-} from "../../shared/core/stores"
+import { actions, activePopup, activeShow, alertMessage, audioChannelsData, driveData, focusMode, ndiData, omtData, outputDisplay, outputs, outputState, popupData, previewBuffers, shows, showsCache } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
 import { syncDrive } from "../../shared/utils/drive"
 import { sendInitialOutputData } from "./listeners"
