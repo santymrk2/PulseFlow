@@ -208,7 +208,7 @@ export function SlideEditor() {
 
     useEffect(() => {
         if (active.length) setTimeout(updateStyles)
-        else setNewStyles({})
+        else setNewStyles((prev) => (Object.keys(prev).length ? {} : prev))
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [newStyles, activeKey])
 
