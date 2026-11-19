@@ -1,0 +1,14 @@
+.root {
+    display: flex;
+    height: 32px;
+    flex-shrink: 0;
+    align-items: center;
+    gap: 2px;
+    border-radius: var(--radius, 6px);
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    padding: 2px;
+}
+
+.root > button {
+    border-radius: var(--radius-chip, 4px);
+}

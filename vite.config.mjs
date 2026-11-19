@@ -1,10 +1,9 @@
-import tailwindcss from "@tailwindcss/vite"
 import react from "@vitejs/plugin-react"
 import { fileURLToPath } from "node:url"
 import { defineConfig } from "vite"
 
 export default defineConfig({
-    plugins: [react({ babel: { plugins: [["babel-plugin-react-compiler", {}]] } }), tailwindcss()],
+    plugins: [react({ babel: { plugins: [["babel-plugin-react-compiler", {}]] } })],
     // `public/` holds static assets (global.css, fonts, …) copied as-is.
     publicDir: "public",
     // los .module.css portados de Svelte usan clases kebab-case; el código React las lee como styles.camelCase

@@ -1,6 +1,6 @@
 /* Portado de button.svelte (F14.8a). Mismo contenido; el scope lo da el módulo en lugar de Svelte. */
 
-/* En la capa `components`: las utilidades de Tailwind (`w-full`, `justify-start`) y los CSS de los padres le ganan. */
+/* En la capa `components`: los CSS de los padres (sin capa) le ganan. */
 @layer components {
     .btn {
         position: relative;

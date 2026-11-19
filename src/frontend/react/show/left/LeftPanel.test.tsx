@@ -2,6 +2,7 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
 import { LeftPanel } from "./LeftPanel"
+import styles from "./LeftPanel.module.css"
 
 afterEach(() => cleanup())
 
@@ -14,15 +15,15 @@ describe("LeftPanel", () => {
         )
 
         const section = container.querySelector('[data-slot="left-panel"]') as HTMLElement
-        expect(section.className).toContain("flex-col")
+        expect(section.className).toContain(styles.root)
         const header = section.querySelector("header") as HTMLElement
-        expect(header.className).toContain("bg-muted")
+        expect(header.className).toContain(styles.header)
         expect(screen.getByText("BIBLIOTECAS")).toBeTruthy()
-        expect(screen.getByText("General").className).toContain("bg-primary")
-        expect(screen.getByText("3").className).toContain("text-muted-foreground")
+        expect(screen.getByText("General").className).toContain(styles.context)
+        expect(screen.getByText("3").className).toContain(styles.count)
         expect(screen.getByText("Acción")).toBeTruthy()
         expect(screen.getByText("Contenido")).toBeTruthy()
-        expect((header.lastElementChild as HTMLElement).className).toContain("shrink-0")
+        expect((header.lastElementChild as HTMLElement).className).toContain(styles.actions)
     })
 
     it("oculta_la_pastilla_y_el_contador_cuando_no_hay_contexto_o_count", () => {
@@ -35,7 +36,7 @@ describe("LeftPanel", () => {
         expect(header.querySelector(".bg-primary")).toBeNull()
         expect(header.querySelector(".text-muted-foreground")).toBeNull()
         expect(header.children).toHaveLength(1)
-        expect(container.querySelector("section > div")?.className).toContain("overflow-y-auto")
+        expect(container.querySelector("section > div")?.className).toContain(styles.body)
     })
 
     it("muestra_el_contador_cero_pero_no_los_valores_undefined", () => {

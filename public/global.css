@@ -1,5 +1,5 @@
 /* Orden de capas, declarado acá por ser la primera hoja que carga: así no depende del orden en que se empaquetan
-   los CSS de los componentes (que usan `@layer components`). Mismo orden que src/frontend/app.css. */
+   los CSS de los componentes (que usan `@layer components`). */
 @layer theme, base, components, utilities;
 
 /* custom CMG Sans */
@@ -109,8 +109,7 @@
     --navigation-width: 290px;
 }
 
-/* reset en la capa base (app.css): sin capa, pisaba el padding y margin de los
-   utilitarios del kit (capa utilities de Tailwind) */
+/* reset en la capa base: sin capa, pisaba el padding y margin de los CSS de los componentes que usan capas */
 @layer base {
     * {
         margin: 0;
@@ -120,6 +119,13 @@
 
         outline-offset: -4px;
         outline-color: var(--ring);
+    }
+
+    /* Sin esto el borde por defecto es `currentColor` (blanco): cualquier `border` dibujaba un recuadro blanco. */
+    *,
+    ::before,
+    ::after {
+        border-color: var(--border-color, var(--primary-lighter));
     }
 }
 

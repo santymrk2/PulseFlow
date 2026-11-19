@@ -170,7 +170,7 @@ export function LooksWindow() {
                     </div>
 
                     <div className={styles.sidebarFooter}>
-                        <Button variant="outline" size="sm" className="w-full" onClick={createPreset}>
+                        <Button variant="outline" size="sm" className={styles.fullWidth} onClick={createPreset}>
                             + {t("looks.new")}
                         </Button>
                     </div>

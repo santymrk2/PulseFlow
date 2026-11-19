@@ -106,3 +106,7 @@
     text-align: end;
     opacity: 0.8;
 }
+
+.fullWidth {
+    width: 100%;
+}

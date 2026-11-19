@@ -71,8 +71,8 @@ prettier sobre `.md` ni el resto de la configuración.
 
 - La apariencia sale de las variables CSS del tema (`--primary`, `--secondary`, `--text`, …) definidas en
   `src/frontend/components/settings/tabs/defaultThemes.ts` y `public/global.css`. No hardcodear colores.
-- Tailwind: clases semánticas (`bg-background`, `text-foreground`, `border-border`, …). Prohibido `var()` y
-  colores hex/rgb en `className`. `cn()` sólo para clases condicionales o para mezclar con un `className` recibido.
+- No se usa Tailwind: los estilos van en CSS Modules con las variables del tema. `cn()` (clsx) sólo para clases
+  condicionales o para mezclar con un `className` recibido.
 - CSS Modules (`Nombre.module.css`): **sólo se hashean las clases**. Por eso:
   - Prohibido un selector que empiece por elemento (`div {}`, `span[role]`, `input::placeholder`): es **global**
     y rompe toda la app. Siempre una clase: `.root {}`, `.toggle:focus`, `.field::placeholder`. Lo controla

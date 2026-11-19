@@ -1,1 +1,16 @@
-/* ItemsPanel.svelte no tiene bloque <style>: las clases de su markup son utilidades de Tailwind. */
+.library {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+}
+
+.search {
+    flex-shrink: 0;
+    border-bottom: 1px solid var(--border-color, var(--primary-lighter));
+    padding: 8px;
+}
+
+.list {
+    min-height: 0;
+    flex: 1 1 0%;
+}

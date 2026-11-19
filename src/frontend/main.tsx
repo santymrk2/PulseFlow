@@ -3,7 +3,6 @@
 
 import { createRoot } from "react-dom/client"
 import { App } from "./react/App"
-import "./app.css"
 import "@fontsource-variable/geist"
 import "@fontsource-variable/geist-mono"
 import { setupTauriApi } from "./IPC/tauri"

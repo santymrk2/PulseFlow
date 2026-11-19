@@ -12,6 +12,7 @@ import { Button } from "../ui/button/Button"
 import { Input } from "../ui/input/Input"
 import { Menu, MenuItem, MenuSeparator } from "../ui/menu"
 import { SelectField } from "../ui/select-field/SelectField"
+import styles from "./CategoryPicker.module.css"
 
 interface Category {
     name: string
@@ -130,10 +131,10 @@ export function CategoryPicker({ kind, extraOptions = [] }: CategoryPickerProps)
     }
 
     return (
-        <div className="flex items-start gap-1 p-2">
-            <div className="min-w-0 flex-1">{renaming ? <Input value={renameValue} autofocus autoselect onInput={(e) => setRenameValue((e.target as HTMLInputElement).value)} onKeyDown={renameKeydown} onChange={() => commitRename()} /> : <SelectField label="guide_title.categories" value={active} options={options} addNew={readOnly ? null : "new.category"} onChange={(v) => setCategory(v || "all")} onNew={(v) => newCategory(v)} />}</div>
+        <div className={styles.root}>
+            <div className={styles.field}>{renaming ? <Input value={renameValue} autofocus autoselect onInput={(e) => setRenameValue((e.target as HTMLInputElement).value)} onKeyDown={renameKeydown} onChange={() => commitRename()} /> : <SelectField label="guide_title.categories" value={active} options={options} addNew={readOnly ? null : "new.category"} onChange={(v) => setCategory(v || "all")} onNew={(v) => newCategory(v)} />}</div>
 
-            <div className="relative h-[38px] shrink-0">
+            <div className={styles.more}>
                 <Button variant="ghost" size="icon" icon="more" title="create_show.more_options" onClick={() => setMenuOpen(!menuOpen)} />
                 <Menu open={menuOpen} onClose={() => setMenuOpen(false)}>
                     {isCategory && !readOnly ? (

@@ -1,0 +1,39 @@
+.root {
+    display: flex;
+    height: 28px;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    background-color: transparent;
+    padding: 0 12px;
+    text-align: left;
+    font-size: 13px;
+    white-space: nowrap;
+    color: var(--text);
+}
+
+.root:hover {
+    background-color: var(--primary-lighter);
+}
+
+.root:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.check {
+    width: 12px;
+    flex-shrink: 0;
+    font-size: var(--text-xs);
+    line-height: 16px;
+    color: var(--secondary);
+}
+
+.label {
+    min-width: 0;
+    flex: 1 1 0%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

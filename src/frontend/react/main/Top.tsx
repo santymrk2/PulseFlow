@@ -158,7 +158,7 @@ export function Top({ isWindows = false }: TopProps) {
                     <Button variant="ghost" size="sm" data-title={`${translateText("looks.looks")}: ${looksValue[activeLookId || ""]?.name || ""}`} onClick={() => setLookOpen((v) => !v)}>
                         <Icon id="looks" size={1} white />
                     </Button>
-                    <Menu open={lookOpen} className="min-w-52" onClose={() => setLookOpen(false)}>
+                    <Menu open={lookOpen} className={styles.lookMenu} onClose={() => setLookOpen(false)}>
                         {lookOptions.map((look) => (
                             <MenuItem key={look.id} checked={look.id === activeLookId} onClick={() => applyLookFromMenu(look.id)}>
                                 {look.label}

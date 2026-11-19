@@ -2,6 +2,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { Item, Menu, MenuItem, MenuSeparator, Root, Separator } from "./index"
+import styles from "./Menu.module.css"
 
 afterEach(cleanup)
 
@@ -79,7 +80,7 @@ describe("Menu", () => {
             </div>
         )
         expect(screen.getByRole("menu").classList.contains("extra")).toBe(true)
-        expect(screen.getByRole("menu").classList.contains("absolute")).toBe(true)
+        expect(screen.getByRole("menu").classList.contains(styles.root)).toBe(true)
     })
 
     it("index_exporta_los_alias", () => {

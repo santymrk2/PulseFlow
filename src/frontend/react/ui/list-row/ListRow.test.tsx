@@ -2,6 +2,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { ListRow } from "./ListRow"
+import styles from "./ListRow.module.css"
 
 afterEach(() => cleanup())
 
@@ -21,12 +22,12 @@ describe("ListRow", () => {
         const { unmount } = render(<ListRow active>x</ListRow>)
         const activa = screen.getByRole("button")
         expect(activa.getAttribute("aria-current")).toBe("true")
-        expect(activa.classList.contains("bg-accent")).toBe(true)
+        expect(activa.classList.contains(styles.active)).toBe(true)
         unmount()
         render(<ListRow>x</ListRow>)
         const inactiva = screen.getByRole("button")
         expect(inactiva.getAttribute("aria-current")).toBeNull()
-        expect(inactiva.classList.contains("bg-accent")).toBe(false)
+        expect(inactiva.classList.contains(styles.active)).toBe(false)
     })
 
     it("click_llama_a_onClick_con_el_evento_nativo", () => {

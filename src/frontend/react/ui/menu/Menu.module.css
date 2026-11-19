@@ -1,0 +1,18 @@
+/* `--menu-min-width` deja a un padre ensanchar el menú sin depender del orden de las hojas de estilo. */
+.root {
+    position: absolute;
+    inset-inline-end: 0;
+    top: 100%;
+    z-index: 50;
+    margin-top: 4px;
+    min-width: var(--menu-min-width, 176px);
+    overflow: hidden;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color, var(--primary-lighter));
+    background-color: var(--bg-elevated);
+    padding: 4px 0;
+    color: var(--text);
+    box-shadow:
+        0 10px 15px -3px color-mix(in srgb, black 10%, transparent),
+        0 4px 6px -4px color-mix(in srgb, black 10%, transparent);
+}

@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from "react"
 import { cn } from "../../../lib/utils"
+import styles from "./Menu.module.css"
 
 // Port de ui/menu/menu.svelte. Desplegable simple: el padre pone un contenedor `relative` alrededor del disparador y este
 // menú se abre debajo. Se cierra con mousedown afuera (fuera del padre) y Esc. `onclose` → onClose.
@@ -39,7 +40,7 @@ export function Menu({ open = false, className = "", onClose, children }: MenuPr
     if (!open) return null
 
     return (
-        <div ref={menu} role="menu" data-slot="menu" className={cn("absolute end-0 top-full z-50 mt-1 min-w-44 overflow-hidden rounded-[var(--radius)] border border-border bg-popover py-1 text-popover-foreground shadow-lg", className)}>
+        <div ref={menu} role="menu" data-slot="menu" className={cn(styles.root, className)}>
             {children}
         </div>
     )

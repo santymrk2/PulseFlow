@@ -1,0 +1,67 @@
+.root {
+    position: relative;
+    display: flex;
+    height: 28px;
+    width: 100%;
+    min-width: 0;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    background-color: transparent;
+    padding: 0 8px 0 12px;
+    text-align: left;
+    font-size: 13px;
+    color: var(--text);
+    transition:
+        color 0.15s cubic-bezier(0.4, 0, 0.2, 1),
+        background-color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.root:hover {
+    background-color: color-mix(in srgb, var(--primary-lighter) 50%, transparent);
+}
+
+.active {
+    background-color: var(--primary-lighter);
+}
+
+.active::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 2px;
+    background-color: var(--secondary);
+}
+
+.icon {
+    display: flex;
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon svg {
+    width: 14px;
+    height: 14px;
+}
+
+.label {
+    min-width: 0;
+    flex: 1 1 0%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.trailing {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    font-size: var(--text-xs);
+    line-height: 16px;
+    color: color-mix(in srgb, var(--text) 60%, transparent);
+}

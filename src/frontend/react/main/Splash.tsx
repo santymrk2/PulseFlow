@@ -91,17 +91,17 @@ export function Splash() {
             ) : null}
 
             <span style={{ paddingTop: "30px" }} className={styles.buttons}>
-                <Button variant="secondary" className="w-full justify-start" title={translateText("main.quick_search")} onClick={() => quickSearchActive.set(true)}>
+                <Button variant="secondary" className={styles.wide} title={translateText("main.quick_search")} onClick={() => quickSearchActive.set(true)}>
                     <Icon id="search" size={1} />
                     <T id="main.quick_search" />
                 </Button>
-                <Button variant="secondary" className="w-full justify-start" title={translateText("tooltip.project")} onClick={() => createProject()}>
+                <Button variant="secondary" className={styles.wide} title={translateText("tooltip.project")} onClick={() => createProject()}>
                     <Icon id="project" size={1} />
                     <T id="new.project" />
                 </Button>
                 <Button
                     variant="secondary"
-                    className="w-full justify-start"
+                    className={styles.wide}
                     title={translateText("tooltip.show")}
                     onClick={(detail) => {
                         if (detail.ctrl) {

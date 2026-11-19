@@ -1,0 +1,17 @@
+.root {
+    display: flex;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 8px;
+}
+
+.field {
+    min-width: 0;
+    flex: 1 1 0%;
+}
+
+.more {
+    position: relative;
+    height: 38px;
+    flex-shrink: 0;
+}

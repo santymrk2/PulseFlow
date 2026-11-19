@@ -8,6 +8,7 @@ import { Button } from "../../ui/button/Button"
 import { Input } from "../../ui/input/Input"
 import { LibraryAddMenu } from "../LibraryAddMenu"
 import { ProjectContentList } from "../ProjectContentList"
+import styles from "./ItemsPanel.module.css"
 import { LeftPanel } from "./LeftPanel"
 import { LibraryShowList } from "./LibraryShowList"
 import { PlaylistOptionsMenu } from "./PlaylistOptionsMenu"
@@ -63,13 +64,12 @@ export function ItemsPanel() {
                 </>
             }
         >
-            {/* ItemsPanel.svelte no tiene bloque <style>: las clases son utilidades de Tailwind. */}
             {library ? (
-                <div className="flex h-full flex-col">
-                    <div className="library-search shrink-0 border-b border-border p-2">
+                <div className={styles.library}>
+                    <div className={`library-search ${styles.search}`}>
                         <Input value={query} placeholder={translateText("ui.search_shows")} onInput={(e) => setQuery(e.currentTarget.value)} />
                     </div>
-                    <div className="min-h-0 flex-1">
+                    <div className={styles.list}>
                         <LibraryShowList shows={visibleShows} searching={!!query.trim() && !visibleShows.length} />
                     </div>
                 </div>
