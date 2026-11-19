@@ -78,4 +78,29 @@ describe("ClearButtons", () => {
         expect(clearBackground).toHaveBeenCalled()
         expect(onAutoChangeChange).toHaveBeenCalledWith(true)
     })
+
+    it("ordena_los_botones_de_capa_de_arriba_hacia_abajo_de_la_pila", () => {
+        vi.mocked(isOutCleared).mockReturnValue(false)
+        vi.mocked(getActiveOutputs).mockReturnValue([])
+        vi.mocked(getOutputContent).mockReturnValue(null)
+        setBaseStores()
+
+        render(<ClearButtons autoChange={false} activeClear={null} />)
+        const titles = screen.getAllByRole("button").map((b) => b.getAttribute("title") || "")
+        const order = ["clear.overlays", "clear.slide", "clear.nextTimer", "clear.background", "clear.audio"].map((t) => titles.findIndex((x) => x.startsWith(t)))
+        expect(order.every((i) => i >= 0)).toBe(true)
+        expect([...order].sort((a, b) => a - b)).toEqual(order)
+    })
+
+    it("clear_all_y_restore_siempre_se_renderizan", () => {
+        vi.mocked(isOutCleared).mockReturnValue(false)
+        vi.mocked(getActiveOutputs).mockReturnValue([])
+        vi.mocked(getOutputContent).mockReturnValue(null)
+        setBaseStores()
+
+        render(<ClearButtons autoChange={false} activeClear={null} />)
+        expect(screen.getByTitle("clear.all [esc]")).toBeTruthy()
+        const restore = screen.getByTitle("preview.restore_output") as HTMLButtonElement
+        expect(restore.disabled).toBe(true)
+    })
 })

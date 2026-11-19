@@ -96,6 +96,7 @@ export function ClearButtons({ autoChange, activeClear, onAutoChangeChange, onUp
         onUpdate?.(key)
     }
 
+    const canRestore = allCleared && !!currentOutputCache && currentOutputCache.slide?.type !== "ppt" && !currentOutLocked && enableRestore
     const outputContent = getOutputContent("", currentOutputs)
     const backgroundCleared = isOutCleared("background", currentOutputs)
     const outputId = getActiveOutputs(currentOutputs, true, true, true)[0] || ""
@@ -165,38 +166,33 @@ export function ClearButtons({ autoChange, activeClear, onAutoChangeChange, onUp
                 </span>
             ) : null}
 
-            <span>
-                {allCleared && currentOutputCache && currentOutputCache?.slide?.type !== "ppt" ? (
-                    <Button style={{ padding: "0.42em 0.8em" }} className="clearAll" disabled={currentOutLocked || !enableRestore} title="preview.restore_output" onClick={restoreOutput}>
-                        <Icon id="reset" size={1.2} white />
-                        {!currentLabelsDisabled ? <T id="preview.restore_output" /> : null}
-                    </Button>
-                ) : (
-                    <Button style={{ padding: "0.42em 0.8em" }} className="clearAll" disabled={currentOutLocked || allCleared} title="clear.all [esc]" onClick={() => clearAll(true)}>
-                        {currentIsTimelinePlaying ? (
-                            <span className={stylesCss.faded} data-title={translateText("popup.timeline")}>
-                                <Icon id="timeline" white />
-                            </span>
-                        ) : null}
-                        <Icon id="clear" size={1.2} white />
-                        {!currentLabelsDisabled ? <T id="clear.all" /> : null}
-                    </Button>
-                )}
+            <span className={stylesCss.group}>
+                <Button style={{ padding: "0.42em 0.8em" }} className="clearAll" disabled={currentOutLocked || allCleared} title="clear.all [esc]" onClick={() => clearAll(true)}>
+                    {currentIsTimelinePlaying ? (
+                        <span className={stylesCss.faded} data-title={translateText("popup.timeline")}>
+                            <Icon id="timeline" white />
+                        </span>
+                    ) : null}
+                    <Icon id="clear" size={1.2} white />
+                    {!currentLabelsDisabled ? <T id="clear.all" /> : null}
+                </Button>
+                <Button style={{ padding: "0.42em 0.8em" }} className="clearAll" disabled={!canRestore} title="preview.restore_output" onClick={restoreOutput}>
+                    <Icon id="reset" size={1.2} white />
+                    {!currentLabelsDisabled ? <T id="preview.restore_output" /> : null}
+                </Button>
             </span>
 
             <span className={stylesCss.group}>
-                {outputContent?.type !== "pdf" && outputContent?.type !== "ppt" ? (
-                    <div className={stylesCss.combinedButton}>
-                        <Button style={{ padding: "0.3em 0.6em", ...(styleBackground ? { opacity: 0.5, cursor: "default" } : {}) }} disabled={(currentOutLocked || backgroundCleared) && !styleBackground} title={currentOutLocked || backgroundCleared ? "" : "clear.background [F1]"} onClick={() => clear("background")}>
-                            <Icon id="image" size={1.2} white />
+                <div className={stylesCss.combinedButton}>
+                    <Button style={{ padding: "0.3em 0.6em", ...(lockedOverlay ? { opacity: 0.5, cursor: "default" } : {}) }} disabled={currentOutLocked || (overlayCleared && effectsCleared)} title={lockedOverlay ? "" : "clear.overlays [F3]"} onClick={() => clear("overlays")}>
+                        <Icon id="overlays" size={1.2} white />
+                    </Button>
+                    {!allCleared ? (
+                        <Button style={{ padding: activeClear === "overlays" ? "0px" : "2px", minHeight: "15px" }} isActive={activeClear === "overlays"} disabled={overlayCleared} onClick={() => openPreview("overlays")} title="preview.overlays">
+                            {activeClear === "overlays" ? <Icon style={{ opacity: 0.8 }} id="expand" size={0.7} white /> : null}
                         </Button>
-                        {!allCleared ? (
-                            <Button style={{ padding: activeClear === "background" ? "0px" : "2px", minHeight: "15px", borderLeft: "0" }} isActive={activeClear === "background"} disabled={backgroundCleared} onClick={() => openPreview("background")} title="preview.background">
-                                {activeClear === "background" ? <Icon style={{ opacity: 0.8 }} id="expand" size={0.7} white /> : null}
-                            </Button>
-                        ) : null}
-                    </div>
-                ) : null}
+                    ) : null}
+                </div>
 
                 {getMediaLayerType(outBackground.path || "", backgroundData) !== "foreground" || !slideCleared ? (
                     <div className={stylesCss.combinedButton}>
@@ -213,28 +209,6 @@ export function ClearButtons({ autoChange, activeClear, onAutoChangeChange, onUp
                     </div>
                 ) : null}
 
-                <div className={stylesCss.combinedButton}>
-                    <Button style={{ padding: "0.3em 0.6em", ...(lockedOverlay ? { opacity: 0.5, cursor: "default" } : {}) }} disabled={currentOutLocked || (overlayCleared && effectsCleared)} title={lockedOverlay ? "" : "clear.overlays [F3]"} onClick={() => clear("overlays")}>
-                        <Icon id="overlays" size={1.2} white />
-                    </Button>
-                    {!allCleared ? (
-                        <Button style={{ padding: activeClear === "overlays" ? "0px" : "2px", minHeight: "15px" }} isActive={activeClear === "overlays"} disabled={overlayCleared} onClick={() => openPreview("overlays")} title="preview.overlays">
-                            {activeClear === "overlays" ? <Icon style={{ opacity: 0.8 }} id="expand" size={0.7} white /> : null}
-                        </Button>
-                    ) : null}
-                </div>
-
-                <div className={stylesCss.combinedButton}>
-                    <Button style={{ padding: "0.3em 0.6em" }} disabled={currentOutLocked || audioCleared} title="clear.audio [F4]" onClick={() => clear("audio")}>
-                        <Icon id={audioIcon} size={1.2} white />
-                    </Button>
-                    {!allCleared ? (
-                        <Button style={{ padding: activeClear === "audio" ? "0px" : "2px", minHeight: "15px" }} isActive={activeClear === "audio"} disabled={audioCleared} onClick={() => openPreview("audio")} title="preview.audio">
-                            {activeClear === "audio" ? <Icon style={{ opacity: 0.8 }} id="expand" size={0.7} white /> : null}
-                        </Button>
-                    ) : null}
-                </div>
-
                 {outputContent?.type !== "pdf" ? (
                     <div className={stylesCss.combinedButton}>
                         <Button style={{ padding: "0.3em 0.6em", ...(isTimer ? { opacity: 0.9 } : {}) }} disabled={currentOutLocked || (slideTimerCleared && activeClear !== "nextTimer")} title={`${isTimer ? "actions.stop_timers" : `clear.${Object.keys(currentOverlayTimers).length ? "timer" : "nextTimer"}`}${presentationControllersKeysDisabled() ? " [F5]" : ""}`} onClick={() => (isTimer ? activeTimers.set([]) : clear("nextTimer"))}>
@@ -247,6 +221,30 @@ export function ClearButtons({ autoChange, activeClear, onAutoChangeChange, onUp
                         ) : null}
                     </div>
                 ) : null}
+
+                {outputContent?.type !== "pdf" && outputContent?.type !== "ppt" ? (
+                    <div className={stylesCss.combinedButton}>
+                        <Button style={{ padding: "0.3em 0.6em", ...(styleBackground ? { opacity: 0.5, cursor: "default" } : {}) }} disabled={(currentOutLocked || backgroundCleared) && !styleBackground} title={currentOutLocked || backgroundCleared ? "" : "clear.background [F1]"} onClick={() => clear("background")}>
+                            <Icon id="image" size={1.2} white />
+                        </Button>
+                        {!allCleared ? (
+                            <Button style={{ padding: activeClear === "background" ? "0px" : "2px", minHeight: "15px", borderLeft: "0" }} isActive={activeClear === "background"} disabled={backgroundCleared} onClick={() => openPreview("background")} title="preview.background">
+                                {activeClear === "background" ? <Icon style={{ opacity: 0.8 }} id="expand" size={0.7} white /> : null}
+                            </Button>
+                        ) : null}
+                    </div>
+                ) : null}
+
+                <div className={stylesCss.combinedButton}>
+                    <Button style={{ padding: "0.3em 0.6em" }} disabled={currentOutLocked || audioCleared} title="clear.audio [F4]" onClick={() => clear("audio")}>
+                        <Icon id={audioIcon} size={1.2} white />
+                    </Button>
+                    {!allCleared ? (
+                        <Button style={{ padding: activeClear === "audio" ? "0px" : "2px", minHeight: "15px" }} isActive={activeClear === "audio"} disabled={audioCleared} onClick={() => openPreview("audio")} title="preview.audio">
+                            {activeClear === "audio" ? <Icon style={{ opacity: 0.8 }} id="expand" size={0.7} white /> : null}
+                        </Button>
+                    ) : null}
+                </div>
             </span>
         </div>
     )
