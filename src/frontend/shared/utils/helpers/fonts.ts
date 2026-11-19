@@ -1,3 +1,4 @@
+import { invoke } from "@tauri-apps/api/core"
 import { get } from "../../core/lib/store"
 import type { DropdownOptions } from "../../../../types/Input"
 import type { CustomFont } from "../../../../types/Show"
@@ -24,7 +25,7 @@ async function getFontsList() {
 
     let localFonts: FontData[] = []
     try {
-        localFonts = await window.queryLocalFonts()
+        localFonts = await invoke<FontData[]>("LIST_SYSTEM_FONTS")
     } catch (err) {
         console.warn("Could not load local fonts:", err)
         return []

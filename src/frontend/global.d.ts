@@ -18,7 +18,6 @@ interface Window {
         getListeners: () => [string, number][]
         showFilePath: (file: File) => string
     }
-    queryLocalFonts: () => Promise<FontData[]>
 }
 
 // event.target.

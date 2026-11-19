@@ -67,6 +67,7 @@ pub fn run() {
             commands::app::LOG,
             commands::app::URL,
             commands::app::IP,
+            commands::fonts::LIST_SYSTEM_FONTS,
             // STARTUP
             commands::startup::READY,
             // WINDOW
