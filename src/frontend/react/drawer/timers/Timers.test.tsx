@@ -14,7 +14,7 @@ vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/actions/actions", () => ({ customActionActivation: customActionActivationMock, runActionId: vi.fn() }))
 vi.mock("../../../components/edit/scripts/edit", () => ({ openDrawer: openDrawerMock }))
-vi.mock("../../slide/views/Timer", async () => ({ Timer: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Timer") }))
+vi.mock("../../../features/slide/views/Timer", async () => ({ Timer: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Timer") }))
 
 const dict = {
     empty: { timers: "Sin temporizadores" },

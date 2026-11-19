@@ -1,14 +1,14 @@
 import { useEffect, useRef, useState } from "react"
 import { getResolution } from "../../shared/utils/helpers/output"
-import { getStyleResolution } from "../../components/slide/getStyleResolution"
+import { getStyleResolution } from "../../features/slide/logic/getStyleResolution"
 import { activeEdit, effects, outputs, previewOutputId, styles } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { Icon } from "../../shared/ui/helpers/Icon"
 import { T } from "../../shared/ui/helpers/T"
 import { useStore } from "../../shared/ui/hooks/useStore"
 import { Effect } from "../output/Effect"
-import { observeResize } from "../slide/observeResize"
-import { Zoomed } from "../slide/Zoomed"
+import { observeResize } from "../../features/slide/observeResize"
+import { Zoomed } from "../../features/slide/Zoomed"
 import stylesModule from "./EffectEditor.module.css"
 
 // Port de components/edit/editors/EffectEditor.svelte.

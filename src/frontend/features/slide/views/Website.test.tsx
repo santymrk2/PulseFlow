@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { attachPersistentWebview } from "../../../components/slide/views/websiteDomPool"
+import { attachPersistentWebview } from "../logic/views/websiteDomPool"
 import { Website } from "./Website"
 
-vi.mock("../../../components/slide/views/websiteDomPool", () => ({ attachPersistentWebview: vi.fn(() => ({ update: vi.fn(), destroy: vi.fn() })) }))
+vi.mock("../logic/views/websiteDomPool", () => ({ attachPersistentWebview: vi.fn(() => ({ update: vi.fn(), destroy: vi.fn() })) }))
 
 afterEach(() => {
     cleanup()

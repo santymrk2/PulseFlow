@@ -21,7 +21,7 @@ vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({
 vi.mock("../../../shared/utils/helpers/overlayOutput", () => ({ toggleEffectOutput: toggleEffectOutputMock }))
 vi.mock("../../../converters/project", () => ({ addProjectItem: addProjectItemMock }))
 vi.mock("../../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Effect") }))
-vi.mock("../../slide/Zoomed", async () => {
+vi.mock("../../../features/slide/Zoomed", async () => {
     const { makePortMock } = await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")
     const Port = makePortMock("Zoomed")
     return {

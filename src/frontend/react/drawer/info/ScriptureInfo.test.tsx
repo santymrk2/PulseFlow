@@ -29,8 +29,8 @@ vi.mock("../../../app/wiring/createData", () => ({ setDefaultScriptureTemplates:
 vi.mock("../../../shared/utils/popup", () => ({ confirmCustom: (message: string) => mocks.confirm(message) }))
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn(), requestMain: vi.fn() }))
 vi.mock("../../output/Media", () => ({ Media: ({ path }: { path?: string }) => <div data-testid="media" data-path={path} /> }))
-vi.mock("../../slide/Textbox", () => ({ Textbox: ({ ref }: { ref?: { id?: string } }) => <div data-testid="textbox" data-ref-id={ref?.id} /> }))
-vi.mock("../../slide/Zoomed", () => ({
+vi.mock("../../../features/slide/Textbox", () => ({ Textbox: ({ ref }: { ref?: { id?: string } }) => <div data-testid="textbox" data-ref-id={ref?.id} /> }))
+vi.mock("../../../features/slide/Zoomed", () => ({
     Zoomed: ({ background, children }: { background?: string; children?: React.ReactNode }) => (
         <div data-testid="zoomed" data-background={background}>
             {children}

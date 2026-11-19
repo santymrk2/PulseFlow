@@ -6,7 +6,7 @@ import { outputs, previewOutputId, styles as stylesStore } from "../../../shared
 import { videoExtensions } from "../../../shared/core/values/extensions"
 import { cropImageToBase64, encodeFilePath, getExtension, isLocalFile } from "../../../shared/utils/helpers/media"
 import { getResolution } from "../../../shared/utils/helpers/output"
-import { getStyleResolution } from "../../../components/slide/getStyleResolution"
+import { getStyleResolution } from "../../../features/slide/logic/getStyleResolution"
 import { useStore } from "../../../shared/ui/hooks/useStore"
 import { Camera } from "../../output/Camera"
 import { Capture } from "../live/Capture"

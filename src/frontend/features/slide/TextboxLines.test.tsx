@@ -3,7 +3,7 @@ import { act, cleanup, render, waitFor } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../types/Show"
 import { outputs, slidesOptions, styles as stylesStore, variables } from "../../shared/core/stores"
-import { applyStyleOverrides } from "../../components/slide/wordOverride"
+import { applyStyleOverrides } from "./logic/wordOverride"
 import { replaceDynamicValues } from "../../shared/utils/helpers/showActions"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { TextboxLines, type TextboxLinesProps } from "./TextboxLines"
@@ -12,7 +12,7 @@ vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/showActions", () => ({ replaceDynamicValues: vi.fn((value: string) => value) }))
-vi.mock("../../components/slide/wordOverride", () => ({
+vi.mock("./logic/wordOverride", () => ({
     applyStyleOverrides: vi.fn((lines) => lines.map((line: { text?: unknown[] }) => ({ ...line, text: [{ value: "override", style: "color: green;" }] })))
 }))
 

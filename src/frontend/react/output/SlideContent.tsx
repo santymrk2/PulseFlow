@@ -10,7 +10,7 @@ import { loadCustomFonts } from "../../shared/utils/helpers/fonts"
 import { getStyleTemplate, itemNeedsAutoSize, slideHasAutoSizeItem } from "../../shared/utils/helpers/output"
 import { SlideTimeline } from "../../features/timeline/logic/SlideTimeline"
 import { useStore } from "../../shared/ui/hooks/useStore"
-import { Textbox, type TextboxRef } from "../slide/Textbox"
+import { Textbox, type TextboxRef } from "../../features/slide/Textbox"
 import { SlideItemTransition, type LineInfo } from "./SlideItemTransition"
 import css from "./SlideContent.module.css"
 

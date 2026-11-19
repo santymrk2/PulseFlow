@@ -23,8 +23,8 @@ vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({
 vi.mock("../../../shared/utils/helpers/overlayOutput", () => ({ toggleOverlayOutput: toggleOverlayOutputMock }))
 vi.mock("../../../converters/project", () => ({ addProjectItem: addProjectItemMock }))
 vi.mock("../effects/Effects", () => ({ Effects: () => <div data-isla="Effects" /> }))
-vi.mock("../../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Textbox") }))
-vi.mock("../../slide/Zoomed", async () => {
+vi.mock("../../../features/slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Textbox") }))
+vi.mock("../../../features/slide/Zoomed", async () => {
     const { makePortMock } = await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")
     const Port = makePortMock("Zoomed")
     return {

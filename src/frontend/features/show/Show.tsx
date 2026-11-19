@@ -5,7 +5,7 @@ import { createGlobalTimerFromLocalTimer } from "../../components/drawer/timers/
 import { setOutput } from "../../shared/utils/helpers/output"
 import { Splash } from "../../react/main/Splash"
 import { Camera } from "../../react/output/Camera"
-import { Layouts } from "../../react/slide/Layouts"
+import { Layouts } from "../slide/Layouts"
 import { Timeline } from "../timeline/Timeline"
 import { Resizeable } from "../../shared/ui/system/Resizeable"
 import { HoverPlay } from "../../shared/ui/system/HoverPlay"

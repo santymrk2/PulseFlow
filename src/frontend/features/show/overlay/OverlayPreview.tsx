@@ -4,7 +4,7 @@ import { findMatchingOut, getActiveOutputs, setOutput } from "../../../shared/ut
 import { useStore } from "../../../shared/ui/hooks/useStore"
 import { Overlay } from "../../../react/output/OutputOverlay"
 import { HoverPlay } from "../../../shared/ui/system/HoverPlay"
-import { Zoomed } from "../../../react/slide/Zoomed"
+import { Zoomed } from "../../slide/Zoomed"
 import styles from "./OverlayPreview.module.css"
 
 export interface OverlayPreviewProps {

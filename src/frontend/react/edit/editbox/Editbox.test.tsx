@@ -117,7 +117,7 @@ vi.mock("../../../components/edit/editbox/EditboxHelper", () => ({
 vi.mock("../../../components/edit/editbox/EditboxPaste", () => ({ EditboxPaste: { handlePaste: vi.fn(), handleCopy: vi.fn(), handleCut: vi.fn(), paste: vi.fn() } }))
 vi.mock("../../../components/media/video/videoPlayer", () => ({}))
 vi.mock("../../../features/timeline/logic/TimelinePlayback", () => ({}))
-vi.mock("../../slide/SlideItems", () => ({
+vi.mock("../../../features/slide/SlideItems", () => ({
     SlideItems: ({ edit }: { edit?: boolean }) => <div data-testid="slide-items" data-edit={String(edit ?? false)} />
 }))
 

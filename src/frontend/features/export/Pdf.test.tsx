@@ -2,9 +2,9 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
-vi.mock("../../react/slide/Zoomed", () => ({ Zoomed: ({ children }: { children?: any }) => <div data-testid="zoomed">{children}</div> }))
-vi.mock("../../react/slide/Textbox", () => ({ Textbox: () => <div data-testid="textbox" /> }))
-vi.mock("../../react/slide/views/MediaItem", () => ({ MediaItem: () => <div data-testid="media-item" /> }))
+vi.mock("../slide/Zoomed", () => ({ Zoomed: ({ children }: { children?: any }) => <div data-testid="zoomed">{children}</div> }))
+vi.mock("../slide/Textbox", () => ({ Textbox: () => <div data-testid="textbox" /> }))
+vi.mock("../slide/views/MediaItem", () => ({ MediaItem: () => <div data-testid="media-item" /> }))
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../shared/ui/hooks/useStore", () => ({ useStore: () => null }))
 

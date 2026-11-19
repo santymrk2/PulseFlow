@@ -4,7 +4,7 @@ import { findMatchingOut, setOutput } from "../../../shared/utils/helpers/output
 import { useStore } from "../../../shared/ui/hooks/useStore"
 import { Effect } from "../../../react/output/Effect"
 import { HoverPlay } from "../../../shared/ui/system/HoverPlay"
-import { Zoomed } from "../../../react/slide/Zoomed"
+import { Zoomed } from "../../slide/Zoomed"
 import styles from "./EffectPreview.module.css"
 
 export interface EffectPreviewProps {

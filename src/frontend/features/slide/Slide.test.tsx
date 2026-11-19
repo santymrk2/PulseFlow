@@ -14,7 +14,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
-vi.mock("../../features/show/logic/slides", () => ({ removeTagsAndContent: vi.fn((value: string) => value) }))
+vi.mock("../show/logic/slides", () => ({ removeTagsAndContent: vi.fn((value: string) => value) }))
 vi.mock("../../components/actions/actions", () => ({ slideHasAction: vi.fn(() => false) }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ shouldItemBeShown: vi.fn(() => true) }))
 vi.mock("../../shared/utils/helpers/media", () => ({
@@ -37,12 +37,12 @@ vi.mock("../../shared/utils/helpers/show", () => ({ getGroupName: vi.fn(() => "G
 vi.mock("../../shared/utils/helpers/shows", () => ({
     _show: vi.fn(() => ({ layouts: () => ({ ref: () => [[]] }) }))
 }))
-vi.mock("../drawer/media/MediaLoader", () => ({
+vi.mock("../../react/drawer/media/MediaLoader", () => ({
     MediaLoader: (props: Record<string, unknown>) => <span data-view="MediaLoader" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
 }))
-vi.mock("../edit/editbox/Editbox", async () => ({ Editbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Editbox") }))
+vi.mock("../../react/edit/editbox/Editbox", async () => ({ Editbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Editbox") }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Effect") }))
+vi.mock("../../react/output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Effect") }))
 vi.mock("../../shared/ui/system/SelectElem", () => ({
     SelectElem: ({ children, style }: { children: ReactNode; style?: CSSProperties }) => (
         <div data-select style={style}>

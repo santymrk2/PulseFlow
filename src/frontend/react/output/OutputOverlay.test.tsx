@@ -5,7 +5,7 @@ import OutputOverlay from "./OutputOverlay"
 
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ shouldItemBeShown: () => true }))
 vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)) }))
-vi.mock("../slide/Textbox", () => ({ Textbox: () => <div data-testid="textbox" /> }))
+vi.mock("../../features/slide/Textbox", () => ({ Textbox: () => <div data-testid="textbox" /> }))
 vi.mock("./SlideItemTransition", () => ({ SlideItemTransition: ({ children }: { children: (args: { customItem: { id: string } }) => React.ReactNode }) => <div>{children({ customItem: { id: "i1" } })}</div> }))
 
 afterEach(cleanup)

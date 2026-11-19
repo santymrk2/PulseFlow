@@ -24,8 +24,8 @@ vi.mock("../../react/drawer/Card", async () => {
         }
     }
 })
-vi.mock("../../react/slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Textbox") }))
-vi.mock("../../react/slide/Zoomed", async () => ({ Zoomed: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Zoomed") }))
+vi.mock("../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Textbox") }))
+vi.mock("../slide/Zoomed", async () => ({ Zoomed: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Zoomed") }))
 vi.mock("../../shared/ui/kit/text-field/TextField", () => ({
     TextField: ({ label, value, onInput }: { label: string; value: string; onInput?: (v: string) => void }) => <input data-label={label} value={value} onChange={(e) => onInput?.(e.currentTarget.value)} />
 }))

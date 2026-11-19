@@ -12,7 +12,7 @@ import { getActiveOutputs, getAllActiveOutputs, getFirstActiveOutput, getOutputL
 import { createCSSVariables } from "../../shared/utils/helpers/showActions"
 import { isCroppedItem } from "../../shared/utils/helpers/cropping"
 import { getStyles, getItemStyle } from "../../shared/utils/helpers/style"
-import { readAutoSizeCache, writeAutoSizeCache } from "../../components/slide/autosizeCache"
+import { readAutoSizeCache, writeAutoSizeCache } from "./logic/autosizeCache"
 import { cn } from "../../shared/core/lib/utils"
 import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
 import { useStore } from "../../shared/ui/hooks/useStore"

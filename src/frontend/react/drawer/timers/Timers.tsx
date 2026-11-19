@@ -9,7 +9,7 @@ import { getCurrentTimerValue, getTimerDynamicValue, playPauseGlobal, resetTimer
 import { Icon } from "../../../shared/ui/helpers/Icon"
 import { T } from "../../../shared/ui/helpers/T"
 import { useStore } from "../../../shared/ui/hooks/useStore"
-import { Timer as TimerView } from "../../slide/views/Timer"
+import { Timer as TimerView } from "../../../features/slide/views/Timer"
 import { Center } from "../../../shared/ui/system/Center"
 import { SelectElem } from "../../../shared/ui/system/SelectElem"
 import { Button } from "../../../shared/ui/kit/button/Button"

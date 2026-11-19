@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { attachPersistentWebview, type PersistentWebviewOptions } from "../../../components/slide/views/websiteDomPool"
+import { attachPersistentWebview, type PersistentWebviewOptions } from "../logic/views/websiteDomPool"
 import { Icon } from "../../../shared/ui/helpers/Icon"
 import styles from "./Website.module.css"
 

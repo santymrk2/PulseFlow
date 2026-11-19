@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import type { Item } from "../../../../types/Show"
 import { audioChannelsData, currentWindow, media as mediaStore, outputs, styles } from "../../../shared/core/stores"
-import { Image } from "../../drawer/media/Image"
+import { Image } from "../../../react/drawer/media/Image"
 import { getCropState } from "../../../shared/utils/helpers/cropping"
 import { encodeFilePath, getExtension, getMedia, getMediaType, getThumbnailPath, mediaSize } from "../../../shared/utils/helpers/media"
 import { defaultLayers } from "../../../shared/utils/helpers/output"

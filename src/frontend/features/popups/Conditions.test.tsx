@@ -10,7 +10,7 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Conditions } from "./Conditions"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../react/slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Textbox") }))
+vi.mock("../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Textbox") }))
 vi.mock("../stage/Stagebox", async () => ({ Stagebox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Stagebox") }))
 // ConditionsBox ya es React: el doble lo registra como las islas, para seguir usando islands/emit
 vi.mock("./ConditionsBox", async () => {

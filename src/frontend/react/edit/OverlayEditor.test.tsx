@@ -20,7 +20,7 @@ vi.mock("../../shared/ui/system/Snaplines", () => ({
 }))
 vi.mock("./editbox/Editbox", () => ({ Editbox: () => <div data-testid="editbox" /> }))
 vi.mock("../../shared/ui/system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode }) => <div data-testid="droparea">{children}</div> }))
-vi.mock("../slide/Zoomed", () => ({ Zoomed: ({ children }: { children?: ReactNode }) => <div data-testid="zoomed">{children}</div> }))
+vi.mock("../../features/slide/Zoomed", () => ({ Zoomed: ({ children }: { children?: ReactNode }) => <div data-testid="zoomed">{children}</div> }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: mocks.history }))
 vi.mock("../../shared/utils/request", () => ({ send: mocks.send }))
 

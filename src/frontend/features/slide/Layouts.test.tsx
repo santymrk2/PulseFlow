@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { changeSlidesView } from "../../features/show/logic/slides"
+import { changeSlidesView } from "../show/logic/slides"
 import { actions, activePopup, activeProject, activeShow, alertMessage, editingProjectTemplate, labelsDisabled, projects, projectTemplates, showsCache, slidesOptions } from "../../shared/core/stores"
 import { getAccess } from "../../shared/utils/profile"
 import { getActionIcon, runAction } from "../../components/actions/actions"
@@ -17,7 +17,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
-vi.mock("../../features/show/logic/slides", () => ({ changeSlidesView: vi.fn() }))
+vi.mock("../show/logic/slides", () => ({ changeSlidesView: vi.fn() }))
 vi.mock("../../components/actions/actions", () => ({ getActionIcon: vi.fn(() => "actions"), runAction: vi.fn() }))
 vi.mock("../../shared/utils/helpers/clipboard", () => ({ duplicate: vi.fn() }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))

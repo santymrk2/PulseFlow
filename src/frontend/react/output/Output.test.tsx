@@ -22,7 +22,7 @@ vi.mock("../../shared/utils/helpers/output", () => ({
     getStyleTemplate: () => ({}),
     setTemplateStyle: (_out: unknown, _style: unknown, items: unknown) => items
 }))
-vi.mock("../slide/Zoomed", () => ({ Zoomed: ({ children }: { children?: React.ReactNode }) => <div data-testid="zoomed">{children}</div> }))
+vi.mock("../../features/slide/Zoomed", () => ({ Zoomed: ({ children }: { children?: React.ReactNode }) => <div data-testid="zoomed">{children}</div> }))
 
 afterEach(cleanup)
 

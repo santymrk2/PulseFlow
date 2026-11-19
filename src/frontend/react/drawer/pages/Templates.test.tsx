@@ -17,7 +17,7 @@ vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({
 vi.mock("../../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [] }))
 vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [] }) }) }))
 vi.mock("../../../shared/utils/helpers/select", () => ({ deselect: deselectMock }))
-vi.mock("../../slide/Actions", () => ({ Actions: (props: Record<string, unknown>) => <div data-isla="Actions" data-props={JSON.stringify(props ?? {})} /> }))
+vi.mock("../../../features/slide/Actions", () => ({ Actions: (props: Record<string, unknown>) => <div data-isla="Actions" data-props={JSON.stringify(props ?? {})} /> }))
 vi.mock("./TemplateSlide", () => ({ TemplateSlide: (props: Record<string, unknown>) => <div data-isla="TemplateSlide" data-props={JSON.stringify(props ?? {})} /> }))
 
 const dict = {

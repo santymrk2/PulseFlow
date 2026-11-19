@@ -7,7 +7,7 @@ import { activeEdit, activePopup, popupData, templates } from "../../shared/core
 import { Icon } from "../../shared/ui/helpers/Icon"
 import { T } from "../../shared/ui/helpers/T"
 import { useStore } from "../../shared/ui/hooks/useStore"
-import { observeResize } from "../slide/observeResize"
+import { observeResize } from "../../features/slide/observeResize"
 import { TemplateSlide } from "../drawer/pages/TemplateSlide"
 import { DropArea } from "../../shared/ui/system/DropArea"
 import { Button } from "../../shared/ui/kit/button/Button"

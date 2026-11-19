@@ -7,8 +7,8 @@ import { OUTPUT } from "../../../../types/Channels"
 import { AudioAnalyser } from "../../../audio/audioAnalyser"
 import { currentWindow, visualizerData } from "../../../shared/core/stores"
 import { send } from "../../../shared/utils/request"
-import { drawKaleidoscope } from "../../../components/slide/views/visualizerKaleidoscope"
-import { drawParticles } from "../../../components/slide/views/visualizerParticles"
+import { drawKaleidoscope } from "../logic/views/visualizerKaleidoscope"
+import { drawParticles } from "../logic/views/visualizerParticles"
 import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { Visualizer } from "./Visualizer"
 
@@ -16,8 +16,8 @@ vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: { getAnalysers: vi.fn(() => []) } }))
 vi.mock("../../../shared/utils/request", () => ({ send: vi.fn() }))
-vi.mock("../../../components/slide/views/visualizerKaleidoscope", () => ({ drawKaleidoscope: vi.fn() }))
-vi.mock("../../../components/slide/views/visualizerParticles", () => ({ drawParticles: vi.fn() }))
+vi.mock("../logic/views/visualizerKaleidoscope", () => ({ drawKaleidoscope: vi.fn() }))
+vi.mock("../logic/views/visualizerParticles", () => ({ drawParticles: vi.fn() }))
 
 const ctx = {
     clearRect: vi.fn(),

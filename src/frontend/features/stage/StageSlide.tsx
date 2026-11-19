@@ -12,7 +12,7 @@ import { triggerClickOnEnterSpace } from "../../shared/ui/helpers/triggerClickOn
 import { useStore } from "../../shared/ui/hooks/useStore"
 import { SelectElem } from "../../shared/ui/system/SelectElem"
 import { HiddenInput, type HiddenInputEdit } from "../../shared/ui/kit/hidden-input/HiddenInput"
-import { Zoomed } from "../../react/slide/Zoomed"
+import { Zoomed } from "../slide/Zoomed"
 import { Stagebox } from "./Stagebox"
 import styles from "./StageSlide.module.css"
 

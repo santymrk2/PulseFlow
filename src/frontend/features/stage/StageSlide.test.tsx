@@ -32,7 +32,7 @@ vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) 
 vi.mock("../../shared/ui/system/SelectElem", () => ({
     SelectElem: ({ children }: { children: ReactNode }) => <div data-select>{children}</div>
 }))
-vi.mock("../../react/slide/Zoomed", () => ({
+vi.mock("../slide/Zoomed", () => ({
     Zoomed: ({ children, onRatioChange, ...props }: { children: ReactNode; onRatioChange?: (ratio: number) => void } & Record<string, unknown>) => (
         <div data-view="Zoomed" data-props={JSON.stringify(props)}>
             <button data-testid="ratio" onClick={() => onRatioChange?.(0.5)} />

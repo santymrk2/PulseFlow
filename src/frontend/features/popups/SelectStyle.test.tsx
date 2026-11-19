@@ -17,7 +17,7 @@ vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
-vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
+vi.mock("../slide/logic/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
 vi.mock("../../react/drawer/Card", async () => {
     const { islands } = await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")
     return {
