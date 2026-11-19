@@ -33,12 +33,12 @@ vi.mock("../../shared/ui/kit/toggle-field/ToggleField", async () => ({ ToggleFie
 
 const DAY = new Date(2026, 0, 15).getTime()
 let restaurar: () => void = () => {}
-function montar(options: { edit?: string | null; events?: object; subTab?: string; popup?: object; extra?: ReturnType<typeof storeEntry>[] } = {}) {
+function montar(options: { edit?: string | null; events?: object; subTab?: string; popup?: object; days?: number[]; extra?: ReturnType<typeof storeEntry>[] } = {}) {
     restaurar = setStoresForTest([
         looseEntry(eventEdit, options.edit ?? null),
         looseEntry(events, options.events ?? {}),
         looseEntry(calendars, { c1: { id: "c1", name: "Mi cal", color: "#111111", custom: true }, imp: { id: "imp", name: "Importado", color: "#222222", url: "http://x" } }),
-        looseEntry(activeDays, [DAY]),
+        looseEntry(activeDays, options.days ?? [DAY]),
         looseEntry(drawerTabsData, { calendar: { activeSubTab: options.subTab ?? "event" } }),
         looseEntry(popupData, options.popup ?? {}),
         storeEntry(activePopup, "edit_event"),
@@ -271,5 +271,10 @@ describe("EditEvent", () => {
         fire("calendar.name", "onInput", "x")
         unmount()
         expect(history).not.toHaveBeenCalled()
+    })
+
+    it("sin_dias_activos_no_tira_RangeError_y_deja_las_fechas_vacías (F03)", () => {
+        montar({ days: [] })
+        expect(screen.getByText("Crear")).toBeTruthy()
     })
 })

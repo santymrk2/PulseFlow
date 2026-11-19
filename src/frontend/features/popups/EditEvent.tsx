@@ -141,7 +141,7 @@ export function EditEvent() {
 
         let options: { month: number; year?: number } = { month: selectedDate.getMonth() + 1 }
         if (options.month > 11) options = { month: 0, year: selectedDate.getFullYear() + 1 }
-        next.repeatData.endingDate = getISO(setDate(selectedDate, options))
+        next.repeatData.endingDate = days.length ? getISO(setDate(selectedDate, options)) : ""
 
         setEditEvent(next)
         setStored(JSON.stringify(next))
