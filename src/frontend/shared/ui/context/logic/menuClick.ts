@@ -90,7 +90,6 @@ import {
 } from "../../../core/stores"
 import { openSettings } from "../../../../features/settings/logic/openSettings"
 import { escapeRegExp, hideDisplay, isOutputWindow, newToast, triggerFunction, wait } from "../../../utils/common"
-import { setExampleEffects, setExampleOverlays, setExampleTemplates } from "../../../../app/wiring/createData"
 import { translateText } from "../../../utils/language"
 import { confirmCustom } from "../../../utils/popup"
 import { send } from "../../../utils/request"
@@ -522,15 +521,6 @@ const clickActions = {
             return a
         })
         return m
-    },
-    reset_defaults: () => {
-        const activeTab = get(activeDrawerTab)
-        if (activeTab === "templates") setExampleTemplates()
-        else if (activeTab === "overlays") {
-            const subTab = get(drawerTabsData).overlays?.activeSubTab
-            if (subTab === "effects") setExampleEffects()
-            else setExampleOverlays()
-        }
     },
 
     // TAGS
