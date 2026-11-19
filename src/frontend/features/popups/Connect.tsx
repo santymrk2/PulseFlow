@@ -70,9 +70,12 @@ export function Connect() {
     const hostname = `${osValue.name.toLowerCase()}${osValue.platform === "win32" ? ".local" : ""}`
     const url = remoteController ? `https://freeshow.net/control?id=${controllerId}` : `http://${useHostname ? hostname : ip}:${port}`
 
+    // sin servidor al que apuntar (popup abierto sin id/ip) no hay link ni QR que mostrar (F08)
+    const hasTarget = remoteController || id === "companion" || (!!id && !!ip)
+
     // El QR se regenera sólo cuando cambia la url (con las mismas excepciones que el Svelte)
     useEffect(() => {
-        if (!url) return
+        if (!url || !hasTarget) return
         if (remoteController ? !controllerId : (!useHostname && ip === "localhost") || id === "companion") return
 
         const qr = qrcode(0, "L")
@@ -181,6 +184,10 @@ export function Connect() {
                                 <Icon id="launch" white />
                             </Link>
                         </>
+                    ) : !hasTarget ? (
+                        <p>
+                            <T id="toast.feature_unavailable" />
+                        </p>
                     ) : (
                         <>
                             <p>

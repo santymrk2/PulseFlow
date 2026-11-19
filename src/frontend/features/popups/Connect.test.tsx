@@ -40,7 +40,7 @@ function montar(data: object, extra: ReturnType<typeof looseEntry>[] = []) {
         looseEntry(outputs, { o1: { name: "Salida", enabled: true }, o2: { name: "Off", enabled: false } }),
         storeEntry(maxConnections, 10),
         storeEntry(activePopup, "connect"),
-        storeEntry(dictionary, { settings: { connect: "Conectar" }, error: { ip: "Sin IP" } }),
+        storeEntry(dictionary, { settings: { connect: "Conectar" }, error: { ip: "Sin IP" }, toast: { feature_unavailable: "No disponible" } }),
         ...extra
     ] as never)
     return render(<Connect />)
@@ -64,6 +64,13 @@ describe("Connect", () => {
         expect(screen.getByText("http://192.168.1.5:5511")).toBeTruthy()
         expect(qr()).toBe("http://192.168.1.5:5511")
         expect(get(popupData)).toEqual({})
+    })
+
+    it("sin_id_ni_ip_avisa_que_no_está_disponible_y_no_arma_un_link_ni_un_QR_rotos (F08)", () => {
+        montar({})
+        expect(document.body.textContent).not.toContain("undefined")
+        expect(screen.getByText("No disponible")).toBeTruthy()
+        expect(qr()).toBeUndefined()
     })
 
     it("con_ip_localhost_avisa_y_no_muestra_QR", () => {
