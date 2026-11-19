@@ -22,6 +22,7 @@ import { Button } from "../../../shared/ui/kit/button/Button"
 import { FileField } from "../../../shared/ui/kit/file-field/FileField"
 import { FontField } from "../../../shared/ui/kit/font-field/FontField"
 import { InputRow } from "../../../shared/ui/kit/input-row/InputRow"
+import { cssTextToStyle } from "../../../shared/ui/helpers/cssTextToStyle"
 import { PopupField } from "../../../shared/ui/kit/popup-field/PopupField"
 import { TextareaField } from "../../../shared/ui/kit/textarea-field/TextareaField"
 import styles from "./EditValues.module.css"
@@ -408,7 +409,7 @@ export function EditValues({ sections = {}, styles: styleValues = {}, customValu
                                           const hasTimelineAction = !!(currentSpecial.slideTimelineActive && currentActivePage === "edit" && (currentActiveEdit.type || "show") === "show" && SlideTimeline.hasActionAtTime(input.key || "", type, currentActiveEdit?.items?.length ? currentActiveEdit.items : [0], timelineUpdater))
 
                                           if (input.type === "fontDropdown") {
-                                              return <FontField key={`${input.id}-${input.key}-${inputIndex}`} label={values.label} value={String(value ?? "")} style={values.style} fontStyleValue={input.styleValue || ""} customLocalFonts={customLocalFonts} onChange={(v) => changed({ detail: v }, input)} onFontStyle={(v) => changed({ detail: v }, { ...input, key: "font" } as EditInput)} enableFontStyles />
+                                              return <FontField key={`${input.id}-${input.key}-${inputIndex}`} label={values.label} value={String(value ?? "")} style={cssTextToStyle(String(values.style || ""))} fontStyleValue={input.styleValue || ""} customLocalFonts={customLocalFonts} onChange={(v) => changed({ detail: v }, input)} onFontStyle={(v) => changed({ detail: v }, { ...input, key: "font" } as EditInput)} enableFontStyles />
                                           }
                                           if (input.type === "toggle") {
                                               return (

@@ -1,10 +1,11 @@
 // @vitest-environment happy-dom
-import { cleanup, render } from "@testing-library/react"
+import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { actions, activeEdit, activePage, activeStage, outputs, special, timers } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { EditValues } from "./EditValues"
+import { textSections } from "../logic/values/boxes"
 
 vi.mock("@soundtouchjs/audio-worklet", () => ({ SoundTouchNode: class {} }))
 vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: { getAnalyser: () => null } }))
@@ -31,7 +32,7 @@ vi.mock("../../../shared/ui/kit/button/Button", () => ({
     )
 }))
 vi.mock("../../../shared/ui/kit/file-field/FileField", () => ({ FileField: () => <div /> }))
-vi.mock("../../../shared/ui/kit/font-field/FontField", () => ({ FontField: () => <div /> }))
+vi.mock("../../../shared/ui/kit/font-field/FontField", () => ({ FontField: ({ style }: { style?: unknown }) => <div data-testid="font-field" data-style-type={typeof style} /> }))
 vi.mock("../../../shared/ui/kit/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 vi.mock("../../../shared/ui/kit/popup-field/PopupField", () => ({ PopupField: () => <div /> }))
 vi.mock("../../../shared/ui/kit/textarea-field/TextareaField", () => ({ TextareaField: () => <div /> }))
@@ -47,5 +48,11 @@ describe("EditValues", () => {
         restore = setStoresForTest([looseEntry(actions, {}), looseEntry(activeEdit, { items: [] }), looseEntry(activePage, "edit"), looseEntry(activeStage, { id: null }), looseEntry(outputs, {}), looseEntry(special, {}), looseEntry(timers, {})])
         const { container } = render(<EditValues sections={{}} />)
         expect(container).toBeTruthy()
+    })
+
+    it("pasa el style del campo de fuente como objeto, no como string CSS (F01)", () => {
+        restore = setStoresForTest([looseEntry(actions, {}), looseEntry(activeEdit, { items: [] }), looseEntry(activePage, "edit"), looseEntry(activeStage, { id: null }), looseEntry(outputs, {}), looseEntry(special, {}), looseEntry(timers, {})])
+        render(<EditValues sections={{ default: textSections.default }} />)
+        expect(screen.getByTestId("font-field").getAttribute("data-style-type")).toBe("object")
     })
 })
