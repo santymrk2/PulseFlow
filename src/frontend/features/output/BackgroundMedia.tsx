@@ -9,6 +9,7 @@ import { BMDStream } from "../drawer/live/BMDStream"
 import { NDIStream } from "../drawer/live/NDIStream"
 import { OMTStream } from "../drawer/live/OMTStream"
 import { Camera } from "./Camera"
+import { Media } from "./Media"
 import { OutputTransition } from "./OutputTransition"
 import { Window as WindowView } from "./Window"
 import styles from "./BackgroundMedia.module.css"
@@ -38,23 +39,10 @@ export function BackgroundMedia({ outputId = "", data, transition, fadingOut = f
 
     let mediaStyle: MediaStyle = {}
     if (data && currentStyle) mediaStyle = getMediaStyle({ ...currentMedia[id], ...data }, currentStyle)
-    void outputId
-    void animationStyle
-    void fadingOut
-    void onLoaded
-    void mediaStyle
 
     return (
         <OutputTransition transition={transition} inTransition={transition.in} outTransition={transition.out} onOutroStart={onOutroStart}>
-            {type === "media" ? (
-                <div
-                    data-slot-host
-                    style={{ display: "contents" } as CSSProperties}
-                    ref={(elem) => {
-                        if (elem && slotHost && slotHost.parentNode !== elem) elem.appendChild(slotHost)
-                    }}
-                />
-            ) : null}
+            {type === "media" ? <Media outputId={outputId} path={id} data={data.type === "media" ? { ...data, type: undefined } : data} mediaStyle={mediaStyle} animationStyle={animationStyle} mirror={mirror} fadingOut={fadingOut} onLoaded={onLoaded} /> : null}
             {type === "screen" ? <WindowView id={id} class="media" style="width: 100%;height: 100%;" onLoaded={onLoaded} /> : null}
             {type === "ndi" ? <NDIStream key={id} screen={{ id, name: "" }} background mirror={mirror} outputId={outputId} /> : null}
             {type === "omt" ? <OMTStream key={id} screen={{ id, name: "" }} background mirror={mirror} outputId={outputId} /> : null}
