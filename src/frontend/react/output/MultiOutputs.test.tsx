@@ -5,7 +5,7 @@ import { activeRecording, activeStyle, audioChannelsData, dictionary, outputs, p
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { MultiOutputs } from "./MultiOutputs"
 
-vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn() }))
+vi.mock("../../features/settings/logic/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../components/drawer/live/recorder", () => ({ stopMediaRecorder: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ openDrawer: vi.fn() }))

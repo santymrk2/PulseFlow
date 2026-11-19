@@ -70,7 +70,7 @@ prettier sobre `.md` ni el resto de la configuración.
 ## Reglas de estilos
 
 - La apariencia sale de las variables CSS del tema (`--primary`, `--secondary`, `--text`, …) definidas en
-  `src/frontend/components/settings/tabs/defaultThemes.ts` y `public/global.css`. No hardcodear colores.
+  `src/frontend/features/settings/logic/tabs/defaultThemes.ts` y `public/global.css`. No hardcodear colores.
 - No se usa Tailwind: los estilos van en CSS Modules con las variables del tema. `cn()` (clsx) sólo para clases
   condicionales o para mezclar con un `className` recibido.
 - CSS Modules (`Nombre.module.css`): **sólo se hashean las clases**. Por eso:

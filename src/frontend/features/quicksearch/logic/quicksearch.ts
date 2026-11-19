@@ -42,7 +42,7 @@ import {
     stageShows,
     styles
 } from "../../../shared/core/stores"
-import { openSettings } from "../../../components/settings/openSettings"
+import { openSettings } from "../../settings/logic/openSettings"
 import { triggerFunction } from "../../../shared/utils/common"
 import { translateText } from "../../../shared/utils/language"
 import { getAccess } from "../../../shared/utils/profile"

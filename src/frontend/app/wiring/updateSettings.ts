@@ -11,7 +11,7 @@ import { clone, keysToID } from "../../shared/utils/helpers/array"
 import { checkFFmpeg, checkWindowCapture, setOutput, startScene, toggleOutputs } from "../../shared/utils/helpers/output"
 import { type LooksMigrationResult, migrateLooksSettings } from "../../shared/utils/helpers/looks"
 import { migrateOutputsRtmp } from "../../shared/utils/helpers/rtmpDestinations"
-import { defaultThemes } from "../../components/settings/tabs/defaultThemes"
+import { defaultThemes } from "../../features/settings/logic/tabs/defaultThemes"
 import { sendMain } from "../../shared/core/ipc/main"
 import {
     actionTags,

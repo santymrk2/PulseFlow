@@ -18,7 +18,7 @@ vi.mock("../../utils/helpers/array", () => ({ keysToID: () => [] }))
 vi.mock("../../utils/helpers/media", () => ({ getExtension: () => "", getMediaType: () => "image" }))
 vi.mock("../../utils/helpers/show", () => ({ getLayoutRef: () => [], getSlideHighlightIndexes: () => [] }))
 vi.mock("../../utils/helpers/shows", () => ({ _show: () => ({ get: () => ({}) }) }))
-vi.mock("../../../components/settings/openSettings", () => ({ isSettingsDisabled: () => false }))
+vi.mock("../../../features/settings/logic/openSettings", () => ({ isSettingsDisabled: () => false }))
 
 import { ContextItem } from "./ContextItem"
 

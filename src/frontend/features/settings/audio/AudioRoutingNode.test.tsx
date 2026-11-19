@@ -13,7 +13,7 @@ vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { start: vi.fn() } }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../drawer/audio/AudioMeter", () => ({ AudioMeter: ({ channelId }: { channelId: string }) => <div data-meter={channelId} /> }))
+vi.mock("../../../react/drawer/audio/AudioMeter", () => ({ AudioMeter: ({ channelId }: { channelId: string }) => <div data-meter={channelId} /> }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {

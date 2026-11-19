@@ -10,7 +10,7 @@ import { SettingsModal } from "./SettingsModal"
 vi.mock("./SettingsTabs", () => ({ SettingsTabs: () => <nav>stub-tabs</nav> }))
 vi.mock("./SettingsTools", () => ({ SettingsTools: () => <div>stub-tools</div> }))
 vi.mock("./Settings", () => ({ Settings: () => <main>stub-settings</main> }))
-vi.mock("../main/Modal", () => ({
+vi.mock("../../react/main/Modal", () => ({
     Modal: (props: { title?: string; width?: number; height?: number; managesPopup?: boolean; blockEscape?: boolean; children?: ReactNode; onClose?: () => void }) => (
         <div data-testid="modal" data-title={props.title} data-width={props.width} data-height={props.height} data-manages-popup={String(props.managesPopup)} data-block-escape={String(props.blockEscape)}>
             {props.children}

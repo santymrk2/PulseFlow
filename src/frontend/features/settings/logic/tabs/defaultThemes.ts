@@ -1,4 +1,4 @@
-import type { Themes } from "../../../../types/Settings"
+import type { Themes } from "../../../../../types/Settings"
 
 export const defaultThemes: { [key: string]: Themes } = {
     // Tema por defecto "PulseFlow": los valores del tema `.dark` de la referencia

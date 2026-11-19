@@ -7,7 +7,7 @@ import { centerZoom } from "../../components/edit/scripts/zoom"
 import { getSortedStageItems } from "../../components/edit/scripts/itemHelpers"
 import { history } from "../../shared/utils/helpers/history"
 import { enableStageOutput, getStageOutputId } from "../../shared/utils/helpers/output"
-import { openSettings } from "../../components/settings/openSettings"
+import { openSettings } from "../settings/logic/openSettings"
 import { updateStageShow } from "./logic/stage"
 import { getStyleResolution } from "../slide/logic/getStyleResolution"
 import { getAccess } from "../../shared/utils/profile"
@@ -60,7 +60,7 @@ vi.mock("../../shared/utils/helpers/style", () => ({
         return result
     })
 }))
-vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn() }))
+vi.mock("../settings/logic/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("./logic/stage", () => ({ getSlideTextItems: vi.fn(() => []), stageItemToItem: vi.fn((item: unknown) => item), updateStageShow: vi.fn() }))
 vi.mock("../slide/logic/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))

@@ -88,7 +88,7 @@ import {
     toggleOutputEnabled,
     variables
 } from "../../../core/stores"
-import { openSettings } from "../../../../components/settings/openSettings"
+import { openSettings } from "../../../../features/settings/logic/openSettings"
 import { escapeRegExp, hideDisplay, isOutputWindow, newToast, triggerFunction, wait } from "../../../utils/common"
 import { setExampleEffects, setExampleOverlays, setExampleTemplates } from "../../../../app/wiring/createData"
 import { translateText } from "../../../utils/language"

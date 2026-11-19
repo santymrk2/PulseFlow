@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { os, statusIndicator } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { openSettings } from "../../components/settings/openSettings"
+import { openSettings } from "../../features/settings/logic/openSettings"
 import { useStore } from "../../shared/ui/hooks/useStore"
 import { Icon } from "../../shared/ui/helpers/Icon"
 import styles from "./StatusIndicator.module.css"

@@ -47,7 +47,7 @@ import {
 import { translateText } from "../../utils/language"
 import { closeContextMenu } from "../../../app/wiring/shortcuts"
 import { keysToID } from "../../utils/helpers/array"
-import { isSettingsDisabled } from "../../../components/settings/openSettings"
+import { isSettingsDisabled } from "../../../features/settings/logic/openSettings"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { getExtension, getMediaType } from "../../utils/helpers/media"

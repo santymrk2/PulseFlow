@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { OUTPUT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
 import { requestMain } from "../../shared/core/ipc/main"
-import { openSettings } from "../../components/settings/openSettings"
+import { openSettings } from "../settings/logic/openSettings"
 import { activePopup, currentOutputSettings, dictionary, outputs } from "../../shared/core/stores"
 import { send } from "../../shared/utils/request"
 import { clearIslands, islands } from "../../shared/test/islandMock"
@@ -18,7 +18,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn() }))
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
-vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn() }))
+vi.mock("../settings/logic/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))

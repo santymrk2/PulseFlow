@@ -1,7 +1,7 @@
-import { get } from "../../shared/core/lib/store"
-import type { SettingsTabs } from "../../../types/Tabs"
-import { activePopup, activeProfile, profiles, settingsOpen, settingsTab } from "../../shared/core/stores"
-import { settingsTabs } from "../../shared/core/values/tabs"
+import { get } from "../../../shared/core/lib/store"
+import type { SettingsTabs } from "../../../../types/Tabs"
+import { activePopup, activeProfile, profiles, settingsOpen, settingsTab } from "../../../shared/core/stores"
+import { settingsTabs } from "../../../shared/core/values/tabs"
 
 /** Un perfil con las pestañas de Configuración bloqueadas no puede abrirla. */
 export function isSettingsDisabled(): boolean {

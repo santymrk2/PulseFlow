@@ -24,7 +24,7 @@ vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/routing/audioRoutingInit", () => ({ syncOutputAudioChannels: vi.fn(), deduplicateConnections: (c: unknown) => c }))
 vi.mock("../../../audio/routing/audioRoutingManager", () => ({ AudioRoutingManager: { sortChannels: vi.fn((a: unknown) => a) } }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getAllOutputs: vi.fn() }))
-vi.mock("../../drawer/audio/AudioMeter", () => ({ AudioMeter: () => <div data-meter /> }))
+vi.mock("../../../react/drawer/audio/AudioMeter", () => ({ AudioMeter: () => <div data-meter /> }))
 
 const addDevice = vi.fn()
 const removeDevice = vi.fn()

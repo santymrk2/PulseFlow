@@ -6,7 +6,7 @@ import { getSortedStageItems, shouldItemBeShown } from "../../components/edit/sc
 import { history } from "../../shared/utils/helpers/history"
 import { enableStageOutput, getStageOutputId, getStageResolution } from "../../shared/utils/helpers/output"
 import { getStyles } from "../../shared/utils/helpers/style"
-import { openSettings } from "../../components/settings/openSettings"
+import { openSettings } from "../settings/logic/openSettings"
 import { getSlideTextItems, stageItemToItem, updateStageShow } from "./logic/stage"
 import { getStyleResolution } from "../slide/logic/getStyleResolution"
 import { getAccess } from "../../shared/utils/profile"

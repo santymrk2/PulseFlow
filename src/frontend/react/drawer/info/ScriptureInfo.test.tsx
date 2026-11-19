@@ -24,7 +24,7 @@ vi.mock("../../../components/drawer/bible/scripture", () => ({
     useOldScriptureSystem: () => false,
     createScriptureShow: () => mocks.convert()
 }))
-vi.mock("../../../components/settings/openSettings", () => ({ openSettings: (id: string) => mocks.openSettings(id) }))
+vi.mock("../../../features/settings/logic/openSettings", () => ({ openSettings: (id: string) => mocks.openSettings(id) }))
 vi.mock("../../../app/wiring/createData", () => ({ setDefaultScriptureTemplates: () => mocks.defaultTemplates() }))
 vi.mock("../../../shared/utils/popup", () => ({ confirmCustom: (message: string) => mocks.confirm(message) }))
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn(), requestMain: vi.fn() }))
