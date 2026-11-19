@@ -25,7 +25,7 @@ vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({ global: "full
 vi.mock("../../shared/utils/helpers/array", () => ({ clone: <T,>(v: T): T => JSON.parse(JSON.stringify(v)) }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/historyHelpers", () => ({ historyHelpers: {}, projectReplacers: [] }))
-vi.mock("../../components/actions/apiHelper", () => ({}))
+vi.mock("../../features/actions/logic/apiHelper", () => ({}))
 vi.mock("../../shared/utils/helpers/media", () => ({ getExtension: () => "", getFileName: (id: string) => id, getMediaType: () => "image" }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [] }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ get: () => "" }) }))

@@ -3,7 +3,7 @@ import { uid } from "uid"
 import type { Event } from "../../../../../types/Calendar"
 import { events } from "../../../../shared/core/stores"
 import { translateText } from "../../../../shared/utils/language"
-import { actionData } from "../../../../components/actions/actionData"
+import { actionData } from "../../../actions/logic/actionData"
 import { clone } from "../../../../shared/utils/helpers/array"
 import { history } from "../../../../shared/utils/helpers/history"
 

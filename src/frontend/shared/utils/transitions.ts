@@ -1,5 +1,5 @@
 import type { TransitionType } from "../../../types/Show"
-import type { API_transition } from "../../components/actions/api"
+import type { API_transition } from "../../features/actions/logic/api"
 import { transitionData } from "../core/stores"
 
 export const transitionTypes: { id: TransitionType; name: string }[] = [

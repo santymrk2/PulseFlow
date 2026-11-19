@@ -1,6 +1,6 @@
 import { useState, type KeyboardEvent } from "react"
 import { actions, activeProject, editingProjectTemplate, projects, projectTemplates, special } from "../../shared/core/stores"
-import { getActionIcon, runAction } from "../../components/actions/actions"
+import { getActionIcon, runAction } from "../actions/logic/actions"
 import { keysToID, sortByName } from "../../shared/utils/helpers/array"
 import { translateText } from "../../shared/utils/language"
 import { Icon } from "../../shared/ui/helpers/Icon"

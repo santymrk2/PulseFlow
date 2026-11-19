@@ -6,7 +6,7 @@ import { activeEdit, activePage, activeShow, activeTimers, editMode, effects, fo
 import { wait } from "../../shared/utils/common"
 import { translateText } from "../../shared/utils/language"
 import { getAccess } from "../../shared/utils/profile"
-import { slideHasAction } from "../../components/actions/actions"
+import { slideHasAction } from "../actions/logic/actions"
 import { shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
 import { clone } from "../../shared/utils/helpers/array"
 import { getContrast, hexToRgb, splitRgb } from "../../shared/utils/helpers/color"

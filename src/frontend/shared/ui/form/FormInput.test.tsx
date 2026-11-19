@@ -20,8 +20,8 @@ vi.mock("../kit/color-field/ColorField", () => ({ ColorField: () => <div data-te
 vi.mock("../kit/colors-field/ColorsField", () => ({ ColorsField: () => <div data-testid="colors" /> }))
 vi.mock("../kit/date-field/DateField", () => ({ DateField: () => <input type="date" /> }))
 vi.mock("../kit/time-field/TimeField", () => ({ TimeField: () => <input type="time" /> }))
-vi.mock("../../../react/actions/MidiValues", () => ({ MidiValues: () => <div data-testid="midi" /> }))
-vi.mock("../../../react/actions/RestValues", () => ({ RestValues: () => <div data-testid="rest" /> }))
+vi.mock("../../../features/actions/MidiValues", () => ({ MidiValues: () => <div data-testid="midi" /> }))
+vi.mock("../../../features/actions/RestValues", () => ({ RestValues: () => <div data-testid="rest" /> }))
 vi.mock("../kit/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button>{children}</button> }))
 
 import { FormInput } from "./FormInput"

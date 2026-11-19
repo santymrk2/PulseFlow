@@ -1,7 +1,7 @@
 import { InputRow } from "../../shared/ui/kit/input-row/InputRow"
 import { SelectField } from "../../shared/ui/kit/select-field/SelectField"
 import { TextField } from "../../shared/ui/kit/text-field/TextField"
-import type { API_rest_command } from "../../components/actions/api"
+import type { API_rest_command } from "./logic/api"
 
 export interface RestValuesProps {
     value: API_rest_command

@@ -1,7 +1,7 @@
 import { get } from "../../shared/core/lib/store"
 import { CONTROLLER, REMOTE, STAGE } from "../../../types/Channels"
 import type { ClientMessage, Clients } from "../../../types/Socket"
-import { API_ACTIONS } from "../../components/actions/api"
+import { API_ACTIONS } from "../../features/actions/logic/api"
 import { checkWindowCapture } from "../../shared/utils/helpers/output"
 import { connections, serverData, shows } from "../../shared/core/stores"
 import { isMainWindow } from "../../shared/utils/common"

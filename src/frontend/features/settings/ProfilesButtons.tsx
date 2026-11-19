@@ -1,5 +1,5 @@
 import { get } from "../../shared/core/lib/store"
-import { runActionId } from "../../components/actions/actions"
+import { runActionId } from "../actions/logic/actions"
 import { activeProfile, profiles, selectedProfile, special } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
 import { translateText } from "../../shared/utils/language"

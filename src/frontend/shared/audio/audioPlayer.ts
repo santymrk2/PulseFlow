@@ -2,7 +2,7 @@
 
 import { get } from "../core/lib/store"
 import { Main } from "../../../types/IPC/Main"
-import { customActionActivation } from "../../components/actions/actions"
+import { customActionActivation } from "../../features/actions/logic/actions"
 import { encodeFilePath, getFileName, isLocalFile, locateMediaFile, removeExtension } from "../utils/helpers/media"
 import { checkNextAfterMedia } from "../utils/helpers/showActions"
 import { requestMain, sendMain } from "../core/ipc/main"

@@ -16,8 +16,8 @@ vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global:
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getFirstActiveOutput: vi.fn(() => undefined) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
-vi.mock("../../components/actions/actions", () => ({ getActionName: vi.fn(() => ""), getActionTriggerId: vi.fn((id: string) => id) }))
-vi.mock("../../components/actions/actionData", () => ({ actionData: { goto: { name: "actions.goto", icon: "forward" } } }))
+vi.mock("../actions/logic/actions", () => ({ getActionName: vi.fn(() => ""), getActionTriggerId: vi.fn((id: string) => id) }))
+vi.mock("../actions/logic/actionData", () => ({ actionData: { goto: { name: "actions.goto", icon: "forward" } } }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 
 let restore: () => void = () => {}

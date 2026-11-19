@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { runActionId } from "../../components/actions/actions"
+import { runActionId } from "../actions/logic/actions"
 import { activeProfile, profiles, selectedProfile, special } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
 import { promptCustom } from "../../shared/utils/popup"
@@ -12,7 +12,7 @@ import { ProfilesButtons } from "./ProfilesButtons"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../shared/utils/popup", () => ({ promptCustom: vi.fn() }))
-vi.mock("../../components/actions/actions", () => ({ runActionId: vi.fn() }))
+vi.mock("../actions/logic/actions", () => ({ runActionId: vi.fn() }))
 
 const perfil = (extra = {}) => ({ name: "P", color: "", image: "", access: {}, ...extra })
 

@@ -1,6 +1,6 @@
 // import JZZ from "jzz"
 // import { toApp } from ".."
-import { getDynamicValue } from "../edit/scripts/itemHelpers"
+import { getDynamicValue } from "../../../components/edit/scripts/itemHelpers"
 import type { API_rest_command } from "./api"
 
 export function sendRestCommandSync(data: API_rest_command) {

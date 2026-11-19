@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
-import type { API_midi } from "../../components/actions/api"
-import { midiInListen } from "../../components/actions/midi"
+import type { API_midi } from "../actions/logic/api"
+import { midiInListen } from "../actions/logic/midi"
 import { clone } from "../../shared/utils/helpers/array"
-import { MidiValues } from "../../react/actions/MidiValues"
+import { MidiValues } from "../actions/MidiValues"
 import { Tip } from "../../react/main/Tip"
 import { actions, activeShow, popupData } from "../../shared/core/stores"
 

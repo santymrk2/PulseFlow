@@ -13,8 +13,8 @@ import { NumberField } from "../kit/number-field/NumberField"
 import { SelectField } from "../kit/select-field/SelectField"
 import { TextField } from "../kit/text-field/TextField"
 import { TimeField } from "../kit/time-field/TimeField"
-import { MidiValues } from "../../../react/actions/MidiValues"
-import { RestValues } from "../../../react/actions/RestValues"
+import { MidiValues } from "../../../features/actions/MidiValues"
+import { RestValues } from "../../../features/actions/RestValues"
 
 type Loose = Record<string, unknown>
 

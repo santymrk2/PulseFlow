@@ -15,8 +15,8 @@ vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: str
 vi.mock("../../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../../../shared/audio/audioMicrophone", () => ({ AudioMicrophone: { start: vi.fn() } }))
 vi.mock("../../../shared/audio/audioPlayer", () => ({ AudioPlayer: { start: vi.fn(), getPlaying: vi.fn(() => null) } }))
-vi.mock("../../../components/actions/actionData", () => ({ actionData: {} }))
-vi.mock("../../../components/actions/actions", () => ({ getActionName: vi.fn(() => ""), getActionTriggerId: vi.fn(() => ""), runAction: vi.fn() }))
+vi.mock("../../actions/logic/actionData", () => ({ actionData: {} }))
+vi.mock("../../actions/logic/actions", () => ({ getActionName: vi.fn(() => ""), getActionTriggerId: vi.fn(() => ""), runAction: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/array", () => ({ clone: vi.fn((value: unknown) => value), sortByName: vi.fn((value: unknown) => value) }))
 vi.mock("../../../shared/utils/helpers/media", () => ({
     encodeFilePath: vi.fn((path: string) => path),

@@ -1,6 +1,6 @@
 import type { Event as CalendarEvent } from "../../../../types/Calendar"
-import { actionData } from "../../../components/actions/actionData"
-import { getActionName } from "../../../components/actions/actions"
+import { actionData } from "../../actions/logic/actionData"
+import { getActionName } from "../../actions/logic/actions"
 import { copyDate, endsMidnightNextDay, getTime, isBetween, isSameDay } from "../logic/calendar/calendar"
 import { isCalendarHidden } from "../logic/calendar/calendars"
 import { sortByTime } from "../../../shared/utils/helpers/array"

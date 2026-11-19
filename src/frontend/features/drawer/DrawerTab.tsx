@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react"
 import type { SelectIds } from "../../../types/Main"
-import { getActionIcon } from "../../components/actions/actions"
+import { getActionIcon } from "../actions/logic/actions"
 import { clone } from "../../shared/utils/helpers/array"
 import { getFirstActiveOutput } from "../../shared/utils/helpers/output"
 import { metadataDisplayValues } from "../../shared/utils/helpers/show"

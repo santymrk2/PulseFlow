@@ -111,7 +111,7 @@ vi.mock("../../../shared/utils/chordTranspose", () => ({ transposeText: (t: stri
 vi.mock("../../../shared/utils/common", () => ({ DEFAULT_WIDTH: 300 }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../../shared/utils/profile", () => ({ getAccess: () => ({}) }))
-vi.mock("../../../components/actions/actions", () => ({ slideHasAction: () => false }))
+vi.mock("../../../features/actions/logic/actions", () => ({ slideHasAction: () => false }))
 vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: () => <span /> }))
 vi.mock("../../../shared/ui/helpers/T", () => ({ T: ({ id }: any) => <span>{id}</span> }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))

@@ -9,8 +9,8 @@ import { InputRow } from "../../shared/ui/kit/input-row/InputRow"
 import { NumberField } from "../../shared/ui/kit/number-field/NumberField"
 import { SelectField } from "../../shared/ui/kit/select-field/SelectField"
 import { ToggleField } from "../../shared/ui/kit/toggle-field/ToggleField"
-import type { API_midi } from "../../components/actions/api"
-import { defaultMidiActionChannels, midiToNote } from "../../components/actions/midi"
+import type { API_midi } from "./logic/api"
+import { defaultMidiActionChannels, midiToNote } from "./logic/midi"
 
 export interface MidiValuesProps {
     value: API_midi

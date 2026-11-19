@@ -3,7 +3,7 @@ import { AudioAnalyser } from "../../../../shared/audio/audioAnalyser"
 import { AudioRoutingManager } from "../../../../shared/audio/routing/audioRoutingManager"
 import { customMetadata, metronome, metronomeTimer, playingMetronome, special } from "../../../../shared/core/stores"
 import type { MetronomeSettings } from "../../../types/Audio"
-import type { API_metronome } from "../../../../components/actions/api"
+import type { API_metronome } from "../../../actions/logic/api"
 import { clone } from "../../../../shared/utils/helpers/array"
 import { _show } from "../../../../shared/utils/helpers/shows"
 

@@ -1,6 +1,6 @@
 import { get } from "../../core/lib/store"
 import { outLocked, outputs, overlays, timelineRecordingAction } from "../../core/stores"
-import { runAction } from "../../../components/actions/actions"
+import { runAction } from "../../../features/actions/logic/actions"
 import { findMatchingOut, setOutput } from "./output"
 
 /** Activa o desactiva un overlay en la salida (al activarlo corre sus acciones). */

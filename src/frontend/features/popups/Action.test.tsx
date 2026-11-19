@@ -18,16 +18,16 @@ vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
-vi.mock("../../react/actions/CreateAction", async () => ({ CreateAction: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("CreateAction") }))
-vi.mock("../../react/actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("MidiValues") }))
-vi.mock("../../components/actions/actionData", () => ({ actionData: { next_slide: { name: "actions.next_slide" }, start_show: {}, id_select_show: {}, multi: { canAddMultiple: true } } }))
-vi.mock("../../components/actions/customActivation", () => ({
+vi.mock("../actions/CreateAction", async () => ({ CreateAction: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("CreateAction") }))
+vi.mock("../actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("MidiValues") }))
+vi.mock("../actions/logic/actionData", () => ({ actionData: { next_slide: { name: "actions.next_slide" }, start_show: {}, id_select_show: {}, multi: { canAddMultiple: true } } }))
+vi.mock("../actions/logic/customActivation", () => ({
     customActionActivations: [
         { id: "startup", name: "actions.activate_on_startup", icon: "startup" },
         { id: "output_changed", common: true, name: "actions.activate_output_changed", icon: "display_settings" }
     ]
 }))
-vi.mock("../../components/actions/midi", () => ({ convertOldMidiToNewAction: (a: unknown) => a, defaultMidiActionChannels: {}, midiInListen: vi.fn() }))
+vi.mock("../actions/logic/midi", () => ({ convertOldMidiToNewAction: (a: unknown) => a, defaultMidiActionChannels: {}, midiInListen: vi.fn() }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => layout.ref, updateCachedShows: vi.fn() }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ get: () => ({}), set: vi.fn() }) }))

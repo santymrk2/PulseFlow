@@ -12,7 +12,7 @@ import { clone } from "./array"
 import { getAllActiveOutputIds, isOutputBound, setOutput } from "./output"
 import { checkActionTrigger, getFewestOutputLines, getItemWithMostLines, playPdf, updateOut } from "./showActions"
 import { _show } from "./shows"
-import { runActionId } from "../../../components/actions/actions"
+import { runActionId } from "../../../features/actions/logic/actions"
 
 type Options = { isSpace: boolean; slideLayers: boolean; playNext: boolean }
 

@@ -4,7 +4,7 @@ import { getItemText } from "../../components/edit/scripts/textStyle"
 import { clone } from "./helpers/array"
 import { mergeWithTemplate } from "./helpers/output"
 import { overlays, templates } from "../core/stores"
-import { runAction } from "../../components/actions/actions"
+import { runAction } from "../../features/actions/logic/actions"
 
 const DEFAULT_TEMPLATE: Template = { name: "", color: null, category: null, items: [] }
 

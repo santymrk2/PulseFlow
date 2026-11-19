@@ -4,7 +4,7 @@ import { activeEdit, activeFocus, activePage, activePopup, alertMessage, cachedS
 import { hasNewerUpdate, wait } from "../../shared/utils/common"
 import { getAccess } from "../../shared/utils/profile"
 import { videoExtensions } from "../../shared/core/values/extensions"
-import { customActionActivation } from "../../components/actions/actions"
+import { customActionActivation } from "../actions/logic/actions"
 import { loadCustomFonts } from "../../shared/utils/helpers/fonts"
 import { history } from "../../shared/utils/helpers/history"
 import { encodeFilePath, getExtension } from "../../shared/utils/helpers/media"

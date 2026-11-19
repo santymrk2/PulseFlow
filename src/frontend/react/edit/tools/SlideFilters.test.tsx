@@ -8,7 +8,7 @@ import { SlideFilters } from "./SlideFilters"
 vi.mock("../../../shared/utils/language", () => ({ translateText: (id: string) => id }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/historyHelpers", () => ({ historyHelpers: {}, projectReplacers: [] }))
-vi.mock("../../../components/actions/apiHelper", () => ({}))
+vi.mock("../../../features/actions/logic/apiHelper", () => ({}))
 vi.mock("../../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ data: { filter: "" } }] }))
 vi.mock("../../../components/edit/scripts/textStyle", () => ({ addFilterString: () => "" }))
 vi.mock("./EditValues", () => ({ EditValues: () => <div data-comp="edit-values" /> }))

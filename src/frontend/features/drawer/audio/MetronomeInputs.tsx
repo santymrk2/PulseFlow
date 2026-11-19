@@ -1,4 +1,4 @@
-import type { API_metronome } from "../../../components/actions/api"
+import type { API_metronome } from "../../actions/logic/api"
 import type { MetronomeSettings } from "../../../../types/Audio"
 import { InputRow } from "../../../shared/ui/kit/input-row/InputRow"
 import { NumberField } from "../../../shared/ui/kit/number-field/NumberField"

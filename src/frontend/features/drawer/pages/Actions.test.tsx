@@ -12,8 +12,8 @@ const { runActionMock, receivedMidiMock } = vi.hoisted(() => ({ runActionMock: v
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../components/actions/actions", () => ({ runAction: runActionMock, getActionIcon: () => "icon" }))
-vi.mock("../../../components/actions/midi", () => ({ convertOldMidiToNewAction: (action: unknown) => action, midiToNote: () => "C4", receivedMidi: receivedMidiMock }))
+vi.mock("../../actions/logic/actions", () => ({ runAction: runActionMock, getActionIcon: () => "icon" }))
+vi.mock("../../actions/logic/midi", () => ({ convertOldMidiToNewAction: (action: unknown) => action, midiToNote: () => "C4", receivedMidi: receivedMidiMock }))
 
 const dict = {
     empty: { general: "Vacío" },

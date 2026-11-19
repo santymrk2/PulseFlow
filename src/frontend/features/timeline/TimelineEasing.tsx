@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
 import type { TimelineAction } from "../../../types/Show"
-import { actionData } from "../../components/actions/actionData"
+import { actionData } from "../actions/logic/actionData"
 import { getActionEasing, getSegmentCurve, getSegmentCurvePoints, toStoredActionEasing } from "./logic/easingHelper"
 import type { EasingHandles } from "./logic/easingHelper"
 import type { TimelineActions } from "./logic/TimelineActions"

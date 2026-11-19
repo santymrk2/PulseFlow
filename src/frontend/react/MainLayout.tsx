@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
 import { activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, currentWindow, editMode, focusMode, loaded, os, projectView, resized, showChangeProfileMenu, showsCache, special } from "../shared/core/stores"
 import { DEFAULT_WIDTH } from "../shared/utils/common"
-import { customActionActivation } from "../components/actions/actions"
+import { customActionActivation } from "../features/actions/logic/actions"
 import { useStore } from "../shared/ui/hooks/useStore"
 import { LeftColumn } from "../features/show/left/LeftColumn"
 import { Drawer } from "../features/drawer/Drawer"

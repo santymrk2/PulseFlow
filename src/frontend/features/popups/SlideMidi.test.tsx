@@ -2,7 +2,7 @@
 import { act, cleanup, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { midiInListen } from "../../components/actions/midi"
+import { midiInListen } from "../actions/logic/midi"
 import { actions, activeShow, dictionary, popupData } from "../../shared/core/stores"
 import { commonMock } from "../../shared/test/mockCommon"
 import { clearIslands, islands } from "../../shared/test/islandMock"
@@ -12,8 +12,8 @@ import { SlideMidi } from "./SlideMidi"
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/actions/midi", () => ({ midiInListen: vi.fn() }))
-vi.mock("../../react/actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("MidiValues") }))
+vi.mock("../actions/logic/midi", () => ({ midiInListen: vi.fn() }))
+vi.mock("../actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("MidiValues") }))
 vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 const cambiarMidi = (value: unknown) =>

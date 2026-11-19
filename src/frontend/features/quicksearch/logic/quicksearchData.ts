@@ -6,7 +6,7 @@ import { requestMain } from "../../../shared/core/ipc/main"
 import { drawerTabsData, scriptures, scripturesCache, textCache } from "../../../shared/core/stores"
 import { buildBibleIndex, fastBibleSearch } from "../../../shared/utils/searchFast"
 import { getTextSnippet } from "./searchHighlight"
-import { sortByClosestMatch } from "../../../components/actions/apiHelper"
+import { sortByClosestMatch } from "../../actions/logic/apiHelper"
 import { loadJsonBible } from "../../drawer/logic/bible/scripture"
 import { getExtension, getMediaType } from "../../../shared/utils/helpers/media"
 

@@ -5,7 +5,7 @@ import { translateText } from "../../../shared/utils/language"
 import { keysToID, sortByName } from "../../../shared/utils/helpers/array"
 import { SelectField } from "../../../shared/ui/kit/select-field/SelectField"
 import { useStore } from "../../../shared/ui/hooks/useStore"
-import type { API_output_style } from "../../../components/actions/api"
+import type { API_output_style } from "../logic/api"
 
 type StyleOutputs = { type: string; outputs?: { [key: string]: string } }
 

@@ -1,7 +1,7 @@
 import { get } from "../../shared/core/lib/store"
 import { STAGE } from "../../../types/Channels"
 import type { OutSlide } from "../../../types/Show"
-import { runAction } from "../../components/actions/actions"
+import { runAction } from "../../features/actions/logic/actions"
 import { clone, keysToID } from "../../shared/utils/helpers/array"
 import { getBase64Path } from "../../shared/utils/helpers/media"
 import { checkWindowCapture, getFirstOutput } from "../../shared/utils/helpers/output"

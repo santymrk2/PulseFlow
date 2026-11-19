@@ -1,7 +1,7 @@
 // CROSSFADE
 
 import { get } from "../core/lib/store"
-import { customActionActivation } from "../../components/actions/actions"
+import { customActionActivation } from "../../features/actions/logic/actions"
 import { stopMetronome } from "../../features/drawer/logic/audio/metronome"
 import { activePlaylist, audioPlaylists, isFadingOut, playingAudio, special } from "../core/stores"
 import { AudioPlayer } from "./audioPlayer"

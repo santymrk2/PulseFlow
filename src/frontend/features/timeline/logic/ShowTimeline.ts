@@ -1,7 +1,7 @@
 import { get, type Unsubscriber } from "../../../shared/core/lib/store"
 import type { LayoutRef } from "../../../../types/Show"
 import { actions, activeShow, outputs, showsCache, timelineRecordingAction } from "../../../shared/core/stores"
-import { actionData } from "../../../components/actions/actionData"
+import { actionData } from "../../actions/logic/actionData"
 import { getFirstActiveOutput, setOutput } from "../../../shared/utils/helpers/output"
 import { updateOut } from "../../../shared/utils/helpers/showActions"
 import { _show } from "../../../shared/utils/helpers/shows"

@@ -2,7 +2,7 @@ import { get } from "../core/lib/store"
 import { activePlaylist, audioPlaylists, media, outLocked, playingAudio } from "../core/stores"
 import { AudioPlayer } from "./audioPlayer"
 import { audioIsFading, clearAudio, fadeOutAudio, isAllAudioFading } from "./audioFading"
-import { customActionActivation } from "../../components/actions/actions"
+import { customActionActivation } from "../../features/actions/logic/actions"
 import { clone, shuffleArray } from "../utils/helpers/array"
 
 type AudioPlaylistOptions = {

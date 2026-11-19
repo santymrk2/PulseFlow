@@ -12,7 +12,7 @@ const { resetVariableMock, setRandomValueMock } = vi.hoisted(() => ({ resetVaria
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../components/actions/apiHelper", () => ({ resetVariable: resetVariableMock }))
+vi.mock("../../actions/logic/apiHelper", () => ({ resetVariable: resetVariableMock }))
 vi.mock("../../../shared/utils/helpers/randomValue", () => ({ getSetChars: () => 4, setRandomValue: setRandomValueMock }))
 
 const dict = {

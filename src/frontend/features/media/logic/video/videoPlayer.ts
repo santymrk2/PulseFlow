@@ -7,7 +7,7 @@ import { fadeinAllPlayingAudio, fadeoutAllPlayingAudio } from "../../../../share
 import { requestMain } from "../../../../shared/core/ipc/main"
 import { media, outputs, playerVideos, playingVideos, playingVideoState, special, styles, transitionData } from "../../../../shared/core/stores"
 import { playFolder } from "../../../../app/wiring/shortcuts"
-import { customActionActivation } from "../../../../components/actions/actions"
+import { customActionActivation } from "../../../actions/logic/actions"
 import { getVimeoData, getYouTubeData } from "../../../drawer/logic/player/playerHelper"
 import { clone } from "../../../../shared/utils/helpers/array"
 import { downloadOnlineMedia, encodeFilePath, getExtension, getMediaType, locateMediaFile } from "../../../../shared/utils/helpers/media"

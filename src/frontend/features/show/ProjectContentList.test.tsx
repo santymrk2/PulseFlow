@@ -12,7 +12,7 @@ import { ProjectContentList } from "./ProjectContentList"
 
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../import/project", () => ({ addProjectItem: vi.fn(), addToProject: vi.fn(), updateRecentlyAddedFiles: vi.fn() }))
-vi.mock("../../components/actions/actions", () => ({ getActionIcon: vi.fn(() => "") }))
+vi.mock("../actions/logic/actions", () => ({ getActionIcon: vi.fn(() => "") }))
 vi.mock("../drawer/logic/timers/timers", () => ({ getTimeUntilClock: vi.fn(() => 0) }))
 vi.mock("../../shared/utils/helpers/array", () => ({ clone: vi.fn((value: unknown) => value) }))
 vi.mock("../../shared/utils/helpers/color", () => ({ brightenDarkColor: vi.fn((value: string) => value), fadeColor: vi.fn((value: string) => value), getContrast: vi.fn(() => "#fff") }))

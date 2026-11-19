@@ -1,5 +1,5 @@
 import { get } from "../core/lib/store"
-import { runActionId } from "../../components/actions/actions"
+import { runActionId } from "../../features/actions/logic/actions"
 import { activeProfile, profiles, showChangeProfileMenu, special } from "../core/stores"
 
 export function getAccess(id: string) {

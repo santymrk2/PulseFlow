@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { changeSlidesView } from "../show/logic/slides"
 import { actions, activePopup, activeProject, activeShow, alertMessage, editingProjectTemplate, labelsDisabled, projects, projectTemplates, showsCache, slidesOptions } from "../../shared/core/stores"
 import { getAccess } from "../../shared/utils/profile"
-import { getActionIcon, runAction } from "../../components/actions/actions"
+import { getActionIcon, runAction } from "../actions/logic/actions"
 import { duplicate } from "../../shared/utils/helpers/clipboard"
 import { history } from "../../shared/utils/helpers/history"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
@@ -18,7 +18,7 @@ vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
 vi.mock("../show/logic/slides", () => ({ changeSlidesView: vi.fn() }))
-vi.mock("../../components/actions/actions", () => ({ getActionIcon: vi.fn(() => "actions"), runAction: vi.fn() }))
+vi.mock("../actions/logic/actions", () => ({ getActionIcon: vi.fn(() => "actions"), runAction: vi.fn() }))
 vi.mock("../../shared/utils/helpers/clipboard", () => ({ duplicate: vi.fn() }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/shows", () => ({

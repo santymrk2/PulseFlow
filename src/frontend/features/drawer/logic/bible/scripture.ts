@@ -16,7 +16,7 @@ import { activeProject, activeScripture, activeShow, drawerTabsData, media, notF
 import { trackScriptureUsage } from "../../../../shared/utils/analytics"
 import { TemplateHelper } from "../../../../shared/utils/templates"
 import { getKey } from "../../../../shared/core/values/keys"
-import { customActionActivation } from "../../../../components/actions/actions"
+import { customActionActivation } from "../../../actions/logic/actions"
 import { getItemText } from "../../../../components/edit/scripts/textStyle"
 import { clone, removeDuplicates } from "../../../../shared/utils/helpers/array"
 import { history } from "../../../../shared/utils/helpers/history"

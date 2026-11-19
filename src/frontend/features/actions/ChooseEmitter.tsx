@@ -12,8 +12,8 @@ import { DynamicList } from "../../shared/ui/kit/dynamic-list/DynamicList"
 import { InputRow } from "../../shared/ui/kit/input-row/InputRow"
 import { SelectField } from "../../shared/ui/kit/select-field/SelectField"
 import { TextField } from "../../shared/ui/kit/text-field/TextField"
-import type { API_emitter } from "../../components/actions/api"
-import { formatData } from "../../components/actions/emitters"
+import type { API_emitter } from "./logic/api"
+import { formatData } from "./logic/emitters"
 import { MidiValues } from "./MidiValues"
 
 export interface ChooseEmitterProps {

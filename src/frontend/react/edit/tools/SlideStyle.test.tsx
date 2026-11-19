@@ -10,7 +10,7 @@ vi.mock("../../../shared/utils/language", () => ({ translateText: (id: string) =
 vi.mock("../../../shared/core/values/extensions", () => ({ mediaExtensions: [], audioExtensions: [], videoExtensions: [], imageExtensions: [], presentationExtensions: [] }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/historyHelpers", () => ({ historyHelpers: {}, projectReplacers: [] }))
-vi.mock("../../../components/actions/apiHelper", () => ({}))
+vi.mock("../../../features/actions/logic/apiHelper", () => ({}))
 vi.mock("../../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ id: "s1" }] }))
 vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [{ settings: {} }] }) }) }))
 vi.mock("../../../shared/ui/kit/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))

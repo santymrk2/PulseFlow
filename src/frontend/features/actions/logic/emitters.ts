@@ -1,12 +1,12 @@
-import { get } from "../../shared/core/lib/store"
-import type { Input } from "../../../types/Input"
-import type { EmitterInputs, EmitterTemplateValue, EmitterTypes } from "../../../types/Show"
-import { emitters } from "../../shared/core/stores"
+import { get } from "../../../shared/core/lib/store"
+import type { Input } from "../../../../types/Input"
+import type { EmitterInputs, EmitterTemplateValue, EmitterTypes } from "../../../../types/Show"
+import { emitters } from "../../../shared/core/stores"
 import type { API_emitter, API_midi, API_rest_command } from "./api"
 import { emitOSC, type OSC_SIGNAL } from "./apiOSC"
 import { sendRestCommandSync } from "./rest"
 import { midiToNote } from "./midi"
-import { sendMidi } from "../../shared/utils/helpers/showActions"
+import { sendMidi } from "../../../shared/utils/helpers/showActions"
 
 const OSC_SIGNAL_INPUTS: Input[] = [
     { label: "inputs.url", id: "host", type: "string", value: "0.0.0.0" }, // ws://127.0.0.1

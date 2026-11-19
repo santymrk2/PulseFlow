@@ -12,7 +12,7 @@ import { audioFolders, cachePath, loadedMediaThumbnails, media, mediaFolders, sp
 import { addToMediaFolder } from "../../../app/wiring/cloudSync"
 import { isMainWindow, newToast, wait, waitUntilValueIsDefined } from "../common"
 import { audioExtensions, imageExtensions, mediaExtensions, presentationExtensions, videoExtensions } from "../../core/values/extensions"
-import type { API_media, API_slide_thumbnail } from "../../../components/actions/api"
+import type { API_media, API_slide_thumbnail } from "../../../features/actions/logic/api"
 import { clone } from "./array"
 import { toDisplayUrl } from "./assetUrl"
 import { getFirstActiveOutput, getOutputResolution } from "./output"

@@ -5,7 +5,7 @@ import { breakLongLines, removeItemValues } from "../../../features/show/logic/s
 import { activeEdit, activeLook, activePage, activePopup, activeProject, activeShow, alertMessage, cachedShowsData, deletedShows, groups, notFound, outputs, projects, refreshEditSlide, renamedShows, shows, showsCache, templates } from "../../core/stores"
 import { save } from "../../../app/wiring/save"
 import { EMPTY_SHOW_SLIDE } from "../../core/values/empty"
-import { customActionActivation } from "../../../components/actions/actions"
+import { customActionActivation } from "../../../features/actions/logic/actions"
 import { getItemText } from "../../../components/edit/scripts/textStyle"
 import { clone, keysToID } from "./array"
 import { history } from "./history"
