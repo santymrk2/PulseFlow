@@ -21,6 +21,7 @@ import { ContextMenu } from "../shared/ui/context/ContextMenu"
 import { Pdf } from "../features/export/Pdf"
 import { Guide } from "./guide/Guide"
 import { QuickSearch } from "../features/quicksearch/QuickSearch"
+import { ErrorBoundary } from "./ErrorBoundary"
 import styles from "./App.module.css"
 
 let startupCalled = false
@@ -81,7 +82,7 @@ export function App() {
     const showProfileSelector = ready && profileCount > 0 && activeProfileId === null
 
     return (
-        <>
+        <ErrorBoundary>
             {isWindows ? <MenuBar /> : null}
 
             <main style={cssTextToStyle(globalStyle)} className={`${styles.main}${closeAdValue ? ` ${styles.closeAd}` : ""}`}>
@@ -109,6 +110,6 @@ export function App() {
                     </div>
                 )}
             </main>
-        </>
+        </ErrorBoundary>
     )
 }
