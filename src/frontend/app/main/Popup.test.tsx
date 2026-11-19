@@ -22,6 +22,9 @@ vi.mock("../../features/popups/registry", () => {
             looks_roto: () => {
                 throw new Error("popup roto")
             },
+            add_shows: () => {
+                throw new Error("modal roto")
+            },
             kit_demo: stub("kit_demo"),
             looks: stub("looks"),
             screen_config: stub("screen_config")
@@ -36,6 +39,8 @@ beforeEach(() => {
 afterEach(() => {
     cleanup()
     restaurar()
+    vi.restoreAllMocks()
+    vi.useRealTimers()
 })
 
 describe("Popup", () => {
@@ -61,5 +66,23 @@ describe("Popup", () => {
         expect(screen.getByRole("alert").textContent).toContain("popup roto")
         fireEvent.click(screen.getByText("Reintentar"))
         expect(get(activePopup)).toBeNull()
+    })
+
+    it.each([
+        ["card", "looks_roto", "kit_demo"],
+        ["modal", "add_shows", "looks"]
+    ])("al pasar de un popup roto a otro (%s) sin cerrar, el segundo no hereda el error", async (_tipo, roto, sano) => {
+        vi.useFakeTimers()
+        vi.spyOn(console, "error").mockImplementation(() => {})
+        activePopup.set(roto as Popups)
+        render(<Popup />)
+        await act(async () => {})
+        expect(screen.getByRole("alert")).toBeTruthy()
+
+        activePopup.set(sano as Popups)
+        await act(async () => {
+            vi.advanceTimersByTime(300)
+        })
+        expect(screen.getByTestId(`react-${sano}`)).toBeTruthy()
     })
 })

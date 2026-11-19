@@ -78,7 +78,7 @@ export function Popup() {
 
     if (FULL_MODALS.includes(popupId))
         return ReactPopup ? (
-            <ErrorBoundary onReset={closePopup}>
+            <ErrorBoundary key={popupId} onReset={closePopup}>
                 <ReactPopup />
             </ErrorBoundary>
         ) : null
@@ -111,7 +111,7 @@ export function Popup() {
                 <div className={styles.scroll} style={{ ["--top-height" as string]: `${isWindows ? MENU_BAR_HEIGHT : 0}px` }} onScroll={onScroll}>
                     <div className={styles.body}>
                         {ReactPopup ? (
-                            <ErrorBoundary onReset={closePopup}>
+                            <ErrorBoundary key={popupId} onReset={closePopup}>
                                 <ReactPopup />
                             </ErrorBoundary>
                         ) : null}
