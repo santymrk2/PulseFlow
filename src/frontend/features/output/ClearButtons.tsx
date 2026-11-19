@@ -168,7 +168,7 @@ export function ClearButtons({ autoChange, activeClear, onAutoChangeChange, onUp
                 </span>
             ) : null}
 
-            <span className={stylesCss.group}>
+            <span className={stylesCss.fixed}>
                 <Button style={{ padding: "0.42em 0.8em" }} className="clearAll" disabled={currentOutLocked || allCleared} title="clear.all [esc]" onClick={() => clearAll(true)}>
                     {currentIsTimelinePlaying ? (
                         <span className={stylesCss.faded} data-title={translateText("popup.timeline")}>
@@ -180,11 +180,9 @@ export function ClearButtons({ autoChange, activeClear, onAutoChangeChange, onUp
                 </Button>
                 <Button style={{ padding: "0.42em 0.8em" }} className="clearAll" disabled={!canRestore} title="preview.restore_output" onClick={restoreOutput}>
                     <Icon id="reset" size={1.2} white />
-                    {!currentLabelsDisabled ? <T id="preview.restore_output" /> : null}
                 </Button>
                 <Button style={{ padding: "0.42em 0.8em" }} className="clearAll" disabled={currentOutLocked || !hasLogo} title={hasLogo ? "clear.logo [F6]" : "clear.logo_missing"} onClick={clearToLogo}>
                     <Icon id="image" size={1.2} white />
-                    {!currentLabelsDisabled ? <T id="clear.logo" /> : null}
                 </Button>
             </span>
 

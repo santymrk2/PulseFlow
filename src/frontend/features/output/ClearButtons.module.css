@@ -7,6 +7,17 @@
     width: 100%;
 }
 
+.fixed {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+}
+.fixed :global(.clearAll) {
+    width: auto;
+    flex: 1;
+    min-width: 0;
+    border-radius: 0;
+}
+
 .faded {
     position: absolute;
     left: 10px;

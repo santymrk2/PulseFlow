@@ -22,7 +22,9 @@ describe("createLookFromPreset", () => {
         ["speaker", { media: false, slide: true, overlays: true }]
     ] as const)("preset_%s_crea_un_look_nuevo_con_las_capas_esperadas_en_cada_pantalla_de_audiencia", (preset, layers) => {
         setup()
+        const before = get(looks)
         const id = createLookFromPreset(preset, "Nuevo")
+        expect(get(looks)).not.toBe(before) // referencia nueva: React Compiler cachea por identidad
         const created = get(looks)[id]
         expect(created.name).toBe("Nuevo")
         expect(Object.keys(created.screens).sort()).toEqual(["a", "b"])

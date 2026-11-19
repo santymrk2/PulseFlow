@@ -322,10 +322,8 @@ export function createLook(name: string): string {
         else screens[outputId] = styleToLookScreen(get(styles)[outs[outputId]?.style || "default"])
     })
 
-    looks.update((a) => {
-        a[id] = { name, transitionMs: 1000, screens }
-        return a
-    })
+    // objeto nuevo: los componentes memoizan por identidad y no verían el look agregado
+    looks.update((a) => ({ ...a, [id]: { name, transitionMs: 1000, screens } }))
     return id
 }
 
@@ -342,8 +340,8 @@ export type LookPreset = keyof typeof LOOK_PRESETS
 export function createLookFromPreset(preset: LookPreset, name: string): string {
     const id = createLook(name)
     looks.update((a) => {
-        Object.values(a[id].screens).forEach((screen) => (screen.layers = { ...LOOK_PRESETS[preset] }))
-        return a
+        const screens = Object.fromEntries(Object.entries(a[id].screens).map(([outputId, screen]) => [outputId, { ...screen, layers: { ...LOOK_PRESETS[preset] } }]))
+        return { ...a, [id]: { ...a[id], screens } }
     })
     return id
 }
