@@ -182,7 +182,7 @@ export function ClearButtons({ autoChange, activeClear, onAutoChangeChange, onUp
                     <Icon id="reset" size={1.2} white />
                 </Button>
                 <Button style={{ padding: "0.42em 0.8em" }} className="clearAll" disabled={currentOutLocked || !hasLogo} title={hasLogo ? "clear.logo [F6]" : "clear.logo_missing"} onClick={clearToLogo}>
-                    <Icon id="image" size={1.2} white />
+                    <Icon id="star" size={1.2} white />
                 </Button>
             </span>
 
