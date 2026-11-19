@@ -4,8 +4,8 @@ import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
 import { sendMain } from "../../../shared/core/ipc/main"
-import { exportProject } from "../../../components/export/project"
-import { shareProjectLink } from "../../../components/export/projectLink"
+import { exportProject } from "../../../features/export/logic/project"
+import { shareProjectLink } from "../../../features/export/logic/projectLink"
 import { contentProviderData, dictionary, projects, providerConnections, special } from "../../../shared/core/stores"
 import { commonMock } from "../../../shared/test/mockCommon"
 import { looseEntry, type StoreEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
@@ -15,8 +15,8 @@ vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
-vi.mock("../../../components/export/project", () => ({ exportProject: vi.fn() }))
-vi.mock("../../../components/export/projectLink", () => ({ shareProjectLink: vi.fn() }))
+vi.mock("../../../features/export/logic/project", () => ({ exportProject: vi.fn() }))
+vi.mock("../../../features/export/logic/projectLink", () => ({ shareProjectLink: vi.fn() }))
 
 const dict = {
     create_show: { more_options: "Más opciones" },

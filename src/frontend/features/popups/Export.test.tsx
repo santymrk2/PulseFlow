@@ -4,7 +4,7 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { EXPORT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
-import { exportProject } from "../../components/export/project"
+import { exportProject } from "../export/logic/project"
 import { convertShowSlidesToImages } from "../../components/main/popups/export/exportHelper"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, activeProject, activeShow, dictionary, projects, selected, shows, showsCache, special } from "../../shared/core/stores"
@@ -23,7 +23,7 @@ vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../app/wiring/save", () => ({ save: vi.fn() }))
-vi.mock("../../components/export/project", () => ({ exportProject: vi.fn() }))
+vi.mock("../export/logic/project", () => ({ exportProject: vi.fn() }))
 vi.mock("../../shared/utils/helpers/setShow", () => ({ loadShows: vi.fn(async () => {}) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
 vi.mock("../../shared/utils/helpers/media", () => ({ getSlideThumbnail: vi.fn() }))
