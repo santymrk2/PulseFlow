@@ -43,7 +43,7 @@ const mocks = vi.hoisted(() => {
 vi.mock("../../core/stores", () => mocks)
 vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../../app/wiring/shortcuts", () => ({ closeContextMenu: () => mocks.contextActive.set(false) }))
-vi.mock("../../../components/edit/scripts/itemHelpers", () => ({ getEditItems: () => [] }))
+vi.mock("../../../features/edit/logic/scripts/itemHelpers", () => ({ getEditItems: () => [] }))
 vi.mock("../../utils/helpers/color", () => ({ hexToRgb: () => "0 0 0" }))
 vi.mock("./logic/nativeMenu", () => ({ contextMenuMode: () => "app" }))
 vi.mock("./logic/contextMenus", () => ({

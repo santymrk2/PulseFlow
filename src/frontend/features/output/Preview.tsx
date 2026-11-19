@@ -6,7 +6,7 @@ import { actions, activePage, activePopup, activeShow, activeTimers, contextActi
 import { formatSearch } from "../../shared/utils/search"
 import { getNormalizedKey, previewCtrlShortcuts, previewShortcuts } from "../../app/wiring/shortcuts"
 import { runAction } from "../actions/logic/actions"
-import { getSlideText } from "../../components/edit/scripts/textStyle"
+import { getSlideText } from "../edit/logic/scripts/textStyle"
 import { getActiveOutputs, getFirstOutputIdWithBackground, isOutCleared, outputSlideHasContent, setOutput } from "../../shared/utils/helpers/output"
 import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { getFewestOutputLines, getItemWithMostLines, playNextGroup, playPreviousGroup, updateOut } from "../../shared/utils/helpers/showActions"

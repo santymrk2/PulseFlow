@@ -1,7 +1,7 @@
 import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
 import type { Item, Layout, Line, Slide, SlideData, Timeline } from "../../../types/Show"
-import { DEFAULT_ITEM_STYLE } from "../../components/edit/scripts/itemHelpers"
+import { DEFAULT_ITEM_STYLE } from "../edit/logic/scripts/itemHelpers"
 import { getExtension, getFileName, getMediaType } from "../../shared/utils/helpers/media"
 import { checkName, getGlobalGroup, initializeMetadata, newSlide } from "../../shared/utils/helpers/show"
 import { translateText } from "../../shared/utils/language"

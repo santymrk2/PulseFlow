@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type FormEvent, type KeyboardEvent } from "react"
 import { uid } from "uid"
 import { cn } from "../../../core/lib/utils"
-import { addOpacityToGradient, getGradientOpacity } from "../../../../components/edit/scripts/edit"
+import { addOpacityToGradient, getGradientOpacity } from "../../../../features/edit/logic/scripts/edit"
 import { defaultColors, defaultGradients, getContrast, hexToRgb, rgbToHex, splitRgb } from "../../../utils/helpers/color"
 import { activePopup, popupData, special } from "../../../core/stores"
 import { translateText } from "../../../utils/language"

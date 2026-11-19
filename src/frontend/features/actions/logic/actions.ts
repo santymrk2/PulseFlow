@@ -5,7 +5,7 @@ import { actionHistory, actions, audioPlaylists, audioRouting, audioStreams, loo
 import { newToast, wait } from "../../../shared/utils/common"
 import { translateText } from "../../../shared/utils/language"
 import { getShowBPM } from "../../drawer/logic/audio/metronome"
-import { getDynamicValue } from "../../../components/edit/scripts/itemHelpers"
+import { getDynamicValue } from "../../edit/logic/scripts/itemHelpers"
 import { clone, keysToID } from "../../../shared/utils/helpers/array"
 import { history } from "../../../shared/utils/helpers/history"
 import { getFirstActiveOutput } from "../../../shared/utils/helpers/output"

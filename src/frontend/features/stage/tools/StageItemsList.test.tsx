@@ -5,7 +5,7 @@ import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeStage, dictionary, selected, stageShows, timers } from "../../../shared/core/stores"
 import { translateText } from "../../../shared/utils/language"
-import { getSortedStageItems, rearrangeStageItems } from "../../../components/edit/scripts/itemHelpers"
+import { getSortedStageItems, rearrangeStageItems } from "../../edit/logic/scripts/itemHelpers"
 import { getCustomStageLabel } from "../logic/stage"
 import { StageItemsList } from "./StageItemsList"
 
@@ -38,8 +38,8 @@ vi.mock("../../../shared/core/stores", () => {
     }
 })
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../components/edit/scripts/itemHelpers", () => ({ getSortedStageItems: vi.fn(() => []), rearrangeStageItems: vi.fn() }))
-vi.mock("../../../components/edit/scripts/textStyle", () => ({ getItemText: vi.fn(() => "texto del item") }))
+vi.mock("../../edit/logic/scripts/itemHelpers", () => ({ getSortedStageItems: vi.fn(() => []), rearrangeStageItems: vi.fn() }))
+vi.mock("../../edit/logic/scripts/textStyle", () => ({ getItemText: vi.fn(() => "texto del item") }))
 vi.mock("../../../shared/utils/helpers/array", () => ({ clone: (value: unknown) => [...(value as unknown[])] }))
 vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: vi.fn(() => "video.mp4") }))
 vi.mock("../logic/stage", () => ({ getCustomStageLabel: vi.fn(() => "") }))

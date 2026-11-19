@@ -1,6 +1,6 @@
 import { get } from "../core/lib/store"
 import type { Item, Template } from "../../../types/Show"
-import { getItemText } from "../../components/edit/scripts/textStyle"
+import { getItemText } from "../../features/edit/logic/scripts/textStyle"
 import { clone } from "./helpers/array"
 import { mergeWithTemplate } from "./helpers/output"
 import { overlays, templates } from "../core/stores"

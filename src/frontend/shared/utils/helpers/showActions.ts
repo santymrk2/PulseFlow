@@ -19,8 +19,8 @@ import { runAction, slideHasAction } from "../../../features/actions/logic/actio
 import type { API_output_style } from "../../../features/actions/logic/api"
 import { getInteraction } from "../../../features/drawer/logic/pages/interactions"
 import { getCurrentTimerValue, getTimeUntilClock, playPauseGlobal } from "../../../features/drawer/logic/timers/timers"
-import { getDynamicValue } from "../../../components/edit/scripts/itemHelpers"
-import { getTextLines } from "../../../components/edit/scripts/textStyle"
+import { getDynamicValue } from "../../../features/edit/logic/scripts/itemHelpers"
+import { getTextLines } from "../../../features/edit/logic/scripts/textStyle"
 import { clearBackground, clearOverlays, clearTimers } from "../../../features/output/logic/clear"
 import {
     activeEdit,

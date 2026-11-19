@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { checkConditionValue, isConditionMet } from "../../components/edit/scripts/itemHelpers"
+import { checkConditionValue, isConditionMet } from "../edit/logic/scripts/itemHelpers"
 import { activeEdit, activeShow, activeStage, dictionary, overlays, popupData, showsCache, stageShows, templates } from "../../shared/core/stores"
 import { commonMock } from "../../shared/test/mockCommon"
 import { clearIslands, emit, islands } from "../../shared/test/islandMock"
@@ -22,8 +22,8 @@ vi.mock("./ConditionsBox", async () => {
         }
     }
 })
-vi.mock("../../components/edit/scripts/itemHelpers", () => ({ isConditionMet: vi.fn(() => true), checkConditionValue: vi.fn(() => true) }))
-vi.mock("../../components/edit/scripts/textStyle", () => ({ getItemText: (item: { text?: string } | null) => item?.text ?? "" }))
+vi.mock("../edit/logic/scripts/itemHelpers", () => ({ isConditionMet: vi.fn(() => true), checkConditionValue: vi.fn(() => true) }))
+vi.mock("../edit/logic/scripts/textStyle", () => ({ getItemText: (item: { text?: string } | null) => item?.text ?? "" }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "sl1" }]) }))
 vi.mock("../stage/logic/stage", () => ({ getSlideTextItems: vi.fn(() => [{ text: "de-stage" }]) }))
 vi.mock("../../shared/ui/kit/zoom-control/ZoomControl", () => ({ ZoomControl: (p: { onChange: (v: number) => void; hidden: boolean }) => <button data-zoom={String(p.hidden)} onClick={() => p.onChange(0.8)} /> }))

@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { allOutputs, outputs, stageShows } from "../../shared/core/stores"
-import { getSortedStageItems, shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
+import { getSortedStageItems, shouldItemBeShown } from "../edit/logic/scripts/itemHelpers"
 import { getAccess } from "../../shared/utils/profile"
 import { getSlideTextItems } from "./logic/stage"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
@@ -14,7 +14,7 @@ vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
-vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getSortedStageItems: vi.fn(() => []), shouldItemBeShown: vi.fn(() => true) }))
+vi.mock("../edit/logic/scripts/itemHelpers", () => ({ getSortedStageItems: vi.fn(() => []), shouldItemBeShown: vi.fn(() => true) }))
 vi.mock("../../shared/utils/helpers/output", () => ({
     getStageOutputId: vi.fn(() => "stage1"),
     getStageResolution: vi.fn(() => ({ width: 1920, height: 1080 }))

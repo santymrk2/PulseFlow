@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { OUTPUT } from "../../../types/Channels"
 import type { Item } from "../../../types/Show"
 import { groups, outputs, overlays, scriptureSettings, showsCache, styles, templates, variables } from "../../shared/core/stores"
-import autosize from "../../components/edit/scripts/autosize"
+import autosize from "../edit/logic/scripts/autosize"
 import { clearAutoSizeCache } from "./logic/autosizeCache"
 import { send } from "../../shared/utils/request"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
@@ -15,7 +15,7 @@ vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, wait: v
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/edit/scripts/autosize", () => ({ default: vi.fn(() => 42) }))
+vi.mock("../edit/logic/scripts/autosize", () => ({ default: vi.fn(() => 42) }))
 vi.mock("../../shared/utils/helpers/showActions", () => ({ createCSSVariables: vi.fn(() => "--variable-test: 1;") }))
 vi.mock("../../shared/utils/helpers/output", () => ({
     getActiveOutputs: vi.fn(() => ["out1"]),

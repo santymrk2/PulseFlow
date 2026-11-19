@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeStage, stageShows, theme, themes } from "../../../shared/core/stores"
-import { addStyleString } from "../../../components/edit/scripts/textStyle"
+import { addStyleString } from "../../edit/logic/scripts/textStyle"
 import { history } from "../../../shared/utils/helpers/history"
 import { updateStageShow } from "../logic/stage"
 import { BoxStyle } from "./BoxStyle"
@@ -41,12 +41,12 @@ vi.mock("../../../shared/core/stores", () => {
         }
     })
 })
-vi.mock("../../../components/edit/scripts/textStyle", () => ({ addStyleString: vi.fn((style: string, [key, value]) => `${style}${key}:${String(value)};`) }))
+vi.mock("../../edit/logic/scripts/textStyle", () => ({ addStyleString: vi.fn((style: string, [key, value]) => `${style}${key}:${String(value)};`) }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/show", () => ({ getCustomMetadata: vi.fn(() => ({})) }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../logic/stage", () => ({ updateStageShow: vi.fn() }))
-vi.mock("../../../react/edit/tools/EditValues", () => ({
+vi.mock("../../edit/tools/EditValues", () => ({
     EditValues: (props: EditValuesProps & { onChange: (input: unknown) => void }) => {
         islandProps = props
         onChange = (event: ChangeEvent) => props.onChange(event.detail)

@@ -6,8 +6,8 @@ import type { StageItem, StageLayout } from "../../../types/Stage"
 import { activePopup, activeStage, activeTimers, allOutputs, dictionary, outputs, outputSlideCache, refreshEditSlide, stageShows, timers, variables } from "../../shared/core/stores"
 import { startResizing } from "../../shared/utils/cursor"
 import { sendBackgroundToStage } from "../../app/wiring/stageTalk"
-import autosize from "../../components/edit/scripts/autosize"
-import { isConditionMet } from "../../components/edit/scripts/itemHelpers"
+import autosize from "../edit/logic/scripts/autosize"
+import { isConditionMet } from "../edit/logic/scripts/itemHelpers"
 import { loadThumbnail } from "../../shared/utils/helpers/media"
 import { replaceDynamicValues } from "../../shared/utils/helpers/showActions"
 import { getCustomStageLabel, getSlideTextItems } from "./logic/stage"
@@ -20,9 +20,9 @@ vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/cursor", () => ({ startResizing: vi.fn() }))
 vi.mock("../../app/wiring/stageTalk", () => ({ sendBackgroundToStage: vi.fn(async () => null) }))
-vi.mock("../../components/edit/scripts/autosize", () => ({ default: vi.fn(() => 64) }))
-vi.mock("../../components/edit/scripts/itemHelpers", () => ({ isConditionMet: vi.fn(() => true) }))
-vi.mock("../../components/edit/scripts/textStyle", () => ({ getItemText: vi.fn(() => "Texto del item") }))
+vi.mock("../edit/logic/scripts/autosize", () => ({ default: vi.fn(() => 64) }))
+vi.mock("../edit/logic/scripts/itemHelpers", () => ({ isConditionMet: vi.fn(() => true) }))
+vi.mock("../edit/logic/scripts/textStyle", () => ({ getItemText: vi.fn(() => "Texto del item") }))
 vi.mock("../../shared/utils/helpers/media", () => ({
     getExtension: vi.fn((path: string) => path.split(".").pop() || ""),
     getMediaType: vi.fn(() => "image"),
@@ -60,7 +60,7 @@ vi.mock("../../shared/ui/kit/button/Button", () => ({
     )
 }))
 const serializeProps = (props: Record<string, unknown>) => JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))
-vi.mock("../../react/edit/editbox/EditboxLines", () => ({ EditboxLines: (props: Record<string, unknown>) => <span data-view="EditboxLines" data-props={JSON.stringify(props)} /> }))
+vi.mock("../edit/editbox/EditboxLines", () => ({ EditboxLines: (props: Record<string, unknown>) => <span data-view="EditboxLines" data-props={JSON.stringify(props)} /> }))
 vi.mock("../output/Media", () => ({ Media: (props: Record<string, unknown>) => <span data-view="Media" data-props={serializeProps(props)} /> }))
 vi.mock("../output/Output", () => ({ Output: (props: Record<string, unknown>) => <span data-view="Output" data-props={serializeProps(props)} /> }))
 vi.mock("../../shared/ui/system/Clock", () => ({ Clock: (props: Record<string, unknown>) => <span data-view="Clock" data-props={serializeProps(props)} /> }))

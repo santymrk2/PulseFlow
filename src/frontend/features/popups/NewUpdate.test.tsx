@@ -16,7 +16,7 @@ vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
-vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
+vi.mock("../edit/logic/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 
 const dict = { about: { download_auto: "Descarga automática", download_latest: "Descargar última versión", changes: "Cambios" }, setup: { or: "O" } }
 let restaurar: () => void = () => {}

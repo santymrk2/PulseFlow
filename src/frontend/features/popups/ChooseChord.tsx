@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { get } from "../../shared/core/lib/store"
-import { chordTensions, chordTypes, keys, keysInverted, romanKeys } from "../../components/edit/values/chords"
+import { chordTensions, chordTypes, keys, keysInverted, romanKeys } from "../edit/logic/values/chords"
 import { popupData, special, storedChordsData } from "../../shared/core/stores"
 import { Icon } from "../../shared/ui/helpers/Icon"
 import { T } from "../../shared/ui/helpers/T"

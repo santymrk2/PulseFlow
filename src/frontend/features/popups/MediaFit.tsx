@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
-import { mediaFitOptions } from "../../components/edit/values/boxes"
+import { mediaFitOptions } from "../edit/logic/values/boxes"
 import { activePopup, popupData, styles } from "../../shared/core/stores"
 import { T } from "../../shared/ui/helpers/T"
 import { useStore } from "../../shared/ui/hooks/useStore"

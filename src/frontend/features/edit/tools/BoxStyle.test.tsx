@@ -1,0 +1,51 @@
+// @vitest-environment happy-dom
+import { cleanup, render } from "@testing-library/react"
+import { afterEach, describe, expect, it, vi } from "vitest"
+import { activeEdit, activePopup, activeShow, alertMessage, categories, styles as outputStyles, overlays, selected, shownTips, showsCache, special, templates, theme, themes, timers } from "../../../shared/core/stores"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
+import { BoxStyle } from "./BoxStyle"
+
+vi.mock("../../../app/wiring/shortcuts", () => ({ getNormalizedKey: (e: KeyboardEvent) => e.key, isFormattingKey: () => false }))
+vi.mock("../../../shared/utils/common", () => ({ newToast: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v ?? null)) }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/media", () => ({ getExtension: () => "", getMediaType: () => "image" }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getAllEnabledOutputs: () => [] }))
+vi.mock("../../../shared/utils/helpers/show", () => ({ getCustomMetadata: () => ({}), getLayoutRef: () => [], initializeMetadata: (v: unknown) => v }))
+vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [] }) }) }))
+vi.mock("../../../shared/utils/helpers/style", () => ({ getStyles: () => ({}) }))
+vi.mock("../logic/scripts/autosize", () => ({ MAX_FONT_SIZE: 800 }))
+vi.mock("../logic/scripts/textStyle", () => ({ addFilterString: () => "", addStyle: (_r: unknown, i: unknown) => i, addStyleString: () => "", getItemStyleAtPos: () => "", getItemText: () => "", getLastLineAlign: () => "", getLineText: () => "", getSelectionRange: () => [] }))
+vi.mock("../logic/scripts/itemClipboard", () => ({ getBoxStyle: () => ({}), getFilterStyle: () => ({}), getItemStyle: () => ({}), getSlideStyle: () => ({}), setBoxStyle: vi.fn(), setFilterStyle: vi.fn(), setItemStyle: vi.fn(), setSlideStyle: vi.fn() }))
+vi.mock("../logic/values/boxes", () => ({ itemBoxes: { text: { sections: {} } }, setBoxInputValue: vi.fn() }))
+vi.mock("./EditValues", () => ({ EditValues: () => <div data-comp="edit-values" /> }))
+
+let restore = () => {}
+afterEach(() => {
+    cleanup()
+    restore()
+})
+
+describe("BoxStyle", () => {
+    it("renderiza el editor de estilo de caja", () => {
+        restore = setStoresForTest([
+            looseEntry(activeEdit, { items: [], slide: 0, type: "show" }),
+            looseEntry(activePopup, null),
+            looseEntry(activeShow, { id: "s1" }),
+            looseEntry(alertMessage, ""),
+            looseEntry(categories, {}),
+            looseEntry(outputStyles, {}),
+            looseEntry(overlays, {}),
+            looseEntry(selected, { id: null, data: [] }),
+            looseEntry(shownTips, []),
+            looseEntry(showsCache, { s1: { slides: {}, settings: {} } }),
+            looseEntry(special, {}),
+            looseEntry(templates, {}),
+            looseEntry(theme, ""),
+            looseEntry(themes, {}),
+            looseEntry(timers, {})
+        ])
+        const { container } = render(<BoxStyle id={"text" as never} allSlideItems={[]} item={null} />)
+        expect(container).toBeTruthy()
+    })
+})

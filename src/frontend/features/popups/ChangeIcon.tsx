@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import type { Categories } from "../../../types/Tabs"
-import { addItem } from "../../components/edit/scripts/itemHelpers"
+import { addItem } from "../edit/logic/scripts/itemHelpers"
 import { activePopup, categories, customizedIcons, mediaFolders, overlayCategories, popupData, selected, templateCategories } from "../../shared/core/stores"
 import { customIcons, customIconsColors } from "../../shared/core/values/customIcons"
 import { Icon } from "../../shared/ui/helpers/Icon"

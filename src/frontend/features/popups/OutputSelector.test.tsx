@@ -21,7 +21,7 @@ vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../settings/logic/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
-vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
+vi.mock("../edit/logic/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 vi.mock("../output/PreviewOutput", async () => ({ PreviewOutput: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("PreviewOutput") }))
 
 const displays = [

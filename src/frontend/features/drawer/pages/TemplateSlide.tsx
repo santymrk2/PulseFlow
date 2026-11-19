@@ -4,7 +4,7 @@ import { activeEdit, outputs, overlays, previewOutputId, styles } from "../../..
 import { getMedia, getThumbnailPath, mediaSize } from "../../../shared/utils/helpers/media"
 import { getResolution } from "../../../shared/utils/helpers/output"
 import { getStyleResolution } from "../../slide/logic/getStyleResolution"
-import { Editbox } from "../../../react/edit/editbox/Editbox"
+import { Editbox } from "../../edit/editbox/Editbox"
 import { MediaLoader } from "../media/MediaLoader"
 import { Zoomed } from "../../slide/Zoomed"
 import { Textbox } from "../../slide/Textbox"

@@ -1,6 +1,6 @@
 import { uid } from "uid"
 import { ShowObj } from "../../shared/core/classes/Show"
-import { DEFAULT_ITEM_STYLE } from "../../components/edit/scripts/itemHelpers"
+import { DEFAULT_ITEM_STYLE } from "../edit/logic/scripts/itemHelpers"
 import { checkName, initializeMetadata } from "../../shared/utils/helpers/show"
 import { activePopup, alertMessage } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"

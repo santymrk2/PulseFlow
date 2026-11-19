@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeStage, stageShows } from "../../../shared/core/stores"
-import { addFilterString } from "../../../components/edit/scripts/textStyle"
+import { addFilterString } from "../../edit/logic/scripts/textStyle"
 import { history } from "../../../shared/utils/helpers/history"
 import { percentageToAspectRatio, stylePosToPercentage } from "../../../shared/utils/helpers/output"
 import { updateStageShow } from "../logic/stage"
@@ -42,11 +42,11 @@ vi.mock("../../../shared/core/stores", () => {
         }
     })
 })
-vi.mock("../../../components/edit/scripts/textStyle", () => ({
+vi.mock("../../edit/logic/scripts/textStyle", () => ({
     addStyleString: vi.fn((style: string, [key, value]) => `${style}${key}:${String(value)};`),
     addFilterString: vi.fn((oldFilter: string, [key, value]) => `${oldFilter}${key}(${String(value)})`)
 }))
-vi.mock("../../../components/edit/values/item", () => ({
+vi.mock("../../edit/logic/values/item", () => ({
     itemSections: {
         shape_outside: { inputs: [[]] },
         transform: { inputs: [[{ id: "perspective", hidden: false }]] }
@@ -76,7 +76,7 @@ vi.mock("../../../shared/utils/helpers/style", () => ({
 }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../logic/stage", () => ({ updateStageShow: vi.fn() }))
-vi.mock("../../../react/edit/tools/EditValues", () => ({
+vi.mock("../../edit/tools/EditValues", () => ({
     EditValues: (props: EditValuesProps & { onChange: (input: unknown) => void }) => {
         islandProps = props
         onChange = (event: ChangeEvent) => props.onChange(event.detail)

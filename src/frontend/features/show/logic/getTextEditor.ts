@@ -1,5 +1,5 @@
 import type { Item } from "../../../../types/Show"
-import { getSlideText } from "../../../components/edit/scripts/textStyle"
+import { getSlideText } from "../../edit/logic/scripts/textStyle"
 import { clone } from "../../../shared/utils/helpers/array"
 import { getLayoutRef } from "../../../shared/utils/helpers/show"
 import { _show } from "../../../shared/utils/helpers/shows"

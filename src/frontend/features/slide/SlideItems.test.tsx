@@ -3,7 +3,7 @@ import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../types/Show"
 import { slidesOptions } from "../../shared/core/stores"
-import autosize from "../../components/edit/scripts/autosize"
+import autosize from "../edit/logic/scripts/autosize"
 import { clearIslands, islands } from "../../shared/test/islandMock"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { SlideItems } from "./SlideItems"
@@ -11,7 +11,7 @@ import { SlideItems } from "./SlideItems"
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/edit/scripts/autosize", () => ({ default: vi.fn(() => 42) }))
+vi.mock("../edit/logic/scripts/autosize", () => ({ default: vi.fn(() => 42) }))
 
 function viewMock(name: string) {
     return ({ ...props }: Record<string, unknown>) => <span data-view={name} data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />

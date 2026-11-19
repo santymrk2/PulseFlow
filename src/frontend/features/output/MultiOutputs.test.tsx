@@ -8,7 +8,7 @@ import { MultiOutputs } from "./MultiOutputs"
 vi.mock("../settings/logic/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../drawer/logic/live/recorder", () => ({ stopMediaRecorder: vi.fn() }))
-vi.mock("../../components/edit/scripts/edit", () => ({ openDrawer: vi.fn() }))
+vi.mock("../edit/logic/scripts/edit", () => ({ openDrawer: vi.fn() }))
 vi.mock("../../shared/utils/helpers/array", () => ({
     clone: vi.fn((v: unknown) => v),
     keysToID: vi.fn((obj: Record<string, unknown>) => Object.entries(obj || {}).map(([id, v]) => ({ id, ...(v as object) }))),

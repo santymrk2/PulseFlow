@@ -12,7 +12,7 @@ import tabsStyles from "../../../../react/main/Tabs.module.css"
 
 vi.mock("../../../utils/common", () => commonMock())
 // edit.ts arrastra medio frontend; ColorField sólo usa dos funciones puras de gradientes: se mockea el borde
-vi.mock("../../../../components/edit/scripts/edit", () => ({
+vi.mock("../../../../features/edit/logic/scripts/edit", () => ({
     getGradientOpacity: (value: string) => (value.includes("alpha") ? 0.4 : 1),
     addOpacityToGradient: vi.fn((value: string, alpha: number) => `${value}@${alpha}`)
 }))

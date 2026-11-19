@@ -1,6 +1,6 @@
 import { Main } from "../../../../types/IPC/Main"
 import { sendMain } from "../../../shared/core/ipc/main"
-import { getDynamicValue } from "../../../components/edit/scripts/itemHelpers"
+import { getDynamicValue } from "../../edit/logic/scripts/itemHelpers"
 
 // Examples: /show/<id>/start | /slide/next | /clear/all
 const oscActions = {

@@ -6,7 +6,7 @@ import { activeEdit, activeLook, activePage, activePopup, activeProject, activeS
 import { save } from "../../../app/wiring/save"
 import { EMPTY_SHOW_SLIDE } from "../../core/values/empty"
 import { customActionActivation } from "../../../features/actions/logic/actions"
-import { getItemText } from "../../../components/edit/scripts/textStyle"
+import { getItemText } from "../../../features/edit/logic/scripts/textStyle"
 import { clone, keysToID } from "./array"
 import { history } from "./history"
 import { _updaters } from "./historyHelpers"

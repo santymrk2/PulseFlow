@@ -1,7 +1,7 @@
 import { get } from "../../../shared/core/lib/store"
 import { uid } from "uid"
 import type { Item, Layout, LayoutRef, Line, Show, Slide, SlideData } from "../../../../types/Show"
-import { getItemText, getLineText } from "../../../components/edit/scripts/textStyle"
+import { getItemText, getLineText } from "../../edit/logic/scripts/textStyle"
 import { changeValues, clone, removeDuplicates, sortObjectNumbers } from "../../../shared/utils/helpers/array"
 import { history } from "../../../shared/utils/helpers/history"
 import { addParents, cloneSlide, getCurrentLayout } from "../../../shared/utils/helpers/layout"

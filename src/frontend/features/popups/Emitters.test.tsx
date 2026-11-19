@@ -17,7 +17,7 @@ vi.mock("uid", () => ({ uid: vi.fn(() => "uid1") }))
 vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 vi.mock("../../shared/ui/form/FormInputs", async () => ({ FormInputs: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("FormInputs") }))
 vi.mock("../actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("MidiValues") }))
-vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getDynamicValue: (v: string) => `dyn(${v})` }))
+vi.mock("../edit/logic/scripts/itemHelpers", () => ({ getDynamicValue: (v: string) => `dyn(${v})` }))
 vi.mock("../../shared/ui/form/logic/inputs", () => ({ getValues: (inputs: { id: string; value?: unknown }[], data: Record<string, unknown> | undefined) => inputs.map((i) => ({ ...i, value: data?.[i.id] ?? i.value })) }))
 vi.mock("../actions/logic/emitters", () => ({
     emitterData: {

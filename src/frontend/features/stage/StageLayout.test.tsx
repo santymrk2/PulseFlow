@@ -3,8 +3,8 @@ import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { useEffect, type ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeStage, allOutputs, currentOutputSettings, outputs, stageShows, toggleOutputEnabled } from "../../shared/core/stores"
-import { centerZoom } from "../../components/edit/scripts/zoom"
-import { getSortedStageItems } from "../../components/edit/scripts/itemHelpers"
+import { centerZoom } from "../edit/logic/scripts/zoom"
+import { getSortedStageItems } from "../edit/logic/scripts/itemHelpers"
 import { history } from "../../shared/utils/helpers/history"
 import { enableStageOutput, getStageOutputId } from "../../shared/utils/helpers/output"
 import { openSettings } from "../settings/logic/openSettings"
@@ -42,8 +42,8 @@ vi.mock("../../shared/core/stores", () => {
         toggleOutputEnabled: makeStore(false)
     }
 })
-vi.mock("../../components/edit/scripts/zoom", () => ({ centerZoom: vi.fn(async () => {}) }))
-vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getSortedStageItems: vi.fn(() => []), shouldItemBeShown: vi.fn(() => true) }))
+vi.mock("../edit/logic/scripts/zoom", () => ({ centerZoom: vi.fn(async () => {}) }))
+vi.mock("../edit/logic/scripts/itemHelpers", () => ({ getSortedStageItems: vi.fn(() => []), shouldItemBeShown: vi.fn(() => true) }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({
     enableStageOutput: vi.fn(() => "newOut"),
@@ -64,7 +64,7 @@ vi.mock("../settings/logic/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("./logic/stage", () => ({ getSlideTextItems: vi.fn(() => []), stageItemToItem: vi.fn((item: unknown) => item), updateStageShow: vi.fn() }))
 vi.mock("../slide/logic/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
-vi.mock("../../react/edit/ItemAddMenu", () => ({ ItemAddMenu: () => null }))
+vi.mock("../edit/ItemAddMenu", () => ({ ItemAddMenu: () => null }))
 vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../slide/Zoomed", () => ({

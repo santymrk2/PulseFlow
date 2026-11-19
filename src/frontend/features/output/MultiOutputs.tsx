@@ -4,7 +4,7 @@ import { activeRecording, activeStyle, audioChannelsData, dictionary, outputs, p
 import { openSettings } from "../settings/logic/openSettings"
 import { translateText } from "../../shared/utils/language"
 import { stopMediaRecorder } from "../drawer/logic/live/recorder"
-import { openDrawer } from "../../components/edit/scripts/edit"
+import { openDrawer } from "../edit/logic/scripts/edit"
 import { clone, keysToID, sortByName, sortObject } from "../../shared/utils/helpers/array"
 import { defaultLayers, getOutputResolution, startRtmpStreaming, startStreaming, stopRtmpStreaming, stopStreaming } from "../../shared/utils/helpers/output"
 import { getUnhealthyDestinations, hasStreamableDestination } from "../../shared/utils/helpers/rtmpDestinations"

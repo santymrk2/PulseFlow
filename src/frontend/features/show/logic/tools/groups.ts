@@ -3,7 +3,7 @@ import type { Show, Slide } from "../../../../../types/Show"
 import { cachedShowsData, groups, refreshEditSlide, showsCache } from "../../../../shared/core/stores"
 import { clone, sortByName } from "../../../../shared/utils/helpers/array"
 import { history } from "../../../../shared/utils/helpers/history"
-import { getSlideText } from "../../../../components/edit/scripts/textStyle"
+import { getSlideText } from "../../../edit/logic/scripts/textStyle"
 import { getShowCacheId } from "../../../../shared/utils/helpers/show"
 import { translateText } from "../../../../shared/utils/language"
 

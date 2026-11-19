@@ -7,7 +7,7 @@ import { _show } from "../../../../shared/utils/helpers/shows"
 import { showsCache } from "../../../../shared/core/stores"
 import { customActionActivation } from "../../../actions/logic/actions"
 import { joinTimeBig } from "../../../../shared/utils/helpers/time"
-import { getDynamicValue } from "../../../../components/edit/scripts/itemHelpers"
+import { getDynamicValue } from "../../../edit/logic/scripts/itemHelpers"
 import { evaluateArithmetic } from "../../../../shared/utils/safeMath"
 
 const typeOrder = { counter: 1, clock: 2, event: 3 }

@@ -11,7 +11,7 @@ import { AudioStream } from "./AudioStream"
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
-vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
+vi.mock("../edit/logic/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ data: { actions: { x: 1 } } }, { data: { actions: { y: 2 } } }] }))
 

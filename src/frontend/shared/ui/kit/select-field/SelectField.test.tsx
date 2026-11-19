@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import type { DropdownOptions } from "../../../../../types/Input"
-import { newDropdown } from "../../../../components/edit/scripts/edit"
+import { newDropdown } from "../../../../features/edit/logic/scripts/edit"
 import { fireWheel } from "../../../test/fireWheel"
 import { commonMock } from "../../../test/mockCommon"
 import { SelectField } from "./SelectField"
@@ -13,7 +13,7 @@ vi.mock("../../../utils/common", () => commonMock())
 // utils/search.ts importa converters/txt, que arrastra el audio; formatSearch no lo usa
 vi.mock("../../../../features/import/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../../utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
-vi.mock("../../../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
+vi.mock("../../../../features/edit/logic/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 
 afterEach(() => {
     cleanup()

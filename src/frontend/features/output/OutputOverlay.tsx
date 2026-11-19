@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import type { Item, Transition } from "../../../types/Show"
-import { shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
+import { shouldItemBeShown } from "../edit/logic/scripts/itemHelpers"
 import { clone } from "../../shared/utils/helpers/array"
 import { Textbox } from "../slide/Textbox"
 import { SlideItemTransition } from "./SlideItemTransition"

@@ -2,14 +2,14 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { addItem } from "../../components/edit/scripts/itemHelpers"
+import { addItem } from "../edit/logic/scripts/itemHelpers"
 import { activePopup, categories, customizedIcons, dictionary, popupData, selected } from "../../shared/core/stores"
 import { commonMock } from "../../shared/test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ChangeIcon } from "./ChangeIcon"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../components/edit/scripts/itemHelpers", () => ({ addItem: vi.fn() }))
+vi.mock("../edit/logic/scripts/itemHelpers", () => ({ addItem: vi.fn() }))
 vi.mock("../../shared/core/values/customIcons", () => ({ customIcons: { empty: "<path/>", star: "<path/>", heart_icon: "<path/>" }, customIconsColors: { star: "#ffcc00" } }))
 
 let restaurar: () => void = () => {}

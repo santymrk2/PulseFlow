@@ -28,7 +28,7 @@ vi.mock("../logic/pages/interactions", () => ({
     stopInteraction: stopInteractionMock,
     formatTimeInteraction: (seconds: number) => `0:${String(seconds).padStart(2, "0")}`
 }))
-vi.mock("../../../components/edit/scripts/edit", () => ({ newDropdown: vi.fn() }))
+vi.mock("../../edit/logic/scripts/edit", () => ({ newDropdown: vi.fn() }))
 
 const dict = {
     main: { unnamed: "Sin nombre" },

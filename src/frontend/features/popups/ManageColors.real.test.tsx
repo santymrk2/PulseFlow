@@ -10,7 +10,7 @@ import { ManageColors } from "./ManageColors"
 
 // Con el ColorField REAL (en editMode): el store se muta en el lugar, así que la lista tiene que refrescarse sola
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../components/edit/scripts/edit", () => ({ getGradientOpacity: () => 1, addOpacityToGradient: vi.fn() }))
+vi.mock("../edit/logic/scripts/edit", () => ({ getGradientOpacity: () => 1, addOpacityToGradient: vi.fn() }))
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))

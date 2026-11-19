@@ -1,7 +1,7 @@
 import { get } from "../../core/lib/store"
 import type { ID, Show, Slide, SlideData } from "../../../../types/Show"
 import { activeShow, showsCache, special } from "../../core/stores"
-import { getSlideText } from "../../../components/edit/scripts/textStyle"
+import { getSlideText } from "../../../features/edit/logic/scripts/textStyle"
 import { getExtension, getFileName, removeExtension } from "./media"
 
 // please don't use the functions in this file!

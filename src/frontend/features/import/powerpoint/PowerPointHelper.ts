@@ -12,7 +12,7 @@
 
 import { uid } from "uid"
 import type { Item, Line } from "../../../../types/Show"
-import { getItemText } from "../../../components/edit/scripts/textStyle"
+import { getItemText } from "../../edit/logic/scripts/textStyle"
 import { clone } from "../../../shared/utils/helpers/array"
 import { hexToHSL, hexToRgb, hslToHex } from "../../../shared/utils/helpers/color"
 import { getCustomShapePath, getPresetShapePath } from "./powerpointShapes"

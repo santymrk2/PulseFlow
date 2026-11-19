@@ -16,7 +16,7 @@ vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
 vi.mock("../show/logic/slides", () => ({ removeTagsAndContent: vi.fn((value: string) => value) }))
 vi.mock("../actions/logic/actions", () => ({ slideHasAction: vi.fn(() => false) }))
-vi.mock("../../components/edit/scripts/itemHelpers", () => ({ shouldItemBeShown: vi.fn(() => true) }))
+vi.mock("../edit/logic/scripts/itemHelpers", () => ({ shouldItemBeShown: vi.fn(() => true) }))
 vi.mock("../../shared/utils/helpers/media", () => ({
     encodeFilePath: vi.fn((path: string) => path),
     getMedia: vi.fn(async () => ({ path: "media/path", thumbnail: "thumb.jpg", data: {} })),
@@ -40,7 +40,7 @@ vi.mock("../../shared/utils/helpers/shows", () => ({
 vi.mock("../drawer/media/MediaLoader", () => ({
     MediaLoader: (props: Record<string, unknown>) => <span data-view="MediaLoader" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
 }))
-vi.mock("../../react/edit/editbox/Editbox", async () => ({ Editbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Editbox") }))
+vi.mock("../edit/editbox/Editbox", async () => ({ Editbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Editbox") }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Effect") }))
 vi.mock("../../shared/ui/system/SelectElem", () => ({

@@ -33,6 +33,6 @@ if (sampleAttr && sampleAttr.nodeValue == null) {
 }
 
 // precarga: este orden de carga evita el ciclo de imports (components/edit/values/boxes ↔ helpers/array)
-await import("../../components/edit/scripts/itemHelpers")
+await import("../edit/logic/scripts/itemHelpers")
 
 export {}

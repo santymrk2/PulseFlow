@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, ty
 import { createPortal } from "react-dom"
 import type { DropdownOptions } from "../../../../../types/Input"
 import { cn } from "../../../core/lib/utils"
-import { newDropdown } from "../../../../components/edit/scripts/edit"
+import { newDropdown } from "../../../../features/edit/logic/scripts/edit"
 import { dictionary } from "../../../core/stores"
 import { translateText } from "../../../utils/language"
 import { formatSearch } from "../../../utils/search"

@@ -13,7 +13,7 @@ vi.mock("../../shared/core/stores", () => ({
 vi.mock("uid", () => ({ uid: () => "id" }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)), keysToID: () => [], sortByName: (a: unknown[]) => a }))
-vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getDynamicValue: (v: unknown) => v }))
+vi.mock("../edit/logic/scripts/itemHelpers", () => ({ getDynamicValue: (v: unknown) => v }))
 vi.mock("./logic/emitters", () => ({ formatData: {} }))
 vi.mock("../../shared/ui/kit/button/Button", () => ({ Button: ({ children, onClick }: { children?: ReactNode; onClick?: () => void }) => <button onClick={onClick}>{children}</button> }))
 vi.mock("../../shared/ui/kit/dynamic-list/DynamicList", () => ({ DynamicList: () => <div data-testid="dynamic-list" /> }))

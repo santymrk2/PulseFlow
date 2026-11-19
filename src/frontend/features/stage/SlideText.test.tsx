@@ -3,7 +3,7 @@ import { act, cleanup, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { outputs, previewOutputId, showsCache, styles as stylesStore } from "../../shared/core/stores"
-import { getItemText } from "../../components/edit/scripts/textStyle"
+import { getItemText } from "../edit/logic/scripts/textStyle"
 import { getStyleResolution } from "../slide/logic/getStyleResolution"
 import { getStageTextLayoutOffset } from "./logic/stage"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
@@ -12,7 +12,7 @@ import { SlideText } from "./SlideText"
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/edit/scripts/textStyle", () => ({ getItemText: vi.fn(() => "Hola") }))
+vi.mock("../edit/logic/scripts/textStyle", () => ({ getItemText: vi.fn(() => "Hola") }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "s1" }]) }))
 vi.mock("../slide/logic/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))

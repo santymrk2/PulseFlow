@@ -1,7 +1,7 @@
 import { get } from "../../../shared/core/lib/store"
 import type { Shows } from "../../../../types/Show"
 import { actions, activePlaylist, audioPlaylists, outputs, playingAudio, playingVideos, playingVideoState, projects, shows, showsCache, variables } from "../../../shared/core/stores"
-import { getTextLines } from "../../../components/edit/scripts/textStyle"
+import { getTextLines } from "../../edit/logic/scripts/textStyle"
 import { keysToID, sortByName } from "../../../shared/utils/helpers/array"
 import { getFirstActiveOutput } from "../../../shared/utils/helpers/output"
 import { loadShows } from "../../../shared/utils/helpers/setShow"

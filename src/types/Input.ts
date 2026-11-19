@@ -52,7 +52,7 @@ export type InputType = ExtractType<Inputs>
 
 ///
 
-// import type { API_rest_command } from "./../frontend/components/actions/api"
+// import type { API_rest_command } from "../frontend/features/actions/logic/api"
 type RestValues = {
     url: string
     method: string

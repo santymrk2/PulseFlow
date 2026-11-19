@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePage, activeStage, dictionary, labelsDisabled, openToolsTab, outputs, stageShows } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { getAccess } from "../../shared/utils/profile"
-import { addStyleString } from "../../components/edit/scripts/textStyle"
+import { addStyleString } from "../edit/logic/scripts/textStyle"
 import { history } from "../../shared/utils/helpers/history"
 import { StageTools } from "./StageTools"
 
@@ -41,9 +41,9 @@ vi.mock("../../shared/core/stores", () => {
 })
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
-vi.mock("../../components/edit/scripts/itemClipboard", () => ({ getItemKeys: vi.fn(() => ["left", "top", "width", "height"]) }))
-vi.mock("../../components/edit/scripts/textStyle", () => ({ addStyleString: vi.fn((style: string, [key, value]) => `${style}${key}:${value};`) }))
-vi.mock("../../components/edit/values/boxes", () => ({ itemBoxes: { text: { icon: "text_icon" } } }))
+vi.mock("../edit/logic/scripts/itemClipboard", () => ({ getItemKeys: vi.fn(() => ["left", "top", "width", "height"]) }))
+vi.mock("../edit/logic/scripts/textStyle", () => ({ addStyleString: vi.fn((style: string, [key, value]) => `${style}${key}:${value};`) }))
+vi.mock("../edit/logic/values/boxes", () => ({ itemBoxes: { text: { icon: "text_icon" } } }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({
     getStageOutputId: vi.fn(() => "out1"),

@@ -4,7 +4,7 @@ import { activePopup, activeProfile, activeTimerTagFilter, activeTimers, disable
 import { translateText } from "../../../shared/utils/language"
 import { clone, keysToID, sortByName } from "../../../shared/utils/helpers/array"
 import { joinTime, secondsToTime } from "../../../shared/utils/helpers/time"
-import { openDrawer } from "../../../components/edit/scripts/edit"
+import { openDrawer } from "../../edit/logic/scripts/edit"
 import { getCurrentTimerValue, getTimerDynamicValue, playPauseGlobal, resetTimer } from "../logic/timers/timers"
 import { Icon } from "../../../shared/ui/helpers/Icon"
 import { T } from "../../../shared/ui/helpers/T"

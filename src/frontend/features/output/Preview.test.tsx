@@ -26,7 +26,7 @@ vi.mock("./SpotifyController", () => ({ SpotifyController: () => <div data-testi
 
 // getSlideText importa itemHelpers -> boxes.ts, que inicializa estados de edición
 // incompatibles con happy-dom. No se usa en estos tests (autoLetterShortcut desactivado).
-vi.mock("../../components/edit/scripts/textStyle", () => ({ getSlideText: () => "" }))
+vi.mock("../edit/logic/scripts/textStyle", () => ({ getSlideText: () => "" }))
 
 // Rompe el ciclo language -> stores -> actions -> historyHelpers -> language en happy-dom
 vi.mock("../../shared/utils/language", () => ({

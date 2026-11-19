@@ -1,4 +1,4 @@
-import type { AutosizeTypes } from "../frontend/components/edit/scripts/autosize"
+import type { AutosizeTypes } from "../frontend/features/edit/logic/scripts/autosize"
 import type { Input } from "./Input"
 import type { Animation } from "./Output"
 import type { Cropping, Resolution } from "./Settings"

@@ -1,7 +1,7 @@
 import { Fragment, useRef, useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import type { Show } from "../../../types/Show"
-import { getTextLines } from "../../components/edit/scripts/textStyle"
+import { getTextLines } from "../edit/logic/scripts/textStyle"
 import { history } from "../../shared/utils/helpers/history"
 import { loadShows } from "../../shared/utils/helpers/setShow"
 import { dateToString } from "../../shared/utils/helpers/time"

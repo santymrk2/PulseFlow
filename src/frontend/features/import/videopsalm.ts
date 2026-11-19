@@ -1,6 +1,6 @@
 import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
-import { DEFAULT_ITEM_STYLE } from "../../components/edit/scripts/itemHelpers"
+import { DEFAULT_ITEM_STYLE } from "../edit/logic/scripts/itemHelpers"
 import { setQuickAccessMetadata } from "../../shared/utils/helpers/setShow"
 import { checkName } from "../../shared/utils/helpers/show"
 import { translateText } from "../../shared/utils/language"

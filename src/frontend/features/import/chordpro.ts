@@ -10,7 +10,7 @@ import { setQuickAccessMetadata } from "../../shared/utils/helpers/setShow"
 import { checkName, getGlobalGroup } from "../../shared/utils/helpers/show"
 import { activePopup, alertMessage, dictionary, drawerTabsData, groups } from "../../shared/core/stores"
 import { setTempShows } from "./importHelpers"
-import { DEFAULT_ITEM_STYLE } from "../../components/edit/scripts/itemHelpers"
+import { DEFAULT_ITEM_STYLE } from "../edit/logic/scripts/itemHelpers"
 
 const metaKeys = ["number", "title", "artist", "composer", "lyricist", "copyright", "year", "notes", "ccli", "t", "su", "k", "key", "f"]
 const chorus = ["start_of_chorus", "soc"]
