@@ -88,7 +88,7 @@ import { Unsaved } from "./Unsaved"
 import { UpdateManager } from "./UpdateManager"
 import { Variable } from "./Variable"
 import { Translate } from "./Translate"
-import { ScreenConfig } from "../../react/screens/ScreenConfig"
+import { ScreenConfig } from "../screens/ScreenConfig"
 
 // Registro único de popups React: los últimos cuatro salieron de components/main/popupComponents.ts.
 export const reactPopups: Partial<Record<Popups, ElementType>> = {

@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { computeDisplayLayout, type LayoutDisplay } from "../../components/screens/displayLayout"
+import { computeDisplayLayout, type LayoutDisplay } from "./logic/displayLayout"
 import { DisplayLayout } from "./DisplayLayout"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
