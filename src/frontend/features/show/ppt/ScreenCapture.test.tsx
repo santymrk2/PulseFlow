@@ -13,7 +13,7 @@ vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn((_main, _data, callback) => callback(windows)) }))
 vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: (path: string) => path, removeExtension: (name: string) => name.split(".")[0] }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getAllActiveOutputIds: vi.fn(() => ["out1"]) }))
-vi.mock("../../../react/output/Window", async () => ({ Window: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Window") }))
+vi.mock("../../output/Window", async () => ({ Window: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Window") }))
 
 let restore: () => void = () => {}
 afterEach(() => {

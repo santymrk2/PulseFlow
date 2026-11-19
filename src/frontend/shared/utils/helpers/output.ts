@@ -62,7 +62,7 @@ import type { API_camera, API_screen, API_stage_output_layout } from "../../../c
 import { getItemText, getSlideText } from "../../../components/edit/scripts/textStyle"
 import type { EditInput } from "../../../components/edit/values/boxes"
 import { VideoPlayer } from "../../../features/media/logic/video/videoPlayer"
-import { clearBackground, clearSlide } from "../../../components/output/clear"
+import { clearBackground, clearSlide } from "../../../features/output/logic/clear"
 import { areObjectsEqual, clone, keysToID, removeDuplicates, sortByName, sortObject } from "./array"
 import { referenceOutputId, resolveOutputAspect } from "./outputAspect"
 import { getExtension, getFileName, getMediaLayerType, getMediaType, removeExtension } from "./media"

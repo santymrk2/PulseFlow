@@ -1,7 +1,7 @@
 import { sendMain } from "../../shared/core/ipc/main"
 import type { SaveData } from "../../../types/Save"
 import { Main } from "../../../types/IPC/Main"
-import { clearAll } from "../../components/output/clear"
+import { clearAll } from "../output/logic/clear"
 import { activeEdit, activePage, activePopup, activeShow, deletedShows, renamedShows, scripturesCache } from "../../shared/core/stores"
 import { save } from "../../app/wiring/save"
 import { T } from "../../shared/ui/helpers/T"

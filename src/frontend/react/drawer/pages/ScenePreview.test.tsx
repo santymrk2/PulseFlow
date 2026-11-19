@@ -7,7 +7,7 @@ import { clearIslands, islands } from "../../../shared/test/islandMock"
 import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { ScenePreview } from "./ScenePreview"
 
-vi.mock("../../output/Output", async () => ({ Output: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Output") }))
+vi.mock("../../../features/output/Output", async () => ({ Output: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Output") }))
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

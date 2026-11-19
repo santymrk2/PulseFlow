@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import type { EffectItem, EffectType } from "../../../types/Effects"
-import { effectItems } from "../../components/output/effects/effectItems"
+import { effectItems } from "../output/logic/effects/effectItems"
 import { activeEdit, activePopup, effects } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { Card } from "../../react/drawer/Card"
 import { useStore } from "../../shared/ui/hooks/useStore"
-import { Effect } from "../../react/output/Effect"
+import { Effect } from "../output/Effect"
 import styles from "./EffectItems.module.css"
 
 // Port de components/main/popups/EffectItems.svelte: grilla de efectos disponibles. Al elegir uno

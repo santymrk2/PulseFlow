@@ -27,7 +27,7 @@ vi.mock("../../react/drawer/Card", async () => {
         }
     }
 })
-vi.mock("../../react/output/Output", async () => ({ Output: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Output") }))
+vi.mock("../output/Output", async () => ({ Output: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Output") }))
 
 const trigger = vi.fn()
 let restaurar: () => void = () => {}

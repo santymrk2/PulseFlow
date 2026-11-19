@@ -32,7 +32,7 @@ vi.mock("../../../shared/utils/helpers/output", () => ({
     setOutput: vi.fn(),
     startFolderTimer: vi.fn()
 }))
-vi.mock("../../../components/output/clear", () => ({ clearBackground: vi.fn(), clearSlide: vi.fn() }))
+vi.mock("../../output/logic/clear", () => ({ clearBackground: vi.fn(), clearSlide: vi.fn() }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../react/drawer/Card", () => ({
     Card: ({ label, onClick, children }: { label: string; onClick?: () => void; children?: ReactNode }) => (

@@ -42,7 +42,7 @@ vi.mock("../../react/drawer/media/MediaLoader", () => ({
 }))
 vi.mock("../../react/edit/editbox/Editbox", async () => ({ Editbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Editbox") }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../react/output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Effect") }))
+vi.mock("../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Effect") }))
 vi.mock("../../shared/ui/system/SelectElem", () => ({
     SelectElem: ({ children, style }: { children: ReactNode; style?: CSSProperties }) => (
         <div data-select style={style}>

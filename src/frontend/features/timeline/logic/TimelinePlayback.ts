@@ -13,7 +13,7 @@ import { getAllActiveOutputIds, getFirstActiveOutput, setOutput } from "../../..
 import { loadShows } from "../../../shared/utils/helpers/setShow"
 import { _show } from "../../../shared/utils/helpers/shows"
 import { VideoPlayer } from "../../media/logic/video/videoPlayer"
-import { clearBackground } from "../../../components/output/clear"
+import { clearBackground } from "../../output/logic/clear"
 import { ShowTimeline } from "./ShowTimeline"
 import { SlideTimeline } from "./SlideTimeline"
 import { TimelineType } from "./TimelineActions"

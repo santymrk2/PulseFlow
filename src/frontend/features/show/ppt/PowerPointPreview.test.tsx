@@ -13,7 +13,7 @@ vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: (path: string) => path, removeExtension: (name: string) => name }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getOutputContent: vi.fn(() => ({})), getActiveOutputs: vi.fn(() => ["out1"]), setOutput: vi.fn() }))
-vi.mock("../../../components/output/clear", () => ({ clearBackground: vi.fn(), clearSlide: vi.fn() }))
+vi.mock("../../output/logic/clear", () => ({ clearBackground: vi.fn(), clearSlide: vi.fn() }))
 vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
 vi.mock("../../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
 vi.mock("../../../shared/ui/kit/button/Button", () => ({

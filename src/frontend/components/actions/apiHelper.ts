@@ -29,7 +29,7 @@ import { playNextGroup, selectProjectShow, updateOut } from "../../shared/utils/
 import { _show } from "../../shared/utils/helpers/shows"
 import { renderPdfPages } from "../../converters/pdfToImages"
 import { VideoPlayer } from "../../features/media/logic/video/videoPlayer"
-import { clearBackground, clearSlide } from "../output/clear"
+import { clearBackground, clearSlide } from "../../features/output/logic/clear"
 import { getPlainEditorText } from "../../features/show/logic/getTextEditor"
 import { getSlideGroups } from "../../features/show/logic/tools/groups"
 import type { API_add_to_project, API_create_project, API_disable_slide, API_edit_timer, API_group, API_id_index, API_id_value, API_layout, API_media, API_output_lock, API_rearrange, API_scripture, API_seek, API_slide_index, API_toggle_id, API_toggle_specific, API_variable, API_volume } from "./api"

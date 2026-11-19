@@ -1,7 +1,7 @@
 import { get } from "../../shared/core/lib/store"
 import { getFirstOutput } from "../../shared/utils/helpers/output"
 import { OutputHelper } from "../../shared/utils/helpers/OutputHelper"
-import { clearAll, clearSlide } from "../../components/output/clear"
+import { clearAll, clearSlide } from "../../features/output/logic/clear"
 import { serverData } from "../../shared/core/stores"
 
 let justCleared: NodeJS.Timeout | null = null

@@ -4,7 +4,7 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { sendMain } from "../../shared/core/ipc/main"
 import { Main } from "../../../types/IPC/Main"
-import { clearAll } from "../../components/output/clear"
+import { clearAll } from "../output/logic/clear"
 import { activeEdit, activePage, activePopup, activeShow, deletedShows, dictionary, renamedShows, scripturesCache } from "../../shared/core/stores"
 import { save } from "../../app/wiring/save"
 import { commonMock } from "../../shared/test/mockCommon"
@@ -15,7 +15,7 @@ vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
-vi.mock("../../components/output/clear", () => ({ clearAll: vi.fn() }))
+vi.mock("../output/logic/clear", () => ({ clearAll: vi.fn() }))
 vi.mock("../../app/wiring/save", () => ({ save: vi.fn() }))
 
 let restaurar: () => void = () => {}

@@ -21,7 +21,7 @@ import { getInteraction } from "../../../components/drawer/pages/interactions"
 import { getCurrentTimerValue, getTimeUntilClock, playPauseGlobal } from "../../../components/drawer/timers/timers"
 import { getDynamicValue } from "../../../components/edit/scripts/itemHelpers"
 import { getTextLines } from "../../../components/edit/scripts/textStyle"
-import { clearBackground, clearOverlays, clearTimers } from "../../../components/output/clear"
+import { clearBackground, clearOverlays, clearTimers } from "../../../features/output/logic/clear"
 import {
     activeEdit,
     activeFocus,

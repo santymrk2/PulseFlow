@@ -116,7 +116,7 @@ import { sendMidi } from "../../../utils/helpers/showActions"
 import { _show } from "../../../utils/helpers/shows"
 import { getMenuTagId, openTagManager, toggleSelectionTags, toggleTagFilter } from "../../../utils/helpers/tags"
 import { addShowsToProject } from "../../../../features/show/logic/project"
-import { clearSlide } from "../../../../components/output/clear"
+import { clearSlide } from "../../../../features/output/logic/clear"
 import { activeProject } from "../../../core/stores"
 import type { ContextMenuItem } from "./contextMenus"
 

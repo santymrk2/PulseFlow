@@ -22,7 +22,7 @@ vi.mock("../settings/logic/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
-vi.mock("../../react/output/PreviewOutput", async () => ({ PreviewOutput: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("PreviewOutput") }))
+vi.mock("../output/PreviewOutput", async () => ({ PreviewOutput: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("PreviewOutput") }))
 
 const displays = [
     { id: "display-1", label: "Principal", bounds: { x: 0, y: 0, width: 1920, height: 1080 }, internal: true },

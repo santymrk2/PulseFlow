@@ -6,7 +6,7 @@ import { activeShow, os, outLocked, outputs, presentationApps, presentationData,
 import { translateText } from "../../../shared/utils/language"
 import { getFileName, removeExtension } from "../../../shared/utils/helpers/media"
 import { getActiveOutputs, getOutputContent, setOutput } from "../../../shared/utils/helpers/output"
-import { clearBackground, clearSlide } from "../../../components/output/clear"
+import { clearBackground, clearSlide } from "../../output/logic/clear"
 import { Icon } from "../../../shared/ui/helpers/Icon"
 import { T } from "../../../shared/ui/helpers/T"
 import { Button } from "../../../shared/ui/kit/button/Button"

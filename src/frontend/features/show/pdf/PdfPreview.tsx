@@ -14,7 +14,7 @@ import { Button } from "../../../shared/ui/kit/button/Button"
 import { FloatingBar } from "../../../shared/ui/kit/floating-bar/FloatingBar"
 import { ZoomControl } from "../../../shared/ui/kit/zoom-control/ZoomControl"
 import { Loader } from "../../../react/main/Loader"
-import { clearBackground } from "../../../components/output/clear"
+import { clearBackground } from "../../output/logic/clear"
 import stylesModule from "./PdfPreview.module.css"
 
 GlobalWorkerOptions.workerSrc = "./assets/pdf.worker.min.mjs"

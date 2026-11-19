@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import type { ReactNode } from "react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { effectItems } from "../../components/output/effects/effectItems"
+import { effectItems } from "../output/logic/effects/effectItems"
 import { activeEdit, activePopup, effects } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { EffectItems } from "./EffectItems"
@@ -22,7 +22,7 @@ vi.mock("../../react/drawer/Card", () => ({
         </button>
     )
 }))
-vi.mock("../../react/output/Effect", () => ({
+vi.mock("../output/Effect", () => ({
     Effect: ({ effect }: { effect: { items: { type: string }[] } }) => <span data-testid="preview">{effect.items[0]?.type}</span>
 }))
 

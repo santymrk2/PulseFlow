@@ -18,7 +18,7 @@ vi.mock("../../../shared/ui/system/HoverPlay", () => ({
         </div>
     )
 }))
-vi.mock("../../../react/output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Effect") }))
+vi.mock("../../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Effect") }))
 vi.mock("../../slide/Zoomed", () => ({ Zoomed: ({ children }: { children: unknown }) => <div data-view="Zoomed">{children as never}</div> }))
 
 let restore: () => void = () => {}

@@ -13,7 +13,7 @@ import { clone } from "../../../../shared/utils/helpers/array"
 import { downloadOnlineMedia, encodeFilePath, getExtension, getMediaType, locateMediaFile } from "../../../../shared/utils/helpers/media"
 import { defaultLayers, getAllOutputs } from "../../../../shared/utils/helpers/output"
 import { checkNextAfterMedia } from "../../../../shared/utils/helpers/showActions"
-import { clearBackground } from "../../../../components/output/clear"
+import { clearBackground } from "../../../output/logic/clear"
 import { TimeInterpolator } from "./videoTime"
 
 type VideoOptions = {

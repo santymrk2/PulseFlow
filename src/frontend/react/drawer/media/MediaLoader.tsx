@@ -8,7 +8,7 @@ import { cropImageToBase64, encodeFilePath, getExtension, isLocalFile } from "..
 import { getResolution } from "../../../shared/utils/helpers/output"
 import { getStyleResolution } from "../../../features/slide/logic/getStyleResolution"
 import { useStore } from "../../../shared/ui/hooks/useStore"
-import { Camera } from "../../output/Camera"
+import { Camera } from "../../../features/output/Camera"
 import { Capture } from "../live/Capture"
 import { NDIStream } from "../live/NDIStream"
 import { OMTStream } from "../live/OMTStream"

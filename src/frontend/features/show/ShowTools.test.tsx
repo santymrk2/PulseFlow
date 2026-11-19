@@ -12,10 +12,10 @@ vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getActiveOutputs: vi.fn(() => []) }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
-vi.mock("../../react/output/Audio", () => ({ Audio: () => <div data-isla="Audio" /> }))
-vi.mock("../../react/output/ToolsOverlay", () => ({ ToolsOverlay: () => <div data-isla="Overlay" /> }))
-vi.mock("../../react/output/TimerControls", () => ({ TimerControls: () => <div data-isla="TimerControls" /> }))
-vi.mock("../../react/output/NextTimer", () => ({
+vi.mock("../output/Audio", () => ({ Audio: () => <div data-isla="Audio" /> }))
+vi.mock("../output/ToolsOverlay", () => ({ ToolsOverlay: () => <div data-isla="Overlay" /> }))
+vi.mock("../output/TimerControls", () => ({ TimerControls: () => <div data-isla="TimerControls" /> }))
+vi.mock("../output/NextTimer", () => ({
     NextTimer: (props: Record<string, unknown>) => <div data-isla="NextTimer" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
 }))
 vi.mock("./tools/Media", () => ({ Media: () => <div data-testid="media-tools" /> }))

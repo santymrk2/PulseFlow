@@ -15,7 +15,7 @@ import { getExtension, getMedia, getMediaLayerType, getMediaStyle, getMediaType 
 import { getActiveOutputs, getFirstActiveOutput, refreshOut, setOutput, startFolderTimer, toggleOutputs } from "../../shared/utils/helpers/output"
 import { OutputHelper } from "../../shared/utils/helpers/OutputHelper"
 import { VideoPlayer } from "../../features/media/logic/video/videoPlayer"
-import { clearAll, clearBackground, clearSlide } from "../../components/output/clear"
+import { clearAll, clearBackground, clearSlide } from "../../features/output/logic/clear"
 import { getRecentlyUsedProjects, openProject } from "../../features/show/logic/project"
 import { importFromClipboard } from "../../converters/importHelpers"
 import { addSection } from "../../converters/project"

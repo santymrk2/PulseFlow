@@ -5,7 +5,7 @@ import { activeProject, outLocked, outputs, presentationData, projects, special 
 import { getFileName, removeExtension } from "../../../shared/utils/helpers/media"
 import { getAllActiveOutputIds } from "../../../shared/utils/helpers/output"
 import { triggerClickOnEnterSpace } from "../../../shared/ui/helpers/triggerClickOnEnterSpace"
-import { Window as WindowView } from "../../../react/output/Window"
+import { Window as WindowView } from "../../output/Window"
 import { T } from "../../../shared/ui/helpers/T"
 import { Center } from "../../../shared/ui/system/Center"
 import { useStore } from "../../../shared/ui/hooks/useStore"

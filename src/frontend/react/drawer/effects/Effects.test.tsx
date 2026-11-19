@@ -20,7 +20,7 @@ vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock }))
 vi.mock("../../../shared/utils/helpers/overlayOutput", () => ({ toggleEffectOutput: toggleEffectOutputMock }))
 vi.mock("../../../converters/project", () => ({ addProjectItem: addProjectItemMock }))
-vi.mock("../../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Effect") }))
+vi.mock("../../../features/output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Effect") }))
 vi.mock("../../../features/slide/Zoomed", async () => {
     const { makePortMock } = await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")
     const Port = makePortMock("Zoomed")

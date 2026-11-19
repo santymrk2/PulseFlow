@@ -9,7 +9,7 @@ import { clone, keysToID, sortFilenames } from "../../../shared/utils/helpers/ar
 import { splitPath } from "../../../shared/utils/helpers/get"
 import { countFolderMediaItems, getExtension, getFileName, getMediaType, isMediaExtension, removeExtension } from "../../../shared/utils/helpers/media"
 import { getFirstActiveOutput, setOutput } from "../../../shared/utils/helpers/output"
-import { clearBackground } from "../../../components/output/clear"
+import { clearBackground } from "../../../features/output/logic/clear"
 import { translateText } from "../../../shared/utils/language"
 import { PlayerVideos } from "../player/PlayerVideos"
 import { BMDStreams } from "../live/BMDStreams"

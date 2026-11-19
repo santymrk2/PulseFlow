@@ -19,7 +19,7 @@ vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock, setOutput: setOutputMock }))
-vi.mock("../../../components/output/clear", () => ({ clearBackground: clearBackgroundMock, clearSlide: clearSlideMock }))
+vi.mock("../../../features/output/logic/clear", () => ({ clearBackground: clearBackgroundMock, clearSlide: clearSlideMock }))
 
 const dict = {
     empty: { player: "Sin videos", search: "Sin resultados" },

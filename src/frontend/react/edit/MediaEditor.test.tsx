@@ -26,13 +26,13 @@ const mocks = vi.hoisted(() => ({
     sliderProps: null as SliderMockProps | null
 }))
 
-vi.mock("../output/Media", () => ({
+vi.mock("../../features/output/Media", () => ({
     Media: (props: MediaMockProps) => {
         mocks.mediaProps = props
         return <div data-testid="media" />
     }
 }))
-vi.mock("../output/VideoSlider", () => ({
+vi.mock("../../features/output/VideoSlider", () => ({
     VideoSlider: (props: SliderMockProps) => {
         mocks.sliderProps = props
         return <div data-testid="video-slider" />

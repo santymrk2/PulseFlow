@@ -2,7 +2,7 @@
 import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { clearSlide } from "../../../components/output/clear"
+import { clearSlide } from "../../output/logic/clear"
 import { getMedia } from "../../../shared/utils/helpers/media"
 import { setOutput } from "../../../shared/utils/helpers/output"
 import { activeShow, media, outLocked, outputs, styles } from "../../../shared/core/stores"
@@ -19,7 +19,7 @@ vi.mock("../../../shared/utils/helpers/output", () => ({
     getCurrentStyle: vi.fn(() => ({})),
     setOutput: vi.fn()
 }))
-vi.mock("../../../components/output/clear", () => ({ clearSlide: vi.fn() }))
+vi.mock("../../output/logic/clear", () => ({ clearSlide: vi.fn() }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../react/drawer/media/Image", () => ({ Image: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} /> }))
 vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))

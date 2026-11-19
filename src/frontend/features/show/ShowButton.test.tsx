@@ -30,7 +30,7 @@ vi.mock("../../shared/utils/helpers/setShow", () => ({ loadShows: vi.fn() }))
 vi.mock("../../shared/utils/helpers/show", () => ({ checkName: vi.fn((name: string) => name), getLayoutRef: vi.fn(() => []) }))
 vi.mock("../../shared/utils/helpers/showActions", () => ({ playPdf: vi.fn(), swichProjectItem: vi.fn(), updateOut: vi.fn() }))
 vi.mock("../../shared/utils/helpers/time", () => ({ joinTime: vi.fn((value: string) => value), secondsToTime: vi.fn((value: number) => String(value)) }))
-vi.mock("../../components/output/clear", () => ({ clearSlide: vi.fn() }))
+vi.mock("../output/logic/clear", () => ({ clearSlide: vi.fn() }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, className, style }: { children?: ReactNode; className?: string; style?: unknown }) => (

@@ -6,7 +6,7 @@ import { translateText } from "../../shared/utils/language"
 import { keysToID, removeDeleted } from "../../shared/utils/helpers/array"
 import { OutputHelper } from "../../shared/utils/helpers/OutputHelper"
 import { loadShows } from "../../shared/utils/helpers/setShow"
-import { clearAll } from "../output/clear"
+import { clearAll } from "../../features/output/logic/clear"
 
 export const guideSteps = [
     {

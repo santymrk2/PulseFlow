@@ -12,7 +12,7 @@ vi.mock("../../features/show/logic/tools/groups", () => ({ getGlobalGroupName: (
 vi.mock("../../components/actions/actionData", () => ({ actionData: {} }))
 vi.mock("../../components/actions/actions", () => ({ getActionName: () => "", getActionTriggerId: (id: string) => id }))
 vi.mock("../../components/actions/api", () => ({ API_ACTIONS: {} }))
-vi.mock("../../components/output/preview/SpotifyManager", () => ({ spotifyState: {} }))
+vi.mock("../../features/output/logic/preview/SpotifyManager", () => ({ spotifyState: {} }))
 vi.mock("../../shared/ui/kit/h-rule/HRule", () => ({ HRule: () => <hr /> }))
 vi.mock("../../shared/ui/kit/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 vi.mock("../../shared/ui/kit/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button>{children}</button> }))

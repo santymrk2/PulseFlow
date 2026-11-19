@@ -5,7 +5,7 @@ import { activeShow, media, outLocked, outputs, styles } from "../../../shared/c
 import { translateText } from "../../../shared/utils/language"
 import { getMedia, getMediaLayerType, getMediaStyle } from "../../../shared/utils/helpers/media"
 import { getActiveOutputs, getCurrentStyle, setOutput } from "../../../shared/utils/helpers/output"
-import { clearSlide } from "../../../components/output/clear"
+import { clearSlide } from "../../output/logic/clear"
 import { Image } from "../../../react/drawer/media/Image"
 import { Icon } from "../../../shared/ui/helpers/Icon"
 import { useStore } from "../../../shared/ui/hooks/useStore"
