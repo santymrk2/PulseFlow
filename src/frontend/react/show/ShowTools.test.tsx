@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeShow, labelsDisabled, outputs, showsCache, slideTimers } from "../../shared/core/stores"
 import { getActiveOutputs } from "../../shared/utils/helpers/output"
 import { _show } from "../../shared/utils/helpers/shows"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ShowTools } from "./ShowTools"
 
 vi.mock("../../audio/audioProcessor", () => ({}))

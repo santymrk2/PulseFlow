@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeDays, calendarAddShow, drawerTabsData, special } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { CalendarInfo } from "./CalendarInfo"
 
 vi.mock("../calendar/CalendarsManagement", () => ({ CalendarsManagement: () => <div data-isla="CalendarsManagement" /> }))

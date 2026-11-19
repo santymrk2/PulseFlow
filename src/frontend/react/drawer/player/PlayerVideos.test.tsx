@@ -3,9 +3,9 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeFocus, activePlayerTagFilter, activeShow, dictionary, focusMode, outLocked, outputs, playerTags, playerVideos } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { clearIslands } from "../../test/islandMock"
-import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { clearIslands } from "../../../shared/test/islandMock"
+import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { PlayerVideos } from "./PlayerVideos"
 
 const { setOutputMock, findMatchingOutMock, clearBackgroundMock, clearSlideMock } = vi.hoisted(() => ({

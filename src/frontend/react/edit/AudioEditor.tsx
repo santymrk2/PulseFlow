@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { AudioPlayer } from "../../audio/audioPlayer"
 import { createWaveform, WAVEFORM_SAMPLES } from "../../audio/audioWaveform"
 import { activeEdit, activeShow, media } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import styles from "./AudioEditor.module.css"
 
 // Port de components/edit/editors/AudioEditor.svelte.

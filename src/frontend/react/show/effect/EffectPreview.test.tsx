@@ -3,14 +3,14 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { outputs } from "../../../shared/core/stores"
 import { findMatchingOut, setOutput } from "../../../shared/utils/helpers/output"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { EffectPreview } from "./EffectPreview"
 
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(() => null), setOutput: vi.fn() }))
-vi.mock("../../system/HoverPlay", () => ({
+vi.mock("../../../shared/ui/system/HoverPlay", () => ({
     HoverPlay: ({ icon, size, onClick, children }: { icon: string; size?: number; onClick?: () => void; children?: unknown }) => (
         <div data-isla="HoverPlay" data-props={JSON.stringify({ icon, size })}>
             <button data-testid="hover" onClick={onClick} />
@@ -18,7 +18,7 @@ vi.mock("../../system/HoverPlay", () => ({
         </div>
     )
 }))
-vi.mock("../../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Effect") }))
+vi.mock("../../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Effect") }))
 vi.mock("../../slide/Zoomed", () => ({ Zoomed: ({ children }: { children: unknown }) => <div data-view="Zoomed">{children as never}</div> }))
 
 let restore: () => void = () => {}

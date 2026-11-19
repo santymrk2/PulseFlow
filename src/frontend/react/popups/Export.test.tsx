@@ -11,9 +11,9 @@ import { activePopup, activeProject, activeShow, dictionary, projects, selected,
 import { send } from "../../shared/utils/request"
 import { save } from "../../app/wiring/save"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
-import { clearFields, fire } from "../test/kitMocks"
-import { clearIslands } from "../test/islandMock"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearFields, fire } from "../../shared/test/kitMocks"
+import { clearIslands } from "../../shared/test/islandMock"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Export } from "./Export"
 
 const pdf = vi.hoisted(() => ({ props: null as null | { pdfOptions: Record<string, unknown>; onChange?: (o: Record<string, unknown>) => void } }))
@@ -34,8 +34,8 @@ vi.mock("./PdfExport", () => ({
         return null
     }
 }))
-vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
-vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
+vi.mock("../../shared/ui/kit/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 const dict = { export: { option_type: "Tipo", option_format: "Formato", export_as: "Exportar como {}", export: "Exportar", current_project: "Proyecto actual", selected_shows: "Shows elegidos", all_shows: "Todos", project: "Proyecto", include_media: "Incluir media" }, formats: { show: "Show" }, edit: { text: "Texto" }, items: { image: "Imagen" } }
 let restaurar: () => void = () => {}

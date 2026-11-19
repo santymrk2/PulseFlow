@@ -3,8 +3,8 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeProject, drawerTabsData, leftSource, loaded, projectView, projects, resized, categories } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { LeftColumn } from "./LeftColumn"
 
 vi.mock("../../../shared/utils/common", () => commonMock())

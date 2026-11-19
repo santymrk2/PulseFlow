@@ -11,7 +11,7 @@ import { getStyles } from "../../../shared/utils/helpers/style"
 import { addFilterString, addStyleString } from "../../../components/edit/scripts/textStyle"
 import { setBoxInputValue } from "../../../components/edit/values/boxes"
 import { itemSections } from "../../../components/edit/values/item"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { EditValues } from "./EditValues"
 
 export interface ItemStyleProps {

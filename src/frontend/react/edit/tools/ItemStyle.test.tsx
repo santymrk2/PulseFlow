@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activeShow, selected, showsCache } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { ItemStyle } from "./ItemStyle"
 
 vi.mock("../../../shared/utils/common", () => ({ wait: () => Promise.resolve() }))

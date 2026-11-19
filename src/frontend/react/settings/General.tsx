@@ -2,11 +2,11 @@ import { dictionary, fullColors, groups, labelsDisabled, language, special, time
 import { sortByName } from "../../shared/utils/helpers/array"
 import { getLanguageList, setLanguage, translateText } from "../../shared/utils/language"
 import { isGroupHidden } from "../../shared/utils/profile"
-import { useStore } from "../hooks/useStore"
-import { PopupField } from "../ui/popup-field/PopupField"
-import { SelectField } from "../ui/select-field/SelectField"
-import { Title } from "../ui/title/Title"
-import { ToggleField } from "../ui/toggle-field/ToggleField"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { PopupField } from "../../shared/ui/kit/popup-field/PopupField"
+import { SelectField } from "../../shared/ui/kit/select-field/SelectField"
+import { Title } from "../../shared/ui/kit/title/Title"
+import { ToggleField } from "../../shared/ui/kit/toggle-field/ToggleField"
 
 // Port de components/settings/tabs/General.svelte (F24.12)
 function updateSpecial(value: unknown, key: string, allowEmpty = false) {

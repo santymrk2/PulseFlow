@@ -6,7 +6,7 @@ import { activeProject, activeShow, outLocked, outputs, projects, shows, showsCa
 import { getAccess } from "../../shared/utils/profile"
 import { getMedia } from "../../shared/utils/helpers/media"
 import { findMatchingOut, getActiveOutputs } from "../../shared/utils/helpers/output"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ShowButton } from "./ShowButton"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
@@ -31,15 +31,15 @@ vi.mock("../../shared/utils/helpers/show", () => ({ checkName: vi.fn((name: stri
 vi.mock("../../shared/utils/helpers/showActions", () => ({ playPdf: vi.fn(), swichProjectItem: vi.fn(), updateOut: vi.fn() }))
 vi.mock("../../shared/utils/helpers/time", () => ({ joinTime: vi.fn((value: string) => value), secondsToTime: vi.fn((value: number) => String(value)) }))
 vi.mock("../../components/output/clear", () => ({ clearSlide: vi.fn() }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, className, style }: { children?: ReactNode; className?: string; style?: unknown }) => (
         <button type="button" className={className} style={style as never}>
             {children}
         </button>
     )
 }))
-vi.mock("../ui/hidden-input/HiddenInput", () => ({ HiddenInput: ({ value }: { value: string }) => <span data-name={value} /> }))
+vi.mock("../../shared/ui/kit/hidden-input/HiddenInput", () => ({ HiddenInput: ({ value }: { value: string }) => <span data-name={value} /> }))
 
 let restore: () => void = () => {}
 afterEach(() => {

@@ -3,8 +3,8 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, activeProfile, activeTimerTagFilter, activeTimers, dictionary, disableDragging, labelsDisabled, profiles, timers } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { Timers } from "./Timers"
 
 const { openDrawerMock, customActionActivationMock } = vi.hoisted(() => ({ openDrawerMock: vi.fn(), customActionActivationMock: vi.fn() }))
@@ -14,7 +14,7 @@ vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/actions/actions", () => ({ customActionActivation: customActionActivationMock, runActionId: vi.fn() }))
 vi.mock("../../../components/edit/scripts/edit", () => ({ openDrawer: openDrawerMock }))
-vi.mock("../../slide/views/Timer", async () => ({ Timer: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Timer") }))
+vi.mock("../../slide/views/Timer", async () => ({ Timer: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Timer") }))
 
 const dict = {
     empty: { timers: "Sin temporizadores" },

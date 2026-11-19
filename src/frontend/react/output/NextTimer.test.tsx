@@ -2,12 +2,12 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { slideTimers } from "../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { NextTimer } from "./NextTimer"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getAllActiveOutputIds: vi.fn(() => ["out1"]) }))
-vi.mock("../ui/slider/Slider", () => ({
+vi.mock("../../shared/ui/kit/slider/Slider", () => ({
     Slider: ({ onInput, onMouseDown, value, max, step }: { onInput?: (e: { currentTarget: { value: string } }) => void; onMouseDown?: (e: { currentTarget: { value: string } }) => void; value: number; max?: number; step?: number }) => (
         <input data-testid="slider" value={String(value)} max={max} step={step} onChange={(e) => onInput?.({ currentTarget: { value: e.currentTarget.value } })} onMouseDown={(e) => onMouseDown?.({ currentTarget: { value: e.currentTarget.value } })} />
     )

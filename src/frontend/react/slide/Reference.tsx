@@ -7,10 +7,10 @@ import { activeDrawerTab, activeShow, drawer, labelsDisabled, openedInteractionI
 import { createSlides, getDateString, getSelectedEvents, sortDays } from "../../components/drawer/calendar/calendar"
 import { history } from "../../shared/utils/helpers/history"
 import { setDrawerTabData } from "../../shared/utils/helpers/historyHelpers"
-import { Icon } from "../helpers/Icon"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
 import styles from "./Reference.module.css"
 
 export interface ReferenceProps {

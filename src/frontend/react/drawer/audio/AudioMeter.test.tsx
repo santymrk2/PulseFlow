@@ -3,8 +3,8 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeDrawerTab, activePage, audioChannelsData, audioRouting, drawer } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { AudioMeter } from "./AudioMeter"
 
 vi.mock("../../../audio/routing/audioInputCapture", () => ({

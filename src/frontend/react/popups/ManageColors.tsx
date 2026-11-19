@@ -3,9 +3,9 @@ import { get } from "../../shared/core/lib/store"
 import { defaultColors, defaultGradients } from "../../shared/utils/helpers/color"
 import { Tip } from "../main/Tip"
 import { special } from "../../shared/core/stores"
-import { T } from "../helpers/T"
-import { Button } from "../ui/button/Button"
-import { ColorField } from "../ui/color-field/ColorField"
+import { T } from "../../shared/ui/helpers/T"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { ColorField } from "../../shared/ui/kit/color-field/ColorField"
 
 // Port de components/main/popups/ManageColors.svelte. Lee special.customColors (al leer el portapapeles). Escribe special: customColors / disabledColors /
 // customColorsGradient / disabledColorsGradient (agrega el color o lo saca si ya estaba; se muta en el lugar y se re-emite, como el Svelte).

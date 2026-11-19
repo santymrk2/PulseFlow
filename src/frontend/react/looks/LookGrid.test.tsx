@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen, within } from "@testing-library/rea
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Look } from "../../../types/Settings"
 import { templates } from "../../shared/core/stores"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { LookGrid } from "./LookGrid"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))

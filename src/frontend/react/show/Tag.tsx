@@ -4,9 +4,9 @@ import { activeShow, globalTags, selected } from "../../shared/core/stores"
 import { history } from "../../shared/utils/helpers/history"
 import { _show } from "../../shared/utils/helpers/shows"
 import { translateText } from "../../shared/utils/language"
-import { HiddenInput } from "../ui/hidden-input/HiddenInput"
-import { useStore } from "../hooks/useStore"
-import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
+import { HiddenInput } from "../../shared/ui/kit/hidden-input/HiddenInput"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { triggerClickOnEnterSpace } from "../../shared/ui/helpers/triggerClickOnEnterSpace"
 import styles from "./Tag.module.css"
 
 export interface TagProps {

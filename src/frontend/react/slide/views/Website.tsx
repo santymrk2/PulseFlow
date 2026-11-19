@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { attachPersistentWebview, type PersistentWebviewOptions } from "../../../components/slide/views/websiteDomPool"
-import { Icon } from "../../helpers/Icon"
+import { Icon } from "../../../shared/ui/helpers/Icon"
 import styles from "./Website.module.css"
 
 interface WebviewAction {

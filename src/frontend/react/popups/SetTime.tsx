@@ -6,7 +6,7 @@ import { history } from "../../shared/utils/helpers/history"
 import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { _show } from "../../shared/utils/helpers/shows"
 import { activeEdit, activeShow, overlays, popupData, templates } from "../../shared/core/stores"
-import { NumberField } from "../ui/number-field/NumberField"
+import { NumberField } from "../../shared/ui/kit/number-field/NumberField"
 
 // Port de components/main/popups/SetTime.svelte. Lee: popupData.action, activeEdit, showsCache (vía _show/getLayoutRef),
 // overlays y templates. Al montar escribe popupData = {}; al cambiar el valor escribe un history UPDATE (overlay/plantilla)

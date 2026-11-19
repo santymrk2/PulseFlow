@@ -30,7 +30,7 @@ vi.mock("../../shared/core/stores", () => ({
     outLocked: mocks.stores.outLocked
 }))
 
-vi.mock("../hooks/useStore", () => ({
+vi.mock("../../shared/ui/hooks/useStore", () => ({
     useStore: (store: unknown) => {
         if (store === mocks.stores.effects) return mocks.values.effects
         if (store === mocks.stores.overlayCategories) return mocks.values.overlayCategories
@@ -45,7 +45,7 @@ vi.mock("../../shared/utils/helpers/array", () => ({
     sortByName: (a: unknown[]) => a
 }))
 vi.mock("../../shared/utils/helpers/overlayOutput", () => ({ toggleOverlayOutput: mocks.toggleOverlayOutput, toggleEffectOutput: mocks.toggleEffectOutput }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
 
 afterEach(() => {
     cleanup()

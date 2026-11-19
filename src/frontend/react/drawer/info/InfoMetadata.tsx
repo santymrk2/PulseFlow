@@ -1,6 +1,6 @@
 import { dateToString } from "../../../shared/utils/helpers/time"
 import { translateText } from "../../../shared/utils/language"
-import { Link } from "../../ui/link/Link"
+import { Link } from "../../../shared/ui/kit/link/Link"
 import styles from "./InfoMetadata.module.css"
 
 // Port de components/drawer/info/InfoMetadata.svelte.

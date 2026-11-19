@@ -2,8 +2,8 @@ import { useEffect, useState } from "react"
 import { popupData } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { setPopupSubmit } from "../../shared/utils/popup"
-import { ChoiceGrid } from "../ui/choice-grid/ChoiceGrid"
-import { Button } from "../ui/button/Button"
+import { ChoiceGrid } from "../../shared/ui/kit/choice-grid/ChoiceGrid"
+import { Button } from "../../shared/ui/kit/button/Button"
 import styles from "./OutputSetup.module.css"
 
 // Port de components/main/popups/OutputSetup.svelte. Lee ningún store; escribe popupData = { id: "choose_output_type", value: { localType, networkType } } al confirmar

@@ -3,11 +3,11 @@ import { Main } from "../../../types/IPC/Main"
 import { requestMain, sendMain } from "../../shared/core/ipc/main"
 import { activePopup, alertMessage, special } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
-import { SelectField } from "../ui/select-field/SelectField"
-import { ToggleField } from "../ui/toggle-field/ToggleField"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { SelectField } from "../../shared/ui/kit/select-field/SelectField"
+import { ToggleField } from "../../shared/ui/kit/toggle-field/ToggleField"
 
 // Port de components/settings/tabs/Other.svelte (F24.12)
 function updateSpecial(value: unknown, key: string) {

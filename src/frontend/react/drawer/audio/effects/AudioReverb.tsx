@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
 import { type ReverbConfig, updateReverbConfig } from "../../../../audio/effects/audioReverb"
-import { InputRow } from "../../../ui/input-row/InputRow"
-import { NumberField } from "../../../ui/number-field/NumberField"
+import { InputRow } from "../../../../shared/ui/kit/input-row/InputRow"
+import { NumberField } from "../../../../shared/ui/kit/number-field/NumberField"
 import { useElementWidth } from "./hooks"
 import styles from "./Visualization.module.css"
 

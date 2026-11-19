@@ -6,7 +6,7 @@ import { clone } from "../../../shared/utils/helpers/array"
 import { deleteAction } from "../../../shared/utils/helpers/clipboard"
 import { history } from "../../../shared/utils/helpers/history"
 import { addChords } from "../../../components/edit/scripts/chords"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./EditboxChords.module.css"
 
 interface ChordButtonData {

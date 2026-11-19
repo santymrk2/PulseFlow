@@ -7,12 +7,12 @@ import { CreateCalendarShow, type CalendarShowDay } from "../calendar/CreateCale
 import { Day } from "../calendar/Day"
 import { joinTimeBig } from "../../../shared/utils/helpers/time"
 import { translateText } from "../../../shared/utils/language"
-import { useStore } from "../../hooks/useStore"
-import { Icon } from "../../helpers/Icon"
-import { T } from "../../helpers/T"
-import { Button } from "../../ui/button/Button"
-import { PopupField } from "../../ui/popup-field/PopupField"
-import { SelectField } from "../../ui/select-field/SelectField"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { T } from "../../../shared/ui/helpers/T"
+import { Button } from "../../../shared/ui/kit/button/Button"
+import { PopupField } from "../../../shared/ui/kit/popup-field/PopupField"
+import { SelectField } from "../../../shared/ui/kit/select-field/SelectField"
 
 // Port de components/drawer/info/CalendarInfo.svelte.
 export interface CalendarInfoProps {

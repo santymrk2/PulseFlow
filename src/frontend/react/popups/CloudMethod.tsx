@@ -2,9 +2,9 @@ import { activePopup, cloudSyncData } from "../../shared/core/stores"
 import { Tip } from "../main/Tip"
 import { syncWithCloud } from "../../app/wiring/cloudSync"
 import { translateText } from "../../shared/utils/language"
-import { Icon } from "../helpers/Icon"
-import { T } from "../helpers/T"
-import { Button } from "../ui/button/Button"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { T } from "../../shared/ui/helpers/T"
+import { Button } from "../../shared/ui/kit/button/Button"
 
 // Port de components/main/popups/CloudMethod.svelte. Escribe: cloudSyncData.cloudMethod (en el lugar) + syncWithCloud(true) + activePopup = null; "cancelar": cloudSyncData = {} + activePopup = null.
 // En el Svelte `showMore` era una constante `true` (el botón que la cambiaba está comentado), así que las 4 opciones salen siempre y `multipleTeams` no influía: se omiten.

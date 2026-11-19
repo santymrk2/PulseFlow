@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeTimers, dictionary, isFadingOut, isTimelinePlaying, labelsDisabled, media, outLocked, outputCache, outputs, overlayTimers, playingAudio, playingMetronome, styles as outputStyles, timelineRecordingAction } from "../../shared/core/stores"
 import { clearAll, clearBackground } from "../../components/output/clear"
 import { getActiveOutputs, getOutputContent, isOutCleared } from "../../shared/utils/helpers/output"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ClearButtons } from "./ClearButtons"
 
 vi.mock("../../audio/audioFading", () => ({ clearAudio: vi.fn() }))

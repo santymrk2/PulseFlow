@@ -1,7 +1,7 @@
 import { type CSSProperties, type SyntheticEvent } from "react"
 import { encodeFilePath } from "../../../shared/utils/helpers/media"
 import { Card } from "../Card"
-import { Icon } from "../../helpers/Icon"
+import { Icon } from "../../../shared/ui/helpers/Icon"
 import styles from "./Folder.module.css"
 
 export interface FolderProps {

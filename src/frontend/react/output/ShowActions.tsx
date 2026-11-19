@@ -5,9 +5,9 @@ import { refreshOut, setOutput } from "../../shared/utils/helpers/output"
 import { OutputHelper } from "../../shared/utils/helpers/OutputHelper"
 import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { updateOut } from "../../shared/utils/helpers/showActions"
-import { Icon } from "../helpers/Icon"
-import { useStore } from "../hooks/useStore"
-import { Button, type ButtonEvent } from "../ui/button/Button"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button, type ButtonEvent } from "../../shared/ui/kit/button/Button"
 import styles from "./ShowActions.module.css"
 
 interface TempRef {

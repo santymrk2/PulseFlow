@@ -64,10 +64,10 @@ vi.mock("../../shared/utils/helpers/style", () => ({
 vi.mock("./tools/BoxStyle", () => ({ BoxStyle: () => <span data-testid="box-style" /> }))
 vi.mock("./tools/ItemStyle", () => ({ ItemStyle: () => <span data-testid="item-style" /> }))
 vi.mock("./tools/SlideStyle", () => ({ SlideStyle: () => <span data-testid="slide-style" /> }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
-vi.mock("../system/Center", () => ({ Center: ({ children }: { children: ReactNode }) => <div data-testid="center">{children}</div> }))
-vi.mock("../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: ReactNode }) => <div data-testid="floating-bar">{children}</div> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
+vi.mock("../../shared/ui/system/Center", () => ({ Center: ({ children }: { children: ReactNode }) => <div data-testid="center">{children}</div> }))
+vi.mock("../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: ReactNode }) => <div data-testid="floating-bar">{children}</div> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, title, icon, disabled, isActive, onClick }: { children?: ReactNode; title?: string; icon?: string; disabled?: boolean; isActive?: boolean; onClick?: () => void }) => (
         <button data-testid="tab-button" data-title={title} data-icon={icon} data-active={isActive} disabled={disabled} onClick={onClick}>
             {children}

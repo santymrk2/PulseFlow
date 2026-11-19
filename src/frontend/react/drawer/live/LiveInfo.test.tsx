@@ -4,16 +4,16 @@ import type { ReactNode } from "react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeRecording, currentRecordingStream, drawerTabsData, special } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
-import { commonMock } from "../../test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
 import { LiveInfo } from "./LiveInfo"
 
 const mocks = vi.hoisted(() => ({ paused: vi.fn(() => false), toggle: vi.fn(() => true), stop: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../components/drawer/live/recorder", () => ({ mediaRecorderIsPaused: mocks.paused, toggleMediaRecorder: mocks.toggle, stopMediaRecorder: mocks.stop }))
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../ui/button/Button", () => ({ Button: ({ onClick, children }: { onClick?: () => void; children?: ReactNode }) => <button onClick={onClick}>{children}</button> }))
-vi.mock("../../ui/text-field/TextField", () => ({ TextField: ({ label, value, onChange }: { label: string; value: string; onChange?: (v: string | null) => void }) => <input data-label={label} value={value} onChange={(e) => onChange?.(e.target.value)} /> }))
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({ Button: ({ onClick, children }: { onClick?: () => void; children?: ReactNode }) => <button onClick={onClick}>{children}</button> }))
+vi.mock("../../../shared/ui/kit/text-field/TextField", () => ({ TextField: ({ label, value, onChange }: { label: string; value: string; onChange?: (v: string | null) => void }) => <input data-label={label} value={value} onChange={(e) => onChange?.(e.target.value)} /> }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {

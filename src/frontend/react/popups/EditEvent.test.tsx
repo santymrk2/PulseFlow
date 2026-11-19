@@ -5,10 +5,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { createCustomCalendar } from "../../components/drawer/calendar/calendars"
 import { history } from "../../shared/utils/helpers/history"
 import { activeDays, activePopup, calendars, dictionary, drawerTabsData, eventEdit, events, popupData } from "../../shared/core/stores"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { clearIslands, islands } from "../test/islandMock"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { uid } from "uid"
 import { EditEvent } from "./EditEvent"
 
@@ -22,14 +22,14 @@ vi.mock("../../components/drawer/calendar/calendars", () => ({ createCustomCalen
 vi.mock("uid", () => ({ uid: vi.fn() }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/actions/actionData", () => ({ actionData: { start_show: { name: "Iniciar show" } } }))
-vi.mock("../actions/CreateAction", async () => ({ CreateAction: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("CreateAction") }))
-vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/color-field/ColorField", async () => ({ ColorField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/date-field/DateField", async () => ({ DateField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/time-field/TimeField", async () => ({ TimeField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../actions/CreateAction", async () => ({ CreateAction: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("CreateAction") }))
+vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/color-field/ColorField", async () => ({ ColorField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/date-field/DateField", async () => ({ DateField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/time-field/TimeField", async () => ({ TimeField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 const DAY = new Date(2026, 0, 15).getTime()
 let restaurar: () => void = () => {}

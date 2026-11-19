@@ -2,7 +2,7 @@ import { useEffect, useState, type ComponentType } from "react"
 import { get } from "../../shared/core/lib/store"
 import type { EffectType } from "../../audio/effects/audioEffectsHelpers"
 import { activeAudioEffects, popupData } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import { AudioCompressor } from "../drawer/audio/effects/AudioCompressor"
 import { AudioDelay, type AudioEffectProps } from "../drawer/audio/effects/AudioDelay"
 import { AudioEffectPresets } from "../drawer/audio/effects/AudioEffectPresets"
@@ -12,7 +12,7 @@ import { AudioLimiter } from "../drawer/audio/effects/AudioLimiter"
 import { AudioNoiseGate } from "../drawer/audio/effects/AudioNoiseGate"
 import { AudioReverb } from "../drawer/audio/effects/AudioReverb"
 import { AudioStereoShaper } from "../drawer/audio/effects/AudioStereoShaper"
-import { Button } from "../ui/button/Button"
+import { Button } from "../../shared/ui/kit/button/Button"
 
 // Port de components/main/popups/AudioEffect.svelte. Lee: popupData { channelId, effect, effectId } (al montar) y activeAudioEffects.
 // Escribe: activeAudioEffects = channelId. Los efectos y los presets ya son componentes React (F24.17d).

@@ -1,6 +1,6 @@
 import { popupData } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { ChoiceGrid } from "../ui/choice-grid/ChoiceGrid"
+import { ChoiceGrid } from "../../shared/ui/kit/choice-grid/ChoiceGrid"
 
 // Port de components/main/popups/ChooseOutput.svelte. Escribe: popupData = { id: "choose_output_input", value: id }.
 export function ChooseOutput() {

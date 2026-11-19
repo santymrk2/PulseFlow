@@ -3,9 +3,9 @@ import { Main } from "../../../types/IPC/Main"
 import type { Popups } from "../../../types/Main"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, dataPath, popupData, settingsTab } from "../../shared/core/stores"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
 import styles from "./SettingsTools.module.css"
 
 // Port de components/settings/SettingsTools.svelte (F24.12)

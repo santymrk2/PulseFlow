@@ -4,9 +4,9 @@ import { actionData } from "../../../components/actions/actionData"
 import { getActionName, getActionTriggerId } from "../../../components/actions/actions"
 import { clone } from "../../../shared/utils/helpers/array"
 import { history } from "../../../shared/utils/helpers/history"
-import { Icon } from "../../helpers/Icon"
-import { useStore } from "../../hooks/useStore"
-import { Button } from "../../ui/button/Button"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { Button } from "../../../shared/ui/kit/button/Button"
 import styles from "./OverlayActions.module.css"
 
 // Port de components/drawer/pages/OverlayActions.svelte: iconos de las acciones del overlay.

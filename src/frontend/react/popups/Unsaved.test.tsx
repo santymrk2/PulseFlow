@@ -6,8 +6,8 @@ import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, dictionary, saved } from "../../shared/core/stores"
 import { closeApp, save, saveComplete } from "../../app/wiring/save"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Unsaved } from "./Unsaved"
 
 vi.mock("../../shared/utils/common", () => commonMock())

@@ -1,7 +1,7 @@
 import type { Scene } from "../../../../types/Show"
 import { getAllActiveOutputIds, getAllNormalOutputs } from "../../../shared/utils/helpers/output"
 import { outputs } from "../../../shared/core/stores"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { Output } from "../../output/Output"
 
 // Port de components/drawer/pages/ScenePreview.svelte. Renderiza Output con el mismo outOverride.

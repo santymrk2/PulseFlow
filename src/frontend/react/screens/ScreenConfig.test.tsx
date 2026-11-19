@@ -10,7 +10,7 @@ import { requestMain } from "../../shared/core/ipc/main"
 import { invokeCommand } from "../../shared/core/ipc/tauri"
 import { currentOutputSettings, outputs, outputState } from "../../shared/core/stores"
 import { send } from "../../shared/utils/request"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ScreenConfig } from "./ScreenConfig"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 36 }))

@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import type { ReactNode } from "react"
 
-vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
+vi.mock("../../shared/ui/hooks/useStore", () => ({ useStore: () => ({}) }))
 vi.mock("../../shared/core/stores", () => ({
     emitters: { subscribe: (fn: (v: unknown) => void) => { fn({}); return () => {} }, update: vi.fn() },
     actions: { subscribe: (fn: (v: unknown) => void) => { fn({}); return () => {} }, update: vi.fn() },
@@ -15,11 +15,11 @@ vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s 
 vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)), keysToID: () => [], sortByName: (a: unknown[]) => a }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getDynamicValue: (v: unknown) => v }))
 vi.mock("../../components/actions/emitters", () => ({ formatData: {} }))
-vi.mock("../ui/button/Button", () => ({ Button: ({ children, onClick }: { children?: ReactNode; onClick?: () => void }) => <button onClick={onClick}>{children}</button> }))
-vi.mock("../ui/dynamic-list/DynamicList", () => ({ DynamicList: () => <div data-testid="dynamic-list" /> }))
-vi.mock("../ui/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../ui/select-field/SelectField", () => ({ SelectField: ({ label }: { label?: string }) => <div data-testid="select">{label}</div> }))
-vi.mock("../ui/text-field/TextField", () => ({ TextField: ({ label }: { label?: string }) => <div data-testid="text">{label}</div> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({ Button: ({ children, onClick }: { children?: ReactNode; onClick?: () => void }) => <button onClick={onClick}>{children}</button> }))
+vi.mock("../../shared/ui/kit/dynamic-list/DynamicList", () => ({ DynamicList: () => <div data-testid="dynamic-list" /> }))
+vi.mock("../../shared/ui/kit/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../shared/ui/kit/select-field/SelectField", () => ({ SelectField: ({ label }: { label?: string }) => <div data-testid="select">{label}</div> }))
+vi.mock("../../shared/ui/kit/text-field/TextField", () => ({ TextField: ({ label }: { label?: string }) => <div data-testid="text">{label}</div> }))
 vi.mock("./MidiValues", () => ({ MidiValues: () => <div data-testid="midi" /> }))
 
 import { ChooseEmitter } from "./ChooseEmitter"

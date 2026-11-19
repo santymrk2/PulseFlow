@@ -4,7 +4,7 @@ import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { EXPORT } from "../../../../types/Channels"
 import { activePopup, activeShow, activeTagFilter, categories, globalTags, popupData, shows, showsCache, special, templates, usageLog } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { ShowInfo } from "./ShowInfo"
 
 const mocks = vi.hoisted(() => ({ send: vi.fn(), lines: [] as unknown[] }))
@@ -12,8 +12,8 @@ vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newT
 vi.mock("../../../shared/utils/request", () => ({ send: mocks.send }))
 vi.mock("../../../shared/utils/helpers/show", () => ({ updateCachedShows: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: () => ({ slides: () => ({ items: () => ({ lines: () => ({ get: () => mocks.lines }) }) }) }) }))
-vi.mock("../../system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
-vi.mock("../../system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
+vi.mock("../../../shared/ui/system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
+vi.mock("../../../shared/ui/system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

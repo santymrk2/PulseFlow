@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { drawerTabsData, effects, overlays, selected } from "../../shared/core/stores"
-import { NumberField } from "../ui/number-field/NumberField"
+import { NumberField } from "../../shared/ui/kit/number-field/NumberField"
 
 // Port de components/main/popups/DisplayDuration.svelte. Lee: drawerTabsData.overlays.activeSubTab, selected.data y overlays/effects (al montar).
 // Escribe: al cambiar, displayDuration de cada id seleccionado que exista en overlays (o effects en la subpestaña "effects"); 0/vacío lo borra.

@@ -4,8 +4,8 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activePopup } from "../../shared/core/stores"
 import { save } from "../../app/wiring/save"
-import { commonMock } from "../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { FilesButtons } from "./FilesButtons"
 
 vi.mock("../../shared/utils/common", () => commonMock())

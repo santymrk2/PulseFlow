@@ -7,7 +7,7 @@ import { activeProfile, profiles, selectedProfile, special } from "../../shared/
 import { newToast } from "../../shared/utils/common"
 import { promptCustom } from "../../shared/utils/popup"
 import { encodePassword } from "../../shared/utils/profile"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ProfilesButtons } from "./ProfilesButtons"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))

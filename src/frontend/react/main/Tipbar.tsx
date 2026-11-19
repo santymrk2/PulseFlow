@@ -2,9 +2,9 @@ import { useState } from "react"
 import { activePopup, guideActive, isDev, special } from "../../shared/core/stores"
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../shared/core/ipc/main"
-import { useStore } from "../hooks/useStore"
-import { Icon } from "../helpers/Icon"
-import { Button } from "../ui/button/Button"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { Button } from "../../shared/ui/kit/button/Button"
 import styles from "./Tipbar.module.css"
 
 const ONE_DAY = 1000 * 60 * 60 * 24

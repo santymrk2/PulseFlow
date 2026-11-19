@@ -3,10 +3,10 @@ import { get } from "../../shared/core/lib/store"
 import { _show } from "../../shared/utils/helpers/shows"
 import { Tip } from "../main/Tip"
 import { actions, activePopup, activeShow, popupData, scenes, showsCache } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
-import { InputRow } from "../ui/input-row/InputRow"
-import { SelectField } from "../ui/select-field/SelectField"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { InputRow } from "../../shared/ui/kit/input-row/InputRow"
+import { SelectField } from "../../shared/ui/kit/select-field/SelectField"
 
 // Port de components/main/popups/CustomAction.svelte. Lee: popupData.mode/sceneId (al montar), scenes, la acción del show activo y actions (lista tomada al montar; el botón editar sí sigue el store).
 // Escribe: modo "scene" -> scenes[sceneId].action + modified; modo "show" -> showsCache[show activo].settings.customAction (en el lugar, como el Svelte).

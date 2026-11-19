@@ -3,7 +3,7 @@ import { get } from "../../shared/core/lib/store"
 import { addEffectToStack, EFFECTS_LIST, type EffectType } from "../../audio/effects/audioEffectsHelpers"
 import { activeAudioEffects, activePopup, popupData } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { Button } from "../ui/button/Button"
+import { Button } from "../../shared/ui/kit/button/Button"
 
 // Port de components/main/popups/AddAudioEffect.svelte. Lee: popupData.channelId (si no, activeAudioEffects, si no "main").
 // Escribe: popupData = { channelId, effectId, effect } y activePopup = "audio_effect".

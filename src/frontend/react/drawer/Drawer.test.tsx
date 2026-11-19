@@ -5,8 +5,8 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { DrawerTabIds } from "../../../types/Tabs"
 import { activeDrawerTab, activeEdit, activePage, activeShow, drawer, drawerTabsData, focusMode, mediaFolders, mediaOptions, os, previousShow, selected } from "../../shared/core/stores"
-import { clearIslands } from "../test/islandMock"
-import { looseEntry, setStoresForTest, storeEntry, type StoreEntry } from "../test/storeTestKit"
+import { clearIslands } from "../../shared/test/islandMock"
+import { looseEntry, setStoresForTest, storeEntry, type StoreEntry } from "../../shared/test/storeTestKit"
 import { Drawer } from "./Drawer"
 import styles from "./Drawer.module.css"
 
@@ -16,7 +16,7 @@ vi.mock("../../shared/utils/common", () => ({ DEFAULT_WIDTH: 290, DEFAULT_DRAWER
 vi.mock("../../shared/utils/profile", () => ({ getAccess: (id: string) => ({ global: cursor.globals[id] ?? "full" }) }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (text: string) => text }))
 vi.mock("../../app/wiring/shortcuts", () => ({ getNormalizedKey: (e: KeyboardEvent) => e.key }))
-vi.mock("../system/Resizeable", () => ({
+vi.mock("../../shared/ui/system/Resizeable", () => ({
     Resizeable: ({ children }: { children?: ReactNode | ((width: number) => ReactNode) }) => <div data-resizeable="">{typeof children === "function" ? children(600) : children}</div>
 }))
 vi.mock("./info/Info", () => ({ Info: ({ id }: { id: string }) => <div data-isla="Info" data-id={id} /> }))

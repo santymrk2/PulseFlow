@@ -5,9 +5,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../shared/utils/helpers/history"
 import { getResolution } from "../../shared/utils/helpers/output"
 import { activePopup, dictionary, outputs, overlays, popupData, previewOutputId, styles } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { clearIslands, islands } from "../test/islandMock"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { SelectOverlay } from "./SelectOverlay"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -16,7 +16,7 @@ vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../drawer/Card", async () => {
-    const { islands } = await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")
+    const { islands } = await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")
     return {
         Card: (props: Record<string, unknown>) => {
             islands.Card = { props }
@@ -24,9 +24,9 @@ vi.mock("../drawer/Card", async () => {
         }
     }
 })
-vi.mock("../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Textbox") }))
-vi.mock("../slide/Zoomed", async () => ({ Zoomed: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Zoomed") }))
-vi.mock("../ui/text-field/TextField", () => ({
+vi.mock("../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Textbox") }))
+vi.mock("../slide/Zoomed", async () => ({ Zoomed: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Zoomed") }))
+vi.mock("../../shared/ui/kit/text-field/TextField", () => ({
     TextField: ({ label, value, onInput }: { label: string; value: string; onInput?: (v: string) => void }) => <input data-label={label} value={value} onChange={(e) => onInput?.(e.currentTarget.value)} />
 }))
 

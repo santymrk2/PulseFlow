@@ -3,17 +3,17 @@ import { cleanup, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activePopup, drawerTabsData, overlayCategories, selected, templateCategories } from "../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { CategoryPicker } from "./CategoryPicker"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
 vi.mock("../../app/wiring/createData", () => ({ setExampleEffects: vi.fn(), setExampleOverlays: vi.fn(), setExampleTemplates: vi.fn() }))
 vi.mock("../../shared/utils/helpers/clipboard", () => ({ deleteAction: vi.fn() }))
-vi.mock("../ui/button/Button", () => ({ Button: () => <button type="button">btn</button> }))
-vi.mock("../ui/input/Input", () => ({ Input: () => <input /> }))
-vi.mock("../ui/menu", () => ({ Menu: ({ children }: { children?: ReactNode }) => <div>{children}</div>, MenuItem: ({ children }: { children?: ReactNode }) => <div>{children}</div>, MenuSeparator: () => <hr /> }))
-vi.mock("../ui/select-field/SelectField", () => ({ SelectField: () => <div data-select="field" /> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({ Button: () => <button type="button">btn</button> }))
+vi.mock("../../shared/ui/kit/input/Input", () => ({ Input: () => <input /> }))
+vi.mock("../../shared/ui/kit/menu", () => ({ Menu: ({ children }: { children?: ReactNode }) => <div>{children}</div>, MenuItem: ({ children }: { children?: ReactNode }) => <div>{children}</div>, MenuSeparator: () => <hr /> }))
+vi.mock("../../shared/ui/kit/select-field/SelectField", () => ({ SelectField: () => <div data-select="field" /> }))
 
 let restore = () => {}
 afterEach(() => {

@@ -4,9 +4,9 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../shared/utils/helpers/history"
 import { activePopup, dictionary, popupData } from "../../shared/core/stores"
-import { clearIslands, islands } from "../test/islandMock"
-import { commonMock } from "../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { commonMock } from "../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { SlideShortcut } from "./SlideShortcut"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -14,7 +14,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ id: "s1", data: { actions: {} } }] }))
-vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 const trigger = vi.fn()
 let restaurar: () => void = () => {}

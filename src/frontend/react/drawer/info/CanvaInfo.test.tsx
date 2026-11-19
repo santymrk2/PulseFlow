@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { addCanvaPresentationAsShow } from "../../../converters/canvaPresentation"
 import { activeCanvaPresentation } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { CanvaInfo } from "./CanvaInfo"
 
 vi.mock("../../../converters/canvaPresentation", () => ({ addCanvaPresentationAsShow: vi.fn() }))

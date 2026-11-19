@@ -4,8 +4,8 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../shared/utils/helpers/history"
 import { audioStreams, dictionary, popupData, selected } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { AudioStream } from "./AudioStream"
 
 vi.mock("../../shared/utils/common", () => commonMock())

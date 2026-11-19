@@ -1,7 +1,7 @@
 import { useEffect, useState, type SyntheticEvent } from "react"
 import type { MediaStyle } from "../../../types/Main"
 import { cropImageToBase64, encodeFilePath } from "../../shared/utils/helpers/media"
-import { cssTextToStyle } from "../helpers/cssTextToStyle"
+import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
 import styles from "./Image.module.css"
 
 export interface ImageProps {

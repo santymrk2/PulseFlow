@@ -7,9 +7,9 @@ import { getFileName } from "../../../shared/utils/helpers/media"
 import { rearrangeItems } from "../../../components/edit/scripts/itemHelpers"
 import { getItemText } from "../../../components/edit/scripts/textStyle"
 import { itemBoxes } from "../../../components/edit/values/boxes"
-import { Icon } from "../../helpers/Icon"
-import { useStore } from "../../hooks/useStore"
-import { Button, type ButtonClickDetail } from "../../ui/button/Button"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { Button, type ButtonClickDetail } from "../../../shared/ui/kit/button/Button"
 import styles from "./ItemsList.module.css"
 
 export interface ItemsListProps {

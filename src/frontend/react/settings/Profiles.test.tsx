@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../shared/utils/helpers/history"
 import { actions, actionTags, activePopup, activeProfile, categories, folders, groups, overlayCategories, popupData, profiles, scenes, selectedProfile, stageShows, templateCategories, timerTags, variableTags } from "../../shared/core/stores"
 import { encodePassword } from "../../shared/utils/profile"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Profiles } from "./Profiles"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))

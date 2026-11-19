@@ -1,9 +1,9 @@
 import type { Show } from "../../../../types/Show"
 import { effects, outLocked, outputs } from "../../../shared/core/stores"
 import { findMatchingOut, setOutput } from "../../../shared/utils/helpers/output"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { Effect } from "../../output/Effect"
-import { HoverPlay } from "../../system/HoverPlay"
+import { HoverPlay } from "../../../shared/ui/system/HoverPlay"
 import { Zoomed } from "../../slide/Zoomed"
 import styles from "./EffectPreview.module.css"
 

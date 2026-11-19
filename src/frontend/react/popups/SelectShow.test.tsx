@@ -4,8 +4,8 @@ import type { ReactNode } from "react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, categories, dictionary, drawerTabsData, popupData, shows, sortedShowsList } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { SelectShow } from "./SelectShow"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -20,7 +20,7 @@ vi.mock("../drawer/VirtualList", () => ({
         </div>
     )
 }))
-vi.mock("../ui/text-field/TextField", () => ({
+vi.mock("../../shared/ui/kit/text-field/TextField", () => ({
     TextField: ({ label, onInput }: { label: string; onInput?: (v: string) => void }) => <input data-label={label} onChange={(e) => onInput?.(e.currentTarget.value)} />
 }))
 

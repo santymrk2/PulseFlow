@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import EffectOutput from "./EffectOutput"
 
 vi.mock("../../shared/core/stores", () => ({ effects: { subscribe: (fn: (value: unknown) => void) => (fn({ e1: { id: "e1", items: [] } }), () => {}) } }))
-vi.mock("../hooks/useStore", () => ({ useStore: () => ({ e1: { id: "e1", items: [] } }) }))
+vi.mock("../../shared/ui/hooks/useStore", () => ({ useStore: () => ({ e1: { id: "e1", items: [] } }) }))
 vi.mock("./Effect", () => ({ Effect: () => <div data-testid="effect" />, default: () => <div data-testid="effect" /> }))
 vi.mock("./OutputTransition", () => ({ OutputTransition: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>, default: ({ children }: { children?: React.ReactNode }) => <div>{children}</div> }))
 

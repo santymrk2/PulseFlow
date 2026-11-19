@@ -1,9 +1,9 @@
 import { activePopup } from "../../shared/core/stores"
 import { save } from "../../app/wiring/save"
-import { Icon } from "../helpers/Icon"
-import { T } from "../helpers/T"
-import { Button } from "../ui/button/Button"
-import { InputRow } from "../ui/input-row/InputRow"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { T } from "../../shared/ui/helpers/T"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { InputRow } from "../../shared/ui/kit/input-row/InputRow"
 import styles from "./FilesButtons.module.css"
 
 // Port de components/settings/tabs/FilesButtons.svelte (F24.12)

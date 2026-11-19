@@ -4,7 +4,7 @@ import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
 import { activeRecording, activeShow, cloudSyncData, drawerTabsData, special } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { MediaInfo } from "./MediaInfo"
 
 const ipc = vi.hoisted(() => ({ request: vi.fn(), send: vi.fn() }))
@@ -14,8 +14,8 @@ vi.mock("../../../shared/utils/helpers/media", async () => {
     return { ...actual, getMediaInfo: vi.fn(() => Promise.resolve(null)) }
 })
 vi.mock("../live/LiveInfo", () => ({ LiveInfo: ({ optionsOpen }: { optionsOpen: boolean }) => <div data-testid="live-info" data-open={optionsOpen} /> }))
-vi.mock("../../system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
-vi.mock("../../system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
+vi.mock("../../../shared/ui/system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
+vi.mock("../../../shared/ui/system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
 vi.mock("./PlayerInfo", () => ({ PlayerInfo: ({ optionsOpen }: { optionsOpen: boolean }) => <div data-testid="player" data-open={optionsOpen} /> }))
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))

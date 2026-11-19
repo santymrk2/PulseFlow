@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { computeDisplayLayout, type LayoutDisplay } from "../../components/screens/displayLayout"
 import { cn } from "../../shared/core/lib/utils"
-import { Icon } from "../helpers/Icon"
+import { Icon } from "../../shared/ui/helpers/Icon"
 import styles from "./DisplayLayout.module.css"
 
 // Port de components/screens/DisplayLayout.svelte (F24.14): dibujo reutilizable de la disposición de monitores.

@@ -1,8 +1,8 @@
 import { addCanvaPresentationAsShow } from "../../../converters/canvaPresentation"
 import { activeCanvaPresentation } from "../../../shared/core/stores"
-import { useStore } from "../../hooks/useStore"
-import { T } from "../../helpers/T"
-import { Button } from "../../ui/button/Button"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { T } from "../../../shared/ui/helpers/T"
+import { Button } from "../../../shared/ui/kit/button/Button"
 import { InfoMetadata } from "./InfoMetadata"
 import styles from "./CanvaInfo.module.css"
 

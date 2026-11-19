@@ -4,8 +4,8 @@ import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../../shared/utils/helpers/history"
 import { activeProfile, activeRename, categories, dictionary, drawerTabsData, leftSource, profiles, selected, shows } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { looseEntry, type StoreEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { looseEntry, type StoreEntry, setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { LibrariesPanel } from "./LibrariesPanel"
 
 vi.mock("../../../shared/utils/common", () => commonMock())

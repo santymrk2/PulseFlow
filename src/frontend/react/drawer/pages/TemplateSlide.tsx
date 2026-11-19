@@ -8,8 +8,8 @@ import { Editbox } from "../../edit/editbox/Editbox"
 import { MediaLoader } from "../media/MediaLoader"
 import { Zoomed } from "../../slide/Zoomed"
 import { Textbox } from "../../slide/Textbox"
-import { Snaplines, type Snapline, type SnaplinesMouse } from "../../system/Snaplines"
-import { useStore } from "../../hooks/useStore"
+import { Snaplines, type Snapline, type SnaplinesMouse } from "../../../shared/ui/system/Snaplines"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 
 export interface TemplateSlideProps {
     templateId: string

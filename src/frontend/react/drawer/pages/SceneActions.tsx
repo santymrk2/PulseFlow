@@ -3,9 +3,9 @@ import { actions, activeProfile, outputs, profiles, scenes } from "../../../shar
 import { translateText } from "../../../shared/utils/language"
 import { getAccess } from "../../../shared/utils/profile"
 import { history } from "../../../shared/utils/helpers/history"
-import { Icon } from "../../helpers/Icon"
-import { useStore } from "../../hooks/useStore"
-import { Button } from "../../ui/button/Button"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { Button } from "../../../shared/ui/kit/button/Button"
 import styles from "./SceneActions.module.css"
 
 // Port de components/drawer/pages/SceneActions.svelte: iconos superpuestos en la tarjeta de escena.

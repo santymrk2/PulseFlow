@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { outputs, showsCache } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { FocusItem } from "./FocusItem"
 
 vi.mock("../../../shared/utils/helpers/output", () => ({ getActiveOutputs: vi.fn(() => ["out1"]) }))

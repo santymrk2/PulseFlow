@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activeEdit, activePage, activePopup, autoOpenedTimeline, openToolsTab, outputs, showNotesActive, shows, showsCache, special, styles as stylesStore, templates } from "../../shared/core/stores"
 import { history } from "../../shared/utils/helpers/history"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ShowHeader } from "./ShowHeader"
 
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), Main: { URL: "url" } }))
@@ -13,9 +13,9 @@ vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({ allOutputsHasStyleTemplate: vi.fn(() => false), getFirstActiveOutput: vi.fn(() => null) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ removeTemplatesFromShow: vi.fn() }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ title, onClick, children }: { title?: string; onClick?: () => void; children?: ReactNode }) => (
         <button type="button" data-title={title} onClick={onClick}>
             {children}

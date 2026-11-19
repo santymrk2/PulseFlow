@@ -3,9 +3,9 @@ import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Show } from "../../../types/Show"
 import { dictionary } from "../../shared/core/stores"
-import { clearFields, fire } from "../test/kitMocks"
-import { commonMock } from "../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearFields, fire } from "../../shared/test/kitMocks"
+import { commonMock } from "../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { PdfExport, type PdfOptions } from "./PdfExport"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -15,10 +15,10 @@ vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 vi.mock("../export/Pdf", () => ({ Pdf: (props: Record<string, unknown>) => <div data-isla="Pdf" data-props={JSON.stringify(props)} /> }))
-vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/checkbox-field/CheckboxField", async () => ({ CheckboxField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/color-field/ColorField", async () => ({ ColorField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/checkbox-field/CheckboxField", async () => ({ CheckboxField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/color-field/ColorField", async () => ({ ColorField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 const dict = {
     example: { default: "Predeterminado" },

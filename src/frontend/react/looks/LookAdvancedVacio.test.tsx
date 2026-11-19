@@ -4,8 +4,8 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { LookAdvanced } from "./LookAdvanced"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../ui/color-field/ColorField", () => ({ ColorField: () => null }))
-vi.mock("../ui/number-field/NumberField", () => ({ NumberField: ({ label, onChange }: { label: string; onChange: (v: number | null) => void }) => <button onClick={() => onChange(null)}>{label}</button> }))
+vi.mock("../../shared/ui/kit/color-field/ColorField", () => ({ ColorField: () => null }))
+vi.mock("../../shared/ui/kit/number-field/NumberField", () => ({ NumberField: ({ label, onChange }: { label: string; onChange: (v: number | null) => void }) => <button onClick={() => onChange(null)}>{label}</button> }))
 
 afterEach(cleanup)
 

@@ -5,12 +5,12 @@ import { AudioMicrophone } from "../../audio/audioMicrophone"
 import { AudioPlayer } from "../../audio/audioPlayer"
 import { dbToGain, gainToDb, MIN_DB } from "../../audio/dBUtils"
 import { audioChannelsData, audioRouting, popupData, special } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
-import { InputRow } from "../ui/input-row/InputRow"
-import { NumberField } from "../ui/number-field/NumberField"
-import { TextField } from "../ui/text-field/TextField"
-import { ToggleField } from "../ui/toggle-field/ToggleField"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { InputRow } from "../../shared/ui/kit/input-row/InputRow"
+import { NumberField } from "../../shared/ui/kit/number-field/NumberField"
+import { TextField } from "../../shared/ui/kit/text-field/TextField"
+import { ToggleField } from "../../shared/ui/kit/toggle-field/ToggleField"
 
 // Port de components/main/popups/NodeOptions.svelte. Lee popupData al montar (nodeId, type, channels, name) y luego lo vacía.
 // Escribe: special.icecast (icecast), audioChannelsData + AudioPlayer.updateVolume() (canal), audioRouting + AudioMicrophone.setChannelCount() (mic).

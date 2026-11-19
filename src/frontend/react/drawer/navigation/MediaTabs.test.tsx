@@ -6,8 +6,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
 import { sendMain } from "../../../shared/core/ipc/main"
 import { dictionary, drawerTabsData, labelsDisabled, media, mediaFolders, providerConnections, special } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { MediaTabs } from "./MediaTabs"
 
 vi.mock("../../../shared/utils/common", () => commonMock())

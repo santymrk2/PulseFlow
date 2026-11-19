@@ -7,10 +7,10 @@ import { getMedia, getMediaLayerType, getMediaStyle } from "../../../shared/util
 import { getActiveOutputs, getCurrentStyle, setOutput } from "../../../shared/utils/helpers/output"
 import { clearSlide } from "../../../components/output/clear"
 import { Image } from "../../drawer/media/Image"
-import { Icon } from "../../helpers/Icon"
-import { useStore } from "../../hooks/useStore"
-import { Center } from "../../system/Center"
-import { HoverPlay } from "../../system/HoverPlay"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { Center } from "../../../shared/ui/system/Center"
+import { HoverPlay } from "../../../shared/ui/system/HoverPlay"
 import { VideoShow } from "../VideoShow"
 
 export interface MediaPreviewProps {

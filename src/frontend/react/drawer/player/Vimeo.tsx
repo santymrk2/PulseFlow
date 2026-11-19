@@ -1,7 +1,7 @@
 import Player from "@vimeo/player"
 import { useEffect, useRef, useState } from "react"
 import { focusMode, theme, themes } from "../../../shared/core/stores"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./Vimeo.module.css"
 
 export interface PlayerVideoData {

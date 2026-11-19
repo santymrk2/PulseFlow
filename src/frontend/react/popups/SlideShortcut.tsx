@@ -8,7 +8,7 @@ import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { Tip } from "../main/Tip"
 import type { Popups } from "../../../types/Main"
 import { activePopup, popupData } from "../../shared/core/stores"
-import { Button } from "../ui/button/Button"
+import { Button } from "../../shared/ui/kit/button/Button"
 import styles from "./SlideShortcut.module.css"
 
 interface SlideShortcutData {

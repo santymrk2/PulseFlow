@@ -3,7 +3,7 @@ import type { Effect as EffectData, EffectItem } from "../../../types/Effects"
 import { effects, hoveredEffectItem } from "../../shared/core/stores"
 import { clone, getChangedKeys } from "../../shared/utils/helpers/array"
 import { EffectRender } from "../../components/output/effects/effectRenderer"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import styles from "./Effect.module.css"
 
 export interface EffectProps {

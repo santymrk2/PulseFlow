@@ -6,8 +6,8 @@ import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { _show } from "../../shared/utils/helpers/shows"
 import { activePopup, activeProject, activeShow, audioRouting, calendars, editingProjectTemplate, effects, globalTags, outputs, overlays, profiles, projects, projectTemplates, selected, showsCache, templates } from "../../shared/core/stores"
 import type { Selected } from "../../../types/Main"
-import { Button } from "../ui/button/Button"
-import { ColorField } from "../ui/color-field/ColorField"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { ColorField } from "../../shared/ui/kit/color-field/ColorField"
 
 // Port de components/main/popups/Color.svelte. Lee (al montar): selected (id y data), y el color actual desde el store que corresponda a esa selección.
 // Escribe, al elegir un color (ColorField input): history UPDATE (slide, grupo, overlay, plantilla, efecto) o el store de output, profile, tag, proyecto/plantilla de proyecto (shows), audioRouting (borra outputLink) o setCalendarColor.

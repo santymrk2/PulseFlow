@@ -14,7 +14,7 @@ vi.mock("../../shared/core/stores", () => ({
     playingAudio: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}), update: vi.fn() },
     playingMetronome: { subscribe: (fn: (value: unknown) => void) => (fn(true), () => {}) }
 }))
-vi.mock("../hooks/useStore", () => ({ useStore: (s: unknown) => (String(s).includes("playingMetronome") ? true : String(s).includes("metronome") ? { tempo: 120, beats: 4 } : {}) }))
+vi.mock("../../shared/ui/hooks/useStore", () => ({ useStore: (s: unknown) => (String(s).includes("playingMetronome") ? true : String(s).includes("metronome") ? { tempo: 120, beats: 4 } : {}) }))
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: { getPath: () => "a.mp3", getDuration: async () => 0, start: vi.fn() } }))
 vi.mock("../../audio/audioPlaylist", () => ({ AudioPlaylist: { next: vi.fn() } }))
 vi.mock("../../shared/utils/clickable", () => ({ triggerClickOnEnterSpace: vi.fn() }))

@@ -4,33 +4,33 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, dictionary, popupData } from "../../shared/core/stores"
 import { triggerPopupSubmit } from "../../shared/utils/popup"
-import { commonMock } from "../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ColorGradient } from "./ColorGradient"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../ui/color-field/ColorField", () => ({
+vi.mock("../../shared/ui/kit/color-field/ColorField", () => ({
     ColorField: (p: { value: string; onInput: (v: string) => void }) => (
         <button data-kind="color" data-value={p.value} onClick={() => p.onInput("#abcdef")}>
             color
         </button>
     )
 }))
-vi.mock("../ui/number-field/NumberField", () => ({
+vi.mock("../../shared/ui/kit/number-field/NumberField", () => ({
     NumberField: (p: { value: number; min: number; max: number; onChange: (v: number) => void }) => (
         <button data-kind="pos" data-value={p.value} data-min={p.min} data-max={p.max} onClick={() => p.onChange(p.value + 1)}>
             pos
         </button>
     )
 }))
-vi.mock("../ui/radial-field/RadialField", () => ({
+vi.mock("../../shared/ui/kit/radial-field/RadialField", () => ({
     RadialField: (p: { value: number; onChange: (v: number) => void }) => (
         <button data-kind="deg" data-value={p.value} onClick={() => p.onChange(45)}>
             deg
         </button>
     )
 }))
-vi.mock("../ui/select-field/SelectField", () => ({
+vi.mock("../../shared/ui/kit/select-field/SelectField", () => ({
     SelectField: (p: { label: string; value: string; onChange: (v: string) => void }) => (
         <button data-kind={p.label} data-value={p.value} onClick={() => p.onChange(p.label === "sort.type" ? "radial-gradient" : "ellipse")}>
             {p.label}

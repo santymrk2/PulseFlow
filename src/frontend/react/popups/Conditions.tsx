@@ -12,11 +12,11 @@ import { activeEdit, activeShow, activeStage, overlays, popupData, showsCache, s
 import { translateText } from "../../shared/utils/language"
 import { Textbox } from "../slide/Textbox"
 import { Stagebox } from "../stage/Stagebox"
-import { Button } from "../ui/button/Button"
+import { Button } from "../../shared/ui/kit/button/Button"
 import { ConditionsBox, type ConditionChange } from "./ConditionsBox"
-import { FloatingBar } from "../ui/floating-bar/FloatingBar"
-import { SelectField } from "../ui/select-field/SelectField"
-import { ZoomControl } from "../ui/zoom-control/ZoomControl"
+import { FloatingBar } from "../../shared/ui/kit/floating-bar/FloatingBar"
+import { SelectField } from "../../shared/ui/kit/select-field/SelectField"
+import { ZoomControl } from "../../shared/ui/kit/zoom-control/ZoomControl"
 import styles from "./Conditions.module.css"
 
 // Port de components/main/popups/Conditions.svelte.

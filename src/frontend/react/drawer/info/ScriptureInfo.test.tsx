@@ -3,8 +3,8 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activePage, activeScripture, drawerTabsData, scriptureSettings, templates } from "../../../shared/core/stores"
-import { clearIslands } from "../../test/islandMock"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { clearIslands } from "../../../shared/test/islandMock"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { ScriptureInfo } from "./ScriptureInfo"
 
 const mocks = vi.hoisted(() => ({

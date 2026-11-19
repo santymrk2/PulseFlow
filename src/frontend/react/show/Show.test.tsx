@@ -3,8 +3,8 @@ import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeShow, autoOpenedTimeline, outLocked, projects, resized, showsCache, special, templateApplied } from "../../shared/core/stores"
-import { clearIslands } from "../test/islandMock"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { clearIslands } from "../../shared/test/islandMock"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Show } from "./Show"
 
 vi.mock("../../audio/audioProcessor", () => ({}))
@@ -13,12 +13,12 @@ vi.mock("../../shared/utils/common", () => ({ DEFAULT_WIDTH: 250 }))
 vi.mock("../../components/drawer/timers/timers", () => ({ createGlobalTimerFromLocalTimer: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({ setOutput: vi.fn() }))
 vi.mock("../main/Splash", () => ({ Splash: () => <div data-isla="Splash" /> }))
-vi.mock("../output/Camera", async () => ({ Camera: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Camera") }))
-vi.mock("../drawer/live/NDIStream", async () => ({ NDIStream: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("NDIStream") }))
+vi.mock("../output/Camera", async () => ({ Camera: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Camera") }))
+vi.mock("../drawer/live/NDIStream", async () => ({ NDIStream: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("NDIStream") }))
 vi.mock("../slide/Layouts", () => ({ Layouts: () => <div data-testid="layouts" /> }))
 vi.mock("../timeline/Timeline", () => ({ Timeline: () => <div data-testid="timeline" /> }))
-vi.mock("../system/Resizeable", () => ({ Resizeable: ({ children }: { children?: ReactNode }) => <div data-testid="resizeable">{children}</div> }))
-vi.mock("../system/HoverPlay", () => ({ HoverPlay: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../shared/ui/system/Resizeable", () => ({ Resizeable: ({ children }: { children?: ReactNode }) => <div data-testid="resizeable">{children}</div> }))
+vi.mock("../../shared/ui/system/HoverPlay", () => ({ HoverPlay: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 vi.mock("./AudioPreview", () => ({ AudioPreview: () => <div data-testid="audio-preview" /> }))
 vi.mock("./Slides", () => ({ Slides: () => <div data-testid="slides" /> }))
 vi.mock("./ShowNotes", () => ({ ShowNotes: () => <div data-testid="show-notes" /> }))

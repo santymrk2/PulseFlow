@@ -4,7 +4,7 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import type { TabsObj } from "../../../types/Tabs"
 import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../shared/core/stores"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Tabs } from "./Tabs"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))

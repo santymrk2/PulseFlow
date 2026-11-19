@@ -1,9 +1,9 @@
 import type { CSSProperties } from "react"
 import { activePopup, version } from "../../shared/core/stores"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
-import { Link } from "../ui/link/Link"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { Link } from "../../shared/ui/kit/link/Link"
 import styles from "./About.module.css"
 
 // Port de components/main/popups/About.svelte. Escribe: activePopup ("update_manager"). Lee: version.

@@ -2,8 +2,8 @@ import { useEffect, useRef, type CSSProperties, type MouseEvent, type ReactNode 
 import { activePopup, os } from "../../../shared/core/stores"
 import { MENU_BAR_HEIGHT } from "../../../shared/utils/common"
 import { translateText } from "../../../shared/utils/language"
-import { Icon } from "../../helpers/Icon"
-import { useStore } from "../../hooks/useStore"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./ModalBase.module.css"
 
 // Port del marco de components/main/Modal.svelte (F12.1). Los modales FULL_MODALS montados desde reactPopups

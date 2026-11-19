@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeProject, activeShow, allOutputs, groups, outputs, projects, showsCache } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { SlideProgress } from "./SlideProgress"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))

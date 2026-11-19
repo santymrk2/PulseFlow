@@ -5,9 +5,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../shared/core/ipc/main"
 import { dictionary, special } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { clearFields, fire } from "../test/kitMocks"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { clearFields, fire } from "../../shared/test/kitMocks"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { NowPlaying } from "./NowPlaying"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -17,7 +17,7 @@ vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
-vi.mock("../ui/textarea-field/TextareaField", async () => ({ TextareaField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/textarea-field/TextareaField", async () => ({ TextareaField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 let restaurar: () => void = () => {}
 function montar(data: object = {}) {

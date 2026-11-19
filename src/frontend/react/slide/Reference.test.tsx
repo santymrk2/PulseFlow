@@ -7,7 +7,7 @@ import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activeDrawerTab, drawer, openedInteractionId, openScripture } from "../../shared/core/stores"
 import { setDrawerTabData } from "../../shared/utils/helpers/historyHelpers"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Reference } from "./Reference"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))

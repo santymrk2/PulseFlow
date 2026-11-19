@@ -3,13 +3,13 @@ import { cleanup, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { special } from "../../shared/core/stores"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { CustomText } from "./CustomText"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../ui/textarea-field/TextareaField", async () => ({ TextareaField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/textarea-field/TextareaField", async () => ({ TextareaField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 let restaurar: () => void = () => {}
 function montar(value: object) {

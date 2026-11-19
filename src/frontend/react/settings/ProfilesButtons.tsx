@@ -5,9 +5,9 @@ import { newToast } from "../../shared/utils/common"
 import { translateText } from "../../shared/utils/language"
 import { promptCustom } from "../../shared/utils/popup"
 import { checkPassword } from "../../shared/utils/profile"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
 
 // Port de components/settings/tabs/ProfilesButtons.svelte (F24.13a)
 export function ProfilesButtons() {

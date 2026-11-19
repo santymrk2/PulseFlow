@@ -3,9 +3,9 @@ import type { SettingsTabs as SettingsTabId } from "../../../types/Tabs"
 import { cn } from "../../shared/core/lib/utils"
 import { activeProfile, profiles, settingsTab } from "../../shared/core/stores"
 import { settingsTabs } from "../../shared/core/values/tabs"
-import { Icon } from "../helpers/Icon"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import styles from "./SettingsTabs.module.css"
 
 // Port de components/settings/SettingsTabs.svelte (F24.12)

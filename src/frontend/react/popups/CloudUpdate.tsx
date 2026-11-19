@@ -1,9 +1,9 @@
 import { Loader } from "../main/Loader"
 import { activePopup, popupData } from "../../shared/core/stores"
-import { Icon } from "../helpers/Icon"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
-import { Center } from "../system/Center"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { Center } from "../../shared/ui/system/Center"
 import styles from "./CloudUpdate.module.css"
 
 // Port de components/main/popups/CloudUpdate.svelte. Lee: popupData (lista de cambios, que escribe utils/receivers.ts). Escribe: activePopup = null.

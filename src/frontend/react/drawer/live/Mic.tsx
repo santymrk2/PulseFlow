@@ -3,9 +3,9 @@ import { Main } from "../../../../types/IPC/Main"
 import { AudioMicrophone } from "../../../audio/audioMicrophone"
 import { sendMain } from "../../../shared/core/ipc/main"
 import { activeFocus, activeShow, focusMode, playingAudio } from "../../../shared/core/stores"
-import { Icon } from "../../helpers/Icon"
-import { Button } from "../../ui/button/Button"
-import { useStore } from "../../hooks/useStore"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { Button } from "../../../shared/ui/kit/button/Button"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./Mic.module.css"
 
 export interface MicProps {

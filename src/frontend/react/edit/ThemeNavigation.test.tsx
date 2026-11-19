@@ -3,7 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { drawerTabsData, templates } from "../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ThemeNavigation } from "./ThemeNavigation"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
@@ -18,7 +18,7 @@ vi.mock("../show/left/LeftPanel", () => ({
         </div>
     )
 }))
-vi.mock("../ui/button/Button", () => ({ Button: () => <button type="button">add</button> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({ Button: () => <button type="button">add</button> }))
 vi.mock("./CategoryPicker", () => ({ CategoryPicker: () => <div data-comp="picker" /> }))
 
 let restore = () => {}

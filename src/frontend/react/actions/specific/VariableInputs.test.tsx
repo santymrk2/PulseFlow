@@ -3,14 +3,14 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import type { ReactNode } from "react"
 
-vi.mock("../../hooks/useStore", () => ({ useStore: () => ({ v1: { name: "Var 1", type: "text" } }) }))
+vi.mock("../../../shared/ui/hooks/useStore", () => ({ useStore: () => ({ v1: { name: "Var 1", type: "text" } }) }))
 vi.mock("../../../shared/core/stores", () => ({ variables: {} }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../../shared/utils/helpers/array", () => ({ sortByName: (a: unknown[]) => a }))
-vi.mock("../../ui/select-field/SelectField", () => ({ SelectField: ({ label }: { label?: string }) => <div data-testid="select">{label}</div> }))
-vi.mock("../../ui/number-field/NumberField", () => ({ NumberField: ({ label }: { label?: string }) => <div data-testid="number">{label}</div> }))
-vi.mock("../../ui/text-field/TextField", () => ({ TextField: ({ label }: { label?: string }) => <div data-testid="text">{label}</div> }))
-vi.mock("../../ui/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/kit/select-field/SelectField", () => ({ SelectField: ({ label }: { label?: string }) => <div data-testid="select">{label}</div> }))
+vi.mock("../../../shared/ui/kit/number-field/NumberField", () => ({ NumberField: ({ label }: { label?: string }) => <div data-testid="number">{label}</div> }))
+vi.mock("../../../shared/ui/kit/text-field/TextField", () => ({ TextField: ({ label }: { label?: string }) => <div data-testid="text">{label}</div> }))
+vi.mock("../../../shared/ui/kit/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 
 import { VariableInputs } from "./VariableInputs"
 

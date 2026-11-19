@@ -6,8 +6,8 @@ import { setDrawerTabData } from "../../../shared/utils/helpers/historyHelpers"
 import { replaceDynamicValues } from "../../../shared/utils/helpers/showActions"
 import { activeDrawerTab, drawer, variables } from "../../../shared/core/stores"
 import { cn } from "../../../shared/core/lib/utils"
-import { cssTextToStyle } from "../../helpers/cssTextToStyle"
-import { useStore } from "../../hooks/useStore"
+import { cssTextToStyle } from "../../../shared/ui/helpers/cssTextToStyle"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./Variable.module.css"
 
 export interface VariableRef {

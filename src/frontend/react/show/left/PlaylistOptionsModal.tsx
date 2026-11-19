@@ -1,8 +1,8 @@
 import { getDefaultProjectName, getProjectName, projectReplacers } from "../../../shared/utils/helpers/historyHelpers"
 import { special } from "../../../shared/core/stores"
-import { useStore } from "../../hooks/useStore"
-import { TextField } from "../../ui/text-field/TextField"
-import { ToggleField } from "../../ui/toggle-field/ToggleField"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { TextField } from "../../../shared/ui/kit/text-field/TextField"
+import { ToggleField } from "../../../shared/ui/kit/toggle-field/ToggleField"
 import { ModalBase } from "./ModalBase"
 import styles from "./PlaylistOptionsModal.module.css"
 

@@ -3,9 +3,9 @@ import { Main } from "../../../types/IPC/Main"
 import { activePopup, saved } from "../../shared/core/stores"
 import { sendMain } from "../../shared/core/ipc/main"
 import { closeApp, save, saveComplete } from "../../app/wiring/save"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
 import styles from "./Unsaved.module.css"
 
 // Port de components/main/popups/Unsaved.svelte. Lee: saved. Escribe: activePopup al cancelar y, al salir, closeApp/save/saveComplete.

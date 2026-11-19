@@ -4,23 +4,23 @@ import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { toggleMetronome, updateMetronome } from "../../../components/drawer/audio/metronome"
 import { dictionary, metronome, outLocked, playingMetronome, special } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { Metronome } from "./Metronome"
 
 vi.mock("../../../components/drawer/audio/metronome", () => ({ toggleMetronome: vi.fn(), updateMetronome: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../ui/button/Button", () => ({
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ title, children, onClick, isActive }: { title?: string; children?: ReactNode; onClick?: () => void; isActive?: boolean }) => (
         <button title={title} data-active={isActive} onClick={() => onClick?.()}>
             {children}
         </button>
     )
 }))
-vi.mock("../../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
-vi.mock("../../ui/input-row/InputRow", () => ({ InputRow: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
-vi.mock("../../ui/select-field/SelectField", () => ({
+vi.mock("../../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/kit/input-row/InputRow", () => ({ InputRow: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/kit/select-field/SelectField", () => ({
     SelectField: ({ label, value, onChange }: { label: string; value?: string; onChange?: (value: string) => void }) => (
         <div data-testid="select-field" data-label={label}>
             <span>{label}</span>
@@ -28,15 +28,15 @@ vi.mock("../../ui/select-field/SelectField", () => ({
         </div>
     )
 }))
-vi.mock("../../ui/file-field/FileField", () => ({ FileField: ({ label }: { label: string }) => <div>{label}</div> }))
-vi.mock("../../ui/number-field/NumberField", () => ({
+vi.mock("../../../shared/ui/kit/file-field/FileField", () => ({ FileField: ({ label }: { label: string }) => <div>{label}</div> }))
+vi.mock("../../../shared/ui/kit/number-field/NumberField", () => ({
     NumberField: ({ label, onChange }: { label: string; onChange?: (value: number) => void }) => (
         <button data-testid="number-field" data-label={label} onClick={() => onChange?.(200)}>
             {label}
         </button>
     )
 }))
-vi.mock("../../system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
 vi.mock("./MetronomeInputs", () => ({
     MetronomeInputs: ({ onChange }: { onChange?: (values: Record<string, number>) => void }) => (
         <button data-testid="metronome-inputs" onClick={() => onChange?.({ tempo: 140, beats: 4 })}>

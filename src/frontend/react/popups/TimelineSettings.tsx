@@ -2,8 +2,8 @@
 // Escribe: timeline.startTime con parseTime del valor del campo.
 import { formatTime, parseTime } from "../../components/timeline/timeline"
 import { timeline } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
-import { TextField } from "../ui/text-field/TextField"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { TextField } from "../../shared/ui/kit/text-field/TextField"
 
 export function TimelineSettings() {
     const timelineValue = useStore(timeline)

@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { obsData } from "../../../shared/core/stores"
 import { connectToOBS } from "../../../app/wiring/obsTalk"
 import { wait } from "../../../shared/utils/common"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { cn } from "../../../shared/core/lib/utils"
 import styles from "./OBSInfo.module.css"
 

@@ -6,8 +6,8 @@ import { getCurrentTimerValue } from "../../../components/drawer/timers/timers"
 import { setDrawerTabData } from "../../../shared/utils/helpers/historyHelpers"
 import { getStyles } from "../../../shared/utils/helpers/style"
 import { joinTimeBig } from "../../../shared/utils/helpers/time"
-import { cssTextToStyle } from "../../helpers/cssTextToStyle"
-import { useStore } from "../../hooks/useStore"
+import { cssTextToStyle } from "../../../shared/ui/helpers/cssTextToStyle"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./Timer.module.css"
 
 export interface TimerProps {

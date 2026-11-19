@@ -7,7 +7,7 @@ import { refreshOut, setOutput } from "../../shared/utils/helpers/output"
 import { OutputHelper } from "../../shared/utils/helpers/OutputHelper"
 import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { updateOut } from "../../shared/utils/helpers/showActions"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ShowActions } from "./ShowActions"
 
 vi.mock("../../shared/utils/helpers/output", () => ({ refreshOut: vi.fn(), setOutput: vi.fn() }))

@@ -2,11 +2,11 @@ import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { applyLook } from "../../shared/utils/helpers/looks"
 import { activeLook, activePopup, looks, popupData } from "../../shared/core/stores"
-import { Icon } from "../helpers/Icon"
-import { useStore } from "../hooks/useStore"
-import { Center } from "../system/Center"
-import { Button } from "../ui/button/Button"
-import { CombinedInput } from "../ui/combined-input/CombinedInput"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Center } from "../../shared/ui/system/Center"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { CombinedInput } from "../../shared/ui/kit/combined-input/CombinedInput"
 
 // Port de components/main/popups/SelectLook.svelte. Lee: popupData (active y trigger al montar), activeLook y looks.
 // Escribe: el trigger con el id elegido (o applyLook si no hay trigger), popupData = { id: "select_look", value },

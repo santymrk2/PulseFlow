@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { activeEdit, effects } from "../../shared/core/stores"
 import { EffectTools } from "./EffectTools"
 
@@ -24,8 +24,8 @@ vi.mock("../main/Tabs", () => ({
 vi.mock("./tools/EditValues", () => ({
     EditValues: () => <div data-testid="edit-values" />
 }))
-vi.mock("../ui/color-field/ColorField", () => ({ ColorField: () => <div data-testid="color-field" /> }))
-vi.mock("../ui/number-field/NumberField", () => ({ NumberField: () => <div data-testid="number-field" /> }))
+vi.mock("../../shared/ui/kit/color-field/ColorField", () => ({ ColorField: () => <div data-testid="color-field" /> }))
+vi.mock("../../shared/ui/kit/number-field/NumberField", () => ({ NumberField: () => <div data-testid="number-field" /> }))
 
 let restore: () => void = () => {}
 afterEach(() => {

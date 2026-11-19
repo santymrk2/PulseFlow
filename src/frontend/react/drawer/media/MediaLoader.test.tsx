@@ -2,15 +2,15 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { outputs, previewOutputId, styles as stylesStore } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { clearIslands } from "../../test/islandMock"
-import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { clearIslands } from "../../../shared/test/islandMock"
+import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { MediaLoader } from "./MediaLoader"
 
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../output/Camera", async () => ({ Camera: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Camera") }))
+vi.mock("../../output/Camera", async () => ({ Camera: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Camera") }))
 
 beforeEach(() => {
     vi.clearAllMocks()

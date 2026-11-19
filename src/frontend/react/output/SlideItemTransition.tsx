@@ -5,7 +5,7 @@ import type { Styles } from "../../../types/Settings"
 import { scriptureSettings, templates } from "../../shared/core/stores"
 import { clone } from "../../shared/utils/helpers/array"
 import { getStyleTemplate, itemNeedsAutoSize, slideHasAutoSizeItem } from "../../shared/utils/helpers/output"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import { OutputTransition } from "./OutputTransition"
 
 export interface LineInfo {

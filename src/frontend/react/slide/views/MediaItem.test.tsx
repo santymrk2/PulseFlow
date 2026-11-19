@@ -6,7 +6,7 @@ import type { Item } from "../../../../types/Show"
 import { audioChannelsData, currentWindow, media as mediaStore, outputs, styles } from "../../../shared/core/stores"
 import { videoSync } from "../../../components/media/video/videoSync"
 import { getCropState } from "../../../shared/utils/helpers/cropping"
-import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { MediaItem } from "./MediaItem"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))

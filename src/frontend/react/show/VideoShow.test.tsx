@@ -9,7 +9,7 @@ import { getFirstActiveOutput } from "../../shared/utils/helpers/output"
 import { clearSlide } from "../../components/output/clear"
 import { SoftLoopSync } from "../../components/media/video/softLoop"
 import { syncVideoToAudio, videoSync } from "../../components/media/video/videoSync"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { VideoShow } from "./VideoShow"
 
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(async () => ({})), sendMain: vi.fn(), Main: { MEDIA_TRACKS: "tracks", GET_WINDOWS: "windows" } }))
@@ -29,18 +29,18 @@ vi.mock("../../components/output/clear", () => ({ clearSlide: vi.fn() }))
 vi.mock("../../components/media/video/softLoop", () => ({ SoftLoopSync: vi.fn(() => ({ update: vi.fn(() => 0), destroy: vi.fn() })) }))
 vi.mock("../../components/media/video/videoSync", () => ({ syncVideoToAudio: vi.fn(), videoSync: vi.fn(() => () => {}) }))
 vi.mock("../../components/show/media/subtitles", () => ({ formatVTT: vi.fn((v: string) => v), SRTtoVTT: vi.fn((v: string) => v) }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
-vi.mock("../system/HoverPlay", () => ({ HoverPlay: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
+vi.mock("../../shared/ui/system/HoverPlay", () => ({ HoverPlay: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, title }: { children?: ReactNode; title?: string }) => (
         <button type="button" data-title={title}>
             {children}
         </button>
     )
 }))
-vi.mock("../ui/hidden-input/HiddenInput", () => ({ HiddenInput: ({ value }: { value: string }) => <span data-name={value} /> }))
-vi.mock("../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children?: ReactNode }) => <div data-testid="bar">{children}</div> }))
+vi.mock("../../shared/ui/kit/hidden-input/HiddenInput", () => ({ HiddenInput: ({ value }: { value: string }) => <span data-name={value} /> }))
+vi.mock("../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children?: ReactNode }) => <div data-testid="bar">{children}</div> }))
 vi.mock("./MediaPicker", () => ({ MediaPicker: () => <div data-testid="media-picker" /> }))
 
 let restore: () => void = () => {}

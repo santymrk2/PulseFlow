@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { popupData, transitionData } from "../../shared/core/stores"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Transition } from "./Transition"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))

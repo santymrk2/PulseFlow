@@ -3,8 +3,8 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { audioStreams, playingAudio } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
-import { commonMock } from "../../test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
 import { AudioStreams } from "./AudioStreams"
 
 const mocks = vi.hoisted(() => ({ start: vi.fn(() => Promise.resolve(true)) }))
@@ -13,8 +13,8 @@ vi.mock("../../../audio/audioPlayer", () => ({ AudioPlayer: { start: mocks.start
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
-vi.mock("../../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Loader") }))
-vi.mock("../../system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
+vi.mock("../../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Loader") }))
+vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {

@@ -2,9 +2,9 @@ import { useEffect, useState } from "react"
 import { AudioPlayer } from "../../../../audio/audioPlayer"
 import { getFileName } from "../../../../shared/utils/helpers/media"
 import { activeShow, outLocked, playingAudio } from "../../../../shared/core/stores"
-import { useStore } from "../../../hooks/useStore"
-import { Button, type ButtonClickDetail } from "../../../ui/button/Button"
-import { SelectElem } from "../../../system/SelectElem"
+import { useStore } from "../../../../shared/ui/hooks/useStore"
+import { Button, type ButtonClickDetail } from "../../../../shared/ui/kit/button/Button"
+import { SelectElem } from "../../../../shared/ui/system/SelectElem"
 import styles from "./AudioEffect.module.css"
 
 // Port de components/drawer/audio/AudioEffect.svelte (card de la librería de efectos).

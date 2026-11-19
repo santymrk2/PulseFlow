@@ -6,8 +6,8 @@ import { AudioPlayer } from "../../../audio/audioPlayer"
 import { AudioPlaylist } from "../../../audio/audioPlaylist"
 import { addProjectItem } from "../../../converters/project"
 import { activePlaylist, activeShow, media, outLocked, playingAudio } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { AudioFile } from "./AudioFile"
 
 interface ClickDetail {
@@ -29,9 +29,9 @@ vi.mock("../../../audio/audioPlayer", () => ({
 vi.mock("../../../audio/audioPlaylist", () => ({ AudioPlaylist: { start: vi.fn() } }))
 vi.mock("../../../converters/project", () => ({ addProjectItem: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../ui/button/Button", () => ({
+vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ title, children, showOutline, onClick, onDblClick }: { title?: string; children?: ReactNode; showOutline?: boolean; onClick?: (detail: ClickDetail) => void; onDblClick?: (detail: ClickDetail) => void }) => (
         <button title={title} data-outline={showOutline} onClick={(e) => onClick?.({ ctrl: e.ctrlKey, shift: e.shiftKey, alt: e.altKey, doubleClick: false, target: e.target })} onDoubleClick={(e) => onDblClick?.({ ctrl: e.ctrlKey, shift: e.shiftKey, alt: e.altKey, doubleClick: true, target: e.target })}>
             {children}

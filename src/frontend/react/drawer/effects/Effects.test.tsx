@@ -4,8 +4,8 @@ import type { ReactNode } from "react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activePage, activeShow, dictionary, effects, mediaOptions, outputs, previewOutputId, styles } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { Effects } from "./Effects"
 
 const { addProjectItemMock, toggleEffectOutputMock, findMatchingOutMock } = vi.hoisted(() => ({
@@ -20,9 +20,9 @@ vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock }))
 vi.mock("../../../shared/utils/helpers/overlayOutput", () => ({ toggleEffectOutput: toggleEffectOutputMock }))
 vi.mock("../../../converters/project", () => ({ addProjectItem: addProjectItemMock }))
-vi.mock("../../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Effect") }))
+vi.mock("../../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Effect") }))
 vi.mock("../../slide/Zoomed", async () => {
-    const { makePortMock } = await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")
+    const { makePortMock } = await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")
     const Port = makePortMock("Zoomed")
     return {
         Zoomed: ({ children, ...props }: { children?: ReactNode } & Record<string, unknown>) => (

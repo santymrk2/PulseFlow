@@ -6,7 +6,7 @@ import { allOutputs, outputs, stageShows } from "../../shared/core/stores"
 import { getSortedStageItems, shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
 import { getAccess } from "../../shared/utils/profile"
 import { getSlideTextItems } from "../../components/stage/stage"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { StageSlide } from "./StageSlide"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
@@ -20,16 +20,16 @@ vi.mock("../../shared/utils/helpers/output", () => ({
     getStageResolution: vi.fn(() => ({ width: 1920, height: 1080 }))
 }))
 vi.mock("../../components/stage/stage", () => ({ getSlideTextItems: vi.fn(() => []), stageItemToItem: vi.fn((item) => item) }))
-vi.mock("../ui/hidden-input/HiddenInput", () => ({
+vi.mock("../../shared/ui/kit/hidden-input/HiddenInput", () => ({
     HiddenInput: ({ onEdit }: { onEdit?: (detail: { value: string; id: string }) => void }) => (
         <span>
             <button data-testid="edit-HiddenInput" onClick={() => onEdit?.({ value: "Nuevo nombre", id: "stage_st1" })} />
         </span>
     )
 }))
-vi.mock("./Stagebox", async () => ({ Stagebox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Stagebox") }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../system/SelectElem", () => ({
+vi.mock("./Stagebox", async () => ({ Stagebox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Stagebox") }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/system/SelectElem", () => ({
     SelectElem: ({ children }: { children: ReactNode }) => <div data-select>{children}</div>
 }))
 vi.mock("../slide/Zoomed", () => ({

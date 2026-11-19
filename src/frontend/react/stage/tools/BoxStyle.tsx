@@ -12,7 +12,7 @@ import { getStyles } from "../../../shared/utils/helpers/style"
 import { updateStageShow } from "../../../components/stage/stage"
 import { slideTextSections } from "../../../components/stage/values/text"
 import { EditValues } from "../../edit/tools/EditValues"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 
 type StyleInput = Partial<EditInput> & { id: string; value: unknown; name?: string; key?: string; values?: { [key: string]: unknown } }
 

@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { channelSidechainMultipliers } from "../../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../../shared/test/storeTestKit"
 import { AudioSidechain } from "./AudioSidechain"
 
 vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))

@@ -4,14 +4,14 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activePopup, activeProject, activeShow, popupData, projects } from "../../../shared/core/stores"
 import { history } from "../../../shared/utils/helpers/history"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { ProjectShowPlaceholder } from "./ProjectShowPlaceholder"
 
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../system/DropArea", () => ({ DropArea: ({ children }: { children: unknown }) => <div>{children as never}</div> }))
-vi.mock("../../system/Center", () => ({ Center: ({ children }: { children: unknown }) => <div>{children as never}</div> }))
-vi.mock("../../ui/button/Button", () => ({ Button: ({ children, onClick }: { children: unknown; onClick?: () => void }) => <button onClick={onClick}>{children as never}</button> }))
+vi.mock("../../../shared/ui/system/DropArea", () => ({ DropArea: ({ children }: { children: unknown }) => <div>{children as never}</div> }))
+vi.mock("../../../shared/ui/system/Center", () => ({ Center: ({ children }: { children: unknown }) => <div>{children as never}</div> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({ Button: ({ children, onClick }: { children: unknown; onClick?: () => void }) => <button onClick={onClick}>{children as never}</button> }))
 
 let restore: () => void = () => {}
 afterEach(() => {

@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { setDrawerTabData } from "../../../shared/utils/helpers/historyHelpers"
 import { replaceDynamicValues } from "../../../shared/utils/helpers/showActions"
 import { activeDrawerTab, drawer, variables } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { Variable } from "./Variable"
 
 vi.mock("../../../shared/utils/helpers/showActions", () => ({ replaceDynamicValues: vi.fn((text: string, _ref: unknown, updater: number) => `${text}:${updater}`) }))

@@ -6,10 +6,10 @@ import { AudioMicrophone } from "../../audio/audioMicrophone"
 import { AudioPlayer } from "../../audio/audioPlayer"
 import { requestMain } from "../../shared/core/ipc/main"
 import { timecode } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
-import inputRowStyles from "../ui/input-row/InputRow.module.css"
-import { NumberField } from "../ui/number-field/NumberField"
-import { SelectField } from "../ui/select-field/SelectField"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import inputRowStyles from "../../shared/ui/kit/input-row/InputRow.module.css"
+import { NumberField } from "../../shared/ui/kit/number-field/NumberField"
+import { SelectField } from "../../shared/ui/kit/select-field/SelectField"
 
 interface Option {
     value: string

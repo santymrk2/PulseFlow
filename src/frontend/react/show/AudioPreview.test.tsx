@@ -7,7 +7,7 @@ import { AudioAnalyser } from "../../audio/audioAnalyser"
 import { clearAudio } from "../../audio/audioFading"
 import { AudioPlayer } from "../../audio/audioPlayer"
 import { focusMode, media, outLocked, playingAudio } from "../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { AudioPreview } from "./AudioPreview"
 
 vi.mock("../../audio/audioPlayer", () => ({
@@ -21,15 +21,15 @@ vi.mock("../../audio/audioPlayer", () => ({
 vi.mock("../../audio/audioFading", () => ({ clearAudio: vi.fn() }))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: { getAnalysers: vi.fn(() => []), releaseAnalyser: vi.fn() } }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ title, disabled, onClick, children }: { title?: string; disabled?: boolean; onClick?: () => void; children?: ReactNode }) => (
         <button type="button" title={title} data-title={title} disabled={disabled} onClick={onClick}>
             {children}
         </button>
     )
 }))
-vi.mock("../ui/slider/Slider", () => ({
+vi.mock("../../shared/ui/kit/slider/Slider", () => ({
     Slider: ({ value, max, disabled, onInput, onChange }: { value: number; max?: number; disabled?: boolean; onInput?: (event: FormEvent<HTMLInputElement>) => void; onChange?: (event: ChangeEvent<HTMLInputElement>) => void }) => <input data-testid="slider" type="range" value={value} max={max} disabled={disabled} onInput={onInput} onChange={onChange} />
 }))
 

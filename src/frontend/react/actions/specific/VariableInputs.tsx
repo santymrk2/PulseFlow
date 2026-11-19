@@ -1,11 +1,11 @@
 import { variables } from "../../../shared/core/stores"
 import { translateText } from "../../../shared/utils/language"
 import { sortByName } from "../../../shared/utils/helpers/array"
-import { useStore } from "../../hooks/useStore"
-import { SelectField } from "../../ui/select-field/SelectField"
-import { NumberField } from "../../ui/number-field/NumberField"
-import { TextField } from "../../ui/text-field/TextField"
-import { InputRow } from "../../ui/input-row/InputRow"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { SelectField } from "../../../shared/ui/kit/select-field/SelectField"
+import { NumberField } from "../../../shared/ui/kit/number-field/NumberField"
+import { TextField } from "../../../shared/ui/kit/text-field/TextField"
+import { InputRow } from "../../../shared/ui/kit/input-row/InputRow"
 
 interface VariableValue {
     id?: string

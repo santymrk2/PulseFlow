@@ -43,8 +43,8 @@ vi.mock("../../../components/edit/scripts/textStyle", () => ({ getItemText: vi.f
 vi.mock("../../../shared/utils/helpers/array", () => ({ clone: (value: unknown) => [...(value as unknown[])] }))
 vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: vi.fn(() => "video.mp4") }))
 vi.mock("../../../components/stage/stage", () => ({ getCustomStageLabel: vi.fn(() => "") }))
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id, custom }: { id: string; custom?: boolean }) => <span data-icon={id} data-custom={custom} /> }))
-vi.mock("../../ui/button/Button", () => ({
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id, custom }: { id: string; custom?: boolean }) => <span data-icon={id} data-custom={custom} /> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ id, children, icon, title, disabled, isActive, className, onClick }: { id?: string; children?: ReactNode; icon?: string; title?: string; disabled?: boolean; isActive?: boolean; className?: string; onClick?: (detail: { ctrl: boolean }) => void }) => (
         <button data-testid="item-button" id={id} data-icon={icon} data-title={title} data-active={isActive} className={className} disabled={disabled} onClick={(event) => onClick?.({ ctrl: event.ctrlKey })}>
             {children}

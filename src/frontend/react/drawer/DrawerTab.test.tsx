@@ -4,8 +4,8 @@ import type { CSSProperties, MouseEvent as ReactMouseEvent, ReactNode } from "re
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { actions, activeActionTagFilter, activeDrawerTab, activePlaylist, activeTimerTagFilter, activeVariableTagFilter, audioPlaylists, dictionary, drawerTabsData, outputs, templates } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { DrawerTab, type DrawerTabCategory } from "./DrawerTab"
 import styles from "./DrawerTab.module.css"
 
@@ -21,7 +21,7 @@ interface ClickDetail {
     target: EventTarget
 }
 
-vi.mock("../system/SelectElem", () => ({
+vi.mock("../../shared/ui/system/SelectElem", () => ({
     SelectElem: ({ children, className, style, draggable, selectable }: { children?: ReactNode; className?: string; style?: CSSProperties; draggable?: boolean; selectable?: boolean }) => (
         <div data-testid="select-elem" data-draggable={draggable} data-selectable={selectable} className={className} style={style}>
             {children}
@@ -29,7 +29,7 @@ vi.mock("../system/SelectElem", () => ({
     )
 }))
 
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, className, style, tab, isActive, onClick, onDblClick }: { children?: ReactNode; className?: string; style?: CSSProperties; tab?: boolean; isActive?: boolean; onClick?: (detail: ClickDetail, event: ReactMouseEvent<HTMLElement>) => void; onDblClick?: (detail: ClickDetail, event: ReactMouseEvent<HTMLElement>) => void }) => {
         const detail = (event: ReactMouseEvent<HTMLElement>): ClickDetail => ({ ctrl: event.ctrlKey, shift: event.shiftKey, alt: event.altKey, doubleClick: false, target: event.target })
         return (
@@ -40,9 +40,9 @@ vi.mock("../ui/button/Button", () => ({
     }
 }))
 
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 
-vi.mock("../ui/hidden-input/HiddenInput", () => ({
+vi.mock("../../shared/ui/kit/hidden-input/HiddenInput", () => ({
     HiddenInput: ({ value, id, onEdit }: { value?: string; id: string; onEdit?: (detail: { value: string; id: string }) => void }) => (
         <span role="button" data-testid="rename-input" onClick={() => onEdit?.({ value: "Nuevo", id })}>
             {value}

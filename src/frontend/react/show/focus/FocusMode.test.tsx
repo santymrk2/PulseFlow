@@ -5,16 +5,16 @@ import type { ProjectShowRef } from "../../../../types/Projects"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeFocus, activeProject, outputs, projects, resized } from "../../../shared/core/stores"
 import { getAllProjectItems } from "../../../components/show/focus/focus"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { FocusMode } from "./FocusMode"
 
 vi.mock("../../../components/show/focus/focus", () => ({ getAllProjectItems: vi.fn(async () => []) }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getActiveOutputs: vi.fn(() => []) }))
 vi.mock("../../../shared/utils/common", () => ({ hasNewerUpdate: vi.fn(async () => false) }))
 vi.mock("../../main/Loader", () => ({ Loader: () => <div data-testid="loader" /> }))
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
-vi.mock("../../system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div data-testid="center">{children}</div> }))
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
+vi.mock("../../../shared/ui/system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div data-testid="center">{children}</div> }))
 vi.mock("./FocusItem", () => ({ FocusItem: ({ show }: { show: { id: string; index?: number } }) => <div data-testid="focus-item" data-id={show.id} data-index={show.index} /> }))
 
 let restore: () => void = () => {}

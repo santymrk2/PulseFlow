@@ -5,17 +5,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../shared/utils/helpers/history"
 import { activePopup, dictionary, groupNumbers, groups, groupsMoreOptionsEnabled, special, templates } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ManageGroups } from "./ManageGroups"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/profile", () => ({ isGroupHidden: (id: string) => id === "oculto" }))
-vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/color-field/ColorField", async () => ({ ColorField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/popup-field/PopupField", async () => ({ PopupField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/color-field/ColorField", async () => ({ ColorField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/popup-field/PopupField", async () => ({ PopupField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 const GRUPOS = {
     verse: { name: "verse", default: true, color: "#111111", shortcut: "V" },

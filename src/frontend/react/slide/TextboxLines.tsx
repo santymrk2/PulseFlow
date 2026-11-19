@@ -11,8 +11,8 @@ import { replaceDynamicValues } from "../../shared/utils/helpers/showActions"
 import { getStyles } from "../../shared/utils/helpers/style"
 import { calculateShapeVerticalOffset, getShapeFloatSide } from "../../components/edit/scripts/shapeOutside"
 import { applyStyleOverrides } from "../../components/slide/wordOverride"
-import { cssTextToStyle } from "../helpers/cssTextToStyle"
-import { useStore } from "../hooks/useStore"
+import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import styles from "./TextboxLines.module.css"
 
 interface RenderText {

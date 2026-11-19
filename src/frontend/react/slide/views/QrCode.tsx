@@ -1,7 +1,7 @@
 import qrcode from "qrcode-generator"
 import { useEffect, useState } from "react"
 import type { Item } from "../../../../types/Show"
-import { Icon } from "../../helpers/Icon"
+import { Icon } from "../../../shared/ui/helpers/Icon"
 import styles from "./QrCode.module.css"
 
 export interface QrCodeProps {

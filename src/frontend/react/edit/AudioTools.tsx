@@ -6,9 +6,9 @@ import { setBoxInputValue } from "../../components/edit/values/boxes"
 import { clone } from "../../shared/utils/helpers/array"
 import { removeStore, updateStore } from "../../shared/utils/helpers/update"
 import { activeEdit, activeShow, media } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
-import { FloatingBar } from "../ui/floating-bar/FloatingBar"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { FloatingBar } from "../../shared/ui/kit/floating-bar/FloatingBar"
 import styles from "./AudioTools.module.css"
 
 // Port de components/edit/AudioTools.svelte.

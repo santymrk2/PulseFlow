@@ -9,7 +9,7 @@ import { currentWindow, visualizerData } from "../../../shared/core/stores"
 import { send } from "../../../shared/utils/request"
 import { drawKaleidoscope } from "../../../components/slide/views/visualizerKaleidoscope"
 import { drawParticles } from "../../../components/slide/views/visualizerParticles"
-import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { Visualizer } from "./Visualizer"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))

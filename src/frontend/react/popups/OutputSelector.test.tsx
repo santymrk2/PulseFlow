@@ -8,9 +8,9 @@ import { requestMain } from "../../shared/core/ipc/main"
 import { openSettings } from "../../components/settings/openSettings"
 import { activePopup, currentOutputSettings, dictionary, outputs } from "../../shared/core/stores"
 import { send } from "../../shared/utils/request"
-import { clearIslands, islands } from "../test/islandMock"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { OutputSelector } from "./OutputSelector"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -22,7 +22,7 @@ vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn()
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
-vi.mock("../output/PreviewOutput", async () => ({ PreviewOutput: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("PreviewOutput") }))
+vi.mock("../output/PreviewOutput", async () => ({ PreviewOutput: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("PreviewOutput") }))
 
 const displays = [
     { id: "display-1", label: "Principal", bounds: { x: 0, y: 0, width: 1920, height: 1080 }, internal: true },

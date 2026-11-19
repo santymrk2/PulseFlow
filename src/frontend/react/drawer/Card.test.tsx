@@ -2,16 +2,16 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { dictionary, mediaOptions } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { clearIslands, islands } from "../test/islandMock"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Card } from "./Card"
 import styles from "./Card.module.css"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
+vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 
 let restaurar: () => void = () => {}
 const principal = (container: HTMLElement) => container.firstElementChild as HTMLElement

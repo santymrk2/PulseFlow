@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeShow, focusMode, outLocked, outputs, playingVideoState, presentationData, showsCache } from "../../shared/core/stores"
 import { formatUrl, getOutputtedWebsites, sendWebsiteKey, toggleWebsiteMute, triggerWebsiteAction } from "../../shared/utils/helpers/websiteControls"
 import { VideoPlayer } from "../../components/media/video/videoPlayer"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import Show from "./Show"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
@@ -19,9 +19,9 @@ vi.mock("../../shared/utils/helpers/websiteControls", () => ({
     triggerWebsiteAction: vi.fn()
 }))
 vi.mock("../../components/media/video/videoPlayer", () => ({ VideoPlayer: { play: vi.fn(), pause: vi.fn(), toggleLoop: vi.fn(), toggleMute: vi.fn() } }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <svg data-icon={id} /> }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <svg data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ title, onClick, children }: { title?: string; onClick?: () => void; children?: ReactNode }) => (
         <button title={title} onClick={onClick}>
             {children}

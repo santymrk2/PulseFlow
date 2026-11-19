@@ -9,7 +9,7 @@ import { sendMain } from "../../../shared/core/ipc/main"
 import { history } from "../../../shared/utils/helpers/history"
 import { getProjectName } from "../../../shared/utils/helpers/historyHelpers"
 import { activePopup, activeProject, activeRename, dictionary, folders, projects, projectTemplates } from "../../../shared/core/stores"
-import { looseEntry, type StoreEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { looseEntry, type StoreEntry, setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { PlaylistAddMenu } from "./PlaylistAddMenu"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))

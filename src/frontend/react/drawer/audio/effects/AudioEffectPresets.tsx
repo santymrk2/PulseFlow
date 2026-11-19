@@ -4,11 +4,11 @@ import { DEFAULT_EFFECT_CONFIGS, setEffectConfig, subscribeEffect, type EffectKe
 import { audioEffectPresets } from "../../../../shared/core/stores"
 import { translateText } from "../../../../shared/utils/language"
 import { clone, keysToID } from "../../../../shared/utils/helpers/array"
-import { useStore } from "../../../hooks/useStore"
-import { Button } from "../../../ui/button/Button"
-import { InputRow } from "../../../ui/input-row/InputRow"
-import { SelectField } from "../../../ui/select-field/SelectField"
-import { TextField } from "../../../ui/text-field/TextField"
+import { useStore } from "../../../../shared/ui/hooks/useStore"
+import { Button } from "../../../../shared/ui/kit/button/Button"
+import { InputRow } from "../../../../shared/ui/kit/input-row/InputRow"
+import { SelectField } from "../../../../shared/ui/kit/select-field/SelectField"
+import { TextField } from "../../../../shared/ui/kit/text-field/TextField"
 
 // Port de components/drawer/audio/effects/AudioEffectPresets.svelte.
 export interface AudioEffectPresetsProps {

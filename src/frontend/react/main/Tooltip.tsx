@@ -1,6 +1,6 @@
 import { special } from "../../shared/core/stores"
-import { cssTextToStyle } from "../helpers/cssTextToStyle"
-import { useStore } from "../hooks/useStore"
+import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import styles from "./Tooltip.module.css"
 
 export interface TooltipPart {

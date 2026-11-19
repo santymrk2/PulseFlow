@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
 import { metronome, metronomeTimer } from "../../../shared/core/stores"
-import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { MetronomeVisualizer } from "./MetronomeVisualizer"
 
 let restaurar: () => void = () => {}

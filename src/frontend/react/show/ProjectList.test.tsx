@@ -6,24 +6,24 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeProfile, activeProject, folders, labelsDisabled, openedFolders, projects } from "../../shared/core/stores"
 import { history } from "../../shared/utils/helpers/history"
 import { isProjectLinked, openProject } from "../../components/show/project"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ProjectList } from "./ProjectList"
 
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/show/project", () => ({ isProjectLinked: vi.fn(() => false), openProject: vi.fn() }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick, className, isActive }: { children?: ReactNode; onClick?: (detail: unknown) => void; className?: string; isActive?: boolean }) => (
         <button type="button" className={`${className || ""}${isActive ? " isActive" : ""}`} onClick={() => onClick?.({})}>
             {children}
         </button>
     )
 }))
-vi.mock("../ui/hidden-input/HiddenInput", () => ({ HiddenInput: ({ value }: { value: string }) => <span data-name={value}>{value}</span> }))
-vi.mock("../system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../system/SelectElem", () => ({ SelectElem: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../shared/ui/kit/hidden-input/HiddenInput", () => ({ HiddenInput: ({ value }: { value: string }) => <span data-name={value}>{value}</span> }))
+vi.mock("../../shared/ui/system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 
 let restore: () => void = () => {}
 afterEach(() => {

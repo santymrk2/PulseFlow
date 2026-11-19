@@ -6,13 +6,13 @@ import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, alertMessage, dictionary } from "../../shared/core/stores"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Alert } from "./Alert"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 // Loader sigue siendo Svelte: acá sólo importa que se monte
-vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
+vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 
 let restaurar: () => void = () => {}
 function montar(mensaje: string) {

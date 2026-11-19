@@ -4,9 +4,9 @@ import { history } from "../../../shared/utils/helpers/history"
 import { getCustomMetadata, initializeMetadata } from "../../../shared/utils/helpers/show"
 import { translateText } from "../../../shared/utils/language"
 import { Tip } from "../../main/Tip"
-import { TextField } from "../../ui/text-field/TextField"
-import { NumberField } from "../../ui/number-field/NumberField"
-import { useStore } from "../../hooks/useStore"
+import { TextField } from "../../../shared/ui/kit/text-field/TextField"
+import { NumberField } from "../../../shared/ui/kit/number-field/NumberField"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./Metadata.module.css"
 
 export interface MetadataProps {}

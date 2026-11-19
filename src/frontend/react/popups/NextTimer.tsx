@@ -7,9 +7,9 @@ import { _show } from "../../shared/utils/helpers/shows"
 import { joinTime, secondsToTime } from "../../shared/utils/helpers/time"
 import { activePopup, activeProject, activeShow, popupData, projects, showsCache } from "../../shared/core/stores"
 import { setPopupSubmit } from "../../shared/utils/popup"
-import { T } from "../helpers/T"
-import { Button } from "../ui/button/Button"
-import { NumberField } from "../ui/number-field/NumberField"
+import { T } from "../../shared/ui/helpers/T"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { NumberField } from "../../shared/ui/kit/number-field/NumberField"
 
 // Port de components/main/popups/NextTimer.svelte. Lee (al montar): popupData.type/value/indexes/count/totalTime, getLayoutRef(), activeShow y activeProject.
 // Escribe: popupData = {} al montar; projects (timer) para carpetas/PDF; history SHOW_LAYOUT (nextTimer, end) y showsCache (quita "end" cuando sólo queda uno); activePopup = null.

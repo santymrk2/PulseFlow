@@ -6,9 +6,9 @@ import { history } from "../../shared/utils/helpers/history"
 import { getResolution } from "../../shared/utils/helpers/output"
 import { openSettings } from "../../components/settings/openSettings"
 import { activePopup, activeStyle, currentOutputSettings, dictionary, outputs, popupData, styles } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { clearIslands, islands } from "../test/islandMock"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { SelectStyle } from "./SelectStyle"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -19,7 +19,7 @@ vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn()
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
 vi.mock("../drawer/Card", async () => {
-    const { islands } = await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")
+    const { islands } = await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")
     return {
         Card: (props: Record<string, unknown>) => {
             islands.Card = { props }
@@ -27,7 +27,7 @@ vi.mock("../drawer/Card", async () => {
         }
     }
 })
-vi.mock("../output/Output", async () => ({ Output: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Output") }))
+vi.mock("../output/Output", async () => ({ Output: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Output") }))
 
 const trigger = vi.fn()
 let restaurar: () => void = () => {}

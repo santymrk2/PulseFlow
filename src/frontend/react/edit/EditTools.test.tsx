@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activeShow, copyPasteEdit, overlays, selected, showsCache, storedEditMenuState, templates } from "../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { EditTools } from "./EditTools"
 
 vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
@@ -16,17 +16,17 @@ vi.mock("../../components/edit/scripts/itemClipboard", () => ({ getBoxStyle: () 
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ DEFAULT_ITEM_STYLE: "" }))
 vi.mock("../../components/edit/scripts/textStyle", () => ({ addStyleString: () => "" }))
 vi.mock("../../components/edit/values/boxes", () => ({ itemBoxes: { text: { icon: "text" } } }))
-vi.mock("../helpers/Icon", () => ({ Icon: () => <span /> }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
-vi.mock("../system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: () => <span /> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
+vi.mock("../../shared/ui/system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick }: { children?: ReactNode; onClick?: () => void }) => (
         <button type="button" onClick={onClick}>
             {children}
         </button>
     )
 }))
-vi.mock("../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 vi.mock("./EditTabs", () => ({ EditTabs: () => <div data-tabs="edit" /> }))
 vi.mock("./tools/BoxStyle", () => ({ BoxStyle: () => <div /> }))
 vi.mock("./tools/ItemStyle", () => ({ ItemStyle: () => <div /> }))

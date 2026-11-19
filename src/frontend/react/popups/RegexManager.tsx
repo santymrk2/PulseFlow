@@ -1,10 +1,10 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { activePopup, globalRegexes, popupData } from "../../shared/core/stores"
-import { Button } from "../ui/button/Button"
-import { HRule } from "../ui/h-rule/HRule"
-import { TextField } from "../ui/text-field/TextField"
-import { useStore } from "../hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { HRule } from "../../shared/ui/kit/h-rule/HRule"
+import { TextField } from "../../shared/ui/kit/text-field/TextField"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import styles from "./RegexManager.module.css"
 
 // Port de components/main/popups/RegexManager.svelte. Lee popupData.id al montar (y previousPopup/previousData al volver) y globalRegexes en forma reactiva.

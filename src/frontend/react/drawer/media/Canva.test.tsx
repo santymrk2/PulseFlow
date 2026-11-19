@@ -2,9 +2,9 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { providerConnections } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { clearIslands } from "../../test/islandMock"
-import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { clearIslands } from "../../../shared/test/islandMock"
+import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { Canva } from "./Canva"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))

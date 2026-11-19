@@ -3,8 +3,8 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePlaylist, activePopup, activeRename, audioFolders, audioPlaylists, drawerTabsData, effectsLibrary, labelsDisabled, media, outLocked, selectAllAudio, selected } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { Audio } from "./Audio"
 
 interface ClickDetail {
@@ -25,19 +25,19 @@ vi.mock("../../../audio/audioPlaylist", () => ({ AudioPlaylist: { update: vi.fn(
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../live/Microphones", () => ({ Microphones: () => <div data-testid="microphones" /> }))
 vi.mock("../live/AudioStreams", () => ({ AudioStreams: () => <div data-testid="audio-streams" /> }))
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
-vi.mock("../../ui/button/Button", () => ({
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ title, children, onClick }: { title?: string; children?: ReactNode; onClick?: (detail: ClickDetail) => void }) => (
         <button title={title} onClick={(e) => onClick?.({ ctrl: false, shift: false, alt: false, doubleClick: false, target: e.target })}>
             {children}
         </button>
     )
 }))
-vi.mock("../../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
-vi.mock("../../ui/number-field/NumberField", () => ({ NumberField: ({ label }: { label: string }) => <div>{label}</div> }))
-vi.mock("../../system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../../system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/kit/number-field/NumberField", () => ({ NumberField: ({ label }: { label: string }) => <div>{label}</div> }))
+vi.mock("../../../shared/ui/system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 vi.mock("../media/Folder", () => ({ Folder: ({ name }: { name: string }) => <div data-testid="folder">{name}</div> }))
 vi.mock("./AudioFile", () => ({ AudioFile: ({ name }: { name: string }) => <div data-testid="audio-file">{name}</div> }))
 vi.mock("./effects/AudioEffect", () => ({ AudioEffect: ({ name }: { name: string }) => <div data-testid="effect-card">{name}</div> }))

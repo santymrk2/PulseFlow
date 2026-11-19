@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { focusMode, outLocked, playerVideos } from "../../shared/core/stores"
 import { clearBackground } from "../../components/output/clear"
 import { VideoPlayer } from "../../components/media/video/videoPlayer"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { MediaControls } from "./MediaControls"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))

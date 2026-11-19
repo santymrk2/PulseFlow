@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, selected, timers, variables } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { ItemsList } from "./ItemsList"
 
 vi.mock("../../../shared/utils/language", () => ({ translateText: (id: string) => id }))
@@ -11,8 +11,8 @@ vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: (p: string)
 vi.mock("../../../components/edit/scripts/itemHelpers", () => ({ rearrangeItems: vi.fn() }))
 vi.mock("../../../components/edit/scripts/textStyle", () => ({ getItemText: () => "texto" }))
 vi.mock("../../../components/edit/values/boxes", () => ({ itemBoxes: { text: { icon: "text" } } }))
-vi.mock("../../helpers/Icon", () => ({ Icon: () => <span /> }))
-vi.mock("../../ui/button/Button", () => ({
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: () => <span /> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick }: { children?: unknown; onClick?: (detail: unknown) => void }) => (
         <button type="button" onClick={() => onClick?.({ ctrl: false, shift: false, detail: {}, target: null })}>
             {children as React.ReactNode}

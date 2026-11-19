@@ -1,5 +1,5 @@
 import { effects } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import { Effect } from "./Effect"
 import { OutputTransition } from "./OutputTransition"
 import type { Transition } from "../../../types/Show"

@@ -4,7 +4,7 @@ import { effectItems } from "../../components/output/effects/effectItems"
 import { activeEdit, activePopup, effects } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { Card } from "../drawer/Card"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import { Effect } from "../output/Effect"
 import styles from "./EffectItems.module.css"
 

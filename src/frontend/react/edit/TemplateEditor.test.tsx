@@ -2,7 +2,7 @@
 import type { ReactNode } from "react"
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { activeEdit, templates } from "../../shared/core/stores"
 import { TemplateEditor } from "./TemplateEditor"
 
@@ -17,7 +17,7 @@ vi.mock("../drawer/pages/TemplateSlide", () => ({
         return <div data-testid="template-slide" />
     }
 }))
-vi.mock("../system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode }) => <div data-testid="droparea">{children}</div> }))
+vi.mock("../../shared/ui/system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode }) => <div data-testid="droparea">{children}</div> }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: mocks.history }))
 
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: {} }))

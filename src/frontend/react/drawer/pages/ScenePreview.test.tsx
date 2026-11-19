@@ -3,11 +3,11 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Scene } from "../../../../types/Show"
 import { outputs } from "../../../shared/core/stores"
-import { clearIslands, islands } from "../../test/islandMock"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { clearIslands, islands } from "../../../shared/test/islandMock"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { ScenePreview } from "./ScenePreview"
 
-vi.mock("../../output/Output", async () => ({ Output: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Output") }))
+vi.mock("../../output/Output", async () => ({ Output: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Output") }))
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

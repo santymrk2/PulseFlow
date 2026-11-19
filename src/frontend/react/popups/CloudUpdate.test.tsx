@@ -3,13 +3,13 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, popupData } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { clearIslands } from "../test/islandMock"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { clearIslands } from "../../shared/test/islandMock"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { CloudUpdate } from "./CloudUpdate"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
+vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 
 let restaurar: () => void = () => {}
 function montar(data: unknown) {

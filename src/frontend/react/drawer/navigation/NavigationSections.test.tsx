@@ -3,8 +3,8 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeActionTagFilter, activeDrawerTab, activeEdit, activeTimerTagFilter, activeVariableTagFilter, dictionary, drawerTabsData, labelsDisabled } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { NavigationSections, type NavSection } from "./NavigationSections"
 
 vi.mock("../../../shared/utils/common", () => commonMock())

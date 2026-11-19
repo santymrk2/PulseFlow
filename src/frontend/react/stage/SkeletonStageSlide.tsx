@@ -3,9 +3,9 @@ import type { StageLayout } from "../../../types/Stage"
 import { outputs } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { getStageOutputId, getStageResolution } from "../../shared/utils/helpers/output"
-import { Icon } from "../helpers/Icon"
-import { cssTextToStyle } from "../helpers/cssTextToStyle"
-import { useStore } from "../hooks/useStore"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import styles from "./SkeletonStageSlide.module.css"
 
 export interface SkeletonStageSlideProps {

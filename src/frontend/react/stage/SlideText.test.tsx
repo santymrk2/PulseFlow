@@ -6,7 +6,7 @@ import { outputs, previewOutputId, showsCache, styles as stylesStore } from "../
 import { getItemText } from "../../components/edit/scripts/textStyle"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
 import { getStageTextLayoutOffset } from "../../components/stage/stage"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { SlideText } from "./SlideText"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))

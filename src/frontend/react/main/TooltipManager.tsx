@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { os } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import { Tooltip, type TooltipPart } from "./Tooltip"
 
 const tooltipDelay = 700

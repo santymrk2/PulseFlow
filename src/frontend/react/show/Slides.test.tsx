@@ -7,8 +7,8 @@ import { hasNewerUpdate } from "../../shared/utils/common"
 import { getActiveOutputs } from "../../shared/utils/helpers/output"
 import { getCachedShow } from "../../shared/utils/helpers/show"
 import { _show } from "../../shared/utils/helpers/shows"
-import { clearIslands } from "../test/islandMock"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { clearIslands } from "../../shared/test/islandMock"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Slides } from "./Slides"
 
 vi.mock("../../audio/audioProcessor", () => ({}))
@@ -22,13 +22,13 @@ vi.mock("../../shared/utils/helpers/output", () => ({ getActiveOutputs: vi.fn(()
 vi.mock("../../shared/utils/helpers/show", () => ({ getCachedShow: vi.fn(() => null) }))
 vi.mock("../../shared/utils/helpers/showActions", () => ({ checkActionTrigger: vi.fn(), getFewestOutputLines: vi.fn(() => 0), getFewestOutputLinesReveal: vi.fn(() => 0), getItemWithMostLines: vi.fn(() => null), updateOut: vi.fn() }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
 vi.mock("../slide/SkeletonSlide", () => ({ SkeletonSlide: () => <div data-testid="skeleton" /> }))
 vi.mock("../slide/Slide", () => ({ Slide: ({ index }: { index: number }) => <div data-testid="slide" data-index={index} /> }))
-vi.mock("../system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div data-testid="center">{children}</div> }))
-vi.mock("../system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode | ((over: boolean) => ReactNode) }) => <div data-testid="drop">{typeof children === "function" ? children(false) : children}</div> }))
-vi.mock("../system/Autoscroll", () => ({ Autoscroll: ({ children }: { children?: ReactNode }) => <div data-testid="autoscroll">{children}</div> }))
-vi.mock("../ui/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))
+vi.mock("../../shared/ui/system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div data-testid="center">{children}</div> }))
+vi.mock("../../shared/ui/system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode | ((over: boolean) => ReactNode) }) => <div data-testid="drop">{typeof children === "function" ? children(false) : children}</div> }))
+vi.mock("../../shared/ui/system/Autoscroll", () => ({ Autoscroll: ({ children }: { children?: ReactNode }) => <div data-testid="autoscroll">{children}</div> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))
 vi.mock("./ShowHeader", () => ({ ShowHeader: () => <div data-testid="show-header" /> }))
 
 let restore: () => void = () => {}

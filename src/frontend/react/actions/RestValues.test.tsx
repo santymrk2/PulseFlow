@@ -3,9 +3,9 @@ import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import type { ReactNode } from "react"
 
-vi.mock("../ui/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../ui/select-field/SelectField", () => ({ SelectField: ({ label, onChange }: { label?: string; onChange?: (v: unknown) => void }) => <button onClick={() => onChange?.("POST")}>{label}</button> }))
-vi.mock("../ui/text-field/TextField", () => ({ TextField: ({ label, value, onChange }: { label?: string; value?: string; onChange?: (v: string) => void }) => <input aria-label={label} value={value || ""} onChange={(e) => onChange?.(e.target.value)} /> }))
+vi.mock("../../shared/ui/kit/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../shared/ui/kit/select-field/SelectField", () => ({ SelectField: ({ label, onChange }: { label?: string; onChange?: (v: unknown) => void }) => <button onClick={() => onChange?.("POST")}>{label}</button> }))
+vi.mock("../../shared/ui/kit/text-field/TextField", () => ({ TextField: ({ label, value, onChange }: { label?: string; value?: string; onChange?: (v: string) => void }) => <input aria-label={label} value={value || ""} onChange={(e) => onChange?.(e.target.value)} /> }))
 
 import { RestValues } from "./RestValues"
 

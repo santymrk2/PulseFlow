@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { AudioMicrophone } from "../../../audio/audioMicrophone"
-import { T } from "../../helpers/T"
-import { Center } from "../../system/Center"
-import { SelectElem } from "../../system/SelectElem"
+import { T } from "../../../shared/ui/helpers/T"
+import { Center } from "../../../shared/ui/system/Center"
+import { SelectElem } from "../../../shared/ui/system/SelectElem"
 import { Mic } from "./Mic"
 import styles from "./Microphones.module.css"
 

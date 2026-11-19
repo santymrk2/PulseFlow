@@ -8,7 +8,7 @@ import { groups, outputs, overlays, scriptureSettings, showsCache, styles, templ
 import autosize from "../../components/edit/scripts/autosize"
 import { clearAutoSizeCache } from "../../components/slide/autosizeCache"
 import { send } from "../../shared/utils/request"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Textbox } from "./Textbox"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, wait: vi.fn(() => Promise.resolve("ended")) }))

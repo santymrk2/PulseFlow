@@ -1,10 +1,10 @@
 import { special } from "../../../shared/core/stores"
-import { useStore } from "../../hooks/useStore"
-import { Center } from "../../system/Center"
-import { Clock } from "../../system/Clock"
-import { Date } from "../../system/Date"
-import { TextField } from "../../ui/text-field/TextField"
-import { ToggleField } from "../../ui/toggle-field/ToggleField"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { Center } from "../../../shared/ui/system/Center"
+import { Clock } from "../../../shared/ui/system/Clock"
+import { Date } from "../../../shared/ui/system/Date"
+import { TextField } from "../../../shared/ui/kit/text-field/TextField"
+import { ToggleField } from "../../../shared/ui/kit/toggle-field/ToggleField"
 import styles from "./TemplateInfo.module.css"
 
 // Port de components/drawer/info/TemplateInfo.svelte. Clock y Date son ports React (F24.18a).

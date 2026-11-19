@@ -6,7 +6,7 @@ import { currentWindow as currentWindowStore, visualizerData } from "../../../sh
 import { send } from "../../../shared/utils/request"
 import { drawKaleidoscope } from "../../../components/slide/views/visualizerKaleidoscope"
 import { drawParticles } from "../../../components/slide/views/visualizerParticles"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./Visualizer.module.css"
 
 export interface VisualizerProps {

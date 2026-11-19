@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { focusMode, special } from "../../../shared/core/stores"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { YouTubePlayer } from "./YouTubePlayer"
 import styles from "./YouTube.module.css"
 

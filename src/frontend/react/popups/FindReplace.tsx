@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react"
 import { get } from "../../shared/core/lib/store"
-import { format } from "../../components/context/menuClick"
+import { format } from "../../shared/ui/context/logic/menuClick"
 import { activePopup, popupData } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
 import { setPopupSubmit } from "../../shared/utils/popup"
-import { Icon } from "../helpers/Icon"
-import { T } from "../helpers/T"
-import { Button } from "../ui/button/Button"
-import { TextField } from "../ui/text-field/TextField"
-import { ToggleField } from "../ui/toggle-field/ToggleField"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { T } from "../../shared/ui/helpers/T"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { TextField } from "../../shared/ui/kit/text-field/TextField"
+import { ToggleField } from "../../shared/ui/kit/toggle-field/ToggleField"
 
 // Port de components/main/popups/FindReplace.svelte. Lee popupData (el ObjData del menú contextual) al reemplazar. Escribe: popupData = {} y activePopup = null.
 // "Reemplazar" (botón o Enter) llama a format("find_replace", obj, { findValue, replaceValue, caseSentitive }) de menuClick, que es quien aplica el

@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { existsSync } from "node:fs"
 import { describe, expect, it, vi } from "vitest"
-import { commonMock } from "../test/mockCommon"
+import { commonMock } from "../../shared/test/mockCommon"
 import { reactPopups } from "./registry"
 
 vi.mock("../../shared/utils/common", () => commonMock())

@@ -8,8 +8,8 @@ import { activeLook, looks, outputs } from "../../shared/core/stores"
 import { confirmCustom } from "../../shared/utils/popup"
 import { save } from "../../app/wiring/save"
 import type { Look, LookScreen } from "../../../types/Settings"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { LooksWindow } from "./LooksWindow"
 
 vi.mock("../../shared/utils/common", () => ({ ...commonMock(), MENU_BAR_HEIGHT: 36 }))

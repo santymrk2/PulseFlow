@@ -3,12 +3,12 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { VideoSlider } from "./VideoSlider"
 
-vi.mock("../ui/slider/Slider", () => ({
+vi.mock("../../shared/ui/kit/slider/Slider", () => ({
     Slider: ({ value, max, onInput, onChange, disabled }: { value: number; max?: number; onInput?: (e: { currentTarget: { value: string } }) => void; onChange?: (e: unknown) => void; disabled?: boolean }) => (
         <input data-testid="slider" value={String(value)} max={max} disabled={disabled} onChange={(e) => onInput?.({ currentTarget: { value: e.currentTarget.value } })} onBlur={(e) => onChange?.({ target: e.currentTarget })} />
     )
 }))
-vi.mock("../helpers/triggerClickOnEnterSpace", () => ({ triggerClickOnEnterSpace: vi.fn() }))
+vi.mock("../../shared/ui/helpers/triggerClickOnEnterSpace", () => ({ triggerClickOnEnterSpace: vi.fn() }))
 vi.mock("../../shared/utils/helpers/time", () => ({
     joinTime: vi.fn((t: number[] | string) => (Array.isArray(t) ? t.join(":") : String(t))),
     secondsToTime: vi.fn((s: number) => [0, 0, Math.floor(s)])

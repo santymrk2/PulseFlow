@@ -36,7 +36,7 @@ vi.mock("../../../shared/core/stores", () => ({
     }
 }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: (s: string) => s }))
-vi.mock("../../../components/context/menuClick", () => ({ menuClick: vi.fn() }))
+vi.mock("../../../shared/ui/context/logic/menuClick", () => ({ menuClick: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)) }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ id: "sl1" }] }))
@@ -45,10 +45,10 @@ vi.mock("../../../shared/utils/helpers/style", () => ({ getStyles: () => ({}) })
 vi.mock("../../../components/main/popups/localization/isoLanguages", () => ({ isoLanguages: [] }))
 vi.mock("../../../components/edit/scripts/itemHelpers", () => ({ isConditionMet: () => false }))
 vi.mock("../../../components/edit/scripts/textStyle", () => ({ getItemText: () => "" }))
-vi.mock("../../system/Movebox", () => ({ Movebox: () => <div data-testid="movebox" /> }))
-vi.mock("../../ui/button/Button", () => ({ Button: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button> }))
-vi.mock("../../helpers/Icon", () => ({ Icon: () => <span /> }))
-vi.mock("../../helpers/T", () => ({ T: () => <span /> }))
+vi.mock("../../../shared/ui/system/Movebox", () => ({ Movebox: () => <div data-testid="movebox" /> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({ Button: ({ children, onClick }: any) => <button onClick={onClick}>{children}</button> }))
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: () => <span /> }))
+vi.mock("../../../shared/ui/helpers/T", () => ({ T: () => <span /> }))
 
 afterEach(cleanup)
 

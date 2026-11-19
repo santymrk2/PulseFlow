@@ -4,15 +4,15 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { defaultColors, defaultGradients } from "../../shared/utils/helpers/color"
 import { dictionary, special } from "../../shared/core/stores"
-import { clearIslands, islands } from "../test/islandMock"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ManageColors } from "./ManageColors"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
-vi.mock("../ui/color-field/ColorField", async () => ({ ColorField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../shared/ui/kit/color-field/ColorField", async () => ({ ColorField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 let restaurar: () => void = () => {}
 function montar(valor: object = {}, portapapeles: string | Error = "") {

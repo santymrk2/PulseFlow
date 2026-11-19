@@ -11,10 +11,10 @@ import { getFirstActiveOutput, setOutput } from "../../shared/utils/helpers/outp
 import { removeStore, updateStore } from "../../shared/utils/helpers/update"
 import { VideoPlayer } from "../../components/media/video/videoPlayer"
 import { activeEdit, activeShow, media } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import { Tabs } from "../main/Tabs"
-import { Button } from "../ui/button/Button"
-import { FloatingBar } from "../ui/floating-bar/FloatingBar"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { FloatingBar } from "../../shared/ui/kit/floating-bar/FloatingBar"
 import styles from "./MediaTools.module.css"
 
 const tabs: TabsObj = {

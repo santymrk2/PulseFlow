@@ -7,14 +7,14 @@ import { importFromClipboard } from "../../converters/importHelpers"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, alertMessage, dictionary, os, popupData } from "../../shared/core/stores"
 import { presentationExtensions } from "../../shared/core/values/extensions"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Import } from "./Import"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../converters/importHelpers", () => ({ importFromClipboard: vi.fn() }))
-vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 const dict = { formats: { show: "Show", project: "Proyecto", template: "Plantilla", overlay: "Overlay", action: "Acción", text: "Texto", clipboard: "Portapapeles" }, stage: { stage_layout: "Stage" }, create_show: { more_options: "Más" }, info: { slides: "Diapositivas" } }
 let restaurar: () => void = () => {}

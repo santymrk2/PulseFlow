@@ -4,8 +4,8 @@ import { Main } from "../../../types/IPC/Main"
 import { clearAll } from "../../components/output/clear"
 import { activeEdit, activePage, activePopup, activeShow, deletedShows, renamedShows, scripturesCache } from "../../shared/core/stores"
 import { save } from "../../app/wiring/save"
-import { T } from "../helpers/T"
-import { Button } from "../ui/button/Button"
+import { T } from "../../shared/ui/helpers/T"
+import { Button } from "../../shared/ui/kit/button/Button"
 
 // Port de components/main/popups/ResetAll.svelte. No lee stores: al confirmar hace backup y, 1 s después,
 // escribe un Main.SAVE que vacía todos los stores de configuración y datos.

@@ -1,8 +1,8 @@
 import type { API_metronome } from "../../../components/actions/api"
 import type { MetronomeSettings } from "../../../../types/Audio"
-import { InputRow } from "../../ui/input-row/InputRow"
-import { NumberField } from "../../ui/number-field/NumberField"
-import { ToggleField } from "../../ui/toggle-field/ToggleField"
+import { InputRow } from "../../../shared/ui/kit/input-row/InputRow"
+import { NumberField } from "../../../shared/ui/kit/number-field/NumberField"
+import { ToggleField } from "../../../shared/ui/kit/toggle-field/ToggleField"
 
 // dispatch("change", values) → onChange(values).
 export type MetronomeValues = API_metronome & MetronomeSettings

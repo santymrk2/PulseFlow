@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeShow, os, outputs, presentationApps, presentationData, special } from "../../../shared/core/stores"
 import { sendMain } from "../../../shared/core/ipc/main"
 import { getOutputContent } from "../../../shared/utils/helpers/output"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { PowerPointPreview } from "./PowerPointPreview"
 
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
@@ -14,17 +14,17 @@ vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain
 vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: (path: string) => path, removeExtension: (name: string) => name }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getOutputContent: vi.fn(() => ({})), getActiveOutputs: vi.fn(() => ["out1"]), setOutput: vi.fn() }))
 vi.mock("../../../components/output/clear", () => ({ clearBackground: vi.fn(), clearSlide: vi.fn() }))
-vi.mock("../../helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
-vi.mock("../../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
-vi.mock("../../ui/button/Button", () => ({
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
+vi.mock("../../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick, title }: { children: unknown; onClick?: () => void; title?: string }) => (
         <button onClick={onClick} title={title}>
             {children as never}
         </button>
     )
 }))
-vi.mock("../../ui/dropdown/Dropdown", () => ({ Dropdown: ({ options, onClick }: { options: { name: string }[]; onClick?: (option: { name: string }) => void }) => <button onClick={() => onClick?.(options[0])}>{options[0].name}</button> }))
-vi.mock("../../system/Center", () => ({ Center: ({ children }: { children: unknown }) => <div>{children as never}</div> }))
+vi.mock("../../../shared/ui/kit/dropdown/Dropdown", () => ({ Dropdown: ({ options, onClick }: { options: { name: string }[]; onClick?: (option: { name: string }) => void }) => <button onClick={() => onClick?.(options[0])}>{options[0].name}</button> }))
+vi.mock("../../../shared/ui/system/Center", () => ({ Center: ({ children }: { children: unknown }) => <div>{children as never}</div> }))
 vi.mock("./ScreenCapture", () => ({ ScreenCapture: ({ path }: { path: string }) => <div data-capture={path} /> }))
 
 let restore: () => void = () => {}

@@ -1,6 +1,6 @@
 import { cn } from "../../shared/core/lib/utils"
 import type { DrawerTabIds } from "../../../types/Tabs"
-import { DropArea } from "../system/DropArea"
+import { DropArea } from "../../shared/ui/system/DropArea"
 import { AudioTabs } from "./navigation/AudioTabs"
 import { CalendarTabs } from "./navigation/CalendarTabs"
 import { FunctionsTabs } from "./navigation/FunctionsTabs"

@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { groups } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { HighlightedNotes } from "./HighlightedNotes"
 
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))

@@ -7,7 +7,7 @@ import { getAccess } from "../../shared/utils/profile"
 import { addProjectItem } from "../../converters/project"
 import { getTimeUntilClock } from "../../components/drawer/timers/timers"
 import { getFileName, removeExtension } from "../../shared/utils/helpers/media"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ProjectContentList } from "./ProjectContentList"
 
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
@@ -19,13 +19,13 @@ vi.mock("../../shared/utils/helpers/color", () => ({ brightenDarkColor: vi.fn((v
 vi.mock("../../shared/utils/helpers/media", () => ({ getExtension: vi.fn(() => ""), getFileName: vi.fn((path: string) => path), getMediaType: vi.fn(() => "image"), removeExtension: vi.fn((name: string) => name) }))
 vi.mock("../../shared/utils/helpers/time", () => ({ joinTimeBig: vi.fn((value: string) => value) }))
 vi.mock("../../components/show/project", () => ({ clipboardToProject: vi.fn(async () => []) }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
-vi.mock("../ui/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))
-vi.mock("../system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode | ((over: boolean) => ReactNode) }) => <div data-testid="drop">{typeof children === "function" ? children(false) : children}</div> }))
-vi.mock("../system/Autoscroll", () => ({ Autoscroll: ({ children }: { children?: ReactNode }) => <div data-testid="autoscroll">{children}</div> }))
-vi.mock("../system/SelectElem", () => ({ SelectElem: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))
+vi.mock("../../shared/ui/system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../shared/ui/system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode | ((over: boolean) => ReactNode) }) => <div data-testid="drop">{typeof children === "function" ? children(false) : children}</div> }))
+vi.mock("../../shared/ui/system/Autoscroll", () => ({ Autoscroll: ({ children }: { children?: ReactNode }) => <div data-testid="autoscroll">{children}</div> }))
+vi.mock("../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 vi.mock("./ShowButton", () => ({
     ShowButton: ({ id, show }: { id: string; show: { name?: string } }) => (
         <div data-testid="show-button" data-id={id}>

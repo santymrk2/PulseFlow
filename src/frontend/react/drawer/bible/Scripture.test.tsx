@@ -3,8 +3,8 @@ import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-libra
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activeScripture, activeTriggerFunction, customScriptureBooks, dictionary, drawerTabsData, notFound, openScripture, outLocked, resized, scriptureHistory, scriptureMode, scriptures, scriptureSettings, selected } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { Scripture } from "./Scripture"
 
 const { loadJsonBibleMock, playScriptureMock, swapPreviewBibleMock, outputFlag } = vi.hoisted(() => ({

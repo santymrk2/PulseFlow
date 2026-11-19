@@ -1,7 +1,7 @@
 import { os } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { useStore } from "../hooks/useStore"
-import { HRule } from "../ui/h-rule/HRule"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { HRule } from "../../shared/ui/kit/h-rule/HRule"
 import styles from "./Shortcuts.module.css"
 
 // Port de components/main/popups/Shortcuts.svelte. Lee: os.platform (para cmd/ctrl y option/alt) y dictionary (vía translateText).

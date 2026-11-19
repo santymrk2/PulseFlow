@@ -2,8 +2,8 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { dictionary, obsData } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { OBS } from "./OBS"
 
 const { connectMock } = vi.hoisted(() => ({ connectMock: vi.fn() }))

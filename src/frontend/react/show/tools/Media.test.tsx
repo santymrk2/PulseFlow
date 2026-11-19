@@ -7,7 +7,7 @@ import { activeShow, media, outLocked, outputs, overlays, playingAudio, showsCac
 import { getAccess } from "../../../shared/utils/profile"
 import { getActiveOutputs, getCurrentStyle, getResolution } from "../../../shared/utils/helpers/output"
 import { _show } from "../../../shared/utils/helpers/shows"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { Media } from "./Media"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(async () => ({})) }))
@@ -30,14 +30,14 @@ vi.mock("../../../shared/utils/helpers/media", () => ({
 vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(() => null), getActiveOutputs: vi.fn(() => []), getCurrentStyle: vi.fn(() => ({})), getResolution: vi.fn(() => [1920, 1080]), setOutput: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
 vi.mock("../../drawer/media/MediaLoader", () => ({ MediaLoader: () => <div data-testid="media-loader" /> }))
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
 vi.mock("../../slide/Textbox", () => ({ Textbox: () => <div /> }))
 vi.mock("../../slide/Zoomed", () => ({ Zoomed: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../../system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div data-testid="center">{children}</div> }))
-vi.mock("../../system/HoverPlay", () => ({ HoverPlay: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../../system/SelectElem", () => ({ SelectElem: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../../ui/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))
+vi.mock("../../../shared/ui/system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div data-testid="center">{children}</div> }))
+vi.mock("../../../shared/ui/system/HoverPlay", () => ({ HoverPlay: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))
 
 let restore: () => void = () => {}
 afterEach(() => {

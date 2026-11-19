@@ -3,8 +3,8 @@ import { groups } from "../../../shared/core/stores"
 import { getGlobalGroup } from "../../../shared/utils/helpers/show"
 import { translateText } from "../../../shared/utils/language"
 import { cn } from "../../../shared/core/lib/utils"
-import { usePropState } from "../../hooks/usePropState"
-import { useStore } from "../../hooks/useStore"
+import { usePropState } from "../../../shared/ui/hooks/usePropState"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./HighlightedNotes.module.css"
 
 export interface HighlightedNotesProps {

@@ -67,9 +67,9 @@ vi.mock("../../components/output/preview/SpotifyManager", () => {
 })
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: (...args: unknown[]) => mocks.sendMain(...args) }))
 vi.mock("../../../types/IPC/Main", () => ({ Main: { URL: "URL" } }))
-vi.mock("../helpers/Icon", () => ({ Icon: () => <span data-testid="icon" /> }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: () => <span data-testid="icon" /> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick, title, disabled }: any) => (
         <button title={title} disabled={disabled} onClick={onClick}>
             {children}

@@ -35,7 +35,7 @@ vi.mock("../../../shared/core/stores", () => ({
     theme: { subscribe: (fn: (value: unknown) => void) => (fn("default"), () => {}) },
     themes: { subscribe: (fn: (value: unknown) => void) => (fn({ default: { colors: { secondary: "white" } } }), () => {}) }
 }))
-vi.mock("../../hooks/useStore", () => ({ useStore: () => ({ default: { colors: { secondary: "white" } } }) }))
+vi.mock("../../../shared/ui/hooks/useStore", () => ({ useStore: () => ({ default: { colors: { secondary: "white" } } }) }))
 
 afterEach(cleanup)
 

@@ -6,8 +6,8 @@ import type { EasingHandles } from "../../components/timeline/easingHelper"
 import type { TimelineActions } from "../../components/timeline/TimelineActions"
 import { cn } from "../../shared/core/lib/utils"
 import { translateText } from "../../shared/utils/language"
-import { cssTextToStyle } from "../helpers/cssTextToStyle"
-import { Icon } from "../helpers/Icon"
+import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
+import { Icon } from "../../shared/ui/helpers/Icon"
 import styles from "./TimelineEasing.module.css"
 
 interface EasingPoint {

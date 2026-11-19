@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeAudioEffects, activePopup, dataPath, special } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { AudioInfo } from "./AudioInfo"
 
 const fading = vi.hoisted(() => ({ fadein: vi.fn(), fadeout: vi.fn(), audible: false, fading: false }))

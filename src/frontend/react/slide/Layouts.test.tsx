@@ -9,7 +9,7 @@ import { getAccess } from "../../shared/utils/profile"
 import { getActionIcon, runAction } from "../../components/actions/actions"
 import { duplicate } from "../../shared/utils/helpers/clipboard"
 import { history } from "../../shared/utils/helpers/history"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Layouts } from "./Layouts"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
@@ -27,16 +27,16 @@ vi.mock("../../shared/utils/helpers/shows", () => ({
         slides: () => ({ get: () => [{ language: "en" }] })
     }))
 }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick, title }: { children?: ReactNode; onClick?: (detail: { ctrl: boolean }) => void; title?: string }) => (
         <button title={title} onClick={(event) => onClick?.({ ctrl: event.ctrlKey })}>
             {children}
         </button>
     )
 }))
-vi.mock("../ui/floating-bar/FloatingBar", () => ({
+vi.mock("../../shared/ui/kit/floating-bar/FloatingBar", () => ({
     FloatingBar: ({ children, menu, side, onlyOne, style }: { children?: ReactNode | ((open: boolean) => ReactNode); menu?: ReactNode; side?: string; onlyOne?: boolean; style?: object }) => (
         <div data-testid="bar" data-side={side} data-only-one={String(onlyOne)} style={style}>
             {menu}
@@ -44,11 +44,11 @@ vi.mock("../ui/floating-bar/FloatingBar", () => ({
         </div>
     )
 }))
-vi.mock("../ui/hidden-input/HiddenInput", () => ({
+vi.mock("../../shared/ui/kit/hidden-input/HiddenInput", () => ({
     HiddenInput: ({ value, id }: { value: string; id: string }) => <span data-input-id={id}>{value}</span>
 }))
-vi.mock("../ui/zoom-control/ZoomControl", () => ({ ZoomControl: ({ hidden }: { hidden?: boolean }) => <span data-zoom-hidden={String(!!hidden)} /> }))
-vi.mock("../system/SelectElem", () => ({ SelectElem: ({ children }: { children?: ReactNode }) => <span data-select>{children}</span> }))
+vi.mock("../../shared/ui/kit/zoom-control/ZoomControl", () => ({ ZoomControl: ({ hidden }: { hidden?: boolean }) => <span data-zoom-hidden={String(!!hidden)} /> }))
+vi.mock("../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children?: ReactNode }) => <span data-select>{children}</span> }))
 vi.mock("./Reference", () => ({ Reference: () => <span data-reference /> }))
 
 const show = {

@@ -3,8 +3,8 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { MouseEvent } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { media } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
-import { commonMock } from "../../test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
 import { Cameras } from "./Cameras"
 
 const mocks = vi.hoisted(() => ({ list: vi.fn(), clearBad: vi.fn() }))

@@ -10,7 +10,7 @@ import { syncOutputAudioChannels } from "../../../audio/routing/audioRoutingInit
 import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
 import { getAllOutputs } from "../../../shared/utils/helpers/output"
 import { newToast } from "../../../shared/utils/common"
-import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { AudioRouting } from "./AudioRouting"
 import styles from "./AudioRouting.module.css"
 import nodeStyles from "./AudioRoutingNode.module.css"

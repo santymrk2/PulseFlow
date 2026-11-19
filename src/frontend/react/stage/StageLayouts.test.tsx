@@ -35,11 +35,11 @@ vi.mock("../../shared/utils/helpers/array", () => ({
     keysToID: (object: Record<string, unknown>) => Object.entries(object).map(([id, value]) => ({ ...(value as object), id })),
     sortByName: (array: { name: string }[]) => [...array].sort((a, b) => a.name.localeCompare(b.name))
 }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
-vi.mock("../system/Autoscroll", () => ({ Autoscroll: ({ children }: { children: ReactNode }) => <div data-testid="autoscroll">{children}</div> }))
-vi.mock("../system/Center", () => ({ Center: ({ children }: { children: ReactNode }) => <div data-testid="center">{children}</div> }))
-vi.mock("../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: ReactNode }) => <div data-testid="floating-bar">{children}</div> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
+vi.mock("../../shared/ui/system/Autoscroll", () => ({ Autoscroll: ({ children }: { children: ReactNode }) => <div data-testid="autoscroll">{children}</div> }))
+vi.mock("../../shared/ui/system/Center", () => ({ Center: ({ children }: { children: ReactNode }) => <div data-testid="center">{children}</div> }))
+vi.mock("../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: ReactNode }) => <div data-testid="floating-bar">{children}</div> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, disabled, icon, onClick }: { children: ReactNode; disabled?: boolean; icon?: string; onClick?: () => void }) => (
         <button data-testid="add-layout" disabled={disabled} data-icon={icon} onClick={onClick}>
             {children}

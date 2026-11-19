@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { outputs } from "../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { SkeletonStageSlide } from "./SkeletonStageSlide"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
@@ -10,7 +10,7 @@ vi.mock("../../shared/utils/helpers/output", () => ({
     getStageOutputId: vi.fn(() => "stage1"),
     getStageResolution: vi.fn(() => ({ width: 1920, height: 1080 }))
 }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 
 let restore: () => void = () => {}
 beforeEach(() => {

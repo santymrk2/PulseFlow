@@ -6,7 +6,7 @@ import type { Item } from "../../../../types/Show"
 import { activeDrawerTab, activeTimers, drawer, timers } from "../../../shared/core/stores"
 import { getCurrentTimerValue } from "../../../components/drawer/timers/timers"
 import { setDrawerTabData } from "../../../shared/utils/helpers/historyHelpers"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { Timer } from "./Timer"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))

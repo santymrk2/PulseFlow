@@ -13,7 +13,7 @@ import { getFewestOutputLines, getItemWithMostLines, playNextGroup, playPrevious
 import { _show } from "../../shared/utils/helpers/shows"
 import { newSlideTimer } from "../../shared/utils/helpers/tick"
 import { AudioMeter } from "../drawer/audio/AudioMeter"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import { ClearButtons } from "./ClearButtons"
 import { MediaControls } from "./MediaControls"
 import { MultiOutputs } from "./MultiOutputs"

@@ -3,7 +3,7 @@ import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vites
 import { get } from "../../shared/core/lib/store"
 import { activePopup, quickSearchActive } from "../../shared/core/stores"
 import { disablePopupClose, keydown } from "../../app/wiring/shortcuts"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 
 // Initialize no decide si se puede cerrar: lo hace el marco (Esc en shortcuts.ts; clic afuera y X, que usan la misma lista).
 // shortcuts.ts arrastra módulos de audio que crean AudioContext al cargarse: un doble que acepta cualquier uso

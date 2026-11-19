@@ -7,10 +7,10 @@ import { history } from "../../shared/utils/helpers/history"
 import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { audioStreams, popupData, selected } from "../../shared/core/stores"
 import { get } from "../../shared/core/lib/store"
-import { T } from "../helpers/T"
-import { Center } from "../system/Center"
-import { Dropdown } from "../ui/dropdown/Dropdown"
-import { TextField } from "../ui/text-field/TextField"
+import { T } from "../../shared/ui/helpers/T"
+import { Center } from "../../shared/ui/system/Center"
+import { Dropdown } from "../../shared/ui/kit/dropdown/Dropdown"
+import { TextField } from "../../shared/ui/kit/text-field/TextField"
 
 // Port de components/main/popups/AudioStream.svelte. Lee (al montar): popupData { dropdown, index }, selected (id "audio_stream" → data[0].id) y audioStreams.
 // Escribe: popupData = {} al montar; audioStreams[streamId] al cambiar nombre/valor; history SHOW_LAYOUT (acción audioStream del slide) al elegir en el dropdown.

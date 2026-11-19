@@ -1,9 +1,9 @@
 import { useState } from "react"
 import { activePopup } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { Button } from "../ui/button/Button"
-import { Menu } from "../ui/menu/Menu"
-import { MenuItem } from "../ui/menu/MenuItem"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { Menu } from "../../shared/ui/kit/menu/Menu"
+import { MenuItem } from "../../shared/ui/kit/menu/MenuItem"
 import styles from "./LibraryAddMenu.module.css"
 
 export interface LibraryAddMenuProps {

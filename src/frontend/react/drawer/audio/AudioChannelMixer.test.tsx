@@ -6,8 +6,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { toggleChannelRecording } from "../../../audio/audioChannelRecorder"
 import { AudioPlayer } from "../../../audio/audioPlayer"
 import { activeAudioEffects, audioChannelsData, recordingChannels } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { AudioChannelMixer } from "./AudioChannelMixer"
 
 interface ClickDetail {
@@ -22,13 +22,13 @@ vi.mock("../../../audio/audioChannelRecorder", () => ({ toggleChannelRecording: 
 vi.mock("../../../audio/audioPlayer", () => ({ AudioPlayer: { updateVolume: vi.fn() } }))
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("./AudioMeter", () => ({ AudioMeter: () => <div data-testid="audio-meter" /> }))
-vi.mock("../../ui/slider/Slider", () => ({
+vi.mock("../../../shared/ui/kit/slider/Slider", () => ({
     Slider: ({ value, onInput }: { value: number; onInput?: (event: FormEvent<HTMLInputElement>) => void }) => <button type="button" data-testid="volume-slider" data-value={value} onClick={() => onInput?.({ currentTarget: { value: "0.8" } } as FormEvent<HTMLInputElement>)} />
 }))
-vi.mock("../../ui/stepper/Stepper", () => ({
+vi.mock("../../../shared/ui/kit/stepper/Stepper", () => ({
     Stepper: ({ value, onChange }: { value: number; onChange?: (value: string) => void }) => <input data-testid="db-stepper" value={value} onChange={(e) => onChange?.(e.target.value)} />
 }))
-vi.mock("../../ui/button/Button", () => ({
+vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ title, icon, style, onClick }: { title?: string; icon?: string; style?: CSSProperties; onClick?: (detail: ClickDetail, event: unknown) => void }) => <button title={title} data-icon={icon} style={style} onClick={(e) => onClick?.({ ctrl: false, shift: false, alt: false, doubleClick: false, target: e.target }, e)} />
 }))
 

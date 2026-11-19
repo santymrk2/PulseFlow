@@ -1,7 +1,7 @@
 import { useEffect, useRef, type CSSProperties, type FormEvent, type FocusEvent, type KeyboardEvent } from "react"
 import { translateText } from "../../../shared/utils/language"
 import { cn } from "../../../shared/core/lib/utils"
-import { usePropState } from "../../hooks/usePropState"
+import { usePropState } from "../../../shared/ui/hooks/usePropState"
 import styles from "./Notes.module.css"
 
 export interface NotesProps {

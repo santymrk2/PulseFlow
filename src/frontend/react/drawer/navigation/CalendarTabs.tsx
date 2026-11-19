@@ -1,9 +1,9 @@
 import { activePopup, drawerTabsData, labelsDisabled } from "../../../shared/core/stores"
 import { getAccess } from "../../../shared/utils/profile"
-import { useStore } from "../../hooks/useStore"
-import { Icon } from "../../helpers/Icon"
-import { T } from "../../helpers/T"
-import { Button } from "../../ui/button/Button"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { T } from "../../../shared/ui/helpers/T"
+import { Button } from "../../../shared/ui/kit/button/Button"
 import { NavigationSections, type NavSection } from "./NavigationSections"
 import styles from "./CalendarTabs.module.css"
 

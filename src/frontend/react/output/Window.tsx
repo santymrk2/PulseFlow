@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { cssTextToStyle } from "../helpers/cssTextToStyle"
+import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
 
 export interface WindowProps {
     id: string

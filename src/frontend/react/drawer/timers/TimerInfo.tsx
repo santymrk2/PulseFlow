@@ -1,8 +1,8 @@
 import { activeTimers } from "../../../shared/core/stores"
-import { Icon } from "../../helpers/Icon"
-import { T } from "../../helpers/T"
-import { useStore } from "../../hooks/useStore"
-import { Button } from "../../ui/button/Button"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { T } from "../../../shared/ui/helpers/T"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { Button } from "../../../shared/ui/kit/button/Button"
 import styles from "./TimerInfo.module.css"
 
 // Port de components/drawer/timers/TimerInfo.svelte: botón para pausar o reanudar todos los temporizadores activos.

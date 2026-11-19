@@ -4,7 +4,7 @@ import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { setEffectConfig, subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
 import { audioEffectPresets } from "../../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../../shared/test/storeTestKit"
 import { AudioEffectPresets } from "./AudioEffectPresets"
 
 interface Option {
@@ -24,8 +24,8 @@ vi.mock("../../../../audio/effects/audioEffectsHelpers", async (importOriginal) 
     }
 })
 vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../../ui/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../../../ui/select-field/SelectField", () => ({
+vi.mock("../../../../shared/ui/kit/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../../shared/ui/kit/select-field/SelectField", () => ({
     SelectField: ({ options, onChange }: { options?: Option[]; onChange?: (value: string) => void }) => (
         <div>
             {(options ?? []).map((option) => (
@@ -36,8 +36,8 @@ vi.mock("../../../ui/select-field/SelectField", () => ({
         </div>
     )
 }))
-vi.mock("../../../ui/text-field/TextField", () => ({ TextField: ({ onChange }: { onChange?: (value: string) => void }) => <input aria-label="nombre" onChange={(event) => onChange?.(event.target.value)} /> }))
-vi.mock("../../../ui/button/Button", () => ({ Button: ({ title, onClick }: { title?: string; onClick?: () => void }) => <button title={title} onClick={onClick} /> }))
+vi.mock("../../../../shared/ui/kit/text-field/TextField", () => ({ TextField: ({ onChange }: { onChange?: (value: string) => void }) => <input aria-label="nombre" onChange={(event) => onChange?.(event.target.value)} /> }))
+vi.mock("../../../../shared/ui/kit/button/Button", () => ({ Button: ({ title, onClick }: { title?: string; onClick?: () => void }) => <button title={title} onClick={onClick} /> }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {

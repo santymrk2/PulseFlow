@@ -8,7 +8,7 @@ import { requestMain, sendMain } from "../../shared/core/ipc/main"
 import { activePage, activePopup, activeShow, activeTriggerFunction, cloudSyncData, connections, contentProviderData, dictionary, disabledServers, maxConnections, notFound, obsData, outputs, popupData, ports, providerConnections, saved, serverData, special } from "../../shared/core/stores"
 import { startRemoteController, stopRemoteController } from "../../app/wiring/remoteController"
 import { contentProviderSync } from "../../app/wiring/startup"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Connection } from "./Connection"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
@@ -19,7 +19,7 @@ vi.mock("../../app/wiring/startup", () => ({ contentProviderSync: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 // El port Tip se mockea como isla: acá sólo importa con qué props se monta.
-vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 const respuestas: { ip?: string[]; teams: { id: string; name: string; current: boolean }[]; switchTeam: { success: boolean }; disconnect: { success: boolean } } = { ip: undefined, teams: [], switchTeam: { success: true }, disconnect: { success: true } }
 

@@ -1,9 +1,9 @@
 import { getDateAndTimeString, timeAgo } from "../../shared/utils/helpers/time"
 import { actionHistory } from "../../shared/core/stores"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
-import { Center } from "../system/Center"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { Center } from "../../shared/ui/system/Center"
 import styles from "./ActionHistory.module.css"
 
 // Port de components/main/popups/ActionHistory.svelte. Lee y escribe: actionHistory (borrar lo deja en []).

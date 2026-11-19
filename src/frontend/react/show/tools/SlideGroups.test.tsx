@@ -6,7 +6,7 @@ import { activeShow, cachedShowsData, fullColors, globalGroupViewEnabled, groups
 import { isGroupHidden } from "../../../shared/utils/profile"
 import { getDuplicateGroups, getSlideGroups } from "../../../components/show/tools/groups"
 import { _show } from "../../../shared/utils/helpers/shows"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { SlideGroups } from "./SlideGroups"
 
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
@@ -18,12 +18,12 @@ vi.mock("../../../shared/utils/helpers/drop", () => ({ ondrop: vi.fn(() => () =>
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
 vi.mock("../../../components/show/tools/groups", () => ({ getDuplicateGroups: vi.fn(() => []), getSlideGroups: vi.fn(() => []), mergeDuplicateGroups: vi.fn() }))
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
-vi.mock("../../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children?: ReactNode }) => <div data-testid="bar">{children}</div> }))
-vi.mock("../../ui/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))
-vi.mock("../../system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div data-testid="center">{children}</div> }))
-vi.mock("../../system/SelectElem", () => ({ SelectElem: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
+vi.mock("../../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children?: ReactNode }) => <div data-testid="bar">{children}</div> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))
+vi.mock("../../../shared/ui/system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div data-testid="center">{children}</div> }))
+vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 
 let restore: () => void = () => {}
 afterEach(() => {

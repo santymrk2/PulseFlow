@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { OUTPUT } from "../../../../types/Channels"
 import { Main } from "../../../../types/IPC/Main"
 import { drawerTabsData, photoApiCredits, playerVideos, providerConnections } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { PlayerInfo } from "./PlayerInfo"
 
 const mocks = vi.hoisted(() => ({ request: vi.fn(), send: vi.fn(), outputs: [] as unknown[] }))

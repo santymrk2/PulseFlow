@@ -7,9 +7,9 @@ import { AudioMicrophone } from "../../audio/audioMicrophone"
 import { AudioPlayer } from "../../audio/audioPlayer"
 import { requestMain } from "../../shared/core/ipc/main"
 import { timecode } from "../../shared/core/stores"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Timecode } from "./Timecode"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -18,10 +18,10 @@ vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: { getOutputs: vi.fn() } }))
 vi.mock("../../audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn() } }))
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn() }))
-vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/input-row/InputRow", async () => {
-    const { FieldMock } = await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")
+vi.mock("../../shared/ui/kit/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/input-row/InputRow", async () => {
+    const { FieldMock } = await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")
     return { InputRow: (p: object) => <FieldMock {...p} label={`row:${(p as { style?: { marginTop?: number } }).style?.marginTop || 0}`} /> }
 })
 

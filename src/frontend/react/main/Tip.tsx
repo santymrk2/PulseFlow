@@ -1,6 +1,6 @@
 import { translateText } from "../../shared/utils/language"
-import { cssTextToStyle } from "../helpers/cssTextToStyle"
-import { Icon } from "../helpers/Icon"
+import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
+import { Icon } from "../../shared/ui/helpers/Icon"
 import { markTipString } from "../../components/main/tipWordDictionary"
 import styles from "./Tip.module.css"
 

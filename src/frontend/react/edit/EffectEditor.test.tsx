@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { activeEdit, effects, outputs, previewOutputId, styles } from "../../shared/core/stores"
 import { EffectEditor } from "./EffectEditor"
 
@@ -10,7 +10,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v ?? null)) }))
-vi.mock("../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Effect") }))
+vi.mock("../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Effect") }))
 
 afterEach(() => {
     cleanup()

@@ -2,8 +2,8 @@ import { useEffect, useRef, type ReactNode } from "react"
 import { activePopup, os, special } from "../../shared/core/stores"
 import { MENU_BAR_HEIGHT } from "../../shared/utils/common"
 import { translateText } from "../../shared/utils/language"
-import { useStore } from "../hooks/useStore"
-import { Icon } from "../helpers/Icon"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Icon } from "../../shared/ui/helpers/Icon"
 import styles from "./Modal.module.css"
 
 export interface ModalProps {

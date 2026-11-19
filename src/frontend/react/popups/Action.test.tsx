@@ -4,9 +4,9 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../shared/utils/helpers/history"
 import { actionMoreOptionsUsed, actions, activePopup, activeShow, dictionary, overlays, popupData } from "../../shared/core/stores"
-import { clearIslands, islands } from "../test/islandMock"
-import { commonMock } from "../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { commonMock } from "../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Action } from "./Action"
 
 const layout = vi.hoisted(() => ({ ref: [] as { data?: { actions?: { slideActions?: { id: string; triggers?: string[] }[] } } }[] }))
@@ -18,8 +18,8 @@ vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
-vi.mock("../actions/CreateAction", async () => ({ CreateAction: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("CreateAction") }))
-vi.mock("../actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("MidiValues") }))
+vi.mock("../actions/CreateAction", async () => ({ CreateAction: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("CreateAction") }))
+vi.mock("../actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("MidiValues") }))
 vi.mock("../../components/actions/actionData", () => ({ actionData: { next_slide: { name: "actions.next_slide" }, start_show: {}, id_select_show: {}, multi: { canAddMultiple: true } } }))
 vi.mock("../../components/actions/customActivation", () => ({
     customActionActivations: [

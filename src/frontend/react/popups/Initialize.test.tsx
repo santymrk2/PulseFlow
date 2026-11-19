@@ -7,9 +7,9 @@ import { requestMain, sendMain } from "../../shared/core/ipc/main"
 import { activePopup, dataPath, dictionary, guideActive, language, popupData, timeFormat } from "../../shared/core/stores"
 import { createData } from "../../app/wiring/createData"
 import { setLanguage } from "../../shared/utils/language"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { commonMock } from "../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { commonMock } from "../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Initialize } from "./Initialize"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -22,9 +22,9 @@ vi.mock("../../shared/utils/language", async () => {
     const translateText = (text: string) => text.replace(/\$?([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+)/g, (match, a, b) => get(dict)[a]?.[b] || match)
     return { setLanguage: vi.fn(), getLanguageList: () => [{ value: "en", label: "English" }], translateText }
 })
-vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/folder-field/FolderField", async () => ({ FolderField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/folder-field/FolderField", async () => ({ FolderField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 const dict = { setup: { good_luck: "Suerte", tips: "Consejos", change_later: "Cambialo luego", get_started: "Empezar" }, settings: { language: "Idioma", data_location: "Carpeta de datos" } }
 let restaurar: () => void = () => {}

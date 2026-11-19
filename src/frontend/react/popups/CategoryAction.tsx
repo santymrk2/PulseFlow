@@ -2,10 +2,10 @@ import { useEffect, useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { Tip } from "../main/Tip"
 import { actions, activePopup, categories, popupData } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
-import { InputRow } from "../ui/input-row/InputRow"
-import { SelectField } from "../ui/select-field/SelectField"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { InputRow } from "../../shared/ui/kit/input-row/InputRow"
+import { SelectField } from "../../shared/ui/kit/select-field/SelectField"
 
 // Port de components/main/popups/CategoryAction.svelte. Lee (al montar): popupData.id (categoría) y categories[id].action; lee actions.
 // Escribe: popupData = {} al montar; categories[id].action al elegir; popupData = { id: acción } y activePopup = "action" al editar. Tip usa el port React.

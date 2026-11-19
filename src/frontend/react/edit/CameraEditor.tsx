@@ -2,7 +2,7 @@ import type { MediaStyle } from "../../../types/Main"
 import { getMediaStyle } from "../../shared/utils/helpers/media"
 import { activeEdit, media } from "../../shared/core/stores"
 import { Cam } from "../drawer/live/Cam"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 
 // Port de components/edit/editors/CameraEditor.svelte.
 export function CameraEditor() {

@@ -11,7 +11,7 @@ import { isConditionMet } from "../../components/edit/scripts/itemHelpers"
 import { loadThumbnail } from "../../shared/utils/helpers/media"
 import { replaceDynamicValues } from "../../shared/utils/helpers/showActions"
 import { getCustomStageLabel, getSlideTextItems } from "../../components/stage/stage"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Stagebox } from "./Stagebox"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
@@ -51,8 +51,8 @@ vi.mock("../../components/stage/stage", () => ({
     getSlideTextItems: vi.fn(() => [{ id: "s1" }]),
     stageItemToItem: vi.fn((value: unknown) => value)
 }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick }: { children: ReactNode; onClick?: () => void }) => (
         <button data-testid="remove-conditions" onClick={onClick}>
             {children}
@@ -63,8 +63,8 @@ const serializeProps = (props: Record<string, unknown>) => JSON.stringify(props,
 vi.mock("../edit/editbox/EditboxLines", () => ({ EditboxLines: (props: Record<string, unknown>) => <span data-view="EditboxLines" data-props={JSON.stringify(props)} /> }))
 vi.mock("../output/Media", () => ({ Media: (props: Record<string, unknown>) => <span data-view="Media" data-props={serializeProps(props)} /> }))
 vi.mock("../output/Output", () => ({ Output: (props: Record<string, unknown>) => <span data-view="Output" data-props={serializeProps(props)} /> }))
-vi.mock("../system/Clock", () => ({ Clock: (props: Record<string, unknown>) => <span data-view="Clock" data-props={serializeProps(props)} /> }))
-vi.mock("../system/Movebox", () => ({ Movebox: (props: Record<string, unknown>) => <span data-view="Movebox" data-props={serializeProps(props)} /> }))
+vi.mock("../../shared/ui/system/Clock", () => ({ Clock: (props: Record<string, unknown>) => <span data-view="Clock" data-props={serializeProps(props)} /> }))
+vi.mock("../../shared/ui/system/Movebox", () => ({ Movebox: (props: Record<string, unknown>) => <span data-view="Movebox" data-props={serializeProps(props)} /> }))
 vi.mock("../slide/SlideItems", () => ({ SlideItems: (props: Record<string, unknown>) => <span data-view="SlideItems" data-props={JSON.stringify(props)} /> }))
 vi.mock("../slide/views/SlideProgress", () => ({ SlideProgress: (props: Record<string, unknown>) => <span data-view="SlideProgress" data-props={serializeProps(props)} /> }))
 vi.mock("../slide/Textbox", () => ({ Textbox: (props: Record<string, unknown>) => <span data-view="Textbox" data-props={JSON.stringify(props)} /> }))

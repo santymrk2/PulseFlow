@@ -4,7 +4,7 @@ import type { Tag } from "../../../../types/Show"
 import { activePopup, popupData } from "../../core/stores"
 import { closeContextMenu } from "../../../app/wiring/shortcuts"
 import { keysToID, sortByName, sortObject } from "./array"
-import type { ContextMenuItem } from "../../../components/context/contextMenus"
+import type { ContextMenuItem } from "../../ui/context/logic/contextMenus"
 
 type TagPopupType = "show" | "media" | "player" | "action" | "variable" | "timer"
 type TagMenuItem = ContextMenuItem | "SEPARATOR"

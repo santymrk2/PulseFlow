@@ -5,8 +5,8 @@ import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../../shared/utils/helpers/history"
 import { categories, dictionary, drawerTabsData, labelsDisabled, shows } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { ShowsTabs } from "./ShowsTabs"
 
 vi.mock("../../../shared/utils/common", () => ({ ...commonMock(), hasNewerUpdate: vi.fn(async () => false) }))

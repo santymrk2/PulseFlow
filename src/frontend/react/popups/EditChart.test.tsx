@@ -2,12 +2,12 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { popupData } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { EditChart } from "./EditChart"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../ui/color-field/ColorField", () => ({
+vi.mock("../../shared/ui/kit/color-field/ColorField", () => ({
     ColorField: ({ value, onChange }: { value: string; onChange: (value: string) => void }) => (
         <button data-color={value} onClick={() => onChange("#000001")}>
             color

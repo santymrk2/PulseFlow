@@ -43,7 +43,7 @@ vi.mock("../../edit/editbox/Editbox", () => ({ Editbox: () => <div data-testid="
 vi.mock("../media/MediaLoader", () => ({ MediaLoader: () => <div data-testid="media" /> }))
 vi.mock("../../slide/Zoomed", () => ({ Zoomed: ({ children }: any) => <div data-testid="zoomed">{children}</div> }))
 vi.mock("../../slide/Textbox", () => ({ Textbox: () => <div data-testid="textbox" /> }))
-vi.mock("../../system/Snaplines", () => ({ Snaplines: () => <div data-testid="snaplines" /> }))
+vi.mock("../../../shared/ui/system/Snaplines", () => ({ Snaplines: () => <div data-testid="snaplines" /> }))
 
 afterEach(cleanup)
 

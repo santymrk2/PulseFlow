@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
 import { sendMain } from "../../../shared/core/ipc/main"
 import { outputs } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
-import { commonMock } from "../../test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
 import { Capture } from "./Capture"
 
 const mocks = vi.hoisted(() => ({ getUserMedia: vi.fn(), stop: vi.fn() }))
@@ -16,7 +16,7 @@ vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
-vi.mock("../../system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
+vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
 vi.mock("../Card", () => ({
     Card: ({ label, onClick, children }: { label: string; onClick?: (e: MouseEvent<HTMLButtonElement>) => void; children?: ReactNode }) => (
         <button onClick={onClick}>

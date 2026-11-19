@@ -10,7 +10,7 @@ import { changeTeam, setupCloudSync, socketDisconnect, updateCloudDeviceName } f
 import { startAutosave, wait } from "../../shared/utils/common"
 import { validateKeys } from "../../shared/utils/drive"
 import { save } from "../../app/wiring/save"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Files } from "./Files"
 
 const ahora = vi.hoisted(() => ({ previousAutosave: 0 }))

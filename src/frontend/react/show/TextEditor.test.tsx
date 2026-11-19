@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { textEditZoom } from "../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { TextEditor } from "./TextEditor"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
@@ -12,16 +12,16 @@ vi.mock("../../shared/utils/chordTranspose", () => ({ transposeText: vi.fn((text
 vi.mock("../../components/show/formatTextEditor", () => ({ formatText: vi.fn() }))
 vi.mock("../../components/show/getTextEditor", () => ({ getPlainEditorText: vi.fn(() => "Texto plano") }))
 vi.mock("../../converters/txt", () => ({ getQuickExample: vi.fn(() => "Ejemplo") }))
-vi.mock("../helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick, disabled }: { children: unknown; onClick?: () => void; disabled?: boolean }) => (
         <button onClick={onClick} disabled={disabled}>
             {children as never}
         </button>
     )
 }))
-vi.mock("../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children, side }: { children: unknown; side?: string }) => <div data-bar={side}>{children as never}</div> }))
-vi.mock("../ui/zoom-control/ZoomControl", () => ({ ZoomControl: ({ hidden }: { hidden?: boolean }) => <div data-zoom={String(hidden)} /> }))
+vi.mock("../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children, side }: { children: unknown; side?: string }) => <div data-bar={side}>{children as never}</div> }))
+vi.mock("../../shared/ui/kit/zoom-control/ZoomControl", () => ({ ZoomControl: ({ hidden }: { hidden?: boolean }) => <div data-zoom={String(hidden)} /> }))
 vi.mock("./tools/HighlightedNotes", () => ({ HighlightedNotes: ({ value }: { value: string }) => <textarea data-notes value={value} readOnly /> }))
 
 let restore: () => void = () => {}

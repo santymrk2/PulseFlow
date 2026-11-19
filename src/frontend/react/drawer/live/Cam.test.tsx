@@ -4,8 +4,8 @@ import type { MouseEvent, ReactNode } from "react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { media, os, outputs, special } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
-import { commonMock } from "../../test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
 import { Cam } from "./Cam"
 
 const mocks = vi.hoisted(() => ({
@@ -22,9 +22,9 @@ vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 vi.mock("../../../media/cameraManager", () => ({ cameraManager: { attachCamera: mocks.attach, detachCamera: mocks.detach, play: mocks.play, pause: mocks.pause, getStartupCameras: mocks.startup, setStartupCameras: mocks.setStartup } }))
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
-vi.mock("../../ui/button/Button", () => ({
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ title, onClick, children }: { title?: string; onClick?: (e: MouseEvent<HTMLButtonElement>) => void; children?: ReactNode }) => (
         <button data-title={title} onClick={onClick}>
             {children}

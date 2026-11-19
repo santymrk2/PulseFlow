@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { addShowsToProject } from "../../../components/show/project"
 import { activePopup, activeProfile, categories, dictionary, leftSource, projects, sortedShowsList } from "../../../shared/core/stores"
 import { getAccess } from "../../../shared/utils/profile"
-import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { AddShowsModal } from "./AddShowsModal"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))

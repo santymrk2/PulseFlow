@@ -7,10 +7,10 @@ import { generateLightRandomColor } from "../../shared/utils/helpers/color"
 import { history } from "../../shared/utils/helpers/history"
 import { activeProfile, activeTriggerFunction, profiles, selectedProfile } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { Icon } from "../helpers/Icon"
-import { useStore } from "../hooks/useStore"
-import { HiddenInput } from "../ui/hidden-input/HiddenInput"
-import { Tabs } from "../ui/tabs/Tabs"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { HiddenInput } from "../../shared/ui/kit/hidden-input/HiddenInput"
+import { Tabs } from "../../shared/ui/kit/tabs/Tabs"
 
 // Port de components/settings/tabs/ProfilesTabs.svelte (F24.13a)
 // Se arma al usarse y no al cargar el módulo: el nombre se traduce con el diccionario ya cargado.

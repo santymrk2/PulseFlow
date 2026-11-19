@@ -5,8 +5,8 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, dataPath, popupData, settingsTab } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { SettingsTools } from "./SettingsTools"
 
 vi.mock("../../shared/utils/common", () => commonMock())

@@ -8,9 +8,9 @@ import { getItemText } from "../../../components/edit/scripts/textStyle"
 import { clone } from "../../../shared/utils/helpers/array"
 import { getFileName } from "../../../shared/utils/helpers/media"
 import { getCustomStageLabel } from "../../../components/stage/stage"
-import { Icon } from "../../helpers/Icon"
-import { useStore } from "../../hooks/useStore"
-import { Button } from "../../ui/button/Button"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { Button } from "../../../shared/ui/kit/button/Button"
 import styles from "./StageItemsList.module.css"
 
 // (F24.19a).

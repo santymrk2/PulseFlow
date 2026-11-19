@@ -9,7 +9,7 @@ import { newToast } from "../../shared/utils/common"
 import { getAccess } from "../../shared/utils/profile"
 import { history } from "../../shared/utils/helpers/history"
 import { _show } from "../../shared/utils/helpers/shows"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Icons, type IconsProps } from "./Icons"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
@@ -25,7 +25,7 @@ vi.mock("../../shared/utils/helpers/shows", () => ({
         media: vi.fn(() => ({ set: vi.fn() }))
     }))
 }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 
 const setMock = vi.fn()
 const baseShow = () => ({

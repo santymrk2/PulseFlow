@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react"
 import { metronome, metronomeTimer } from "../../../shared/core/stores"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./MetronomeVisualizer.module.css"
 
 // Port de components/drawer/audio/MetronomeVisualizer.svelte.

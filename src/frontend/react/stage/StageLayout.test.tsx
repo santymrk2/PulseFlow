@@ -65,8 +65,8 @@ vi.mock("../../components/stage/stage", () => ({ getSlideTextItems: vi.fn(() => 
 vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../edit/ItemAddMenu", () => ({ ItemAddMenu: () => null }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../slide/Zoomed", () => ({
     Zoomed: ({ background, children, onRatioChange }: { background: string; children: ReactNode; onRatioChange?: (ratio: number) => void }) => {
         useEffect(() => onRatioChange?.(2), [])
@@ -83,24 +83,24 @@ vi.mock("../slide/observeResize", () => ({
         return { destroy: () => {} }
     }
 }))
-vi.mock("../system/Center", () => ({ Center: ({ children }: { children: ReactNode }) => <div data-testid="center">{children}</div> }))
-vi.mock("../system/DropArea", () => ({ DropArea: ({ children }: { children: ReactNode }) => <div data-testid="droparea">{children}</div> }))
-vi.mock("../system/Snaplines", () => ({
+vi.mock("../../shared/ui/system/Center", () => ({ Center: ({ children }: { children: ReactNode }) => <div data-testid="center">{children}</div> }))
+vi.mock("../../shared/ui/system/DropArea", () => ({ DropArea: ({ children }: { children: ReactNode }) => <div data-testid="droparea">{children}</div> }))
+vi.mock("../../shared/ui/system/Snaplines", () => ({
     Snaplines: ({ lines, newStyles, ratio, active, onNewStylesChange }: { lines: unknown[]; newStyles: unknown; ratio: number; active: unknown[]; onNewStylesChange?: (value: unknown) => void }) => (
         <span data-testid="snaplines" data-props={JSON.stringify({ lineCount: lines.length, newStyles, ratio, active })} data-lines={lines.length}>
             <button data-testid="apply-styles" onClick={() => onNewStylesChange?.({ left: "10px" })} />
         </span>
     )
 }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick }: { children: ReactNode; onClick?: () => void }) => (
         <button data-testid="create-output" onClick={onClick}>
             {children}
         </button>
     )
 }))
-vi.mock("../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: ReactNode }) => <div data-testid="floating-bar">{children}</div> }))
-vi.mock("../ui/zoom-control/ZoomControl", () => ({
+vi.mock("../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: ReactNode }) => <div data-testid="floating-bar">{children}</div> }))
+vi.mock("../../shared/ui/kit/zoom-control/ZoomControl", () => ({
     ZoomControl: ({ columns, onChange, onOrigin }: { columns: number; onChange?: (value: number) => void; onOrigin?: (origin: { x: number; y: number }) => void }) => (
         <div data-testid="zoom-control" data-columns={columns}>
             <button data-testid="zoom-change" onClick={() => onChange?.(2)} />

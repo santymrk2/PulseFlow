@@ -4,9 +4,9 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, activeStyle, dictionary, drawerTabsData, outputs, popupData, previewOutputId, scriptures, styles, templates } from "../../shared/core/stores"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
-import { clearIslands, islands } from "../test/islandMock"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { SelectTemplate } from "./SelectTemplate"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -14,7 +14,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../drawer/Card", async () => {
-    const { islands } = await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")
+    const { islands } = await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")
     return {
         Card: (props: Record<string, unknown>) => {
             islands.Card = { props }
@@ -22,11 +22,11 @@ vi.mock("../drawer/Card", async () => {
         }
     }
 })
-vi.mock("../drawer/pages/TemplateSlide", async () => ({ TemplateSlide: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("TemplateSlide") }))
-vi.mock("../ui/text-field/TextField", () => ({
+vi.mock("../drawer/pages/TemplateSlide", async () => ({ TemplateSlide: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("TemplateSlide") }))
+vi.mock("../../shared/ui/kit/text-field/TextField", () => ({
     TextField: ({ label, onInput }: { label: string; onInput?: (v: string) => void }) => <input data-label={label} onChange={(e) => onInput?.(e.currentTarget.value)} />
 }))
-vi.mock("../ui/select-field/SelectField", () => ({
+vi.mock("../../shared/ui/kit/select-field/SelectField", () => ({
     SelectField: ({ label, value, options, onChange }: { label: string; value: string; options: { label: string; value: string }[]; onChange?: (v: string) => void }) => (
         <select data-label={label} value={value} onChange={(e) => onChange?.(e.currentTarget.value)}>
             {options.map((o) => (

@@ -4,7 +4,7 @@ import { activeShow } from "../../../shared/core/stores"
 import { startResizing, stopResizing } from "../../../shared/utils/cursor"
 import { clampCrop, clampPan, getCropCenter, getCropValues, isSameCrop, type CropValues } from "../../../shared/utils/helpers/cropping"
 import { history } from "../../../shared/utils/helpers/history"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./EditboxCropping.module.css"
 
 type CropSide = "top" | "right" | "bottom" | "left" | "topLeft" | "topRight" | "bottomRight" | "bottomLeft"

@@ -5,7 +5,7 @@ import type { Item } from "../../../types/Show"
 import { outputs, slidesOptions, styles as stylesStore, variables } from "../../shared/core/stores"
 import { applyStyleOverrides } from "../../components/slide/wordOverride"
 import { replaceDynamicValues } from "../../shared/utils/helpers/showActions"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { TextboxLines, type TextboxLinesProps } from "./TextboxLines"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))

@@ -1,5 +1,5 @@
 import { activePopup, settingsOpen } from "../../shared/core/stores"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import { Modal } from "../main/Modal"
 import { Settings } from "./Settings"
 import styles from "./SettingsModal.module.css"

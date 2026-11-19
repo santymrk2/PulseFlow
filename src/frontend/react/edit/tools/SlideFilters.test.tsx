@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activeShow, showsCache, templates } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { SlideFilters } from "./SlideFilters"
 
 vi.mock("../../../shared/utils/language", () => ({ translateText: (id: string) => id }))

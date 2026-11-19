@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { DrawerTabIds } from "../../../types/Tabs"
 import { Navigation } from "./Navigation"
 
-vi.mock("../system/DropArea", () => ({
+vi.mock("../../shared/ui/system/DropArea", () => ({
     DropArea: ({ children, id, selectChildren }: { children: ReactNode; id: string; selectChildren?: boolean }) => (
         <div data-droparea={id} data-select={String(selectChildren)}>
             {children}

@@ -5,7 +5,7 @@ import { isSourceValid, resolveInitialSource, UNLABELED_LIBRARY_ID } from "../..
 import { DEFAULT_SIZES, dragSplitter, type PanelSizes } from "../../../components/show/left/panelSizes"
 import { cn } from "../../../shared/core/lib/utils"
 import { activeProject, categories, drawerTabsData, leftSource, loaded, projects, projectView, resized } from "../../../shared/core/stores"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { ItemsPanel } from "./ItemsPanel"
 import { LibrariesPanel } from "./LibrariesPanel"
 import { PlaylistsPanel } from "./PlaylistsPanel"

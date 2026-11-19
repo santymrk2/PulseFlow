@@ -9,7 +9,7 @@ import type { Category } from "../../../types/Tabs"
 import { playerVideos, popupData } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
 import { translateText } from "../../shared/utils/language"
-import { TextField } from "../ui/text-field/TextField"
+import { TextField } from "../../shared/ui/kit/text-field/TextField"
 
 // Port de components/main/popups/CreatePlayer.svelte. Lee: popupData.active/id (al montar) y playerVideos[id] (copia).
 // Escribe: popupData = {} al montar (si hay `active`); playerVideos[id] en cada cambio de id o nombre; un marcador de video si el link trae tiempo (+ toast).

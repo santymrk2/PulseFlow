@@ -5,7 +5,7 @@ import { activeShow, outputs, showsCache, slideTimers } from "../../shared/core/
 import { getActiveOutputs } from "../../shared/utils/helpers/output"
 import { _show } from "../../shared/utils/helpers/shows"
 import { translateText } from "../../shared/utils/language"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import { Tabs } from "../main/Tabs"
 import { Audio } from "../output/Audio"
 import { NextTimer } from "../output/NextTimer"

@@ -4,7 +4,7 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { addEffectToStack } from "../../audio/effects/audioEffectsHelpers"
 import { activeAudioEffects, activePopup, dictionary, popupData } from "../../shared/core/stores"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { AddAudioEffect } from "./AddAudioEffect"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))

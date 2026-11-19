@@ -4,7 +4,7 @@ import type { MouseEvent } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
 import { requestMain } from "../../../shared/core/ipc/main"
-import { commonMock } from "../../test/mockCommon"
+import { commonMock } from "../../../shared/test/mockCommon"
 import { Screens } from "./Screens"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))

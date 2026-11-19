@@ -8,7 +8,7 @@ import { toggleOutputs } from "../../shared/utils/helpers/output"
 import { invokeCommand } from "../../shared/core/ipc/tauri"
 import { activePage, activePopup, activeStage, currentOutputSettings, outputs, popupData, stageShows } from "../../shared/core/stores"
 import { send } from "../../shared/utils/request"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ScreenDetail } from "./ScreenDetail"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
@@ -19,7 +19,7 @@ vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("./ScreenOutputOptions", () => ({ ScreenOutputOptions: () => <div data-testid="envio" /> }))
-vi.mock("../ui/color-field/ColorField", () => ({
+vi.mock("../../shared/ui/kit/color-field/ColorField", () => ({
     ColorField: ({ value, onChange }: { value: string; onChange: (v: string) => void }) => (
         <button data-testid="color" onClick={() => onChange("#123456")}>
             {value}

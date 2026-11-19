@@ -6,7 +6,7 @@ import { getLayoutRef } from "../../../shared/utils/helpers/show"
 import { addFilterString } from "../../../components/edit/scripts/textStyle"
 import type { EditInput } from "../../../components/edit/values/boxes"
 import { slideFilterSections } from "../../../components/edit/values/filters"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { EditValues } from "./EditValues"
 
 export function SlideFilters() {

@@ -7,9 +7,9 @@ import { history } from "../../../shared/utils/helpers/history"
 import { getProjectName } from "../../../shared/utils/helpers/historyHelpers"
 import { activePopup, activeProject, activeRename, folders, projects, projectTemplates } from "../../../shared/core/stores"
 import { translateText } from "../../../shared/utils/language"
-import { useStore } from "../../hooks/useStore"
-import { Button } from "../../ui/button/Button"
-import { Menu, MenuItem, MenuSeparator } from "../../ui/menu"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { Button } from "../../../shared/ui/kit/button/Button"
+import { Menu, MenuItem, MenuSeparator } from "../../../shared/ui/kit/menu"
 import styles from "./PlaylistAddMenu.module.css"
 
 // Port de components/show/left/PlaylistAddMenu.svelte: el "+" de PLAYLISTS (playlist, carpeta, plantillas, importar).

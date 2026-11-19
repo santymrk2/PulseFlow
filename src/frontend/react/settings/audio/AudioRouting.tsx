@@ -12,10 +12,10 @@ import { activePopup, audioChannelsData, audioEffects, audioPlaylists, audioRout
 import { newToast } from "../../../shared/utils/common"
 import { translateText } from "../../../shared/utils/language"
 import { cn } from "../../../shared/core/lib/utils"
-import { Button } from "../../ui/button/Button"
+import { Button } from "../../../shared/ui/kit/button/Button"
 import { AudioRoutingNode } from "./AudioRoutingNode"
 import { applyDrop, connectionPath, dragPath, FIXED_INPUTS, FIXED_OUTPUTS, isLineConnectedToPort, isValidConnection, isValidHoverTarget, keepAfterPortContext, lineKey, nodeHue, type AudioDevice, type ColumnType, type HoveredPort, type PortType, type RenderedLine } from "./routingLogic"
-import { useFreshStore } from "../../hooks/useFreshStore"
+import { useFreshStore } from "../../../shared/ui/hooks/useFreshStore"
 import styles from "./AudioRouting.module.css"
 
 // Port de components/settings/tabs/AudioRouting.svelte (F24.13b).

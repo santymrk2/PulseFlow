@@ -3,8 +3,8 @@ import type { Weather as WeatherData } from "../../../../types/Show"
 import { timeFormat } from "../../../shared/core/stores"
 import { translateText } from "../../../shared/utils/language"
 import { getWeather } from "../../../shared/utils/weather"
-import { T } from "../../helpers/T"
-import { useStore } from "../../hooks/useStore"
+import { T } from "../../../shared/ui/helpers/T"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./Weather.module.css"
 
 export interface WeatherProps {

@@ -2,7 +2,7 @@
 import { act, cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { actionHistory, activeTimers, drawerTabsData } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { FunctionsInfo } from "./FunctionsInfo"
 
 vi.mock("../pages/InteractionsInfo", () => ({ InteractionsInfo: () => <div data-testid="interactions" /> }))

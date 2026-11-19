@@ -7,7 +7,7 @@ import { AudioPlayer } from "../../../audio/audioPlayer"
 import { setOutput } from "../../../shared/utils/helpers/output"
 import { requestMain } from "../../../shared/core/ipc/main"
 import { activePopup, activeProject, focusMode, media, outLocked, outputs, playingAudio, popupData, projects, styles } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { FolderShow } from "./FolderShow"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(async () => ({})), sendMain: vi.fn() }))
@@ -42,17 +42,17 @@ vi.mock("../../drawer/Card", () => ({
     )
 }))
 vi.mock("../../drawer/media/MediaLoader", () => ({ MediaLoader: ({ path }: { path: string }) => <div data-testid="media-loader" data-path={path} /> }))
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
-vi.mock("../../ui/button/Button", () => ({
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ title, disabled, onClick, children }: { title?: string; disabled?: boolean; onClick?: () => void; children?: ReactNode }) => (
         <button type="button" title={title} disabled={disabled} onClick={onClick}>
             {children}
         </button>
     )
 }))
-vi.mock("../../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ side, children }: { side?: string; children?: ReactNode }) => <div data-side={side}>{children}</div> }))
-vi.mock("../../system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ side, children }: { side?: string; children?: ReactNode }) => <div data-side={side}>{children}</div> }))
+vi.mock("../../../shared/ui/system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 
 let restore: () => void = () => {}
 afterEach(() => {

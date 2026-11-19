@@ -4,7 +4,7 @@ import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../../types/Show"
 import { activeEdit, showsCache } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { Table } from "./Table"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))

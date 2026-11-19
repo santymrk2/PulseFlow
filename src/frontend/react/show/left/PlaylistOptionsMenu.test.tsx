@@ -7,8 +7,8 @@ import { sendMain } from "../../../shared/core/ipc/main"
 import { exportProject } from "../../../components/export/project"
 import { shareProjectLink } from "../../../components/export/projectLink"
 import { contentProviderData, dictionary, projects, providerConnections, special } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { looseEntry, type StoreEntry, setStoresForTest } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { looseEntry, type StoreEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { PlaylistOptionsMenu } from "./PlaylistOptionsMenu"
 
 vi.mock("../../../shared/utils/common", () => commonMock())

@@ -3,9 +3,9 @@ import { translateText } from "../../shared/utils/language"
 import { getAccess } from "../../shared/utils/profile"
 import { history } from "../../shared/utils/helpers/history"
 import { Templates } from "../drawer/pages/Templates"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import { LeftPanel } from "../show/left/LeftPanel"
-import { Button } from "../ui/button/Button"
+import { Button } from "../../shared/ui/kit/button/Button"
 import { CategoryPicker } from "./CategoryPicker"
 
 export function ThemeNavigation() {

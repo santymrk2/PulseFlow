@@ -3,12 +3,12 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { EditTabs } from "./EditTabs"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick, title, isActive, disabled }: { children?: ReactNode; onClick?: () => void; title?: string; isActive?: boolean; disabled?: boolean }) => (
         <button type="button" onClick={onClick} title={title} data-active={String(!!isActive)} disabled={disabled}>
             {children}

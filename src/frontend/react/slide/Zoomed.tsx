@@ -2,8 +2,8 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import type { Cropping, Resolution } from "../../../types/Settings"
 import { outputs, previewOutputId, styles } from "../../shared/core/stores"
 import { DEFAULT_BOUNDS, getActiveOutputs, getOutputResolution, getResolution } from "../../shared/utils/helpers/output"
-import { useStore } from "../hooks/useStore"
-import { cssTextToStyle } from "../helpers/cssTextToStyle"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
 import { observeResize } from "./observeResize"
 import stylesModule from "./Zoomed.module.css"
 

@@ -7,14 +7,14 @@ import { fetchAndImportIcs } from "../../components/drawer/calendar/calendars"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, alertMessage, dictionary } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ImportCalendar } from "./ImportCalendar"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../components/drawer/calendar/calendars", () => ({ fetchAndImportIcs: vi.fn() }))
-vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 let restaurar: () => void = () => {}
 function montar() {

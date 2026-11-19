@@ -4,8 +4,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../types/Show"
 import { slidesOptions } from "../../shared/core/stores"
 import autosize from "../../components/edit/scripts/autosize"
-import { clearIslands, islands } from "../test/islandMock"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { SlideItems } from "./SlideItems"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
@@ -20,7 +20,7 @@ function viewMock(name: string) {
 vi.mock("./views/MediaItem", () => ({ MediaItem: viewMock("MediaItem") }))
 vi.mock("./views/Website", () => ({ Website: viewMock("Website") }))
 vi.mock("./views/Timer", () => ({ Timer: viewMock("Timer") }))
-vi.mock("../system/Clock", () => ({ Clock: viewMock("Clock") }))
+vi.mock("../../shared/ui/system/Clock", () => ({ Clock: viewMock("Clock") }))
 vi.mock("../output/Window", () => ({ Window: () => <span data-isla="Window" /> }))
 vi.mock("./views/SlideProgress", () => ({ SlideProgress: viewMock("SlideProgress") }))
 vi.mock("./views/DynamicEvents", () => ({ DynamicEvents: viewMock("DynamicEvents") }))
@@ -33,10 +33,10 @@ vi.mock("./views/Variable", () => ({ Variable: viewMock("Variable") }))
 vi.mock("./views/Chart", () => ({ Chart: viewMock("Chart") }))
 vi.mock("./views/Table", () => ({ Table: viewMock("Table") }))
 vi.mock("./views/QrCode", () => ({ QrCode: viewMock("QrCode") }))
-vi.mock("../drawer/live/BMDStream", async () => ({ BMDStream: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("BMDStream") }))
-vi.mock("../drawer/live/Cam", async () => ({ Cam: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Cam") }))
-vi.mock("../drawer/live/NDIStream", async () => ({ NDIStream: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("NDIStream") }))
-vi.mock("../drawer/live/OMTStream", async () => ({ OMTStream: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("OMTStream") }))
+vi.mock("../drawer/live/BMDStream", async () => ({ BMDStream: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("BMDStream") }))
+vi.mock("../drawer/live/Cam", async () => ({ Cam: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Cam") }))
+vi.mock("../drawer/live/NDIStream", async () => ({ NDIStream: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("NDIStream") }))
+vi.mock("../drawer/live/OMTStream", async () => ({ OMTStream: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("OMTStream") }))
 
 let restore: () => void = () => {}
 beforeEach(() => {

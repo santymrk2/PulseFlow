@@ -2,7 +2,7 @@
 import type { ReactNode } from "react"
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { activeEdit, overlays, outputs, previewOutputId, styles } from "../../shared/core/stores"
 import { OverlayEditor } from "./OverlayEditor"
 
@@ -12,14 +12,14 @@ const mocks = vi.hoisted(() => ({
     send: vi.fn()
 }))
 
-vi.mock("../system/Snaplines", () => ({
+vi.mock("../../shared/ui/system/Snaplines", () => ({
     Snaplines: ({ onNewStylesChange }: { onNewStylesChange?: (styles: { [key: string]: string | number }) => void }) => {
         mocks.emitNewStyles = onNewStylesChange ?? null
         return <div data-testid="snaplines" />
     }
 }))
 vi.mock("./editbox/Editbox", () => ({ Editbox: () => <div data-testid="editbox" /> }))
-vi.mock("../system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode }) => <div data-testid="droparea">{children}</div> }))
+vi.mock("../../shared/ui/system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode }) => <div data-testid="droparea">{children}</div> }))
 vi.mock("../slide/Zoomed", () => ({ Zoomed: ({ children }: { children?: ReactNode }) => <div data-testid="zoomed">{children}</div> }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: mocks.history }))
 vi.mock("../../shared/utils/request", () => ({ send: mocks.send }))

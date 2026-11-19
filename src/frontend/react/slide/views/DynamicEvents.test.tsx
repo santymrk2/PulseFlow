@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { setDrawerTabData } from "../../../shared/utils/helpers/historyHelpers"
 import { visibleEvents } from "../../../shared/utils/helpers/dynamicItemText"
 import { activeDrawerTab, drawer, events } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { DynamicEvents } from "./DynamicEvents"
 
 vi.mock("../../../shared/utils/helpers/dynamicItemText", () => ({ visibleEvents: vi.fn(() => [{ name: "Culto", from: "2026-11-17T10:00:00", time: true, location: "Sala" }]) }))

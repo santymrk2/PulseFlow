@@ -5,13 +5,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { NDI } from "../../../../types/Channels"
 import { special } from "../../../shared/core/stores"
 import { destroy, receive, send } from "../../../shared/utils/request"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
-import { commonMock } from "../../test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
 import { NDIStreams } from "./NDIStreams"
 
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../shared/utils/request", () => ({ send: vi.fn(), receive: vi.fn(), destroy: vi.fn() }))
-vi.mock("../../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Loader") }))
+vi.mock("../../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Loader") }))
 vi.mock("./NDIStream", () => ({ NDIStream: ({ screen: item, onClick }: { screen: { id: string; name: string }; onClick?: (e: MouseEvent<HTMLButtonElement>) => void }) => <button onClick={onClick}>{item.name}</button> }))
 
 let restaurar: () => void = () => {}

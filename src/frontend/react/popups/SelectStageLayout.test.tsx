@@ -6,8 +6,8 @@ import { uid } from "uid"
 import { history } from "../../shared/utils/helpers/history"
 import { getAccess } from "../../shared/utils/profile"
 import { activePage, activePopup, currentOutputSettings, dictionary, popupData, stageShows } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { SelectStageLayout } from "./SelectStageLayout"
 
 const { portProps } = vi.hoisted(() => ({ portProps: {} as Record<string, Record<string, unknown>> }))

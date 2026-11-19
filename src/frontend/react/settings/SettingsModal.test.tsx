@@ -4,7 +4,7 @@ import type { ReactNode } from "react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activePopup, settingsOpen } from "../../shared/core/stores"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { SettingsModal } from "./SettingsModal"
 
 vi.mock("./SettingsTabs", () => ({ SettingsTabs: () => <nav>stub-tabs</nav> }))

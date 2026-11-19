@@ -26,8 +26,8 @@ vi.mock("../../../shared/core/stores", () => {
 })
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../ui/select-field/SelectField", () => ({
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../../shared/ui/kit/select-field/SelectField", () => ({
     SelectField: ({ label, value, options, onChange }: { label: string; value: string; options: { value: string; label: string }[]; onChange?: (value: string | null) => void }) => (
         <select data-testid="output" aria-label={label} value={value} onChange={(event) => onChange?.(event.target.value)}>
             {options.map((option) => (
@@ -38,13 +38,13 @@ vi.mock("../../ui/select-field/SelectField", () => ({
         </select>
     )
 }))
-vi.mock("../../ui/text-field/TextField", () => ({
+vi.mock("../../../shared/ui/kit/text-field/TextField", () => ({
     TextField: ({ label, value, onChange }: { label: string; value: string; onChange?: (value: string | null) => void }) => <input data-testid="password" aria-label={label} value={value} onChange={(event) => onChange?.(event.target.value)} />
 }))
-vi.mock("../../ui/color-field/ColorField", () => ({
+vi.mock("../../../shared/ui/kit/color-field/ColorField", () => ({
     ColorField: ({ label, value, onInput }: { label: string; value: string; onInput?: (value: string) => void }) => <input data-testid="color" aria-label={label} value={value} onChange={(event) => onInput?.(event.target.value)} />
 }))
-vi.mock("../../ui/checkbox-field/CheckboxField", () => ({
+vi.mock("../../../shared/ui/kit/checkbox-field/CheckboxField", () => ({
     CheckboxField: ({ label, checked, onChange }: { label: string; checked?: boolean; onChange?: (value: boolean) => void }) => <input data-testid="labels" type="checkbox" aria-label={label} checked={checked} onChange={(event) => onChange?.(event.target.checked)} />
 }))
 vi.mock("./StageItemsList", () => ({ StageItemsList: () => <div data-testid="items-list" /> }))

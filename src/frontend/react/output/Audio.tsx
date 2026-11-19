@@ -5,11 +5,11 @@ import { activeFocus, activePlaylist, activeShow, audioPlaylists, focusMode, met
 import { translateText } from "../../shared/utils/language"
 import { getFileName, removeExtension } from "../../shared/utils/helpers/media"
 import { joinTime, secondsToTime } from "../../shared/utils/helpers/time"
-import { Icon } from "../helpers/Icon"
-import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
-import { Slider } from "../ui/slider/Slider"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { triggerClickOnEnterSpace } from "../../shared/ui/helpers/triggerClickOnEnterSpace"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { Slider } from "../../shared/ui/kit/slider/Slider"
 import styles from "./Audio.module.css"
 
 function getName(id: string) {

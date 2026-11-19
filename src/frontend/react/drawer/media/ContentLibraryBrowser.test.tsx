@@ -3,16 +3,16 @@ import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { requestMain } from "../../../shared/core/ipc/main"
 import { mediaOptions, openedMediaFolders } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { clearIslands } from "../../test/islandMock"
-import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { clearIslands } from "../../../shared/test/islandMock"
+import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { ContentLibraryBrowser } from "./ContentLibraryBrowser"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("./MediaCard", async () => ({ MediaCard: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("MediaCard") }))
+vi.mock("./MediaCard", async () => ({ MediaCard: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("MediaCard") }))
 
 let restaurar: () => void = () => {}
 

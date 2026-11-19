@@ -11,7 +11,7 @@ import { percentageToAspectRatio, stylePosToPercentage } from "../../../shared/u
 import { getStyles } from "../../../shared/utils/helpers/style"
 import { updateStageShow } from "../../../components/stage/stage"
 import { EditValues } from "../../edit/tools/EditValues"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 
 // El Svelte original escribía `input.relative` e `input.input` sobre el detail de EditValues (tipado como any).
 type ItemStyleInput = EditInput & { relative?: boolean; input?: string }

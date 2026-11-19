@@ -1,9 +1,9 @@
 import { livePrepare, outputs, styles as stylesStore } from "../../shared/core/stores"
 import { getResolution } from "../../shared/utils/helpers/output"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
-import { Icon } from "../helpers/Icon"
-import { cssTextToStyle } from "../helpers/cssTextToStyle"
-import { useStore } from "../hooks/useStore"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import { StageLayout } from "../stage/StageLayout"
 import styles from "./PreviewOutput.module.css"
 

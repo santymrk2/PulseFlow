@@ -2,12 +2,12 @@ import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { initializeMetadata } from "../../shared/utils/helpers/show"
 import { customMetadata } from "../../shared/core/stores"
-import { T } from "../helpers/T"
-import { Button } from "../ui/button/Button"
-import { CheckboxField } from "../ui/checkbox-field/CheckboxField"
-import { HRule } from "../ui/h-rule/HRule"
-import { InputRow } from "../ui/input-row/InputRow"
-import { TextField } from "../ui/text-field/TextField"
+import { T } from "../../shared/ui/helpers/T"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { CheckboxField } from "../../shared/ui/kit/checkbox-field/CheckboxField"
+import { HRule } from "../../shared/ui/kit/h-rule/HRule"
+import { InputRow } from "../../shared/ui/kit/input-row/InputRow"
+import { TextField } from "../../shared/ui/kit/text-field/TextField"
 
 // Port de components/main/popups/ManageMetadata.svelte. Lee customMetadata ({ disabled, custom }) al montar (copias locales) y los campos por defecto de
 // initializeMetadata({}). Escribe customMetadata = { ...customMetadata, disabled } o { ...customMetadata, custom } en cada cambio (alternar campo, editar / borrar / agregar nombre).

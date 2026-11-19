@@ -4,8 +4,8 @@ import { media } from "../../shared/core/stores"
 import { getCropState } from "../../shared/utils/helpers/cropping"
 import { getMediaStyle } from "../../shared/utils/helpers/media"
 import { cn } from "../../shared/core/lib/utils"
-import { cssTextToStyle } from "../helpers/cssTextToStyle"
-import { useStore } from "../hooks/useStore"
+import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import styles from "./Camera.module.css"
 
 export interface CameraProps {

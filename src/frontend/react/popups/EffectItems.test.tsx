@@ -5,7 +5,7 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { effectItems } from "../../components/output/effects/effectItems"
 import { activeEdit, activePopup, effects } from "../../shared/core/stores"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { EffectItems } from "./EffectItems"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))

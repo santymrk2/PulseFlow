@@ -18,8 +18,8 @@ vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false })
 vi.mock("../../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: { getChannelLiveVolume: () => -12 } }))
 vi.mock("../../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
-vi.mock("../../../ui/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../../../ui/number-field/NumberField", () => ({
+vi.mock("../../../../shared/ui/kit/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../../shared/ui/kit/number-field/NumberField", () => ({
     NumberField: ({ label, onChange }: { label: string; onChange?: (value: number) => void }) => <button onClick={() => onChange?.(label === "audio.ceiling" ? -6 : 80)}>{label}</button>
 }))
 

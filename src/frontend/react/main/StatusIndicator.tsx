@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react"
 import { os, statusIndicator } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { openSettings } from "../../components/settings/openSettings"
-import { useStore } from "../hooks/useStore"
-import { Icon } from "../helpers/Icon"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Icon } from "../../shared/ui/helpers/Icon"
 import styles from "./StatusIndicator.module.css"
 
 const titles: Record<string, string> = {

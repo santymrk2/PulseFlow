@@ -37,11 +37,11 @@ vi.mock("../../shared/core/stores", () => {
         styles: sub({})
     }
 })
-vi.mock("../hooks/useStore", () => ({ useStore: () => ({ o1: { out: {} } }) }))
+vi.mock("../../shared/ui/hooks/useStore", () => ({ useStore: () => ({ o1: { out: {} } }) }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 1920, height: 1080 }) }))
 vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: () => "width:100%" }))
 vi.mock("../stage/StageLayout", () => ({ StageLayout: () => <div data-testid="island" /> }))
-vi.mock("../helpers/Icon", () => ({ Icon: () => <span /> }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: () => <span /> }))
 
 import PreviewOutput from "./PreviewOutput"
 

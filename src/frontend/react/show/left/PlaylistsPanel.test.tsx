@@ -3,7 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeProfile, categories, dictionary, folders, leftSource, projects, sorted } from "../../../shared/core/stores"
 import { getAccess } from "../../../shared/utils/profile"
-import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { PlaylistsPanel } from "./PlaylistsPanel"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))

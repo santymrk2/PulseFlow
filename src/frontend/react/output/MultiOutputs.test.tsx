@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeRecording, activeStyle, audioChannelsData, dictionary, outputs, previewOutputId, rtmpStatus, selected, styles as outputStyles, templates, toggleOutputEnabled } from "../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { MultiOutputs } from "./MultiOutputs"
 
 vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn() }))
@@ -28,7 +28,7 @@ vi.mock("../../shared/utils/helpers/show", () => ({ bindSlidesToOutput: vi.fn(),
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn(() => ({ get: vi.fn(() => null) })) }))
 vi.mock("./PreviewOutput", () => ({ PreviewOutput: () => <div data-testid="preview-output" /> }))
 vi.mock("../drawer/audio/AudioMeter", () => ({ AudioMeter: () => <div data-testid="audio-meter" /> }))
-vi.mock("../ui/select-field/SelectField", () => ({
+vi.mock("../../shared/ui/kit/select-field/SelectField", () => ({
     SelectField: ({ value, options, onChange }: { value: string; options: { value: string; label: string }[]; onChange?: (v: string | null) => void }) => (
         <select data-testid="output-select" value={value} onChange={(e) => onChange?.(e.target.value)}>
             {options.map((o) => (

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { actionHistory, activeTimers, drawerTabsData } from "../../../shared/core/stores"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { InteractionsInfo } from "../pages/InteractionsInfo"
 import { TimerInfo } from "../timers/TimerInfo"
 import { OBSInfo } from "./OBSInfo"

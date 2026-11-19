@@ -5,9 +5,9 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { getDynamicIds, replaceDynamicValues } from "../../shared/utils/helpers/showActions"
 import { activeEdit, activePage, activePopup, activeShow, activeStage, dynamicValuesRevealUsed, overlays, popupData, refreshEditSlide, showsCache, special, stageShows, templates } from "../../shared/core/stores"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { DynamicValues } from "./DynamicValues"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -15,7 +15,7 @@ vi.mock("../../shared/utils/helpers/showActions", () => ({ getDynamicIds: vi.fn(
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ get: () => "layout1" }) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ id: "slideA" }, { id: "slideB" }] }))
-vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 const ids = ["slide_text", "time_hour", "time_minute", "timer_a", "$name", "interaction_x", "show_text_full", "plain"]
 const items = () => [{ lines: [{ text: [{ value: "Hola mundo" }] }] }]

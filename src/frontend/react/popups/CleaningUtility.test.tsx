@@ -5,14 +5,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { destroyMain, receiveMain, requestMain, sendMain } from "../../shared/core/ipc/main"
 import { activePage, activePopup, deletedShows, dictionary, popupData, shows, showsCache } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { clearIslands } from "../test/islandMock"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { clearIslands } from "../../shared/test/islandMock"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { CleaningUtility } from "./CleaningUtility"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn(), receiveMain: vi.fn(() => "listener-1"), destroyMain: vi.fn() }))
-vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
+vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 
 const SHOWS = { a: { name: "Amazing Grace" }, b: { name: "Amazing Grace 2" }, c: { name: "Otra" }, d: { name: "" } }
 let restaurar: () => void = () => {}

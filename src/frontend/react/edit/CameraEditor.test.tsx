@@ -1,15 +1,15 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { activeEdit, media } from "../../shared/core/stores"
-import { clearIslands } from "../test/islandMock"
+import { clearIslands } from "../../shared/test/islandMock"
 import { CameraEditor } from "./CameraEditor"
 
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: {} }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../drawer/live/Cam", async () => ({ Cam: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Cam") }))
+vi.mock("../drawer/live/Cam", async () => ({ Cam: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Cam") }))
 
 afterEach(() => {
     cleanup()

@@ -3,9 +3,9 @@ import { get } from "../../shared/core/lib/store"
 import { history } from "../../shared/utils/helpers/history"
 import { activePopup, selected, shows } from "../../shared/core/stores"
 import { setPopupSubmit } from "../../shared/utils/popup"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
 
 // Port de components/main/popups/DeleteShow.svelte. Lee: selected.data (una vez, sin los shows bloqueados) y shows (nombres).
 // Escribe (botón o Enter): history SHOWS { oldData: { data } } (es lo que borra los shows), selected = { id: null, data: [] } y activePopup = null.

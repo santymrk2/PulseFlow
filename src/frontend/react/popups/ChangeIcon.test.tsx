@@ -4,8 +4,8 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { addItem } from "../../components/edit/scripts/itemHelpers"
 import { activePopup, categories, customizedIcons, dictionary, popupData, selected } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ChangeIcon } from "./ChangeIcon"
 
 vi.mock("../../shared/utils/common", () => commonMock())

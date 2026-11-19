@@ -7,8 +7,8 @@ import { Main } from "../../../types/IPC/Main"
 import { clearAll } from "../../components/output/clear"
 import { activeEdit, activePage, activePopup, activeShow, deletedShows, dictionary, renamedShows, scripturesCache } from "../../shared/core/stores"
 import { save } from "../../app/wiring/save"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ResetAll } from "./ResetAll"
 
 vi.mock("../../shared/utils/common", () => commonMock())

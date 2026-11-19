@@ -1,9 +1,9 @@
 import type { Item, Show } from "../../../../types/Show"
 import { outLocked, outputs, overlays } from "../../../shared/core/stores"
 import { findMatchingOut, getActiveOutputs, setOutput } from "../../../shared/utils/helpers/output"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { Overlay } from "../../output/OutputOverlay"
-import { HoverPlay } from "../../system/HoverPlay"
+import { HoverPlay } from "../../../shared/ui/system/HoverPlay"
 import { Zoomed } from "../../slide/Zoomed"
 import styles from "./OverlayPreview.module.css"
 

@@ -2,10 +2,10 @@ import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from 
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../shared/core/ipc/main"
 import { destroySpotifyManager, fadePause, initSpotifyManager, seekTo, skipNext, skipPrev, spotifyIsFading, spotifyState, togglePlay } from "../../components/output/preview/SpotifyManager"
-import { Icon } from "../helpers/Icon"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
 import styles from "./SpotifyController.module.css"
 
 function formatTime(seconds: number) {

@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { popupData } from "../../shared/core/stores"
-import { T } from "../helpers/T"
-import { Button } from "../ui/button/Button"
-import { ColorField } from "../ui/color-field/ColorField"
-import { InputRow } from "../ui/input-row/InputRow"
-import { TextField } from "../ui/text-field/TextField"
+import { T } from "../../shared/ui/helpers/T"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { ColorField } from "../../shared/ui/kit/color-field/ColorField"
+import { InputRow } from "../../shared/ui/kit/input-row/InputRow"
+import { TextField } from "../../shared/ui/kit/text-field/TextField"
 
 // Port de components/main/popups/EditChart.svelte. Lee (al montar): popupData.active (JSON de filas [nombre, valor, color] o líneas "nombre: valor") y
 // llama a popupData.trigger(JSON.stringify(grid)) al montar y en cada cambio de la grilla. No escribe ningún store.

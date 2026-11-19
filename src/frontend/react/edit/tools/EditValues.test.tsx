@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { actions, activeEdit, activePage, activeStage, outputs, special, timers } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { EditValues } from "./EditValues"
 
 vi.mock("@soundtouchjs/audio-worklet", () => ({ SoundTouchNode: class {} }))
@@ -21,20 +21,20 @@ vi.mock("../../../components/edit/scripts/edit", () => ({ parseShadowValue: () =
 vi.mock("../../../components/edit/scripts/itemClipboard", () => ({ filterItemStyle: (s: string) => s || "", mergeWithStyle: (v: string) => v }))
 vi.mock("../../../components/edit/scripts/shapeOutside", () => ({ getShapeOutsideStyle: () => "", parseShapeOutsideValue: () => [] }))
 vi.mock("../../../components/edit/values/captionLanguages", () => ({ captionLanguages: [], captionTranslateLanguages: [] }))
-vi.mock("../../form/FormInput", () => ({ FormInput: () => <div data-island="form-input" /> }))
-vi.mock("../../helpers/Icon", () => ({ Icon: () => <span /> }))
-vi.mock("../../ui/button/Button", () => ({
+vi.mock("../../../shared/ui/form/FormInput", () => ({ FormInput: () => <div data-island="form-input" /> }))
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: () => <span /> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick }: { children?: ReactNode; onClick?: () => void }) => (
         <button type="button" onClick={onClick}>
             {children}
         </button>
     )
 }))
-vi.mock("../../ui/file-field/FileField", () => ({ FileField: () => <div /> }))
-vi.mock("../../ui/font-field/FontField", () => ({ FontField: () => <div /> }))
-vi.mock("../../ui/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
-vi.mock("../../ui/popup-field/PopupField", () => ({ PopupField: () => <div /> }))
-vi.mock("../../ui/textarea-field/TextareaField", () => ({ TextareaField: () => <div /> }))
+vi.mock("../../../shared/ui/kit/file-field/FileField", () => ({ FileField: () => <div /> }))
+vi.mock("../../../shared/ui/kit/font-field/FontField", () => ({ FontField: () => <div /> }))
+vi.mock("../../../shared/ui/kit/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
+vi.mock("../../../shared/ui/kit/popup-field/PopupField", () => ({ PopupField: () => <div /> }))
+vi.mock("../../../shared/ui/kit/textarea-field/TextareaField", () => ({ TextareaField: () => <div /> }))
 
 let restore = () => {}
 afterEach(() => {

@@ -6,9 +6,9 @@ import { convertText } from "../../converters/txt"
 import { history } from "../../shared/utils/helpers/history"
 import { activePopup, activeProject, activeShow, categories, dictionary, drawerTabsData, formatNewShow, quickTextCache, shows, special, splitLines } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { clearIslands, emit, islands } from "../test/islandMock"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { clearIslands, emit, islands } from "../../shared/test/islandMock"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { customIconsColors } from "../../shared/core/values/customIcons"
 import { CreateShow } from "./CreateShow"
 
@@ -33,13 +33,13 @@ vi.mock("./WebSearch", () => ({
         return <div data-isla="WebSearch" />
     }
 }))
-vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/textarea-field/TextareaField", async () => ({ TextareaField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/choice-grid/ChoiceGrid", async () => {
-    const { FieldMock } = await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")
+vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/textarea-field/TextareaField", async () => ({ TextareaField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/choice-grid/ChoiceGrid", async () => {
+    const { FieldMock } = await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")
     return { ChoiceGrid: (p: object) => <FieldMock {...p} label="choice" /> }
 })
 

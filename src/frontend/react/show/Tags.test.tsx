@@ -3,15 +3,15 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeShow, globalTags, shows } from "../../shared/core/stores"
 import { history } from "../../shared/utils/helpers/history"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Tags } from "./Tags"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ get: () => ({ tags: [] }) }) }))
-vi.mock("../helpers/Icon", () => ({ Icon: () => <span data-icon="tag" /> }))
-vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
-vi.mock("../ui/button/Button", () => ({ Button: ({ children, onClick }: { children: unknown; onClick?: () => void }) => <button onClick={onClick}>{children as never}</button> }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: () => <span data-icon="tag" /> }))
+vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({ Button: ({ children, onClick }: { children: unknown; onClick?: () => void }) => <button onClick={onClick}>{children as never}</button> }))
 vi.mock("./Tag", () => ({ Tag: ({ tag }: { tag: { id: string } }) => <span data-tag={tag.id} /> }))
 
 let restore: () => void = () => {}

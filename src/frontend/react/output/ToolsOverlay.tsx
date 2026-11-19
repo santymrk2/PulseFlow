@@ -4,8 +4,8 @@ import { translateText } from "../../shared/utils/language"
 import { getAccess } from "../../shared/utils/profile"
 import { keysToID, sortByName } from "../../shared/utils/helpers/array"
 import { toggleEffectOutput, toggleOverlayOutput } from "../../shared/utils/helpers/overlayOutput"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import styles from "./ToolsOverlay.module.css"
 
 export interface ToolsOverlayProps {

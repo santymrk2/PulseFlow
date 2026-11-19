@@ -1,8 +1,8 @@
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { dictionary, effects, outputs } from "../../../shared/core/stores"
 import { translateText } from "../../../shared/utils/language"
-import { Icon } from "../../helpers/Icon"
-import { Button } from "../../ui/button/Button"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { Button } from "../../../shared/ui/kit/button/Button"
 import styles from "./EffectIcons.module.css"
 
 // Port de components/drawer/effects/EffectIcons.svelte: iconos de las acciones del efecto sobre la tarjeta.

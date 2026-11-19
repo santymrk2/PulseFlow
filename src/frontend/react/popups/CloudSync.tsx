@@ -3,7 +3,7 @@ import { get } from "../../shared/core/lib/store"
 import { Tip } from "../main/Tip"
 import { popupData } from "../../shared/core/stores"
 import { chooseTeam } from "../../app/wiring/cloudSync"
-import { ChoiceGrid, type ChoiceOption } from "../ui/choice-grid/ChoiceGrid"
+import { ChoiceGrid, type ChoiceOption } from "../../shared/ui/kit/choice-grid/ChoiceGrid"
 
 // Port de components/main/popups/CloudSync.svelte. Lee (al montar): popupData.type y popupData.teams.
 // Escribe: chooseTeam({ ...team, count }) al elegir (una sola vez). Tip usa el port React.

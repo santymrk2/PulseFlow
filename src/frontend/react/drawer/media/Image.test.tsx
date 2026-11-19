@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { commonMock } from "../../test/mockCommon"
+import { commonMock } from "../../../shared/test/mockCommon"
 import { Image } from "./Image"
 
 vi.mock("../../../shared/utils/common", () => commonMock())

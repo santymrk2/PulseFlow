@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
 import { mediaDownloads, pdfImports } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { useStore } from "../hooks/useStore"
-import { Icon } from "../helpers/Icon"
-import { T } from "../helpers/T"
-import { Button } from "../ui/button/Button"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { T } from "../../shared/ui/helpers/T"
+import { Button } from "../../shared/ui/kit/button/Button"
 import styles from "./ProgressPanel.module.css"
 
 export function ProgressPanel() {

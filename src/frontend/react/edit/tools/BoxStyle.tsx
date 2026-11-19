@@ -14,7 +14,7 @@ import { getStyles } from "../../../shared/utils/helpers/style"
 import { MAX_FONT_SIZE } from "../../../components/edit/scripts/autosize"
 import { addFilterString, addStyle, addStyleString, getItemStyleAtPos, getItemText, getLastLineAlign, getLineText, getSelectionRange } from "../../../components/edit/scripts/textStyle"
 import { itemBoxes, setBoxInputValue } from "../../../components/edit/values/boxes"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { EditValues } from "./EditValues"
 
 export interface BoxStyleProps {

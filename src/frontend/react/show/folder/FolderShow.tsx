@@ -14,12 +14,12 @@ import { getExtension, getMediaLayerType, getMediaStyle, getMediaType, getVideoD
 import { findMatchingOut, getFirstActiveOutput, setOutput, startFolderTimer } from "../../../shared/utils/helpers/output"
 import { joinTime, secondsToTime } from "../../../shared/utils/helpers/time"
 import { clearBackground, clearSlide } from "../../../components/output/clear"
-import { Button } from "../../ui/button/Button"
-import { FloatingBar } from "../../ui/floating-bar/FloatingBar"
-import { Icon } from "../../helpers/Icon"
-import { T } from "../../helpers/T"
-import { useStore } from "../../hooks/useStore"
-import { Center } from "../../system/Center"
+import { Button } from "../../../shared/ui/kit/button/Button"
+import { FloatingBar } from "../../../shared/ui/kit/floating-bar/FloatingBar"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { T } from "../../../shared/ui/helpers/T"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { Center } from "../../../shared/ui/system/Center"
 import stylesCss from "./FolderShow.module.css"
 
 type TFile = { path: string; name: string; type: ShowType; thumbnail?: string }

@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState, type FormEvent, type MouseEvent } from "react"
 import { cn } from "../../shared/core/lib/utils"
-import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
+import { triggerClickOnEnterSpace } from "../../shared/ui/helpers/triggerClickOnEnterSpace"
 import { joinTime, secondsToTime } from "../../shared/utils/helpers/time"
 import { VideoPlayer } from "../../components/media/video/videoPlayer"
-import { Slider } from "../ui/slider/Slider"
+import { Slider } from "../../shared/ui/kit/slider/Slider"
 import styles from "./VideoSlider.module.css"
 
 export interface VideoControlData {

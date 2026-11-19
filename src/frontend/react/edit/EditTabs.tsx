@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from "react"
 import type { TabsObj } from "../../../types/Tabs"
 import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { Icon } from "../helpers/Icon"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
+import { Icon } from "../../shared/ui/helpers/Icon"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
 import styles from "./EditTabs.module.css"
 
 export interface EditTabsProps {

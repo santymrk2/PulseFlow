@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
 import { activeRecording, currentRecordingStream, drawerTabsData, special } from "../../../shared/core/stores"
 import { mediaRecorderIsPaused, stopMediaRecorder, toggleMediaRecorder } from "../../../components/drawer/live/recorder"
-import { Icon } from "../../helpers/Icon"
-import { T } from "../../helpers/T"
-import { Button } from "../../ui/button/Button"
-import { TextField } from "../../ui/text-field/TextField"
-import { useStore } from "../../hooks/useStore"
+import { Icon } from "../../../shared/ui/helpers/Icon"
+import { T } from "../../../shared/ui/helpers/T"
+import { Button } from "../../../shared/ui/kit/button/Button"
+import { TextField } from "../../../shared/ui/kit/text-field/TextField"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./LiveInfo.module.css"
 
 export interface LiveInfoProps {

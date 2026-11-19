@@ -7,10 +7,10 @@ import { history } from "../../shared/utils/helpers/history"
 import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { _show } from "../../shared/utils/helpers/shows"
 import { setPopupSubmit } from "../../shared/utils/popup"
-import { T } from "../helpers/T"
-import { useStore } from "../hooks/useStore"
-import { Button } from "../ui/button/Button"
-import { TextField } from "../ui/text-field/TextField"
+import { T } from "../../shared/ui/helpers/T"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { TextField } from "../../shared/ui/kit/text-field/TextField"
 
 // Port de components/main/popups/Rename.svelte. Lee selected y los stores de cada tipo de selección (ver abajo) y escribe el store correspondiente
 // según selected.id (slide, group, chord, audio_channel, audio_effect, bible_book, calendar), además de activePopup, selected y groupName local.

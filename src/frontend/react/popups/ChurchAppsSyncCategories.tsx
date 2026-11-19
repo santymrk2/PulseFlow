@@ -4,8 +4,8 @@ import { keysToID, sortByName } from "../../shared/utils/helpers/array"
 import { Tip } from "../main/Tip"
 import { categories, contentProviderData, shows } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { CheckboxField } from "../ui/checkbox-field/CheckboxField"
-import { useFreshStore } from "../hooks/useFreshStore"
+import { CheckboxField } from "../../shared/ui/kit/checkbox-field/CheckboxField"
+import { useFreshStore } from "../../shared/ui/hooks/useFreshStore"
 import styles from "./ChurchAppsSyncCategories.module.css"
 
 // Port de components/main/popups/ChurchAppsSyncCategories.svelte. Lee: categories y shows (una vez, al montar) y contentProviderData.churchApps.syncCategories.

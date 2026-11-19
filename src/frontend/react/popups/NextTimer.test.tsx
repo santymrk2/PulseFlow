@@ -6,9 +6,9 @@ import { history } from "../../shared/utils/helpers/history"
 import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { activePopup, activeProject, activeShow, dictionary, popupData, projects, showsCache } from "../../shared/core/stores"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
-import { commonMock } from "../test/mockCommon"
-import { clearFields, fire } from "../test/kitMocks"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { clearFields, fire } from "../../shared/test/kitMocks"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { NextTimer } from "./NextTimer"
 
 vi.mock("../../shared/utils/common", () => commonMock())
@@ -21,7 +21,7 @@ vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn(() => ({ get: vi.fn(() => "l1") })) }))
 vi.mock("../../shared/utils/helpers/time", () => ({ joinTime: vi.fn((t) => `${t}m`), secondsToTime: vi.fn((s) => [0, s]) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
-vi.mock("../ui/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 const dict = { timer: { seconds: "Segundos" }, actions: { reset: "Resetear", to_all: "A todos" }, transition: { duration: "Duración" } }
 let restaurar: () => void = () => {}

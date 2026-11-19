@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeAudioEffects, activePopup, audioEffects, popupData } from "../../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../../../shared/test/storeTestKit"
 import { AudioEffects } from "./AudioEffects"
 
 vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))

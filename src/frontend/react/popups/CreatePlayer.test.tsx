@@ -6,8 +6,8 @@ import { getUrlTimestamp, getVimeoData, getYouTubeData } from "../../components/
 import { addVideoMarker } from "../../shared/utils/helpers/media"
 import { dictionary, playerVideos, popupData } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { CreatePlayer } from "./CreatePlayer"
 
 vi.mock("uid", () => ({ uid: () => "nuevo" }))
@@ -20,7 +20,7 @@ vi.mock("../../components/drawer/player/playerHelper", () => ({
 }))
 vi.mock("../../shared/utils/helpers/media", () => ({ addVideoMarker: vi.fn(() => 2) }))
 vi.mock("../../shared/utils/helpers/time", () => ({ joinTime: () => "1:00", secondsToTime: () => ({}) }))
-vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 let restaurar: () => void = () => {}
 function montar(data: object, videos: object = {}) {

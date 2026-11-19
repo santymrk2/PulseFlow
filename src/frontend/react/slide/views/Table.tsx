@@ -4,8 +4,8 @@ import type { Item } from "../../../../types/Show"
 import { activeEdit, showsCache } from "../../../shared/core/stores"
 import { clone } from "../../../shared/utils/helpers/array"
 import { getStyles } from "../../../shared/utils/helpers/style"
-import { cssTextToStyle } from "../../helpers/cssTextToStyle"
-import { Icon } from "../../helpers/Icon"
+import { cssTextToStyle } from "../../../shared/ui/helpers/cssTextToStyle"
+import { Icon } from "../../../shared/ui/helpers/Icon"
 import styles from "./Table.module.css"
 
 export interface TableProps {

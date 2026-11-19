@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen, within } from "@testing-library/rea
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { toggleOutputs } from "../../shared/utils/helpers/output"
 import { outputs, outputState } from "../../shared/core/stores"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ScreenList } from "./ScreenList"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))

@@ -7,7 +7,7 @@ vi.mock("../../media/cameraManager", () => ({ cameraManager: { attachCamera: vi.
 vi.mock("../../shared/core/stores", () => ({ media: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) } }))
 vi.mock("../../shared/utils/helpers/cropping", () => ({ getCropState: () => ({ mediaCropGeometry: "", cropHasValues: false, mediaContainerStyle: "" }) }))
 vi.mock("../../shared/utils/helpers/media", () => ({ getMediaStyle: () => ({ style: "", filter: "", fit: "contain", flipped: false, flippedY: false, cropping: {} }) }))
-vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
+vi.mock("../../shared/ui/hooks/useStore", () => ({ useStore: () => ({}) }))
 
 afterEach(() => {
     cleanup()

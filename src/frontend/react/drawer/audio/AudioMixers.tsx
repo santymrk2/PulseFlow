@@ -2,7 +2,7 @@ import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
 import { audioRouting, outputs } from "../../../shared/core/stores"
 import { keysToID } from "../../../shared/utils/helpers/array"
 import { translateText } from "../../../shared/utils/language"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import { AudioChannelMixer } from "./AudioChannelMixer"
 import styles from "./AudioMixers.module.css"
 

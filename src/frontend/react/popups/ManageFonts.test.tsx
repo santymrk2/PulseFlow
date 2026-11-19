@@ -5,8 +5,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { loadCustomFont } from "../../shared/utils/helpers/fonts"
 import { customFonts, special } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ManageFonts } from "./ManageFonts"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
@@ -18,8 +18,8 @@ vi.mock("../../shared/utils/helpers/fonts", () => ({
     ]),
     loadCustomFont: vi.fn()
 }))
-vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/file-field/FileField", async () => ({ FileField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/file-field/FileField", async () => ({ FileField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 let restaurar: () => void = () => {}
 async function montar(personalizadas: object[] = [], hiddenFonts?: string[]) {

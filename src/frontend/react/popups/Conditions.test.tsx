@@ -4,17 +4,17 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { checkConditionValue, isConditionMet } from "../../components/edit/scripts/itemHelpers"
 import { activeEdit, activeShow, activeStage, dictionary, overlays, popupData, showsCache, stageShows, templates } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { clearIslands, emit, islands } from "../test/islandMock"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { clearIslands, emit, islands } from "../../shared/test/islandMock"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Conditions } from "./Conditions"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Textbox") }))
-vi.mock("../stage/Stagebox", async () => ({ Stagebox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Stagebox") }))
+vi.mock("../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Textbox") }))
+vi.mock("../stage/Stagebox", async () => ({ Stagebox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Stagebox") }))
 // ConditionsBox ya es React: el doble lo registra como las islas, para seguir usando islands/emit
 vi.mock("./ConditionsBox", async () => {
-    const { islands } = await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")
+    const { islands } = await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")
     return {
         ConditionsBox: ({ input, onChange }: { input: object; onChange: (c: unknown) => void }) => {
             islands.ConditionsBox = { props: { input }, events: { change: (e) => onChange(e.detail) } }
@@ -26,8 +26,8 @@ vi.mock("../../components/edit/scripts/itemHelpers", () => ({ isConditionMet: vi
 vi.mock("../../components/edit/scripts/textStyle", () => ({ getItemText: (item: { text?: string } | null) => item?.text ?? "" }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "sl1" }]) }))
 vi.mock("../../components/stage/stage", () => ({ getSlideTextItems: vi.fn(() => [{ text: "de-stage" }]) }))
-vi.mock("../ui/zoom-control/ZoomControl", () => ({ ZoomControl: (p: { onChange: (v: number) => void; hidden: boolean }) => <button data-zoom={String(p.hidden)} onClick={() => p.onChange(0.8)} /> }))
-vi.mock("../ui/select-field/SelectField", () => ({ SelectField: (p: { options: { value: string; label: string; data: string }[]; value: string; onChange: (v: string) => void }) => <button data-select={p.value} data-options={JSON.stringify(p.options)} onClick={() => p.onChange("1")} /> }))
+vi.mock("../../shared/ui/kit/zoom-control/ZoomControl", () => ({ ZoomControl: (p: { onChange: (v: number) => void; hidden: boolean }) => <button data-zoom={String(p.hidden)} onClick={() => p.onChange(0.8)} /> }))
+vi.mock("../../shared/ui/kit/select-field/SelectField", () => ({ SelectField: (p: { options: { value: string; label: string; data: string }[]; value: string; onChange: (v: string) => void }) => <button data-select={p.value} data-options={JSON.stringify(p.options)} onClick={() => p.onChange("1")} /> }))
 
 const SHOW = (items: object[]) => ({ sh: { slides: { sl1: { items } }, timestamps: { modified: 0 } } })
 const C1 = { element: "text", value: "a" }

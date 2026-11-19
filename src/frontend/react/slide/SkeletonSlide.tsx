@@ -4,7 +4,7 @@ import { cn } from "../../shared/core/lib/utils"
 import { outputs, previewOutputId, slidesOptions, styles } from "../../shared/core/stores"
 import { getResolution } from "../../shared/utils/helpers/output"
 import { referenceOutputId } from "../../shared/utils/helpers/outputAspect"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import stylesCss from "./SkeletonSlide.module.css"
 
 export interface SkeletonSlideProps {

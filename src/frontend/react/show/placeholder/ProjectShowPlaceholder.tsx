@@ -1,10 +1,10 @@
 import { activePopup, activeProject, activeShow, popupData, projects } from "../../../shared/core/stores"
 import { history } from "../../../shared/utils/helpers/history"
 import { translateText } from "../../../shared/utils/language"
-import { Button } from "../../ui/button/Button"
-import { Center } from "../../system/Center"
-import { DropArea } from "../../system/DropArea"
-import { useStore } from "../../hooks/useStore"
+import { Button } from "../../../shared/ui/kit/button/Button"
+import { Center } from "../../../shared/ui/system/Center"
+import { DropArea } from "../../../shared/ui/system/DropArea"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 
 // (F24.20a).
 export function ProjectShowPlaceholder() {

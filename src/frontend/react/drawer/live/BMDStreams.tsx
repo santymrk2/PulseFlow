@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react"
 import { BLACKMAGIC } from "../../../../types/Channels"
 import { destroy, receive, send } from "../../../shared/utils/request"
-import { Center } from "../../system/Center"
-import { T } from "../../helpers/T"
+import { Center } from "../../../shared/ui/system/Center"
+import { T } from "../../../shared/ui/helpers/T"
 import { BMDStream } from "./BMDStream"
 import type { InputSelectDetail, Screen } from "./types"
 

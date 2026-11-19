@@ -2,10 +2,10 @@ import { keysToID, sortByName, sortObject, clone } from "../../shared/utils/help
 import { toggleOutputs } from "../../shared/utils/helpers/output"
 import { outputs, outputState } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { useFreshStore } from "../hooks/useFreshStore"
-import { Button } from "../ui/button/Button"
-import { ListRow } from "../ui/list-row/ListRow"
-import { SectionHeader } from "../ui/section-header/SectionHeader"
+import { useFreshStore } from "../../shared/ui/hooks/useFreshStore"
+import { Button } from "../../shared/ui/kit/button/Button"
+import { ListRow } from "../../shared/ui/kit/list-row/ListRow"
+import { SectionHeader } from "../../shared/ui/kit/section-header/SectionHeader"
 import styles from "./ScreenList.module.css"
 
 // Port de components/screens/ScreenList.svelte (F24.14): columna de pantallas con el kit (section-header + list-row, 240 px).

@@ -3,7 +3,7 @@ import { get } from "../../shared/core/lib/store"
 import { activeRecording, currentRecordingStream } from "../../shared/core/stores"
 import { createMediaRecorder } from "../../components/drawer/live/recorder"
 import { clone } from "../../shared/utils/helpers/array"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import styles from "./Recorder.module.css"
 
 export function Recorder() {

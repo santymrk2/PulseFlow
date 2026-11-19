@@ -5,7 +5,7 @@ import { getTime } from "../../../components/drawer/calendar/calendar"
 import { keysToID } from "../../../shared/utils/helpers/array"
 import { visibleEvents } from "../../../shared/utils/helpers/dynamicItemText"
 import { setDrawerTabData } from "../../../shared/utils/helpers/historyHelpers"
-import { useStore } from "../../hooks/useStore"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./DynamicEvents.module.css"
 
 export interface DynamicEventsProps {

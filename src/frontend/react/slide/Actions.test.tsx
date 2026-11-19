@@ -5,7 +5,7 @@ import { activeShow, groups, outputs, showsCache, special, templates } from "../
 import { newToast } from "../../shared/utils/common"
 import { getAccess } from "../../shared/utils/profile"
 import { history } from "../../shared/utils/helpers/history"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Actions } from "./Actions"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
@@ -18,7 +18,7 @@ vi.mock("../../shared/utils/helpers/output", () => ({ getFirstActiveOutput: vi.f
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
 vi.mock("../../components/actions/actions", () => ({ getActionName: vi.fn(() => ""), getActionTriggerId: vi.fn((id: string) => id) }))
 vi.mock("../../components/actions/actionData", () => ({ actionData: { goto: { name: "actions.goto", icon: "forward" } } }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 
 let restore: () => void = () => {}
 beforeEach(() => {

@@ -5,20 +5,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { requestMain } from "../../shared/core/ipc/main"
 import { activePopup, dictionary, emitters, popupData } from "../../shared/core/stores"
-import { clearFields, fields, fire } from "../test/kitMocks"
-import { commonMock } from "../test/mockCommon"
-import { clearIslands, islands } from "../test/islandMock"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearFields, fields, fire } from "../../shared/test/kitMocks"
+import { commonMock } from "../../shared/test/mockCommon"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Emitters } from "./Emitters"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("uid", () => ({ uid: vi.fn(() => "uid1") }))
-vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
-vi.mock("../form/FormInputs", async () => ({ FormInputs: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("FormInputs") }))
-vi.mock("../actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("MidiValues") }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../shared/ui/form/FormInputs", async () => ({ FormInputs: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("FormInputs") }))
+vi.mock("../actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("MidiValues") }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getDynamicValue: (v: string) => `dyn(${v})` }))
-vi.mock("../../components/form/inputs", () => ({ getValues: (inputs: { id: string; value?: unknown }[], data: Record<string, unknown> | undefined) => inputs.map((i) => ({ ...i, value: data?.[i.id] ?? i.value })) }))
+vi.mock("../../shared/ui/form/logic/inputs", () => ({ getValues: (inputs: { id: string; value?: unknown }[], data: Record<string, unknown> | undefined) => inputs.map((i) => ({ ...i, value: data?.[i.id] ?? i.value })) }))
 vi.mock("../../components/actions/emitters", () => ({
     emitterData: {
         osc: { signal: [{ id: "host", type: "string", value: "0.0.0.0" }] },
@@ -32,8 +32,8 @@ vi.mock("../../components/actions/emitters", () => ({
     },
     formatData: { osc: (values: { name: string; value: string }[], data = "") => `${data}|${values.map((v) => `${v.name}=${v.value}`).join(",")}`, http: () => "", midi: () => "" }
 }))
-vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
-vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
+vi.mock("../../shared/ui/kit/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 let restaurar: () => void = () => {}
 function montar(data: object = {}, store: object = {}) {

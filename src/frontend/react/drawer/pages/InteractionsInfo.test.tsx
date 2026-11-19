@@ -2,8 +2,8 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeInteractions, dictionary, interactions, openedInteractionId, shows } from "../../../shared/core/stores"
-import { commonMock } from "../../test/mockCommon"
-import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
+import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { InteractionsInfo } from "./InteractionsInfo"
 
 const { generateSlideMock, getInteractionMock } = vi.hoisted(() => ({ generateSlideMock: vi.fn(), getInteractionMock: vi.fn() }))

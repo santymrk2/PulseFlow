@@ -2,26 +2,26 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { actions, activeProject, projects, special } from "../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Section } from "./Section"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../components/actions/actions", () => ({ getActionIcon: vi.fn(() => "play"), runAction: vi.fn() }))
-vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
-vi.mock("../helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
-vi.mock("../ui/button/Button", () => ({
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick, title }: { children: unknown; onClick?: () => void; title?: string }) => (
         <button title={title} onClick={onClick}>
             {children as never}
         </button>
     )
 }))
-vi.mock("../ui/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: unknown }) => <div data-bar>{children as never}</div> }))
-vi.mock("../ui/input-row/InputRow", () => ({ InputRow: ({ children }: { children: unknown }) => <div data-row>{children as never}</div> }))
-vi.mock("../ui/title/Title", () => ({ Title: () => <h2 data-title /> }))
-vi.mock("../ui/select-field/SelectField", () => ({ SelectField: ({ label }: { label: string }) => <label data-select={label} /> }))
-vi.mock("../ui/time-field/TimeField", () => ({ TimeField: () => <input data-time /> }))
-vi.mock("../ui/input/Input", () => ({ Input: ({ value }: { value: string }) => <input data-name value={value} readOnly /> }))
+vi.mock("../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: { children: unknown }) => <div data-bar>{children as never}</div> }))
+vi.mock("../../shared/ui/kit/input-row/InputRow", () => ({ InputRow: ({ children }: { children: unknown }) => <div data-row>{children as never}</div> }))
+vi.mock("../../shared/ui/kit/title/Title", () => ({ Title: () => <h2 data-title /> }))
+vi.mock("../../shared/ui/kit/select-field/SelectField", () => ({ SelectField: ({ label }: { label: string }) => <label data-select={label} /> }))
+vi.mock("../../shared/ui/kit/time-field/TimeField", () => ({ TimeField: () => <input data-time /> }))
+vi.mock("../../shared/ui/kit/input/Input", () => ({ Input: ({ value }: { value: string }) => <input data-name value={value} readOnly /> }))
 vi.mock("./tools/Notes", () => ({ Notes: ({ value }: { value: string }) => <textarea data-note value={value} readOnly /> }))
 
 let restore: () => void = () => {}

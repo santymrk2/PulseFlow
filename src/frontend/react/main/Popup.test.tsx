@@ -5,8 +5,8 @@ import { readFileSync } from "node:fs"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Popups } from "../../../types/Main"
 import { activePopup, popupData } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { storeEntry, setStoresForTest } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { storeEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Popup } from "./Popup"
 
 vi.mock("../../shared/utils/common", () => ({ ...commonMock(), MENU_BAR_HEIGHT: 36 }))

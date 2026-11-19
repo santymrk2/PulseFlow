@@ -4,15 +4,15 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, customizedIcons, popupData } from "../../shared/core/stores"
 import { customIcons, customIconsColors } from "../../shared/core/values/customIcons"
-import { clearIslands, islands } from "../test/islandMock"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { clearIslands, islands } from "../../shared/test/islandMock"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ManageIcons } from "./ManageIcons"
 import css from "./ManageIcons.module.css"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("uid", () => ({ uid: () => "id-nuevo" }))
-vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
+vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 const ids = Object.keys(customIcons)
 const coloreado = ids.find((id) => customIconsColors[id]) as string

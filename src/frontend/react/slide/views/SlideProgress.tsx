@@ -6,8 +6,8 @@ import { getFirstActiveOutput } from "../../../shared/utils/helpers/output"
 import { getCurrentProjectIndexes, getProjectItemLabel, getProjectItems } from "../../../shared/utils/helpers/projectProgress"
 import { getGroupName, getLayoutRef } from "../../../shared/utils/helpers/show"
 import { slideTrackerParts } from "../../../shared/utils/helpers/dynamicItemText"
-import { useStore } from "../../hooks/useStore"
-import { cssTextToStyle } from "../../helpers/cssTextToStyle"
+import { useStore } from "../../../shared/ui/hooks/useStore"
+import { cssTextToStyle } from "../../../shared/ui/helpers/cssTextToStyle"
 import styles from "./SlideProgress.module.css"
 
 export interface SlideProgressProps {

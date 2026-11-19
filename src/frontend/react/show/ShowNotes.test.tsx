@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeShow, showNotesActive, showsCache } from "../../shared/core/stores"
 import { sendMain } from "../../shared/core/ipc/main"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ShowNotes } from "./ShowNotes"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
@@ -14,9 +14,9 @@ vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../shared/utils/helpers/shows", () => ({
     _show: () => ({ layouts: () => ({ get: () => ["Mira https://example.com"], set: vi.fn() }) })
 }))
-vi.mock("../helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
-vi.mock("../ui/button/Button", () => ({ Button: ({ children }: { children: unknown }) => <button>{children as never}</button> }))
-vi.mock("../system/Resizeable", () => ({ Resizeable: ({ children }: { children: unknown }) => <div data-resizeable>{children as never}</div> }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
+vi.mock("../../shared/ui/kit/button/Button", () => ({ Button: ({ children }: { children: unknown }) => <button>{children as never}</button> }))
+vi.mock("../../shared/ui/system/Resizeable", () => ({ Resizeable: ({ children }: { children: unknown }) => <div data-resizeable>{children as never}</div> }))
 vi.mock("./tools/Notes", () => ({ Notes: ({ value }: { value: string }) => <textarea data-notes value={value} readOnly /> }))
 
 let restore: () => void = () => {}

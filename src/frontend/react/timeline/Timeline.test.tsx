@@ -4,8 +4,8 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { TimelineAction } from "../../../types/Show"
 import { activeEdit, activePopup, activeShow, activeTriggerFunction, dictionary, resized, showsCache, special, timecode, timeline } from "../../shared/core/stores"
-import { commonMock } from "../test/mockCommon"
-import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { commonMock } from "../../shared/test/mockCommon"
+import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Timeline } from "./Timeline"
 
 const { FakePlayback, FakeActions } = vi.hoisted(() => {
@@ -99,7 +99,7 @@ vi.mock("../../components/timeline/timeline", async () => {
     const actual = await vi.importActual<typeof import("../../components/timeline/timeline")>("../../components/timeline/timeline")
     return { ...actual, timelineZoom: vi.fn(async (_e: WheelEvent, zoom: number) => zoom * 1.1) }
 })
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("uid", () => ({ uid: () => "nuevo-id" }))
 
 const action = (id: string, time: number, type = "slide", extra: Partial<TimelineAction> = {}): TimelineAction => ({ id, time, name: `name.${id}`, type, data: { id: `slide-${id}`, index: 0 }, ...extra })

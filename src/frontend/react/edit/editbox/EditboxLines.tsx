@@ -17,8 +17,8 @@ import { getItemText, getLineText, getSelectionRange, setCaret } from "../../../
 import { EditboxChords } from "./EditboxChords"
 import { EditboxHelper } from "../../../components/edit/editbox/EditboxHelper"
 import { EditboxPaste } from "../../../components/edit/editbox/EditboxPaste"
-import { T } from "../../helpers/T"
-import { useStore } from "../../hooks/useStore"
+import { T } from "../../../shared/ui/helpers/T"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 import styles from "./EditboxLines.module.css"
 
 type SelRange = { start?: number; end?: number } | undefined

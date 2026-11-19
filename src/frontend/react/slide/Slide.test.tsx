@@ -6,7 +6,7 @@ import type { Show, SlideData } from "../../../types/Show"
 import { activeEdit, activeShow, effects, focusMode, fullColors, overlays, outputs, refreshListBoxes, refreshSlideThumbnails, slideDeleteHighlight, slidesOptions, special, styles } from "../../shared/core/stores"
 import { getMedia, getMediaCached, getMediaStyle, mediaSize } from "../../shared/utils/helpers/media"
 import { setTemplateStyle } from "../../shared/utils/helpers/output"
-import { looseEntry, setStoresForTest } from "../test/storeTestKit"
+import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Slide } from "./Slide"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, wait: vi.fn(async () => "ended") }))
@@ -40,10 +40,10 @@ vi.mock("../../shared/utils/helpers/shows", () => ({
 vi.mock("../drawer/media/MediaLoader", () => ({
     MediaLoader: (props: Record<string, unknown>) => <span data-view="MediaLoader" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
 }))
-vi.mock("../edit/editbox/Editbox", async () => ({ Editbox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Editbox") }))
-vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Effect") }))
-vi.mock("../system/SelectElem", () => ({
+vi.mock("../edit/editbox/Editbox", async () => ({ Editbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Editbox") }))
+vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Effect") }))
+vi.mock("../../shared/ui/system/SelectElem", () => ({
     SelectElem: ({ children, style }: { children: ReactNode; style?: CSSProperties }) => (
         <div data-select style={style}>
             {children}

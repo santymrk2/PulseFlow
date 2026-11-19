@@ -6,8 +6,8 @@ import { NDI } from "../../../../types/Channels"
 import { outputs } from "../../../shared/core/stores"
 import { send } from "../../../shared/utils/request"
 import { onStreamFrame } from "../../../shared/utils/streamPort"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
-import { commonMock } from "../../test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
 import { StreamFrame } from "./StreamFrame"
 
 const mocks = vi.hoisted(() => ({ draw: vi.fn(), destroy: vi.fn(), stop: vi.fn() }))
@@ -25,7 +25,7 @@ vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
-vi.mock("../../system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
+vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
 vi.mock("../Card", () => ({
     Card: ({ label, onClick, children }: { label: string; onClick?: (e: MouseEvent<HTMLButtonElement>) => void; children?: ReactNode }) => (
         <button onClick={onClick}>

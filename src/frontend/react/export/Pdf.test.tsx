@@ -6,7 +6,7 @@ vi.mock("../slide/Zoomed", () => ({ Zoomed: ({ children }: { children?: any }) =
 vi.mock("../slide/Textbox", () => ({ Textbox: () => <div data-testid="textbox" /> }))
 vi.mock("../slide/views/MediaItem", () => ({ MediaItem: () => <div data-testid="media-item" /> }))
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
-vi.mock("../hooks/useStore", () => ({ useStore: () => null }))
+vi.mock("../../shared/ui/hooks/useStore", () => ({ useStore: () => null }))
 
 import { Pdf } from "./Pdf"
 

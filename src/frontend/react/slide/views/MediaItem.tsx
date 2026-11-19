@@ -8,8 +8,8 @@ import { defaultLayers } from "../../../shared/utils/helpers/output"
 import { _show } from "../../../shared/utils/helpers/shows"
 import { SoftLoopSync } from "../../../components/media/video/softLoop"
 import { syncVideoToAudio, videoSync } from "../../../components/media/video/videoSync"
-import { cssTextToStyle } from "../../helpers/cssTextToStyle"
-import { useStore } from "../../hooks/useStore"
+import { cssTextToStyle } from "../../../shared/ui/helpers/cssTextToStyle"
+import { useStore } from "../../../shared/ui/hooks/useStore"
 
 export interface MediaItemProps {
     item: Item

@@ -4,7 +4,7 @@ import type { MouseEvent } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { BLACKMAGIC } from "../../../../types/Channels"
 import { destroy, receive, send } from "../../../shared/utils/request"
-import { commonMock } from "../../test/mockCommon"
+import { commonMock } from "../../../shared/test/mockCommon"
 import { BMDStreams } from "./BMDStreams"
 
 vi.mock("../../../shared/utils/common", () => commonMock())

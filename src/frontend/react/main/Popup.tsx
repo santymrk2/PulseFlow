@@ -8,9 +8,9 @@ import { translateText } from "../../shared/utils/language"
 import { clearPopupSubmit } from "../../shared/utils/popup"
 import { disablePopupClose } from "../../app/wiring/shortcuts"
 import { reactPopups } from "../popups/registry"
-import { useStore } from "../hooks/useStore"
-import { T } from "../helpers/T"
-import { Button } from "../ui/button/Button"
+import { useStore } from "../../shared/ui/hooks/useStore"
+import { T } from "../../shared/ui/helpers/T"
+import { Button } from "../../shared/ui/kit/button/Button"
 import styles from "./Popup.module.css"
 
 const FULL_MODALS: Popups[] = ["looks", "screen_config", "add_shows", "playlist_options"]

@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
-vi.mock("../../hooks/useStore", () => ({
+vi.mock("../../../shared/ui/hooks/useStore", () => ({
     useStore: (store: unknown) => {
         // outputs or styles store
         if (store === outputsStore) return { out1: { id: "out1", name: "Main" } }
@@ -14,7 +14,7 @@ vi.mock("../../../shared/core/stores", () => ({ outputs: { id: "outputs" }, styl
 vi.mock("../../../shared/utils/common", () => ({ newToast: vi.fn() }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../../shared/utils/helpers/array", () => ({ keysToID: (o: Record<string, unknown>) => Object.keys(o || {}).map((id) => ({ ...(o[id] || {}), id })), sortByName: (a: unknown[]) => a }))
-vi.mock("../../ui/select-field/SelectField", () => ({ SelectField: ({ label }: { label?: string }) => <div data-testid="select">{label}</div> }))
+vi.mock("../../../shared/ui/kit/select-field/SelectField", () => ({ SelectField: ({ label }: { label?: string }) => <div data-testid="select">{label}</div> }))
 
 import { outputs as outputsStore, styles as stylesStore } from "../../../shared/core/stores"
 import { ChooseStyle } from "./ChooseStyle"

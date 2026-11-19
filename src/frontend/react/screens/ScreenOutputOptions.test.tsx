@@ -10,7 +10,7 @@ import { requestMain } from "../../shared/core/ipc/main"
 import { activePopup, alertMessage, currentOutputSettings, ndiData, omtData, os, outputs, rtmpStatus, saved } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
 import { destroy, receive, send } from "../../shared/utils/request"
-import { setStoresForTest, storeEntry } from "../test/storeTestKit"
+import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { ScreenOutputOptions } from "./ScreenOutputOptions"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))

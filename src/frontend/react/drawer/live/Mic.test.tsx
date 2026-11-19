@@ -6,8 +6,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
 import { sendMain } from "../../../shared/core/ipc/main"
 import { activeFocus, activeShow, focusMode, playingAudio } from "../../../shared/core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
-import { commonMock } from "../../test/mockCommon"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
+import { commonMock } from "../../../shared/test/mockCommon"
 import { Mic } from "./Mic"
 
 const mocks = vi.hoisted(() => ({ getUserMedia: vi.fn(), start: vi.fn() }))
@@ -38,8 +38,8 @@ vi.hoisted(() => {
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn(), start: mocks.start } }))
-vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../../ui/button/Button", () => ({
+vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
+vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ onClick, onDblClick, children, disabled }: { onClick?: (d: { ctrl: boolean }, e: MouseEvent<HTMLButtonElement>) => void; onDblClick?: (d: { ctrl: boolean }, e: MouseEvent<HTMLButtonElement>) => void; children?: ReactNode; disabled?: boolean }) => (
         <button disabled={disabled} onClick={(e) => onClick?.({ ctrl: e.ctrlKey || e.metaKey }, e)} onDoubleClick={(e) => onDblClick?.({ ctrl: e.ctrlKey || e.metaKey }, e)}>
             {children}

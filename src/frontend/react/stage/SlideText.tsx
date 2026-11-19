@@ -11,7 +11,7 @@ import { getStageTextLayoutOffset } from "../../components/stage/stage"
 import { observeResize } from "../slide/observeResize"
 import { Textbox } from "../slide/Textbox"
 import { Zoomed } from "../slide/Zoomed"
-import { useStore } from "../hooks/useStore"
+import { useStore } from "../../shared/ui/hooks/useStore"
 import styles from "./SlideText.module.css"
 
 export interface SlideTextProps {
