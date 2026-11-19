@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../shared/utils/helpers/history"
-import { applyLook, createLook } from "../../shared/utils/helpers/looks"
+import { applyLook, createLook, createLookFromPreset } from "../../shared/utils/helpers/looks"
 import { activeLook, looks, outputs } from "../../shared/core/stores"
 import { confirmCustom } from "../../shared/utils/popup"
 import { save } from "../../app/wiring/save"
@@ -17,6 +17,8 @@ vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/looks", () => ({
     applyLook: vi.fn(),
     createLook: vi.fn(() => "l3"),
+    createLookFromPreset: vi.fn(() => "l4"),
+    LOOK_PRESETS: { default: {}, lyrics: {}, speaker: {} },
     isStageOutput: (output?: { stageOutput?: string }) => !!output?.stageOutput
 }))
 vi.mock("../../shared/utils/popup", () => ({ confirmCustom: vi.fn() }))
@@ -122,5 +124,17 @@ describe("LooksWindow", () => {
         render(<LooksWindow />)
         expect(screen.getByText("looks.no_screens")).toBeTruthy()
         expect(get(activeLook)).toBe("l1")
+    })
+
+    it("agregar desde plantilla ofrece los tres presets y crea el look elegido", () => {
+        render(<LooksWindow />)
+        expect(screen.queryByText("looks.preset_lyrics")).toBeNull()
+        fireEvent.click(screen.getByText(/looks.from_template/))
+        expect(screen.getByText("looks.preset_default")).toBeTruthy()
+        expect(screen.getByText("looks.preset_speaker")).toBeTruthy()
+        fireEvent.click(screen.getByText("looks.preset_lyrics"))
+        expect(createLookFromPreset).toHaveBeenCalledWith("lyrics", "looks.preset_lyrics")
+        expect(save).toHaveBeenCalled()
+        expect(screen.queryByText("looks.preset_lyrics")).toBeNull()
     })
 })

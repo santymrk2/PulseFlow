@@ -2,7 +2,7 @@ import { useState, type CSSProperties, type MouseEvent } from "react"
 import type { Look, LookScreen } from "../../../types/Settings"
 import { clone, keysToID, sortByName } from "../../shared/utils/helpers/array"
 import { history } from "../../shared/utils/helpers/history"
-import { applyLook, createLook, isStageOutput } from "../../shared/utils/helpers/looks"
+import { applyLook, createLook, createLookFromPreset, isStageOutput, LOOK_PRESETS, type LookPreset } from "../../shared/utils/helpers/looks"
 import { activeLook, looks, outputs } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { confirmCustom } from "../../shared/utils/popup"
@@ -32,6 +32,7 @@ export function LooksWindow() {
 
     // `$: if (!selectedLook || !$looks[selectedLook]) selectedLook = ...`: se resuelve en render.
     const [chosen, setChosen] = useState<string | null>(null)
+    const [templatesOpen, setTemplatesOpen] = useState(false)
     const selectedLook = chosen && looksValue[chosen] ? chosen : activeLookValue && looksValue[activeLookValue] ? activeLookValue : presetIds[0] || ""
 
     const stored = selectedLook ? looksValue[selectedLook] : undefined
@@ -70,6 +71,13 @@ export function LooksWindow() {
         const id = createLook(name)
         save()
         setChosen(id)
+    }
+
+    function createFromTemplate(preset: LookPreset) {
+        const id = createLookFromPreset(preset, t(`looks.preset_${preset}`))
+        save()
+        setChosen(id)
+        setTemplatesOpen(false)
     }
 
     async function removePreset(id: string) {
@@ -173,6 +181,16 @@ export function LooksWindow() {
                         <Button variant="outline" size="sm" className={styles.fullWidth} onClick={createPreset}>
                             + {t("looks.new")}
                         </Button>
+                        <Button variant="outline" size="sm" className={styles.fullWidth} onClick={() => setTemplatesOpen(!templatesOpen)}>
+                            + {t("looks.from_template")}
+                        </Button>
+                        {templatesOpen
+                            ? (Object.keys(LOOK_PRESETS) as LookPreset[]).map((preset) => (
+                                  <Button key={preset} variant="ghost" size="sm" className={styles.fullWidth} onClick={() => createFromTemplate(preset)}>
+                                      {t(`looks.preset_${preset}`)}
+                                  </Button>
+                              ))
+                            : null}
                     </div>
                 </div>
 
