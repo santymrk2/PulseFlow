@@ -49,7 +49,6 @@ import {
     activeProject,
     activeShow,
     activeTimers,
-    aiSttStatus,
     alertMessage,
     audioData,
     contentProviderData,

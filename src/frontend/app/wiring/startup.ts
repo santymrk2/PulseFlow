@@ -1,6 +1,6 @@
 import { get } from "../../shared/core/lib/store"
 import type { ContentProviderId } from "../../../types/ContentProvider"
-import { OUTPUT, STARTUP } from "../../../types/Channels"
+import { STARTUP } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
 import { checkStartupActions } from "../../components/actions/actions"
 import { syncIcsCalendars } from "../../components/drawer/calendar/calendars"
@@ -18,7 +18,7 @@ import { setLanguage } from "../../shared/utils/language"
 import { storeSubscriber } from "./listeners"
 import { autoOpenLastUsedProfile, openProfileByName } from "../../shared/utils/profile"
 import { remoteListen, setupMainReceivers } from "./receivers"
-import { destroy, receive, send } from "../../shared/utils/request"
+import { destroy } from "../../shared/utils/request"
 import { save, unsavedUpdater } from "./save"
 
 let initialized = false

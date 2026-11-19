@@ -4,7 +4,7 @@ import { AudioPlayer } from "../../audio/audioPlayer"
 import { midiInListen } from "../../components/actions/midi"
 import { scenesHaveClock, sendOutputScenes } from "../../shared/utils/helpers/sceneGraph"
 import { shouldResendForVideo, videoSyncFields, type VideoSyncFields } from "../../shared/utils/helpers/videoSync"
-import { getAllActiveOutputIds, getAllNormalOutputs, updateSyncedOutputs } from "../../shared/utils/helpers/output"
+import { updateSyncedOutputs } from "../../shared/utils/helpers/output"
 import { loadShows } from "../../shared/utils/helpers/setShow"
 import { getShowCacheId, syncCachedShows, updateCachedShow, updateCachedShows, updateShowsList } from "../../shared/utils/helpers/show"
 import {

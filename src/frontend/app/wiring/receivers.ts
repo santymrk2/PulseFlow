@@ -1,71 +1,31 @@
 import { get } from "../../shared/core/lib/store"
 import { CLOUD, CONTROLLER, NDI, OMT, OUTPUT, OUTPUT_STREAM, REMOTE, STAGE } from "../../../types/Channels"
 import type { ClientMessage } from "../../../types/Socket"
-import { AudioMicrophone } from "../../audio/audioMicrophone"
 import { MIN_DB } from "../../audio/dBUtils"
 import { runAction } from "../../components/actions/actions"
 import { handleRecorderFrame } from "../../components/drawer/live/recorder"
 import { getDynamicValue } from "../../components/edit/scripts/itemHelpers"
-import { clone } from "../../shared/utils/helpers/array"
 import { receiveMainGlobal } from "../../shared/core/ipc/main"
 import {
     actions,
     activePopup,
-    activeProject,
     activeShow,
-    activeTimers,
     alertMessage,
-    allOutputs,
     audioChannelsData,
-    audioData,
-    cachedDynamicValues,
-    categories,
-    closeAd,
-    colorbars,
-    customMessageCredits,
-    customMetadata,
     driveData,
-    dynamicValueData,
-    effects,
-    events,
     focusMode,
-    globalRegexes,
-    groups,
-    livePrepare,
-    media,
-    metronome,
-    metronomeTimer,
     ndiData,
     omtData,
     outputDisplay,
     outputs,
-    outputSlideCache,
     outputState,
-    overlays,
-    playerVideos,
-    playingAudioPaths,
-    playingVideoState,
     popupData,
     previewBuffers,
-    projects,
     shows,
     showsCache,
-    slideTimelineSpeedMultiplier,
-    special,
-    stageShows,
-    styles,
-    syncedOutputs,
-    templates,
-    timeFormat,
-    timers,
-    transitionData,
-    variables,
-    visualizerData,
-    websiteAction
 } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
 import { syncDrive } from "../../shared/utils/drive"
-import { setLanguage } from "../../shared/utils/language"
 import { sendInitialOutputData } from "./listeners"
 import { receive, send } from "../../shared/utils/request"
 import { closeApp, save } from "./save"
