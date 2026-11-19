@@ -10,10 +10,10 @@ import { commonMock } from "../../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { MediaTabs } from "./MediaTabs"
 
-vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../utils/profile", () => ({ getAccess: () => ({}) }))
-vi.mock("../../../components/helpers/dropActions", () => ({ addDrawerFolder: vi.fn() }))
-vi.mock("../../../components/helpers/media", () => ({ countFolderMediaItems: () => ({ folder: 0, audio: 0, video: 0, image: 0 }) }))
+vi.mock("../../../shared/utils/common", () => commonMock())
+vi.mock("../../../shared/utils/profile", () => ({ getAccess: () => ({}) }))
+vi.mock("../../../shared/utils/helpers/dropActions", () => ({ addDrawerFolder: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/media", () => ({ countFolderMediaItems: () => ({ folder: 0, audio: 0, video: 0, image: 0 }) }))
 vi.mock("../../../shared/core/ipc/main", () => ({
     sendMain: vi.fn(),
     receiveToMain: vi.fn(() => "listener-2"),

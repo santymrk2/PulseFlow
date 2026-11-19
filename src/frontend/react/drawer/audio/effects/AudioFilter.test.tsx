@@ -14,7 +14,7 @@ vi.mock("../../../../audio/effects/audioFilter", () => ({
     GAIN_FILTER_TYPES: ["peaking", "lowshelf", "highshelf"],
     updateFilterConfig: vi.fn()
 }))
-vi.mock("../../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type FocusEvent, type FormEvent, type KeyboardEvent, type MouseEvent, type TouchEvent } from "react"
 import { cn } from "../../../shared/core/lib/utils"
-import { translateText } from "../../../utils/language"
+import { translateText } from "../../../shared/utils/language"
 import { useDerivedState } from "../../hooks/useDerivedState"
 import styles from "./RadialField.module.css"
 

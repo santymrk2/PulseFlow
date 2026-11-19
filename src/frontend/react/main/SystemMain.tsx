@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type ReactNode } from "react"
 import { outputs, previewOutputId, styles } from "../../shared/core/stores"
-import { getResolution } from "../../components/helpers/output"
+import { getResolution } from "../../shared/utils/helpers/output"
 import { useStore } from "../hooks/useStore"
 import stylesCss from "./SystemMain.module.css"
 

@@ -1,13 +1,13 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { toggleOutputs } from "../../components/helpers/output"
+import { toggleOutputs } from "../../shared/utils/helpers/output"
 import { outputs, outputState } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ScreenList } from "./ScreenList"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../components/helpers/output", () => ({ toggleOutputs: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/helpers/output", () => ({ toggleOutputs: vi.fn() }))
 
 const salida = (name: string, extra = {}) => ({ name, enabled: true, active: false, color: "", bounds: { x: 0, y: 0, width: 1920, height: 1080 }, screen: null, ...extra })
 

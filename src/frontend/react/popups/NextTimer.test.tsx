@@ -2,25 +2,25 @@
 import { act, cleanup, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { history } from "../../components/helpers/history"
-import { getLayoutRef } from "../../components/helpers/show"
+import { history } from "../../shared/utils/helpers/history"
+import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { activePopup, activeProject, activeShow, dictionary, popupData, projects, showsCache } from "../../shared/core/stores"
-import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
+import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
 import { commonMock } from "../test/mockCommon"
 import { clearFields, fire } from "../test/kitMocks"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { NextTimer } from "./NextTimer"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
-vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
+vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn(() => ({ get: vi.fn(() => "l1") })) }))
-vi.mock("../../components/helpers/time", () => ({ joinTime: vi.fn((t) => `${t}m`), secondsToTime: vi.fn((s) => [0, s]) }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn(() => ({ get: vi.fn(() => "l1") })) }))
+vi.mock("../../shared/utils/helpers/time", () => ({ joinTime: vi.fn((t) => `${t}m`), secondsToTime: vi.fn((s) => [0, s]) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
 vi.mock("../ui/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 
 const dict = { timer: { seconds: "Segundos" }, actions: { reset: "Resetear", to_all: "A todos" }, transition: { duration: "Duración" } }

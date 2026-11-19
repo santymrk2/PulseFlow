@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type SyntheticEvent } 
 import type { MediaStyle } from "../../../types/Main"
 import { useStore } from "../hooks/useStore"
 import { currentWindow, media, playingVideoState } from "../../shared/core/stores"
-import { enableSubtitle, encodeFilePath, isVideoSupported } from "../../components/helpers/media"
+import { enableSubtitle, encodeFilePath, isVideoSupported } from "../../shared/utils/helpers/media"
 import { SoftLoopSync } from "../../components/media/video/softLoop"
 import { clampPlaybackRate, syncVideoToAudio, videoSync } from "../../components/media/video/videoSync"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"

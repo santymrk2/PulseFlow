@@ -7,7 +7,7 @@ import { commonMock } from "../../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { NavigationSections, type NavSection } from "./NavigationSections"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 interface DrawerTabMockProps {
     category: { id: string; label: string }

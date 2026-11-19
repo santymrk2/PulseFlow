@@ -3,8 +3,8 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { uid } from "uid"
-import { history } from "../../components/helpers/history"
-import { getAccess } from "../../utils/profile"
+import { history } from "../../shared/utils/helpers/history"
+import { getAccess } from "../../shared/utils/profile"
 import { activePage, activePopup, currentOutputSettings, dictionary, popupData, stageShows } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
@@ -12,11 +12,11 @@ import { SelectStageLayout } from "./SelectStageLayout"
 
 const { portProps } = vi.hoisted(() => ({ portProps: {} as Record<string, Record<string, unknown>> }))
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("uid", () => ({ uid: vi.fn(() => "layout-nuevo") }))
 vi.mock("../stage/StageSlide", () => ({
     StageSlide: (props: Record<string, unknown>) => {

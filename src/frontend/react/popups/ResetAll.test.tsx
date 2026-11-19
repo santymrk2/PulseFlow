@@ -11,7 +11,7 @@ import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ResetAll } from "./ResetAll"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))

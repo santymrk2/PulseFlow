@@ -6,7 +6,7 @@ import { templates } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { LookGrid } from "./LookGrid"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 

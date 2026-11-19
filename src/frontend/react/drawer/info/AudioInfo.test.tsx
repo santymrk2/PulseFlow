@@ -18,7 +18,7 @@ vi.mock("../../../components/media/video/videoPlayer", () => ({ VideoPlayer: { h
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn() }))
 vi.mock("../audio/AudioMixers", () => ({ AudioMixers: () => <div data-isla="AudioMixers" /> }))
 vi.mock("../audio/effects/AudioEffects", () => ({ AudioEffects: () => <div data-testid="efectos" /> }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {}, wait: () => Promise.resolve() }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {}, wait: () => Promise.resolve() }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

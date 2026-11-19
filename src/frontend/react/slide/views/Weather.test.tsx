@@ -1,12 +1,12 @@
 // @vitest-environment happy-dom
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { getWeather } from "../../../utils/weather"
+import { getWeather } from "../../../shared/utils/weather"
 import type { Weather as WeatherData } from "../../../../types/Show"
 import { Weather } from "./Weather"
 
-vi.mock("../../../utils/weather", () => ({ getWeather: vi.fn() }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../shared/utils/weather", () => ({ getWeather: vi.fn() }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 
 const now = new Date()
 const iso = (hours: number) => {

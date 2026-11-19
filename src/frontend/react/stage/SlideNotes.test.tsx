@@ -2,12 +2,12 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { showsCache } from "../../shared/core/stores"
-import { getLayoutRef } from "../../components/helpers/show"
+import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { getStageTextLayoutOffset } from "../../components/stage/stage"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { SlideNotes } from "./SlideNotes"
 
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "s1" }]) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "s1" }]) }))
 vi.mock("../../components/stage/stage", () => ({ getStageTextLayoutOffset: vi.fn(() => 0) }))
 
 let restore: () => void = () => {}

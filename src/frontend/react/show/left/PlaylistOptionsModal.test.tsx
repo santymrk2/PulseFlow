@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 import { cleanup, render } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { getDefaultProjectName, getProjectName } from "../../../components/helpers/historyHelpers"
+import { getDefaultProjectName, getProjectName } from "../../../shared/utils/helpers/historyHelpers"
 import { special } from "../../../shared/core/stores"
 import { clearFields, fields, fire } from "../../test/kitMocks"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
@@ -11,7 +11,7 @@ import { PlaylistOptionsModal } from "./PlaylistOptionsModal"
 
 const { modalProps } = vi.hoisted(() => ({ modalProps: { current: {} as Record<string, unknown> } }))
 
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("./ModalBase", () => ({
@@ -22,8 +22,8 @@ vi.mock("./ModalBase", () => ({
 }))
 vi.mock("../../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../test/kitMocks")>("../../test/kitMocks")).FieldMock }))
 vi.mock("../../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../../test/kitMocks")>("../../test/kitMocks")).FieldMock }))
-vi.mock("../../../components/helpers/historyHelpers", async () => {
-    const actual = await vi.importActual<typeof import("../../../components/helpers/historyHelpers")>("../../../components/helpers/historyHelpers")
+vi.mock("../../../shared/utils/helpers/historyHelpers", async () => {
+    const actual = await vi.importActual<typeof import("../../../shared/utils/helpers/historyHelpers")>("../../../shared/utils/helpers/historyHelpers")
     return {
         ...actual,
         getDefaultProjectName: vi.fn(() => "Formato por defecto"),

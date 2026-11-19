@@ -1,7 +1,7 @@
 import { useState } from "react"
 import type { Output } from "../../../types/Output"
 import type { Look, LookScreen } from "../../../types/Settings"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { Icon } from "../helpers/Icon"
 import { ColorField } from "../ui/color-field/ColorField"
 import { InputRow } from "../ui/input-row/InputRow"

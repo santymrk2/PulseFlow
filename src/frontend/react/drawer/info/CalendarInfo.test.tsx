@@ -10,7 +10,7 @@ vi.mock("../calendar/CalendarsManagement", () => ({ CalendarsManagement: () => <
 vi.mock("../calendar/CreateCalendarShow", () => ({ CreateCalendarShow: ({ currentEvents }: { currentEvents: unknown[] }) => <div data-isla="CreateCalendarShow" data-count={currentEvents.length} /> }))
 vi.mock("../calendar/Day", () => ({ Day: ({ type }: { type: string }) => <div data-isla="Day" data-type={type} /> }))
 vi.mock("../../../components/drawer/calendar/calendar", () => ({ getSelectedEvents: () => [{ id: "evt" }] }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

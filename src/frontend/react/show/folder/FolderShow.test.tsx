@@ -4,7 +4,7 @@ import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { clearAudio } from "../../../audio/audioFading"
 import { AudioPlayer } from "../../../audio/audioPlayer"
-import { setOutput } from "../../../components/helpers/output"
+import { setOutput } from "../../../shared/utils/helpers/output"
 import { requestMain } from "../../../shared/core/ipc/main"
 import { activePopup, activeProject, focusMode, media, outLocked, outputs, playingAudio, popupData, projects, styles } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
@@ -15,25 +15,25 @@ vi.mock("../../../audio/audioFading", () => ({ clearAudio: vi.fn() }))
 vi.mock("../../../audio/audioPlayer", () => ({
     AudioPlayer: { start: vi.fn(), getPlaying: vi.fn(() => false) }
 }))
-vi.mock("../../../components/helpers/array", () => ({
+vi.mock("../../../shared/utils/helpers/array", () => ({
     keysToID: (value: unknown) => Object.values((value || {}) as object),
     sortByName: (value: unknown) => value
 }))
-vi.mock("../../../components/helpers/media", () => ({
+vi.mock("../../../shared/utils/helpers/media", () => ({
     getExtension: (name: string) => name.split(".").pop() || "",
     getMediaType: (extension: string) => (extension === "mp3" ? "audio" : extension === "mp4" ? "video" : "image"),
     getMediaStyle: vi.fn(() => ({})),
     getMediaLayerType: vi.fn(() => "background"),
     getVideoDuration: vi.fn(async () => 5)
 }))
-vi.mock("../../../components/helpers/output", () => ({
+vi.mock("../../../shared/utils/helpers/output", () => ({
     getFirstActiveOutput: vi.fn(() => undefined),
     findMatchingOut: vi.fn(() => null),
     setOutput: vi.fn(),
     startFolderTimer: vi.fn()
 }))
 vi.mock("../../../components/output/clear", () => ({ clearBackground: vi.fn(), clearSlide: vi.fn() }))
-vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../drawer/Card", () => ({
     Card: ({ label, onClick, children }: { label: string; onClick?: () => void; children?: ReactNode }) => (
         <div data-testid="card" data-label={label} onClick={onClick}>

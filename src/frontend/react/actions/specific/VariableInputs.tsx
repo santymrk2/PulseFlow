@@ -1,6 +1,6 @@
 import { variables } from "../../../shared/core/stores"
-import { translateText } from "../../../utils/language"
-import { sortByName } from "../../../components/helpers/array"
+import { translateText } from "../../../shared/utils/language"
+import { sortByName } from "../../../shared/utils/helpers/array"
 import { useStore } from "../../hooks/useStore"
 import { SelectField } from "../../ui/select-field/SelectField"
 import { NumberField } from "../../ui/number-field/NumberField"

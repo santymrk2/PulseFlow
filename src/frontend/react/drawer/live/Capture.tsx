@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 
 import { Main } from "../../../../types/IPC/Main"
 import { sendMain } from "../../../shared/core/ipc/main"
 import { outputs } from "../../../shared/core/stores"
-import { findMatchingOut } from "../../../components/helpers/output"
+import { findMatchingOut } from "../../../shared/utils/helpers/output"
 import { SelectElem } from "../../system/SelectElem"
 import { useStore } from "../../hooks/useStore"
 import { Card } from "../Card"

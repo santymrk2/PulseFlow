@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { activeProject, activeShow, playerVideos, projects } from "../../shared/core/stores"
 import { useStore } from "../hooks/useStore"
-import { _show } from "../../components/helpers/shows"
+import { _show } from "../../shared/utils/helpers/shows"
 import { videoSync } from "../../components/media/video/videoSync"
 import { Vimeo } from "../drawer/player/Vimeo"
 import { YouTube } from "../drawer/player/YouTube"

@@ -1,11 +1,11 @@
 import { get } from "../../shared/core/lib/store"
 import { activeDrawerTab, activePage, activePopup, activeProject, activeShow, drawer, focusMode, outputCache, projects, projectView, showRecentlyUsedProjects, shows, showsCache } from "../../shared/core/stores"
-import { DEFAULT_DRAWER_HEIGHT } from "../../utils/common"
+import { DEFAULT_DRAWER_HEIGHT } from "../../shared/utils/common"
 import { createDefaultShow } from "../../utils/createData"
-import { translateText } from "../../utils/language"
-import { keysToID, removeDeleted } from "../helpers/array"
-import { OutputHelper } from "../helpers/OutputHelper"
-import { loadShows } from "../helpers/setShow"
+import { translateText } from "../../shared/utils/language"
+import { keysToID, removeDeleted } from "../../shared/utils/helpers/array"
+import { OutputHelper } from "../../shared/utils/helpers/OutputHelper"
+import { loadShows } from "../../shared/utils/helpers/setShow"
 import { clearAll } from "../output/clear"
 
 export const guideSteps = [

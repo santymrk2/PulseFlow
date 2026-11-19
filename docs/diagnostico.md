@@ -147,7 +147,6 @@ Los encontró `src/frontend/arch/relativeSpecifiers.test.ts` (rutas relativas qu
 arreglaron para no cambiar el comportamiento de los tests; están en `KNOWN_BROKEN` de ese test, que sólo puede achicarse.
 
 - `src/frontend/components/drawer/audio/metronome.ts` → `../../../types/Audio`
-- `src/frontend/components/helpers/looks.migration.test.ts` → `../../../../types/Output` y `../../../../types/Settings`
 - `src/frontend/react/drawer/media/Media.test.tsx` → `vi.mock("./pixabay")` y `vi.mock("./unsplash")`
 - `src/frontend/react/show/Show.test.tsx` → `vi.mock("./MediaPreview")`
 

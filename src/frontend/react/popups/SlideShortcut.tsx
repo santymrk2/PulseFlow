@@ -3,8 +3,8 @@
 // Tip usa el port React.
 import { useEffect, useState } from "react"
 import { get } from "../../shared/core/lib/store"
-import { history } from "../../components/helpers/history"
-import { getLayoutRef } from "../../components/helpers/show"
+import { history } from "../../shared/utils/helpers/history"
+import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { Tip } from "../main/Tip"
 import type { Popups } from "../../../types/Main"
 import { activePopup, popupData } from "../../shared/core/stores"

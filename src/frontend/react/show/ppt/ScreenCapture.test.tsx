@@ -11,8 +11,8 @@ const windows = [{ id: 1, name: "PowerPoint - Predicación" }]
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn((_main, _data, callback) => callback(windows)) }))
-vi.mock("../../../components/helpers/media", () => ({ getFileName: (path: string) => path, removeExtension: (name: string) => name.split(".")[0] }))
-vi.mock("../../../components/helpers/output", () => ({ getAllActiveOutputIds: vi.fn(() => ["out1"]) }))
+vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: (path: string) => path, removeExtension: (name: string) => name.split(".")[0] }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getAllActiveOutputIds: vi.fn(() => ["out1"]) }))
 vi.mock("../../output/Window", async () => ({ Window: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Window") }))
 
 let restore: () => void = () => {}

@@ -1,7 +1,7 @@
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react"
 import { cn } from "../../../shared/core/lib/utils"
 import { dictionary } from "../../../shared/core/stores"
-import { translateText } from "../../../utils/language"
+import { translateText } from "../../../shared/utils/language"
 import { usePropState } from "../../hooks/usePropState"
 import { useStore } from "../../hooks/useStore"
 import styles from "./ToggleField.module.css"

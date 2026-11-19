@@ -4,12 +4,12 @@ import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { addShowsToProject } from "../../../components/show/project"
 import { activePopup, activeProfile, categories, dictionary, leftSource, projects, sortedShowsList } from "../../../shared/core/stores"
-import { getAccess } from "../../../utils/profile"
+import { getAccess } from "../../../shared/utils/profile"
 import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { AddShowsModal } from "./AddShowsModal"
 
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))
-vi.mock("../../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))
+vi.mock("../../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../../../components/show/project", () => ({ addShowsToProject: vi.fn() }))
 
 const catalogo = [

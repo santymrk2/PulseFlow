@@ -1,6 +1,6 @@
 import type { History as HistoryItem, HistoryNew } from "../../../types/History"
-import { redo, undo } from "../../components/helpers/history"
-import { getDateAndTimeString, timeAgo } from "../../components/helpers/time"
+import { redo, undo } from "../../shared/utils/helpers/history"
+import { getDateAndTimeString, timeAgo } from "../../shared/utils/helpers/time"
 import { redoHistory, undoHistory } from "../../shared/core/stores"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"

@@ -8,7 +8,7 @@ import { activePopup, dictionary, version } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { About } from "./About"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 
 let restaurar: () => void = () => {}

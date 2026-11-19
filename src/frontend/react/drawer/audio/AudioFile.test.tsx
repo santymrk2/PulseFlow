@@ -28,7 +28,7 @@ vi.mock("../../../audio/audioPlayer", () => ({
 }))
 vi.mock("../../../audio/audioPlaylist", () => ({ AudioPlaylist: { start: vi.fn() } }))
 vi.mock("../../../converters/project", () => ({ addProjectItem: vi.fn() }))
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../ui/button/Button", () => ({

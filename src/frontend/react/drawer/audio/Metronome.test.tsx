@@ -9,7 +9,7 @@ import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { Metronome } from "./Metronome"
 
 vi.mock("../../../components/drawer/audio/metronome", () => ({ toggleMetronome: vi.fn(), updateMetronome: vi.fn() }))
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../ui/button/Button", () => ({
     Button: ({ title, children, onClick, isActive }: { title?: string; children?: ReactNode; onClick?: () => void; isActive?: boolean }) => (

@@ -1,6 +1,6 @@
 import { get } from "../shared/core/lib/store"
 import { obsData } from "../shared/core/stores"
-import { promptCustom } from "./popup"
+import { promptCustom } from "../shared/utils/popup"
 
 class OBSWebSocket {
     private socket: WebSocket | null = null

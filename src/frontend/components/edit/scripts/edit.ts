@@ -2,7 +2,7 @@ import { get } from "../../../shared/core/lib/store"
 import type { Popups } from "../../../../types/Main"
 import type { DrawerTabIds } from "../../../../types/Tabs"
 import { activeDrawerTab, activePage, activePopup, drawer, drawerTabsData } from "../../../shared/core/stores"
-import { hexToRgb } from "../../helpers/color"
+import { hexToRgb } from "../../../shared/utils/helpers/color"
 import { openOverlayEditor, openThemeEditor } from "./libraryEditor"
 
 // COLOR

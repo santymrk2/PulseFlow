@@ -8,7 +8,7 @@ vi.mock("../../shared/core/stores", () => ({
     hoveredEffectItem: { subscribe: (fn: (value: unknown) => void) => (fn(null), () => {}) }
 }))
 vi.mock("../hooks/useStore", () => ({ useStore: () => null }))
-vi.mock("../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)), getChangedKeys: () => [] }))
+vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)), getChangedKeys: () => [] }))
 vi.mock("../../components/output/effects/effectRenderer", () => ({
     EffectRender: class {
         highlightedIndex: number | null = null

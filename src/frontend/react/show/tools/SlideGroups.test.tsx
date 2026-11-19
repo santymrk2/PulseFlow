@@ -3,20 +3,20 @@ import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeShow, cachedShowsData, fullColors, globalGroupViewEnabled, groups, selected, showsCache, templates } from "../../../shared/core/stores"
-import { isGroupHidden } from "../../../utils/profile"
+import { isGroupHidden } from "../../../shared/utils/profile"
 import { getDuplicateGroups, getSlideGroups } from "../../../components/show/tools/groups"
-import { _show } from "../../../components/helpers/shows"
+import { _show } from "../../../shared/utils/helpers/shows"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { SlideGroups } from "./SlideGroups"
 
-vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../utils/profile", () => ({ getAccess: vi.fn(() => ({})), isGroupHidden: vi.fn(() => false) }))
-vi.mock("../../../utils/common", () => ({ newToast: vi.fn() }))
-vi.mock("../../../components/helpers/array", () => ({ sortByName: vi.fn((value: unknown) => value) }))
-vi.mock("../../../components/helpers/color", () => ({ hexToRgb: vi.fn(() => ({ r: 255, g: 0, b: 0 })) }))
-vi.mock("../../../components/helpers/drop", () => ({ ondrop: vi.fn(() => () => {}) }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../../components/helpers/shows", () => ({ _show: vi.fn() }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})), isGroupHidden: vi.fn(() => false) }))
+vi.mock("../../../shared/utils/common", () => ({ newToast: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/array", () => ({ sortByName: vi.fn((value: unknown) => value) }))
+vi.mock("../../../shared/utils/helpers/color", () => ({ hexToRgb: vi.fn(() => ({ r: 255, g: 0, b: 0 })) }))
+vi.mock("../../../shared/utils/helpers/drop", () => ({ ondrop: vi.fn(() => () => {}) }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
 vi.mock("../../../components/show/tools/groups", () => ({ getDuplicateGroups: vi.fn(() => []), getSlideGroups: vi.fn(() => []), mergeDuplicateGroups: vi.fn() }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))

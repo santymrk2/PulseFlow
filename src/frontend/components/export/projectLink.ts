@@ -1,9 +1,9 @@
 import { get } from "../../shared/core/lib/store"
 import type { Project } from "../../../types/Projects"
 import { overlays, playerVideos, showsCache } from "../../shared/core/stores"
-import { newToast } from "../../utils/common"
-import { loadShows } from "../helpers/setShow"
-import { _show } from "../helpers/shows"
+import { newToast } from "../../shared/utils/common"
+import { loadShows } from "../../shared/utils/helpers/setShow"
+import { _show } from "../../shared/utils/helpers/shows"
 import { LinkGenericItem, LinkOverlayItem, LinkSectionItem, LinkShowItem, LinkSlide, LinkSlideGenericItem, LinkSlideItems, LinkSlideLine, LinkSlideMediaItem, LinkSlideTextItem, ProjectLink } from "./ProjectLinkTypes"
 
 export async function exportProjectAsData(project: Project, projectId: string): Promise<ProjectLink | null> {

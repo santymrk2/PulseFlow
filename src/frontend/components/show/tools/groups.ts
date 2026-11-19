@@ -1,11 +1,11 @@
 import { get } from "../../../shared/core/lib/store"
 import type { Show, Slide } from "../../../../types/Show"
 import { cachedShowsData, groups, refreshEditSlide, showsCache } from "../../../shared/core/stores"
-import { clone, sortByName } from "../../helpers/array"
-import { history } from "../../helpers/history"
+import { clone, sortByName } from "../../../shared/utils/helpers/array"
+import { history } from "../../../shared/utils/helpers/history"
 import { getSlideText } from "../../edit/scripts/textStyle"
-import { getShowCacheId } from "../../helpers/show"
-import { translateText } from "../../../utils/language"
+import { getShowCacheId } from "../../../shared/utils/helpers/show"
+import { translateText } from "../../../shared/utils/language"
 
 export function getSlideGroups(showId: string, showUpdater = get(showsCache), cachedUpdater = get(cachedShowsData)) {
     return sortByName(cachedUpdater[getShowCacheId(showId, showUpdater[showId])]?.groups || [], "group") as any

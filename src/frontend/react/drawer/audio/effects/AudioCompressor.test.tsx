@@ -14,7 +14,7 @@ vi.mock("../../../../audio/effects/audioCompressor", () => ({
     getCompressorReduction: () => -6,
     updateCompressorConfig: vi.fn()
 }))
-vi.mock("../../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: { getChannelLiveVolume: () => -20 } }))
 vi.mock("../../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

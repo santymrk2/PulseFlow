@@ -1,4 +1,4 @@
-import { getLabelId } from "../components/helpers/show"
+import { getLabelId } from "../shared/utils/helpers/show"
 import { findGroupMatch, isHeaderLine, similarity } from "./txt"
 
 const SIMILARITY_THRESHOLD = 0.7

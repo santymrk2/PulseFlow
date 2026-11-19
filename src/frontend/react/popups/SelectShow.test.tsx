@@ -8,7 +8,7 @@ import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SelectShow } from "./SelectShow"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../drawer/VirtualList", () => ({

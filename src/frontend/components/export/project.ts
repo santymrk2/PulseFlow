@@ -7,12 +7,12 @@ import type { Effects } from "../../../types/Effects"
 import type { Project, ProjectShowRef } from "../../../types/Projects"
 import type { Action, Overlays, Shows, SlideData } from "../../../types/Show"
 import { actions as actionsStores, categories, effects as effectsStores, folders, media, overlays as overlayStores, showsCache, special } from "../../shared/core/stores"
-import { send } from "../../utils/request"
-import { clone } from "../helpers/array"
-import { loadShows } from "../helpers/setShow"
-import { formatToFileName } from "../helpers/show"
-import { _show } from "../helpers/shows"
-import { getMedia, isLocalFile } from "../helpers/media"
+import { send } from "../../shared/utils/request"
+import { clone } from "../../shared/utils/helpers/array"
+import { loadShows } from "../../shared/utils/helpers/setShow"
+import { formatToFileName } from "../../shared/utils/helpers/show"
+import { _show } from "../../shared/utils/helpers/shows"
+import { getMedia, isLocalFile } from "../../shared/utils/helpers/media"
 
 export async function exportProject(project: Project, projectId: string, savePath?: string) {
     if (!project) return

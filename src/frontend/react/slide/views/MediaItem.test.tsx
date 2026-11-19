@@ -5,11 +5,11 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../../types/Show"
 import { audioChannelsData, currentWindow, media as mediaStore, outputs, styles } from "../../../shared/core/stores"
 import { videoSync } from "../../../components/media/video/videoSync"
-import { getCropState } from "../../../components/helpers/cropping"
+import { getCropState } from "../../../shared/utils/helpers/cropping"
 import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { MediaItem } from "./MediaItem"
 
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../drawer/media/Image", () => ({
@@ -27,7 +27,7 @@ vi.mock("../../drawer/media/Image", () => ({
         />
     )
 }))
-vi.mock("../../../components/helpers/media", () => ({
+vi.mock("../../../shared/utils/helpers/media", () => ({
     encodeFilePath: (path: string) => `file://${path}`,
     getExtension: (path: string) => path.split(".").pop() || "",
     getMedia: vi.fn(async (path: string) => ({ path, thumbnail: `${path}_thumb` })),
@@ -35,11 +35,11 @@ vi.mock("../../../components/helpers/media", () => ({
     getThumbnailPath: (path: string) => `${path}_thumb`,
     mediaSize: { slideSize: 1920 }
 }))
-vi.mock("../../../components/helpers/cropping", () => ({
+vi.mock("../../../shared/utils/helpers/cropping", () => ({
     getCropState: vi.fn(() => ({ showCropOverflowPreview: false, mediaCropGeometry: "", mediaContainerStyle: "" }))
 }))
-vi.mock("../../../components/helpers/output", () => ({ defaultLayers: ["background", "slide", "overlays"] }))
-vi.mock("../../../components/helpers/shows", () => ({
+vi.mock("../../../shared/utils/helpers/output", () => ({ defaultLayers: ["background", "slide", "overlays"] }))
+vi.mock("../../../shared/utils/helpers/shows", () => ({
     _show: vi.fn(() => ({
         layouts: () => ({ ref: () => [[{ data: { background: "bg1" } }]] }),
         get: () => ({ media: { bg1: { path: "/bg.mp4" } } })

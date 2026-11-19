@@ -8,7 +8,7 @@ import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { TimelineSettings } from "./TimelineSettings"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/timeline/timeline", () => ({ formatTime: (ms: number) => `fmt:${ms}`, parseTime: (str: string) => str.length }))

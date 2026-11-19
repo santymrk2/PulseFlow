@@ -85,8 +85,8 @@ const { FakePlayback, FakeActions } = vi.hoisted(() => {
 vi.mock("../../audio/audioWaveform", () => ({ createWaveform: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/common", () => ({ ...commonMock(), DEFAULT_WIDTH: 290 }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/common", () => ({ ...commonMock(), DEFAULT_WIDTH: 290 }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../components/timeline/TimelinePlayback", () => ({
     TimelinePlayback: FakePlayback,
     getActiveTimelinePlayback: vi.fn(() => null)

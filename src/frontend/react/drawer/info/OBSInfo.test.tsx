@@ -11,7 +11,7 @@ const obs = vi.hoisted(() => ({
     listen: vi.fn()
 }))
 vi.mock("../../../utils/obsTalk", () => ({ connectToOBS: () => Promise.resolve(obs) }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {}, wait: () => Promise.resolve() }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {}, wait: () => Promise.resolve() }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {

@@ -6,7 +6,7 @@ import type { Emitter, EmitterTemplate, EmitterTemplateValue } from "../../../ty
 import { emitterData, formatData } from "../../components/actions/emitters"
 import { getDynamicValue } from "../../components/edit/scripts/itemHelpers"
 import { getValues } from "../../components/form/inputs"
-import { clone, keysToID, sortByName } from "../../components/helpers/array"
+import { clone, keysToID, sortByName } from "../../shared/utils/helpers/array"
 import { Tip } from "../main/Tip"
 import { requestMain } from "../../shared/core/ipc/main"
 import { activePopup, emitters, popupData } from "../../shared/core/stores"

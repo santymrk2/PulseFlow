@@ -6,12 +6,12 @@ import { Main } from "../../../types/IPC/Main"
 import { fetchAndImportIcs } from "../../components/drawer/calendar/calendars"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, alertMessage, dictionary } from "../../shared/core/stores"
-import { newToast } from "../../utils/common"
+import { newToast } from "../../shared/utils/common"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ImportCalendar } from "./ImportCalendar"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../components/drawer/calendar/calendars", () => ({ fetchAndImportIcs: vi.fn() }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))

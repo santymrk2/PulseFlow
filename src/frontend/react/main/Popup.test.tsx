@@ -9,8 +9,8 @@ import { commonMock } from "../test/mockCommon"
 import { storeEntry, setStoresForTest } from "../test/storeTestKit"
 import { Popup } from "./Popup"
 
-vi.mock("../../utils/common", () => ({ ...commonMock(), MENU_BAR_HEIGHT: 36 }))
-vi.mock("../../utils/popup", () => ({ clearPopupSubmit: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ ...commonMock(), MENU_BAR_HEIGHT: 36 }))
+vi.mock("../../shared/utils/popup", () => ({ clearPopupSubmit: vi.fn() }))
 vi.mock("../../utils/shortcuts", () => ({ disablePopupClose: [] }))
 vi.mock("../../audio/effects/audioEffectsHelpers", () => ({ EFFECTS_LIST: [] }))
 vi.mock("../popups/registry", () => {

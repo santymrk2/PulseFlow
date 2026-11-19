@@ -1,7 +1,7 @@
 import type { Line, Item } from "../../../../types/Show"
 import { EditboxHelper } from "./EditboxHelper"
 import { getSelectionRange, setCaret } from "../scripts/textStyle"
-import { clone } from "../../helpers/array"
+import { clone } from "../../../shared/utils/helpers/array"
 
 export interface EditboxPasteContext {
     item: Item

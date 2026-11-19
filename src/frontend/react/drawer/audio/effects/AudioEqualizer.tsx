@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type MouseEvent as Rea
 import { AudioEqualizer as AudioEqualizerEngine, type EQBand, EqualizerCalculations, updateEqualizerBands } from "../../../../audio/effects/audioEqualizer"
 import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
 import { SpectrumAnalyzer } from "../../../../audio/spectrumAnalyzer"
-import { clone } from "../../../../components/helpers/array"
+import { clone } from "../../../../shared/utils/helpers/array"
 import type { AudioEffectProps } from "./AudioDelay"
 import styles from "./AudioEqualizer.module.css"
 

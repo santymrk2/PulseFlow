@@ -5,20 +5,20 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../shared/core/ipc/main"
 import { alertUpdates, dictionary, special, version } from "../../shared/core/stores"
-import { getUpdateData } from "../../utils/checkForUpdates"
-import { setPopupSubmit } from "../../utils/popup"
+import { getUpdateData } from "../../shared/utils/checkForUpdates"
+import { setPopupSubmit } from "../../shared/utils/popup"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { clearIslands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { UpdateManager } from "./UpdateManager"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/language", () => ({ translateText: (value: string) => value }))
-vi.mock("../../utils/checkForUpdates", () => ({ getUpdateData: vi.fn() }))
-vi.mock("../../utils/popup", () => ({ setPopupSubmit: vi.fn(() => () => {}) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (value: string) => value }))
+vi.mock("../../shared/utils/checkForUpdates", () => ({ getUpdateData: vi.fn() }))
+vi.mock("../../shared/utils/popup", () => ({ setPopupSubmit: vi.fn(() => () => {}) }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))

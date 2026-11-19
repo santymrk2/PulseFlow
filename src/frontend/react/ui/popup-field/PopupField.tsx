@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type KeyboardEvent, ty
 import type { Popups } from "../../../../types/Main"
 import { cn } from "../../../shared/core/lib/utils"
 import { activePopup, popupData } from "../../../shared/core/stores"
-import { translateText } from "../../../utils/language"
+import { translateText } from "../../../shared/utils/language"
 import { Icon } from "../../helpers/Icon"
 import { Button } from "../button/Button"
 import styles from "./PopupField.module.css"

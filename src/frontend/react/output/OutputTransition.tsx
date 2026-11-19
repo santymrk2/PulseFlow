@@ -1,6 +1,6 @@
 import { useEffect, useRef, type ReactNode } from "react"
 import type { Transition } from "../../../types/Show"
-import { custom } from "../../utils/transitions"
+import { custom } from "../../shared/utils/transitions"
 import styles from "./OutputTransition.module.css"
 
 export interface OutputTransitionProps {

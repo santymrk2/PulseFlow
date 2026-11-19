@@ -14,7 +14,7 @@ vi.mock("../../../../audio/effects/audioDelay", () => ({ updateDelayConfig: vi.f
 vi.mock("../../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
-vi.mock("../../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../ui/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 vi.mock("../../../ui/number-field/NumberField", () => ({ NumberField: ({ label, onChange }: { label: string; onChange?: (value: number) => void }) => <button onClick={() => onChange?.(500)}>{label}</button> }))
 

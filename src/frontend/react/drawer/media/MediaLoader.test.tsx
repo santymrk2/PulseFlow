@@ -7,7 +7,7 @@ import { clearIslands } from "../../test/islandMock"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { MediaLoader } from "./MediaLoader"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../output/Camera", async () => ({ Camera: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Camera") }))

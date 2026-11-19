@@ -3,18 +3,18 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activePage, activePopup, activeShow, outLocked, popupData, showsCache } from "../../shared/core/stores"
-import { refreshOut, setOutput } from "../../components/helpers/output"
-import { OutputHelper } from "../../components/helpers/OutputHelper"
-import { getLayoutRef } from "../../components/helpers/show"
-import { updateOut } from "../../components/helpers/showActions"
+import { refreshOut, setOutput } from "../../shared/utils/helpers/output"
+import { OutputHelper } from "../../shared/utils/helpers/OutputHelper"
+import { getLayoutRef } from "../../shared/utils/helpers/show"
+import { updateOut } from "../../shared/utils/helpers/showActions"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ShowActions } from "./ShowActions"
 
-vi.mock("../../components/helpers/output", () => ({ refreshOut: vi.fn(), setOutput: vi.fn() }))
-vi.mock("../../components/helpers/OutputHelper", () => ({ OutputHelper: { advanceOutputs: vi.fn() } }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
-vi.mock("../../components/helpers/showActions", () => ({ updateOut: vi.fn() }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/helpers/output", () => ({ refreshOut: vi.fn(), setOutput: vi.fn() }))
+vi.mock("../../shared/utils/helpers/OutputHelper", () => ({ OutputHelper: { advanceOutputs: vi.fn() } }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
+vi.mock("../../shared/utils/helpers/showActions", () => ({ updateOut: vi.fn() }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 
 let restore: () => void = () => {}
 afterEach(() => {

@@ -3,16 +3,16 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { dictionary, popupData } from "../../shared/core/stores"
-import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
+import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { OutputSetup } from "./OutputSetup"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
-vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
+vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 
 const dict = { settings: { window: "Ventana", local_output: "Salida local", network_output: "Salida de red" }, popup: { confirm: "Confirmar" } }

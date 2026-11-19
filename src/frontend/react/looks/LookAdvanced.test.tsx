@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { Look } from "../../../types/Settings"
 import { LookAdvanced } from "./LookAdvanced"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../ui/color-field/ColorField", () => ({ ColorField: ({ onInput }: { onInput: (v: string) => void }) => <button data-testid="color" onClick={() => onInput("#abcdef")} /> }))
 
 afterEach(cleanup)

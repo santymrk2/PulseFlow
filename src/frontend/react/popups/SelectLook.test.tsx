@@ -2,16 +2,16 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { applyLook } from "../../components/helpers/looks"
+import { applyLook } from "../../shared/utils/helpers/looks"
 import { activeLook, activePopup, dictionary, looks, popupData } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SelectLook } from "./SelectLook"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/helpers/looks", () => ({ applyLook: vi.fn() }))
+vi.mock("../../shared/utils/helpers/looks", () => ({ applyLook: vi.fn() }))
 
 const trigger = vi.fn()
 let restaurar: () => void = () => {}

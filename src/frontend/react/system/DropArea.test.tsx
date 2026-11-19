@@ -9,8 +9,8 @@ import { DropArea } from "./DropArea"
 import styles from "./DropArea.module.css"
 
 const { proyecto } = vi.hoisted(() => ({ proyecto: vi.fn() }))
-vi.mock("../../components/helpers/dropActions", () => ({ dropActions: { project: proyecto } }))
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/helpers/dropActions", () => ({ dropActions: { project: proyecto } }))
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 

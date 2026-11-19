@@ -6,7 +6,7 @@ import { outputs, previewOutputId, slidesOptions, styles } from "../../shared/co
 import { looseEntry, storeEntry, setStoresForTest } from "../test/storeTestKit"
 import { SkeletonSlide } from "./SkeletonSlide"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 

@@ -38,13 +38,13 @@ vi.mock("../hooks/useStore", () => ({
         return mocks.values.overlays
     }
 }))
-vi.mock("../../utils/language", () => ({ translateText: (t: string) => t }))
-vi.mock("../../utils/profile", () => ({ getAccess: () => ({}) }))
-vi.mock("../../components/helpers/array", () => ({
+vi.mock("../../shared/utils/language", () => ({ translateText: (t: string) => t }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({}) }))
+vi.mock("../../shared/utils/helpers/array", () => ({
     keysToID: (o: unknown) => Object.entries((o as Record<string, unknown>) || {}).map(([id, v]) => ({ id, ...(v as Record<string, unknown>) })),
     sortByName: (a: unknown[]) => a
 }))
-vi.mock("../../components/helpers/overlayOutput", () => ({ toggleOverlayOutput: mocks.toggleOverlayOutput, toggleEffectOutput: mocks.toggleEffectOutput }))
+vi.mock("../../shared/utils/helpers/overlayOutput", () => ({ toggleOverlayOutput: mocks.toggleOverlayOutput, toggleEffectOutput: mocks.toggleEffectOutput }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))
 
 afterEach(() => {

@@ -1,4 +1,4 @@
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { Icon } from "../helpers/Icon"
 import { markTipString } from "../../components/main/tipWordDictionary"

@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import OutputOverlay from "./OutputOverlay"
 
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ shouldItemBeShown: () => true }))
-vi.mock("../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)) }))
+vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)) }))
 vi.mock("../slide/Textbox", () => ({ Textbox: () => <div data-testid="textbox" /> }))
 vi.mock("./SlideItemTransition", () => ({ SlideItemTransition: ({ children }: { children: (args: { customItem: { id: string } }) => React.ReactNode }) => <div>{children({ customItem: { id: "i1" } })}</div> }))
 

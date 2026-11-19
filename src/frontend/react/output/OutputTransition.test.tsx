@@ -3,7 +3,7 @@ import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import OutputTransition from "./OutputTransition"
 
-vi.mock("../../utils/transitions", () => ({ custom: () => ({ duration: 0, delay: 0, css: () => "" }) }))
+vi.mock("../../shared/utils/transitions", () => ({ custom: () => ({ duration: 0, delay: 0, css: () => "" }) }))
 
 afterEach(cleanup)
 

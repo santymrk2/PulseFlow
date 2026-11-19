@@ -3,10 +3,10 @@ import type { Effect } from "../../types/Effects"
 import type { MainFilePaths } from "../../types/Main"
 import type { Overlay, Template } from "../../types/Show"
 import { DEFAULT_ITEM_STYLE } from "../components/edit/scripts/itemHelpers"
-import { setShow } from "../components/helpers/setShow"
+import { setShow } from "../shared/utils/helpers/setShow"
 import { activePopup, audioFolders, deletedDefaults, effects, folders, mediaFolders, outputs, overlays, projects, serverData, shows, templates, variables } from "../shared/core/stores"
 import { stageShows, templateCategories } from "../shared/core/stores"
-import { translateText } from "./language"
+import { translateText } from "../shared/utils/language"
 import { save } from "./save"
 
 export function createData(paths: MainFilePaths) {

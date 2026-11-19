@@ -7,9 +7,9 @@ import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ChooseChord } from "./ChooseChord"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
-vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
+vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 
 let restaurar: () => void = () => {}
 function montar(stored: object = {}, sp: object = {}) {

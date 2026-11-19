@@ -7,7 +7,7 @@ import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { CanvaInfo } from "./CanvaInfo"
 
 vi.mock("../../../converters/canvaPresentation", () => ({ addCanvaPresentationAsShow: vi.fn() }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

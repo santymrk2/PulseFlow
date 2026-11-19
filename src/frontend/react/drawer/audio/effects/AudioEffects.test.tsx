@@ -6,7 +6,7 @@ import { activeAudioEffects, activePopup, audioEffects, popupData } from "../../
 import { looseEntry, setStoresForTest } from "../../../test/storeTestKit"
 import { AudioEffects } from "./AudioEffects"
 
-vi.mock("../../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 
 const STACK = [
     { id: "c1", type: "compressor", enabled: true, config: { enabled: true } },

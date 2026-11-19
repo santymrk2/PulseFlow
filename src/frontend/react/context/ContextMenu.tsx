@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { useCallback, useEffect, useRef, useState } from "react"
 import { activePage, activePopup, contextActive, contextData, currentWindow, dictionary, localeDirection, os, serverData, slideDeleteHighlight, special, spellcheck, theme, themes } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { closeContextMenu } from "../../utils/shortcuts"
 import { getEditItems } from "../../components/edit/scripts/itemHelpers"
-import { hexToRgb } from "../../components/helpers/color"
+import { hexToRgb } from "../../shared/utils/helpers/color"
 import { contextMenuGroups, contextMenuItems, contextMenuLayouts } from "../../components/context/contextMenus"
 import { contextMenuMode } from "../../components/context/nativeMenu"
 import { flattenMenuItems, handleKeydown as handleSearchKeydown, searchMenuItems, type FlatMenuItem } from "../../components/context/contextMenuSearch"

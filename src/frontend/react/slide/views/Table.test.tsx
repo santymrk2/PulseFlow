@@ -7,7 +7,7 @@ import { activeEdit, showsCache } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { Table } from "./Table"
 
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 

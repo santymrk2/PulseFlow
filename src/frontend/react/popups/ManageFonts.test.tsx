@@ -2,15 +2,15 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { loadCustomFont } from "../../components/helpers/fonts"
+import { loadCustomFont } from "../../shared/utils/helpers/fonts"
 import { customFonts, special } from "../../shared/core/stores"
-import { newToast } from "../../utils/common"
+import { newToast } from "../../shared/utils/common"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ManageFonts } from "./ManageFonts"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
-vi.mock("../../components/helpers/fonts", () => ({
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
+vi.mock("../../shared/utils/helpers/fonts", () => ({
     defaultFonts: ["CMGSans", "Arial"],
     getSystemFontsList: vi.fn(async () => [
         { label: "Arial", value: "Arial", style: "font-family: Arial;" },

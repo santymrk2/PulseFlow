@@ -9,7 +9,7 @@ import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { DrawerTab, type DrawerTabCategory } from "./DrawerTab"
 import styles from "./DrawerTab.module.css"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 

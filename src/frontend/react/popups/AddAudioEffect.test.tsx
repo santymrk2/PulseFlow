@@ -7,7 +7,7 @@ import { activeAudioEffects, activePopup, dictionary, popupData } from "../../sh
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { AddAudioEffect } from "./AddAudioEffect"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../audio/effects/audioEffectsHelpers", () => ({
     EFFECTS_LIST: [
         { id: "equalizer", label: "audio_effects.equalizer", description: "audio_effects.equalizer_desc", color: "#112233" },

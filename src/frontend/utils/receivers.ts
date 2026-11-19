@@ -6,7 +6,7 @@ import { MIN_DB } from "../audio/dBUtils"
 import { runAction } from "../components/actions/actions"
 import { handleRecorderFrame } from "../components/drawer/live/recorder"
 import { getDynamicValue } from "../components/edit/scripts/itemHelpers"
-import { clone } from "../components/helpers/array"
+import { clone } from "../shared/utils/helpers/array"
 import { receiveMainGlobal } from "../shared/core/ipc/main"
 import {
     actions,
@@ -63,11 +63,11 @@ import {
     visualizerData,
     websiteAction
 } from "../shared/core/stores"
-import { newToast } from "./common"
-import { syncDrive } from "./drive"
-import { setLanguage } from "./language"
+import { newToast } from "../shared/utils/common"
+import { syncDrive } from "../shared/utils/drive"
+import { setLanguage } from "../shared/utils/language"
 import { sendInitialOutputData } from "./listeners"
-import { receive, send } from "./request"
+import { receive, send } from "../shared/utils/request"
 import { closeApp, save } from "./save"
 import { client } from "./sendData"
 import { previewShortcuts } from "./shortcuts"

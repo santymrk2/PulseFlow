@@ -3,15 +3,15 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeTimers, dictionary, isFadingOut, isTimelinePlaying, labelsDisabled, media, outLocked, outputCache, outputs, overlayTimers, playingAudio, playingMetronome, styles as outputStyles, timelineRecordingAction } from "../../shared/core/stores"
 import { clearAll, clearBackground } from "../../components/output/clear"
-import { getActiveOutputs, getOutputContent, isOutCleared } from "../../components/helpers/output"
+import { getActiveOutputs, getOutputContent, isOutCleared } from "../../shared/utils/helpers/output"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ClearButtons } from "./ClearButtons"
 
 vi.mock("../../audio/audioFading", () => ({ clearAudio: vi.fn() }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../utils/shortcuts", () => ({ presentationControllersKeysDisabled: vi.fn(() => false) }))
-vi.mock("../../components/helpers/media", () => ({ getMediaLayerType: vi.fn(() => "background") }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/helpers/media", () => ({ getMediaLayerType: vi.fn(() => "background") }))
+vi.mock("../../shared/utils/helpers/output", () => ({
     getActiveOutputs: vi.fn(() => []),
     getOutputContent: vi.fn(() => null),
     isOutCleared: vi.fn(() => false)

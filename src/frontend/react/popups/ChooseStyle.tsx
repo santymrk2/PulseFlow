@@ -1,5 +1,5 @@
 import { popupData } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { ChoiceGrid } from "../ui/choice-grid/ChoiceGrid"
 
 // Escribe: popupData = { id: "choose_style", value: id }.

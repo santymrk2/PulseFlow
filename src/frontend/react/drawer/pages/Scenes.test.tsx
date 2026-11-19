@@ -9,11 +9,11 @@ import { Scenes } from "./Scenes"
 
 const { historyMock, startSceneMock, findMatchingOutMock } = vi.hoisted(() => ({ historyMock: vi.fn(), startSceneMock: vi.fn(), findMatchingOutMock: vi.fn(() => null) }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../components/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock, startScene: startSceneMock }))
-vi.mock("../../../components/helpers/history", () => ({ history: historyMock }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock, startScene: startSceneMock }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
 vi.mock("./ScenePreview", () => ({ ScenePreview: ({ scene }: { scene: { id: string } }) => <div data-testid={`preview-${scene.id}`} /> }))
 vi.mock("./SceneActions", () => ({ SceneActions: ({ sceneId }: { sceneId: string }) => <div data-testid={`actions-${sceneId}`} /> }))
 

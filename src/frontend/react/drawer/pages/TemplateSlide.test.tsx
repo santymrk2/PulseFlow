@@ -36,8 +36,8 @@ vi.mock("../../../shared/core/stores", () => ({
         }
     }
 }))
-vi.mock("../../../components/helpers/media", () => ({ getMedia: vi.fn(async () => null), getThumbnailPath: () => "", mediaSize: { slideSize: "slideSize" } }))
-vi.mock("../../../components/helpers/output", () => ({ getResolution: () => ({ width: 1920, height: 1080 }) }))
+vi.mock("../../../shared/utils/helpers/media", () => ({ getMedia: vi.fn(async () => null), getThumbnailPath: () => "", mediaSize: { slideSize: "slideSize" } }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 1920, height: 1080 }) }))
 vi.mock("../../../components/slide/getStyleResolution", () => ({ getStyleResolution: () => "" }))
 vi.mock("../../edit/editbox/Editbox", () => ({ Editbox: () => <div data-testid="editbox" /> }))
 vi.mock("../media/MediaLoader", () => ({ MediaLoader: () => <div data-testid="media" /> }))

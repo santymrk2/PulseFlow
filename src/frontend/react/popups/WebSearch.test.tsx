@@ -6,14 +6,14 @@ import { Main } from "../../../types/IPC/Main"
 import type { LyricSearchResult } from "../../../types/Main"
 import { destroyMain, receiveMain, sendMain } from "../../shared/core/ipc/main"
 import { dictionary, special } from "../../shared/core/stores"
-import { newToast } from "../../utils/common"
+import { newToast } from "../../shared/utils/common"
 import { clearIslands, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { WebSearch, type LyricData } from "./WebSearch"
 
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveMain: vi.fn((id: string) => `id-${id}`), destroyMain: vi.fn() }))
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
-vi.mock("../../utils/language", () => ({ translateText: (value: string) => value }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (value: string) => value }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 
 const SONG = (title: string, artist: string, source: LyricSearchResult["source"] = "Genius"): LyricSearchResult => ({ key: title, title, artist, source })

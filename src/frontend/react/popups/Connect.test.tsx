@@ -13,7 +13,7 @@ import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Connect } from "./Connect"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: { recorderActivate: vi.fn() } }))
 vi.mock("../../utils/remoteController", () => ({ startRemoteController: vi.fn(), stopRemoteController: vi.fn() }))

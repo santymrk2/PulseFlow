@@ -8,7 +8,7 @@ import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SettingsTabs } from "./SettingsTabs"
 import styles from "./SettingsTabs.module.css"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 
 let restaurar: () => void = () => {}
 afterEach(() => {

@@ -6,7 +6,7 @@ import { actionHistory, dictionary } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ActionHistory } from "./ActionHistory"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 
 let restaurar: () => void = () => {}
 function montar(items: { action: string; data: unknown; time: number; count: number; source?: string }[]) {

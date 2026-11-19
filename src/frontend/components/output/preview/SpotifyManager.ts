@@ -2,7 +2,7 @@ import { get, writable } from "../../../shared/core/lib/store"
 import { Main } from "../../../../types/IPC/Main"
 import type { SpotifyState } from "../../../../types/Main"
 import { requestMain } from "../../../shared/core/ipc/main"
-import { wait } from "../../../utils/common"
+import { wait } from "../../../shared/utils/common"
 import { special } from "../../../shared/core/stores"
 
 export const spotifyState = writable<SpotifyState | null>(null)

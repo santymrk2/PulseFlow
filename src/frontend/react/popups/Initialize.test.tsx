@@ -6,17 +6,17 @@ import { Main } from "../../../types/IPC/Main"
 import { requestMain, sendMain } from "../../shared/core/ipc/main"
 import { activePopup, dataPath, dictionary, guideActive, language, popupData, timeFormat } from "../../shared/core/stores"
 import { createData } from "../../utils/createData"
-import { setLanguage } from "../../utils/language"
+import { setLanguage } from "../../shared/utils/language"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Initialize } from "./Initialize"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))
 vi.mock("../../utils/createData", () => ({ createData: vi.fn() }))
 // el módulo real arrastra un ciclo con common/stores al mockearlo parcialmente: se reemplaza entero con un translateText mínimo
-vi.mock("../../utils/language", async () => {
+vi.mock("../../shared/utils/language", async () => {
     const { get } = await vi.importActual<typeof import("../../shared/core/lib/store")>("../../shared/core/lib/store")
     const { dictionary: dict } = await vi.importActual<typeof import("../../shared/core/stores")>("../../shared/core/stores")
     const translateText = (text: string) => text.replace(/\$?([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]+)/g, (match, a, b) => get(dict)[a]?.[b] || match)

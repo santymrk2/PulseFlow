@@ -1,11 +1,11 @@
 import { get } from "../../../../shared/core/lib/store"
 import type { Item, Line } from "../../../../../types/Show"
 import { showsCache, templates } from "../../../../shared/core/stores"
-import { newToast } from "../../../../utils/common"
+import { newToast } from "../../../../shared/utils/common"
 import { createDoubleTemplate } from "../../../../utils/createData"
 import { getItemTextArray } from "../../../edit/scripts/textStyle"
-import { clone, sortByName } from "../../../helpers/array"
-import { history } from "../../../helpers/history"
+import { clone, sortByName } from "../../../../shared/utils/helpers/array"
+import { history } from "../../../../shared/utils/helpers/history"
 import { isoLanguages } from "./isoLanguages"
 
 // https://www.npmjs.com/package/translate

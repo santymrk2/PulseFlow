@@ -4,8 +4,8 @@ import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { requestMain, sendMain } from "../../shared/core/ipc/main"
 import { activeProject, focusMode, media, outLocked, outputs, playingVideos, projects, videoMarkers } from "../../shared/core/stores"
-import { encodeFilePath, getMediaLayerType } from "../../components/helpers/media"
-import { getFirstActiveOutput } from "../../components/helpers/output"
+import { encodeFilePath, getMediaLayerType } from "../../shared/utils/helpers/media"
+import { getFirstActiveOutput } from "../../shared/utils/helpers/output"
 import { clearSlide } from "../../components/output/clear"
 import { SoftLoopSync } from "../../components/media/video/softLoop"
 import { syncVideoToAudio, videoSync } from "../../components/media/video/videoSync"
@@ -13,8 +13,8 @@ import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { VideoShow } from "./VideoShow"
 
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(async () => ({})), sendMain: vi.fn(), Main: { MEDIA_TRACKS: "tracks", GET_WINDOWS: "windows" } }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../components/helpers/media", () => ({
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/helpers/media", () => ({
     addVideoMarker: vi.fn(),
     enableSubtitle: vi.fn(),
     encodeFilePath: vi.fn((path: string) => path),
@@ -23,8 +23,8 @@ vi.mock("../../components/helpers/media", () => ({
     getMediaLayerType: vi.fn(() => "background"),
     removeExtension: vi.fn((path: string) => path)
 }))
-vi.mock("../../components/helpers/output", () => ({ getFirstActiveOutput: vi.fn(() => null), setOutput: vi.fn() }))
-vi.mock("../../components/helpers/time", () => ({ joinTime: vi.fn((value: string) => value), secondsToTime: vi.fn((value: number) => String(value)) }))
+vi.mock("../../shared/utils/helpers/output", () => ({ getFirstActiveOutput: vi.fn(() => null), setOutput: vi.fn() }))
+vi.mock("../../shared/utils/helpers/time", () => ({ joinTime: vi.fn((value: string) => value), secondsToTime: vi.fn((value: number) => String(value)) }))
 vi.mock("../../components/output/clear", () => ({ clearSlide: vi.fn() }))
 vi.mock("../../components/media/video/softLoop", () => ({ SoftLoopSync: vi.fn(() => ({ update: vi.fn(() => 0), destroy: vi.fn() })) }))
 vi.mock("../../components/media/video/videoSync", () => ({ syncVideoToAudio: vi.fn(), videoSync: vi.fn(() => () => {}) }))

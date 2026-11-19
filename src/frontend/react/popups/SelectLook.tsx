@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
-import { applyLook } from "../../components/helpers/looks"
+import { applyLook } from "../../shared/utils/helpers/looks"
 import { activeLook, activePopup, looks, popupData } from "../../shared/core/stores"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"

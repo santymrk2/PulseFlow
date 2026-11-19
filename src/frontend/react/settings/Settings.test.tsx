@@ -8,7 +8,7 @@ import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Settings } from "./Settings"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/routing/audioRoutingInit", () => ({ resetAudioRouting: vi.fn() }))
 vi.mock("./General", () => ({ General: () => <div>stub-general</div> }))
 vi.mock("./Files", () => ({ Files: () => <div>stub-files</div> }))

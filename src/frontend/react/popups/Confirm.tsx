@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { activePopup, popupData } from "../../shared/core/stores"
-import { setPopupSubmit } from "../../utils/popup"
+import { setPopupSubmit } from "../../shared/utils/popup"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"

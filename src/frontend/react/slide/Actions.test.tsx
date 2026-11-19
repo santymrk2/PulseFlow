@@ -2,20 +2,20 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeShow, groups, outputs, showsCache, special, templates } from "../../shared/core/stores"
-import { newToast } from "../../utils/common"
-import { getAccess } from "../../utils/profile"
-import { history } from "../../components/helpers/history"
+import { newToast } from "../../shared/utils/common"
+import { getAccess } from "../../shared/utils/profile"
+import { history } from "../../shared/utils/helpers/history"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Actions } from "./Actions"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/output", () => ({ getFirstActiveOutput: vi.fn(() => undefined) }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/output", () => ({ getFirstActiveOutput: vi.fn(() => undefined) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
 vi.mock("../../components/actions/actions", () => ({ getActionName: vi.fn(() => ""), getActionTriggerId: vi.fn((id: string) => id) }))
 vi.mock("../../components/actions/actionData", () => ({ actionData: { goto: { name: "actions.goto", icon: "forward" } } }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))

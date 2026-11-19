@@ -7,7 +7,7 @@ import { playingAudio, selected } from "../../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../../test/storeTestKit"
 import { AudioEffect } from "./AudioEffect"
 
-vi.mock("../../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../../audio/audioPlayer", () => ({ AudioPlayer: { getAudio: vi.fn(), start: vi.fn() } }))
 vi.mock("../../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

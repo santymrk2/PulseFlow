@@ -8,10 +8,10 @@ import { SceneActions } from "./SceneActions"
 
 const { historyMock } = vi.hoisted(() => ({ historyMock: vi.fn() }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../components/helpers/history", () => ({ history: historyMock }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
 
 let restaurar: () => void = () => {}
 

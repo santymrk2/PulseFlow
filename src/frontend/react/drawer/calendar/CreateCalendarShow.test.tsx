@@ -9,11 +9,11 @@ import { CreateCalendarShow } from "./CreateCalendarShow"
 
 const { createSlidesMock, historyMock } = vi.hoisted(() => ({ createSlidesMock: vi.fn(), historyMock: vi.fn() }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/drawer/calendar/calendar", () => ({ createSlides: createSlidesMock }))
-vi.mock("../../../components/helpers/history", () => ({ history: historyMock }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
 
 const dict = { main: { unnamed: "Sin nombre" }, new: { show_convert: "Convertir en show" }, empty: { events: "Sin eventos" }, month: { 11: "Noviembre" } }
 const day = {

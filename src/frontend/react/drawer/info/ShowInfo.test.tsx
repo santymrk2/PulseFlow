@@ -8,10 +8,10 @@ import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { ShowInfo } from "./ShowInfo"
 
 const mocks = vi.hoisted(() => ({ send: vi.fn(), lines: [] as unknown[] }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {}, hasNewerUpdate: () => Promise.resolve(false) }))
-vi.mock("../../../utils/request", () => ({ send: mocks.send }))
-vi.mock("../../../components/helpers/show", () => ({ updateCachedShows: vi.fn() }))
-vi.mock("../../../components/helpers/shows", () => ({ _show: () => ({ slides: () => ({ items: () => ({ lines: () => ({ get: () => mocks.lines }) }) }) }) }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {}, hasNewerUpdate: () => Promise.resolve(false) }))
+vi.mock("../../../shared/utils/request", () => ({ send: mocks.send }))
+vi.mock("../../../shared/utils/helpers/show", () => ({ updateCachedShows: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: () => ({ slides: () => ({ items: () => ({ lines: () => ({ get: () => mocks.lines }) }) }) }) }))
 vi.mock("../../system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
 vi.mock("../../system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
 vi.mock("../../../audio/audioProcessor", () => ({}))

@@ -8,7 +8,7 @@ import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ChangeIcon } from "./ChangeIcon"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ addItem: vi.fn() }))
 vi.mock("../../shared/core/values/customIcons", () => ({ customIcons: { empty: "<path/>", star: "<path/>", heart_icon: "<path/>" }, customIconsColors: { star: "#ffcc00" } }))
 

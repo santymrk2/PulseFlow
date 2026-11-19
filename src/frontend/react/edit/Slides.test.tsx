@@ -38,8 +38,8 @@ vi.mock("../../shared/core/stores", () => ({
     }
 }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: any) => <span>{id}</span> }))
-vi.mock("../../components/helpers/output", () => ({ findMatchingOut: () => null }))
-vi.mock("../../components/helpers/show", () => ({ getShowCacheId: () => "s1" }))
+vi.mock("../../shared/utils/helpers/output", () => ({ findMatchingOut: () => null }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getShowCacheId: () => "s1" }))
 vi.mock("../slide/SkeletonSlide", () => ({ SkeletonSlide: () => <div data-testid="skeleton" /> }))
 vi.mock("../slide/Slide", () => ({ Slide: () => <div data-testid="slide" /> }))
 vi.mock("../system/Autoscroll", () => ({ Autoscroll: ({ children }: any) => <div>{children}</div> }))

@@ -3,9 +3,9 @@ import { uid } from "uid"
 import type { Event } from "../../../../types/Calendar"
 import { convertCalendar } from "../../../converters/calendar"
 import { calendars, events, special } from "../../../shared/core/stores"
-import { translateText } from "../../../utils/language"
-import { confirmCustom } from "../../../utils/popup"
-import { encodeFilePath } from "../../helpers/media"
+import { translateText } from "../../../shared/utils/language"
+import { confirmCustom } from "../../../shared/utils/popup"
+import { encodeFilePath } from "../../../shared/utils/helpers/media"
 
 export interface CalendarData {
     id: string

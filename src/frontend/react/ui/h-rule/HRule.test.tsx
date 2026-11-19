@@ -6,7 +6,7 @@ import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { HRule } from "./HRule"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 let restaurar: () => void = () => {}
 

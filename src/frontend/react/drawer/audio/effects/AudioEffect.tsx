@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { AudioPlayer } from "../../../../audio/audioPlayer"
-import { getFileName } from "../../../../components/helpers/media"
+import { getFileName } from "../../../../shared/utils/helpers/media"
 import { activeShow, outLocked, playingAudio } from "../../../../shared/core/stores"
 import { useStore } from "../../../hooks/useStore"
 import { Button, type ButtonClickDetail } from "../../../ui/button/Button"

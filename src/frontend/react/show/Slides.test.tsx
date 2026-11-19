@@ -3,25 +3,25 @@ import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeEdit, activeFocus, activePage, activePopup, cachedShowsData, categories, focusMode, groups, lessonsLoaded, notFound, outLocked, outputs, outputSlideCache, showsCache, slidesOptions, special, templates } from "../../shared/core/stores"
-import { hasNewerUpdate } from "../../utils/common"
-import { getActiveOutputs } from "../../components/helpers/output"
-import { getCachedShow } from "../../components/helpers/show"
-import { _show } from "../../components/helpers/shows"
+import { hasNewerUpdate } from "../../shared/utils/common"
+import { getActiveOutputs } from "../../shared/utils/helpers/output"
+import { getCachedShow } from "../../shared/utils/helpers/show"
+import { _show } from "../../shared/utils/helpers/shows"
 import { clearIslands } from "../test/islandMock"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Slides } from "./Slides"
 
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/common", () => ({ hasNewerUpdate: vi.fn(async () => false), wait: vi.fn(async () => {}) }))
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
-vi.mock("../../components/helpers/fonts", () => ({ loadCustomFonts: vi.fn() }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/media", () => ({ encodeFilePath: vi.fn((path: string) => path), getExtension: vi.fn(() => "") }))
-vi.mock("../../components/helpers/output", () => ({ getActiveOutputs: vi.fn(() => []), refreshOut: vi.fn(), setOutput: vi.fn() }))
-vi.mock("../../components/helpers/show", () => ({ getCachedShow: vi.fn(() => null) }))
-vi.mock("../../components/helpers/showActions", () => ({ checkActionTrigger: vi.fn(), getFewestOutputLines: vi.fn(() => 0), getFewestOutputLinesReveal: vi.fn(() => 0), getItemWithMostLines: vi.fn(() => null), updateOut: vi.fn() }))
-vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ hasNewerUpdate: vi.fn(async () => false), wait: vi.fn(async () => {}) }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
+vi.mock("../../shared/utils/helpers/fonts", () => ({ loadCustomFonts: vi.fn() }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/media", () => ({ encodeFilePath: vi.fn((path: string) => path), getExtension: vi.fn(() => "") }))
+vi.mock("../../shared/utils/helpers/output", () => ({ getActiveOutputs: vi.fn(() => []), refreshOut: vi.fn(), setOutput: vi.fn() }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getCachedShow: vi.fn(() => null) }))
+vi.mock("../../shared/utils/helpers/showActions", () => ({ checkActionTrigger: vi.fn(), getFewestOutputLines: vi.fn(() => 0), getFewestOutputLinesReveal: vi.fn(() => 0), getItemWithMostLines: vi.fn(() => null), updateOut: vi.fn() }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
 vi.mock("../slide/SkeletonSlide", () => ({ SkeletonSlide: () => <div data-testid="skeleton" /> }))
 vi.mock("../slide/Slide", () => ({ Slide: ({ index }: { index: number }) => <div data-testid="slide" data-index={index} /> }))

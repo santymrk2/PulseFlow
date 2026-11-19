@@ -1,8 +1,8 @@
 import { uid } from "uid"
 import type { Chords, Item, Show, Slide } from "../../../../types/Show"
 import { selected } from "../../../shared/core/stores"
-import { clone } from "../../helpers/array"
-import { _show } from "../../helpers/shows"
+import { clone } from "../../../shared/utils/helpers/array"
+import { _show } from "../../../shared/utils/helpers/shows"
 import { keys } from "../values/chords"
 
 export function createChord(pos: number, key: string, id: string = uid(5)): Chords {

@@ -2,13 +2,13 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeShow, globalTags, selected } from "../../shared/core/stores"
-import { history } from "../../components/helpers/history"
+import { history } from "../../shared/utils/helpers/history"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Tag } from "./Tag"
 
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/shows", () => ({ _show: () => ({ get: (key: string) => (key === "quickAccess" ? { tags: [] } : null) }) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ get: (key: string) => (key === "quickAccess" ? { tags: [] } : null) }) }))
 vi.mock("../ui/hidden-input/HiddenInput", () => ({
     HiddenInput: ({ id, onEdit }: { id: string; onEdit?: (detail: { value: string; id: string }) => void }) => <button data-testid={id} onClick={() => onEdit?.({ value: "Nuevo", id })} />
 }))

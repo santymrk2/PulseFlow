@@ -4,10 +4,10 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { ReactNode } from "react"
 
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
-vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
-vi.mock("../../utils/search", () => ({ formatSearch: (s: string) => s }))
-vi.mock("../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v || {})) }))
-vi.mock("../../components/helpers/shows", () => ({ _show: () => ({}) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
+vi.mock("../../shared/utils/search", () => ({ formatSearch: (s: string) => s }))
+vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v || {})) }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({}) }))
 vi.mock("../../components/show/tools/groups", () => ({ getGlobalGroupName: () => "" }))
 vi.mock("../../components/actions/actionData", () => ({ actionData: {} }))
 vi.mock("../../components/actions/actions", () => ({ getActionName: () => "", getActionTriggerId: (id: string) => id }))

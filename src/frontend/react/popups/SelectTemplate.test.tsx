@@ -3,16 +3,16 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, activeStyle, dictionary, drawerTabsData, outputs, popupData, previewOutputId, scriptures, styles, templates } from "../../shared/core/stores"
-import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
+import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
 import { clearIslands, islands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SelectTemplate } from "./SelectTemplate"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
+vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../drawer/Card", async () => {
     const { islands } = await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")
     return {

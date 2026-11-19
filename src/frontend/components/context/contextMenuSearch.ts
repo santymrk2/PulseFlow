@@ -1,4 +1,4 @@
-import { formatSearch } from "../../utils/search"
+import { formatSearch } from "../../shared/utils/search"
 import { contextMenuItems, type ContextMenuItem } from "./contextMenus"
 import { loadItems } from "./loadItems"
 import { closeContextMenu } from "../../utils/shortcuts"

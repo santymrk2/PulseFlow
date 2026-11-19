@@ -2,7 +2,7 @@ import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { addEffectToStack, EFFECTS_LIST, type EffectType } from "../../audio/effects/audioEffectsHelpers"
 import { activeAudioEffects, activePopup, popupData } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { Button } from "../ui/button/Button"
 
 // Port de components/main/popups/AddAudioEffect.svelte. Lee: popupData.channelId (si no, activeAudioEffects, si no "main").

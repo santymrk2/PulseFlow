@@ -7,17 +7,17 @@ import type { Item } from "../../../types/Show"
 import { groups, outputs, overlays, scriptureSettings, showsCache, styles, templates, variables } from "../../shared/core/stores"
 import autosize from "../../components/edit/scripts/autosize"
 import { clearAutoSizeCache } from "../../components/slide/autosizeCache"
-import { send } from "../../utils/request"
+import { send } from "../../shared/utils/request"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Textbox } from "./Textbox"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, wait: vi.fn(() => Promise.resolve("ended")) }))
-vi.mock("../../utils/request", () => ({ send: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, wait: vi.fn(() => Promise.resolve("ended")) }))
+vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/edit/scripts/autosize", () => ({ default: vi.fn(() => 42) }))
-vi.mock("../../components/helpers/showActions", () => ({ createCSSVariables: vi.fn(() => "--variable-test: 1;") }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/helpers/showActions", () => ({ createCSSVariables: vi.fn(() => "--variable-test: 1;") }))
+vi.mock("../../shared/utils/helpers/output", () => ({
     getActiveOutputs: vi.fn(() => ["out1"]),
     getAllActiveOutputs: vi.fn(() => [{ id: "out1", out: { slide: { id: "sh1", index: 0, layout: "l1" } }, style: "st1", color: "red" }]),
     getFirstActiveOutput: vi.fn(() => ({ id: "out1", out: { slide: { id: "sh1", index: 0, layout: "l1" } } })),

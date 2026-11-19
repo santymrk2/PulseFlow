@@ -4,8 +4,8 @@ import type { Project, ProjectShowRef } from "../../../types/Projects"
 import { similarity } from "../../converters/txt"
 import { activeEdit, activeProject, activeShow, leftSource, projects, projectView, saved, showRecentlyUsedProjects, shows, showsCache } from "../../shared/core/stores"
 import { generateScriptureShowFromReference } from "../drawer/bible/scripture"
-import { keysToID, sortByTimeNew } from "../helpers/array"
-import { history } from "../helpers/history"
+import { keysToID, sortByTimeNew } from "../../shared/utils/helpers/array"
+import { history } from "../../shared/utils/helpers/history"
 import { appendShowRefs } from "./leftSource"
 
 export function openProject(id: string, openFirstItem: boolean = true) {

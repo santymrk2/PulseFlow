@@ -9,9 +9,9 @@ import { Show } from "./Show"
 
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/common", () => ({ DEFAULT_WIDTH: 250 }))
+vi.mock("../../shared/utils/common", () => ({ DEFAULT_WIDTH: 250 }))
 vi.mock("../../components/drawer/timers/timers", () => ({ createGlobalTimerFromLocalTimer: vi.fn() }))
-vi.mock("../../components/helpers/output", () => ({ setOutput: vi.fn() }))
+vi.mock("../../shared/utils/helpers/output", () => ({ setOutput: vi.fn() }))
 vi.mock("../main/Splash", () => ({ Splash: () => <div data-isla="Splash" /> }))
 vi.mock("../output/Camera", async () => ({ Camera: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Camera") }))
 vi.mock("../drawer/live/NDIStream", async () => ({ NDIStream: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("NDIStream") }))

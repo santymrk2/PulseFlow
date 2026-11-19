@@ -1,5 +1,5 @@
 import { livePrepare, outputs, styles as stylesStore } from "../../shared/core/stores"
-import { getResolution } from "../../components/helpers/output"
+import { getResolution } from "../../shared/utils/helpers/output"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
 import { Icon } from "../helpers/Icon"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"

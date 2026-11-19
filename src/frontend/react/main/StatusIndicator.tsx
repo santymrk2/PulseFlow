@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { os, statusIndicator } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { openSettings } from "../../components/settings/openSettings"
 import { useStore } from "../hooks/useStore"
 import { Icon } from "../helpers/Icon"

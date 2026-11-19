@@ -5,11 +5,11 @@ import { activeEdit, activeShow, selected, showsCache } from "../../../shared/co
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { ItemStyle } from "./ItemStyle"
 
-vi.mock("../../../utils/common", () => ({ wait: () => Promise.resolve() }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../../components/helpers/output", () => ({ percentageToAspectRatio: (i: unknown) => i, stylePosToPercentage: (d: unknown) => d }))
-vi.mock("../../../components/helpers/show", () => ({ getLayoutRef: () => [] }))
-vi.mock("../../../components/helpers/style", () => ({ getStyles: () => ({}) }))
+vi.mock("../../../shared/utils/common", () => ({ wait: () => Promise.resolve() }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ percentageToAspectRatio: (i: unknown) => i, stylePosToPercentage: (d: unknown) => d }))
+vi.mock("../../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [] }))
+vi.mock("../../../shared/utils/helpers/style", () => ({ getStyles: () => ({}) }))
 vi.mock("../../../components/edit/scripts/textStyle", () => ({ addFilterString: () => "", addStyleString: () => "" }))
 vi.mock("../../../components/edit/values/boxes", () => ({ setBoxInputValue: vi.fn() }))
 vi.mock("../../../components/edit/values/item", () => ({ itemSections: {} }))

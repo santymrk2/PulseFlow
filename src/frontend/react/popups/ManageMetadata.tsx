@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
-import { initializeMetadata } from "../../components/helpers/show"
+import { initializeMetadata } from "../../shared/utils/helpers/show"
 import { customMetadata } from "../../shared/core/stores"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"

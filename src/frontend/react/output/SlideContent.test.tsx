@@ -6,9 +6,9 @@ import SlideContent from "./SlideContent"
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/helpers/array", () => ({ clone: (value: unknown) => JSON.parse(JSON.stringify(value)) }))
-vi.mock("../../components/helpers/fonts", () => ({ loadCustomFonts: () => {} }))
-vi.mock("../../components/helpers/output", () => ({ getStyleTemplate: () => ({}), itemNeedsAutoSize: () => false, slideHasAutoSizeItem: () => false }))
+vi.mock("../../shared/utils/helpers/array", () => ({ clone: (value: unknown) => JSON.parse(JSON.stringify(value)) }))
+vi.mock("../../shared/utils/helpers/fonts", () => ({ loadCustomFonts: () => {} }))
+vi.mock("../../shared/utils/helpers/output", () => ({ getStyleTemplate: () => ({}), itemNeedsAutoSize: () => false, slideHasAutoSizeItem: () => false }))
 vi.mock("../slide/Textbox", () => ({ Textbox: () => null }))
 vi.mock("./SlideItemTransition", () => ({ SlideItemTransition: () => null }))
 

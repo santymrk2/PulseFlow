@@ -8,7 +8,7 @@ import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { Canva } from "./Canva"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 

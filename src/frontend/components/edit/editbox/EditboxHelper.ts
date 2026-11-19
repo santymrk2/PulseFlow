@@ -1,9 +1,9 @@
 import { get } from "../../../shared/core/lib/store"
 import type { Item, Line } from "../../../../types/Show"
 import { styles } from "../../../shared/core/stores"
-import { clone } from "../../helpers/array"
-import { getFirstActiveOutput } from "../../helpers/output"
-import { getStyles } from "../../helpers/style"
+import { clone } from "../../../shared/utils/helpers/array"
+import { getFirstActiveOutput } from "../../../shared/utils/helpers/output"
+import { getStyles } from "../../../shared/utils/helpers/style"
 import { getItemText } from "../scripts/textStyle"
 
 export class EditboxHelper {

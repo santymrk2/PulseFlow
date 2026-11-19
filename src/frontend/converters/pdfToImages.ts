@@ -14,7 +14,7 @@
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
 import { Main } from "../../types/IPC/Main"
 import { requestMain } from "../shared/core/ipc/main"
-import { encodeFilePath, getFileName, locateMediaFile, removeExtension } from "../components/helpers/media"
+import { encodeFilePath, getFileName, locateMediaFile, removeExtension } from "../shared/utils/helpers/media"
 import { pdfImports } from "../shared/core/stores"
 import { createImageShow } from "./imageShow"
 

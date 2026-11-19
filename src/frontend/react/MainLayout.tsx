@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import { activeEdit, activePage, activeProfile, activeProject, activeShow, activeStage, currentWindow, editMode, focusMode, loaded, os, projectView, resized, showChangeProfileMenu, showsCache, special } from "../shared/core/stores"
-import { DEFAULT_WIDTH } from "../utils/common"
+import { DEFAULT_WIDTH } from "../shared/utils/common"
 import { customActionActivation } from "../components/actions/actions"
 import { useStore } from "./hooks/useStore"
 import { LeftColumn } from "./show/left/LeftColumn"

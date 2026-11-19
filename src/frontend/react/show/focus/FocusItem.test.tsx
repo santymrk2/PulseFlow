@@ -5,7 +5,7 @@ import { outputs, showsCache } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { FocusItem } from "./FocusItem"
 
-vi.mock("../../../components/helpers/output", () => ({ getActiveOutputs: vi.fn(() => ["out1"]) }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getActiveOutputs: vi.fn(() => ["out1"]) }))
 vi.mock("../AudioPreview", () => ({ AudioPreview: ({ active }: { active: { id: string } }) => <div data-audio={active.id} /> }))
 vi.mock("../effect/EffectPreview", () => ({ EffectPreview: () => <div data-effect="true" /> }))
 vi.mock("../folder/FolderShow", () => ({ FolderShow: ({ path }: { path: string }) => <div data-folder={path} /> }))

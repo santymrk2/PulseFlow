@@ -6,10 +6,10 @@ import { activePopup, drawerTabsData, overlayCategories, selected, templateCateg
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { CategoryPicker } from "./CategoryPicker"
 
-vi.mock("../../utils/language", () => ({ translateText: (id: string) => id }))
-vi.mock("../../utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
 vi.mock("../../utils/createData", () => ({ setExampleEffects: vi.fn(), setExampleOverlays: vi.fn(), setExampleTemplates: vi.fn() }))
-vi.mock("../../components/helpers/clipboard", () => ({ deleteAction: vi.fn() }))
+vi.mock("../../shared/utils/helpers/clipboard", () => ({ deleteAction: vi.fn() }))
 vi.mock("../ui/button/Button", () => ({ Button: () => <button type="button">btn</button> }))
 vi.mock("../ui/input/Input", () => ({ Input: () => <input /> }))
 vi.mock("../ui/menu", () => ({ Menu: ({ children }: { children?: ReactNode }) => <div>{children}</div>, MenuItem: ({ children }: { children?: ReactNode }) => <div>{children}</div>, MenuSeparator: () => <hr /> }))

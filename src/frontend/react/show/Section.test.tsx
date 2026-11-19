@@ -5,7 +5,7 @@ import { actions, activeProject, projects, special } from "../../shared/core/sto
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Section } from "./Section"
 
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../components/actions/actions", () => ({ getActionIcon: vi.fn(() => "play"), runAction: vi.fn() }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 vi.mock("../helpers/Icon", () => ({ Icon: () => <span data-icon /> }))

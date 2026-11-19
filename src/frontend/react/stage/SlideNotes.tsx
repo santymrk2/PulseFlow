@@ -1,6 +1,6 @@
 import type { OutSlide } from "../../../types/Show"
 import { showsCache } from "../../shared/core/stores"
-import { getLayoutRef } from "../../components/helpers/show"
+import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { getStageTextLayoutOffset } from "../../components/stage/stage"
 import { useStore } from "../hooks/useStore"
 import styles from "./SlideNotes.module.css"

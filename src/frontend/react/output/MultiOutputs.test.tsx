@@ -6,16 +6,16 @@ import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { MultiOutputs } from "./MultiOutputs"
 
 vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn() }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../components/drawer/live/recorder", () => ({ stopMediaRecorder: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ openDrawer: vi.fn() }))
-vi.mock("../../components/helpers/array", () => ({
+vi.mock("../../shared/utils/helpers/array", () => ({
     clone: vi.fn((v: unknown) => v),
     keysToID: vi.fn((obj: Record<string, unknown>) => Object.entries(obj || {}).map(([id, v]) => ({ id, ...(v as object) }))),
     sortByName: vi.fn((arr: unknown[]) => arr),
     sortObject: vi.fn((arr: unknown[]) => arr)
 }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/helpers/output", () => ({
     defaultLayers: ["background", "slide", "overlays"],
     getOutputResolution: vi.fn(() => ({ width: 1920, height: 1080 })),
     startRtmpStreaming: vi.fn(),
@@ -23,9 +23,9 @@ vi.mock("../../components/helpers/output", () => ({
     stopRtmpStreaming: vi.fn(),
     stopStreaming: vi.fn()
 }))
-vi.mock("../../components/helpers/rtmpDestinations", () => ({ getUnhealthyDestinations: vi.fn(() => []), hasStreamableDestination: vi.fn(() => false) }))
-vi.mock("../../components/helpers/show", () => ({ bindSlidesToOutput: vi.fn(), getLayoutRef: vi.fn(() => []) }))
-vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn(() => ({ get: vi.fn(() => null) })) }))
+vi.mock("../../shared/utils/helpers/rtmpDestinations", () => ({ getUnhealthyDestinations: vi.fn(() => []), hasStreamableDestination: vi.fn(() => false) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ bindSlidesToOutput: vi.fn(), getLayoutRef: vi.fn(() => []) }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn(() => ({ get: vi.fn(() => null) })) }))
 vi.mock("./PreviewOutput", () => ({ PreviewOutput: () => <div data-testid="preview-output" /> }))
 vi.mock("../drawer/audio/AudioMeter", () => ({ AudioMeter: () => <div data-testid="audio-meter" /> }))
 vi.mock("../ui/select-field/SelectField", () => ({

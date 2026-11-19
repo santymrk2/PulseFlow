@@ -6,7 +6,7 @@ import buttonStyles from "../button/Button.module.css"
 import { ChoiceGrid, type ChoiceOption } from "./ChoiceGrid"
 import styles from "./ChoiceGrid.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 afterEach(cleanup)
 

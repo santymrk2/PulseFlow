@@ -11,8 +11,8 @@ vi.mock("../../shared/core/stores", () => ({
     activePopup: { set: vi.fn() }
 }))
 vi.mock("uid", () => ({ uid: () => "id" }))
-vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
-vi.mock("../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)), keysToID: () => [], sortByName: (a: unknown[]) => a }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
+vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)), keysToID: () => [], sortByName: (a: unknown[]) => a }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getDynamicValue: (v: unknown) => v }))
 vi.mock("../../components/actions/emitters", () => ({ formatData: {} }))
 vi.mock("../ui/button/Button", () => ({ Button: ({ children, onClick }: { children?: ReactNode; onClick?: () => void }) => <button onClick={onClick}>{children}</button> }))

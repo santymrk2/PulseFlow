@@ -4,14 +4,14 @@ import type { ReactNode } from "react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeShow, focusMode, outLocked, outputs, playingVideoState, presentationData, showsCache } from "../../shared/core/stores"
-import { formatUrl, getOutputtedWebsites, sendWebsiteKey, toggleWebsiteMute, triggerWebsiteAction } from "../../components/helpers/websiteControls"
+import { formatUrl, getOutputtedWebsites, sendWebsiteKey, toggleWebsiteMute, triggerWebsiteAction } from "../../shared/utils/helpers/websiteControls"
 import { VideoPlayer } from "../../components/media/video/videoPlayer"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import Show from "./Show"
 
-vi.mock("../../utils/language", () => ({ translateText: (id: string) => id }))
-vi.mock("../../components/helpers/media", () => ({ getFileName: (path: string) => path, removeExtension: (path: string) => path }))
-vi.mock("../../components/helpers/websiteControls", () => ({
+vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../shared/utils/helpers/media", () => ({ getFileName: (path: string) => path, removeExtension: (path: string) => path }))
+vi.mock("../../shared/utils/helpers/websiteControls", () => ({
     formatUrl: (url: string) => url,
     getOutputtedWebsites: vi.fn(() => [] as { src: string }[]),
     sendWebsiteKey: vi.fn(),

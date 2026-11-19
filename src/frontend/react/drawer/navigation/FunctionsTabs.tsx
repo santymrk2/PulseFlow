@@ -1,9 +1,9 @@
 import { useEffect } from "react"
 import type { Writable } from "../../../shared/core/lib/store"
 import type { Tag } from "../../../../types/Show"
-import { keysToID, sortByName, sortObject } from "../../../components/helpers/array"
+import { keysToID, sortByName, sortObject } from "../../../shared/utils/helpers/array"
 import { actions, actionTags, activeActionTagFilter, activeTimerTagFilter, activeVariableTagFilter, drawerTabsData, obsData, timerTags, timers, variableTags, variables } from "../../../shared/core/stores"
-import { getAccess } from "../../../utils/profile"
+import { getAccess } from "../../../shared/utils/profile"
 import { useStore } from "../../hooks/useStore"
 import { NavigationSections, type NavCategory, type NavSection } from "./NavigationSections"
 

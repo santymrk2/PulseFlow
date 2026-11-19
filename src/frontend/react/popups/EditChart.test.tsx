@@ -6,7 +6,7 @@ import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { EditChart } from "./EditChart"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../ui/color-field/ColorField", () => ({
     ColorField: ({ value, onChange }: { value: string; onChange: (value: string) => void }) => (
         <button data-color={value} onClick={() => onChange("#000001")}>

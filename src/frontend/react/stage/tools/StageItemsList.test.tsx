@@ -4,7 +4,7 @@ import type { ReactNode } from "react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeStage, dictionary, selected, stageShows, timers } from "../../../shared/core/stores"
-import { translateText } from "../../../utils/language"
+import { translateText } from "../../../shared/utils/language"
 import { getSortedStageItems, rearrangeStageItems } from "../../../components/edit/scripts/itemHelpers"
 import { getCustomStageLabel } from "../../../components/stage/stage"
 import { StageItemsList } from "./StageItemsList"
@@ -37,11 +37,11 @@ vi.mock("../../../shared/core/stores", () => {
         timers: makeStore({})
     }
 })
-vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../components/edit/scripts/itemHelpers", () => ({ getSortedStageItems: vi.fn(() => []), rearrangeStageItems: vi.fn() }))
 vi.mock("../../../components/edit/scripts/textStyle", () => ({ getItemText: vi.fn(() => "texto del item") }))
-vi.mock("../../../components/helpers/array", () => ({ clone: (value: unknown) => [...(value as unknown[])] }))
-vi.mock("../../../components/helpers/media", () => ({ getFileName: vi.fn(() => "video.mp4") }))
+vi.mock("../../../shared/utils/helpers/array", () => ({ clone: (value: unknown) => [...(value as unknown[])] }))
+vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: vi.fn(() => "video.mp4") }))
 vi.mock("../../../components/stage/stage", () => ({ getCustomStageLabel: vi.fn(() => "") }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id, custom }: { id: string; custom?: boolean }) => <span data-icon={id} data-custom={custom} /> }))
 vi.mock("../../ui/button/Button", () => ({

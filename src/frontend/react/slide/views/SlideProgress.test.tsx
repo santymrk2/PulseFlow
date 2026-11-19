@@ -5,17 +5,17 @@ import { activeProject, activeShow, allOutputs, groups, outputs, projects, shows
 import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { SlideProgress } from "./SlideProgress"
 
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../components/helpers/dynamicItemText", () => ({ slideTrackerParts: vi.fn(() => ({ current: "2" })) }))
-vi.mock("../../../components/helpers/output", () => ({ getFirstActiveOutput: vi.fn(() => ({ id: "out1" })) }))
-vi.mock("../../../components/helpers/projectProgress", () => ({
+vi.mock("../../../shared/utils/helpers/dynamicItemText", () => ({ slideTrackerParts: vi.fn(() => ({ current: "2" })) }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getFirstActiveOutput: vi.fn(() => ({ id: "out1" })) }))
+vi.mock("../../../shared/utils/helpers/projectProgress", () => ({
     getProjectItems: vi.fn(() => [{ index: 0, showId: "s1" }]),
     getCurrentProjectIndexes: vi.fn(() => [0]),
     getProjectItemLabel: vi.fn(() => "Show 1")
 }))
-vi.mock("../../../components/helpers/show", () => ({
+vi.mock("../../../shared/utils/helpers/show", () => ({
     getGroupName: vi.fn((_, __, name) => name),
     getLayoutRef: vi.fn(() => [])
 }))

@@ -1,6 +1,6 @@
 import { useEffect, useRef, type FormEvent } from "react"
 import { cn } from "../../../shared/core/lib/utils"
-import { translateText } from "../../../utils/language"
+import { translateText } from "../../../shared/utils/language"
 import { usePropState } from "../../hooks/usePropState"
 import styles from "./TextareaField.module.css"
 

@@ -9,7 +9,7 @@ import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { AudioRoutingNode, type AudioRoutingNodeProps } from "./AudioRoutingNode"
 import styles from "./AudioRoutingNode.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { start: vi.fn() } }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

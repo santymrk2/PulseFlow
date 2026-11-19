@@ -4,26 +4,26 @@ import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { StageItem, StageLayout } from "../../../types/Stage"
 import { activePopup, activeStage, activeTimers, allOutputs, dictionary, outputs, outputSlideCache, refreshEditSlide, stageShows, timers, variables } from "../../shared/core/stores"
-import { startResizing } from "../../utils/cursor"
+import { startResizing } from "../../shared/utils/cursor"
 import { sendBackgroundToStage } from "../../utils/stageTalk"
 import autosize from "../../components/edit/scripts/autosize"
 import { isConditionMet } from "../../components/edit/scripts/itemHelpers"
-import { loadThumbnail } from "../../components/helpers/media"
-import { replaceDynamicValues } from "../../components/helpers/showActions"
+import { loadThumbnail } from "../../shared/utils/helpers/media"
+import { replaceDynamicValues } from "../../shared/utils/helpers/showActions"
 import { getCustomStageLabel, getSlideTextItems } from "../../components/stage/stage"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Stagebox } from "./Stagebox"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../utils/cursor", () => ({ startResizing: vi.fn() }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/cursor", () => ({ startResizing: vi.fn() }))
 vi.mock("../../utils/stageTalk", () => ({ sendBackgroundToStage: vi.fn(async () => null) }))
 vi.mock("../../components/edit/scripts/autosize", () => ({ default: vi.fn(() => 64) }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ isConditionMet: vi.fn(() => true) }))
 vi.mock("../../components/edit/scripts/textStyle", () => ({ getItemText: vi.fn(() => "Texto del item") }))
-vi.mock("../../components/helpers/media", () => ({
+vi.mock("../../shared/utils/helpers/media", () => ({
     getExtension: vi.fn((path: string) => path.split(".").pop() || ""),
     getMediaType: vi.fn(() => "image"),
     loadThumbnail: vi.fn(async () => "thumb.jpg"),
@@ -36,16 +36,16 @@ vi.mock("../../shared/core/values/extensions", () => ({
     presentationExtensions: ["ppt"],
     mediaExtensions: ["mp4", "jpg"]
 }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/helpers/output", () => ({
     getActiveOutputs: vi.fn(() => ["out1"]),
     getStageResolution: vi.fn(() => ({ width: 1920, height: 1080 })),
     percentageStylePos: vi.fn((style: string) => style)
 }))
-vi.mock("../../components/helpers/showActions", () => ({
+vi.mock("../../shared/utils/helpers/showActions", () => ({
     createCSSVariables: vi.fn(() => "--var: 1;"),
     replaceDynamicValues: vi.fn((text: string) => text)
 }))
-vi.mock("../../components/helpers/style", () => ({ getStyles: vi.fn(() => ({ "font-size": "100px", "line-height": "1.2" })) }))
+vi.mock("../../shared/utils/helpers/style", () => ({ getStyles: vi.fn(() => ({ "font-size": "100px", "line-height": "1.2" })) }))
 vi.mock("../../components/stage/stage", () => ({
     getCustomStageLabel: vi.fn(() => "Etiqueta"),
     getSlideTextItems: vi.fn(() => [{ id: "s1" }]),

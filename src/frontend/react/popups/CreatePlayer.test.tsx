@@ -3,23 +3,23 @@ import { cleanup, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { getUrlTimestamp, getVimeoData, getYouTubeData } from "../../components/drawer/player/playerHelper"
-import { addVideoMarker } from "../../components/helpers/media"
+import { addVideoMarker } from "../../shared/utils/helpers/media"
 import { dictionary, playerVideos, popupData } from "../../shared/core/stores"
-import { newToast } from "../../utils/common"
+import { newToast } from "../../shared/utils/common"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { CreatePlayer } from "./CreatePlayer"
 
 vi.mock("uid", () => ({ uid: () => "nuevo" }))
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../components/drawer/player/playerHelper", () => ({
     getUrlTimestamp: vi.fn(() => 0),
     getVimeoData: vi.fn(async () => ({ name: "Vimeo name" })),
     getYouTubeData: vi.fn(async () => ({ name: "YT name" })),
     trimPlayerId: vi.fn((id: string) => id.replace("https://y/", ""))
 }))
-vi.mock("../../components/helpers/media", () => ({ addVideoMarker: vi.fn(() => 2) }))
-vi.mock("../../components/helpers/time", () => ({ joinTime: () => "1:00", secondsToTime: () => ({}) }))
+vi.mock("../../shared/utils/helpers/media", () => ({ addVideoMarker: vi.fn(() => 2) }))
+vi.mock("../../shared/utils/helpers/time", () => ({ joinTime: () => "1:00", secondsToTime: () => ({}) }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 
 let restaurar: () => void = () => {}

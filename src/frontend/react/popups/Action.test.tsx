@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { history } from "../../components/helpers/history"
+import { history } from "../../shared/utils/helpers/history"
 import { actionMoreOptionsUsed, actions, activePopup, activeShow, dictionary, overlays, popupData } from "../../shared/core/stores"
 import { clearIslands, islands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"
@@ -11,12 +11,12 @@ import { Action } from "./Action"
 
 const layout = vi.hoisted(() => ({ ref: [] as { data?: { actions?: { slideActions?: { id: string; triggers?: string[] }[] } } }[] }))
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener-1"), destroyMain: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
-vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
+vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 vi.mock("../actions/CreateAction", async () => ({ CreateAction: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("CreateAction") }))
 vi.mock("../actions/MidiValues", async () => ({ MidiValues: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("MidiValues") }))
@@ -28,10 +28,10 @@ vi.mock("../../components/actions/customActivation", () => ({
     ]
 }))
 vi.mock("../../components/actions/midi", () => ({ convertOldMidiToNewAction: (a: unknown) => a, defaultMidiActionChannels: {}, midiInListen: vi.fn() }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: () => layout.ref, updateCachedShows: vi.fn() }))
-vi.mock("../../components/helpers/shows", () => ({ _show: () => ({ get: () => ({}), set: vi.fn() }) }))
-vi.mock("../../components/helpers/media", () => ({ convertImagePathToIcon: vi.fn(async (path: string) => `icono:${path}`), getFileName: (p: string) => p }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => layout.ref, updateCachedShows: vi.fn() }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ get: () => ({}), set: vi.fn() }) }))
+vi.mock("../../shared/utils/helpers/media", () => ({ convertImagePathToIcon: vi.fn(async (path: string) => `icono:${path}`), getFileName: (p: string) => p }))
 
 const dict = { midi: { name: "Nombre", activate_keypress: "Atajo", ...{ midi: "MIDI" } }, actions: { custom_activation: "Activación", back: "Volver", activate_on_startup: "Al iniciar", activate_output_changed: "Salida cambiada", next_slide: "Siguiente slide" }, settings: { add: "Agregar" }, items: { icon: "Icono" } }
 

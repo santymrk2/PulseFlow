@@ -1,5 +1,5 @@
 import type { ShowList } from "../../../../types/Show"
-import { dateToString } from "../../../components/helpers/time"
+import { dateToString } from "../../../shared/utils/helpers/time"
 import { cn } from "../../../shared/core/lib/utils"
 import { activeShow, focusedArea, sorted } from "../../../shared/core/stores"
 import { VirtualList } from "../../drawer/VirtualList"

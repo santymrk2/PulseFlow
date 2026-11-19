@@ -9,8 +9,8 @@ import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { FocusMode } from "./FocusMode"
 
 vi.mock("../../../components/show/focus/focus", () => ({ getAllProjectItems: vi.fn(async () => []) }))
-vi.mock("../../../components/helpers/output", () => ({ getActiveOutputs: vi.fn(() => []) }))
-vi.mock("../../../utils/common", () => ({ hasNewerUpdate: vi.fn(async () => false) }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getActiveOutputs: vi.fn(() => []) }))
+vi.mock("../../../shared/utils/common", () => ({ hasNewerUpdate: vi.fn(async () => false) }))
 vi.mock("../../main/Loader", () => ({ Loader: () => <div data-testid="loader" /> }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))

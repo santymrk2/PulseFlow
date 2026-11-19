@@ -5,10 +5,10 @@ import { textEditZoom } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { TextEditor } from "./TextEditor"
 
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../utils/common", () => ({ newToast: vi.fn() }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/common", () => ({ newToast: vi.fn() }))
 vi.mock("../../utils/shortcuts", () => ({ getNormalizedKey: vi.fn(() => "f") }))
-vi.mock("../../utils/chordTranspose", () => ({ transposeText: vi.fn((text: string) => text) }))
+vi.mock("../../shared/utils/chordTranspose", () => ({ transposeText: vi.fn((text: string) => text) }))
 vi.mock("../../components/show/formatTextEditor", () => ({ formatText: vi.fn() }))
 vi.mock("../../components/show/getTextEditor", () => ({ getPlainEditorText: vi.fn(() => "Texto plano") }))
 vi.mock("../../converters/txt", () => ({ getQuickExample: vi.fn(() => "Ejemplo") }))

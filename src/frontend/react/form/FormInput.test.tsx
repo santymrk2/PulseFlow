@@ -10,8 +10,8 @@ vi.mock("../../shared/core/stores", () => ({
     activeEdit: { subscribe: () => () => {} },
     activePopup: { set: vi.fn() }
 }))
-vi.mock("../../components/helpers/select", () => ({ select: vi.fn() }))
-vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
+vi.mock("../../shared/utils/helpers/select", () => ({ select: vi.fn() }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../ui/text-field/TextField", () => ({ TextField: (p: Record<string, unknown>) => <input aria-label={String(p.label ?? "")} value={String(p.value ?? "")} onChange={() => {}} /> }))
 vi.mock("../ui/number-field/NumberField", () => ({ NumberField: (p: Record<string, unknown>) => <input aria-label={String(p.label ?? "")} type="number" value={Number(p.value ?? 0)} readOnly /> }))
 vi.mock("../ui/checkbox-field/CheckboxField", () => ({ CheckboxField: (p: Record<string, unknown>) => <input aria-label={String(p.label ?? "")} type="checkbox" checked={!!p.checked} readOnly /> }))

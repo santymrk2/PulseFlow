@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { LookAdvanced } from "./LookAdvanced"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../ui/color-field/ColorField", () => ({ ColorField: () => null }))
 vi.mock("../ui/number-field/NumberField", () => ({ NumberField: ({ label, onChange }: { label: string; onChange: (v: number | null) => void }) => <button onClick={() => onChange(null)}>{label}</button> }))
 

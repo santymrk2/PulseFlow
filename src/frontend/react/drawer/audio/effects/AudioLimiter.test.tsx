@@ -14,7 +14,7 @@ vi.mock("../../../../audio/effects/audioLimiter", () => ({
     getLimiterReduction: () => -3,
     updateLimiterConfig: vi.fn()
 }))
-vi.mock("../../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: { getChannelLiveVolume: () => -12 } }))
 vi.mock("../../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

@@ -6,7 +6,7 @@ import type { API_emitter, API_midi, API_rest_command } from "./api"
 import { emitOSC, type OSC_SIGNAL } from "./apiOSC"
 import { sendRestCommandSync } from "./rest"
 import { midiToNote } from "./midi"
-import { sendMidi } from "../helpers/showActions"
+import { sendMidi } from "../../shared/utils/helpers/showActions"
 
 const OSC_SIGNAL_INPUTS: Input[] = [
     { label: "inputs.url", id: "host", type: "string", value: "0.0.0.0" }, // ws://127.0.0.1

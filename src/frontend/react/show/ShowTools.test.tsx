@@ -2,16 +2,16 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeShow, labelsDisabled, outputs, showsCache, slideTimers } from "../../shared/core/stores"
-import { getActiveOutputs } from "../../components/helpers/output"
-import { _show } from "../../components/helpers/shows"
+import { getActiveOutputs } from "../../shared/utils/helpers/output"
+import { _show } from "../../shared/utils/helpers/shows"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ShowTools } from "./ShowTools"
 
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../components/helpers/output", () => ({ getActiveOutputs: vi.fn(() => []) }))
-vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn() }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/helpers/output", () => ({ getActiveOutputs: vi.fn(() => []) }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
 vi.mock("../output/Audio", () => ({ Audio: () => <div data-isla="Audio" /> }))
 vi.mock("../output/ToolsOverlay", () => ({ ToolsOverlay: () => <div data-isla="Overlay" /> }))
 vi.mock("../output/TimerControls", () => ({ TimerControls: () => <div data-isla="TimerControls" /> }))

@@ -1,7 +1,7 @@
 import type { CSSProperties, MouseEvent } from "react"
 import { EFFECTS_LIST, getEffectStack, moveEffectInStack, toggleEffectInStack } from "../../../../audio/effects/audioEffectsHelpers"
 import { activeAudioEffects, activePopup, audioEffects, popupData } from "../../../../shared/core/stores"
-import { translateText } from "../../../../utils/language"
+import { translateText } from "../../../../shared/utils/language"
 import { useStore } from "../../../hooks/useStore"
 import { Icon } from "../../../helpers/Icon"
 import { T } from "../../../helpers/T"

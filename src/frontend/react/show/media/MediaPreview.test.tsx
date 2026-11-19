@@ -3,24 +3,24 @@ import { cleanup, render, screen, waitFor } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { clearSlide } from "../../../components/output/clear"
-import { getMedia } from "../../../components/helpers/media"
-import { setOutput } from "../../../components/helpers/output"
+import { getMedia } from "../../../shared/utils/helpers/media"
+import { setOutput } from "../../../shared/utils/helpers/output"
 import { activeShow, media, outLocked, outputs, styles } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { MediaPreview } from "./MediaPreview"
 
-vi.mock("../../../components/helpers/media", () => ({
+vi.mock("../../../shared/utils/helpers/media", () => ({
     getMedia: vi.fn(async () => ({ path: "/media/image.png" })),
     getMediaLayerType: vi.fn(() => "background"),
     getMediaStyle: vi.fn(() => ({ fit: "contain" }))
 }))
-vi.mock("../../../components/helpers/output", () => ({
+vi.mock("../../../shared/utils/helpers/output", () => ({
     getActiveOutputs: vi.fn(() => ["out1"]),
     getCurrentStyle: vi.fn(() => ({})),
     setOutput: vi.fn()
 }))
 vi.mock("../../../components/output/clear", () => ({ clearSlide: vi.fn() }))
-vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../drawer/media/Image", () => ({ Image: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} /> }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../system/Center", () => ({ Center: ({ children }: { children: ReactNode }) => <div>{children}</div> }))

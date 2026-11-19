@@ -32,7 +32,7 @@ import type { AiSettings } from "../../../types/ai/AiSettings"
 import type { Outputs, RtmpStatus, SyncedOutputs } from "../../../types/Output"
 import type { DrawerTabIds } from "../../../types/Tabs"
 import type { AudioData } from "../../audio/audioPlayer"
-import type { WebsiteAction } from "../../components/helpers/websiteControls"
+import type { WebsiteAction } from "../utils/helpers/websiteControls"
 import type { PlayingVideoState, VideoAudioData } from "../../components/media/video/videoPlayer"
 
 // ----- TEMPORARY VARIABLES -----

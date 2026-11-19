@@ -1,5 +1,5 @@
 import { activePopup } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { Button } from "../ui/button/Button"
 
 // Port de components/settings/tabs/OtherButtons.svelte (F24.12)

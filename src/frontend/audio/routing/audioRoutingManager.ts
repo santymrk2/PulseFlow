@@ -1,6 +1,6 @@
 import { get } from "../../shared/core/lib/store"
 import type { AudioRoutingConfig } from "../../../types/AudioRouting"
-import { keysToID } from "../../components/helpers/array"
+import { keysToID } from "../../shared/utils/helpers/array"
 import { audioChannelsData, audioEffects, audioRouting, outputs } from "../../shared/core/stores"
 import { AudioAnalyser } from "../audioAnalyser"
 import { AudioSidechain } from "../audioSidechain"

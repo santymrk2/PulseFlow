@@ -6,12 +6,12 @@ import { activeEdit, activeShow, copyPasteEdit, overlays, selected, showsCache, 
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { EditTools } from "./EditTools"
 
-vi.mock("../../utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
-vi.mock("../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v ?? null)) }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: () => [], isSlideLocked: () => false }))
-vi.mock("../../components/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [] }) }) }))
-vi.mock("../../components/helpers/style", () => ({ getStyles: () => ({}) }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
+vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v ?? null)) }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [], isSlideLocked: () => false }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [] }) }) }))
+vi.mock("../../shared/utils/helpers/style", () => ({ getStyles: () => ({}) }))
 vi.mock("../../components/edit/scripts/itemClipboard", () => ({ getBoxStyle: () => ({}), getFilterStyle: () => ({}), getItemStyle: () => ({}), getSlideStyle: () => ({}), setBoxStyle: vi.fn(), setFilterStyle: vi.fn(), setItemStyle: vi.fn(), setSlideStyle: vi.fn() }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ DEFAULT_ITEM_STYLE: "" }))
 vi.mock("../../components/edit/scripts/textStyle", () => ({ addStyleString: () => "" }))

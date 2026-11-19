@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { createCustomCalendar } from "../../components/drawer/calendar/calendars"
-import { history } from "../../components/helpers/history"
+import { history } from "../../shared/utils/helpers/history"
 import { activeDays, activePopup, calendars, dictionary, drawerTabsData, eventEdit, events, popupData } from "../../shared/core/stores"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { clearIslands, islands } from "../test/islandMock"
@@ -12,7 +12,7 @@ import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { uid } from "uid"
 import { EditEvent } from "./EditEvent"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../components/drawer/calendar/calendar", () => ({
     getTime: (date: Date) => ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2),
@@ -20,7 +20,7 @@ vi.mock("../../components/drawer/calendar/calendar", () => ({
 }))
 vi.mock("../../components/drawer/calendar/calendars", () => ({ createCustomCalendar: vi.fn(), isCalendarImported: (cal?: { url?: string; custom?: boolean } | null) => (cal ? !!cal.url || !cal.custom : false) }))
 vi.mock("uid", () => ({ uid: vi.fn() }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/actions/actionData", () => ({ actionData: { start_show: { name: "Iniciar show" } } }))
 vi.mock("../actions/CreateAction", async () => ({ CreateAction: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("CreateAction") }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))

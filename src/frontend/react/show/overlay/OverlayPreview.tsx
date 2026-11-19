@@ -1,6 +1,6 @@
 import type { Item, Show } from "../../../../types/Show"
 import { outLocked, outputs, overlays } from "../../../shared/core/stores"
-import { findMatchingOut, getActiveOutputs, setOutput } from "../../../components/helpers/output"
+import { findMatchingOut, getActiveOutputs, setOutput } from "../../../shared/utils/helpers/output"
 import { useStore } from "../../hooks/useStore"
 import { Overlay } from "../../output/OutputOverlay"
 import { HoverPlay } from "../../system/HoverPlay"

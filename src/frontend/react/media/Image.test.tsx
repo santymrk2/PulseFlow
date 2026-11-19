@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { Image } from "./Image"
 
-vi.mock("../../components/helpers/media", () => ({
+vi.mock("../../shared/utils/helpers/media", () => ({
     encodeFilePath: (path: string) => `encoded:${path}`,
     cropImageToBase64: vi.fn(async () => "data:image/png;base64,crop")
 }))

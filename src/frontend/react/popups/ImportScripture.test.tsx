@@ -11,7 +11,7 @@ import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ImportScripture } from "./ImportScripture"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))
 vi.mock("../../components/drawer/bible/scripture", () => ({ getApiBiblesList: vi.fn(), customBibleData: (a: object) => ({ ...a }) }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))

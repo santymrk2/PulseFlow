@@ -9,15 +9,15 @@ import { MediaInfo } from "./MediaInfo"
 
 const ipc = vi.hoisted(() => ({ request: vi.fn(), send: vi.fn() }))
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: ipc.request, sendMain: ipc.send }))
-vi.mock("../../../components/helpers/media", async () => {
-    const actual = await vi.importActual<typeof import("../../../components/helpers/media")>("../../../components/helpers/media")
+vi.mock("../../../shared/utils/helpers/media", async () => {
+    const actual = await vi.importActual<typeof import("../../../shared/utils/helpers/media")>("../../../shared/utils/helpers/media")
     return { ...actual, getMediaInfo: vi.fn(() => Promise.resolve(null)) }
 })
 vi.mock("../live/LiveInfo", () => ({ LiveInfo: ({ optionsOpen }: { optionsOpen: boolean }) => <div data-testid="live-info" data-open={optionsOpen} /> }))
 vi.mock("../../system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
 vi.mock("../../system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
 vi.mock("./PlayerInfo", () => ({ PlayerInfo: ({ optionsOpen }: { optionsOpen: boolean }) => <div data-testid="player" data-open={optionsOpen} /> }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

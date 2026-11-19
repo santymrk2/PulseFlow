@@ -4,24 +4,24 @@ import type { MouseEvent, ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { NDI } from "../../../../types/Channels"
 import { outputs } from "../../../shared/core/stores"
-import { send } from "../../../utils/request"
-import { onStreamFrame } from "../../../utils/streamPort"
+import { send } from "../../../shared/utils/request"
+import { onStreamFrame } from "../../../shared/utils/streamPort"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { commonMock } from "../../test/mockCommon"
 import { StreamFrame } from "./StreamFrame"
 
 const mocks = vi.hoisted(() => ({ draw: vi.fn(), destroy: vi.fn(), stop: vi.fn() }))
 
-vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../utils/request", () => ({ send: vi.fn(), receive: vi.fn(), destroy: vi.fn() }))
-vi.mock("../../../utils/streamPort", () => ({ onStreamFrame: vi.fn(() => mocks.stop) }))
+vi.mock("../../../shared/utils/common", () => commonMock())
+vi.mock("../../../shared/utils/request", () => ({ send: vi.fn(), receive: vi.fn(), destroy: vi.fn() }))
+vi.mock("../../../shared/utils/streamPort", () => ({ onStreamFrame: vi.fn(() => mocks.stop) }))
 vi.mock("../../../components/drawer/live/streamCanvas", () => ({
     StreamCanvasRenderer: class {
         draw = mocks.draw
         destroy = mocks.destroy
     }
 }))
-vi.mock("../../../components/helpers/output", () => ({ findMatchingOut: vi.fn(() => "out-1") }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(() => "out-1") }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

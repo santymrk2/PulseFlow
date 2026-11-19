@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react"
 import { toastMessages } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { useStore } from "../hooks/useStore"
 import styles from "./Toast.module.css"
 

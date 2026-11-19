@@ -6,9 +6,9 @@ import { drawerTabsData, templates } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ThemeNavigation } from "./ThemeNavigation"
 
-vi.mock("../../utils/language", () => ({ translateText: (id: string) => id }))
-vi.mock("../../utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../drawer/pages/Templates", () => ({ Templates: () => <div data-comp="templates" /> }))
 vi.mock("../show/left/LeftPanel", () => ({
     LeftPanel: ({ children, title }: { children?: ReactNode; title?: string }) => (

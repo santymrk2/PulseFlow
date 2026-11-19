@@ -5,11 +5,11 @@ import { popupData, transitionData } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Transition } from "./Transition"
 
-vi.mock("../../utils/language", () => ({ translateText: (id: string) => id }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../utils/request", () => ({ send: vi.fn() }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
-vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn(() => ({ get: () => "" })) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn(() => ({ get: () => "" })) }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 

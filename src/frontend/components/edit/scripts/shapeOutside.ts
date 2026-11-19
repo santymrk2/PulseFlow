@@ -1,4 +1,4 @@
-import { getStyles } from "../../helpers/style"
+import { getStyles } from "../../../shared/utils/helpers/style"
 
 function parseInset(value: string) {
     const match = value.match(/inset\(([^)]*)\)/i)

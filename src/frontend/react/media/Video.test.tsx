@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
-vi.mock("../../components/helpers/media", () => ({
+vi.mock("../../shared/utils/helpers/media", () => ({
     enableSubtitle: vi.fn(),
     encodeFilePath: (p: string) => p,
     isVideoSupported: vi.fn()

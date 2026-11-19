@@ -35,7 +35,7 @@ vi.hoisted(() => {
     vi.stubGlobal("cancelAnimationFrame", () => {})
 })
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn(), start: mocks.start } }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))

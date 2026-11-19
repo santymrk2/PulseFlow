@@ -9,14 +9,14 @@ import { Templates } from "./Templates"
 
 const { historyMock, deselectMock } = vi.hoisted(() => ({ historyMock: vi.fn(), deselectMock: vi.fn() }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../components/helpers/history", () => ({ history: historyMock }))
-vi.mock("../../../components/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), getFirstActiveOutput: () => null }))
-vi.mock("../../../components/helpers/show", () => ({ getLayoutRef: () => [] }))
-vi.mock("../../../components/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [] }) }) }))
-vi.mock("../../../components/helpers/select", () => ({ deselect: deselectMock }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), getFirstActiveOutput: () => null }))
+vi.mock("../../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [] }))
+vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [] }) }) }))
+vi.mock("../../../shared/utils/helpers/select", () => ({ deselect: deselectMock }))
 vi.mock("../../slide/Actions", () => ({ Actions: (props: Record<string, unknown>) => <div data-isla="Actions" data-props={JSON.stringify(props ?? {})} /> }))
 vi.mock("./TemplateSlide", () => ({ TemplateSlide: (props: Record<string, unknown>) => <div data-isla="TemplateSlide" data-props={JSON.stringify(props ?? {})} /> }))
 

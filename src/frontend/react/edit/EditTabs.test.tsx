@@ -6,7 +6,7 @@ import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../shar
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { EditTabs } from "./EditTabs"
 
-vi.mock("../../utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../ui/button/Button", () => ({
     Button: ({ children, onClick, title, isActive, disabled }: { children?: ReactNode; onClick?: () => void; title?: string; isActive?: boolean; disabled?: boolean }) => (

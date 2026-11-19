@@ -2,14 +2,14 @@
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { history } from "../../components/helpers/history"
+import { history } from "../../shared/utils/helpers/history"
 import { activeProfile, activeRename, activeTriggerFunction, profiles, selectedProfile } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ProfilesTabs } from "./ProfilesTabs"
 
-vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/common", () => commonMock())
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("uid", () => ({ uid: () => "nuevo-id" }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

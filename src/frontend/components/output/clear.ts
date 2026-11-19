@@ -5,9 +5,9 @@ import { AudioPlayer } from "../../audio/audioPlayer"
 import { activeEdit, activePage, activePopup, activeStage, contextActive, customMessageCredits, focusMode, outLocked, outputCache, outputs, outputSlideCache, overlays, overlayTimers, playingAudio, playingMetronome, selected, slideTimers, topContextActive } from "../../shared/core/stores"
 import { customActionActivation } from "../actions/actions"
 import { startMetronome } from "../drawer/audio/metronome"
-import { clone } from "../helpers/array"
-import { clearOverlayTimer, getAllActiveOutputIds, getAllActiveOutputs, isOutCleared, setOutput } from "../helpers/output"
-import { _show } from "../helpers/shows"
+import { clone } from "../../shared/utils/helpers/array"
+import { clearOverlayTimer, getAllActiveOutputIds, getAllActiveOutputs, isOutCleared, setOutput } from "../../shared/utils/helpers/output"
+import { _show } from "../../shared/utils/helpers/shows"
 import { getActiveTimelinePlayback } from "../timeline/TimelinePlayback"
 
 export function clearAll(button = false) {

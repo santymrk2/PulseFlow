@@ -104,9 +104,9 @@ vi.mock("../../shared/core/stores", () => ({
     }
 }))
 vi.mock("../../utils/cloudSync", () => ({ isActiveShowInUseByCloudUser: () => false }))
-vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
-vi.mock("../../utils/profile", () => ({ getAccess: () => ({}) }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: () => [{ id: "sl1" }] }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({}) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ id: "sl1" }] }))
 vi.mock("../../components/edit/scripts/chords", () => ({ getSlideChords: () => [] }))
 vi.mock("../../components/edit/scripts/textStyle", () => ({ getSlideText: () => "" }))
 vi.mock("../helpers/Icon", () => ({ Icon: () => <span /> }))

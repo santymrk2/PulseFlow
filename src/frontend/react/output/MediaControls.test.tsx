@@ -7,9 +7,9 @@ import { VideoPlayer } from "../../components/media/video/videoPlayer"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { MediaControls } from "./MediaControls"
 
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../components/helpers/media", () => ({ getExtension: vi.fn(() => "mp4"), getMediaType: vi.fn(() => "video") }))
-vi.mock("../../components/helpers/get", () => ({ splitPath: vi.fn(() => ({ name: "clip.mp4" })) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/helpers/media", () => ({ getExtension: vi.fn(() => "mp4"), getMediaType: vi.fn(() => "video") }))
+vi.mock("../../shared/utils/helpers/get", () => ({ splitPath: vi.fn(() => ({ name: "clip.mp4" })) }))
 vi.mock("../../components/media/video/videoSync", () => ({ videoSync: vi.fn(() => () => {}) }))
 vi.mock("../../components/output/clear", () => ({ clearBackground: vi.fn() }))
 vi.mock("../../components/media/video/videoPlayer", () => ({

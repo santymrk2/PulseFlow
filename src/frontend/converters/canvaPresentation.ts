@@ -4,12 +4,12 @@ import type { ContentFile, ContentProviderId } from "../../types/ContentProvider
 import { Main } from "../../types/IPC/Main"
 import type { Show, Slide, SlideData } from "../../types/Show"
 import { ShowObj } from "../shared/core/classes/Show"
-import { history } from "../components/helpers/history"
-import { loadShows } from "../components/helpers/setShow"
-import { checkName, getLayoutRef } from "../components/helpers/show"
+import { history } from "../shared/utils/helpers/history"
+import { loadShows } from "../shared/utils/helpers/setShow"
+import { checkName, getLayoutRef } from "../shared/utils/helpers/show"
 import { requestMain } from "../shared/core/ipc/main"
 import { activeProject, showsCache } from "../shared/core/stores"
-import { newToast } from "../utils/common"
+import { newToast } from "../shared/utils/common"
 
 type CanvaPresentationData = {
     designId: string

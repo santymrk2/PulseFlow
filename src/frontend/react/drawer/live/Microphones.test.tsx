@@ -6,7 +6,7 @@ import { commonMock } from "../../test/mockCommon"
 import { Microphones } from "./Microphones"
 
 const mocks = vi.hoisted(() => ({ list: vi.fn() }))
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { getList: mocks.list, start: vi.fn() } }))
 vi.mock("../../system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
 vi.mock("./Mic", () => ({ Mic: ({ mic }: { mic: { id: string; name: string } }) => <div>{mic.name}</div> }))

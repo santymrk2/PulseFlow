@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { defaultColors, defaultGradients, getContrast } from "../../../components/helpers/color"
+import { defaultColors, defaultGradients, getContrast } from "../../../shared/utils/helpers/color"
 import { activePopup, popupData, special } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
@@ -10,7 +10,7 @@ import { ColorField } from "./ColorField"
 import styles from "./ColorField.module.css"
 import tabsStyles from "../../main/Tabs.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 // edit.ts arrastra medio frontend; ColorField sólo usa dos funciones puras de gradientes: se mockea el borde
 vi.mock("../../../components/edit/scripts/edit", () => ({
     getGradientOpacity: (value: string) => (value.includes("alpha") ? 0.4 : 1),

@@ -2,19 +2,19 @@
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { getDynamicIds, replaceDynamicValues } from "../../components/helpers/showActions"
+import { getDynamicIds, replaceDynamicValues } from "../../shared/utils/helpers/showActions"
 import { activeEdit, activePage, activePopup, activeShow, activeStage, dynamicValuesRevealUsed, overlays, popupData, refreshEditSlide, showsCache, special, stageShows, templates } from "../../shared/core/stores"
-import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
+import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { DynamicValues } from "./DynamicValues"
 
-vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../components/helpers/showActions", () => ({ getDynamicIds: vi.fn(), replaceDynamicValues: vi.fn(), dynamicValueText: (id: string) => `{${id}}` }))
+vi.mock("../../shared/utils/common", () => commonMock())
+vi.mock("../../shared/utils/helpers/showActions", () => ({ getDynamicIds: vi.fn(), replaceDynamicValues: vi.fn(), dynamicValueText: (id: string) => `{${id}}` }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
-vi.mock("../../components/helpers/shows", () => ({ _show: () => ({ get: () => "layout1" }) }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: () => [{ id: "slideA" }, { id: "slideB" }] }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ get: () => "layout1" }) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ id: "slideA" }, { id: "slideB" }] }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 
 const ids = ["slide_text", "time_hour", "time_minute", "timer_a", "$name", "interaction_x", "show_text_full", "plain"]

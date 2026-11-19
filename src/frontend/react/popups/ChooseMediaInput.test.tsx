@@ -17,9 +17,9 @@ const details = vi.hoisted(() => ({
     BMDStreams: { screen: { id: "b1", name: "B" } }
 }))
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
-vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
+vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../drawer/live/Cameras", () => ({ Cameras: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="Cameras" onClick={() => onClick?.(details.Cameras)} /> }))
 vi.mock("../drawer/live/Screens", () => ({ Screens: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="Screens" onClick={() => onClick?.(details.Screens)} /> }))
 vi.mock("../drawer/live/Windows", () => ({ Windows: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="Windows" onClick={() => onClick?.(details.Windows)} /> }))

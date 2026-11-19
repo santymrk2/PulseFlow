@@ -1,7 +1,7 @@
 import { activePopup, cloudSyncData } from "../../shared/core/stores"
 import { Tip } from "../main/Tip"
 import { syncWithCloud } from "../../utils/cloudSync"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"

@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { throttle } from "../../utils/common"
-import { stopResizing } from "../../utils/cursor"
-import { getOutputResolution } from "../../components/helpers/output"
+import { throttle } from "../../shared/utils/common"
+import { stopResizing } from "../../shared/utils/cursor"
+import { getOutputResolution } from "../../shared/utils/helpers/output"
 import { shouldStartDrag } from "../../components/system/dragThreshold"
 import { getRadius, moveBox, resizeBox, rotateBox } from "../../components/system/textbox"
 import { Snaplines, type Snapline, type SnaplinesMouse } from "./Snaplines"
@@ -16,9 +16,9 @@ vi.mock("../../shared/core/stores", () => ({
         }
     }
 }))
-vi.mock("../../utils/common", () => ({ throttle: vi.fn((_id: string, value: unknown, callback: (v: unknown) => void) => callback(value)) }))
-vi.mock("../../utils/cursor", () => ({ stopResizing: vi.fn(), startResizing: vi.fn() }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/common", () => ({ throttle: vi.fn((_id: string, value: unknown, callback: (v: unknown) => void) => callback(value)) }))
+vi.mock("../../shared/utils/cursor", () => ({ stopResizing: vi.fn(), startResizing: vi.fn() }))
+vi.mock("../../shared/utils/helpers/output", () => ({
     DEFAULT_BOUNDS: { width: 1920, height: 1080 },
     getActiveOutputs: vi.fn(() => ["out1"]),
     getOutputResolution: vi.fn(() => ({ width: 1920, height: 1080 })),

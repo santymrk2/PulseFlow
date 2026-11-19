@@ -8,7 +8,7 @@ import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { ScenePreview } from "./ScenePreview"
 
 vi.mock("../../output/Output", async () => ({ Output: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Output") }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 

@@ -8,9 +8,9 @@ import { exportProject } from "../../components/export/project"
 import { convertShowSlidesToImages } from "../../components/main/popups/export/exportHelper"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, activeProject, activeShow, dictionary, projects, selected, shows, showsCache, special } from "../../shared/core/stores"
-import { send } from "../../utils/request"
+import { send } from "../../shared/utils/request"
 import { save } from "../../utils/save"
-import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
+import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
 import { clearFields, fire } from "../test/kitMocks"
 import { clearIslands } from "../test/islandMock"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
@@ -18,15 +18,15 @@ import { Export } from "./Export"
 
 const pdf = vi.hoisted(() => ({ props: null as null | { pdfOptions: Record<string, unknown>; onChange?: (o: Record<string, unknown>) => void } }))
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, wait: () => Promise.resolve(), newToast: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, wait: () => Promise.resolve(), newToast: vi.fn() }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
-vi.mock("../../utils/request", () => ({ send: vi.fn() }))
+vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../utils/save", () => ({ save: vi.fn() }))
 vi.mock("../../components/export/project", () => ({ exportProject: vi.fn() }))
-vi.mock("../../components/helpers/setShow", () => ({ loadShows: vi.fn(async () => {}) }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
-vi.mock("../../components/helpers/media", () => ({ getSlideThumbnail: vi.fn() }))
+vi.mock("../../shared/utils/helpers/setShow", () => ({ loadShows: vi.fn(async () => {}) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
+vi.mock("../../shared/utils/helpers/media", () => ({ getSlideThumbnail: vi.fn() }))
 vi.mock("../../components/main/popups/export/exportHelper", async () => ({ ...(await vi.importActual<typeof import("../../components/main/popups/export/exportHelper")>("../../components/main/popups/export/exportHelper")), convertShowSlidesToImages: vi.fn() }))
 vi.mock("./PdfExport", () => ({
     PdfExport: (props: { pdfOptions: Record<string, unknown>; onChange?: (o: Record<string, unknown>) => void }) => {

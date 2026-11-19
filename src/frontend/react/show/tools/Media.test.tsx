@@ -4,21 +4,21 @@ import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { requestMain } from "../../../shared/core/ipc/main"
 import { activeShow, media, outLocked, outputs, overlays, playingAudio, showsCache, styles as stylesStore, previewOutputId } from "../../../shared/core/stores"
-import { getAccess } from "../../../utils/profile"
-import { getActiveOutputs, getCurrentStyle, getResolution } from "../../../components/helpers/output"
-import { _show } from "../../../components/helpers/shows"
+import { getAccess } from "../../../shared/utils/profile"
+import { getActiveOutputs, getCurrentStyle, getResolution } from "../../../shared/utils/helpers/output"
+import { _show } from "../../../shared/utils/helpers/shows"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { Media } from "./Media"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(async () => ({})) }))
-vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { start: vi.fn() } }))
 vi.mock("../../../audio/audioPlayer", () => ({ AudioPlayer: { start: vi.fn(), getPlaying: vi.fn(() => null) } }))
 vi.mock("../../../components/actions/actionData", () => ({ actionData: {} }))
 vi.mock("../../../components/actions/actions", () => ({ getActionName: vi.fn(() => ""), getActionTriggerId: vi.fn(() => ""), runAction: vi.fn() }))
-vi.mock("../../../components/helpers/array", () => ({ clone: vi.fn((value: unknown) => value), sortByName: vi.fn((value: unknown) => value) }))
-vi.mock("../../../components/helpers/media", () => ({
+vi.mock("../../../shared/utils/helpers/array", () => ({ clone: vi.fn((value: unknown) => value), sortByName: vi.fn((value: unknown) => value) }))
+vi.mock("../../../shared/utils/helpers/media", () => ({
     encodeFilePath: vi.fn((path: string) => path),
     getExtension: vi.fn(() => ""),
     getMedia: vi.fn(async () => null),
@@ -27,8 +27,8 @@ vi.mock("../../../components/helpers/media", () => ({
     isMediaExtension: vi.fn(() => false),
     mediaSize: vi.fn(() => "")
 }))
-vi.mock("../../../components/helpers/output", () => ({ findMatchingOut: vi.fn(() => null), getActiveOutputs: vi.fn(() => []), getCurrentStyle: vi.fn(() => ({})), getResolution: vi.fn(() => [1920, 1080]), setOutput: vi.fn() }))
-vi.mock("../../../components/helpers/shows", () => ({ _show: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(() => null), getActiveOutputs: vi.fn(() => []), getCurrentStyle: vi.fn(() => ({})), getResolution: vi.fn(() => [1920, 1080]), setOutput: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
 vi.mock("../../drawer/media/MediaLoader", () => ({ MediaLoader: () => <div data-testid="media-loader" /> }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))

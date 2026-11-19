@@ -1,8 +1,8 @@
 import { uid } from "uid"
 import type { Slide, SlideData } from "../../types/Show"
 import { ShowObj } from "../shared/core/classes/Show"
-import { getFileName, removeExtension } from "../components/helpers/media"
-import { checkName } from "../components/helpers/show"
+import { getFileName, removeExtension } from "../shared/utils/helpers/media"
+import { checkName } from "../shared/utils/helpers/show"
 import { createCategory, setTempShows } from "./importHelpers"
 
 export function createImageShow({ images, name }: { images: string[]; name: string }) {

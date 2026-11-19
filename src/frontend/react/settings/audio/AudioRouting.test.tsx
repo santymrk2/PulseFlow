@@ -8,14 +8,14 @@ import { AudioMicrophone } from "../../../audio/audioMicrophone"
 import { AudioPlayer } from "../../../audio/audioPlayer"
 import { syncOutputAudioChannels } from "../../../audio/routing/audioRoutingInit"
 import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
-import { getAllOutputs } from "../../../components/helpers/output"
-import { newToast } from "../../../utils/common"
+import { getAllOutputs } from "../../../shared/utils/helpers/output"
+import { newToast } from "../../../shared/utils/common"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { AudioRouting } from "./AudioRouting"
 import styles from "./AudioRouting.module.css"
 import nodeStyles from "./AudioRoutingNode.module.css"
 
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { getInputs: vi.fn(), start: vi.fn() } }))
 vi.mock("../../../audio/audioPlayer", () => ({ AudioPlayer: { getOutputs: vi.fn() } }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
@@ -23,7 +23,7 @@ vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 // deduplicateConnections real sólo quita repetidos exactos; acá basta la identidad (las pruebas no repiten conexiones)
 vi.mock("../../../audio/routing/audioRoutingInit", () => ({ syncOutputAudioChannels: vi.fn(), deduplicateConnections: (c: unknown) => c }))
 vi.mock("../../../audio/routing/audioRoutingManager", () => ({ AudioRoutingManager: { sortChannels: vi.fn((a: unknown) => a) } }))
-vi.mock("../../../components/helpers/output", () => ({ getAllOutputs: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getAllOutputs: vi.fn() }))
 vi.mock("../../drawer/audio/AudioMeter", () => ({ AudioMeter: () => <div data-meter /> }))
 
 const addDevice = vi.fn()

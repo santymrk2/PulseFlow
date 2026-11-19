@@ -6,12 +6,12 @@ import { sendMain } from "../../shared/core/ipc/main"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ShowNotes } from "./ShowNotes"
 
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/common", () => ({ DEFAULT_WIDTH: 300 }))
+vi.mock("../../shared/utils/common", () => ({ DEFAULT_WIDTH: 300 }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
-vi.mock("../../components/helpers/shows", () => ({
+vi.mock("../../shared/utils/helpers/shows", () => ({
     _show: () => ({ layouts: () => ({ get: () => ["Mira https://example.com"], set: vi.fn() }) })
 }))
 vi.mock("../helpers/Icon", () => ({ Icon: () => <span data-icon /> }))

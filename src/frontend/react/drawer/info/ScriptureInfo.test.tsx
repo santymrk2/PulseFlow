@@ -26,7 +26,7 @@ vi.mock("../../../components/drawer/bible/scripture", () => ({
 }))
 vi.mock("../../../components/settings/openSettings", () => ({ openSettings: (id: string) => mocks.openSettings(id) }))
 vi.mock("../../../utils/createData", () => ({ setDefaultScriptureTemplates: () => mocks.defaultTemplates() }))
-vi.mock("../../../utils/popup", () => ({ confirmCustom: (message: string) => mocks.confirm(message) }))
+vi.mock("../../../shared/utils/popup", () => ({ confirmCustom: (message: string) => mocks.confirm(message) }))
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn(), requestMain: vi.fn() }))
 vi.mock("../../output/Media", () => ({ Media: ({ path }: { path?: string }) => <div data-testid="media" data-path={path} /> }))
 vi.mock("../../slide/Textbox", () => ({ Textbox: ({ ref }: { ref?: { id?: string } }) => <div data-testid="textbox" data-ref-id={ref?.id} /> }))
@@ -37,7 +37,7 @@ vi.mock("../../slide/Zoomed", () => ({
         </div>
     )
 }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

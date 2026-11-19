@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { InfoMetadata } from "./InfoMetadata"
 
 // Evita el ciclo language → common → save → apiHelper → historyHelpers (projectReplacers llama translateText al cargar).
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

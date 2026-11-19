@@ -4,14 +4,14 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { ShowList } from "../../../../types/Show"
-import { dateToString } from "../../../components/helpers/time"
+import { dateToString } from "../../../shared/utils/helpers/time"
 import { activeShow, dictionary, focusedArea, sorted } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { LibraryShowList } from "./LibraryShowList"
 import styles from "./LibraryShowList.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../ShowButton", () => ({

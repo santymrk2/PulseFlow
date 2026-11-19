@@ -5,7 +5,7 @@ import { commonMock } from "../../test/mockCommon"
 import { SegmentedField } from "./SegmentedField"
 import styles from "./SegmentedField.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 afterEach(cleanup)
 

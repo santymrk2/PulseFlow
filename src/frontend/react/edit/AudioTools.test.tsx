@@ -19,7 +19,7 @@ vi.mock("../../audio/audioPlayer", () => ({
 }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
 
 afterEach(() => {
     cleanup()

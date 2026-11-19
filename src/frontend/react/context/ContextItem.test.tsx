@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
 vi.mock("../../components/context/menuClick", () => ({ menuClick: vi.fn() }))
 vi.mock("../../utils/shortcuts", () => ({ closeContextMenu: vi.fn() }))
-vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../components/context/contextMenus", () => ({
     contextMenuItems: {
         copy: { label: "actions.copy", icon: "copy", shortcut: "Ctrl+C" },
@@ -14,10 +14,10 @@ vi.mock("../../components/context/contextMenus", () => ({
 }))
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: {} }))
 vi.mock("../../media/cameraManager", () => ({ cameraManager: {} }))
-vi.mock("../../components/helpers/array", () => ({ keysToID: () => [] }))
-vi.mock("../../components/helpers/media", () => ({ getExtension: () => "", getMediaType: () => "image" }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: () => [], getSlideHighlightIndexes: () => [] }))
-vi.mock("../../components/helpers/shows", () => ({ _show: () => ({ get: () => ({}) }) }))
+vi.mock("../../shared/utils/helpers/array", () => ({ keysToID: () => [] }))
+vi.mock("../../shared/utils/helpers/media", () => ({ getExtension: () => "", getMediaType: () => "image" }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [], getSlideHighlightIndexes: () => [] }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ get: () => ({}) }) }))
 vi.mock("../../components/settings/openSettings", () => ({ isSettingsDisabled: () => false }))
 
 import { ContextItem } from "./ContextItem"

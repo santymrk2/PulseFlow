@@ -10,10 +10,10 @@ import { PlayerInfo } from "./PlayerInfo"
 
 const mocks = vi.hoisted(() => ({ request: vi.fn(), send: vi.fn(), outputs: [] as unknown[] }))
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: mocks.request }))
-vi.mock("../../../utils/request", () => ({ send: mocks.send }))
-vi.mock("../../../components/helpers/output", () => ({ getAllNormalOutputs: () => mocks.outputs }))
+vi.mock("../../../shared/utils/request", () => ({ send: mocks.send }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getAllNormalOutputs: () => mocks.outputs }))
 vi.mock("./CanvaInfo", () => ({ CanvaInfo: () => <div data-testid="canva" /> }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

@@ -4,8 +4,8 @@ import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
-import { getLayoutRef } from "../../components/helpers/show"
-import { _show } from "../../components/helpers/shows"
+import { getLayoutRef } from "../../shared/utils/helpers/show"
+import { _show } from "../../shared/utils/helpers/shows"
 import styles from "./EditHeader.module.css"
 
 export interface EditHeaderProps {

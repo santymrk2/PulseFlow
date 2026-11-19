@@ -5,7 +5,7 @@ import { commonMock } from "../../test/mockCommon"
 import { InputRow } from "./InputRow"
 import styles from "./InputRow.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 afterEach(cleanup)
 

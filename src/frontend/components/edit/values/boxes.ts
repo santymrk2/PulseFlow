@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import extendedFormat from "dayjs/plugin/advancedFormat"
 import localizedFormat from "dayjs/plugin/localizedFormat"
-import { clone } from "../../helpers/array"
+import { clone } from "../../../shared/utils/helpers/array"
 import type { ItemType } from "./../../../../types/Show"
 import { captionLanguages } from "./captionLanguages"
 

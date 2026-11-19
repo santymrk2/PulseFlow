@@ -8,7 +8,7 @@ import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { FilesButtons } from "./FilesButtons"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../utils/save", () => ({ save: vi.fn() }))
 
 let restaurar: () => void = () => {}

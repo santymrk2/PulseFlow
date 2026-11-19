@@ -7,7 +7,7 @@ import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { AudioMixers } from "./AudioMixers"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/routing/audioRoutingManager", () => ({
     AudioRoutingManager: { sortChannels: vi.fn((config) => config) }
 }))

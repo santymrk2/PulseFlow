@@ -4,14 +4,14 @@ import type { MouseEvent, ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { BLACKMAGIC } from "../../../../types/Channels"
 import { outputs } from "../../../shared/core/stores"
-import { destroy, receive, send } from "../../../utils/request"
+import { destroy, receive, send } from "../../../shared/utils/request"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { commonMock } from "../../test/mockCommon"
 import { BMDStream } from "./BMDStream"
 
-vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../utils/request", () => ({ send: vi.fn(), receive: vi.fn(), destroy: vi.fn() }))
-vi.mock("../../../components/helpers/output", () => ({ findMatchingOut: vi.fn(() => "out-1") }))
+vi.mock("../../../shared/utils/common", () => commonMock())
+vi.mock("../../../shared/utils/request", () => ({ send: vi.fn(), receive: vi.fn(), destroy: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(() => "out-1") }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

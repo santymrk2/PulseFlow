@@ -10,10 +10,10 @@ import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Unsaved } from "./Unsaved"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/language", () => ({ translateText: (value: string) => value }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (value: string) => value }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../utils/save", () => ({ closeApp: vi.fn(), save: vi.fn(), saveComplete: vi.fn() }))
 

@@ -5,7 +5,7 @@ import BackgroundMedia from "./BackgroundMedia"
 
 vi.mock("../../shared/core/stores", () => ({ media: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) }, playerVideos: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) }, special: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) } }))
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
-vi.mock("../../components/helpers/media", () => ({ getMediaStyle: () => ({}) }))
+vi.mock("../../shared/utils/helpers/media", () => ({ getMediaStyle: () => ({}) }))
 vi.mock("./Window", async () => ({ Window: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Window") }))
 vi.mock("./Camera", () => ({ Camera: () => <div data-testid="camera" /> }))
 vi.mock("./OutputTransition", () => ({ OutputTransition: ({ children }: { children?: React.ReactNode }) => <div>{children}</div> }))

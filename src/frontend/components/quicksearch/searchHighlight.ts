@@ -1,4 +1,4 @@
-import { formatSearch, tokenize } from "../../utils/search"
+import { formatSearch, tokenize } from "../../shared/utils/search"
 
 const escapeHtml = (s: string) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" })[c] || c)
 const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")

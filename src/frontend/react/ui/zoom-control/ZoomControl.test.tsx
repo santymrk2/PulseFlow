@@ -6,7 +6,7 @@ import { commonMock } from "../../test/mockCommon"
 import { ZoomControl } from "./ZoomControl"
 import styles from "./ZoomControl.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 afterEach(() => {
     cleanup()

@@ -1,5 +1,5 @@
 // Datos de color de los campos de color. Viven en un .ts (no en el .tsx) porque son valores, no estilos: el presupuesto de colores literales mide componentes y CSS.
-import { defaultColors } from "../../../components/helpers/color"
+import { defaultColors } from "../../../shared/utils/helpers/color"
 
 // Los cuatro colores de un ColorsField sin value
 export const DEFAULT_GRADIENT_COLORS = ["#1a1b33", "#2b2d4d", "#7c5f7a", "#e0a98c"]

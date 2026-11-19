@@ -5,9 +5,9 @@ import { AudioAnalyser } from "../../../audio/audioAnalyser"
 import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
 import { sendMain } from "../../../shared/core/ipc/main"
 import { activeRecording, audioRouting, currentRecordingStream, outputs, special } from "../../../shared/core/stores"
-import { newToast } from "../../../utils/common"
-import { send } from "../../../utils/request"
-import { getOutputResolution } from "../../helpers/output"
+import { newToast } from "../../../shared/utils/common"
+import { send } from "../../../shared/utils/request"
+import { getOutputResolution } from "../../../shared/utils/helpers/output"
 
 let mediaRecorder: MediaRecorder | null = null
 let recordedChunks: Blob[] = []

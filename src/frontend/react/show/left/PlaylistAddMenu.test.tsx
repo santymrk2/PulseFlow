@@ -6,20 +6,20 @@ import { uid } from "uid"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
 import { sendMain } from "../../../shared/core/ipc/main"
-import { history } from "../../../components/helpers/history"
-import { getProjectName } from "../../../components/helpers/historyHelpers"
+import { history } from "../../../shared/utils/helpers/history"
+import { getProjectName } from "../../../shared/utils/helpers/historyHelpers"
 import { activePopup, activeProject, activeRename, dictionary, folders, projects, projectTemplates } from "../../../shared/core/stores"
 import { looseEntry, type StoreEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { PlaylistAddMenu } from "./PlaylistAddMenu"
 
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("uid", () => ({ uid: vi.fn(() => "uid-1") }))
-vi.mock("../../../components/helpers/historyHelpers", async () => {
-    const actual = await vi.importActual<typeof import("../../../components/helpers/historyHelpers")>("../../../components/helpers/historyHelpers")
+vi.mock("../../../shared/utils/helpers/historyHelpers", async () => {
+    const actual = await vi.importActual<typeof import("../../../shared/utils/helpers/historyHelpers")>("../../../shared/utils/helpers/historyHelpers")
     return { ...actual, getProjectName: vi.fn(() => "Nombre calculado") }
 })
 

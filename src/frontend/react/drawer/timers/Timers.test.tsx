@@ -9,7 +9,7 @@ import { Timers } from "./Timers"
 
 const { openDrawerMock, customActionActivationMock } = vi.hoisted(() => ({ openDrawerMock: vi.fn(), customActionActivationMock: vi.fn() }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/actions/actions", () => ({ customActionActivation: customActionActivationMock, runActionId: vi.fn() }))

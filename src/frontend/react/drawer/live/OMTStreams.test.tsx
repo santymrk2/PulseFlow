@@ -3,12 +3,12 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { MouseEvent } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { OMT } from "../../../../types/Channels"
-import { destroy, receive, send } from "../../../utils/request"
+import { destroy, receive, send } from "../../../shared/utils/request"
 import { commonMock } from "../../test/mockCommon"
 import { OMTStreams } from "./OMTStreams"
 
-vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../utils/request", () => ({ send: vi.fn(), receive: vi.fn(), destroy: vi.fn() }))
+vi.mock("../../../shared/utils/common", () => commonMock())
+vi.mock("../../../shared/utils/request", () => ({ send: vi.fn(), receive: vi.fn(), destroy: vi.fn() }))
 vi.mock("../../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Loader") }))
 vi.mock("./OMTStream", () => ({ OMTStream: ({ screen: item, onClick }: { screen: { id: string; name: string }; onClick?: (e: MouseEvent<HTMLButtonElement>) => void }) => <button onClick={onClick}>{item.name}</button> }))
 

@@ -4,15 +4,15 @@ import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activeEdit, activePage, activePopup, autoOpenedTimeline, openToolsTab, outputs, showNotesActive, shows, showsCache, special, styles as stylesStore, templates } from "../../shared/core/stores"
-import { history } from "../../components/helpers/history"
+import { history } from "../../shared/utils/helpers/history"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ShowHeader } from "./ShowHeader"
 
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), Main: { URL: "url" } }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string, _a?: unknown, params?: string[]) => (params?.[0] ? `${id} ${params[0]}` : id)) }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/output", () => ({ allOutputsHasStyleTemplate: vi.fn(() => false), getFirstActiveOutput: vi.fn(() => null) }))
-vi.mock("../../components/helpers/show", () => ({ removeTemplatesFromShow: vi.fn() }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string, _a?: unknown, params?: string[]) => (params?.[0] ? `${id} ${params[0]}` : id)) }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/output", () => ({ allOutputsHasStyleTemplate: vi.fn(() => false), getFirstActiveOutput: vi.fn(() => null) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ removeTemplatesFromShow: vi.fn() }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
 vi.mock("../ui/button/Button", () => ({

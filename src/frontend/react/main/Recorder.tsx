@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { activeRecording, currentRecordingStream } from "../../shared/core/stores"
 import { createMediaRecorder } from "../../components/drawer/live/recorder"
-import { clone } from "../../components/helpers/array"
+import { clone } from "../../shared/utils/helpers/array"
 import { useStore } from "../hooks/useStore"
 import styles from "./Recorder.module.css"
 

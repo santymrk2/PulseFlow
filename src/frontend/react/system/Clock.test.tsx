@@ -5,7 +5,7 @@ import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { timeFormat } from "../../shared/core/stores"
 import { Clock } from "./Clock"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 
 let restore: () => void = () => {}
 afterEach(() => {

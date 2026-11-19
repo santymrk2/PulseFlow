@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import type { Styles } from "../../../types/Settings"
 import type { OutBackground, Transition } from "../../../types/Show"
-import { clone } from "../../components/helpers/array"
+import { clone } from "../../shared/utils/helpers/array"
 import { BackgroundMedia } from "./BackgroundMedia"
 import styles from "./Background.module.css"
 

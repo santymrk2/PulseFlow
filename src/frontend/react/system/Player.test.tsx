@@ -25,7 +25,7 @@ vi.mock("../hooks/useStore", () => ({
 }))
 vi.mock("../drawer/player/YouTube", () => ({ YouTube: () => <div data-testid="youtube" />, default: () => <div data-testid="youtube" /> }))
 vi.mock("../drawer/player/Vimeo", () => ({ Vimeo: () => <div data-testid="vimeo" />, default: () => <div data-testid="vimeo" /> }))
-vi.mock("../../components/helpers/shows", () => ({ _show: () => ({ get: () => ({}) }) }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ get: () => ({}) }) }))
 vi.mock("../../components/media/video/videoSync", () => ({ videoSync: () => () => {} }))
 
 afterEach(cleanup)

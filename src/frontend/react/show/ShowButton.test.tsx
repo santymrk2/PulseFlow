@@ -3,16 +3,16 @@ import { cleanup, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeProject, activeShow, outLocked, outputs, projects, shows, showsCache, special, styles as stylesStore } from "../../shared/core/stores"
-import { getAccess } from "../../utils/profile"
-import { getMedia } from "../../components/helpers/media"
-import { findMatchingOut, getActiveOutputs } from "../../components/helpers/output"
+import { getAccess } from "../../shared/utils/profile"
+import { getMedia } from "../../shared/utils/helpers/media"
+import { findMatchingOut, getActiveOutputs } from "../../shared/utils/helpers/output"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ShowButton } from "./ShowButton"
 
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: { getPlaying: vi.fn(() => null) } }))
-vi.mock("../../components/helpers/media", () => ({
+vi.mock("../../shared/utils/helpers/media", () => ({
     encodeFilePath: vi.fn((path: string) => path),
     getExtension: vi.fn(() => ""),
     getFileName: vi.fn(() => ""),
@@ -24,12 +24,12 @@ vi.mock("../../components/helpers/media", () => ({
     mediaSize: vi.fn(() => ""),
     removeExtension: vi.fn((name: string) => name)
 }))
-vi.mock("../../components/helpers/output", () => ({ findMatchingOut: vi.fn(() => null), getActiveOutputs: vi.fn(() => []), setOutput: vi.fn() }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn(), historyAwait: vi.fn() }))
-vi.mock("../../components/helpers/setShow", () => ({ loadShows: vi.fn() }))
-vi.mock("../../components/helpers/show", () => ({ checkName: vi.fn((name: string) => name), getLayoutRef: vi.fn(() => []) }))
-vi.mock("../../components/helpers/showActions", () => ({ playPdf: vi.fn(), swichProjectItem: vi.fn(), updateOut: vi.fn() }))
-vi.mock("../../components/helpers/time", () => ({ joinTime: vi.fn((value: string) => value), secondsToTime: vi.fn((value: number) => String(value)) }))
+vi.mock("../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(() => null), getActiveOutputs: vi.fn(() => []), setOutput: vi.fn() }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn(), historyAwait: vi.fn() }))
+vi.mock("../../shared/utils/helpers/setShow", () => ({ loadShows: vi.fn() }))
+vi.mock("../../shared/utils/helpers/show", () => ({ checkName: vi.fn((name: string) => name), getLayoutRef: vi.fn(() => []) }))
+vi.mock("../../shared/utils/helpers/showActions", () => ({ playPdf: vi.fn(), swichProjectItem: vi.fn(), updateOut: vi.fn() }))
+vi.mock("../../shared/utils/helpers/time", () => ({ joinTime: vi.fn((value: string) => value), secondsToTime: vi.fn((value: number) => String(value)) }))
 vi.mock("../../components/output/clear", () => ({ clearSlide: vi.fn() }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../ui/button/Button", () => ({

@@ -2,16 +2,16 @@
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { setDrawerTabData } from "../../../components/helpers/historyHelpers"
-import { visibleEvents } from "../../../components/helpers/dynamicItemText"
+import { setDrawerTabData } from "../../../shared/utils/helpers/historyHelpers"
+import { visibleEvents } from "../../../shared/utils/helpers/dynamicItemText"
 import { activeDrawerTab, drawer, events } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { DynamicEvents } from "./DynamicEvents"
 
-vi.mock("../../../components/helpers/dynamicItemText", () => ({ visibleEvents: vi.fn(() => [{ name: "Culto", from: "2026-11-17T10:00:00", time: true, location: "Sala" }]) }))
-vi.mock("../../../components/helpers/array", () => ({ keysToID: vi.fn(() => []), clone: (v: unknown) => (v === undefined ? v : structuredClone(v)) }))
-vi.mock("../../../components/helpers/historyHelpers", () => ({ setDrawerTabData: vi.fn() }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../shared/utils/helpers/dynamicItemText", () => ({ visibleEvents: vi.fn(() => [{ name: "Culto", from: "2026-11-17T10:00:00", time: true, location: "Sala" }]) }))
+vi.mock("../../../shared/utils/helpers/array", () => ({ keysToID: vi.fn(() => []), clone: (v: unknown) => (v === undefined ? v : structuredClone(v)) }))
+vi.mock("../../../shared/utils/helpers/historyHelpers", () => ({ setDrawerTabData: vi.fn() }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 

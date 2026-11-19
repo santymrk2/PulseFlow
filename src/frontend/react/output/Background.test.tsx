@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import Background from "./Background"
 
-vi.mock("../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)) }))
+vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)) }))
 vi.mock("./BackgroundMedia", async () => ({ BackgroundMedia: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("BackgroundMedia") }))
 
 afterEach(cleanup)

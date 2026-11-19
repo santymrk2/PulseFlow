@@ -1,4 +1,4 @@
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import styles from "./SystemDisplays.module.css"
 
 // Port de components/screens/SystemDisplays.svelte (F24.14).

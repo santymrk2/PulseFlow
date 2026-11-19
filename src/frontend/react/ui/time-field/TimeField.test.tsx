@@ -7,7 +7,7 @@ import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { TimeField } from "./TimeField"
 import styles from "./TimeField.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 let restaurar: () => void = () => {}
 

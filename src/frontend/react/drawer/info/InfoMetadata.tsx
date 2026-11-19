@@ -1,5 +1,5 @@
-import { dateToString } from "../../../components/helpers/time"
-import { translateText } from "../../../utils/language"
+import { dateToString } from "../../../shared/utils/helpers/time"
+import { translateText } from "../../../shared/utils/language"
 import { Link } from "../../ui/link/Link"
 import styles from "./InfoMetadata.module.css"
 

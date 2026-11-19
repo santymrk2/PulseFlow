@@ -38,8 +38,8 @@ const mocks = vi.hoisted(() => {
 
 vi.mock("../../shared/core/stores", () => mocks)
 vi.mock("../../components/guide/guideSteps", () => ({ guideSteps: [] }))
-vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
-vi.mock("../../utils/common", () => ({ wait: async () => {} }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
+vi.mock("../../shared/utils/common", () => ({ wait: async () => {} }))
 
 import { Guide } from "./Guide"
 

@@ -5,21 +5,21 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Media, Slide, SlideData } from "../../../types/Show"
 import { AudioPlayer } from "../../audio/audioPlayer"
 import { activeShow, activeTimers, outputs, shows } from "../../shared/core/stores"
-import { newToast } from "../../utils/common"
-import { getAccess } from "../../utils/profile"
-import { history } from "../../components/helpers/history"
-import { _show } from "../../components/helpers/shows"
+import { newToast } from "../../shared/utils/common"
+import { getAccess } from "../../shared/utils/profile"
+import { history } from "../../shared/utils/helpers/history"
+import { _show } from "../../shared/utils/helpers/shows"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Icons, type IconsProps } from "./Icons"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: { getDuration: vi.fn(async () => 95) } }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/shows", () => ({
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/shows", () => ({
     _show: vi.fn(() => ({
         get: () => ({ media: { a1: { path: "/audio/song.mp3" } } }),
         media: vi.fn(() => ({ set: vi.fn() }))

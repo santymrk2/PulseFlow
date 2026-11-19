@@ -2,14 +2,14 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { outputs } from "../../../shared/core/stores"
-import { findMatchingOut, getActiveOutputs, setOutput } from "../../../components/helpers/output"
+import { findMatchingOut, getActiveOutputs, setOutput } from "../../../shared/utils/helpers/output"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { OverlayPreview } from "./OverlayPreview"
 
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../components/helpers/output", () => ({ findMatchingOut: vi.fn(() => null), getActiveOutputs: vi.fn(() => ["out1"]), setOutput: vi.fn() }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(() => null), getActiveOutputs: vi.fn(() => ["out1"]), setOutput: vi.fn() }))
 vi.mock("../../system/HoverPlay", () => ({
     HoverPlay: ({ icon, size, onClick, children }: { icon: string; size?: number; onClick?: () => void; children?: unknown }) => (
         <div data-isla="HoverPlay" data-props={JSON.stringify({ icon, size })}>

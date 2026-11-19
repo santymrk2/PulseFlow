@@ -11,8 +11,8 @@ import { Capture } from "./Capture"
 
 const mocks = vi.hoisted(() => ({ getUserMedia: vi.fn(), stop: vi.fn() }))
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
-vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../components/helpers/output", () => ({ findMatchingOut: vi.fn(() => "out-1") }))
+vi.mock("../../../shared/utils/common", () => commonMock())
+vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(() => "out-1") }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

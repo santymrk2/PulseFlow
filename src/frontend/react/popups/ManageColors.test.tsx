@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { defaultColors, defaultGradients } from "../../components/helpers/color"
+import { defaultColors, defaultGradients } from "../../shared/utils/helpers/color"
 import { dictionary, special } from "../../shared/core/stores"
 import { clearIslands, islands } from "../test/islandMock"
 import { clearFields, fields, fire } from "../test/kitMocks"
@@ -10,7 +10,7 @@ import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ManageColors } from "./ManageColors"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 vi.mock("../ui/color-field/ColorField", async () => ({ ColorField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 

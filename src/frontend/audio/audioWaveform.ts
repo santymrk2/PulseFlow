@@ -1,4 +1,4 @@
-import { encodeFilePath } from "../components/helpers/media"
+import { encodeFilePath } from "../shared/utils/helpers/media"
 
 type WaveformSettings = {
     height?: number // 1 = 100%

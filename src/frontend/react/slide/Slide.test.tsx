@@ -4,28 +4,28 @@ import type { CSSProperties, ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Show, SlideData } from "../../../types/Show"
 import { activeEdit, activeShow, effects, focusMode, fullColors, overlays, outputs, refreshListBoxes, refreshSlideThumbnails, slideDeleteHighlight, slidesOptions, special, styles } from "../../shared/core/stores"
-import { getMedia, getMediaCached, getMediaStyle, mediaSize } from "../../components/helpers/media"
-import { setTemplateStyle } from "../../components/helpers/output"
+import { getMedia, getMediaCached, getMediaStyle, mediaSize } from "../../shared/utils/helpers/media"
+import { setTemplateStyle } from "../../shared/utils/helpers/output"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Slide } from "./Slide"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, wait: vi.fn(async () => "ended") }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, wait: vi.fn(async () => "ended") }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
 vi.mock("../../show/slides", () => ({ removeTagsAndContent: vi.fn((value: string) => value) }))
 vi.mock("../../components/actions/actions", () => ({ slideHasAction: vi.fn(() => false) }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ shouldItemBeShown: vi.fn(() => true) }))
-vi.mock("../../components/helpers/media", () => ({
+vi.mock("../../shared/utils/helpers/media", () => ({
     encodeFilePath: vi.fn((path: string) => path),
     getMedia: vi.fn(async () => ({ path: "media/path", thumbnail: "thumb.jpg", data: {} })),
     getMediaCached: vi.fn(async () => ({ thumbnail: "ghost.jpg" })),
     getMediaStyle: vi.fn(() => "object-fit: contain;"),
     mediaSize: { small: "small", drawerSize: "drawer", slideSize: "slide" }
 }))
-vi.mock("../../components/helpers/outputAspect", () => ({ referenceOutputId: vi.fn(() => "out1") }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/helpers/outputAspect", () => ({ referenceOutputId: vi.fn(() => "out1") }))
+vi.mock("../../shared/utils/helpers/output", () => ({
     allOutputsHasStyleTemplate: vi.fn(() => false),
     getActiveOutputs: vi.fn(() => ["out1"]),
     getFirstActiveOutput: vi.fn(() => ({ id: "out1", style: "st1" })),
@@ -33,8 +33,8 @@ vi.mock("../../components/helpers/output", () => ({
     getSlideFilter: vi.fn(() => "filter: none;"),
     setTemplateStyle: vi.fn((_ref, _style, items) => items)
 }))
-vi.mock("../../components/helpers/show", () => ({ getGroupName: vi.fn(() => "Grupo"), isSlideLocked: vi.fn(() => false) }))
-vi.mock("../../components/helpers/shows", () => ({
+vi.mock("../../shared/utils/helpers/show", () => ({ getGroupName: vi.fn(() => "Grupo"), isSlideLocked: vi.fn(() => false) }))
+vi.mock("../../shared/utils/helpers/shows", () => ({
     _show: vi.fn(() => ({ layouts: () => ({ ref: () => [[]] }) }))
 }))
 vi.mock("../drawer/media/MediaLoader", () => ({

@@ -1,6 +1,6 @@
 import type { Show } from "../../../../types/Show"
 import { effects, outLocked, outputs } from "../../../shared/core/stores"
-import { findMatchingOut, setOutput } from "../../../components/helpers/output"
+import { findMatchingOut, setOutput } from "../../../shared/utils/helpers/output"
 import { useStore } from "../../hooks/useStore"
 import { Effect } from "../../output/Effect"
 import { HoverPlay } from "../../system/HoverPlay"

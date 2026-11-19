@@ -8,8 +8,8 @@ import { EffectEditor } from "./EffectEditor"
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: {} }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
-vi.mock("../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v ?? null)) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
+vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v ?? null)) }))
 vi.mock("../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Effect") }))
 
 afterEach(() => {

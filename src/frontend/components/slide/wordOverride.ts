@@ -1,7 +1,7 @@
 import { get } from "../../shared/core/lib/store"
 import type { TemplateStyleOverride } from "../../../types/Show"
 import { globalRegexes } from "../../shared/core/stores"
-import { TemplateHelper } from "../../utils/templates"
+import { TemplateHelper } from "../../shared/utils/templates"
 
 // split the rendered text so template rules can restyle matching chunks
 export function applyStyleOverrides(baseLines: any[], overrides: TemplateStyleOverride[]) {

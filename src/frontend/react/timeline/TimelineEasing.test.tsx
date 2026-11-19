@@ -5,7 +5,7 @@ import type { TimelineAction } from "../../../types/Show"
 import type { TimelineActions } from "../../components/timeline/TimelineActions"
 import { TimelineEasing, type TimelineEasingProps } from "./TimelineEasing"
 
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 
 const action = (id: string, time: number, value: number): TimelineAction => ({

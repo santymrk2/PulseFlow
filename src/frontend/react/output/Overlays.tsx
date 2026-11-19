@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import type { Item, Overlays as OverlaysData, Transition } from "../../../types/Show"
-import { clone } from "../../components/helpers/array"
+import { clone } from "../../shared/utils/helpers/array"
 import { Overlay } from "./OutputOverlay"
 
 export interface OverlaysProps {

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type SyntheticEvent } from "react"
 import { cn } from "../../../shared/core/lib/utils"
-import { encodeFilePath, isLocalFile } from "../../../components/helpers/media"
+import { encodeFilePath, isLocalFile } from "../../../shared/utils/helpers/media"
 import styles from "./Image.module.css"
 
 // Port de components/drawer/media/Image.svelte.

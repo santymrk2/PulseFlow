@@ -7,14 +7,14 @@ import { ToMain } from "../../../types/IPC/ToMain"
 import { receiveToMain, requestMain, sendMain } from "../../shared/core/ipc/main"
 import { activePopup, alertMessage, autosave, cloudSyncData, dataPath, driveData, driveKeys, providerConnections, saved, special, statusIndicator } from "../../shared/core/stores"
 import { changeTeam, setupCloudSync, socketDisconnect, updateCloudDeviceName } from "../../utils/cloudSync"
-import { startAutosave, wait } from "../../utils/common"
-import { validateKeys } from "../../utils/drive"
+import { startAutosave, wait } from "../../shared/utils/common"
+import { validateKeys } from "../../shared/utils/drive"
 import { save } from "../../utils/save"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Files } from "./Files"
 
 const ahora = vi.hoisted(() => ({ previousAutosave: 0 }))
-vi.mock("../../utils/common", () => ({
+vi.mock("../../shared/utils/common", () => ({
     isMainWindow: () => false,
     get previousAutosave() {
         return ahora.previousAutosave
@@ -24,7 +24,7 @@ vi.mock("../../utils/common", () => ({
 }))
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn() }))
 vi.mock("../../utils/save", () => ({ save: vi.fn() }))
-vi.mock("../../utils/drive", () => ({ validateKeys: vi.fn() }))
+vi.mock("../../shared/utils/drive", () => ({ validateKeys: vi.fn() }))
 vi.mock("../../utils/cloudSync", () => ({ changeTeam: vi.fn(), setupCloudSync: vi.fn(), socketDisconnect: vi.fn(async () => {}), updateCloudDeviceName: vi.fn() }))
 // getFileName (FileField) vive en helpers/media, que arrastra el módulo de audio
 vi.mock("../../audio/audioProcessor", () => ({}))

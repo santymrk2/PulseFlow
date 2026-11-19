@@ -1,6 +1,6 @@
 import { get } from "../../shared/core/lib/store"
 import { language } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 
 const dictionary = [
     { fallback: "dynamic values", key: "popup.dynamic_values", tip: "Text that can change dynamically.<br>Right click any textbox to add." },

@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { Movebox } from "./Movebox"
 
 vi.mock("../../shared/core/stores", () => ({ openToolsTab: { set: vi.fn() } }))
-vi.mock("../../components/helpers/style", () => ({ getStyles: () => ({}) }))
+vi.mock("../../shared/utils/helpers/style", () => ({ getStyles: () => ({}) }))
 vi.mock("../../components/system/textbox", () => ({ radiusHandleSize: 10, radiusSliderOffset: 0, radiusSliderRatio: 1 }))
 
 afterEach(cleanup)

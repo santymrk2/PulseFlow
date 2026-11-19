@@ -2,19 +2,19 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { history } from "../../components/helpers/history"
-import { _show } from "../../components/helpers/shows"
+import { history } from "../../shared/utils/helpers/history"
+import { _show } from "../../shared/utils/helpers/shows"
 import { activeEdit, activeShow, dictionary, overlays, popupData, showsCache, templates } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SetTime } from "./SetTime"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "sl1" }]) }))
-vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn() }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "sl1" }]) }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
 vi.mock("../ui/number-field/NumberField", () => ({
     NumberField: ({ label, value, max, onChange }: { label: string; value: number; max: number; onChange: (v: number | null) => void }) => <input data-label={label} data-max={max} value={value} onChange={(e) => onChange(Number(e.currentTarget.value))} />
 }))

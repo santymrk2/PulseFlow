@@ -4,21 +4,21 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { OUTPUT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
-import { deleteAction } from "../../components/helpers/clipboard"
-import { addOutput, enableStageOutput } from "../../components/helpers/output"
+import { deleteAction } from "../../shared/utils/helpers/clipboard"
+import { addOutput, enableStageOutput } from "../../shared/utils/helpers/output"
 import { requestMain } from "../../shared/core/ipc/main"
 import { invokeCommand } from "../../shared/core/ipc/tauri"
 import { currentOutputSettings, outputs, outputState } from "../../shared/core/stores"
-import { send } from "../../utils/request"
+import { send } from "../../shared/utils/request"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ScreenConfig } from "./ScreenConfig"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 36 }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 36 }))
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn() }))
 vi.mock("../../shared/core/ipc/tauri", () => ({ invokeCommand: vi.fn() }))
-vi.mock("../../utils/request", () => ({ send: vi.fn() }))
-vi.mock("../../components/helpers/clipboard", () => ({ deleteAction: vi.fn(), duplicate: vi.fn() }))
-vi.mock("../../components/helpers/output", () => ({ toggleOutputs: vi.fn(), addOutput: vi.fn(), enableStageOutput: vi.fn() }))
+vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
+vi.mock("../../shared/utils/helpers/clipboard", () => ({ deleteAction: vi.fn(), duplicate: vi.fn() }))
+vi.mock("../../shared/utils/helpers/output", () => ({ toggleOutputs: vi.fn(), addOutput: vi.fn(), enableStageOutput: vi.fn() }))
 vi.mock("./ScreenOutputOptions", () => ({ ScreenOutputOptions: () => null }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

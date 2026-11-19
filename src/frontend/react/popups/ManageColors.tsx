@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { get } from "../../shared/core/lib/store"
-import { defaultColors, defaultGradients } from "../../components/helpers/color"
+import { defaultColors, defaultGradients } from "../../shared/utils/helpers/color"
 import { Tip } from "../main/Tip"
 import { special } from "../../shared/core/stores"
 import { T } from "../helpers/T"

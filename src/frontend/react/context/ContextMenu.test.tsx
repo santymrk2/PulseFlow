@@ -41,10 +41,10 @@ const mocks = vi.hoisted(() => {
 })
 
 vi.mock("../../shared/core/stores", () => mocks)
-vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../utils/shortcuts", () => ({ closeContextMenu: () => mocks.contextActive.set(false) }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getEditItems: () => [] }))
-vi.mock("../../components/helpers/color", () => ({ hexToRgb: () => "0 0 0" }))
+vi.mock("../../shared/utils/helpers/color", () => ({ hexToRgb: () => "0 0 0" }))
 vi.mock("../../components/context/nativeMenu", () => ({ contextMenuMode: () => "app" }))
 vi.mock("../../components/context/contextMenus", () => ({
     contextMenuGroups: {},

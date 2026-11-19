@@ -2,8 +2,8 @@
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeStage, outputs, stageShows } from "../../../shared/core/stores"
-import { translateText } from "../../../utils/language"
-import { history } from "../../../components/helpers/history"
+import { translateText } from "../../../shared/utils/language"
+import { history } from "../../../shared/utils/helpers/history"
 import { SlideStyle } from "./SlideStyle"
 
 vi.mock("../../../shared/core/stores", () => {
@@ -24,8 +24,8 @@ vi.mock("../../../shared/core/stores", () => {
     }
     return { activeStage: makeStore({ id: "st1", items: [] }), outputs: makeStore({}), stageShows: makeStore({}) }
 })
-vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../ui/select-field/SelectField", () => ({
     SelectField: ({ label, value, options, onChange }: { label: string; value: string; options: { value: string; label: string }[]; onChange?: (value: string | null) => void }) => (

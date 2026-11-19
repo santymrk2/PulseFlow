@@ -2,16 +2,16 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { getContrast } from "../../components/helpers/color"
+import { getContrast } from "../../shared/utils/helpers/color"
 import { activeRename, dictionary, fullColors, templates } from "../../shared/core/stores"
-import { getAccess } from "../../utils/profile"
+import { getAccess } from "../../shared/utils/profile"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Label } from "./Label"
 import styles from "./Label.module.css"
 
-vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
+vi.mock("../../shared/utils/common", () => commonMock())
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 
 let restaurar: () => void = () => {}
 const raiz = (container: HTMLElement) => container.firstElementChild as HTMLElement

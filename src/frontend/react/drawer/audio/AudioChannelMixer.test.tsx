@@ -20,7 +20,7 @@ interface ClickDetail {
 
 vi.mock("../../../audio/audioChannelRecorder", () => ({ toggleChannelRecording: vi.fn() }))
 vi.mock("../../../audio/audioPlayer", () => ({ AudioPlayer: { updateVolume: vi.fn() } }))
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("./AudioMeter", () => ({ AudioMeter: () => <div data-testid="audio-meter" /> }))
 vi.mock("../../ui/slider/Slider", () => ({
     Slider: ({ value, onInput }: { value: number; onInput?: (event: FormEvent<HTMLInputElement>) => void }) => <button type="button" data-testid="volume-slider" data-value={value} onClick={() => onInput?.({ currentTarget: { value: "0.8" } } as FormEvent<HTMLInputElement>)} />

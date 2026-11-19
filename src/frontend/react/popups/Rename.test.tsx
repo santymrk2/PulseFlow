@@ -3,26 +3,26 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { renameCalendar } from "../../components/drawer/calendar/calendars"
-import { history } from "../../components/helpers/history"
-import { getLayoutRef } from "../../components/helpers/show"
-import { _show } from "../../components/helpers/shows"
+import { history } from "../../shared/utils/helpers/history"
+import { getLayoutRef } from "../../shared/utils/helpers/show"
+import { _show } from "../../shared/utils/helpers/shows"
 import { activePopup, activeShow, audioRouting, calendars, customScriptureBooks, dictionary, drawerTabsData, effectsLibrary, selected, scripturesCache, showsCache } from "../../shared/core/stores"
-import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
+import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
 import { clearFields, fire } from "../test/kitMocks"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Rename } from "./Rename"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
-vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
+vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/drawer/calendar/calendars", () => ({ renameCalendar: vi.fn() }))
-vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn(() => ({ slides: () => ({ get: () => [undefined], set: vi.fn() }), layouts: () => ({ get: () => [] }) })) }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn(() => ({ slides: () => ({ get: () => [undefined], set: vi.fn() }), layouts: () => ({ get: () => [] }) })) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 
 const dict = { popup: { change_name: "Cambiar nombre" }, inputs: { name: "Nombre" }, actions: { rename: "Renombrar" } }

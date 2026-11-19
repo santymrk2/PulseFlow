@@ -3,7 +3,7 @@
 
 import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
-import { clone } from "../../components/helpers/array"
+import { clone } from "../../shared/utils/helpers/array"
 import { activeAudioEffects, audioEffects, type AudioEffectInstance, type AudioEffectsConfig } from "../../shared/core/stores"
 
 export const ALL_EFFECT_KEYS = ["equalizer", "filter", "noiseGate", "compressor", "limiter", "reverb", "delay", "stereoShaper"] as const

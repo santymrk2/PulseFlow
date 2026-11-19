@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react"
 import type { Cropping, Resolution } from "../../../types/Settings"
 import { outputs, previewOutputId, styles } from "../../shared/core/stores"
-import { DEFAULT_BOUNDS, getActiveOutputs, getOutputResolution, getResolution } from "../../components/helpers/output"
+import { DEFAULT_BOUNDS, getActiveOutputs, getOutputResolution, getResolution } from "../../shared/utils/helpers/output"
 import { useStore } from "../hooks/useStore"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { observeResize } from "./observeResize"

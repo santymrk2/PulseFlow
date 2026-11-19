@@ -3,7 +3,7 @@ import { activePlaylist, audioPlaylists, media, outLocked, playingAudio } from "
 import { AudioPlayer } from "./audioPlayer"
 import { audioIsFading, clearAudio, fadeOutAudio, isAllAudioFading } from "./audioFading"
 import { customActionActivation } from "../components/actions/actions"
-import { clone, shuffleArray } from "../components/helpers/array"
+import { clone, shuffleArray } from "../shared/utils/helpers/array"
 
 type AudioPlaylistOptions = {
     pauseIfPlaying?: boolean

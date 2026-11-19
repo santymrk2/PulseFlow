@@ -3,15 +3,15 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import type { ReactNode } from "react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { history } from "../../../components/helpers/history"
+import { history } from "../../../shared/utils/helpers/history"
 import { categories, dictionary, drawerTabsData, labelsDisabled, shows } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { ShowsTabs } from "./ShowsTabs"
 
-vi.mock("../../../utils/common", () => ({ ...commonMock(), hasNewerUpdate: vi.fn(async () => false) }))
-vi.mock("../../../utils/profile", () => ({ getAccess: () => ({}) }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/common", () => ({ ...commonMock(), hasNewerUpdate: vi.fn(async () => false) }))
+vi.mock("../../../shared/utils/profile", () => ({ getAccess: () => ({}) }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 
 interface SectionsProps {
     sections: unknown

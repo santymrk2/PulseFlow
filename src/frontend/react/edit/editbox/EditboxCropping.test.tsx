@@ -11,8 +11,8 @@ vi.mock("../../../shared/core/stores", () => ({
         }
     }
 }))
-vi.mock("../../../utils/cursor", () => ({ startResizing: vi.fn(), stopResizing: vi.fn() }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/cursor", () => ({ startResizing: vi.fn(), stopResizing: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 
 afterEach(cleanup)
 

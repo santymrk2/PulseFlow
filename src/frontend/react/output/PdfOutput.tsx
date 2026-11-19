@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { getDocument, GlobalWorkerOptions, type PDFDocumentLoadingTask, type PDFDocumentProxy, type RenderTask } from "pdfjs-dist"
 import type { Transition } from "../../../types/Show"
-import { encodeFilePath, locateMediaFile } from "../../components/helpers/media"
+import { encodeFilePath, locateMediaFile } from "../../shared/utils/helpers/media"
 import { OutputTransition } from "./OutputTransition"
 import styles from "./PdfOutput.module.css"
 

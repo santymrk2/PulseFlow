@@ -5,8 +5,8 @@ import SlideItemTransition from "./SlideItemTransition"
 
 vi.mock("../../shared/core/stores", () => ({ scriptureSettings: { subscribe: (fn: (value: unknown) => void) => (fn({ template: "t" }), () => {}) }, templates: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) } }))
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
-vi.mock("../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)) }))
-vi.mock("../../components/helpers/output", () => ({ getStyleTemplate: () => ({}), itemNeedsAutoSize: () => false, slideHasAutoSizeItem: () => false }))
+vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)) }))
+vi.mock("../../shared/utils/helpers/output", () => ({ getStyleTemplate: () => ({}), itemNeedsAutoSize: () => false, slideHasAutoSizeItem: () => false }))
 vi.mock("./OutputTransition", () => ({ OutputTransition: ({ children }: { children?: React.ReactNode }) => <div>{children}</div> }))
 
 afterEach(cleanup)

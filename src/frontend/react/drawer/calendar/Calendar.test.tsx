@@ -8,7 +8,7 @@ import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { Calendar } from "./Calendar"
 import styles from "./Calendar.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 

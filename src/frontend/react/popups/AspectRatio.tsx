@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { activePopup, popupData } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
 import { Button } from "../ui/button/Button"
 import { HRule } from "../ui/h-rule/HRule"

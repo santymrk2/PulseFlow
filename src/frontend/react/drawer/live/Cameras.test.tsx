@@ -8,7 +8,7 @@ import { commonMock } from "../../test/mockCommon"
 import { Cameras } from "./Cameras"
 
 const mocks = vi.hoisted(() => ({ list: vi.fn(), clearBad: vi.fn() }))
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

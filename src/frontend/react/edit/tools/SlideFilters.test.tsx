@@ -5,11 +5,11 @@ import { activeEdit, activeShow, showsCache, templates } from "../../../shared/c
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { SlideFilters } from "./SlideFilters"
 
-vi.mock("../../../utils/language", () => ({ translateText: (id: string) => id }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../../components/helpers/historyHelpers", () => ({ historyHelpers: {}, projectReplacers: [] }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/historyHelpers", () => ({ historyHelpers: {}, projectReplacers: [] }))
 vi.mock("../../../components/actions/apiHelper", () => ({}))
-vi.mock("../../../components/helpers/show", () => ({ getLayoutRef: () => [{ data: { filter: "" } }] }))
+vi.mock("../../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ data: { filter: "" } }] }))
 vi.mock("../../../components/edit/scripts/textStyle", () => ({ addFilterString: () => "" }))
 vi.mock("./EditValues", () => ({ EditValues: () => <div data-comp="edit-values" /> }))
 

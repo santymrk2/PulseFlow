@@ -2,7 +2,7 @@ import { get } from "../shared/core/lib/store"
 import { Main } from "../../types/IPC/Main"
 import { sendMain } from "../shared/core/ipc/main"
 import { recordingChannels, special } from "../shared/core/stores"
-import { newToast } from "../utils/common"
+import { newToast } from "../shared/utils/common"
 import { AudioAnalyser } from "./audioAnalyser"
 import { AudioRoutingManager } from "./routing/audioRoutingManager"
 

@@ -18,7 +18,7 @@ const { getInteractionMock, startInteractionMock, stopInteractionMock, gotoMock,
     kickMock: vi.fn()
 }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/drawer/pages/interactions", () => ({

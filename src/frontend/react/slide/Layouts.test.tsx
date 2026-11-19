@@ -5,23 +5,23 @@ import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { changeSlidesView } from "../../show/slides"
 import { actions, activePopup, activeProject, activeShow, alertMessage, editingProjectTemplate, labelsDisabled, projects, projectTemplates, showsCache, slidesOptions } from "../../shared/core/stores"
-import { getAccess } from "../../utils/profile"
+import { getAccess } from "../../shared/utils/profile"
 import { getActionIcon, runAction } from "../../components/actions/actions"
-import { duplicate } from "../../components/helpers/clipboard"
-import { history } from "../../components/helpers/history"
+import { duplicate } from "../../shared/utils/helpers/clipboard"
+import { history } from "../../shared/utils/helpers/history"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Layouts } from "./Layouts"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
 vi.mock("../../show/slides", () => ({ changeSlidesView: vi.fn() }))
 vi.mock("../../components/actions/actions", () => ({ getActionIcon: vi.fn(() => "actions"), runAction: vi.fn() }))
-vi.mock("../../components/helpers/clipboard", () => ({ duplicate: vi.fn() }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/shows", () => ({
+vi.mock("../../shared/utils/helpers/clipboard", () => ({ duplicate: vi.fn() }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/shows", () => ({
     _show: vi.fn(() => ({
         layouts: () => ({ ref: () => [[{ data: { nextTimer: 30 } }, { data: { nextTimer: 90 }, id: "sl1" }]] }),
         slides: () => ({ get: () => [{ language: "en" }] })

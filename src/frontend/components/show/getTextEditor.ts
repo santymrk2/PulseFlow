@@ -1,8 +1,8 @@
 import type { Item } from "../../../types/Show"
 import { getSlideText } from "../edit/scripts/textStyle"
-import { clone } from "../helpers/array"
-import { getLayoutRef } from "../helpers/show"
-import { _show } from "../helpers/shows"
+import { clone } from "../../shared/utils/helpers/array"
+import { getLayoutRef } from "../../shared/utils/helpers/show"
+import { _show } from "../../shared/utils/helpers/shows"
 import { getTextboxes } from "./formatTextEditor"
 
 export function getPlainEditorText(showId = "", allowEmpty = false, itemIndex = 0) {

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import type { TabsObj } from "../../../types/Tabs"
 import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"

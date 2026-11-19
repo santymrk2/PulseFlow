@@ -15,8 +15,8 @@ vi.mock("../ui/button/Button", () => ({
         </button>
     )
 }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: () => [] }))
-vi.mock("../../components/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [] }) }) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [] }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [] }) }) }))
 
 let restore = () => {}
 afterEach(() => {

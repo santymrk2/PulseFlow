@@ -4,8 +4,8 @@ import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
 import { customMetadata, metronome, metronomeTimer, playingMetronome, special } from "../../../shared/core/stores"
 import type { MetronomeSettings } from "../../../types/Audio"
 import type { API_metronome } from "../../actions/api"
-import { clone } from "../../helpers/array"
-import { _show } from "../../helpers/shows"
+import { clone } from "../../../shared/utils/helpers/array"
+import { _show } from "../../../shared/utils/helpers/shows"
 
 function getAudioContext() {
     return AudioAnalyser.getAudioContext()

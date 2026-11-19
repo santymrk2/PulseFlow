@@ -5,7 +5,7 @@ import { channelSidechainMultipliers } from "../../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../../test/storeTestKit"
 import { AudioSidechain } from "./AudioSidechain"
 
-vi.mock("../../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {

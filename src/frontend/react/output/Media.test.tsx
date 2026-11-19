@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import Media from "./Media"
 
-vi.mock("../../components/helpers/media", () => ({ downloadOnlineMedia: async (p: string) => p, getExtension: () => "jpg", getMediaType: () => "image" }))
+vi.mock("../../shared/utils/helpers/media", () => ({ downloadOnlineMedia: async (p: string) => p, getExtension: () => "jpg", getMediaType: () => "image" }))
 vi.mock("../media/Video", () => ({ Video: () => <div data-testid="video" /> }))
 vi.mock("../media/Image", () => ({ Image: () => <div data-testid="image" /> }))
 

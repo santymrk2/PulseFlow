@@ -6,12 +6,12 @@ import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { MediaCard } from "./MediaCard"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("./MediaLoader", () => ({ MediaLoader: (props: Record<string, unknown>) => <span data-view="MediaLoader" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} /> }))
-vi.mock("../../../components/helpers/media", async () => {
-    const actual = await vi.importActual<typeof import("../../../components/helpers/media")>("../../../components/helpers/media")
+vi.mock("../../../shared/utils/helpers/media", async () => {
+    const actual = await vi.importActual<typeof import("../../../shared/utils/helpers/media")>("../../../shared/utils/helpers/media")
     return { ...actual, loadThumbnail: vi.fn(() => Promise.resolve("")) }
 })
 

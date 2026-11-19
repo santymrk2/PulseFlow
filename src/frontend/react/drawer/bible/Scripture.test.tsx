@@ -14,7 +14,7 @@ const { loadJsonBibleMock, playScriptureMock, swapPreviewBibleMock, outputFlag }
     outputFlag: { current: false }
 }))
 
-vi.mock("../../../utils/common", () => ({ ...commonMock(), wait: () => Promise.resolve() }))
+vi.mock("../../../shared/utils/common", () => ({ ...commonMock(), wait: () => Promise.resolve() }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/classes/Show", () => ({ ShowObj: class ShowObj {} }))

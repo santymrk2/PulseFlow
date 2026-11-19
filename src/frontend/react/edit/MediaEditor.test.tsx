@@ -46,8 +46,8 @@ vi.mock("../../components/media/video/videoPlayer", () => ({
     VideoPlayer: { getDuration: () => Promise.resolve(42) }
 }))
 
-vi.mock("../../components/helpers/media", async (importOriginal) => {
-    const actual = await importOriginal<typeof import("../../components/helpers/media")>()
+vi.mock("../../shared/utils/helpers/media", async (importOriginal) => {
+    const actual = await importOriginal<typeof import("../../shared/utils/helpers/media")>()
     return {
         ...actual,
         getMedia: () => Promise.resolve(null),

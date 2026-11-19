@@ -2,14 +2,14 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { setDrawerTabData } from "../../../components/helpers/historyHelpers"
-import { replaceDynamicValues } from "../../../components/helpers/showActions"
+import { setDrawerTabData } from "../../../shared/utils/helpers/historyHelpers"
+import { replaceDynamicValues } from "../../../shared/utils/helpers/showActions"
 import { activeDrawerTab, drawer, variables } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { Variable } from "./Variable"
 
-vi.mock("../../../components/helpers/showActions", () => ({ replaceDynamicValues: vi.fn((text: string, _ref: unknown, updater: number) => `${text}:${updater}`) }))
-vi.mock("../../../components/helpers/historyHelpers", () => ({ setDrawerTabData: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/showActions", () => ({ replaceDynamicValues: vi.fn((text: string, _ref: unknown, updater: number) => `${text}:${updater}`) }))
+vi.mock("../../../shared/utils/helpers/historyHelpers", () => ({ setDrawerTabData: vi.fn() }))
 
 let restore: () => void = () => {}
 beforeEach(() => {

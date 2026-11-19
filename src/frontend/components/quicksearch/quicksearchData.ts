@@ -4,11 +4,11 @@ import type { FileFolder } from "../../../types/Main"
 import type { ShowList } from "../../../types/Show"
 import { requestMain } from "../../shared/core/ipc/main"
 import { drawerTabsData, scriptures, scripturesCache, textCache } from "../../shared/core/stores"
-import { buildBibleIndex, fastBibleSearch } from "../../utils/searchFast"
+import { buildBibleIndex, fastBibleSearch } from "../../shared/utils/searchFast"
 import { getTextSnippet } from "./searchHighlight"
 import { sortByClosestMatch } from "../actions/apiHelper"
 import { loadJsonBible } from "../drawer/bible/scripture"
-import { getExtension, getMediaType } from "../helpers/media"
+import { getExtension, getMediaType } from "../../shared/utils/helpers/media"
 
 export function showResult(show: ShowList, rawSearchValue: string) {
     return { ...show, description: getTextSnippet(get(textCache)[show.id] || "", rawSearchValue) }

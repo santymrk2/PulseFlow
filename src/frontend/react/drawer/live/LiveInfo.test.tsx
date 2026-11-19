@@ -9,7 +9,7 @@ import { commonMock } from "../../test/mockCommon"
 import { LiveInfo } from "./LiveInfo"
 
 const mocks = vi.hoisted(() => ({ paused: vi.fn(() => false), toggle: vi.fn(() => true), stop: vi.fn() }))
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../components/drawer/live/recorder", () => ({ mediaRecorderIsPaused: mocks.paused, toggleMediaRecorder: mocks.toggle, stopMediaRecorder: mocks.stop }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../ui/button/Button", () => ({ Button: ({ onClick, children }: { onClick?: () => void; children?: ReactNode }) => <button onClick={onClick}>{children}</button> }))

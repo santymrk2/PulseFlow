@@ -5,7 +5,7 @@ import { destroyMain, receiveToMain, sendMain } from "../../shared/core/ipc/main
 import { MediaPicker } from "./MediaPicker"
 
 vi.mock("../../shared/core/ipc/main", () => ({ receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn(), sendMain: vi.fn() }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 
 afterEach(() => {
     cleanup()

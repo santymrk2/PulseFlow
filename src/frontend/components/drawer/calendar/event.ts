@@ -2,10 +2,10 @@ import { get } from "../../../shared/core/lib/store"
 import { uid } from "uid"
 import type { Event } from "../../../../types/Calendar"
 import { events } from "../../../shared/core/stores"
-import { translateText } from "../../../utils/language"
+import { translateText } from "../../../shared/utils/language"
 import { actionData } from "../../actions/actionData"
-import { clone } from "../../helpers/array"
-import { history } from "../../helpers/history"
+import { clone } from "../../../shared/utils/helpers/array"
+import { history } from "../../../shared/utils/helpers/history"
 
 function getOrdinalWeekdayOfMonth(year: number, month: number, weekday: number, ordinal: string): number {
     const dates: number[] = []

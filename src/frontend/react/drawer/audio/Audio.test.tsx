@@ -22,7 +22,7 @@ vi.mock("../../../audio/audioPlayer", () => ({
     AudioPlayer: { getDurationSync: vi.fn(() => 30), getKey: vi.fn((p: string) => p), getAudioType: vi.fn(() => "music"), start: vi.fn(), updateVolume: vi.fn(), getDuration: vi.fn(() => Promise.resolve(30)) }
 }))
 vi.mock("../../../audio/audioPlaylist", () => ({ AudioPlaylist: { update: vi.fn(), start: vi.fn(), stop: vi.fn() } }))
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../live/Microphones", () => ({ Microphones: () => <div data-testid="microphones" /> }))
 vi.mock("../live/AudioStreams", () => ({ AudioStreams: () => <div data-testid="audio-streams" /> }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))

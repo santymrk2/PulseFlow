@@ -6,9 +6,9 @@ import { activeEdit, activePopup, overlays, popupData, templates } from "../../.
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { TemplateStyle } from "./TemplateStyle"
 
-vi.mock("../../../utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: (id: string) => id }))
 vi.mock("../../../shared/core/values/extensions", () => ({ mediaExtensions: [] }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../helpers/Icon", () => ({ Icon: () => <span /> }))
 vi.mock("../../ui/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))
 vi.mock("../../ui/color-field/ColorField", () => ({ ColorField: () => <div /> }))

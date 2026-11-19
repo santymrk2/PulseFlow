@@ -4,13 +4,13 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { format } from "../../components/context/menuClick"
 import { activePopup, dictionary, popupData } from "../../shared/core/stores"
-import { newToast } from "../../utils/common"
-import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
+import { newToast } from "../../shared/utils/common"
+import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { FindReplace } from "./FindReplace"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../components/context/menuClick", () => ({ format: vi.fn() }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))

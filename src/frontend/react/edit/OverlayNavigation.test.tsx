@@ -6,9 +6,9 @@ import { drawerTabsData, effects, overlays } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { OverlayNavigation } from "./OverlayNavigation"
 
-vi.mock("../../utils/language", () => ({ translateText: (id: string) => id }))
-vi.mock("../../utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../drawer/pages/Overlays", () => ({ Overlays: () => <div data-comp="overlays" /> }))
 vi.mock("../show/left/LeftPanel", () => ({
     LeftPanel: ({ children, title }: { children?: ReactNode; title?: string }) => (

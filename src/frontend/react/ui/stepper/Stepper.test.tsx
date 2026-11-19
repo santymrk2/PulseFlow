@@ -6,7 +6,7 @@ import { fireWheel } from "../../test/fireWheel"
 import { Stepper } from "./Stepper"
 import styles from "./Stepper.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 afterEach(() => {
     cleanup()

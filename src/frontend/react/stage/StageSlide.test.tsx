@@ -4,18 +4,18 @@ import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { allOutputs, outputs, stageShows } from "../../shared/core/stores"
 import { getSortedStageItems, shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
-import { getAccess } from "../../utils/profile"
+import { getAccess } from "../../shared/utils/profile"
 import { getSlideTextItems } from "../../components/stage/stage"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { StageSlide } from "./StageSlide"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getSortedStageItems: vi.fn(() => []), shouldItemBeShown: vi.fn(() => true) }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/helpers/output", () => ({
     getStageOutputId: vi.fn(() => "stage1"),
     getStageResolution: vi.fn(() => ({ width: 1920, height: 1080 }))
 }))

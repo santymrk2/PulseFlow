@@ -5,7 +5,7 @@ import { commonMock } from "../../test/mockCommon"
 import { ToggleGroupField } from "./ToggleGroupField"
 import styles from "./ToggleGroupField.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 afterEach(cleanup)
 

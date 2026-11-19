@@ -6,7 +6,7 @@ import { commonMock } from "../../test/mockCommon"
 import { RadialField } from "./RadialField"
 import styles from "./RadialField.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 afterEach(() => {
     cleanup()

@@ -2,14 +2,14 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeProfile, categories, dictionary, folders, leftSource, projects, sorted } from "../../../shared/core/stores"
-import { getAccess } from "../../../utils/profile"
+import { getAccess } from "../../../shared/utils/profile"
 import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { PlaylistsPanel } from "./PlaylistsPanel"
 
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
+vi.mock("../../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 let projectListProps: { tree?: unknown[]; readOnly?: boolean; selectedId?: string | null } = {}
 vi.mock("../ProjectList", () => ({
     ProjectList: (props: { tree?: unknown[]; readOnly?: boolean; selectedId?: string | null }) => {

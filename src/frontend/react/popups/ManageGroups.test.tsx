@@ -2,16 +2,16 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { history } from "../../components/helpers/history"
+import { history } from "../../shared/utils/helpers/history"
 import { activePopup, dictionary, groupNumbers, groups, groupsMoreOptionsEnabled, special, templates } from "../../shared/core/stores"
-import { newToast } from "../../utils/common"
+import { newToast } from "../../shared/utils/common"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ManageGroups } from "./ManageGroups"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../utils/profile", () => ({ isGroupHidden: (id: string) => id === "oculto" }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/profile", () => ({ isGroupHidden: (id: string) => id === "oculto" }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/color-field/ColorField", async () => ({ ColorField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/popup-field/PopupField", async () => ({ PopupField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))

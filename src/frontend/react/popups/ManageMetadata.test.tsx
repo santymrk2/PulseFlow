@@ -8,8 +8,8 @@ import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ManageMetadata } from "./ManageMetadata"
 
-vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../components/helpers/show", () => ({ initializeMetadata: () => ({ number: "", title: "", artist: "" }) }))
+vi.mock("../../shared/utils/common", () => commonMock())
+vi.mock("../../shared/utils/helpers/show", () => ({ initializeMetadata: () => ({ number: "", title: "", artist: "" }) }))
 vi.mock("../ui/checkbox-field/CheckboxField", async () => ({ CheckboxField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 

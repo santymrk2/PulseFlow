@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { _show } from "../../components/helpers/shows"
+import { _show } from "../../shared/utils/helpers/shows"
 import { actions, activePopup, activeShow, dictionary, popupData, scenes, showsCache } from "../../shared/core/stores"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { clearIslands, islands } from "../test/islandMock"
@@ -10,8 +10,8 @@ import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { CustomAction } from "./CustomAction"
 
-vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../components/helpers/shows", () => ({ _show: vi.fn() }))
+vi.mock("../../shared/utils/common", () => commonMock())
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
 vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 

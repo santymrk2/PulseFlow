@@ -3,15 +3,15 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, activeProfile, categories, dictionary, leftSource, projects, sortedShowsList } from "../../../shared/core/stores"
-import { getAccess } from "../../../utils/profile"
+import { getAccess } from "../../../shared/utils/profile"
 import { commonMock } from "../../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { ItemsPanel } from "./ItemsPanel"
 
 const { libraryAddMenuProps } = vi.hoisted(() => ({ libraryAddMenuProps: { current: {} as Record<string, unknown> } }))
 
-vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
+vi.mock("../../../shared/utils/common", () => commonMock())
+vi.mock("../../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../LibraryAddMenu", () => ({
     LibraryAddMenu: (props: Record<string, unknown>) => {
         libraryAddMenuProps.current = props

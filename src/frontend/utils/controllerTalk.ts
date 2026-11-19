@@ -1,6 +1,6 @@
 import { get } from "../shared/core/lib/store"
-import { getFirstActiveOutput, getFirstOutput, getOutputResolution } from "../components/helpers/output"
-import { OutputHelper } from "../components/helpers/OutputHelper"
+import { getFirstActiveOutput, getFirstOutput, getOutputResolution } from "../shared/utils/helpers/output"
+import { OutputHelper } from "../shared/utils/helpers/OutputHelper"
 import { clearAll, clearSlide } from "../components/output/clear"
 import { outputs, serverData } from "../shared/core/stores"
 

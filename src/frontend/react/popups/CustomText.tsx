@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { special } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { TextareaField } from "../ui/textarea-field/TextareaField"
 
 // Port de components/main/popups/CustomText.svelte. Lee special.splashText (al montar). Escribe special.splashText al cambiar (en el lugar, como el Svelte).

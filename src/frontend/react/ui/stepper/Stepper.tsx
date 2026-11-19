@@ -1,6 +1,6 @@
 import { useEffect, useRef, type CSSProperties, type MouseEvent } from "react"
 import { cn } from "../../../shared/core/lib/utils"
-import { evaluateArithmetic } from "../../../utils/safeMath"
+import { evaluateArithmetic } from "../../../shared/utils/safeMath"
 import { Icon } from "../../helpers/Icon"
 import { Button } from "../button/Button"
 import { Input } from "../input/Input"

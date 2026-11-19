@@ -10,15 +10,15 @@ import { writable } from "../shared/core/lib/store"
 const mocks = vi.hoisted(() => ({ requestMain: vi.fn(), newToast: vi.fn(), contentProviderSync: vi.fn() }))
 
 vi.mock("../shared/core/ipc/main", () => ({ requestMain: mocks.requestMain, sendMain: vi.fn() }))
-vi.mock("./common", () => ({ newToast: mocks.newToast, setStatus: vi.fn(), hasNewerUpdate: vi.fn(), isMainWindow: vi.fn(() => true), wait: vi.fn() }))
+vi.mock("../shared/utils/common", () => ({ newToast: mocks.newToast, setStatus: vi.fn(), hasNewerUpdate: vi.fn(), isMainWindow: vi.fn(() => true), wait: vi.fn() }))
 vi.mock("./startup", () => ({ contentProviderSync: mocks.contentProviderSync }))
-vi.mock("./popup", () => ({ confirmCustom: vi.fn() }))
+vi.mock("../shared/utils/popup", () => ({ confirmCustom: vi.fn() }))
 vi.mock("./save", () => ({ getSyncedSettings: vi.fn(), save: vi.fn() }))
-vi.mock("./SocketHelper", () => ({ SocketHelper: class {} }))
-vi.mock("../components/helpers/media", () => ({ isLocalFile: vi.fn() }))
-vi.mock("../components/helpers/setShow", () => ({ loadShows: vi.fn() }))
-vi.mock("../components/helpers/color", () => ({ generateLightRandomColor: vi.fn() }))
-vi.mock("../components/helpers/array", () => ({ clone: (a: any) => a }))
+vi.mock("../shared/utils/SocketHelper", () => ({ SocketHelper: class {} }))
+vi.mock("../shared/utils/helpers/media", () => ({ isLocalFile: vi.fn() }))
+vi.mock("../shared/utils/helpers/setShow", () => ({ loadShows: vi.fn() }))
+vi.mock("../shared/utils/helpers/color", () => ({ generateLightRandomColor: vi.fn() }))
+vi.mock("../shared/utils/helpers/array", () => ({ clone: (a: any) => a }))
 vi.mock("../shared/core/stores", () => ({
     alertMessage: writable(""),
     activePopup: writable(null),

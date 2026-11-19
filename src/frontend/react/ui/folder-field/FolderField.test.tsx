@@ -8,7 +8,7 @@ import { commonMock } from "../../test/mockCommon"
 import { FolderField } from "./FolderField"
 import styles from "./FolderField.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener-1"), destroyMain: vi.fn() }))
 
 afterEach(() => {

@@ -22,10 +22,10 @@ vi.mock("../../../shared/core/stores", () => ({
         set: vi.fn()
     }
 }))
-vi.mock("../../../utils/popup", () => ({ waitForPopupData: vi.fn(async () => null) }))
-vi.mock("../../../components/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)) }))
-vi.mock("../../../components/helpers/clipboard", () => ({ deleteAction: vi.fn() }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/popup", () => ({ waitForPopupData: vi.fn(async () => null) }))
+vi.mock("../../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v)) }))
+vi.mock("../../../shared/utils/helpers/clipboard", () => ({ deleteAction: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../components/edit/scripts/chords", () => ({ addChords: vi.fn() }))
 
 afterEach(cleanup)

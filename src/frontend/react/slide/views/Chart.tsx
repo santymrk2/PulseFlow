@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 import type { Item } from "../../../../types/Show"
-import { replaceDynamicValues } from "../../../components/helpers/showActions"
+import { replaceDynamicValues } from "../../../shared/utils/helpers/showActions"
 import styles from "./Chart.module.css"
 
 export interface ChartProps {

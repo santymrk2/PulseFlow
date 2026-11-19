@@ -20,7 +20,7 @@ vi.mock("./ScriptureInfo", () => ({ ScriptureInfo: child("scripture") }))
 vi.mock("./CalendarInfo", () => ({ CalendarInfo: child("calendar") }))
 vi.mock("./FunctionsInfo", () => ({ FunctionsInfo: () => <div data-testid="functions" /> }))
 
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

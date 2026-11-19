@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { activePopup } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { Button } from "../ui/button/Button"
 import { Menu } from "../ui/menu/Menu"
 import { MenuItem } from "../ui/menu/MenuItem"

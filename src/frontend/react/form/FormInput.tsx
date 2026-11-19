@@ -1,8 +1,8 @@
 // @ts-nocheck
 import type { Input } from "../../../types/Input"
 import { activeEdit, activePage, activePopup, special } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
-import { select } from "../../components/helpers/select"
+import { translateText } from "../../shared/utils/language"
+import { select } from "../../shared/utils/helpers/select"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"
 import { CheckboxField } from "../ui/checkbox-field/CheckboxField"

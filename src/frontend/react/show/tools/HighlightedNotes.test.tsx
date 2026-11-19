@@ -5,8 +5,8 @@ import { groups } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { HighlightedNotes } from "./HighlightedNotes"
 
-vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../components/helpers/show", () => ({ getGlobalGroup: (name: string) => (name === "Grupo" ? "g1" : null) }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../../shared/utils/helpers/show", () => ({ getGlobalGroup: (name: string) => (name === "Grupo" ? "g1" : null) }))
 
 let restore: () => void = () => {}
 afterEach(() => {

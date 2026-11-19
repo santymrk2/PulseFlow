@@ -7,10 +7,10 @@ import type { SaveListSettings, SaveListSyncedSettings } from "../../types/Save"
 import type { Metadata, Themes } from "../../types/Settings"
 import { migrateAudioEffects } from "../audio/effects/audioEffectsHelpers"
 import { initAudioRouting } from "../audio/routing/audioRoutingInit"
-import { clone, keysToID } from "../components/helpers/array"
-import { checkFFmpeg, checkWindowCapture, setOutput, startScene, toggleOutputs } from "../components/helpers/output"
-import { type LooksMigrationResult, migrateLooksSettings } from "../components/helpers/looks"
-import { migrateOutputsRtmp } from "../components/helpers/rtmpDestinations"
+import { clone, keysToID } from "../shared/utils/helpers/array"
+import { checkFFmpeg, checkWindowCapture, setOutput, startScene, toggleOutputs } from "../shared/utils/helpers/output"
+import { type LooksMigrationResult, migrateLooksSettings } from "../shared/utils/helpers/looks"
+import { migrateOutputsRtmp } from "../shared/utils/helpers/rtmpDestinations"
 import { defaultThemes } from "../components/settings/tabs/defaultThemes"
 import { sendMain } from "../shared/core/ipc/main"
 import {
@@ -101,12 +101,12 @@ import {
     version,
     videoMarkers
 } from "../shared/core/stores"
-import { checkForUpdates } from "./checkForUpdates"
-import { isMainWindow, startAutosave } from "./common"
-import { setLanguage } from "./language"
-import { languages } from "./languageData"
+import { checkForUpdates } from "../shared/utils/checkForUpdates"
+import { isMainWindow, startAutosave } from "../shared/utils/common"
+import { setLanguage } from "../shared/utils/language"
+import { languages } from "../shared/utils/languageData"
 import { startRemoteController } from "./remoteController"
-import { send } from "./request"
+import { send } from "../shared/utils/request"
 
 /** F10.1: migra looks/salidas al modelo nuevo si hace falta y actualiza los stores
  *  afectados (looks, activeLook, stylesLegacyBackup). Los outputs migrados los

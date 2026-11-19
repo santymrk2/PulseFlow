@@ -11,9 +11,9 @@ vi.mock("../../hooks/useStore", () => ({
     }
 }))
 vi.mock("../../../shared/core/stores", () => ({ outputs: { id: "outputs" }, styles: { id: "styles" } }))
-vi.mock("../../../utils/common", () => ({ newToast: vi.fn() }))
-vi.mock("../../../utils/language", () => ({ translateText: (s: string) => s }))
-vi.mock("../../../components/helpers/array", () => ({ keysToID: (o: Record<string, unknown>) => Object.keys(o || {}).map((id) => ({ ...(o[id] || {}), id })), sortByName: (a: unknown[]) => a }))
+vi.mock("../../../shared/utils/common", () => ({ newToast: vi.fn() }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: (s: string) => s }))
+vi.mock("../../../shared/utils/helpers/array", () => ({ keysToID: (o: Record<string, unknown>) => Object.keys(o || {}).map((id) => ({ ...(o[id] || {}), id })), sortByName: (a: unknown[]) => a }))
 vi.mock("../../ui/select-field/SelectField", () => ({ SelectField: ({ label }: { label?: string }) => <div data-testid="select">{label}</div> }))
 
 import { outputs as outputsStore, styles as stylesStore } from "../../../shared/core/stores"

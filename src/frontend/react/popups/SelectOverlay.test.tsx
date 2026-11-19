@@ -2,19 +2,19 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { history } from "../../components/helpers/history"
-import { getResolution } from "../../components/helpers/output"
+import { history } from "../../shared/utils/helpers/history"
+import { getResolution } from "../../shared/utils/helpers/output"
 import { activePopup, dictionary, outputs, overlays, popupData, previewOutputId, styles } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { clearIslands, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SelectOverlay } from "./SelectOverlay"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../drawer/Card", async () => {
     const { islands } = await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")
     return {

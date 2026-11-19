@@ -3,8 +3,8 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeStage, stageShows } from "../../../shared/core/stores"
 import { addFilterString } from "../../../components/edit/scripts/textStyle"
-import { history } from "../../../components/helpers/history"
-import { percentageToAspectRatio, stylePosToPercentage } from "../../../components/helpers/output"
+import { history } from "../../../shared/utils/helpers/history"
+import { percentageToAspectRatio, stylePosToPercentage } from "../../../shared/utils/helpers/output"
 import { updateStageShow } from "../../../components/stage/stage"
 import { ItemStyle } from "./ItemStyle"
 
@@ -52,8 +52,8 @@ vi.mock("../../../components/edit/values/item", () => ({
         transform: { inputs: [[{ id: "perspective", hidden: false }]] }
     }
 }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../../components/helpers/output", () => ({
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/output", () => ({
     percentageToAspectRatio: vi.fn((input: unknown) => input),
     stylePosToPercentage: vi.fn((data: Record<string, string>) => ({
         ...data,
@@ -61,7 +61,7 @@ vi.mock("../../../components/helpers/output", () => ({
         top: String((Number(data.top) / 1080) * 100)
     }))
 }))
-vi.mock("../../../components/helpers/style", () => ({
+vi.mock("../../../shared/utils/helpers/style", () => ({
     getStyles: vi.fn((style: string, removeTxt = false) => {
         const result: Record<string, string> = {}
         for (const declaration of (style || "").split(";")) {
@@ -74,7 +74,7 @@ vi.mock("../../../components/helpers/style", () => ({
         return result
     })
 }))
-vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../components/stage/stage", () => ({ updateStageShow: vi.fn() }))
 vi.mock("../../edit/tools/EditValues", () => ({
     EditValues: (props: EditValuesProps & { onChange: (input: unknown) => void }) => {

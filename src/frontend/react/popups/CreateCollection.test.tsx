@@ -3,13 +3,13 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, dictionary, scriptures } from "../../shared/core/stores"
-import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
+import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { CreateCollection } from "./CreateCollection"
 
 vi.mock("uid", () => ({ uid: () => "col1" }))
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../components/drawer/bible/scripture", () => ({ getShortBibleName: (n: string) => n.slice(0, 3) }))
 
 const SCRIPTURES = {

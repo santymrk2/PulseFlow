@@ -1,10 +1,10 @@
 import { get } from "../../shared/core/lib/store"
 import type { AudioRoutingChannel, AudioRoutingConfig, AudioRoutingConnection } from "../../../types/AudioRouting"
-import { getAllOutputs, getFirstActiveOutput } from "../../components/helpers/output"
+import { getAllOutputs, getFirstActiveOutput } from "../../shared/utils/helpers/output"
 import { audioRouting, dictionary, outputs } from "../../shared/core/stores"
-import { waitUntilValueIsDefined } from "../../utils/common"
-import { translateText } from "../../utils/language"
-import { confirmCustom } from "../../utils/popup"
+import { waitUntilValueIsDefined } from "../../shared/utils/common"
+import { translateText } from "../../shared/utils/language"
+import { confirmCustom } from "../../shared/utils/popup"
 
 export function deduplicateConnections(connections: AudioRoutingConnection[]): AudioRoutingConnection[] {
     const seen = new Set<string>()

@@ -14,11 +14,11 @@ const { addProjectItemMock, toggleEffectOutputMock, findMatchingOutMock } = vi.h
     findMatchingOutMock: vi.fn((): string | null => null)
 }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../components/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock }))
-vi.mock("../../../components/helpers/overlayOutput", () => ({ toggleEffectOutput: toggleEffectOutputMock }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock }))
+vi.mock("../../../shared/utils/helpers/overlayOutput", () => ({ toggleEffectOutput: toggleEffectOutputMock }))
 vi.mock("../../../converters/project", () => ({ addProjectItem: addProjectItemMock }))
 vi.mock("../../output/Effect", async () => ({ Effect: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Effect") }))
 vi.mock("../../slide/Zoomed", async () => {

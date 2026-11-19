@@ -7,7 +7,7 @@ import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { ToggleField } from "./ToggleField"
 import styles from "./ToggleField.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 let restaurar: () => void = () => {}
 

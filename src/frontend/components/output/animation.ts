@@ -1,9 +1,9 @@
 import type { AnimationAction } from "../../../types/Output"
 import type { AnimationData } from "../../../types/Show"
 import { activeAnimate } from "../../shared/core/stores"
-import { wait } from "../../utils/common"
-import { clone } from "../helpers/array"
-import { getExtension, getMediaType } from "../helpers/media"
+import { wait } from "../../shared/utils/common"
+import { clone } from "../../shared/utils/helpers/array"
+import { getExtension, getMediaType } from "../../shared/utils/helpers/media"
 
 export async function updateAnimation(animationData: AnimationData, currentIndex: number, outSlide: any, background: any) {
     if (!animationData.animation) return {}

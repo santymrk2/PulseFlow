@@ -1,5 +1,5 @@
 import { os } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { useStore } from "../hooks/useStore"
 import { HRule } from "../ui/h-rule/HRule"
 import styles from "./Shortcuts.module.css"

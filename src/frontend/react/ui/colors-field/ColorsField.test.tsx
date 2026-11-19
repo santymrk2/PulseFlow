@@ -1,12 +1,12 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { hslToHex } from "../../../components/helpers/color"
+import { hslToHex } from "../../../shared/utils/helpers/color"
 import { commonMock } from "../../test/mockCommon"
 import { ColorsField } from "./ColorsField"
 import styles from "./ColorsField.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 // ColorField tiene su propio test: acá es el borde. El stub despacha input y change como el original.
 vi.mock("../color-field/ColorField", () => ({
     ColorField: (p: { label: string; value: string; allowOpacity?: boolean; onInput?: (v: string) => void; onChange?: (v: string) => void }) => (

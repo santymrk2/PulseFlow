@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties, type HTMLAttributes } from "react"
 import { dictionary } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
 import { cn } from "../../shared/core/lib/utils"

@@ -2,15 +2,15 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { history } from "../../components/helpers/history"
+import { history } from "../../shared/utils/helpers/history"
 import { activePopup, dictionary, selected, shows } from "../../shared/core/stores"
-import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
+import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { DeleteShow } from "./DeleteShow"
 
-vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/common", () => commonMock())
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 
 let restaurar: () => void = () => {}
 function montar() {

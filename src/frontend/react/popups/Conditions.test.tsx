@@ -9,7 +9,7 @@ import { clearIslands, emit, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Conditions } from "./Conditions"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../slide/Textbox", async () => ({ Textbox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Textbox") }))
 vi.mock("../stage/Stagebox", async () => ({ Stagebox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Stagebox") }))
 // ConditionsBox ya es React: el doble lo registra como las islas, para seguir usando islands/emit
@@ -24,7 +24,7 @@ vi.mock("./ConditionsBox", async () => {
 })
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ isConditionMet: vi.fn(() => true), checkConditionValue: vi.fn(() => true) }))
 vi.mock("../../components/edit/scripts/textStyle", () => ({ getItemText: (item: { text?: string } | null) => item?.text ?? "" }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "sl1" }]) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "sl1" }]) }))
 vi.mock("../../components/stage/stage", () => ({ getSlideTextItems: vi.fn(() => [{ text: "de-stage" }]) }))
 vi.mock("../ui/zoom-control/ZoomControl", () => ({ ZoomControl: (p: { onChange: (v: number) => void; hidden: boolean }) => <button data-zoom={String(p.hidden)} onClick={() => p.onChange(0.8)} /> }))
 vi.mock("../ui/select-field/SelectField", () => ({ SelectField: (p: { options: { value: string; label: string; data: string }[]; value: string; onChange: (v: string) => void }) => <button data-select={p.value} data-options={JSON.stringify(p.options)} onClick={() => p.onChange("1")} /> }))

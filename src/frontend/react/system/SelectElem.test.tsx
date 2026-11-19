@@ -8,7 +8,7 @@ import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SelectElem } from "./SelectElem"
 import styles from "./SelectElem.module.css"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 // SelectElem arrastra (vía helpers) el módulo de audio, que necesita AudioContext/AudioWorkletNode (no existen en happy-dom)
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

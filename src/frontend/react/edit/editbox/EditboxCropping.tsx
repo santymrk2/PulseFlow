@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react"
 import type { Item } from "../../../../types/Show"
 import { activeShow } from "../../../shared/core/stores"
-import { startResizing, stopResizing } from "../../../utils/cursor"
-import { clampCrop, clampPan, getCropCenter, getCropValues, isSameCrop, type CropValues } from "../../../components/helpers/cropping"
-import { history } from "../../../components/helpers/history"
+import { startResizing, stopResizing } from "../../../shared/utils/cursor"
+import { clampCrop, clampPan, getCropCenter, getCropValues, isSameCrop, type CropValues } from "../../../shared/utils/helpers/cropping"
+import { history } from "../../../shared/utils/helpers/history"
 import { useStore } from "../../hooks/useStore"
 import styles from "./EditboxCropping.module.css"
 

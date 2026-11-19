@@ -9,11 +9,11 @@ import { Variables } from "./Variables"
 
 const { resetVariableMock, setRandomValueMock } = vi.hoisted(() => ({ resetVariableMock: vi.fn(), setRandomValueMock: vi.fn() }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/actions/apiHelper", () => ({ resetVariable: resetVariableMock }))
-vi.mock("../../../components/helpers/randomValue", () => ({ getSetChars: () => 4, setRandomValue: setRandomValueMock }))
+vi.mock("../../../shared/utils/helpers/randomValue", () => ({ getSetChars: () => 4, setRandomValue: setRandomValueMock }))
 
 const dict = {
     empty: { general: "Vacío" },

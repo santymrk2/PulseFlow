@@ -3,10 +3,10 @@ import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePage, activeStage, dictionary, labelsDisabled, openToolsTab, outputs, stageShows } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
-import { getAccess } from "../../utils/profile"
+import { translateText } from "../../shared/utils/language"
+import { getAccess } from "../../shared/utils/profile"
 import { addStyleString } from "../../components/edit/scripts/textStyle"
-import { history } from "../../components/helpers/history"
+import { history } from "../../shared/utils/helpers/history"
 import { StageTools } from "./StageTools"
 
 vi.mock("../../shared/core/stores", () => {
@@ -39,17 +39,17 @@ vi.mock("../../shared/core/stores", () => {
         stageShows: makeStore({})
     }
 })
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../../components/edit/scripts/itemClipboard", () => ({ getItemKeys: vi.fn(() => ["left", "top", "width", "height"]) }))
 vi.mock("../../components/edit/scripts/textStyle", () => ({ addStyleString: vi.fn((style: string, [key, value]) => `${style}${key}:${value};`) }))
 vi.mock("../../components/edit/values/boxes", () => ({ itemBoxes: { text: { icon: "text_icon" } } }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/output", () => ({
     getStageOutputId: vi.fn(() => "out1"),
     getStageResolution: vi.fn(() => ({ width: 1920, height: 1080 }))
 }))
-vi.mock("../../components/helpers/style", () => ({
+vi.mock("../../shared/utils/helpers/style", () => ({
     getStyles: vi.fn((style: string, removeTxt = false) => {
         const result: Record<string, string> = {}
         for (const declaration of (style || "").split(";")) {

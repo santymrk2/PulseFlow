@@ -4,12 +4,12 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 // commonMock tiene que cargarse antes que utils/language, que importa utils/common
 import { commonMock } from "../test/mockCommon"
-import * as language from "../../utils/language"
+import * as language from "../../shared/utils/language"
 import { activePopup, activeProfile, dictionary, fullColors, groups, labelsDisabled, popupData, profiles, special, timeFormat } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { General } from "./General"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 // SelectField llega a helpers/media (getFileName), que arrastra el módulo de audio
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

@@ -9,7 +9,7 @@ vi.mock("../ui/slider/Slider", () => ({
     )
 }))
 vi.mock("../helpers/triggerClickOnEnterSpace", () => ({ triggerClickOnEnterSpace: vi.fn() }))
-vi.mock("../../components/helpers/time", () => ({
+vi.mock("../../shared/utils/helpers/time", () => ({
     joinTime: vi.fn((t: number[] | string) => (Array.isArray(t) ? t.join(":") : String(t))),
     secondsToTime: vi.fn((s: number) => [0, 0, Math.floor(s)])
 }))

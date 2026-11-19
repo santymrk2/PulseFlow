@@ -11,12 +11,12 @@ import { Shows } from "./Shows"
 
 const { historyMock, updateShowsListMock } = vi.hoisted(() => ({ historyMock: vi.fn(), updateShowsListMock: vi.fn() }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/classes/Show", () => ({ ShowObj: class ShowObj {} }))
-vi.mock("../../../components/helpers/history", () => ({ history: historyMock }))
-vi.mock("../../../components/helpers/show", () => ({ updateShowsList: updateShowsListMock }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
+vi.mock("../../../shared/utils/helpers/show", () => ({ updateShowsList: updateShowsListMock }))
 vi.mock("../../show/ShowButton", () => ({
     ShowButton: (props: Record<string, unknown>) => <div data-isla="ShowButton" data-props={JSON.stringify(props)} />
 }))

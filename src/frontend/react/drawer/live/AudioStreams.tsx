@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { AudioPlayer } from "../../../audio/audioPlayer"
 import { audioStreams, playingAudio } from "../../../shared/core/stores"
-import { keysToID, sortByName } from "../../../components/helpers/array"
+import { keysToID, sortByName } from "../../../shared/utils/helpers/array"
 import { Loader } from "../../main/Loader"
 import { T } from "../../helpers/T"
 import { Center } from "../../system/Center"

@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 
-vi.mock("../../components/helpers/array", () => ({
+vi.mock("../../shared/utils/helpers/array", () => ({
     clone: (v: unknown) => JSON.parse(JSON.stringify(v))
 }))
 vi.mock("../ui/h-rule/HRule", () => ({ HRule: ({ title }: { title: string }) => <h3>{title}</h3> }))

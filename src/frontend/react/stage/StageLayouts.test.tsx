@@ -3,8 +3,8 @@ import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import type { MouseEvent as ReactMouseEvent, ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeStage, labelsDisabled, outputs, stageShows } from "../../shared/core/stores"
-import { history } from "../../components/helpers/history"
-import { getAccess } from "../../utils/profile"
+import { history } from "../../shared/utils/helpers/history"
+import { getAccess } from "../../shared/utils/profile"
 import { StageLayouts } from "./StageLayouts"
 
 vi.mock("../../shared/core/stores", () => {
@@ -29,9 +29,9 @@ vi.mock("../../shared/core/stores", () => {
     }
     return { activeStage: makeStore({ id: null, items: [] }), labelsDisabled: makeStore(false), outputs: makeStore({}), stageShows: makeStore({}) }
 })
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
-vi.mock("../../components/helpers/array", () => ({
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
+vi.mock("../../shared/utils/helpers/array", () => ({
     keysToID: (object: Record<string, unknown>) => Object.entries(object).map(([id, value]) => ({ ...(value as object), id })),
     sortByName: (array: { name: string }[]) => [...array].sort((a, b) => a.name.localeCompare(b.name))
 }))

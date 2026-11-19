@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
-import { checkWindowCapture } from "../../components/helpers/output"
+import { checkWindowCapture } from "../../shared/utils/helpers/output"
 import { requestMain, sendMain } from "../../shared/core/ipc/main"
 import { activePage, activePopup, activeShow, activeTriggerFunction, cloudSyncData, connections, contentProviderData, dictionary, disabledServers, maxConnections, notFound, obsData, outputs, popupData, ports, providerConnections, saved, serverData, special } from "../../shared/core/stores"
 import { startRemoteController, stopRemoteController } from "../../utils/remoteController"
@@ -11,9 +11,9 @@ import { contentProviderSync } from "../../utils/startup"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Connection } from "./Connection"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
-vi.mock("../../components/helpers/output", () => ({ checkWindowCapture: vi.fn() }))
+vi.mock("../../shared/utils/helpers/output", () => ({ checkWindowCapture: vi.fn() }))
 vi.mock("../../utils/remoteController", () => ({ startRemoteController: vi.fn(), stopRemoteController: vi.fn() }))
 vi.mock("../../utils/startup", () => ({ contentProviderSync: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))

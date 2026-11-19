@@ -6,13 +6,13 @@ import { activeEdit, activePage, activeShow, showsCache, templates } from "../..
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { SlideStyle } from "./SlideStyle"
 
-vi.mock("../../../utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: (id: string) => id }))
 vi.mock("../../../shared/core/values/extensions", () => ({ mediaExtensions: [], audioExtensions: [], videoExtensions: [], imageExtensions: [], presentationExtensions: [] }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../../components/helpers/historyHelpers", () => ({ historyHelpers: {}, projectReplacers: [] }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/historyHelpers", () => ({ historyHelpers: {}, projectReplacers: [] }))
 vi.mock("../../../components/actions/apiHelper", () => ({}))
-vi.mock("../../../components/helpers/show", () => ({ getLayoutRef: () => [{ id: "s1" }] }))
-vi.mock("../../../components/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [{ settings: {} }] }) }) }))
+vi.mock("../../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ id: "s1" }] }))
+vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: () => ({ slides: () => ({ get: () => [{ settings: {} }] }) }) }))
 vi.mock("../../ui/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))
 vi.mock("../../ui/color-field/ColorField", () => ({ ColorField: () => <div /> }))
 vi.mock("../../ui/file-field/FileField", () => ({ FileField: () => <div /> }))

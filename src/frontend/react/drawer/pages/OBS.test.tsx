@@ -8,7 +8,7 @@ import { OBS } from "./OBS"
 
 const { connectMock } = vi.hoisted(() => ({ connectMock: vi.fn() }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../utils/obsTalk", () => ({ connectToOBS: connectMock }))

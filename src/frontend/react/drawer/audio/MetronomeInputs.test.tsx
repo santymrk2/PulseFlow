@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { commonMock } from "../../test/mockCommon"
 import { MetronomeInputs } from "./MetronomeInputs"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 afterEach(() => cleanup())
 

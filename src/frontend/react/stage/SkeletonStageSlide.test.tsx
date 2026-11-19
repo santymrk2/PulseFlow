@@ -5,8 +5,8 @@ import { outputs } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { SkeletonStageSlide } from "./SkeletonStageSlide"
 
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/helpers/output", () => ({
     getStageOutputId: vi.fn(() => "stage1"),
     getStageResolution: vi.fn(() => ({ width: 1920, height: 1080 }))
 }))

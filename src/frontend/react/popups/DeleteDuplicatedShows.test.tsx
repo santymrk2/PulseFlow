@@ -2,8 +2,8 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { history } from "../../components/helpers/history"
-import { loadShows } from "../../components/helpers/setShow"
+import { history } from "../../shared/utils/helpers/history"
+import { loadShows } from "../../shared/utils/helpers/setShow"
 import { activePopup, dictionary, popupData, shows, showsCache } from "../../shared/core/stores"
 import { clearFields, fields } from "../test/kitMocks"
 import { clearIslands, islands } from "../test/islandMock"
@@ -11,11 +11,11 @@ import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { DeleteDuplicatedShows } from "./DeleteDuplicatedShows"
 
-vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/setShow", () => ({ loadShows: vi.fn(async () => {}) }))
+vi.mock("../../shared/utils/common", () => commonMock())
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/setShow", () => ({ loadShows: vi.fn(async () => {}) }))
 vi.mock("../../components/edit/scripts/textStyle", () => ({ getTextLines: (slide: { lines: string[] }) => slide.lines }))
-vi.mock("../../components/helpers/time", () => ({ dateToString: (d: number) => `fecha:${d}` }))
+vi.mock("../../shared/utils/helpers/time", () => ({ dateToString: (d: number) => `fecha:${d}` }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 vi.mock("../ui/textarea-field/TextareaField", async () => ({ TextareaField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 

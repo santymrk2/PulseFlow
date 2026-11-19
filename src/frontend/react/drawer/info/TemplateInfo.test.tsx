@@ -8,7 +8,7 @@ import { TemplateInfo } from "./TemplateInfo"
 
 vi.mock("../../system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
 vi.mock("../../system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))

@@ -2,24 +2,24 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { history } from "../../components/helpers/history"
-import { applyLook, createLook } from "../../components/helpers/looks"
+import { history } from "../../shared/utils/helpers/history"
+import { applyLook, createLook } from "../../shared/utils/helpers/looks"
 import { activeLook, looks, outputs } from "../../shared/core/stores"
-import { confirmCustom } from "../../utils/popup"
+import { confirmCustom } from "../../shared/utils/popup"
 import { save } from "../../utils/save"
 import type { Look, LookScreen } from "../../../types/Settings"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { LooksWindow } from "./LooksWindow"
 
-vi.mock("../../utils/common", () => ({ ...commonMock(), MENU_BAR_HEIGHT: 36 }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/looks", () => ({
+vi.mock("../../shared/utils/common", () => ({ ...commonMock(), MENU_BAR_HEIGHT: 36 }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/looks", () => ({
     applyLook: vi.fn(),
     createLook: vi.fn(() => "l3"),
     isStageOutput: (output?: { stageOutput?: string }) => !!output?.stageOutput
 }))
-vi.mock("../../utils/popup", () => ({ confirmCustom: vi.fn() }))
+vi.mock("../../shared/utils/popup", () => ({ confirmCustom: vi.fn() }))
 vi.mock("../../utils/save", () => ({ save: vi.fn() }))
 vi.mock("../looks/LookGrid", () => ({
     LookGrid: ({ onCell }: { onCell?: (detail: { outputId: string; patch: Partial<LookScreen> }) => void }) => (

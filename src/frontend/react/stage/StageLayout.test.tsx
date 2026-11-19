@@ -5,12 +5,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeStage, allOutputs, currentOutputSettings, outputs, stageShows, toggleOutputEnabled } from "../../shared/core/stores"
 import { centerZoom } from "../../components/edit/scripts/zoom"
 import { getSortedStageItems } from "../../components/edit/scripts/itemHelpers"
-import { history } from "../../components/helpers/history"
-import { enableStageOutput, getStageOutputId } from "../../components/helpers/output"
+import { history } from "../../shared/utils/helpers/history"
+import { enableStageOutput, getStageOutputId } from "../../shared/utils/helpers/output"
 import { openSettings } from "../../components/settings/openSettings"
 import { updateStageShow } from "../../components/stage/stage"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
-import { getAccess } from "../../utils/profile"
+import { getAccess } from "../../shared/utils/profile"
 import { StageLayout } from "./StageLayout"
 
 vi.mock("../../shared/core/stores", () => {
@@ -44,13 +44,13 @@ vi.mock("../../shared/core/stores", () => {
 })
 vi.mock("../../components/edit/scripts/zoom", () => ({ centerZoom: vi.fn(async () => {}) }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getSortedStageItems: vi.fn(() => []), shouldItemBeShown: vi.fn(() => true) }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/output", () => ({
     enableStageOutput: vi.fn(() => "newOut"),
     getStageOutputId: vi.fn(() => "out1"),
     getStageResolution: vi.fn(() => ({ width: 1920, height: 1080 }))
 }))
-vi.mock("../../components/helpers/style", () => ({
+vi.mock("../../shared/utils/helpers/style", () => ({
     getStyles: vi.fn((style: string) => {
         const result: Record<string, string> = {}
         for (const declaration of (style || "").split(";")) {
@@ -63,7 +63,7 @@ vi.mock("../../components/helpers/style", () => ({
 vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("../../components/stage/stage", () => ({ getSlideTextItems: vi.fn(() => []), stageItemToItem: vi.fn((item: unknown) => item), updateStageShow: vi.fn() }))
 vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
-vi.mock("../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
+vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../edit/ItemAddMenu", () => ({ ItemAddMenu: () => null }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))

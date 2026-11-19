@@ -8,7 +8,7 @@ import { clearIslands, islands } from "../test/islandMock"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { CloudSync } from "./CloudSync"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../utils/cloudSync", () => ({ chooseTeam: vi.fn() }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 

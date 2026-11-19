@@ -5,7 +5,7 @@ import { getActionEasing, getSegmentCurve, getSegmentCurvePoints, toStoredAction
 import type { EasingHandles } from "../../components/timeline/easingHelper"
 import type { TimelineActions } from "../../components/timeline/TimelineActions"
 import { cn } from "../../shared/core/lib/utils"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { Icon } from "../helpers/Icon"
 import styles from "./TimelineEasing.module.css"

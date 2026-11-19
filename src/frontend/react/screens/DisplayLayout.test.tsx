@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { computeDisplayLayout, type LayoutDisplay } from "../../components/screens/displayLayout"
 import { DisplayLayout } from "./DisplayLayout"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 
 class FakeResizeObserver {
     static instances: FakeResizeObserver[] = []

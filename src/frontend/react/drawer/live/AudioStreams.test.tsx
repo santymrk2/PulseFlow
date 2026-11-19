@@ -8,7 +8,7 @@ import { commonMock } from "../../test/mockCommon"
 import { AudioStreams } from "./AudioStreams"
 
 const mocks = vi.hoisted(() => ({ start: vi.fn(() => Promise.resolve(true)) }))
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioPlayer", () => ({ AudioPlayer: { start: mocks.start } }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

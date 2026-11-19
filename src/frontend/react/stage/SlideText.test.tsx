@@ -9,12 +9,12 @@ import { getStageTextLayoutOffset } from "../../components/stage/stage"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { SlideText } from "./SlideText"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/edit/scripts/textStyle", () => ({ getItemText: vi.fn(() => "Hola") }))
-vi.mock("../../components/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "s1" }]) }))
+vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "s1" }]) }))
 vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
 vi.mock("../../components/stage/stage", () => ({ getStageTextLayoutOffset: vi.fn(() => 0) }))
 vi.mock("../slide/observeResize", () => ({ observeResize: vi.fn(() => ({ destroy: vi.fn() })) }))

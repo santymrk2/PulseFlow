@@ -1,10 +1,10 @@
 import type { Bible, Book, Chapter, Verse } from "json-bible/lib/Bible"
 import { uid } from "uid"
-import { formatToFileName } from "../components/helpers/show"
+import { formatToFileName } from "../shared/utils/helpers/show"
 import { scriptures, scripturesCache } from "../shared/core/stores"
 import { setActiveScripture } from "./bible"
 import { xml2json } from "./xml"
-import { confirmCustom, promptCustom } from "../utils/popup"
+import { confirmCustom, promptCustom } from "../shared/utils/popup"
 
 export async function convertBebliaBible(data: any[]) {
     for (const bible of data) {

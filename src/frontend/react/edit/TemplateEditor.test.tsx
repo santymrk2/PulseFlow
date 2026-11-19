@@ -18,12 +18,12 @@ vi.mock("../drawer/pages/TemplateSlide", () => ({
     }
 }))
 vi.mock("../system/DropArea", () => ({ DropArea: ({ children }: { children?: ReactNode }) => <div data-testid="droparea">{children}</div> }))
-vi.mock("../../components/helpers/history", () => ({ history: mocks.history }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: mocks.history }))
 
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: {} }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 
 afterEach(cleanup)
 beforeEach(() => {

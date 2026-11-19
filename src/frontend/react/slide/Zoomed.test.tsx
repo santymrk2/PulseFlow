@@ -5,10 +5,10 @@ import { outputs, previewOutputId, styles } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Zoomed } from "./Zoomed"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/helpers/output", () => ({
     DEFAULT_BOUNDS: { width: 1920, height: 1080 },
     getActiveOutputs: vi.fn(() => ["out1"]),
     getResolution: vi.fn(() => ({ width: 1920, height: 1080 })),

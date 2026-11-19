@@ -2,11 +2,11 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../../types/Show"
-import { replaceDynamicValues } from "../../../components/helpers/showActions"
+import { replaceDynamicValues } from "../../../shared/utils/helpers/showActions"
 import { Chart } from "./Chart"
 
-vi.mock("../../../utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../../components/helpers/showActions", () => ({ replaceDynamicValues: vi.fn((v: string) => v) }))
+vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../shared/utils/helpers/showActions", () => ({ replaceDynamicValues: vi.fn((v: string) => v) }))
 
 afterEach(() => {
     cleanup()

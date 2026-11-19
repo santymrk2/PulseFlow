@@ -29,7 +29,7 @@ vi.mock("./SpotifyController", () => ({ SpotifyController: () => <div data-testi
 vi.mock("../../components/edit/scripts/textStyle", () => ({ getSlideText: () => "" }))
 
 // Rompe el ciclo language -> stores -> actions -> historyHelpers -> language en happy-dom
-vi.mock("../../utils/language", () => ({
+vi.mock("../../shared/utils/language", () => ({
     translateText: (id: string) => id,
     setLanguage: () => {},
     getLeftParenthesis: () => "(",

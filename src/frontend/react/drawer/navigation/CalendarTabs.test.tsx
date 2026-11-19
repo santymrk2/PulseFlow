@@ -8,8 +8,8 @@ import { commonMock } from "../../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { CalendarTabs } from "./CalendarTabs"
 
-vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../utils/profile", () => ({ getAccess: () => ({}) }))
+vi.mock("../../../shared/utils/common", () => commonMock())
+vi.mock("../../../shared/utils/profile", () => ({ getAccess: () => ({}) }))
 
 interface SectionsProps {
     sections: unknown

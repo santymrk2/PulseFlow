@@ -1,7 +1,7 @@
 import { get } from "../../../shared/core/lib/store"
 import type { Interaction as InteractionData } from "../../../../types/Main"
 import { activeInteractions, activePopup, alertMessage, interactions } from "../../../shared/core/stores"
-import { clone, keysToID } from "../../helpers/array"
+import { clone, keysToID } from "../../../shared/utils/helpers/array"
 import { createInteractionDb, deleteInteractionDb, getInteractionDb, subscribeInteraction, updateInteractionDb } from "./firebaseUtils"
 
 let existingInteractions = new Map<string, Interaction>()

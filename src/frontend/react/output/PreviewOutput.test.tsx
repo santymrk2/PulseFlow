@@ -26,7 +26,7 @@ vi.hoisted(() => {
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../audio/audioChannelRecorder", () => ({ AudioChannelRecorder: {}, stopAllChannelRecordings: () => {}, stopChannelRecording: () => {}, startChannelRecording: () => {}, toggleChannelRecording: () => {}, isChannelRecording: () => false }))
 vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../components/helpers/historyHelpers", () => ({ _updaters: {}, history: () => {} }))
+vi.mock("../../shared/utils/helpers/historyHelpers", () => ({ _updaters: {}, history: () => {} }))
 vi.mock("../../components/actions/apiHelper", () => ({}))
 vi.mock("../../utils/save", () => ({}))
 vi.mock("../../shared/core/stores", () => {
@@ -38,7 +38,7 @@ vi.mock("../../shared/core/stores", () => {
     }
 })
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({ o1: { out: {} } }) }))
-vi.mock("../../components/helpers/output", () => ({ getResolution: () => ({ width: 1920, height: 1080 }) }))
+vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 1920, height: 1080 }) }))
 vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: () => "width:100%" }))
 vi.mock("../stage/StageLayout", () => ({ StageLayout: () => <div data-testid="island" /> }))
 vi.mock("../helpers/Icon", () => ({ Icon: () => <span /> }))

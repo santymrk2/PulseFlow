@@ -1,5 +1,5 @@
 import { activePopup, drawerTabsData, labelsDisabled } from "../../../shared/core/stores"
-import { getAccess } from "../../../utils/profile"
+import { getAccess } from "../../../shared/utils/profile"
 import { useStore } from "../../hooks/useStore"
 import { Icon } from "../../helpers/Icon"
 import { T } from "../../helpers/T"

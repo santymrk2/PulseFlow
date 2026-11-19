@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react"
 import type { Selected } from "../../../types/Main"
 import { cn } from "../../shared/core/lib/utils"
-import { defaultColors, fadeColor } from "../../components/helpers/color"
+import { defaultColors, fadeColor } from "../../shared/utils/helpers/color"
 import { activePopup, localeDirection, selected } from "../../shared/core/stores"
 import { customIcons } from "../../shared/core/values/customIcons"
 import icons from "../../shared/core/values/icons"

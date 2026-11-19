@@ -1,18 +1,18 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { getFontStyleList, getSystemFontsList, mergeCustomFonts } from "../../../components/helpers/fonts"
+import { getFontStyleList, getSystemFontsList, mergeCustomFonts } from "../../../shared/utils/helpers/fonts"
 import { customFonts } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { FontField } from "./FontField"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../converters/txt", () => ({ similarity: () => 0 }))
-vi.mock("../../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../../components/edit/scripts/edit", () => ({ newDropdown: {} }))
 // fonts.ts pide la lista de fuentes al sistema (IPC): se mockea el borde
-vi.mock("../../../components/helpers/fonts", () => ({
+vi.mock("../../../shared/utils/helpers/fonts", () => ({
     getFontName: (value: string) => (value ? `'${value}'` : ""),
     getSystemFontsList: vi.fn(async () => [{ label: "Arial", value: "'Arial'" }]),
     mergeCustomFonts: vi.fn((system: { label: string; value: string }[], custom: { name: string }[]) => [...system, ...custom.map((c) => ({ label: c.name, value: `'${c.name}'` }))]),

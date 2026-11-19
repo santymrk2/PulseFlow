@@ -6,8 +6,8 @@ import Output from "./Output"
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/helpers/array", () => ({ clone: (value: unknown) => JSON.parse(JSON.stringify(value)) }))
-vi.mock("../../components/helpers/output", () => ({
+vi.mock("../../shared/utils/helpers/array", () => ({ clone: (value: unknown) => JSON.parse(JSON.stringify(value)) }))
+vi.mock("../../shared/utils/helpers/output", () => ({
     defaultLayers: ["background", "slide", "overlays"],
     getCurrentStyle: () => ({ name: "" }),
     getMetadata: () => null,

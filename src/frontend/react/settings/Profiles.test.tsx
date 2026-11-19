@@ -2,14 +2,14 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { history } from "../../components/helpers/history"
+import { history } from "../../shared/utils/helpers/history"
 import { actions, actionTags, activePopup, activeProfile, categories, folders, groups, overlayCategories, popupData, profiles, scenes, selectedProfile, stageShows, templateCategories, timerTags, variableTags } from "../../shared/core/stores"
-import { encodePassword } from "../../utils/profile"
+import { encodePassword } from "../../shared/utils/profile"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Profiles } from "./Profiles"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 

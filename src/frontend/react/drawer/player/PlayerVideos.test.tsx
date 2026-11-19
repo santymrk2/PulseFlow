@@ -15,10 +15,10 @@ const { setOutputMock, findMatchingOutMock, clearBackgroundMock, clearSlideMock 
     clearSlideMock: vi.fn()
 }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../components/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock, setOutput: setOutputMock }))
+vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock, setOutput: setOutputMock }))
 vi.mock("../../../components/output/clear", () => ({ clearBackground: clearBackgroundMock, clearSlide: clearSlideMock }))
 
 const dict = {

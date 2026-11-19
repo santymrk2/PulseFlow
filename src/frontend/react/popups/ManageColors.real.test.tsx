@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { defaultColors } from "../../components/helpers/color"
+import { defaultColors } from "../../shared/utils/helpers/color"
 import { special } from "../../shared/core/stores"
 import styles from "../ui/color-field/ColorField.module.css"
 import { commonMock } from "../test/mockCommon"
@@ -9,7 +9,7 @@ import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ManageColors } from "./ManageColors"
 
 // Con el ColorField REAL (en editMode): el store se muta en el lugar, así que la lista tiene que refrescarse sola
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../components/edit/scripts/edit", () => ({ getGradientOpacity: () => 1, addOpacityToGradient: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

@@ -4,14 +4,14 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { runActionId } from "../../components/actions/actions"
 import { activeProfile, profiles, selectedProfile, special } from "../../shared/core/stores"
-import { newToast } from "../../utils/common"
-import { promptCustom } from "../../utils/popup"
-import { encodePassword } from "../../utils/profile"
+import { newToast } from "../../shared/utils/common"
+import { promptCustom } from "../../shared/utils/popup"
+import { encodePassword } from "../../shared/utils/profile"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ProfilesButtons } from "./ProfilesButtons"
 
-vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
-vi.mock("../../utils/popup", () => ({ promptCustom: vi.fn() }))
+vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
+vi.mock("../../shared/utils/popup", () => ({ promptCustom: vi.fn() }))
 vi.mock("../../components/actions/actions", () => ({ runActionId: vi.fn() }))
 
 const perfil = (extra = {}) => ({ name: "P", color: "", image: "", access: {}, ...extra })

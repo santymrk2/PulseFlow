@@ -3,17 +3,17 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { setCalendarColor } from "../../components/drawer/calendar/calendars"
-import { history } from "../../components/helpers/history"
+import { history } from "../../shared/utils/helpers/history"
 import { activePopup, activeProject, activeShow, audioRouting, calendars, dictionary, editingProjectTemplate, effects, globalTags, outputs, overlays, profiles, projects, projectTemplates, selected, showsCache, templates } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Color } from "./Color"
 
 const campo = vi.hoisted(() => ({ props: {} as Record<string, unknown> }))
-vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "s1" }, { id: "child", type: "child", parent: { id: "s1" } }]) }))
-vi.mock("../../components/helpers/shows", () => ({ _show: () => ({ slides: (ids: string[]) => ({ get: () => [ids[0] === "s1" ? "#aabbcc" : ""] }) }) }))
+vi.mock("../../shared/utils/common", () => commonMock())
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "s1" }, { id: "child", type: "child", parent: { id: "s1" } }]) }))
+vi.mock("../../shared/utils/helpers/shows", () => ({ _show: () => ({ slides: (ids: string[]) => ({ get: () => [ids[0] === "s1" ? "#aabbcc" : ""] }) }) }))
 vi.mock("../../components/drawer/calendar/calendars", () => ({ setCalendarColor: vi.fn() }))
 vi.mock("../ui/color-field/ColorField", () => ({
     ColorField: (props: { value: string; onInput: (v: string) => void }) => {

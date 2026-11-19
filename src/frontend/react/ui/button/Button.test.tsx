@@ -8,7 +8,7 @@ import iconStyles from "../../helpers/Icon.module.css"
 import { BUTTON_SIZE, BUTTON_VARIANT, Button, type ButtonProps, type ButtonVariant } from "./Button"
 import styles from "./Button.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 let restaurar: () => void = () => {}
 

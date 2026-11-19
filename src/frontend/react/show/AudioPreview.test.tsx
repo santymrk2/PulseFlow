@@ -20,7 +20,7 @@ vi.mock("../../audio/audioPlayer", () => ({
 }))
 vi.mock("../../audio/audioFading", () => ({ clearAudio: vi.fn() }))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: { getAnalysers: vi.fn(() => []), releaseAnalyser: vi.fn() } }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../ui/button/Button", () => ({
     Button: ({ title, disabled, onClick, children }: { title?: string; disabled?: boolean; onClick?: () => void; children?: ReactNode }) => (

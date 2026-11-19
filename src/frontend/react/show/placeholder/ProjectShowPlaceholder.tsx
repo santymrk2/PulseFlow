@@ -1,6 +1,6 @@
 import { activePopup, activeProject, activeShow, popupData, projects } from "../../../shared/core/stores"
-import { history } from "../../../components/helpers/history"
-import { translateText } from "../../../utils/language"
+import { history } from "../../../shared/utils/helpers/history"
+import { translateText } from "../../../shared/utils/language"
 import { Button } from "../../ui/button/Button"
 import { Center } from "../../system/Center"
 import { DropArea } from "../../system/DropArea"

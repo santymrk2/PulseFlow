@@ -1,9 +1,9 @@
 import { uid } from "uid"
 import { ShowObj } from "../shared/core/classes/Show"
 import { DEFAULT_ITEM_STYLE } from "../components/edit/scripts/itemHelpers"
-import { checkName, initializeMetadata } from "../components/helpers/show"
+import { checkName, initializeMetadata } from "../shared/utils/helpers/show"
 import { activePopup, alertMessage } from "../shared/core/stores"
-import { translateText } from "../utils/language"
+import { translateText } from "../shared/utils/language"
 import { createCategory, setTempShows } from "./importHelpers"
 import { xml2json } from "./xml"
 

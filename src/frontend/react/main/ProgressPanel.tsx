@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { mediaDownloads, pdfImports } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { useStore } from "../hooks/useStore"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"

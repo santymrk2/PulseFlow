@@ -23,7 +23,7 @@ vi.mock("../../../../audio/effects/audioEffectsHelpers", async (importOriginal) 
         setEffectConfig: vi.fn()
     }
 })
-vi.mock("../../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../ui/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 vi.mock("../../../ui/select-field/SelectField", () => ({
     SelectField: ({ options, onChange }: { options?: Option[]; onChange?: (value: string) => void }) => (

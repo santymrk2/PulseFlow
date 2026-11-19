@@ -5,7 +5,7 @@ import PdfOutput from "./PdfOutput"
 
 vi.mock("pdfjs-dist", () => ({ GlobalWorkerOptions: { workerSrc: "" }, getDocument: () => ({ promise: Promise.resolve({ getPage: async () => ({ getViewport: () => ({ width: 100, height: 100 }), render: () => ({ promise: Promise.resolve() }) }) }), destroy: () => {} }) }))
 vi.mock("./OutputTransition", () => ({ OutputTransition: ({ children }: { children?: React.ReactNode }) => <div>{children}</div> }))
-vi.mock("../../components/helpers/media", () => ({ encodeFilePath: (p: string) => p, locateMediaFile: async () => null }))
+vi.mock("../../shared/utils/helpers/media", () => ({ encodeFilePath: (p: string) => p, locateMediaFile: async () => null }))
 
 afterEach(cleanup)
 

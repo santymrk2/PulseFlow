@@ -10,7 +10,7 @@ import { AudioMeter } from "./AudioMeter"
 vi.mock("../../../audio/routing/audioInputCapture", () => ({
     AudioInputCapture: { getInstance: () => ({ getVisualizerData: vi.fn(() => undefined) }) }
 }))
-vi.mock("../../../utils/common", () => ({ ...commonMock(), DEFAULT_DRAWER_HEIGHT: 300 }))
+vi.mock("../../../shared/utils/common", () => ({ ...commonMock(), DEFAULT_DRAWER_HEIGHT: 300 }))
 
 let restaurar: () => void = () => {}
 

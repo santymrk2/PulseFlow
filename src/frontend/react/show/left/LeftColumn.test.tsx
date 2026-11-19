@@ -7,7 +7,7 @@ import { commonMock } from "../../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { LeftColumn } from "./LeftColumn"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("./LibrariesPanel", () => ({ LibrariesPanel: () => <div>librerías</div> }))
 vi.mock("./PlaylistsPanel", () => ({ PlaylistsPanel: () => <div>playlists</div> }))
 vi.mock("./ItemsPanel", () => ({

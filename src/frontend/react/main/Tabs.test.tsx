@@ -7,7 +7,7 @@ import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../shar
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Tabs } from "./Tabs"
 
-vi.mock("../../utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
 
 const tabs: TabsObj = {
     effect: { name: "items.effect", icon: "effects" },

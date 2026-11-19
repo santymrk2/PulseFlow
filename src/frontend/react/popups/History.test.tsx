@@ -2,14 +2,14 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { redo, undo } from "../../components/helpers/history"
+import { redo, undo } from "../../shared/utils/helpers/history"
 import { redoHistory, undoHistory } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { History } from "./History"
 
-vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../components/helpers/history", () => ({ undo: vi.fn(), redo: vi.fn() }))
+vi.mock("../../shared/utils/common", () => commonMock())
+vi.mock("../../shared/utils/helpers/history", () => ({ undo: vi.fn(), redo: vi.fn() }))
 
 let restaurar: () => void = () => {}
 function montar(undoList: object[], redoList: object[]) {

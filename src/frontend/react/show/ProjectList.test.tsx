@@ -4,14 +4,14 @@ import type { ReactNode } from "react"
 import type { Tree } from "../../../types/Projects"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeProfile, activeProject, folders, labelsDisabled, openedFolders, projects } from "../../shared/core/stores"
-import { history } from "../../components/helpers/history"
+import { history } from "../../shared/utils/helpers/history"
 import { isProjectLinked, openProject } from "../../components/show/project"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ProjectList } from "./ProjectList"
 
-vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/show/project", () => ({ isProjectLinked: vi.fn(() => false), openProject: vi.fn() }))
-vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
 vi.mock("../ui/button/Button", () => ({

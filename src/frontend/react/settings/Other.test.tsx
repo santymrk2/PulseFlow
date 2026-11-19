@@ -9,7 +9,7 @@ import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Other } from "./Other"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 // SelectField llega a helpers/media (getFileName), que arrastra el módulo de audio
 vi.mock("../../audio/audioProcessor", () => ({}))

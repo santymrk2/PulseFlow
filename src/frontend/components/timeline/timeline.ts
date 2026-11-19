@@ -1,7 +1,7 @@
 import { get } from "../../shared/core/lib/store"
 import type { Timeline, TimelineAction } from "../../../types/Show"
 import { showsCache, timeline } from "../../shared/core/stores"
-import { loadShows } from "../helpers/setShow"
+import { loadShows } from "../../shared/utils/helpers/setShow"
 import type { TimelineType } from "./TimelineActions"
 
 // SECTIONS

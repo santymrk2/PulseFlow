@@ -8,8 +8,8 @@ import { Resizeable } from "./Resizeable"
 import styles from "./Resizeable.module.css"
 
 const { empezar, parar } = vi.hoisted(() => ({ empezar: vi.fn(), parar: vi.fn() }))
-vi.mock("../../utils/cursor", () => ({ startResizing: empezar, stopResizing: parar }))
-vi.mock("../../utils/common", () => ({ DEFAULT_WIDTH: 290 }))
+vi.mock("../../shared/utils/cursor", () => ({ startResizing: empezar, stopResizing: parar }))
+vi.mock("../../shared/utils/common", () => ({ DEFAULT_WIDTH: 290 }))
 
 let restaurar: () => void = () => {}
 const preparar = (...extra: ReturnType<typeof storeEntry>[]) => (restaurar = setStoresForTest([storeEntry(resized, { panel: 0 }), storeEntry(editColumns, 1), storeEntry(localeDirection, "ltr"), ...extra]))

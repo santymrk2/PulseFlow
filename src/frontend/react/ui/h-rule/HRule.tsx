@@ -1,4 +1,4 @@
-import { translateText } from "../../../utils/language"
+import { translateText } from "../../../shared/utils/language"
 import styles from "./HRule.module.css"
 
 // Línea con un título centrado. Sin título, sólo la línea.

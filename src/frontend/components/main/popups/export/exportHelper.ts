@@ -1,8 +1,8 @@
 import { get } from "../../../../shared/core/lib/store"
 import type { Option } from "../../../../../types/Main"
 import { activeProject, activeShow, projects, selected, shows, showsCache } from "../../../../shared/core/stores"
-import { getSlideThumbnail } from "../../../helpers/media"
-import { getLayoutRef } from "../../../helpers/show"
+import { getSlideThumbnail } from "../../../../shared/utils/helpers/media"
+import { getLayoutRef } from "../../../../shared/utils/helpers/show"
 
 export const exportFormats: Option[] = [
     { name: "export.project", id: "project" }, // many shows in one file

@@ -10,7 +10,7 @@ import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { Media } from "./Media"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("./pixabay", () => ({ loadFromPixabay: vi.fn(() => Promise.resolve([])) }))

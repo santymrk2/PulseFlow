@@ -2,13 +2,13 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activeShow, customMetadata, dictionary, showsCache } from "../../../shared/core/stores"
-import { history } from "../../../components/helpers/history"
+import { history } from "../../../shared/utils/helpers/history"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { Metadata } from "./Metadata"
 
-vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../../components/helpers/show", () => ({ getCustomMetadata: () => ({ number: "", title: "" }), initializeMetadata: () => ({ number: "", title: "" }) }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
+vi.mock("../../../shared/utils/helpers/show", () => ({ getCustomMetadata: () => ({ number: "", title: "" }), initializeMetadata: () => ({ number: "", title: "" }) }))
 vi.mock("../../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Tip") }))
 vi.mock("../../ui/text-field/TextField", () => ({ TextField: ({ label, value }: { label: string; value: string }) => <label data-field={label}>{value}</label> }))
 vi.mock("../../ui/number-field/NumberField", () => ({ NumberField: ({ label }: { label: string }) => <label data-field={label} /> }))

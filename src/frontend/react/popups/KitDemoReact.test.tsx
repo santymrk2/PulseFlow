@@ -4,9 +4,9 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { commonMock } from "../test/mockCommon"
 import { KitDemoReact } from "./KitDemoReact"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
-vi.mock("../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
+vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 
 afterEach(cleanup)

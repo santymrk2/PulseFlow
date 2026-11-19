@@ -13,7 +13,7 @@ vi.mock("../../../../audio/effects/audioEqualizer", async (importOriginal) => ({
     ...(await importOriginal<typeof import("../../../../audio/effects/audioEqualizer")>()),
     updateEqualizerBands: vi.fn()
 }))
-vi.mock("../../../../utils/common", () => ({ isMainWindow: () => false }))
+vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../../audio/spectrumAnalyzer", () => ({

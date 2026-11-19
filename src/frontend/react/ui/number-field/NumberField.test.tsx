@@ -8,7 +8,7 @@ import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { NumberField } from "./NumberField"
 import styles from "./NumberField.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 let restaurar: () => void = () => {}
 

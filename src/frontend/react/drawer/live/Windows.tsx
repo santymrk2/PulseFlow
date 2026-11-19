@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react"
 import { Main } from "../../../../types/IPC/Main"
 import { requestMain } from "../../../shared/core/ipc/main"
-import { clone } from "../../../components/helpers/array"
+import { clone } from "../../../shared/utils/helpers/array"
 import { Center } from "../../system/Center"
 import { T } from "../../helpers/T"
 import { Capture } from "./Capture"

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { BLACKMAGIC } from "../../../../types/Channels"
-import { destroy, receive, send } from "../../../utils/request"
+import { destroy, receive, send } from "../../../shared/utils/request"
 import { Center } from "../../system/Center"
 import { T } from "../../helpers/T"
 import { BMDStream } from "./BMDStream"

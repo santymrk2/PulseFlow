@@ -5,9 +5,9 @@ import { activeEdit, selected, timers, variables } from "../../../shared/core/st
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { ItemsList } from "./ItemsList"
 
-vi.mock("../../../utils/language", () => ({ translateText: (id: string) => id }))
-vi.mock("../../../components/helpers/array", () => ({ clone: (v: unknown) => (Array.isArray(v) ? [...v] : v) }))
-vi.mock("../../../components/helpers/media", () => ({ getFileName: (p: string) => p }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: (id: string) => id }))
+vi.mock("../../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => (Array.isArray(v) ? [...v] : v) }))
+vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: (p: string) => p }))
 vi.mock("../../../components/edit/scripts/itemHelpers", () => ({ rearrangeItems: vi.fn() }))
 vi.mock("../../../components/edit/scripts/textStyle", () => ({ getItemText: () => "texto" }))
 vi.mock("../../../components/edit/values/boxes", () => ({ itemBoxes: { text: { icon: "text" } } }))

@@ -8,7 +8,7 @@ import iconStyles from "../../helpers/Icon.module.css"
 import { Title } from "./Title"
 import styles from "./Title.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 let restaurar: () => void = () => {}
 

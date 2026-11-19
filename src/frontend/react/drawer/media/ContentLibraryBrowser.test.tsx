@@ -9,7 +9,7 @@ import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { ContentLibraryBrowser } from "./ContentLibraryBrowser"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("./MediaCard", async () => ({ MediaCard: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("MediaCard") }))

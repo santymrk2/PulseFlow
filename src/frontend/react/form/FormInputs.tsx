@@ -1,5 +1,5 @@
 import type { Input as TInput } from "../../../types/Input"
-import { clone } from "../../components/helpers/array"
+import { clone } from "../../shared/utils/helpers/array"
 import { HRule } from "../ui/h-rule/HRule"
 import { FormInput } from "./FormInput"
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 import type { MediaStyle } from "../../../types/Main"
 import type { OutBackground } from "../../../types/Show"
-import { downloadOnlineMedia, getExtension, getMediaType } from "../../components/helpers/media"
+import { downloadOnlineMedia, getExtension, getMediaType } from "../../shared/utils/helpers/media"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { Image } from "../media/Image"
 import { Video } from "../media/Video"

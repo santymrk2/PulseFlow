@@ -2,8 +2,8 @@ import { get } from "../../../shared/core/lib/store"
 import type { Item } from "../../../../types/Show"
 import type { StageItem } from "../../../../types/Stage"
 import { activePage, activeStage } from "../../../shared/core/stores"
-import { getFirstOutput, getOutputResolution } from "../../helpers/output"
-import { getStyles, removeText } from "../../helpers/style"
+import { getFirstOutput, getOutputResolution } from "../../../shared/utils/helpers/output"
+import { getStyles, removeText } from "../../../shared/utils/helpers/style"
 
 // get a position on the slide that the user likely wants
 // one that has available space with a bit of margin (not touching another item)

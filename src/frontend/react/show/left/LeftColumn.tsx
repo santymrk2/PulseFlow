@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react"
 import { get } from "../../../shared/core/lib/store"
-import { keysToID, sortByName } from "../../../components/helpers/array"
+import { keysToID, sortByName } from "../../../shared/utils/helpers/array"
 import { isSourceValid, resolveInitialSource, UNLABELED_LIBRARY_ID } from "../../../components/show/leftSource"
 import { DEFAULT_SIZES, dragSplitter, type PanelSizes } from "../../../components/show/left/panelSizes"
 import { cn } from "../../../shared/core/lib/utils"

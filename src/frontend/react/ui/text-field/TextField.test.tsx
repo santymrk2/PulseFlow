@@ -1,15 +1,15 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { pasteText } from "../../../components/helpers/caretHelper"
+import { pasteText } from "../../../shared/utils/helpers/caretHelper"
 import { dictionary } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { TextField } from "./TextField"
 import styles from "./TextField.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../components/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
+vi.mock("../../../shared/utils/common", () => commonMock())
+vi.mock("../../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 
 let restaurar: () => void = () => {}
 

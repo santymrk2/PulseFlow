@@ -7,7 +7,7 @@ import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { HoverPlay } from "./HoverPlay"
 import styles from "./HoverPlay.module.css"
 
-vi.mock("../../utils/common", () => commonMock())
+vi.mock("../../shared/utils/common", () => commonMock())
 
 let restaurar: () => void = () => {}
 afterEach(() => {

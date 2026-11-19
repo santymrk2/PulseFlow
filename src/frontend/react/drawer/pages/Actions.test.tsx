@@ -9,7 +9,7 @@ import { Actions } from "./Actions"
 
 const { runActionMock, receivedMidiMock } = vi.hoisted(() => ({ runActionMock: vi.fn(), receivedMidiMock: vi.fn() }))
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/actions/actions", () => ({ runAction: runActionMock, getActionIcon: () => "icon" }))

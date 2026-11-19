@@ -1,6 +1,6 @@
 import type { TopViews } from "../../../types/Tabs"
 import { activeEdit, activePage, activeShow, dictionary, editHistory, shows, special } from "../../shared/core/stores"
-import { translateText } from "../../utils/language"
+import { translateText } from "../../shared/utils/language"
 import { useStore } from "../hooks/useStore"
 import { Icon } from "../helpers/Icon"
 import { Button } from "../ui/button/Button"

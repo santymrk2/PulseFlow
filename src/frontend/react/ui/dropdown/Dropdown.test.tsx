@@ -9,7 +9,7 @@ import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { Dropdown } from "./Dropdown"
 import styles from "./Dropdown.module.css"
 
-vi.mock("../../../utils/common", () => commonMock())
+vi.mock("../../../shared/utils/common", () => commonMock())
 
 let restaurar: () => void = () => {}
 
