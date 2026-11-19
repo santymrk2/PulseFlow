@@ -13,7 +13,7 @@ vi.mock("../../shared/utils/common", () => ({ ...commonMock(), MENU_BAR_HEIGHT: 
 vi.mock("../../shared/utils/popup", () => ({ clearPopupSubmit: vi.fn() }))
 vi.mock("../../app/wiring/shortcuts", () => ({ disablePopupClose: [] }))
 vi.mock("../../audio/effects/audioEffectsHelpers", () => ({ EFFECTS_LIST: [] }))
-vi.mock("../popups/registry", () => {
+vi.mock("../../features/popups/registry", () => {
     const stub = (id: string) => () => createElement("div", { "data-testid": `react-${id}` }, id)
     return {
         reactPopups: {
