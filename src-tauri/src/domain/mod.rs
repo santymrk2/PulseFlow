@@ -5,3 +5,4 @@
 //! capa IPC de `crate::commands`.
 
 pub mod data;
+pub mod fonts;

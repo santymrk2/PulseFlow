@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core"
 import { get } from "../../core/lib/store"
+import type { FontData } from "../../../../types/Fonts"
 import type { DropdownOptions } from "../../../../types/Input"
 import type { CustomFont } from "../../../../types/Show"
 import { customFonts, special } from "../../core/stores"

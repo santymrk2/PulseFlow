@@ -2,13 +2,6 @@
 
 // declare properties TypeScript don't allow
 
-type FontData = {
-    family: string
-    fullName: string
-    postscriptName: string
-    style: string
-}
-
 // window.
 interface Window {
     api: {
