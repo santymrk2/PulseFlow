@@ -12,7 +12,7 @@ import { fileURLToPath } from "node:url"
 import { describe, expect, it } from "vitest"
 import { classifyChannels, collectChannelUses, parseMainEnum, parsePostponed, parseRegisteredCommands } from "./ipcContract"
 
-const ROOT = fileURLToPath(new URL("../../../", import.meta.url))
+const ROOT = fileURLToPath(new URL("../../../../../", import.meta.url))
 const read = (path: string) => readFileSync(join(ROOT, path), "utf8")
 
 function walk(dir: string, found: string[] = []): string[] {
@@ -34,7 +34,7 @@ const KNOWN_WITHOUT_COMMAND: string[] = []
 describe("contrato de IPC Main.* ↔ comandos Rust", () => {
     const enumNames = parseMainEnum(read("src/types/IPC/Main.ts"))
     const registered = parseRegisteredCommands(read("src-tauri/src/lib.rs"))
-    const postponed = parsePostponed(read("src/frontend/IPC/tauri.ts"))
+    const postponed = parsePostponed(read("src/frontend/shared/core/ipc/tauri.ts"))
     const used = collectChannelUses(
         walk(join(ROOT, "src/frontend")).map((path) => readFileSync(path, "utf8")),
         enumNames
