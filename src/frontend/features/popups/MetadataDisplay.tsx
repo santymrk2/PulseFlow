@@ -43,13 +43,13 @@ export function MetadataDisplay() {
     useStore(currentMetadataPopupData)
 
     const [data] = useState<MetadataPopupData>(() => {
-        const popup = get(popupData) as MetadataPopupData
+        const popup = (get(popupData) ?? {}) as MetadataPopupData
         if (popup.type === "show_category" || popup.type === "style") {
             const cloned = clone(popup)
             currentMetadataPopupData.set(cloned)
             return cloned
         }
-        return get(currentMetadataPopupData) as MetadataPopupData
+        return (get(currentMetadataPopupData) ?? {}) as MetadataPopupData
     })
 
     const type = data.type

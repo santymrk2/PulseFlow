@@ -21,9 +21,9 @@ vi.mock("../../shared/ui/kit/toggle-field/ToggleField", async () => ({ ToggleFie
 
 const dict = { show_at: { never: "Nunca", first: "Primero", last: "Último", first_last: "Primero y último", always: "Siempre" }, example: { default: "Predeterminado" } }
 let restaurar: () => void = () => {}
-function montar(tipo: "show_category" | "style" = "show_category") {
+function montar(tipo: "show_category" | "style" | null = "show_category") {
     restaurar = setStoresForTest([
-        storeEntry(popupData, { type: tipo, id: tipo === "style" ? "s1" : "c1" }),
+        storeEntry(popupData, tipo ? { type: tipo, id: tipo === "style" ? "s1" : "c1" } : null),
         storeEntry(currentMetadataPopupData, null),
         storeEntry(categories, { c1: { name: "Cat", metadata: { display: "never" } } }),
         storeEntry(styles, { s1: { name: "Estilo" } }),
@@ -95,5 +95,10 @@ describe("MetadataDisplay", () => {
         fireEvent.click(container.querySelector("button.popup-options") as HTMLElement)
         fire("meta.ignore_empty", "onChange", true)
         expect(get(categories).c1.metadata?.ignoreEmpty).toBe(true)
+    })
+
+    it("sin_popupData_no_tira_error_y_renderiza_las_opciones (F02)", () => {
+        montar(null)
+        expect(screen.getByText("Nunca")).toBeTruthy()
     })
 })
