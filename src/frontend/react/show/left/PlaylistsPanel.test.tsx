@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeProfile, categories, dictionary, folders, leftSource, projects, sorted } from "../../../stores"
+import { activeProfile, categories, dictionary, folders, leftSource, projects, sorted } from "../../../shared/core/stores"
 import { getAccess } from "../../../utils/profile"
 import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { PlaylistsPanel } from "./PlaylistsPanel"

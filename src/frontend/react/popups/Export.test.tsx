@@ -1,13 +1,13 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { EXPORT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
 import { exportProject } from "../../components/export/project"
 import { convertShowSlidesToImages } from "../../components/main/popups/export/exportHelper"
-import { sendMain } from "../../IPC/main"
-import { activePopup, activeProject, activeShow, dictionary, projects, selected, shows, showsCache, special } from "../../stores"
+import { sendMain } from "../../shared/core/ipc/main"
+import { activePopup, activeProject, activeShow, dictionary, projects, selected, shows, showsCache, special } from "../../shared/core/stores"
 import { send } from "../../utils/request"
 import { save } from "../../utils/save"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
@@ -20,7 +20,7 @@ const pdf = vi.hoisted(() => ({ props: null as null | { pdfOptions: Record<strin
 
 vi.mock("../../utils/common", () => ({ isMainWindow: () => false, wait: () => Promise.resolve(), newToast: vi.fn() }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../utils/save", () => ({ save: vi.fn() }))
 vi.mock("../../components/export/project", () => ({ exportProject: vi.fn() }))

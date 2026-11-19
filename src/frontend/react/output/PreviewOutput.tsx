@@ -1,4 +1,4 @@
-import { livePrepare, outputs, styles as stylesStore } from "../../stores"
+import { livePrepare, outputs, styles as stylesStore } from "../../shared/core/stores"
 import { getResolution } from "../../components/helpers/output"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
 import { Icon } from "../helpers/Icon"

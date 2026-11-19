@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { os, statusIndicator } from "../../stores"
+import { os, statusIndicator } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { openSettings } from "../../components/settings/openSettings"
 import { useStore } from "../hooks/useStore"

@@ -1,6 +1,6 @@
 import { useState, type CSSProperties, type MouseEvent, type ReactNode } from "react"
-import { cn } from "../../../lib/utils"
-import { special } from "../../../stores"
+import { cn } from "../../../shared/core/lib/utils"
+import { special } from "../../../shared/core/stores"
 import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
 import { Button } from "../button/Button"

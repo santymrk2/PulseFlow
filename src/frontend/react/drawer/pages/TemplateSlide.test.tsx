@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { Template } from "../../../../types/Show"
 import { TemplateSlide } from "./TemplateSlide"
 
-vi.mock("../../../stores", () => ({
+vi.mock("../../../shared/core/stores", () => ({
     activeEdit: {
         subscribe: (r: any) => {
             r({ items: [] })

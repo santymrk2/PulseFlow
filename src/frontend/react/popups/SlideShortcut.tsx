@@ -2,12 +2,12 @@
 // y el layout activo. Escribe: popupData (mode: "" o {}) y activePopup al montar; history SHOW_LAYOUT o trigger(key) al asignar, y activePopup = revert || null.
 // Tip usa el port React.
 import { useEffect, useState } from "react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { history } from "../../components/helpers/history"
 import { getLayoutRef } from "../../components/helpers/show"
 import { Tip } from "../main/Tip"
 import type { Popups } from "../../../types/Main"
-import { activePopup, popupData } from "../../stores"
+import { activePopup, popupData } from "../../shared/core/stores"
 import { Button } from "../ui/button/Button"
 import styles from "./SlideShortcut.module.css"
 

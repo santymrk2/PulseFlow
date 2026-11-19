@@ -5,12 +5,12 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { clearAudio } from "../../../audio/audioFading"
 import { AudioPlayer } from "../../../audio/audioPlayer"
 import { setOutput } from "../../../components/helpers/output"
-import { requestMain } from "../../../IPC/main"
-import { activePopup, activeProject, focusMode, media, outLocked, outputs, playingAudio, popupData, projects, styles } from "../../../stores"
+import { requestMain } from "../../../shared/core/ipc/main"
+import { activePopup, activeProject, focusMode, media, outLocked, outputs, playingAudio, popupData, projects, styles } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { FolderShow } from "./FolderShow"
 
-vi.mock("../../../IPC/main", () => ({ requestMain: vi.fn(async () => ({})), sendMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(async () => ({})), sendMain: vi.fn() }))
 vi.mock("../../../audio/audioFading", () => ({ clearAudio: vi.fn() }))
 vi.mock("../../../audio/audioPlayer", () => ({
     AudioPlayer: { start: vi.fn(), getPlaying: vi.fn(() => false) }

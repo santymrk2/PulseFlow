@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react"
-import { outputs, styles } from "../../../stores"
+import { outputs, styles } from "../../../shared/core/stores"
 import { newToast } from "../../../utils/common"
 import { translateText } from "../../../utils/language"
 import { keysToID, sortByName } from "../../../components/helpers/array"

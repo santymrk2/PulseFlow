@@ -1,14 +1,14 @@
 // @vitest-environment happy-dom
 // El mock inline de utils/common debe cargarse antes que utils/language, que lo importa.
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { uid } from "uid"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
-import { sendMain } from "../../../IPC/main"
+import { sendMain } from "../../../shared/core/ipc/main"
 import { history } from "../../../components/helpers/history"
 import { getProjectName } from "../../../components/helpers/historyHelpers"
-import { activePopup, activeProject, activeRename, dictionary, folders, projects, projectTemplates } from "../../../stores"
+import { activePopup, activeProject, activeRename, dictionary, folders, projects, projectTemplates } from "../../../shared/core/stores"
 import { looseEntry, type StoreEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { PlaylistAddMenu } from "./PlaylistAddMenu"
 
@@ -16,7 +16,7 @@ vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HE
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("uid", () => ({ uid: vi.fn(() => "uid-1") }))
 vi.mock("../../../components/helpers/historyHelpers", async () => {
     const actual = await vi.importActual<typeof import("../../../components/helpers/historyHelpers")>("../../../components/helpers/historyHelpers")

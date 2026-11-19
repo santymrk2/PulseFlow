@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import styles from "./MenuItem.module.css"
 
 // Port de ui/menu/menu-item.svelte: ítem de 28 px. `checked` muestra una marca a la izquierda (ej. el look activo).

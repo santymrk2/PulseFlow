@@ -5,7 +5,7 @@ import { Editor } from "./Editor"
 
 const editState = vi.hoisted(() => ({ value: { slide: 0 as number | null | undefined, items: [] as number[], type: "show" as string, id: "" } }))
 
-vi.mock("../../stores", () => ({
+vi.mock("../../shared/core/stores", () => ({
     activeEdit: {
         subscribe: (r: any) => {
             r(editState.value)

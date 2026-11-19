@@ -1,4 +1,4 @@
-import { activeStage, outputs, stageShows } from "../../../stores"
+import { activeStage, outputs, stageShows } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { keysToID, sortByName } from "../../../components/helpers/array"
 import { history } from "../../../components/helpers/history"

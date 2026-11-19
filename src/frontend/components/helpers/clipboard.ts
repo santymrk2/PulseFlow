@@ -1,4 +1,4 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
 import { Main } from "../../../types/IPC/Main"
 import type { Clipboard } from "../../../types/Main"
@@ -6,7 +6,7 @@ import type { Folder, Project } from "../../../types/Projects"
 import type { Item } from "../../../types/Show"
 import { removeOutputAudioChannel } from "../../audio/routing/audioRoutingInit"
 import { getProjectsInFolder } from "../../converters/project"
-import { sendMain } from "../../IPC/main"
+import { sendMain } from "../../shared/core/ipc/main"
 import {
     actions,
     activeDays,
@@ -58,7 +58,7 @@ import {
     timers,
     variables,
     videoMarkers
-} from "../../stores"
+} from "../../shared/core/stores"
 import { newToast, setStatus, triggerFunction } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { confirmCustom } from "../../utils/popup"
@@ -67,7 +67,7 @@ import { removeSlide } from "../context/menuClick"
 import { deleteTimer } from "../drawer/timers/timers"
 import { updateSortedStageItems } from "../edit/scripts/itemHelpers"
 import { setCaret } from "../edit/scripts/textStyle"
-import { activeEdit } from "./../../stores"
+import { activeEdit } from "../../shared/core/stores"
 import { clone, keysToID, removeDeleted, removeDuplicates } from "./array"
 import { pasteText } from "./caretHelper"
 import { history } from "./history"

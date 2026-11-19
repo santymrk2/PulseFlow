@@ -1,6 +1,6 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
-import { sendMain } from "../../IPC/main"
+import { sendMain } from "../../shared/core/ipc/main"
 import {
     actions,
     activeEdit,
@@ -41,7 +41,7 @@ import {
     sortedShowsList,
     stageShows,
     styles
-} from "../../stores"
+} from "../../shared/core/stores"
 import { openSettings } from "../settings/openSettings"
 import { triggerFunction } from "../../utils/common"
 import { translateText } from "../../utils/language"

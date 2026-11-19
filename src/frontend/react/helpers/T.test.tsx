@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { render } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
-import { dictionary } from "../../stores"
+import { dictionary } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { T } from "./T"
 

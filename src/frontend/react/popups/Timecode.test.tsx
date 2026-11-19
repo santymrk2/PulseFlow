@@ -1,12 +1,12 @@
 // @vitest-environment happy-dom
 import { cleanup, render, waitFor } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { AudioMicrophone } from "../../audio/audioMicrophone"
 import { AudioPlayer } from "../../audio/audioPlayer"
-import { requestMain } from "../../IPC/main"
-import { timecode } from "../../stores"
+import { requestMain } from "../../shared/core/ipc/main"
+import { timecode } from "../../shared/core/stores"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
@@ -17,7 +17,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: { getOutputs: vi.fn() } }))
 vi.mock("../../audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn() } }))
-vi.mock("../../IPC/main", () => ({ requestMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn() }))
 vi.mock("../ui/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 vi.mock("../ui/input-row/InputRow", async () => {

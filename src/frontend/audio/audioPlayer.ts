@@ -1,12 +1,12 @@
 // const captureFrameRate = 24
 
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { Main } from "../../types/IPC/Main"
 import { customActionActivation } from "../components/actions/actions"
 import { encodeFilePath, getFileName, isLocalFile, locateMediaFile, removeExtension } from "../components/helpers/media"
 import { checkNextAfterMedia } from "../components/helpers/showActions"
-import { requestMain, sendMain } from "../IPC/main"
-import { activePlaylist, dictionary, media, outLocked, playingAudio, playingAudioPaths, special } from "../stores"
+import { requestMain, sendMain } from "../shared/core/ipc/main"
+import { activePlaylist, dictionary, media, outLocked, playingAudio, playingAudioPaths, special } from "../shared/core/stores"
 import { addToMediaFolder } from "../utils/cloudSync"
 import { AudioAnalyser } from "./audioAnalyser"
 import { clearAudio, clearing, currentlyCrossfadingIn, fadeInAudio, fadeOutAudio } from "./audioFading"

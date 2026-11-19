@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { activeEdit, activePage, activePopup, activeStage, dictionary, selected, stageShows } from "../../stores"
+import { activeEdit, activePage, activePopup, activeStage, dictionary, selected, stageShows } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"

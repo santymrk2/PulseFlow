@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { runActionId } from "../../components/actions/actions"
-import { activeProfile, profiles, selectedProfile, special } from "../../stores"
+import { activeProfile, profiles, selectedProfile, special } from "../../shared/core/stores"
 import { newToast } from "../../utils/common"
 import { promptCustom } from "../../utils/popup"
 import { encodePassword } from "../../utils/profile"

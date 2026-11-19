@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import type { Item, ItemType, Line, Slide } from "../../../types/Show"
 import type { TabsObj } from "../../../types/Tabs"
-import { activeEdit, activeShow, copyPasteEdit, overlays, selected, showsCache, storedEditMenuState, templates } from "../../stores"
+import { activeEdit, activeShow, copyPasteEdit, overlays, selected, showsCache, storedEditMenuState, templates } from "../../shared/core/stores"
 import { getAccess } from "../../utils/profile"
 import { clone } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"

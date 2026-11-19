@@ -1,5 +1,5 @@
-import { get } from "../../lib/store"
-import { shows } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { shows } from "../../shared/core/stores"
 import { getFileName, removeExtension } from "./media"
 import { loadShows } from "./setShow"
 

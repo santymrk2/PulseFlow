@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { Slides } from "./Slides"
 
-vi.mock("../../stores", () => ({
+vi.mock("../../shared/core/stores", () => ({
     activeEdit: {
         subscribe: (r: any) => {
             r({ slide: 0, items: [], showId: "s1" })

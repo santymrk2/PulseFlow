@@ -1,6 +1,6 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { runActionId } from "../../components/actions/actions"
-import { activeProfile, profiles, selectedProfile, special } from "../../stores"
+import { activeProfile, profiles, selectedProfile, special } from "../../shared/core/stores"
 import { newToast } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { promptCustom } from "../../utils/popup"

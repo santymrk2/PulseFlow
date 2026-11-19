@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeInteractions, dictionary, interactions, openedInteractionId, shows } from "../../../stores"
+import { activeInteractions, dictionary, interactions, openedInteractionId, shows } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { InteractionsInfo } from "./InteractionsInfo"

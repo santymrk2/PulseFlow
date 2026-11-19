@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { filterShows, showsOfLibrary, UNLABELED_LIBRARY_ID } from "../../../components/show/leftSource"
-import { activePopup, activeProfile, categories, leftSource, projects, sortedShowsList } from "../../../stores"
+import { activePopup, activeProfile, categories, leftSource, projects, sortedShowsList } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getAccess } from "../../../utils/profile"
 import { useStore } from "../../hooks/useStore"

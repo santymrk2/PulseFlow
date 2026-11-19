@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { getResolution } from "../../components/helpers/output"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
-import { activeEdit, effects, outputs, previewOutputId, styles } from "../../stores"
+import { activeEdit, effects, outputs, previewOutputId, styles } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"

@@ -1,5 +1,5 @@
 import type { Scene } from "../../../../types/Show"
-import { actions, activeProfile, outputs, profiles, scenes } from "../../../stores"
+import { actions, activeProfile, outputs, profiles, scenes } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getAccess } from "../../../utils/profile"
 import { history } from "../../../components/helpers/history"

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type MouseEvent } from "react"
-import { cn } from "../../lib/utils"
+import { cn } from "../../shared/core/lib/utils"
 import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
 import { joinTime, secondsToTime } from "../../components/helpers/time"
 import { VideoPlayer } from "../../components/media/video/videoPlayer"

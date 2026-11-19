@@ -1,4 +1,4 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import type { ContentProviderId } from "../../types/ContentProvider"
 import type { ToMainSendPayloads } from "../../types/IPC/ToMain"
 import { ToMain } from "../../types/IPC/ToMain"
@@ -86,7 +86,7 @@ import {
     usageLog,
     variables,
     windowState
-} from "../stores"
+} from "../shared/core/stores"
 import { setupCloudSync } from "../utils/cloudSync"
 import { newToast } from "../utils/common"
 import { translateText } from "../utils/language"

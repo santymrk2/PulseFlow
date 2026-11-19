@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { actions, activeFocus, activeProject, activeShow, contextActive, drawer, editingProjectTemplate, focusMode, fullColors, playerVideos, projects, projectTemplates, recentFiles, selected, special } from "../../stores"
+import { actions, activeFocus, activeProject, activeShow, contextActive, drawer, editingProjectTemplate, focusMode, fullColors, playerVideos, projects, projectTemplates, recentFiles, selected, special } from "../../shared/core/stores"
 import { getAccess } from "../../utils/profile"
 import { addProjectItem } from "../../converters/project"
 import { getTimeUntilClock } from "../../components/drawer/timers/timers"

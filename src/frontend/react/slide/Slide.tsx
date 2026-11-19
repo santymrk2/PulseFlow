@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from 
 import type { MediaStyle } from "../../../types/Main"
 import type { Item, Media, Show, Slide as SlideType, SlideData } from "../../../types/Show"
 import { removeTagsAndContent } from "../../show/slides"
-import { activeEdit, activePage, activeShow, activeTimers, editMode, effects, focusMode, fullColors, groups, media, outputs, overlays, playerVideos, refreshListBoxes, refreshSlideThumbnails, slideDeleteHighlight, slideNotesActive, slidesOptions, slideTimers, special, styles as stylesStore, previewOutputId } from "../../stores"
+import { activeEdit, activePage, activeShow, activeTimers, editMode, effects, focusMode, fullColors, groups, media, outputs, overlays, playerVideos, refreshListBoxes, refreshSlideThumbnails, slideDeleteHighlight, slideNotesActive, slidesOptions, slideTimers, special, styles as stylesStore, previewOutputId } from "../../shared/core/stores"
 import { wait } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { getAccess } from "../../utils/profile"

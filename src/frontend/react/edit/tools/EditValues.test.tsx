@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { actions, activeEdit, activePage, activeStage, outputs, special, timers } from "../../../stores"
+import { actions, activeEdit, activePage, activeStage, outputs, special, timers } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { EditValues } from "./EditValues"
 
@@ -12,7 +12,7 @@ vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioPlayer", () => ({}))
 vi.mock("../../../utils/common", () => ({ throttle: (_id: string, value: unknown, cb: (v: unknown) => void) => cb(value) }))
 vi.mock("../../../utils/language", () => ({ translateText: (id: string) => id }))
-vi.mock("../../../values/extensions", () => ({ mediaExtensions: [], audioExtensions: [], videoExtensions: [], imageExtensions: [], presentationExtensions: [] }))
+vi.mock("../../../shared/core/values/extensions", () => ({ mediaExtensions: [], audioExtensions: [], videoExtensions: [], imageExtensions: [], presentationExtensions: [] }))
 vi.mock("../../../components/drawer/timers/timers", () => ({ getSortedTimers: () => [] }))
 vi.mock("../../../components/helpers/style", () => ({ getFilters: () => ({}), getStyles: () => ({}) }))
 vi.mock("../../../components/main/popups/localization/translation", () => ({ getIsoLanguages: () => [] }))

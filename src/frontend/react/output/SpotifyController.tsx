@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent, type PointerEvent } from "react"
 import { Main } from "../../../types/IPC/Main"
-import { sendMain } from "../../IPC/main"
+import { sendMain } from "../../shared/core/ipc/main"
 import { destroySpotifyManager, fadePause, initSpotifyManager, seekTo, skipNext, skipPrev, spotifyIsFading, spotifyState, togglePlay } from "../../components/output/preview/SpotifyManager"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"

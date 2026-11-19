@@ -4,8 +4,8 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { ReactNode } from "react"
 
 vi.mock("../hooks/useStore", () => ({ useStore: () => null }))
-vi.mock("../../IPC/main", () => ({ requestMain: vi.fn(), receiveToMain: () => "id", destroyMain: vi.fn() }))
-vi.mock("../../stores", () => ({ popupData: { subscribe: (fn: (v: unknown) => void) => { fn(null); return () => {} } } }))
+vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), receiveToMain: () => "id", destroyMain: vi.fn() }))
+vi.mock("../../shared/core/stores", () => ({ popupData: { subscribe: (fn: (v: unknown) => void) => { fn(null); return () => {} } } }))
 vi.mock("../../components/actions/midi", () => ({ defaultMidiActionChannels: {}, midiToNote: () => "C0" }))
 vi.mock("../ui/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 vi.mock("../ui/number-field/NumberField", () => ({ NumberField: ({ label }: { label?: string }) => <div>{label}</div> }))

@@ -2,7 +2,7 @@
 import { act, cleanup, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { outputs, previewOutputId, showsCache, styles as stylesStore } from "../../stores"
+import { outputs, previewOutputId, showsCache, styles as stylesStore } from "../../shared/core/stores"
 import { getItemText } from "../../components/edit/scripts/textStyle"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
 import { getStageTextLayoutOffset } from "../../components/stage/stage"

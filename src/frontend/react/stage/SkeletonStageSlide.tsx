@@ -1,6 +1,6 @@
 import type { MouseEvent as ReactMouseEvent } from "react"
 import type { StageLayout } from "../../../types/Stage"
-import { outputs } from "../../stores"
+import { outputs } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getStageOutputId, getStageResolution } from "../../components/helpers/output"
 import { Icon } from "../helpers/Icon"

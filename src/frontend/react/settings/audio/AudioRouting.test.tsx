@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, waitFor } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activePopup, audioChannelsData, audioEffects, audioPlaylists, audioRouting, dictionary, outputs, popupData, selected, special } from "../../../stores"
+import { activePopup, audioChannelsData, audioEffects, audioPlaylists, audioRouting, dictionary, outputs, popupData, selected, special } from "../../../shared/core/stores"
 import type { AudioRoutingConfig } from "../../../../types/AudioRouting"
 import { AudioMicrophone } from "../../../audio/audioMicrophone"
 import { AudioPlayer } from "../../../audio/audioPlayer"

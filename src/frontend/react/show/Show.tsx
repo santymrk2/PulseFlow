@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { activeProject, activeShow, autoOpenedTimeline, outLocked, projects, resized, showsCache, special, templateApplied } from "../../stores"
+import { activeProject, activeShow, autoOpenedTimeline, outLocked, projects, resized, showsCache, special, templateApplied } from "../../shared/core/stores"
 import { DEFAULT_WIDTH } from "../../utils/common"
 import { createGlobalTimerFromLocalTimer } from "../../components/drawer/timers/timers"
 import { setOutput } from "../../components/helpers/output"

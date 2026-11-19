@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { Item } from "../../../types/Show"
 import { clone } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"
 import { getLayoutRef } from "../../components/helpers/show"
 import { _show } from "../../components/helpers/shows"
-import { activeEdit, activeShow, overlays, popupData, templates } from "../../stores"
+import { activeEdit, activeShow, overlays, popupData, templates } from "../../shared/core/stores"
 import { NumberField } from "../ui/number-field/NumberField"
 
 // Port de components/main/popups/SetTime.svelte. Lee: popupData.action, activeEdit, showsCache (vía _show/getLayoutRef),

@@ -1,11 +1,11 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { MouseEvent, ReactNode } from "react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
-import { sendMain } from "../../../IPC/main"
-import { activeFocus, activeShow, focusMode, playingAudio } from "../../../stores"
+import { sendMain } from "../../../shared/core/ipc/main"
+import { activeFocus, activeShow, focusMode, playingAudio } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { commonMock } from "../../test/mockCommon"
 import { Mic } from "./Mic"
@@ -36,7 +36,7 @@ vi.hoisted(() => {
 })
 
 vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../IPC/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn(), start: mocks.start } }))
 vi.mock("../../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../ui/button/Button", () => ({

@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeShow, os, outputs, presentationApps, presentationData, special } from "../../../stores"
-import { sendMain } from "../../../IPC/main"
+import { activeShow, os, outputs, presentationApps, presentationData, special } from "../../../shared/core/stores"
+import { sendMain } from "../../../shared/core/ipc/main"
 import { getOutputContent } from "../../../components/helpers/output"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { PowerPointPreview } from "./PowerPointPreview"
@@ -10,7 +10,7 @@ import { PowerPointPreview } from "./PowerPointPreview"
 vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../IPC/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../../components/helpers/media", () => ({ getFileName: (path: string) => path, removeExtension: (name: string) => name }))
 vi.mock("../../../components/helpers/output", () => ({ getOutputContent: vi.fn(() => ({})), getActiveOutputs: vi.fn(() => ["out1"]), setOutput: vi.fn() }))
 vi.mock("../../../components/output/clear", () => ({ clearBackground: vi.fn(), clearSlide: vi.fn() }))

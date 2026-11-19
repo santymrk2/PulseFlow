@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { ReactNode } from "react"
 
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
-vi.mock("../../stores", () => ({
+vi.mock("../../shared/core/stores", () => ({
     emitters: { subscribe: (fn: (v: unknown) => void) => { fn({}); return () => {} }, update: vi.fn() },
     actions: { subscribe: (fn: (v: unknown) => void) => { fn({}); return () => {} }, update: vi.fn() },
     popupData: { subscribe: (fn: (v: unknown) => void) => { fn(null); return () => {} }, set: vi.fn() },

@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { get } from "../../lib/store"
-import { activePopup, quickSearchActive } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { activePopup, quickSearchActive } from "../../shared/core/stores"
 import { disablePopupClose, keydown } from "../../utils/shortcuts"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 

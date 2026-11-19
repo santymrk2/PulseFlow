@@ -1,9 +1,9 @@
-import { get, writable } from "../../../lib/store"
+import { get, writable } from "../../../shared/core/lib/store"
 import { Main } from "../../../../types/IPC/Main"
 import type { SpotifyState } from "../../../../types/Main"
-import { requestMain } from "../../../IPC/main"
+import { requestMain } from "../../../shared/core/ipc/main"
 import { wait } from "../../../utils/common"
-import { special } from "../../../stores"
+import { special } from "../../../shared/core/stores"
 
 export const spotifyState = writable<SpotifyState | null>(null)
 export const spotifyIsFading = writable(false)

@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeProject, outLocked, outputs, presentationData, projects, special } from "../../../stores"
-import { requestMain } from "../../../IPC/main"
+import { activeProject, outLocked, outputs, presentationData, projects, special } from "../../../shared/core/stores"
+import { requestMain } from "../../../shared/core/ipc/main"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { ScreenCapture } from "./ScreenCapture"
 
@@ -10,7 +10,7 @@ const windows = [{ id: 1, name: "PowerPoint - Predicación" }]
 
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../IPC/main", () => ({ requestMain: vi.fn((_main, _data, callback) => callback(windows)) }))
+vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn((_main, _data, callback) => callback(windows)) }))
 vi.mock("../../../components/helpers/media", () => ({ getFileName: (path: string) => path, removeExtension: (name: string) => name.split(".")[0] }))
 vi.mock("../../../components/helpers/output", () => ({ getAllActiveOutputIds: vi.fn(() => ["out1"]) }))
 vi.mock("../../output/Window", async () => ({ Window: (await vi.importActual<typeof import("../../test/islandMock")>("../../test/islandMock")).makePortMock("Window") }))

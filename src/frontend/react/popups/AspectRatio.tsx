@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { get } from "../../lib/store"
-import { activePopup, popupData } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { activePopup, popupData } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { triggerClickOnEnterSpace } from "../helpers/triggerClickOnEnterSpace"
 import { Button } from "../ui/button/Button"

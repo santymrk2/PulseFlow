@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { CSSProperties, MouseEvent as ReactMouseEvent, ReactNode } from "react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { actions, activeActionTagFilter, activeDrawerTab, activePlaylist, activeTimerTagFilter, activeVariableTagFilter, audioPlaylists, dictionary, drawerTabsData, outputs, templates } from "../../stores"
+import { actions, activeActionTagFilter, activeDrawerTab, activePlaylist, activeTimerTagFilter, activeVariableTagFilter, audioPlaylists, dictionary, drawerTabsData, outputs, templates } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { DrawerTab, type DrawerTabCategory } from "./DrawerTab"

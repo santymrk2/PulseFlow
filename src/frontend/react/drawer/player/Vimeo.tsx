@@ -1,6 +1,6 @@
 import Player from "@vimeo/player"
 import { useEffect, useRef, useState } from "react"
-import { focusMode, theme, themes } from "../../../stores"
+import { focusMode, theme, themes } from "../../../shared/core/stores"
 import { useStore } from "../../hooks/useStore"
 import styles from "./Vimeo.module.css"
 

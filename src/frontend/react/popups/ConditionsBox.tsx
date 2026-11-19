@@ -1,6 +1,6 @@
 import { Fragment } from "react"
 import type { ConditionValue } from "../../../types/Show"
-import { audioRouting, timers } from "../../stores"
+import { audioRouting, timers } from "../../shared/core/stores"
 import { clone, sortByName } from "../../components/helpers/array"
 import { getDynamicIds, getVariablesIds } from "../../components/helpers/showActions"
 import { newToast } from "../../utils/common"

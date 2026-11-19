@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import type { Template } from "../../../../types/Show"
-import { activeEdit, outputs, overlays, previewOutputId, styles } from "../../../stores"
+import { activeEdit, outputs, overlays, previewOutputId, styles } from "../../../shared/core/stores"
 import { getMedia, getThumbnailPath, mediaSize } from "../../../components/helpers/media"
 import { getResolution } from "../../../components/helpers/output"
 import { getStyleResolution } from "../../../components/slide/getStyleResolution"

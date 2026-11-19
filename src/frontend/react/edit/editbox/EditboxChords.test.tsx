@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../../types/Show"
 import { EditboxChords } from "./EditboxChords"
 
-vi.mock("../../../stores", () => ({
+vi.mock("../../../shared/core/stores", () => ({
     activeDropId: {
         subscribe: (r: any) => {
             r("")

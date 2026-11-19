@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeEdit, activeShow, copyPasteEdit, overlays, selected, showsCache, storedEditMenuState, templates } from "../../stores"
+import { activeEdit, activeShow, copyPasteEdit, overlays, selected, showsCache, storedEditMenuState, templates } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { EditTools } from "./EditTools"
 

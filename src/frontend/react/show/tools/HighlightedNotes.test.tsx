@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { groups } from "../../../stores"
+import { groups } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { HighlightedNotes } from "./HighlightedNotes"
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import type { Weather as WeatherData } from "../../../../types/Show"
-import { timeFormat } from "../../../stores"
+import { timeFormat } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getWeather } from "../../../utils/weather"
 import { T } from "../../helpers/T"

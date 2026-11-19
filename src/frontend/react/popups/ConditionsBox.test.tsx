@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { newToast } from "../../utils/common"
-import { audioRouting, dictionary, timers } from "../../stores"
+import { audioRouting, dictionary, timers } from "../../shared/core/stores"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ConditionsBox } from "./ConditionsBox"

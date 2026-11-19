@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { get, type Readable } from "../../lib/store"
+import { get, type Readable } from "../../shared/core/lib/store"
 
 // Como `useStore`, pero cada notificación entrega una copia: varios popups (Rename, Color, NodeOptions) mutan estos
 // stores en el lugar y devuelven el mismo objeto. El `$:` de Svelte se reejecuta igual; el React Compiler memoiza por

@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
-import { activeEdit, overlays, outputs, previewOutputId, styles } from "../../stores"
+import { activeEdit, overlays, outputs, previewOutputId, styles } from "../../shared/core/stores"
 import { OverlayEditor } from "./OverlayEditor"
 
 const mocks = vi.hoisted(() => ({

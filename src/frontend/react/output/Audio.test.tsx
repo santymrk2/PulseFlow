@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import Audio from "./Audio"
 
-vi.mock("../../stores", () => ({
+vi.mock("../../shared/core/stores", () => ({
     activeFocus: { set: vi.fn() },
     activePlaylist: { subscribe: (fn: (value: unknown) => void) => (fn(null), () => {}) },
     activeShow: { set: vi.fn(), subscribe: (fn: (value: unknown) => void) => (fn(null), () => {}) },

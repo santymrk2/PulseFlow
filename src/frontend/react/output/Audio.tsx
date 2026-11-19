@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { AudioPlayer } from "../../audio/audioPlayer"
 import { AudioPlaylist } from "../../audio/audioPlaylist"
-import { activeFocus, activePlaylist, activeShow, audioPlaylists, focusMode, metronome, outLocked, playingAudio, playingMetronome } from "../../stores"
+import { activeFocus, activePlaylist, activeShow, audioPlaylists, focusMode, metronome, outLocked, playingAudio, playingMetronome } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getFileName, removeExtension } from "../../components/helpers/media"
 import { joinTime, secondsToTime } from "../../components/helpers/time"

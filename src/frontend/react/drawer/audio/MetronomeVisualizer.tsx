@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react"
-import { metronome, metronomeTimer } from "../../../stores"
+import { metronome, metronomeTimer } from "../../../shared/core/stores"
 import { useStore } from "../../hooks/useStore"
 import styles from "./MetronomeVisualizer.module.css"
 

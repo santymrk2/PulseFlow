@@ -1,6 +1,6 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { Timeline, TimelineAction } from "../../../types/Show"
-import { showsCache, timeline } from "../../stores"
+import { showsCache, timeline } from "../../shared/core/stores"
 import { loadShows } from "../helpers/setShow"
 import type { TimelineType } from "./TimelineActions"
 

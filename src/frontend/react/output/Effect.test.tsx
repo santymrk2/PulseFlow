@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import Effect from "./Effect"
 
-vi.mock("../../stores", () => ({
+vi.mock("../../shared/core/stores", () => ({
     effects: { update: (fn: (value: unknown) => void) => fn({}), subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) },
     hoveredEffectItem: { subscribe: (fn: (value: unknown) => void) => (fn(null), () => {}) }
 }))

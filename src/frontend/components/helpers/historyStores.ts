@@ -1,7 +1,7 @@
-import type { Writable } from "../../lib/store"
-import { get } from "../../lib/store"
-import type { StoreKey } from "../../stores"
-import { $ } from "../../stores"
+import type { Writable } from "../../shared/core/lib/store"
+import { get } from "../../shared/core/lib/store"
+import type { StoreKey } from "../../shared/core/stores"
+import { $ } from "../../shared/core/stores"
 import { clone } from "./array"
 import { historyNew } from "./history"
 

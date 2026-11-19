@@ -3,11 +3,11 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { MouseEvent } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
-import { requestMain } from "../../../IPC/main"
+import { requestMain } from "../../../shared/core/ipc/main"
 import { commonMock } from "../../test/mockCommon"
 import { Screens } from "./Screens"
 
-vi.mock("../../../IPC/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("./Capture", () => ({ Capture: ({ screen: item, onClick }: { screen: { id: string; name: string }; onClick?: (e: MouseEvent<HTMLButtonElement>) => void }) => <button onClick={onClick}>{item.name}</button> }))
 

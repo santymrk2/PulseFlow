@@ -1,5 +1,5 @@
 import { useStore } from "../../hooks/useStore"
-import { drawerTabsData } from "../../../stores"
+import { drawerTabsData } from "../../../shared/core/stores"
 import { EffectsInfo } from "./EffectsInfo"
 import styles from "./OverlayInfo.module.css"
 

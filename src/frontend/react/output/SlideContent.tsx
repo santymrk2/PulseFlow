@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import type { AnimationData, Item, OutSlide, Slide, SlideData, TimelineAction, Transition } from "../../../types/Show"
 import type { Styles } from "../../../types/Settings"
-import { scriptureSettings, showsCache, slideTimelineSpeedMultiplier, templates } from "../../stores"
+import { scriptureSettings, showsCache, slideTimelineSpeedMultiplier, templates } from "../../shared/core/stores"
 import { waitUntilValueIsDefined } from "../../utils/common"
 import { shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
 import { getItemText } from "../../components/edit/scripts/textStyle"

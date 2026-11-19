@@ -3,7 +3,7 @@ import type { ReactNode } from "react"
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
-import { activeEdit, templates } from "../../stores"
+import { activeEdit, templates } from "../../shared/core/stores"
 import { TemplateEditor } from "./TemplateEditor"
 
 const mocks = vi.hoisted(() => ({

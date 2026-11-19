@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { act, cleanup, render } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { midiInListen } from "../../components/actions/midi"
-import { actions, activeShow, dictionary, popupData } from "../../stores"
+import { actions, activeShow, dictionary, popupData } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { clearIslands, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"

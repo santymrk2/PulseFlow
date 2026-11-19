@@ -1,4 +1,4 @@
-import { os } from "../../stores"
+import { os } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { useStore } from "../hooks/useStore"
 import { HRule } from "../ui/h-rule/HRule"

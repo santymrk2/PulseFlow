@@ -2,15 +2,15 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { requestMain } from "../../../IPC/main"
-import { activeShow, media, outLocked, outputs, overlays, playingAudio, showsCache, styles as stylesStore, previewOutputId } from "../../../stores"
+import { requestMain } from "../../../shared/core/ipc/main"
+import { activeShow, media, outLocked, outputs, overlays, playingAudio, showsCache, styles as stylesStore, previewOutputId } from "../../../shared/core/stores"
 import { getAccess } from "../../../utils/profile"
 import { getActiveOutputs, getCurrentStyle, getResolution } from "../../../components/helpers/output"
 import { _show } from "../../../components/helpers/shows"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { Media } from "./Media"
 
-vi.mock("../../../IPC/main", () => ({ requestMain: vi.fn(async () => ({})) }))
+vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(async () => ({})) }))
 vi.mock("../../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { start: vi.fn() } }))

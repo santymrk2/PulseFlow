@@ -1,4 +1,4 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
 import { EXPORT, OUTPUT } from "../../../types/Channels"
 import type { HistoryPages } from "../../../types/History"
@@ -7,9 +7,9 @@ import type { MediaStyle, Selected, SelectIds } from "../../../types/Main"
 import type { Item, LayoutRef, SlideData } from "../../../types/Show"
 import { AudioPlayer } from "../../audio/audioPlayer"
 import { duplicateEffectInStack, removeEffectFromStack } from "../../audio/effects/audioEffectsHelpers"
-import { ShowObj } from "../../classes/Show"
+import { ShowObj } from "../../shared/core/classes/Show"
 import { markItemsAsPlayed } from "../../converters/project"
-import { sendMain } from "../../IPC/main"
+import { sendMain } from "../../shared/core/ipc/main"
 import { cameraManager } from "../../media/cameraManager"
 import { changeSlideGroups, mergeSlides, mergeTextboxes, splitItemInTwo, VIRTUAL_BREAK_CHAR } from "../../show/slides"
 import {
@@ -87,7 +87,7 @@ import {
     timers,
     toggleOutputEnabled,
     variables
-} from "../../stores"
+} from "../../shared/core/stores"
 import { openSettings } from "../settings/openSettings"
 import { escapeRegExp, hideDisplay, isOutputWindow, newToast, triggerFunction, wait } from "../../utils/common"
 import { setExampleEffects, setExampleOverlays, setExampleTemplates } from "../../utils/createData"
@@ -117,7 +117,7 @@ import { _show } from "../helpers/shows"
 import { getMenuTagId, openTagManager, toggleSelectionTags, toggleTagFilter } from "../helpers/tags"
 import { addShowsToProject } from "../show/project"
 import { clearSlide } from "../output/clear"
-import { activeProject } from "./../../stores"
+import { activeProject } from "../../shared/core/stores"
 import type { ContextMenuItem } from "./contextMenus"
 
 interface ObjData {

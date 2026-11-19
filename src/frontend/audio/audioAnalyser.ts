@@ -1,6 +1,6 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { getFirstOutput } from "../components/helpers/output"
-import { disabledServers, media, playingAudio, playingVideos, serverData } from "../stores"
+import { disabledServers, media, playingAudio, playingVideos, serverData } from "../shared/core/stores"
 import { AudioMicrophone } from "./audioMicrophone"
 import { AudioMultichannel, MultichannelInfo } from "./audioMultichannel"
 import { AudioPlayer } from "./audioPlayer"

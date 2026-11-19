@@ -1,6 +1,6 @@
 import { useState, type CSSProperties, type MouseEvent } from "react"
 import type { Tag as TagData } from "../../../types/Show"
-import { activeShow, globalTags, selected } from "../../stores"
+import { activeShow, globalTags, selected } from "../../shared/core/stores"
 import { history } from "../../components/helpers/history"
 import { _show } from "../../components/helpers/shows"
 import { translateText } from "../../utils/language"

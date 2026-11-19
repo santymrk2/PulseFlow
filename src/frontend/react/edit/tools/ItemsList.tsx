@@ -1,6 +1,6 @@
 import { type MouseEvent } from "react"
 import type { Item, ItemType } from "../../../../types/Show"
-import { activeEdit, selected, timers, variables } from "../../../stores"
+import { activeEdit, selected, timers, variables } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { clone } from "../../../components/helpers/array"
 import { getFileName } from "../../../components/helpers/media"

@@ -1,6 +1,6 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { runActionId } from "../components/actions/actions"
-import { activeProfile, profiles, showChangeProfileMenu, special } from "../stores"
+import { activeProfile, profiles, showChangeProfileMenu, special } from "../shared/core/stores"
 
 export function getAccess(id: string) {
     return get(activeProfile) ? get(profiles)[get(activeProfile)!]?.access[id] || {} : {}

@@ -11,7 +11,7 @@ const listenMock = vi.fn(() => Promise.resolve(() => {}))
 
 vi.mock("@tauri-apps/api/core", () => ({ invoke: invokeMock }))
 vi.mock("@tauri-apps/api/event", () => ({ listen: listenMock }))
-vi.mock("../utils/common", () => ({ newToast: vi.fn(), setStatus: vi.fn() }))
+vi.mock("../../../utils/common", () => ({ newToast: vi.fn(), setStatus: vi.fn() }))
 
 // window debe existir ANTES de importar tauri.ts (isTauri se evalúa en load time).
 ;(globalThis as any).window = {
@@ -20,7 +20,7 @@ vi.mock("../utils/common", () => ({ newToast: vi.fn(), setStatus: vi.fn() }))
     removeEventListener: () => {}
 }
 
-const { Main, MAIN } = await import("../../types/IPC/Main")
+const { Main, MAIN } = await import("../../../../types/IPC/Main")
 const { setupTauriApi, invokeCommand, POSTPONED_COMMANDS, POSTPONED_NOTIFY } = await import("./tauri")
 setupTauriApi()
 const api = (window as any).api
@@ -31,7 +31,7 @@ const commandCalls = () => invokeMock.mock.calls.filter((call) => call[0] !== "L
 
 beforeEach(async () => {
     invokeMock.mockClear()
-    const common = await import("../utils/common")
+    const common = await import("../../../utils/common")
     vi.mocked(common.newToast).mockClear()
     vi.mocked(common.setStatus).mockClear()
     setupTauriApi()
@@ -114,7 +114,7 @@ describe("funciones pospuestas avisan una vez (F23.22)", () => {
     })
 
     it("avisa con un toast una sola vez por canal, aunque se envíe varias veces", async () => {
-        const { newToast } = await import("../utils/common")
+        const { newToast } = await import("../../../utils/common")
         const received: any[] = []
         api.receive(MAIN, (msg: any) => received.push(msg), "id-toast")
 
@@ -128,7 +128,7 @@ describe("funciones pospuestas avisan una vez (F23.22)", () => {
     })
 
     it("un canal pospuesto que no está en POSTPONED_NOTIFY no avisa", async () => {
-        const { newToast } = await import("../utils/common")
+        const { newToast } = await import("../../../utils/common")
         const received: any[] = []
         api.receive(MAIN, (msg: any) => received.push(msg), "id-silent")
 
@@ -191,7 +191,7 @@ describe("invokeCommand (F7.3)", () => {
     })
 
     it("muestra el toast de persistencia si falla un comando de guardado", async () => {
-        const { newToast, setStatus } = await import("../utils/common")
+        const { newToast, setStatus } = await import("../../../utils/common")
         invokeMock.mockRejectedValueOnce("disco lleno")
 
         const result = await invokeCommand(Main.SAVE)
@@ -202,7 +202,7 @@ describe("invokeCommand (F7.3)", () => {
     })
 
     it("no muestra toast de persistencia para comandos no críticos", async () => {
-        const { newToast } = await import("../utils/common")
+        const { newToast } = await import("../../../utils/common")
         invokeMock.mockRejectedValueOnce("fallo cualquiera")
 
         await invokeCommand("UN_COMANDO_CUALQUIERA")

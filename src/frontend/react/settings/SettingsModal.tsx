@@ -1,4 +1,4 @@
-import { activePopup, settingsOpen } from "../../stores"
+import { activePopup, settingsOpen } from "../../shared/core/stores"
 import { useStore } from "../hooks/useStore"
 import { Modal } from "../main/Modal"
 import { Settings } from "./Settings"

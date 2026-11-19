@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from "react"
 import { uid } from "uid"
-import { activePopup, activeShow, alertMessage, cachedShowsData, fullColors, globalGroupViewEnabled, groups, selected, showsCache, templates } from "../../../stores"
+import { activePopup, activeShow, alertMessage, cachedShowsData, fullColors, globalGroupViewEnabled, groups, selected, showsCache, templates } from "../../../shared/core/stores"
 import { createKeydownHandler } from "../../helpers/triggerClickOnEnterSpace"
 import { newToast } from "../../../utils/common"
 import { translateText } from "../../../utils/language"

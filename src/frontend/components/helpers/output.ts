@@ -1,4 +1,4 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
 import { OUTPUT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
@@ -6,8 +6,8 @@ import type { Output, Outputs, RtmpDestination } from "../../../types/Output"
 import type { Resolution, Styles } from "../../../types/Settings"
 import type { Item, Layout, LayoutRef, Media, OutSlide, Show, Slide, SlideData, Template, TemplateSettings, Transition } from "../../../types/Show"
 import { AudioAnalyser } from "../../audio/audioAnalyser"
-import { requestMain, sendMain } from "../../IPC/main"
-import { invokeCommand } from "../../IPC/tauri"
+import { requestMain, sendMain } from "../../shared/core/ipc/main"
+import { invokeCommand } from "../../shared/core/ipc/tauri"
 import {
     actions,
     activeFocus,
@@ -49,7 +49,7 @@ import {
     transitionData,
     usageLog,
     previewOutputId
-} from "../../stores"
+} from "../../shared/core/stores"
 import { trackScriptureUsage } from "../../utils/analytics"
 import { isMainWindow, isOutputWindow, newToast } from "../../utils/common"
 import { translateText } from "../../utils/language"

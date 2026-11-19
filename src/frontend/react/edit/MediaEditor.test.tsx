@@ -2,7 +2,7 @@
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
-import { activeEdit, activeShow, media, outputs, playingVideoState, previewOutputId, styles } from "../../stores"
+import { activeEdit, activeShow, media, outputs, playingVideoState, previewOutputId, styles } from "../../shared/core/stores"
 import { MediaEditor } from "./MediaEditor"
 
 interface MediaMockProps {

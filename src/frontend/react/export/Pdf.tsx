@@ -2,13 +2,13 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react"
 import { EXPORT } from "../../../types/Channels"
 import type { Show } from "../../../types/Show"
-import { currentWindow } from "../../stores"
+import { currentWindow } from "../../shared/core/stores"
 import { send } from "../../utils/request"
 import { useStore } from "../hooks/useStore"
 import { Zoomed } from "../slide/Zoomed"
 import { Textbox } from "../slide/Textbox"
 import { MediaItem } from "../slide/views/MediaItem"
-import { cn } from "../../lib/utils"
+import { cn } from "../../shared/core/lib/utils"
 import styles from "./Pdf.module.css"
 
 interface PdfProps {

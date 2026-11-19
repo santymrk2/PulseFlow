@@ -2,14 +2,14 @@
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activePage, activeStage, dictionary, labelsDisabled, openToolsTab, outputs, stageShows } from "../../stores"
+import { activePage, activeStage, dictionary, labelsDisabled, openToolsTab, outputs, stageShows } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getAccess } from "../../utils/profile"
 import { addStyleString } from "../../components/edit/scripts/textStyle"
 import { history } from "../../components/helpers/history"
 import { StageTools } from "./StageTools"
 
-vi.mock("../../stores", () => {
+vi.mock("../../shared/core/stores", () => {
     function makeStore(initial: unknown) {
         let value = initial
         const listeners = new Set<(next: unknown) => void>()

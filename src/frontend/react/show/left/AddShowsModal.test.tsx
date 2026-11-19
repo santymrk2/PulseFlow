@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { addShowsToProject } from "../../../components/show/project"
-import { activePopup, activeProfile, categories, dictionary, leftSource, projects, sortedShowsList } from "../../../stores"
+import { activePopup, activeProfile, categories, dictionary, leftSource, projects, sortedShowsList } from "../../../shared/core/stores"
 import { getAccess } from "../../../utils/profile"
 import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { AddShowsModal } from "./AddShowsModal"

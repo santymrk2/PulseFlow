@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { get } from "../../lib/store"
-import { popupData } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { popupData } from "../../shared/core/stores"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"
 import { ColorField } from "../ui/color-field/ColorField"

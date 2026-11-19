@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { outputs } from "../../stores"
+import { outputs } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { SkeletonStageSlide } from "./SkeletonStageSlide"
 

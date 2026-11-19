@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
-import { timeFormat } from "../../stores"
+import { timeFormat } from "../../shared/core/stores"
 import { Clock } from "./Clock"
 
 vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))

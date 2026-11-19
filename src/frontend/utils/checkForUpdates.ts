@@ -1,5 +1,5 @@
-import { get } from "../lib/store"
-import { activePopup, alertUpdates, isDev, popupData, special } from "./../stores"
+import { get } from "../shared/core/lib/store"
+import { activePopup, alertUpdates, isDev, popupData, special } from "../shared/core/stores"
 
 interface UpdateData {
     latestVersion: string

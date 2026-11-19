@@ -1,10 +1,10 @@
 // @ts-nocheck
 import { useEffect, useMemo, useRef, useState } from "react"
 import type { CustomFont } from "../../../../types/Show"
-import { actions, activeEdit, activePage, activeStage, outputs, special, timers } from "../../../stores"
+import { actions, activeEdit, activePage, activeStage, outputs, special, timers } from "../../../shared/core/stores"
 import { throttle } from "../../../utils/common"
 import { translateText } from "../../../utils/language"
-import { mediaExtensions } from "../../../values/extensions"
+import { mediaExtensions } from "../../../shared/core/values/extensions"
 import { getSortedTimers } from "../../../components/drawer/timers/timers"
 import { clone, keysToID, sortByName } from "../../../components/helpers/array"
 import { getFilters, getStyles } from "../../../components/helpers/style"

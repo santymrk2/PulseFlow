@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { createCustomCalendar } from "../../components/drawer/calendar/calendars"
 import { history } from "../../components/helpers/history"
-import { activeDays, activePopup, calendars, dictionary, drawerTabsData, eventEdit, events, popupData } from "../../stores"
+import { activeDays, activePopup, calendars, dictionary, drawerTabsData, eventEdit, events, popupData } from "../../shared/core/stores"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { clearIslands, islands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"

@@ -1,6 +1,6 @@
 import type { ValidChannels } from "../../types/Channels"
 import { OUTPUT } from "../../types/Channels"
-import { invokeCommand } from "../IPC/tauri"
+import { invokeCommand } from "../shared/core/ipc/tauri"
 
 export function send(ID: ValidChannels, channels: string[], data: any = null) {
     channels.forEach((channel: string) => {

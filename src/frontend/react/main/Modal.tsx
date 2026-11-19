@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react"
-import { activePopup, os, special } from "../../stores"
+import { activePopup, os, special } from "../../shared/core/stores"
 import { MENU_BAR_HEIGHT } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { useStore } from "../hooks/useStore"

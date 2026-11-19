@@ -1,11 +1,11 @@
 // Resiliencia de `setLanguage` ante fallos de red (F25.9): los fetch se mockean
 // para cubrir el idioma pedido, el fallback a inglés y el arranque sin red.
 
-import { get, writable } from "../lib/store"
+import { get, writable } from "../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Dictionary } from "../../types/Settings"
 
-vi.mock("../stores", () => ({
+vi.mock("../shared/core/stores", () => ({
     dictionary: writable<Dictionary>({}),
     language: writable("en"),
     localeDirection: writable<"ltr" | "rtl">("ltr")
@@ -14,7 +14,7 @@ vi.mock("./common", () => ({ isMainWindow: vi.fn(() => true) }))
 vi.mock("../components/helpers/array", () => ({ sortByName: (options: unknown) => options }))
 
 const { setLanguage } = await import("./language")
-const stores = await import("../stores")
+const stores = await import("../shared/core/stores")
 
 const fetchMock = vi.fn<(input: string) => Promise<Response>>()
 const jsonResponse = (data: unknown): Response => new Response(JSON.stringify(data), { headers: { "Content-Type": "application/json" } })

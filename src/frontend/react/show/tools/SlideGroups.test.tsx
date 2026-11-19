@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeShow, cachedShowsData, fullColors, globalGroupViewEnabled, groups, selected, showsCache, templates } from "../../../stores"
+import { activeShow, cachedShowsData, fullColors, globalGroupViewEnabled, groups, selected, showsCache, templates } from "../../../shared/core/stores"
 import { isGroupHidden } from "../../../utils/profile"
 import { getDuplicateGroups, getSlideGroups } from "../../../components/show/tools/groups"
 import { _show } from "../../../components/helpers/shows"

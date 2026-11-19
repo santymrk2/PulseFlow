@@ -1,5 +1,5 @@
 import type { Output } from "../../../types/Output"
-import { effects, outLocked, overlayCategories, overlays } from "../../stores"
+import { effects, outLocked, overlayCategories, overlays } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getAccess } from "../../utils/profile"
 import { keysToID, sortByName } from "../../components/helpers/array"

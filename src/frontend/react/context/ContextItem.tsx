@@ -43,7 +43,7 @@ import {
     timers,
     topContextActive,
     undoHistory
-} from "../../stores"
+} from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { closeContextMenu } from "../../utils/shortcuts"
 import { keysToID } from "../../components/helpers/array"

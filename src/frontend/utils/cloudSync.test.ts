@@ -5,11 +5,11 @@
 // usa `requestMain`, `newToast` y los stores de sincronización en estas ramas.
 
 import { beforeEach, describe, expect, it, vi } from "vitest"
-import { writable } from "../lib/store"
+import { writable } from "../shared/core/lib/store"
 
 const mocks = vi.hoisted(() => ({ requestMain: vi.fn(), newToast: vi.fn(), contentProviderSync: vi.fn() }))
 
-vi.mock("../IPC/main", () => ({ requestMain: mocks.requestMain, sendMain: vi.fn() }))
+vi.mock("../shared/core/ipc/main", () => ({ requestMain: mocks.requestMain, sendMain: vi.fn() }))
 vi.mock("./common", () => ({ newToast: mocks.newToast, setStatus: vi.fn(), hasNewerUpdate: vi.fn(), isMainWindow: vi.fn(() => true), wait: vi.fn() }))
 vi.mock("./startup", () => ({ contentProviderSync: mocks.contentProviderSync }))
 vi.mock("./popup", () => ({ confirmCustom: vi.fn() }))
@@ -19,7 +19,7 @@ vi.mock("../components/helpers/media", () => ({ isLocalFile: vi.fn() }))
 vi.mock("../components/helpers/setShow", () => ({ loadShows: vi.fn() }))
 vi.mock("../components/helpers/color", () => ({ generateLightRandomColor: vi.fn() }))
 vi.mock("../components/helpers/array", () => ({ clone: (a: any) => a }))
-vi.mock("../stores", () => ({
+vi.mock("../shared/core/stores", () => ({
     alertMessage: writable(""),
     activePopup: writable(null),
     cloudSyncData: writable<any>({}),
@@ -42,7 +42,7 @@ vi.mock("../stores", () => ({
 }))
 
 const { setupCloudSync } = await import("./cloudSync")
-const stores = await import("../stores")
+const stores = await import("../shared/core/stores")
 
 beforeEach(() => {
     vi.clearAllMocks()

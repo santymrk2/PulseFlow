@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import type { TabsObj } from "../../../types/Tabs"
-import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../stores"
+import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { useStore } from "../hooks/useStore"

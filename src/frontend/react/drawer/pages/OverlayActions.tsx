@@ -1,4 +1,4 @@
-import { overlays } from "../../../stores"
+import { overlays } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { actionData } from "../../../components/actions/actionData"
 import { getActionName, getActionTriggerId } from "../../../components/actions/actions"

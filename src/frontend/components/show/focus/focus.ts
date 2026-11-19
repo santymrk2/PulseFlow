@@ -1,6 +1,6 @@
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import type { ProjectShowRef } from "../../../../types/Projects"
-import { categories, overlays, playerVideos, showsCache } from "../../../stores"
+import { categories, overlays, playerVideos, showsCache } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { loadShows } from "../../helpers/setShow"
 

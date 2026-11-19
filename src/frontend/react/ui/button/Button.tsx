@@ -1,6 +1,6 @@
 import { useRef, useState, type ButtonHTMLAttributes, type KeyboardEvent, type MouseEvent, type ReactNode } from "react"
-import { cn } from "../../../lib/utils"
-import { dictionary } from "../../../stores"
+import { cn } from "../../../shared/core/lib/utils"
+import { dictionary } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"

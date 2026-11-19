@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { selected } from "../../../stores"
+import { selected } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
-import { dictionary } from "../../../stores"
+import { dictionary } from "../../../shared/core/stores"
 import { Tabs } from "./Tabs"
 import styles from "./Tabs.module.css"
 

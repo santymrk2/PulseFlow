@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import type { Effect as EffectData, EffectItem } from "../../../types/Effects"
-import { effects, hoveredEffectItem } from "../../stores"
+import { effects, hoveredEffectItem } from "../../shared/core/stores"
 import { clone, getChangedKeys } from "../../components/helpers/array"
 import { EffectRender } from "../../components/output/effects/effectRenderer"
 import { useStore } from "../hooks/useStore"

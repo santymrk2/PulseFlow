@@ -1,5 +1,5 @@
 import type { Show } from "../../../../types/Show"
-import { effects, outLocked, outputs } from "../../../stores"
+import { effects, outLocked, outputs } from "../../../shared/core/stores"
 import { findMatchingOut, setOutput } from "../../../components/helpers/output"
 import { useStore } from "../../hooks/useStore"
 import { Effect } from "../../output/Effect"

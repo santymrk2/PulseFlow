@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 
 const mockSpellcheck = { misspelled: "holaa", suggestions: ["hola"] }
 vi.mock("../hooks/useStore", () => ({ useStore: () => mockSpellcheck }))
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../utils/shortcuts", () => ({ closeContextMenu: vi.fn() }))
 vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
 

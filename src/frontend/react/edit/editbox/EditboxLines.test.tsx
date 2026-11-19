@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../../types/Show"
 import { EditboxLines } from "./EditboxLines"
 
-vi.mock("../../../stores", () => ({
+vi.mock("../../../shared/core/stores", () => ({
     activeEdit: {
         subscribe: (r: any) => {
             r({ items: [0], slide: 0 })

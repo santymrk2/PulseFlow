@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { actions, activePage, activePopup, activeShow, activeTimers, contextActive, groups, guideActive, openToolsTab, outLocked, outputs, overlayTimers, playingAudio, playingMetronome, slideTimers, special, timelineRecordingAction } from "../../stores"
+import { actions, activePage, activePopup, activeShow, activeTimers, contextActive, groups, guideActive, openToolsTab, outLocked, outputs, overlayTimers, playingAudio, playingMetronome, slideTimers, special, timelineRecordingAction } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import Preview from "./Preview"
 

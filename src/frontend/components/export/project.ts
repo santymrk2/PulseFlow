@@ -1,12 +1,12 @@
 // ----- FreeShow -----
 // Function for exporting project/shows as a project (.project)
 
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { EXPORT } from "../../../types/Channels"
 import type { Effects } from "../../../types/Effects"
 import type { Project, ProjectShowRef } from "../../../types/Projects"
 import type { Action, Overlays, Shows, SlideData } from "../../../types/Show"
-import { actions as actionsStores, categories, effects as effectsStores, folders, media, overlays as overlayStores, showsCache, special } from "../../stores"
+import { actions as actionsStores, categories, effects as effectsStores, folders, media, overlays as overlayStores, showsCache, special } from "../../shared/core/stores"
 import { send } from "../../utils/request"
 import { clone } from "../helpers/array"
 import { loadShows } from "../helpers/setShow"

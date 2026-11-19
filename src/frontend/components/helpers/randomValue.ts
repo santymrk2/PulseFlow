@@ -1,5 +1,5 @@
-import { get } from "../../lib/store"
-import { randomNumberVariable, variables } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { randomNumberVariable, variables } from "../../shared/core/stores"
 import { newToast, wait } from "../../utils/common"
 
 function updateVariable(id: string, key: string, value: any) {

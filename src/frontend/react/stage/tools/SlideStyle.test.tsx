@@ -1,12 +1,12 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeStage, outputs, stageShows } from "../../../stores"
+import { activeStage, outputs, stageShows } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { history } from "../../../components/helpers/history"
 import { SlideStyle } from "./SlideStyle"
 
-vi.mock("../../../stores", () => {
+vi.mock("../../../shared/core/stores", () => {
     function makeStore(initial: unknown) {
         let value = initial
         const listeners = new Set<(next: unknown) => void>()

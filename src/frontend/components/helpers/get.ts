@@ -1,6 +1,6 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { ID, Show, Slide, SlideData } from "../../../types/Show"
-import { activeShow, showsCache, special } from "../../stores"
+import { activeShow, showsCache, special } from "../../shared/core/stores"
 import { getSlideText } from "../edit/scripts/textStyle"
 import { getExtension, getFileName, removeExtension } from "./media"
 

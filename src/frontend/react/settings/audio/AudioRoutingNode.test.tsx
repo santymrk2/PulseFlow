@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { AudioMicrophone } from "../../../audio/audioMicrophone"
-import { activePopup, dictionary, playingAudio, popupData, special } from "../../../stores"
+import { activePopup, dictionary, playingAudio, popupData, special } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { AudioRoutingNode, type AudioRoutingNodeProps } from "./AudioRoutingNode"

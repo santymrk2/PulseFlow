@@ -1,7 +1,7 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { DropdownOptions } from "../../../types/Input"
 import type { CustomFont } from "../../../types/Show"
-import { customFonts, special } from "../../stores"
+import { customFonts, special } from "../../shared/core/stores"
 import { sortByName } from "./array"
 
 interface Family {

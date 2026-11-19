@@ -4,7 +4,7 @@ import type { OutData } from "../../../types/Output"
 import type { Styles } from "../../../types/Settings"
 import type { AnimationData, Item, OutBackground, OutScene, OutSlide, Overlays as OverlaysData, Slide, SlideData, Transition } from "../../../types/Show"
 
-import { allOutputs, colorbars, effects, media, outputs, overlays, showsCache, styles as stylesStore, templates, transitionData } from "../../stores"
+import { allOutputs, colorbars, effects, media, outputs, overlays, showsCache, styles as stylesStore, templates, transitionData } from "../../shared/core/stores"
 import { wait } from "../../utils/common"
 import { clone } from "../../components/helpers/array"
 import { defaultLayers, getCurrentStyle, getMetadata, getOutputLines, getOutputTransitions, getResolution, getSlideFilter, getStyleTemplate, setTemplateStyle } from "../../components/helpers/output"

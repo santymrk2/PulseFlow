@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { act, renderHook } from "@testing-library/react"
 import { describe, expect, it } from "vitest"
-import { get, readable, writable } from "../../lib/store"
+import { get, readable, writable } from "../../shared/core/lib/store"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { useStore } from "./useStore"
 

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { Main } from "../../../../types/IPC/Main"
-import { sendMain } from "../../../IPC/main"
+import { sendMain } from "../../../shared/core/ipc/main"
 import styles from "./Link.module.css"
 
 // Port de ui/link/link.svelte: abre la URL en el navegador del sistema. Conserva href="#void" del original.

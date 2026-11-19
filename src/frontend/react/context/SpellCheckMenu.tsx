@@ -1,6 +1,6 @@
 import { Main } from "../../../types/IPC/Main"
-import { sendMain } from "../../IPC/main"
-import { spellcheck } from "../../stores"
+import { sendMain } from "../../shared/core/ipc/main"
+import { spellcheck } from "../../shared/core/stores"
 import { closeContextMenu } from "../../utils/shortcuts"
 import { translateText } from "../../utils/language"
 import { triggerClickOnEnterSpace } from "../../utils/clickable"

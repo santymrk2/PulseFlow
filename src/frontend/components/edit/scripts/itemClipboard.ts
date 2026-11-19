@@ -1,6 +1,6 @@
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import type { Item, ItemType } from "../../../../types/Show"
-import { activeEdit, activeShow, showsCache } from "../../../stores"
+import { activeEdit, activeShow, showsCache } from "../../../shared/core/stores"
 import { wait } from "../../../utils/common"
 import { clone } from "../../helpers/array"
 import { history } from "../../helpers/history"

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
 import type { Item } from "../../../../types/Show"
-import { activeEdit, activeShow, openToolsTab, os, outputs, showsCache, special, templates, variables } from "../../../stores"
+import { activeEdit, activeShow, openToolsTab, os, outputs, showsCache, special, templates, variables } from "../../../shared/core/stores"
 import { startResizing } from "../../../utils/cursor"
 import { translateText } from "../../../utils/language"
 import { getAccess } from "../../../utils/profile"

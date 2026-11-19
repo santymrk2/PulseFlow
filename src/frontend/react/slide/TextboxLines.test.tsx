@@ -2,7 +2,7 @@
 import { act, cleanup, render, waitFor } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../types/Show"
-import { outputs, slidesOptions, styles as stylesStore, variables } from "../../stores"
+import { outputs, slidesOptions, styles as stylesStore, variables } from "../../shared/core/stores"
 import { applyStyleOverrides } from "../../components/slide/wordOverride"
 import { replaceDynamicValues } from "../../components/helpers/showActions"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"

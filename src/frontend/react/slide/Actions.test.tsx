@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeShow, groups, outputs, showsCache, special, templates } from "../../stores"
+import { activeShow, groups, outputs, showsCache, special, templates } from "../../shared/core/stores"
 import { newToast } from "../../utils/common"
 import { getAccess } from "../../utils/profile"
 import { history } from "../../components/helpers/history"

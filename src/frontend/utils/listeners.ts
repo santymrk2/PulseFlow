@@ -1,4 +1,4 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { OUTPUT, REMOTE, STAGE } from "../../types/Channels"
 import { AudioPlayer } from "../audio/audioPlayer"
 import { midiInListen } from "../components/actions/midi"
@@ -62,7 +62,7 @@ import {
     transitionData,
     variables,
     variableTags
-} from "../stores"
+} from "../shared/core/stores"
 import { hasNewerUpdate } from "./common"
 import { driveConnect } from "./drive"
 import { convertBackgrounds, getFilteredAudioChannels } from "./remoteTalk"

@@ -1,18 +1,18 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { getApiBiblesList } from "../../components/drawer/bible/scripture"
-import { requestMain, sendMain } from "../../IPC/main"
-import { dictionary, scriptures } from "../../stores"
+import { requestMain, sendMain } from "../../shared/core/ipc/main"
+import { dictionary, scriptures } from "../../shared/core/stores"
 import { clearFields, fire } from "../test/kitMocks"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ImportScripture } from "./ImportScripture"
 
 vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))
 vi.mock("../../components/drawer/bible/scripture", () => ({ getApiBiblesList: vi.fn(), customBibleData: (a: object) => ({ ...a }) }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 vi.mock("uid", () => ({ uid: () => "nuevo" }))

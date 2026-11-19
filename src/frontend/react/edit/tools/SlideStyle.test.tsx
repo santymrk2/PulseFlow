@@ -2,12 +2,12 @@
 import { cleanup, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeEdit, activePage, activeShow, showsCache, templates } from "../../../stores"
+import { activeEdit, activePage, activeShow, showsCache, templates } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { SlideStyle } from "./SlideStyle"
 
 vi.mock("../../../utils/language", () => ({ translateText: (id: string) => id }))
-vi.mock("../../../values/extensions", () => ({ mediaExtensions: [], audioExtensions: [], videoExtensions: [], imageExtensions: [], presentationExtensions: [] }))
+vi.mock("../../../shared/core/values/extensions", () => ({ mediaExtensions: [], audioExtensions: [], videoExtensions: [], imageExtensions: [], presentationExtensions: [] }))
 vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../components/helpers/historyHelpers", () => ({ historyHelpers: {}, projectReplacers: [] }))
 vi.mock("../../../components/actions/apiHelper", () => ({}))

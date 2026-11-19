@@ -1,6 +1,6 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { OUTPUT } from "../../../types/Channels"
-import { outputs, showsCache, websiteAction } from "../../stores"
+import { outputs, showsCache, websiteAction } from "../../shared/core/stores"
 import { send } from "../../utils/request"
 import { clone } from "./array"
 import { getAllActiveOutputIds } from "./output"

@@ -1,4 +1,4 @@
-import { drawerTabsData, templates } from "../../stores"
+import { drawerTabsData, templates } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getAccess } from "../../utils/profile"
 import { history } from "../../components/helpers/history"

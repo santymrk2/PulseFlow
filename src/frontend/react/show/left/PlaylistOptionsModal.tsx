@@ -1,5 +1,5 @@
 import { getDefaultProjectName, getProjectName, projectReplacers } from "../../../components/helpers/historyHelpers"
-import { special } from "../../../stores"
+import { special } from "../../../shared/core/stores"
 import { useStore } from "../../hooks/useStore"
 import { TextField } from "../../ui/text-field/TextField"
 import { ToggleField } from "../../ui/toggle-field/ToggleField"

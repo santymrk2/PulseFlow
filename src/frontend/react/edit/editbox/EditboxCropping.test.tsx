@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { EditboxCropping } from "./EditboxCropping"
 
-vi.mock("../../../stores", () => ({
+vi.mock("../../../shared/core/stores", () => ({
     activeShow: {
         subscribe: (run: (v: unknown) => void) => {
             run({ id: "s1" })

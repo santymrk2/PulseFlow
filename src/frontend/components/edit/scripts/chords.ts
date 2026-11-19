@@ -1,6 +1,6 @@
 import { uid } from "uid"
 import type { Chords, Item, Show, Slide } from "../../../../types/Show"
-import { selected } from "../../../stores"
+import { selected } from "../../../shared/core/stores"
 import { clone } from "../../helpers/array"
 import { _show } from "../../helpers/shows"
 import { keys } from "../values/chords"

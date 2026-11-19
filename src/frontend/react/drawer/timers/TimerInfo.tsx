@@ -1,4 +1,4 @@
-import { activeTimers } from "../../../stores"
+import { activeTimers } from "../../../shared/core/stores"
 import { Icon } from "../../helpers/Icon"
 import { T } from "../../helpers/T"
 import { useStore } from "../../hooks/useStore"

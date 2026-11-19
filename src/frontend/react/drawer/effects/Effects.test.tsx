@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeEdit, activePage, activeShow, dictionary, effects, mediaOptions, outputs, previewOutputId, styles } from "../../../stores"
+import { activeEdit, activePage, activeShow, dictionary, effects, mediaOptions, outputs, previewOutputId, styles } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { Effects } from "./Effects"

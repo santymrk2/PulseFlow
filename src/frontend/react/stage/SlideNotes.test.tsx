@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { showsCache } from "../../stores"
+import { showsCache } from "../../shared/core/stores"
 import { getLayoutRef } from "../../components/helpers/show"
 import { getStageTextLayoutOffset } from "../../components/stage/stage"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"

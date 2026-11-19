@@ -1,18 +1,18 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { fetchAndImportIcs } from "../../components/drawer/calendar/calendars"
-import { sendMain } from "../../IPC/main"
-import { activePopup, alertMessage, dictionary } from "../../stores"
+import { sendMain } from "../../shared/core/ipc/main"
+import { activePopup, alertMessage, dictionary } from "../../shared/core/stores"
 import { newToast } from "../../utils/common"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ImportCalendar } from "./ImportCalendar"
 
 vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../components/drawer/calendar/calendars", () => ({ fetchAndImportIcs: vi.fn() }))
 vi.mock("../ui/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 

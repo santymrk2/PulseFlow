@@ -1,5 +1,5 @@
 import type { OutSlide } from "../../../types/Show"
-import { showsCache } from "../../stores"
+import { showsCache } from "../../shared/core/stores"
 import { getLayoutRef } from "../../components/helpers/show"
 import { getStageTextLayoutOffset } from "../../components/stage/stage"
 import { useStore } from "../hooks/useStore"

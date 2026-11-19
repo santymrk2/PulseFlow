@@ -15,9 +15,9 @@
 
 import { invoke } from "@tauri-apps/api/core"
 import { listen, type UnlistenFn } from "@tauri-apps/api/event"
-import { OUTPUT } from "../../types/Channels"
-import { Main } from "../../types/IPC/Main"
-import { newToast, setStatus } from "../utils/common"
+import { OUTPUT } from "../../../../types/Channels"
+import { Main } from "../../../../types/IPC/Main"
+import { newToast, setStatus } from "../../../utils/common"
 import { pickerEvent } from "./pickerEvents"
 
 type Receiver = (args: any, listenedId?: string) => void

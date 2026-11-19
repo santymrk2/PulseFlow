@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../stores"
+import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { EditTabs } from "./EditTabs"
 

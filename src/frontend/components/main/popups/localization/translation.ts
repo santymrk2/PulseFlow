@@ -1,6 +1,6 @@
-import { get } from "../../../../lib/store"
+import { get } from "../../../../shared/core/lib/store"
 import type { Item, Line } from "../../../../../types/Show"
-import { showsCache, templates } from "../../../../stores"
+import { showsCache, templates } from "../../../../shared/core/stores"
 import { newToast } from "../../../../utils/common"
 import { createDoubleTemplate } from "../../../../utils/createData"
 import { getItemTextArray } from "../../../edit/scripts/textStyle"

@@ -1,6 +1,6 @@
 import type { ProjectShowRef } from "../../../../types/Projects"
 import type { Show } from "../../../../types/Show"
-import { outputs, showsCache } from "../../../stores"
+import { outputs, showsCache } from "../../../shared/core/stores"
 import { getActiveOutputs } from "../../../components/helpers/output"
 import { useStore } from "../../hooks/useStore"
 import { AudioPreview } from "../AudioPreview"

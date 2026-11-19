@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from "react"
-import { obsData } from "../../../stores"
+import { obsData } from "../../../shared/core/stores"
 import { connectToOBS } from "../../../utils/obsTalk"
 import { wait } from "../../../utils/common"
 import { useStore } from "../../hooks/useStore"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import styles from "./OBSInfo.module.css"
 
 // Port de components/drawer/info/OBSInfo.svelte. Cliente OBS y sus intervalos se conservan tal cual.

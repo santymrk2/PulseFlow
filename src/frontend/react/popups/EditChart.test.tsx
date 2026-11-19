@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { popupData } from "../../stores"
+import { popupData } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { EditChart } from "./EditChart"

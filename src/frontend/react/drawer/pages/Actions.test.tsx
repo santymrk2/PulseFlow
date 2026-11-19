@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { actionTags, actions, activeActionTagFilter, activePopup, activeProfile, dictionary, labelsDisabled, popupData, profiles, runningActions, special, timelineRecordingAction } from "../../../stores"
+import { actionTags, actions, activeActionTagFilter, activePopup, activeProfile, dictionary, labelsDisabled, popupData, profiles, runningActions, special, timelineRecordingAction } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { Actions } from "./Actions"

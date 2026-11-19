@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type WheelEvent } from "react"
 import type { Template } from "../../../../types/Show"
-import { activeEdit, activePage, activePopup, activeProfile, activeShow, alertMessage, categories, labelsDisabled, mediaOptions, outputs, previewOutputId, profiles, selected, showsCache, special, styles as stylesStore, templateApplied, templateCategories, templates } from "../../../stores"
+import { activeEdit, activePage, activePopup, activeProfile, activeShow, alertMessage, categories, labelsDisabled, mediaOptions, outputs, previewOutputId, profiles, selected, showsCache, special, styles as stylesStore, templateApplied, templateCategories, templates } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getAccess } from "../../../utils/profile"
 import { clone, keysToID, sortByName } from "../../../components/helpers/array"

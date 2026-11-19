@@ -1,8 +1,8 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { AUDIO } from "../../types/Channels"
 import { keysToID } from "../components/helpers/array"
 import { getFirstActiveOutput } from "../components/helpers/output"
-import { audioRouting, currentWindow, disabledServers, outputs, serverData, special } from "../stores"
+import { audioRouting, currentWindow, disabledServers, outputs, serverData, special } from "../shared/core/stores"
 import { send } from "../utils/request"
 
 export class AudioSender {

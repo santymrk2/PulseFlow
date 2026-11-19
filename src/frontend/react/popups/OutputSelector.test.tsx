@@ -1,12 +1,12 @@
 // @vitest-environment happy-dom
 import { act, cleanup, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { OUTPUT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
-import { requestMain } from "../../IPC/main"
+import { requestMain } from "../../shared/core/ipc/main"
 import { openSettings } from "../../components/settings/openSettings"
-import { activePopup, currentOutputSettings, dictionary, outputs } from "../../stores"
+import { activePopup, currentOutputSettings, dictionary, outputs } from "../../shared/core/stores"
 import { send } from "../../utils/request"
 import { clearIslands, islands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"
@@ -16,7 +16,7 @@ import { OutputSelector } from "./OutputSelector"
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../IPC/main", () => ({ requestMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn() }))
 vi.mock("../../utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))

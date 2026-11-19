@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
-import { activeEdit, outputs, previewOutputId, scenes, styles } from "../../stores"
+import { activeEdit, outputs, previewOutputId, scenes, styles } from "../../shared/core/stores"
 import { SceneEditor } from "./SceneEditor"
 
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: {} }))

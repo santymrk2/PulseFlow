@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { slideTimers } from "../../stores"
+import { slideTimers } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { NextTimer } from "./NextTimer"
 

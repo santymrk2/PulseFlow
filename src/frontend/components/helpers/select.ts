@@ -1,6 +1,6 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { Selected, SelectIds } from "../../../types/Main"
-import { selected } from "../../stores"
+import { selected } from "../../shared/core/stores"
 import { removeDuplicates } from "./array"
 
 export function select(id: SelectIds, data: any) {

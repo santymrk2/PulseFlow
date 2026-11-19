@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import type { Item } from "../../../../types/Show"
-import { audioChannelsData, currentWindow, media as mediaStore, outputs, styles } from "../../../stores"
+import { audioChannelsData, currentWindow, media as mediaStore, outputs, styles } from "../../../shared/core/stores"
 import { Image } from "../../drawer/media/Image"
 import { getCropState } from "../../../components/helpers/cropping"
 import { encodeFilePath, getExtension, getMedia, getMediaType, getThumbnailPath, mediaSize } from "../../../components/helpers/media"

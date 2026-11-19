@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { setEffectConfig, subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
-import { audioEffectPresets } from "../../../../stores"
+import { audioEffectPresets } from "../../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../../test/storeTestKit"
 import { AudioEffectPresets } from "./AudioEffectPresets"
 

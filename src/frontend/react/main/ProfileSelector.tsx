@@ -1,4 +1,4 @@
-import { activeProfile, os, profiles, special } from "../../stores"
+import { activeProfile, os, profiles, special } from "../../shared/core/stores"
 import { newToast, wait } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { confirmCustom, promptCustom } from "../../utils/popup"

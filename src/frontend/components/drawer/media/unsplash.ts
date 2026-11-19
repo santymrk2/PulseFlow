@@ -1,4 +1,4 @@
-import { getKey } from "../../../values/keys"
+import { getKey } from "../../../shared/core/values/keys"
 import { getExtension } from "../../helpers/media"
 
 // https://unsplash.com/documentation

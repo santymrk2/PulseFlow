@@ -1,8 +1,8 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import type { ShowList } from "../../types/Show"
 import { sortObjectNumbers } from "../components/helpers/array"
 import { similarity } from "../converters/txt"
-import { categories, drawerTabsData, textCache } from "../stores"
+import { categories, drawerTabsData, textCache } from "../shared/core/stores"
 
 const specialChars = /[.,\/#!?$%\^&\*;:{}=\-_'"´`~()]/g
 export function formatSearch(value: string, removeSpaces = false) {

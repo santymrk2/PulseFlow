@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activePopup, dictionary, popupData } from "../../stores"
+import { activePopup, dictionary, popupData } from "../../shared/core/stores"
 import { clearPopupSubmit, confirmCustom, promptCustom, triggerPopupSubmit } from "../../utils/popup"
 import { clearFields, fire } from "../test/kitMocks"
 import { commonMock } from "../test/mockCommon"

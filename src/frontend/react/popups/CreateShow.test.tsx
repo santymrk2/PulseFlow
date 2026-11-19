@@ -1,15 +1,15 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { convertText } from "../../converters/txt"
 import { history } from "../../components/helpers/history"
-import { activePopup, activeProject, activeShow, categories, dictionary, drawerTabsData, formatNewShow, quickTextCache, shows, special, splitLines } from "../../stores"
+import { activePopup, activeProject, activeShow, categories, dictionary, drawerTabsData, formatNewShow, quickTextCache, shows, special, splitLines } from "../../shared/core/stores"
 import { newToast } from "../../utils/common"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { clearIslands, emit, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
-import { customIconsColors } from "../../values/customIcons"
+import { customIconsColors } from "../../shared/core/values/customIcons"
 import { CreateShow } from "./CreateShow"
 
 vi.mock("../../utils/shortcuts", () => ({ getNormalizedKey: (e: KeyboardEvent) => e.key }))
@@ -18,7 +18,7 @@ vi.mock("../../utils/common", () => ({ isMainWindow: () => false, newToast: vi.f
 vi.mock("../../converters/txt", () => ({ convertText: vi.fn(), getQuickExample: () => "ejemplo", trimNameFromString: (t: string) => `nombre:${t.slice(0, 3)}` }))
 vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/helpers/show", () => ({ checkName: (n: string) => `check:${n}` }))
-vi.mock("../../classes/Show", () => ({
+vi.mock("../../shared/core/classes/Show", () => ({
     ShowObj: class {
         name = ""
         constructor(

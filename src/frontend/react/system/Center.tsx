@@ -1,5 +1,5 @@
 import type { CSSProperties, HTMLAttributes } from "react"
-import { cn } from "../../lib/utils"
+import { cn } from "../../shared/core/lib/utils"
 import styles from "./Center.module.css"
 
 // Port de components/system/Center.svelte. `class` → className; `style` (string en Svelte) → CSSProperties.

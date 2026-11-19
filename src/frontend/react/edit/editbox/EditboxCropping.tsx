@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import type { Item } from "../../../../types/Show"
-import { activeShow } from "../../../stores"
+import { activeShow } from "../../../shared/core/stores"
 import { startResizing, stopResizing } from "../../../utils/cursor"
 import { clampCrop, clampPan, getCropCenter, getCropValues, isSameCrop, type CropValues } from "../../../components/helpers/cropping"
 import { history } from "../../../components/helpers/history"

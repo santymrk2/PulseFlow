@@ -1,5 +1,5 @@
 import { useEffect, useRef, type CSSProperties, type FormEvent, type MouseEvent } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import styles from "./Slider.module.css"
 
 // Port de ui/slider/slider.svelte. Reenvía los eventos DOM: `value` es de una vía y el DOM conserva lo arrastrado

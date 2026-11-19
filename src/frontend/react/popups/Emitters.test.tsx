@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
-import { requestMain } from "../../IPC/main"
-import { activePopup, dictionary, emitters, popupData } from "../../stores"
+import { requestMain } from "../../shared/core/ipc/main"
+import { activePopup, dictionary, emitters, popupData } from "../../shared/core/stores"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { commonMock } from "../test/mockCommon"
 import { clearIslands, islands } from "../test/islandMock"
@@ -12,7 +12,7 @@ import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Emitters } from "./Emitters"
 
 vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../IPC/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("uid", () => ({ uid: vi.fn(() => "uid1") }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 vi.mock("../form/FormInputs", async () => ({ FormInputs: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("FormInputs") }))

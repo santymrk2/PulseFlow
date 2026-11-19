@@ -1,5 +1,5 @@
-import type { StoreKey } from "../../stores"
-import { $ } from "../../stores"
+import type { StoreKey } from "../../shared/core/stores"
+import { $ } from "../../shared/core/stores"
 import { clone } from "./array"
 
 export interface StoreData {

@@ -1,13 +1,13 @@
 import "./testEnv"
 import { describe, expect, it, vi } from "vitest"
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { fixture } from "./converterTestKit"
 
 const { setActiveScripture } = vi.hoisted(() => ({ setActiveScripture: vi.fn() }))
 vi.mock("./bible", () => ({ setActiveScripture }))
 
 const { convertZefaniaBible } = await import("./zefaniaBible")
-const { scriptures, scripturesCache } = await import("../stores")
+const { scriptures, scripturesCache } = await import("../shared/core/stores")
 
 describe("convertZefaniaBible", () => {
     it("convierte una Biblia Zefania real: libros, capítulos y versículos quedan en la caché y en la lista", () => {

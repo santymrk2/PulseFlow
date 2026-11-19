@@ -1,5 +1,5 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import styles from "./ListRow.module.css"
 
 // Port de ui/list-row/list-row.svelte: fila de 28 px. `active` pinta el fondo y la barra de 2 px a la izquierda.

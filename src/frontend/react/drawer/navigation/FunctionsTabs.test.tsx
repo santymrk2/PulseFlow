@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { actions, actionTags, activeActionTagFilter, activeTimerTagFilter, activeVariableTagFilter, dictionary, drawerTabsData, obsData, timerTags, timers, variableTags, variables } from "../../../stores"
+import { actions, actionTags, activeActionTagFilter, activeTimerTagFilter, activeVariableTagFilter, dictionary, drawerTabsData, obsData, timerTags, timers, variableTags, variables } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { FunctionsTabs } from "./FunctionsTabs"

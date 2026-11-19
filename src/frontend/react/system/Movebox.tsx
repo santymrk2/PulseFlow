@@ -1,5 +1,5 @@
 import { useMemo, useRef, type MouseEvent } from "react"
-import { openToolsTab } from "../../stores"
+import { openToolsTab } from "../../shared/core/stores"
 import { getStyles } from "../../components/helpers/style"
 import { radiusHandleSize, radiusSliderOffset, radiusSliderRatio } from "../../components/system/textbox"
 import styles from "./Movebox.module.css"

@@ -1,4 +1,4 @@
-import { activePopup } from "../../stores"
+import { activePopup } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { Button } from "../ui/button/Button"
 

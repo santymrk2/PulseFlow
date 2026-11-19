@@ -1,5 +1,5 @@
-import { get } from "../../lib/store"
-import { outLocked, outputs, overlays, timelineRecordingAction } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { outLocked, outputs, overlays, timelineRecordingAction } from "../../shared/core/stores"
 import { runAction } from "../actions/actions"
 import { findMatchingOut, setOutput } from "./output"
 

@@ -1,6 +1,6 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { Shows } from "../../../types/Show"
-import { actions, activePlaylist, audioPlaylists, outputs, playingAudio, playingVideos, playingVideoState, projects, shows, showsCache, variables } from "../../stores"
+import { actions, activePlaylist, audioPlaylists, outputs, playingAudio, playingVideos, playingVideoState, projects, shows, showsCache, variables } from "../../shared/core/stores"
 import { getTextLines } from "../edit/scripts/textStyle"
 import { keysToID, sortByName } from "../helpers/array"
 import { getFirstActiveOutput } from "../helpers/output"

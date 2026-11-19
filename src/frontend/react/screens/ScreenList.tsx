@@ -1,6 +1,6 @@
 import { keysToID, sortByName, sortObject, clone } from "../../components/helpers/array"
 import { toggleOutputs } from "../../components/helpers/output"
-import { outputs, outputState } from "../../stores"
+import { outputs, outputState } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { useFreshStore } from "../hooks/useFreshStore"
 import { Button } from "../ui/button/Button"

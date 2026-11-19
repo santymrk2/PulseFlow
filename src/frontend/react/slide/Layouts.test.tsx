@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { changeSlidesView } from "../../show/slides"
-import { actions, activePopup, activeProject, activeShow, alertMessage, editingProjectTemplate, labelsDisabled, projects, projectTemplates, showsCache, slidesOptions } from "../../stores"
+import { actions, activePopup, activeProject, activeShow, alertMessage, editingProjectTemplate, labelsDisabled, projects, projectTemplates, showsCache, slidesOptions } from "../../shared/core/stores"
 import { getAccess } from "../../utils/profile"
 import { getActionIcon, runAction } from "../../components/actions/actions"
 import { duplicate } from "../../components/helpers/clipboard"

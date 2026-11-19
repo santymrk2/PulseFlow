@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import type { Output } from "../../../types/Output"
 import type { MediaType, ShowType } from "../../../types/Show"
-import { activeFocus, activeShow, focusMode, outLocked, playerVideos } from "../../stores"
+import { activeFocus, activeShow, focusMode, outLocked, playerVideos } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getExtension, getMediaType } from "../../components/helpers/media"
 import { splitPath } from "../../components/helpers/get"

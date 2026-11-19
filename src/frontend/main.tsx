@@ -5,9 +5,9 @@ import { createRoot } from "react-dom/client"
 import { App } from "./react/App"
 import "@fontsource-variable/geist"
 import "@fontsource-variable/geist-mono"
-import { setupTauriApi } from "./IPC/tauri"
+import { setupTauriApi } from "./shared/core/ipc/tauri"
 import { initMenuActions } from "./utils/shortcuts"
-import { activePopup } from "./stores"
+import { activePopup } from "./shared/core/stores"
 
 // set up the Tauri IPC bridge (replaces the Electron preload's window.api)
 setupTauriApi()

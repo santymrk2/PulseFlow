@@ -1,4 +1,4 @@
-import { websiteAction } from "../../../stores"
+import { websiteAction } from "../../../shared/core/stores"
 
 export type PersistentWebviewOptions = {
     src: string

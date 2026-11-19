@@ -2,14 +2,14 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
-import { requestMain } from "../../../IPC/main"
-import { activeDrawerTab, activeEdit, activeFocus, activeMediaTagFilter, activePopup, activeShow, audioFolders, cloudSyncData, drawerTabsData, focusMode, labelsDisabled, media, mediaFolders, mediaOptions, openedMediaFolders, outLocked, outputs, popupData, providerConnections, selectAllMedia, selected, sorted, special } from "../../../stores"
+import { requestMain } from "../../../shared/core/ipc/main"
+import { activeDrawerTab, activeEdit, activeFocus, activeMediaTagFilter, activePopup, activeShow, audioFolders, cloudSyncData, drawerTabsData, focusMode, labelsDisabled, media, mediaFolders, mediaOptions, openedMediaFolders, outLocked, outputs, popupData, providerConnections, selectAllMedia, selected, sorted, special } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { clearIslands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { Media } from "./Media"
 
-vi.mock("../../../IPC/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

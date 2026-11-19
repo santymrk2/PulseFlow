@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type WheelEvent } from "react"
 import type { Overlay } from "../../../../types/Show"
-import { activeEdit, activePage, activeProfile, activeShow, labelsDisabled, mediaOptions, overlayCategories, outputs, overlays, previewOutputId, profiles, styles as stylesStore } from "../../../stores"
+import { activeEdit, activePage, activeProfile, activeShow, labelsDisabled, mediaOptions, overlayCategories, outputs, overlays, previewOutputId, profiles, styles as stylesStore } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getAccess } from "../../../utils/profile"
 import { addProjectItem } from "../../../converters/project"

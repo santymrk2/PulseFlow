@@ -1,4 +1,4 @@
-import type { SettingsTabs } from "../../types/Tabs"
+import type { SettingsTabs } from "../../../../types/Tabs"
 
 export const settingsTabs: SettingsTabs[] = ["general", "audio", "connection", "files", "profiles", "other"]
 

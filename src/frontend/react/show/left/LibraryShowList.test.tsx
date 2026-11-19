@@ -1,11 +1,11 @@
 // @vitest-environment happy-dom
 import type { ReactNode } from "react"
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { ShowList } from "../../../../types/Show"
 import { dateToString } from "../../../components/helpers/time"
-import { activeShow, dictionary, focusedArea, sorted } from "../../../stores"
+import { activeShow, dictionary, focusedArea, sorted } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { LibraryShowList } from "./LibraryShowList"

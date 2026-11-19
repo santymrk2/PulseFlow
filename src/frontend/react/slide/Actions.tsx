@@ -1,7 +1,7 @@
 import type { CSSProperties } from "react"
 import type { Output } from "../../../types/Output"
 import type { Show, Slide } from "../../../types/Show"
-import { activeShow, groups, outputs, showsCache, special, templates } from "../../stores"
+import { activeShow, groups, outputs, showsCache, special, templates } from "../../shared/core/stores"
 import { newToast } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { getAccess } from "../../utils/profile"

@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import YouTube from "./YouTube"
 
-vi.mock("../../../stores", () => ({ focusMode: { subscribe: (fn: (value: unknown) => void) => (fn(false), () => {}) }, special: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) } }))
+vi.mock("../../../shared/core/stores", () => ({ focusMode: { subscribe: (fn: (value: unknown) => void) => (fn(false), () => {}) }, special: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) } }))
 vi.mock("../../hooks/useStore", () => ({ useStore: () => ({}) }))
 vi.mock("./YouTubePlayer", () => ({ YouTubePlayer: () => <div data-testid="yt-player" /> }))
 

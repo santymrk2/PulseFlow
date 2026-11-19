@@ -1,7 +1,7 @@
 import { useEffect, useState, type KeyboardEvent } from "react"
 import type { Show } from "../../../types/Show"
 import { getQuickExample } from "../../converters/txt"
-import { activePopup, textEditZoom } from "../../stores"
+import { activePopup, textEditZoom } from "../../shared/core/stores"
 import { formatText } from "../../components/show/formatTextEditor"
 import { getPlainEditorText } from "../../components/show/getTextEditor"
 import { transposeText } from "../../utils/chordTranspose"

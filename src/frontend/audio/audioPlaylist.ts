@@ -1,5 +1,5 @@
-import { get } from "../lib/store"
-import { activePlaylist, audioPlaylists, media, outLocked, playingAudio } from "../stores"
+import { get } from "../shared/core/lib/store"
+import { activePlaylist, audioPlaylists, media, outLocked, playingAudio } from "../shared/core/stores"
 import { AudioPlayer } from "./audioPlayer"
 import { audioIsFading, clearAudio, fadeOutAudio, isAllAudioFading } from "./audioFading"
 import { customActionActivation } from "../components/actions/actions"

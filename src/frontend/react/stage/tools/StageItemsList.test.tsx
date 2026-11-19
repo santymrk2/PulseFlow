@@ -1,15 +1,15 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import type { ReactNode } from "react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeStage, dictionary, selected, stageShows, timers } from "../../../stores"
+import { activeStage, dictionary, selected, stageShows, timers } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getSortedStageItems, rearrangeStageItems } from "../../../components/edit/scripts/itemHelpers"
 import { getCustomStageLabel } from "../../../components/stage/stage"
 import { StageItemsList } from "./StageItemsList"
 
-vi.mock("../../../stores", () => {
+vi.mock("../../../shared/core/stores", () => {
     function makeStore(initial: unknown) {
         let value = initial
         const listeners = new Set<(next: unknown) => void>()

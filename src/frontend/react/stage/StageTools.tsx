@@ -1,5 +1,5 @@
 import { useEffect, useState, type ReactNode } from "react"
-import { activePage, activeStage, dictionary, labelsDisabled, openToolsTab, outputs, stageShows } from "../../stores"
+import { activePage, activeStage, dictionary, labelsDisabled, openToolsTab, outputs, stageShows } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getAccess } from "../../utils/profile"
 import { getItemKeys } from "../../components/edit/scripts/itemClipboard"

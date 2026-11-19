@@ -1,4 +1,4 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
 import type { Item, LayoutRef } from "../../../types/Show"
 import type { StageItem, StageLayout } from "../../../types/Stage"
@@ -11,7 +11,7 @@ import { getItemText } from "../edit/scripts/textStyle"
 import { getActiveOutputs } from "../helpers/output"
 import { getLayoutRef } from "../helpers/show"
 import { STAGE } from "./../../../types/Channels"
-import { activeStage, allOutputs, connections, outputs, outputSlideCache, showsCache, stageShows, timers, variables } from "./../../stores"
+import { activeStage, allOutputs, connections, outputs, outputSlideCache, showsCache, stageShows, timers, variables } from "../../shared/core/stores"
 
 const resolution = { width: 1920, height: 1080 }
 const halfWidth = resolution.width * 0.5

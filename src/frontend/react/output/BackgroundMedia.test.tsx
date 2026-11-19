@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import BackgroundMedia from "./BackgroundMedia"
 
-vi.mock("../../stores", () => ({ media: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) }, playerVideos: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) }, special: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) } }))
+vi.mock("../../shared/core/stores", () => ({ media: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) }, playerVideos: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) }, special: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) } }))
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
 vi.mock("../../components/helpers/media", () => ({ getMediaStyle: () => ({}) }))
 vi.mock("./Window", async () => ({ Window: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Window") }))

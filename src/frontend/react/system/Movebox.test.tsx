@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { Movebox } from "./Movebox"
 
-vi.mock("../../stores", () => ({ openToolsTab: { set: vi.fn() } }))
+vi.mock("../../shared/core/stores", () => ({ openToolsTab: { set: vi.fn() } }))
 vi.mock("../../components/helpers/style", () => ({ getStyles: () => ({}) }))
 vi.mock("../../components/system/textbox", () => ({ radiusHandleSize: 10, radiusSliderOffset: 0, radiusSliderRatio: 1 }))
 

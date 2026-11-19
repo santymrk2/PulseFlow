@@ -1,7 +1,7 @@
 import type { ExifData } from "exif"
 import type { ICommonTagsResult } from "music-metadata/lib/type"
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { OUTPUT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
 import type { Variable } from "../../../types/Main"
@@ -10,7 +10,7 @@ import type { Item, LayoutRef, OutSlide, Show, Slide, SlideAction, SlideData } f
 import { clearAudio } from "../../audio/audioFading"
 import { AudioMicrophone } from "../../audio/audioMicrophone"
 import { AudioPlayer } from "../../audio/audioPlayer"
-import { requestMain, sendMain } from "../../IPC/main"
+import { requestMain, sendMain } from "../../shared/core/ipc/main"
 import { isMainWindow, isOutputWindow } from "../../utils/common"
 import { convertTXTToString, getTXT } from "../../utils/dynamicTXT"
 import { send } from "../../utils/request"
@@ -60,7 +60,7 @@ import {
     templates,
     timers,
     variables
-} from "./../../stores"
+} from "../../shared/core/stores"
 import { clone, keysToID, sortByName } from "./array"
 import { downloadOnlineMedia, encodeFilePath, getExtension, getFileName, getMedia, getMediaStyle, getMediaType, locateMediaFile, removeExtension } from "./media"
 import { defaultLayers, getActiveOutputs, getAllActiveOutputIds, getAllNormalOutputs, getAllStageOutputs, getFirstActiveOutput, getFirstOutput, getWindowOutputId, isOutCleared, refreshOut, resolveOutputId, resolveOutputIds, setOutput, startFolderTimer } from "./output"

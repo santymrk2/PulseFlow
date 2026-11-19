@@ -1,7 +1,7 @@
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import type { Item } from "../../../../types/Show"
 import type { StageItem } from "../../../../types/Stage"
-import { activePage, activeStage } from "../../../stores"
+import { activePage, activeStage } from "../../../shared/core/stores"
 import { getFirstOutput, getOutputResolution } from "../../helpers/output"
 import { getStyles, removeText } from "../../helpers/style"
 

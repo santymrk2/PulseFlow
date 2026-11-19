@@ -1,4 +1,4 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { uid } from "uid"
 import { OUTPUT } from "../../types/Channels"
 import { Main } from "../../types/IPC/Main"
@@ -12,7 +12,7 @@ import { checkFFmpeg, checkWindowCapture, setOutput, startScene, toggleOutputs }
 import { type LooksMigrationResult, migrateLooksSettings } from "../components/helpers/looks"
 import { migrateOutputsRtmp } from "../components/helpers/rtmpDestinations"
 import { defaultThemes } from "../components/settings/tabs/defaultThemes"
-import { sendMain } from "../IPC/main"
+import { sendMain } from "../shared/core/ipc/main"
 import {
     actionTags,
     actions,
@@ -100,7 +100,7 @@ import {
     variables,
     version,
     videoMarkers
-} from "./../stores"
+} from "../shared/core/stores"
 import { checkForUpdates } from "./checkForUpdates"
 import { isMainWindow, startAutosave } from "./common"
 import { setLanguage } from "./language"

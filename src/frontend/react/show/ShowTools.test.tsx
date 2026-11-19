@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeShow, labelsDisabled, outputs, showsCache, slideTimers } from "../../stores"
+import { activeShow, labelsDisabled, outputs, showsCache, slideTimers } from "../../shared/core/stores"
 import { getActiveOutputs } from "../../components/helpers/output"
 import { _show } from "../../components/helpers/shows"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"

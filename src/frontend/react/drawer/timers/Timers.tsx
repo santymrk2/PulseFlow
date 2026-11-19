@@ -1,6 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react"
 import type { Timer } from "../../../../types/Show"
-import { activePopup, activeProfile, activeTimerTagFilter, activeTimers, disableDragging, labelsDisabled, profiles, timers } from "../../../stores"
+import { activePopup, activeProfile, activeTimerTagFilter, activeTimers, disableDragging, labelsDisabled, profiles, timers } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { clone, keysToID, sortByName } from "../../../components/helpers/array"
 import { joinTime, secondsToTime } from "../../../components/helpers/time"

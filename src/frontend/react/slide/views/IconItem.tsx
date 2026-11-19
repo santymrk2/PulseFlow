@@ -1,5 +1,5 @@
 import type { Item } from "../../../../types/Show"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import { Icon } from "../../helpers/Icon"
 import styles from "./IconItem.module.css"
 

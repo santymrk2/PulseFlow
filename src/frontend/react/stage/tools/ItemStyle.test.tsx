@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeStage, stageShows } from "../../../stores"
+import { activeStage, stageShows } from "../../../shared/core/stores"
 import { addFilterString } from "../../../components/edit/scripts/textStyle"
 import { history } from "../../../components/helpers/history"
 import { percentageToAspectRatio, stylePosToPercentage } from "../../../components/helpers/output"
@@ -13,7 +13,7 @@ type EditValuesProps = { sections: Record<string, { inputs: { id: string; hidden
 let islandProps: EditValuesProps | null = null
 let onChange: ((event: ChangeEvent) => void) | null = null
 
-vi.mock("../../../stores", () => {
+vi.mock("../../../shared/core/stores", () => {
     function makeStore(initial: unknown) {
         let value = initial
         const listeners = new Set<(next: unknown) => void>()

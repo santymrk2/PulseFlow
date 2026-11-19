@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { getResolution } from "../../components/helpers/output"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
-import { activeEdit, outputs, previewOutputId, scenes, styles } from "../../stores"
+import { activeEdit, outputs, previewOutputId, scenes, styles } from "../../shared/core/stores"
 import { ScenePreview } from "../drawer/pages/ScenePreview"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"

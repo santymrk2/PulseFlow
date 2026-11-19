@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import type { Output } from "../../../types/Output"
-import { slideTimers } from "../../stores"
+import { slideTimers } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getAllActiveOutputIds } from "../../components/helpers/output"
 import { Icon } from "../helpers/Icon"

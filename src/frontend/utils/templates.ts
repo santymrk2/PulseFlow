@@ -1,9 +1,9 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import type { Item, Template } from "../../types/Show"
 import { getItemText } from "../components/edit/scripts/textStyle"
 import { clone } from "../components/helpers/array"
 import { mergeWithTemplate } from "../components/helpers/output"
-import { overlays, templates } from "../stores"
+import { overlays, templates } from "../shared/core/stores"
 import { runAction } from "../components/actions/actions"
 
 const DEFAULT_TEMPLATE: Template = { name: "", color: null, category: null, items: [] }

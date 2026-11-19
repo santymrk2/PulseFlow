@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { outputs } from "../../../stores"
+import { outputs } from "../../../shared/core/stores"
 import { findMatchingOut, setOutput } from "../../../components/helpers/output"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { EffectPreview } from "./EffectPreview"

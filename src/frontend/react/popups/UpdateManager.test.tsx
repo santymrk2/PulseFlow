@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { act, cleanup, render, screen, waitFor } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
-import { sendMain } from "../../IPC/main"
-import { alertUpdates, dictionary, special, version } from "../../stores"
+import { sendMain } from "../../shared/core/ipc/main"
+import { alertUpdates, dictionary, special, version } from "../../shared/core/stores"
 import { getUpdateData } from "../../utils/checkForUpdates"
 import { setPopupSubmit } from "../../utils/popup"
 import { clearFields, fields, fire } from "../test/kitMocks"
@@ -19,7 +19,7 @@ vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../utils/language", () => ({ translateText: (value: string) => value }))
 vi.mock("../../utils/checkForUpdates", () => ({ getUpdateData: vi.fn() }))
 vi.mock("../../utils/popup", () => ({ setPopupSubmit: vi.fn(() => () => {}) }))
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 vi.mock("../ui/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../test/kitMocks")>("../test/kitMocks")).FieldMock }))
 

@@ -1,5 +1,5 @@
 import { Main } from "../../types/IPC/Main"
-import { requestMain } from "../IPC/main"
+import { requestMain } from "../shared/core/ipc/main"
 import { wait } from "./common"
 
 const SOCKET_URL = "wss://socket.churchapps.org"

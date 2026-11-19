@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeRecording, activeStyle, audioChannelsData, dictionary, outputs, previewOutputId, rtmpStatus, selected, styles as outputStyles, templates, toggleOutputEnabled } from "../../stores"
+import { activeRecording, activeStyle, audioChannelsData, dictionary, outputs, previewOutputId, rtmpStatus, selected, styles as outputStyles, templates, toggleOutputEnabled } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { MultiOutputs } from "./MultiOutputs"
 

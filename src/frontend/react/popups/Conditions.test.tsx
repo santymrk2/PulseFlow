@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { checkConditionValue, isConditionMet } from "../../components/edit/scripts/itemHelpers"
-import { activeEdit, activeShow, activeStage, dictionary, overlays, popupData, showsCache, stageShows, templates } from "../../stores"
+import { activeEdit, activeShow, activeStage, dictionary, overlays, popupData, showsCache, stageShows, templates } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { clearIslands, emit, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"

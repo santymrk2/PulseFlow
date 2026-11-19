@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState, type ComponentProps, type ReactNode } from "react"
 import { translateText } from "../../../utils/language"
-import { activeActionTagFilter, activeDrawerTab, activeEdit, activeTimerTagFilter, activeVariableTagFilter, dictionary, drawerTabsData, labelsDisabled } from "../../../stores"
+import { activeActionTagFilter, activeDrawerTab, activeEdit, activeTimerTagFilter, activeVariableTagFilter, dictionary, drawerTabsData, labelsDisabled } from "../../../shared/core/stores"
 import { useStore } from "../../hooks/useStore"
 import { DrawerTab } from "../DrawerTab"
 import styles from "./NavigationSections.module.css"

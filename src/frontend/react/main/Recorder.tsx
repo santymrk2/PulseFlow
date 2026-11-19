@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "../../lib/store"
-import { activeRecording, currentRecordingStream } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { activeRecording, currentRecordingStream } from "../../shared/core/stores"
 import { createMediaRecorder } from "../../components/drawer/live/recorder"
 import { clone } from "../../components/helpers/array"
 import { useStore } from "../hooks/useStore"

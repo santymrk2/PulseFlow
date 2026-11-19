@@ -1,15 +1,15 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { OUTPUT } from "../../../../types/Channels"
 import { Main } from "../../../../types/IPC/Main"
-import { drawerTabsData, photoApiCredits, playerVideos, providerConnections } from "../../../stores"
+import { drawerTabsData, photoApiCredits, playerVideos, providerConnections } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { PlayerInfo } from "./PlayerInfo"
 
 const mocks = vi.hoisted(() => ({ request: vi.fn(), send: vi.fn(), outputs: [] as unknown[] }))
-vi.mock("../../../IPC/main", () => ({ requestMain: mocks.request }))
+vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: mocks.request }))
 vi.mock("../../../utils/request", () => ({ send: mocks.send }))
 vi.mock("../../../components/helpers/output", () => ({ getAllNormalOutputs: () => mocks.outputs }))
 vi.mock("./CanvaInfo", () => ({ CanvaInfo: () => <div data-testid="canva" /> }))

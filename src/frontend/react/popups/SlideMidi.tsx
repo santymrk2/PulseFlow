@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
 import type { API_midi } from "../../components/actions/api"
 import { midiInListen } from "../../components/actions/midi"
 import { clone } from "../../components/helpers/array"
 import { MidiValues } from "../actions/MidiValues"
 import { Tip } from "../main/Tip"
-import { actions, activeShow, popupData } from "../../stores"
+import { actions, activeShow, popupData } from "../../shared/core/stores"
 
 // Port de components/main/popups/SlideMidi.svelte. Lee: popupData (id, index, indexes), actions y activeShow.
 // Escribe: popupData.id al montar si faltaba, actions[id] en cada cambio de MIDI y llama a midiInListen().

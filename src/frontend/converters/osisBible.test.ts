@@ -1,13 +1,13 @@
 import "./testEnv"
 import { describe, expect, it, vi } from "vitest"
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { fixture } from "./converterTestKit"
 
 const { setActiveScripture } = vi.hoisted(() => ({ setActiveScripture: vi.fn() }))
 vi.mock("./bible", () => ({ setActiveScripture }))
 
 const { convertOSISBible } = await import("./osisBible")
-const { scripturesCache } = await import("../stores")
+const { scripturesCache } = await import("../shared/core/stores")
 
 describe("convertOSISBible", () => {
     it("convierte una Biblia OSIS real de un solo libro: libro, capítulo y versículos", async () => {

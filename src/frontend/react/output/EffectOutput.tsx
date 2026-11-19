@@ -1,4 +1,4 @@
-import { effects } from "../../stores"
+import { effects } from "../../shared/core/stores"
 import { useStore } from "../hooks/useStore"
 import { Effect } from "./Effect"
 import { OutputTransition } from "./OutputTransition"

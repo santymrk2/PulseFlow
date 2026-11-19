@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type SyntheticEvent } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import { encodeFilePath, isLocalFile } from "../../../components/helpers/media"
 import styles from "./Image.module.css"
 

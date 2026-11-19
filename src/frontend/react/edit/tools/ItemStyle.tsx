@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useMemo } from "react"
 import type { Item } from "../../../../types/Show"
-import { activeEdit, activeShow, selected, showsCache } from "../../../stores"
+import { activeEdit, activeShow, selected, showsCache } from "../../../shared/core/stores"
 import { wait } from "../../../utils/common"
 import { clone } from "../../../components/helpers/array"
 import { history } from "../../../components/helpers/history"

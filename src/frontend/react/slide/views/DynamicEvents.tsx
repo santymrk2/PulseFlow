@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { get } from "../../../lib/store"
-import { activeDrawerTab, drawer, events } from "../../../stores"
+import { get } from "../../../shared/core/lib/store"
+import { activeDrawerTab, drawer, events } from "../../../shared/core/stores"
 import { getTime } from "../../../components/drawer/calendar/calendar"
 import { keysToID } from "../../../components/helpers/array"
 import { visibleEvents } from "../../../components/helpers/dynamicItemText"

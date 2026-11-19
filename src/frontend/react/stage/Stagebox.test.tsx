@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { StageItem, StageLayout } from "../../../types/Stage"
-import { activePopup, activeStage, activeTimers, allOutputs, dictionary, outputs, outputSlideCache, refreshEditSlide, stageShows, timers, variables } from "../../stores"
+import { activePopup, activeStage, activeTimers, allOutputs, dictionary, outputs, outputSlideCache, refreshEditSlide, stageShows, timers, variables } from "../../shared/core/stores"
 import { startResizing } from "../../utils/cursor"
 import { sendBackgroundToStage } from "../../utils/stageTalk"
 import autosize from "../../components/edit/scripts/autosize"
@@ -29,7 +29,7 @@ vi.mock("../../components/helpers/media", () => ({
     loadThumbnail: vi.fn(async () => "thumb.jpg"),
     mediaSize: { big: 3, drawerSize: 1, slideSize: 2 }
 }))
-vi.mock("../../values/extensions", () => ({
+vi.mock("../../shared/core/values/extensions", () => ({
     videoExtensions: ["mp4"],
     imageExtensions: ["jpg"],
     audioExtensions: ["mp3"],

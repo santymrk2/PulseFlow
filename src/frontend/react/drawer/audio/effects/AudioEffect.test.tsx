@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { AudioPlayer } from "../../../../audio/audioPlayer"
-import { playingAudio, selected } from "../../../../stores"
+import { playingAudio, selected } from "../../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../../test/storeTestKit"
 import { AudioEffect } from "./AudioEffect"
 

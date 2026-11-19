@@ -1,5 +1,5 @@
 import type { CSSProperties, KeyboardEvent, ReactNode } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import { translateText } from "../../../utils/language"
 import { Icon } from "../../helpers/Icon"
 import { usePropState } from "../../hooks/usePropState"

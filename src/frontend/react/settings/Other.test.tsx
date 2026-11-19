@@ -1,16 +1,16 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
-import { requestMain, sendMain } from "../../IPC/main"
-import { activePopup, alertMessage, special } from "../../stores"
+import { requestMain, sendMain } from "../../shared/core/ipc/main"
+import { activePopup, alertMessage, special } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Other } from "./Other"
 
 vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../IPC/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 // SelectField llega a helpers/media (getFileName), que arrastra el módulo de audio
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

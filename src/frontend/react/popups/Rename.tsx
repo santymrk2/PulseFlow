@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import type { Line, SlideData } from "../../../types/Show"
-import { activePopup, activeShow, audioRouting, calendars, customScriptureBooks, drawerTabsData, effectsLibrary, scripturesCache, selected, showsCache } from "../../stores"
+import { activePopup, activeShow, audioRouting, calendars, customScriptureBooks, drawerTabsData, effectsLibrary, scripturesCache, selected, showsCache } from "../../shared/core/stores"
 import { renameCalendar } from "../../components/drawer/calendar/calendars"
 import { clone, removeDuplicates } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"

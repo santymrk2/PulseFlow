@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { get } from "../../lib/store"
-import { activePopup, globalRegexes, popupData } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { activePopup, globalRegexes, popupData } from "../../shared/core/stores"
 import { Button } from "../ui/button/Button"
 import { HRule } from "../ui/h-rule/HRule"
 import { TextField } from "../ui/text-field/TextField"

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import type { ProjectShowRef } from "../../../../types/Projects"
-import { activeFocus, activeProject, outputs, projects, resized } from "../../../stores"
+import { activeFocus, activeProject, outputs, projects, resized } from "../../../shared/core/stores"
 import { getAllProjectItems } from "../../../components/show/focus/focus"
 import { getActiveOutputs } from "../../../components/helpers/output"
 import { hasNewerUpdate } from "../../../utils/common"

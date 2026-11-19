@@ -1,5 +1,5 @@
 import { gainToDb, MIN_DB } from "../../../../audio/dBUtils"
-import { channelSidechainMultipliers } from "../../../../stores"
+import { channelSidechainMultipliers } from "../../../../shared/core/stores"
 import { translateText } from "../../../../utils/language"
 import { useStore } from "../../../hooks/useStore"
 import styles from "./AudioSidechain.module.css"

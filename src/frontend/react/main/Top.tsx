@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { activeDrawerTab, activeEdit, activeLook, activePage, activePopup, activeProfile, activeProject, activeShow, cloudUsers, drawer, looks, outputDisplay, outputState, outputs, profiles, quickSearchActive, saved, shows } from "../../stores"
+import { activeDrawerTab, activeEdit, activeLook, activePage, activePopup, activeProfile, activeProject, activeShow, cloudUsers, drawer, looks, outputDisplay, outputState, outputs, profiles, quickSearchActive, saved, shows } from "../../shared/core/stores"
 import type { Look } from "../../../types/Settings"
 import type { TopViews } from "../../../types/Tabs"
 import { translateText } from "../../utils/language"

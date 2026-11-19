@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import type { Slide } from "../../../types/Show"
-import { outputs, previewOutputId, slidesOptions, styles } from "../../stores"
+import { outputs, previewOutputId, slidesOptions, styles } from "../../shared/core/stores"
 import { looseEntry, storeEntry, setStoresForTest } from "../test/storeTestKit"
 import { SkeletonSlide } from "./SkeletonSlide"
 

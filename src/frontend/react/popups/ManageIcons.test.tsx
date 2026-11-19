@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activePopup, customizedIcons, popupData } from "../../stores"
-import { customIcons, customIconsColors } from "../../values/customIcons"
+import { activePopup, customizedIcons, popupData } from "../../shared/core/stores"
+import { customIcons, customIconsColors } from "../../shared/core/values/customIcons"
 import { clearIslands, islands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"

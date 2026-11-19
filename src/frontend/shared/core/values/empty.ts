@@ -1,8 +1,8 @@
-import type { Event } from "../../types/Calendar"
-import type { Effect } from "../../types/Effects"
-import type { Project, ProjectShowRef } from "../../types/Projects"
-import type { Layout, Overlay, Scene, Slide, Template } from "../../types/Show"
-import type { Category } from "../../types/Tabs"
+import type { Event } from "../../../../types/Calendar"
+import type { Effect } from "../../../../types/Effects"
+import type { Project, ProjectShowRef } from "../../../../types/Projects"
+import type { Layout, Overlay, Scene, Slide, Template } from "../../../../types/Show"
+import type { Category } from "../../../../types/Tabs"
 
 // UPDATE
 

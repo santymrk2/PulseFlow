@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import type { StageItem } from "../../../../types/Stage"
-import { activeStage, stageShows } from "../../../stores"
+import { activeStage, stageShows } from "../../../shared/core/stores"
 import { addFilterString, addStyleString } from "../../../components/edit/scripts/textStyle"
 import type { EditBoxSection, EditInput } from "../../../components/edit/values/boxes"
 import { setBoxInputValue } from "../../../components/edit/values/boxes"

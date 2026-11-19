@@ -2,7 +2,7 @@
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Show } from "../../../types/Show"
-import { dictionary } from "../../stores"
+import { dictionary } from "../../shared/core/stores"
 import { clearFields, fire } from "../test/kitMocks"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"

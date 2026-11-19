@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { activeEdit, activeShow, cachedShowsData, editColumns, showsCache } from "../../stores"
+import { activeEdit, activeShow, cachedShowsData, editColumns, showsCache } from "../../shared/core/stores"
 import { T } from "../helpers/T"
 import { findMatchingOut } from "../../components/helpers/output"
 import { getShowCacheId } from "../../components/helpers/show"

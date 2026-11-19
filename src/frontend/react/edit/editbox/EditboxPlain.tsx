@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import type { Item } from "../../../../types/Show"
-import { activeEdit, activeShow, outputs, overlays, templates } from "../../../stores"
+import { activeEdit, activeShow, outputs, overlays, templates } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { menuClick } from "../../../components/context/menuClick"
 import { clone } from "../../../components/helpers/array"

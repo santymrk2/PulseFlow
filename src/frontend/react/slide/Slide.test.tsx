@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render, waitFor } from "@testing-library/react
 import type { CSSProperties, ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Show, SlideData } from "../../../types/Show"
-import { activeEdit, activeShow, effects, focusMode, fullColors, overlays, outputs, refreshListBoxes, refreshSlideThumbnails, slideDeleteHighlight, slidesOptions, special, styles } from "../../stores"
+import { activeEdit, activeShow, effects, focusMode, fullColors, overlays, outputs, refreshListBoxes, refreshSlideThumbnails, slideDeleteHighlight, slidesOptions, special, styles } from "../../shared/core/stores"
 import { getMedia, getMediaCached, getMediaStyle, mediaSize } from "../../components/helpers/media"
 import { setTemplateStyle } from "../../components/helpers/output"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"

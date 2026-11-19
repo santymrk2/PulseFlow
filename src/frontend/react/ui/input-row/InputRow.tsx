@@ -1,5 +1,5 @@
 import { type CSSProperties, type ReactNode } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import { usePropState } from "../../hooks/usePropState"
 import { Icon } from "../../helpers/Icon"
 import { Button } from "../button/Button"

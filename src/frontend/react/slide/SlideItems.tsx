@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 import type { Item } from "../../../types/Show"
-import { slidesOptions } from "../../stores"
+import { slidesOptions } from "../../shared/core/stores"
 import { MetronomeVisualizer } from "../drawer/audio/MetronomeVisualizer"
 import { BMDStream } from "../drawer/live/BMDStream"
 import { Cam } from "../drawer/live/Cam"

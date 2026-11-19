@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { clearSlide } from "../../../components/output/clear"
 import { getMedia } from "../../../components/helpers/media"
 import { setOutput } from "../../../components/helpers/output"
-import { activeShow, media, outLocked, outputs, styles } from "../../../stores"
+import { activeShow, media, outLocked, outputs, styles } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { MediaPreview } from "./MediaPreview"
 

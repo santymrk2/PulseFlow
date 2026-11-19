@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent as ReactMouseEvent, type WheelEvent } from "react"
 import type { Scene } from "../../../../types/Show"
-import { activeEdit, activePage, activeProfile, labelsDisabled, mediaOptions, outLocked, outputs, previewOutputId, profiles, scenes, styles as stylesStore } from "../../../stores"
+import { activeEdit, activePage, activeProfile, labelsDisabled, mediaOptions, outLocked, outputs, previewOutputId, profiles, scenes, styles as stylesStore } from "../../../shared/core/stores"
 import { getResolution, findMatchingOut, startScene } from "../../../components/helpers/output"
 import { history } from "../../../components/helpers/history"
 import { clone, keysToID, sortByName } from "../../../components/helpers/array"

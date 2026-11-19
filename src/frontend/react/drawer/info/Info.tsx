@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { activeShow, focusMode, forceClock } from "../../../stores"
-import { cn } from "../../../lib/utils"
+import { activeShow, focusMode, forceClock } from "../../../shared/core/stores"
+import { cn } from "../../../shared/core/lib/utils"
 import { Icon } from "../../helpers/Icon"
 import { useStore } from "../../hooks/useStore"
 import { Center } from "../../system/Center"

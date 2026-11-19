@@ -1,4 +1,4 @@
-import { get, type Writable } from "../../lib/store"
+import { get, type Writable } from "../../shared/core/lib/store"
 
 export interface StoreEntry {
     apply: () => () => void

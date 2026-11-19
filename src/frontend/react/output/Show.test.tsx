@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeShow, focusMode, outLocked, outputs, playingVideoState, presentationData, showsCache } from "../../stores"
+import { activeShow, focusMode, outLocked, outputs, playingVideoState, presentationData, showsCache } from "../../shared/core/stores"
 import { formatUrl, getOutputtedWebsites, sendWebsiteKey, toggleWebsiteMute, triggerWebsiteAction } from "../../components/helpers/websiteControls"
 import { VideoPlayer } from "../../components/media/video/videoPlayer"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"

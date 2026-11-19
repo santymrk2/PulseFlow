@@ -1,6 +1,6 @@
 // @ts-nocheck
 import type { Input } from "../../../types/Input"
-import { activeEdit, activePage, activePopup, special } from "../../stores"
+import { activeEdit, activePage, activePopup, special } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { select } from "../../components/helpers/select"
 import { useStore } from "../hooks/useStore"

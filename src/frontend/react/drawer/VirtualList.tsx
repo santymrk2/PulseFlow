@@ -1,5 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react"
-import { cn } from "../../lib/utils"
+import { cn } from "../../shared/core/lib/utils"
 import styles from "./VirtualList.module.css"
 
 // Port fiel de components/drawer/VirtualList.svelte (de @sveltejs/svelte-virtual-list): mide el offsetHeight de cada fila, usa el promedio

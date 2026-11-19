@@ -1,5 +1,5 @@
 import { useMemo } from "react"
-import { activeEdit, activeShow, showsCache, templates } from "../../../stores"
+import { activeEdit, activeShow, showsCache, templates } from "../../../shared/core/stores"
 import { clone } from "../../../components/helpers/array"
 import { history } from "../../../components/helpers/history"
 import { getLayoutRef } from "../../../components/helpers/show"

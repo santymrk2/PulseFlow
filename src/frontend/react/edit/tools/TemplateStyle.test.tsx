@@ -2,12 +2,12 @@
 import { cleanup, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeEdit, activePopup, overlays, popupData, templates } from "../../../stores"
+import { activeEdit, activePopup, overlays, popupData, templates } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { TemplateStyle } from "./TemplateStyle"
 
 vi.mock("../../../utils/language", () => ({ translateText: (id: string) => id }))
-vi.mock("../../../values/extensions", () => ({ mediaExtensions: [] }))
+vi.mock("../../../shared/core/values/extensions", () => ({ mediaExtensions: [] }))
 vi.mock("../../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../helpers/Icon", () => ({ Icon: () => <span /> }))
 vi.mock("../../ui/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button type="button">{children}</button> }))

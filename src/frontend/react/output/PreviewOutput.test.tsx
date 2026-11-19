@@ -29,7 +29,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../components/helpers/historyHelpers", () => ({ _updaters: {}, history: () => {} }))
 vi.mock("../../components/actions/apiHelper", () => ({}))
 vi.mock("../../utils/save", () => ({}))
-vi.mock("../../stores", () => {
+vi.mock("../../shared/core/stores", () => {
     const sub = (value: unknown) => ({ subscribe: (fn: (v: unknown) => void) => (fn(value), () => {}) })
     return {
         livePrepare: sub({}),

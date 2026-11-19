@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import type { Item, Line, OutSlide } from "../../../types/Show"
 import type { StageItem } from "../../../types/Stage"
-import { outputs, previewOutputId, showsCache, styles as stylesStore } from "../../stores"
+import { outputs, previewOutputId, showsCache, styles as stylesStore } from "../../shared/core/stores"
 import { getItemText } from "../../components/edit/scripts/textStyle"
 import { clone } from "../../components/helpers/array"
 import { getResolution } from "../../components/helpers/output"

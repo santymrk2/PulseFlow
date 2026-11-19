@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import { hexToHSL, hslToHex } from "../../../components/helpers/color"
 import { translateText } from "../../../utils/language"
 import { Icon } from "../../helpers/Icon"

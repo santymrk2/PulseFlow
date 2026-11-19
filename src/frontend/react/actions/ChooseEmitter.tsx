@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useMemo } from "react"
 import { uid } from "uid"
-import { actions, activePopup, emitters, popupData } from "../../stores"
+import { actions, activePopup, emitters, popupData } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getDynamicValue } from "../../components/edit/scripts/itemHelpers"
 import { clone, keysToID, sortByName } from "../../components/helpers/array"

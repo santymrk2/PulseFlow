@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { defaultColors, defaultGradients, getContrast } from "../../../components/helpers/color"
-import { activePopup, popupData, special } from "../../../stores"
+import { activePopup, popupData, special } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { ColorField } from "./ColorField"

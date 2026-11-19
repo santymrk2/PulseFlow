@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../components/helpers/history"
 import { _show } from "../../components/helpers/shows"
-import { activeEdit, activeShow, dictionary, overlays, popupData, showsCache, templates } from "../../stores"
+import { activeEdit, activeShow, dictionary, overlays, popupData, showsCache, templates } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SetTime } from "./SetTime"

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
 import type { LayoutRef, Show, ShowGroups, Slide } from "../../../../types/Show"
-import { activeProject, activeShow, allOutputs, groups, outputs, projects, showsCache } from "../../../stores"
+import { activeProject, activeShow, allOutputs, groups, outputs, projects, showsCache } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getFirstActiveOutput } from "../../../components/helpers/output"
 import { getCurrentProjectIndexes, getProjectItemLabel, getProjectItems } from "../../../components/helpers/projectProgress"

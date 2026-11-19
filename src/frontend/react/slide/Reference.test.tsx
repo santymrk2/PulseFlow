@@ -1,11 +1,11 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Show } from "../../../types/Show"
 import { Main } from "../../../types/IPC/Main"
-import { sendMain } from "../../IPC/main"
-import { activeDrawerTab, drawer, openedInteractionId, openScripture } from "../../stores"
+import { sendMain } from "../../shared/core/ipc/main"
+import { activeDrawerTab, drawer, openedInteractionId, openScripture } from "../../shared/core/stores"
 import { setDrawerTabData } from "../../components/helpers/historyHelpers"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Reference } from "./Reference"
@@ -13,7 +13,7 @@ import { Reference } from "./Reference"
 vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../components/helpers/historyHelpers", () => ({ setDrawerTabData: vi.fn() }))
 vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../converters/canvaPresentation", () => ({ syncCanvaShow: vi.fn() }))

@@ -1,5 +1,5 @@
 import { Loader } from "../main/Loader"
-import { activePopup, popupData } from "../../stores"
+import { activePopup, popupData } from "../../shared/core/stores"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { activeRecording, currentRecordingStream, drawerTabsData, special } from "../../../stores"
+import { activeRecording, currentRecordingStream, drawerTabsData, special } from "../../../shared/core/stores"
 import { mediaRecorderIsPaused, stopMediaRecorder, toggleMediaRecorder } from "../../../components/drawer/live/recorder"
 import { Icon } from "../../helpers/Icon"
 import { T } from "../../helpers/T"

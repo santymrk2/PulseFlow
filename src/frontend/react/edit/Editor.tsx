@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState, type ReactNode } from "react"
 import type { EditMode, TabsObj } from "../../../types/Tabs"
-import { activeEdit, activePage, activePopup, activeShow, cloudUsers, dictionary, drawer, drawerOpenedInEdit, editMode, focusMode, labelsDisabled, openToolsTab, refreshEditSlide, showsCache, slideNotesActive, special } from "../../stores"
+import { activeEdit, activePage, activePopup, activeShow, cloudUsers, dictionary, drawer, drawerOpenedInEdit, editMode, focusMode, labelsDisabled, openToolsTab, refreshEditSlide, showsCache, slideNotesActive, special } from "../../shared/core/stores"
 import { isActiveShowInUseByCloudUser } from "../../utils/cloudSync"
 import { translateText } from "../../utils/language"
 import { getAccess } from "../../utils/profile"

@@ -1,4 +1,4 @@
-import { drawerTabsData, effects, overlays } from "../../stores"
+import { drawerTabsData, effects, overlays } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getAccess } from "../../utils/profile"
 import { history } from "../../components/helpers/history"

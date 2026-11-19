@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { getFontStyleList, getSystemFontsList, mergeCustomFonts } from "../../../components/helpers/fonts"
-import { customFonts } from "../../../stores"
+import { customFonts } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { FontField } from "./FontField"

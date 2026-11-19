@@ -1,4 +1,4 @@
-import { dictionary, fullColors, groups, labelsDisabled, language, special, timeFormat } from "../../stores"
+import { dictionary, fullColors, groups, labelsDisabled, language, special, timeFormat } from "../../shared/core/stores"
 import { sortByName } from "../../components/helpers/array"
 import { getLanguageList, setLanguage, translateText } from "../../utils/language"
 import { isGroupHidden } from "../../utils/profile"

@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { audioStreams, playingAudio } from "../../../stores"
+import { audioStreams, playingAudio } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { commonMock } from "../../test/mockCommon"
 import { AudioStreams } from "./AudioStreams"

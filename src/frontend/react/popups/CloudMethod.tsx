@@ -1,4 +1,4 @@
-import { activePopup, cloudSyncData } from "../../stores"
+import { activePopup, cloudSyncData } from "../../shared/core/stores"
 import { Tip } from "../main/Tip"
 import { syncWithCloud } from "../../utils/cloudSync"
 import { translateText } from "../../utils/language"

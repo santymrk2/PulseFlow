@@ -1,6 +1,6 @@
 import { useState } from "react"
-import { get } from "../../../lib/store"
-import { activeInteractions, interactions, openedInteractionId, shows } from "../../../stores"
+import { get } from "../../../shared/core/lib/store"
+import { activeInteractions, interactions, openedInteractionId, shows } from "../../../shared/core/stores"
 import { Icon } from "../../helpers/Icon"
 import { T } from "../../helpers/T"
 import { useStore } from "../../hooks/useStore"

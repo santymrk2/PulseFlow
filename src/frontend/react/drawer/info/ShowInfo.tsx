@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { EXPORT } from "../../../../types/Channels"
 import type { Line, Show, TrimmedShow } from "../../../../types/Show"
-import { activePopup, activeShow, activeTagFilter, categories, globalTags, popupData, shows, showsCache, special, templates, usageLog } from "../../../stores"
+import { activePopup, activeShow, activeTagFilter, categories, globalTags, popupData, shows, showsCache, special, templates, usageLog } from "../../../shared/core/stores"
 import { hasNewerUpdate } from "../../../utils/common"
 import { send } from "../../../utils/request"
 import { keysToID, sortByName } from "../../../components/helpers/array"

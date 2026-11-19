@@ -1,6 +1,6 @@
-import { get } from "../../../../lib/store"
+import { get } from "../../../../shared/core/lib/store"
 import type { Option } from "../../../../../types/Main"
-import { activeProject, activeShow, projects, selected, shows, showsCache } from "../../../../stores"
+import { activeProject, activeShow, projects, selected, shows, showsCache } from "../../../../shared/core/stores"
 import { getSlideThumbnail } from "../../../helpers/media"
 import { getLayoutRef } from "../../../helpers/show"
 

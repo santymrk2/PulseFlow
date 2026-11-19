@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeEdit, activePage, activeShow, editHistory, editMode, effects, focusMode, labelsDisabled, overlays, refreshEditSlide, scenes, shows, templates } from "../../stores"
+import { activeEdit, activePage, activeShow, editHistory, editMode, effects, focusMode, labelsDisabled, overlays, refreshEditSlide, scenes, shows, templates } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Navigation } from "./Navigation"
 

@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import type { ReactNode } from "react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { effectItems } from "../../components/output/effects/effectItems"
-import { activeEdit, activePopup, effects } from "../../stores"
+import { activeEdit, activePopup, effects } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { EffectItems } from "./EffectItems"
 

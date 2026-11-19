@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeRename, audioFolders, audioPlaylists, dictionary, drawerTabsData, effectsLibrary, labelsDisabled, media } from "../../../stores"
+import { activeRename, audioFolders, audioPlaylists, dictionary, drawerTabsData, effectsLibrary, labelsDisabled, media } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { AudioTabs } from "./AudioTabs"
@@ -13,7 +13,7 @@ vi.mock("../../../utils/profile", () => ({ getAccess: () => ({}) }))
 vi.mock("../../../audio/audioPlaylist", () => ({ AudioPlaylist: { start: vi.fn() } }))
 vi.mock("../../../components/helpers/dropActions", () => ({ addDrawerFolder: vi.fn() }))
 vi.mock("../../../components/helpers/media", () => ({ countFolderMediaItems: () => ({ folder: 0, audio: 0, video: 0, image: 0 }) }))
-vi.mock("../../../IPC/main", () => ({
+vi.mock("../../../shared/core/ipc/main", () => ({
     sendMain: vi.fn(),
     receiveToMain: vi.fn(() => "listener-1"),
     destroyMain: vi.fn(),

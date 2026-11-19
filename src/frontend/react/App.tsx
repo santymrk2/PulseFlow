@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { activeProfile, closeAd, currentWindow, loaded, os, profiles, settingsOpen, theme, themes } from "../stores"
+import { activeProfile, closeAd, currentWindow, loaded, os, profiles, settingsOpen, theme, themes } from "../shared/core/stores"
 import { focusArea, logerror, mainClick } from "../utils/common"
 import { keydown } from "../utils/shortcuts"
 import { startup, startupAppEffects } from "../utils/startup"

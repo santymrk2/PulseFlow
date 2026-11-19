@@ -1,4 +1,4 @@
-import { activePopup } from "../../stores"
+import { activePopup } from "../../shared/core/stores"
 import { save } from "../../utils/save"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"

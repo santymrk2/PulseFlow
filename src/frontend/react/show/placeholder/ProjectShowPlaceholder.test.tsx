@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activePopup, activeProject, activeShow, popupData, projects } from "../../../stores"
+import { activePopup, activeProject, activeShow, popupData, projects } from "../../../shared/core/stores"
 import { history } from "../../../components/helpers/history"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { ProjectShowPlaceholder } from "./ProjectShowPlaceholder"

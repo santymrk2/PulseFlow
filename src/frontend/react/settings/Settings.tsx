@@ -1,7 +1,7 @@
 import { useEffect, useState, type CSSProperties, type UIEvent } from "react"
 import { resetAudioRouting } from "../../audio/routing/audioRoutingInit"
 import { AudioRouting } from "./audio/AudioRouting"
-import { activePopup, dictionary, settingsTab } from "../../stores"
+import { activePopup, dictionary, settingsTab } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"

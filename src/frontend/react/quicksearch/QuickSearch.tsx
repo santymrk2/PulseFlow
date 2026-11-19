@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { quickSearchActive, special, theme, themes } from "../../stores"
+import { quickSearchActive, special, theme, themes } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getNormalizedKey } from "../../utils/shortcuts"
 import { hexToRgb } from "../../components/helpers/color"

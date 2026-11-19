@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { drawerTabsData, templates } from "../../stores"
+import { drawerTabsData, templates } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ThemeNavigation } from "./ThemeNavigation"
 

@@ -1,4 +1,4 @@
-import { activeProfile, profiles, showChangeProfileMenu } from "../../stores"
+import { activeProfile, profiles, showChangeProfileMenu } from "../../shared/core/stores"
 import { useStore } from "../hooks/useStore"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"

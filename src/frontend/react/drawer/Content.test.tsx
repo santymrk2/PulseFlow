@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { drawerTabsData } from "../../stores"
+import { drawerTabsData } from "../../shared/core/stores"
 import { clearIslands } from "../test/islandMock"
 import { setStoresForTest, type StoreEntry, storeEntry } from "../test/storeTestKit"
 import { Content } from "./Content"

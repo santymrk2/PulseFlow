@@ -1,7 +1,7 @@
 import { useEffect, useRef, type ReactNode } from "react"
 import { Scripture } from "./bible/Scripture"
 import { Calendar } from "./calendar/Calendar"
-import { drawerTabsData } from "../../stores"
+import { drawerTabsData } from "../../shared/core/stores"
 import { useStore } from "../hooks/useStore"
 import { Actions } from "./pages/Actions"
 import { Interactions } from "./pages/Interactions"

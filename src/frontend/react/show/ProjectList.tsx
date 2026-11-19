@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import type { Tree } from "../../../types/Projects"
-import { activeProfile, activeProject, folders, labelsDisabled, openedFolders, projects } from "../../stores"
+import { activeProfile, activeProject, folders, labelsDisabled, openedFolders, projects } from "../../shared/core/stores"
 import { history } from "../../components/helpers/history"
 import { isProjectLinked, openProject } from "../../components/show/project"
 import { Loader } from "../main/Loader"

@@ -1,5 +1,5 @@
 import { uid } from "uid"
-import { activeShow, globalTags, shows } from "../../stores"
+import { activeShow, globalTags, shows } from "../../shared/core/stores"
 import { keysToID, sortByName, sortObject } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"
 import { _show } from "../../components/helpers/shows"

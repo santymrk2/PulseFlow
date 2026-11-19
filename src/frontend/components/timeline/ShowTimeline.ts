@@ -1,6 +1,6 @@
-import { get, type Unsubscriber } from "../../lib/store"
+import { get, type Unsubscriber } from "../../shared/core/lib/store"
 import type { LayoutRef } from "../../../types/Show"
-import { actions, activeShow, outputs, showsCache, timelineRecordingAction } from "../../stores"
+import { actions, activeShow, outputs, showsCache, timelineRecordingAction } from "../../shared/core/stores"
 import { actionData } from "../actions/actionData"
 import { getFirstActiveOutput, setOutput } from "../helpers/output"
 import { updateOut } from "../helpers/showActions"

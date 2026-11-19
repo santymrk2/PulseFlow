@@ -1,5 +1,5 @@
-import { get } from "../lib/store"
-import { obsData } from "../stores"
+import { get } from "../shared/core/lib/store"
+import { obsData } from "../shared/core/stores"
 import { promptCustom } from "./popup"
 
 class OBSWebSocket {

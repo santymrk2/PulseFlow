@@ -1,11 +1,11 @@
 // plays the audio part of any given video element, and syncs the visible video to this
 
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { Main } from "../../../../types/IPC/Main"
 import { AudioAnalyser } from "../../../audio/audioAnalyser"
 import { fadeinAllPlayingAudio, fadeoutAllPlayingAudio } from "../../../audio/audioFading"
-import { requestMain } from "../../../IPC/main"
-import { media, outputs, playerVideos, playingVideos, playingVideoState, special, styles, transitionData } from "../../../stores"
+import { requestMain } from "../../../shared/core/ipc/main"
+import { media, outputs, playerVideos, playingVideos, playingVideoState, special, styles, transitionData } from "../../../shared/core/stores"
 import { playFolder } from "../../../utils/shortcuts"
 import { customActionActivation } from "../../actions/actions"
 import { getVimeoData, getYouTubeData } from "../../drawer/player/playerHelper"

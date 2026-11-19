@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeShow, globalTags, selected } from "../../stores"
+import { activeShow, globalTags, selected } from "../../shared/core/stores"
 import { history } from "../../components/helpers/history"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Tag } from "./Tag"

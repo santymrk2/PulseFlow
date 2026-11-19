@@ -1,6 +1,6 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { Item, Show, ShowList, Shows, Slide, TrimmedShow, TrimmedShows } from "../../../types/Show"
-import { activeEdit, activeFocus, activePage, activeProject, activeShow, cachedShowsData, customMetadata, dictionary, focusMode, groupNumbers, groups, projects, refreshEditSlide, selected, shows, showsCache, sorted, sortedShowsList } from "../../stores"
+import { activeEdit, activeFocus, activePage, activeProject, activeShow, cachedShowsData, customMetadata, dictionary, focusMode, groupNumbers, groups, projects, refreshEditSlide, selected, shows, showsCache, sorted, sortedShowsList } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { clone, keysToID, removeValues, sortByName, sortByNameAndNumber } from "./array"
 import { GetLayout } from "./get"

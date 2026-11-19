@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
 import type { MediaStyle } from "../../../../types/Main"
 import { cameraManager, type CameraData } from "../../../media/cameraManager"
-import { media, os, outputs, special } from "../../../stores"
+import { media, os, outputs, special } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getCropState } from "../../../components/helpers/cropping"
 import { getMediaStyle } from "../../../components/helpers/media"

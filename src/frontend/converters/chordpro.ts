@@ -1,14 +1,14 @@
 // homepage: https://www.chordpro.org/chordpro/
 // docs: https://github.com/martijnversluis/ChordSheetJS
 
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { uid } from "uid"
 import type { Slide } from "../../types/Show"
-import { ShowObj } from "../classes/Show"
+import { ShowObj } from "../shared/core/classes/Show"
 import { clone } from "../components/helpers/array"
 import { setQuickAccessMetadata } from "../components/helpers/setShow"
 import { checkName, getGlobalGroup } from "../components/helpers/show"
-import { activePopup, alertMessage, dictionary, drawerTabsData, groups } from "../stores"
+import { activePopup, alertMessage, dictionary, drawerTabsData, groups } from "../shared/core/stores"
 import { setTempShows } from "./importHelpers"
 import { DEFAULT_ITEM_STYLE } from "../components/edit/scripts/itemHelpers"
 

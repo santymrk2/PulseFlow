@@ -1,12 +1,12 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { ChangeEvent, FormEvent, ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { AudioAnalyser } from "../../audio/audioAnalyser"
 import { clearAudio } from "../../audio/audioFading"
 import { AudioPlayer } from "../../audio/audioPlayer"
-import { focusMode, media, outLocked, playingAudio } from "../../stores"
+import { focusMode, media, outLocked, playingAudio } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { AudioPreview } from "./AudioPreview"
 

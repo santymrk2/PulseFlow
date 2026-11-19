@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeAudioEffects, dictionary, popupData } from "../../stores"
+import { activeAudioEffects, dictionary, popupData } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { AudioEffect } from "./AudioEffect"

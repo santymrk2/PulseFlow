@@ -1,5 +1,5 @@
 import type { CSSProperties } from "react"
-import { activePopup, version } from "../../stores"
+import { activePopup, version } from "../../shared/core/stores"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"

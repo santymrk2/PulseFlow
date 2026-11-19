@@ -1,7 +1,7 @@
 import { useState } from "react"
 import type { Output } from "../../../types/Output"
 import type { TabsObj } from "../../../types/Tabs"
-import { activeShow, outputs, showsCache, slideTimers } from "../../stores"
+import { activeShow, outputs, showsCache, slideTimers } from "../../shared/core/stores"
 import { getActiveOutputs } from "../../components/helpers/output"
 import { _show } from "../../components/helpers/shows"
 import { translateText } from "../../utils/language"

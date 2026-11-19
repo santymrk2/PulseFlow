@@ -1,6 +1,6 @@
 import { uid } from "uid"
 import { formatToFileName } from "../components/helpers/show"
-import { activePopup, alertMessage, drawerTabsData, scriptures, scripturesCache } from "../stores"
+import { activePopup, alertMessage, drawerTabsData, scriptures, scripturesCache } from "../shared/core/stores"
 import { translateText } from "../utils/language"
 import { convertBebliaBible } from "./bebliaBible"
 import { convertOpenSongBible } from "./opensong"

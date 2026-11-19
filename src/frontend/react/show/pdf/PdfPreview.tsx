@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties, type MouseEvent } from "react"
 import { getDocument, GlobalWorkerOptions, type PDFDocumentLoadingTask } from "pdfjs-dist"
-import { activePopup, activeProject, focusMode, labelsDisabled, outLocked, outputs, popupData, projects, slidesOptions, styles } from "../../../stores"
+import { activePopup, activeProject, focusMode, labelsDisabled, outLocked, outputs, popupData, projects, slidesOptions, styles } from "../../../shared/core/stores"
 import { triggerClickOnEnterSpace } from "../../../utils/clickable"
 import { newToast, wait } from "../../../utils/common"
 import { translateText } from "../../../utils/language"

@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeEdit, activePage, activeScripture, drawerTabsData, scriptureSettings, templates } from "../../../stores"
+import { activeEdit, activePage, activeScripture, drawerTabsData, scriptureSettings, templates } from "../../../shared/core/stores"
 import { clearIslands } from "../../test/islandMock"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { ScriptureInfo } from "./ScriptureInfo"
@@ -27,7 +27,7 @@ vi.mock("../../../components/drawer/bible/scripture", () => ({
 vi.mock("../../../components/settings/openSettings", () => ({ openSettings: (id: string) => mocks.openSettings(id) }))
 vi.mock("../../../utils/createData", () => ({ setDefaultScriptureTemplates: () => mocks.defaultTemplates() }))
 vi.mock("../../../utils/popup", () => ({ confirmCustom: (message: string) => mocks.confirm(message) }))
-vi.mock("../../../IPC/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn(), requestMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn(), requestMain: vi.fn() }))
 vi.mock("../../output/Media", () => ({ Media: ({ path }: { path?: string }) => <div data-testid="media" data-path={path} /> }))
 vi.mock("../../slide/Textbox", () => ({ Textbox: ({ ref }: { ref?: { id?: string } }) => <div data-testid="textbox" data-ref-id={ref?.id} /> }))
 vi.mock("../../slide/Zoomed", () => ({

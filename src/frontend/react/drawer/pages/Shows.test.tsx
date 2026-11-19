@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import type { ReactNode } from "react"
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { ShowList } from "../../../../types/Show"
-import { activeEdit, activeProfile, activeShow, activeTagFilter, activePopup, categories, dictionary, drawer, focusMode, focusedArea, labelsDisabled, profiles, shows, sorted, sortedShowsList } from "../../../stores"
+import { activeEdit, activeProfile, activeShow, activeTagFilter, activePopup, categories, dictionary, drawer, focusMode, focusedArea, labelsDisabled, profiles, shows, sorted, sortedShowsList } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { Shows } from "./Shows"
@@ -14,13 +14,13 @@ const { historyMock, updateShowsListMock } = vi.hoisted(() => ({ historyMock: vi
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../classes/Show", () => ({ ShowObj: class ShowObj {} }))
+vi.mock("../../../shared/core/classes/Show", () => ({ ShowObj: class ShowObj {} }))
 vi.mock("../../../components/helpers/history", () => ({ history: historyMock }))
 vi.mock("../../../components/helpers/show", () => ({ updateShowsList: updateShowsListMock }))
 vi.mock("../../show/ShowButton", () => ({
     ShowButton: (props: Record<string, unknown>) => <div data-isla="ShowButton" data-props={JSON.stringify(props)} />
 }))
-vi.mock("../../drawer/VirtualList", () => ({
+vi.mock("../VirtualList", () => ({
     VirtualList: ({ items, activeIndex, className, render }: { items: ShowList[]; activeIndex?: number | null; className?: string; render: (item: ShowList, index: number) => ReactNode }) => (
         <div data-class={className} data-active-index={activeIndex ?? ""}>
             {items.map((item, index) => (

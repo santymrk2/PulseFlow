@@ -7,11 +7,6 @@ import { defineConfig } from "vitest/config"
 export default defineConfig({
     root: fileURLToPath(new URL("../../", import.meta.url)),
     plugins: [react({ babel: { plugins: [["babel-plugin-react-compiler", {}]] } })],
-    resolve: {
-        alias: {
-            $lib: fileURLToPath(new URL("../../src/frontend/lib", import.meta.url))
-        }
-    },
     test: {
         include: ["src/**/*.test.ts", "src/**/*.test.tsx", "scripts/**/*.test.ts"],
         environment: "node"

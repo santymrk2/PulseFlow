@@ -1,12 +1,12 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
-import { sendMain } from "../../../IPC/main"
+import { sendMain } from "../../../shared/core/ipc/main"
 import { exportProject } from "../../../components/export/project"
 import { shareProjectLink } from "../../../components/export/projectLink"
-import { contentProviderData, dictionary, projects, providerConnections, special } from "../../../stores"
+import { contentProviderData, dictionary, projects, providerConnections, special } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { looseEntry, type StoreEntry, setStoresForTest } from "../../test/storeTestKit"
 import { PlaylistOptionsMenu } from "./PlaylistOptionsMenu"
@@ -14,7 +14,7 @@ import { PlaylistOptionsMenu } from "./PlaylistOptionsMenu"
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../../components/export/project", () => ({ exportProject: vi.fn() }))
 vi.mock("../../../components/export/projectLink", () => ({ shareProjectLink: vi.fn() }))
 

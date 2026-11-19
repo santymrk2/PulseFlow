@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react"
-import { localeDirection } from "../../stores"
+import { localeDirection } from "../../shared/core/stores"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"

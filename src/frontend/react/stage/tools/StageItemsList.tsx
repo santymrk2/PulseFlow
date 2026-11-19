@@ -1,7 +1,7 @@
 import type { MouseEvent as ReactMouseEvent } from "react"
 import type { Item } from "../../../../types/Show"
 import type { StageItem } from "../../../../types/Stage"
-import { activeStage, dictionary, selected, stageShows, timers } from "../../../stores"
+import { activeStage, dictionary, selected, stageShows, timers } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getSortedStageItems, rearrangeStageItems } from "../../../components/edit/scripts/itemHelpers"
 import { getItemText } from "../../../components/edit/scripts/textStyle"

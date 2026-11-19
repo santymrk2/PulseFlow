@@ -1,5 +1,5 @@
 import type { CSSProperties, ReactNode } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import styles from "./CombinedInput.module.css"
 
 // `style + ";--text-width: " + textWidth + "%"` → style con la variable CSS.

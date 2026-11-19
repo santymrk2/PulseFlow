@@ -1,6 +1,6 @@
 import { useEffect, useState, type DragEvent, type MouseEvent } from "react"
 import type { Output } from "../../../types/Output"
-import { activeRecording, activeStyle, audioChannelsData, dictionary, outputs, previewOutputId, rtmpStatus, selected, styles as outputStyles, templates, toggleOutputEnabled } from "../../stores"
+import { activeRecording, activeStyle, audioChannelsData, dictionary, outputs, previewOutputId, rtmpStatus, selected, styles as outputStyles, templates, toggleOutputEnabled } from "../../shared/core/stores"
 import { openSettings } from "../../components/settings/openSettings"
 import { translateText } from "../../utils/language"
 import { stopMediaRecorder } from "../../components/drawer/live/recorder"

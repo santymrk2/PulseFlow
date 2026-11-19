@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeTimers, dictionary, isFadingOut, isTimelinePlaying, labelsDisabled, media, outLocked, outputCache, outputs, overlayTimers, playingAudio, playingMetronome, styles as outputStyles, timelineRecordingAction } from "../../stores"
+import { activeTimers, dictionary, isFadingOut, isTimelinePlaying, labelsDisabled, media, outLocked, outputCache, outputs, overlayTimers, playingAudio, playingMetronome, styles as outputStyles, timelineRecordingAction } from "../../shared/core/stores"
 import { clearAll, clearBackground } from "../../components/output/clear"
 import { getActiveOutputs, getOutputContent, isOutCleared } from "../../components/helpers/output"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"

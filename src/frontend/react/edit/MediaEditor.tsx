@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import type { MediaStyle } from "../../../types/Main"
-import { activeEdit, activeShow, media, outputs, playingVideoState, previewOutputId, styles } from "../../stores"
+import { activeEdit, activeShow, media, outputs, playingVideoState, previewOutputId, styles } from "../../shared/core/stores"
 import { VideoPlayer } from "../../components/media/video/videoPlayer"
 import { getExtension, getMedia, getMediaStyle, getMediaType } from "../../components/helpers/media"
 import { getCurrentStyle, getFirstActiveOutput, getResolution } from "../../components/helpers/output"

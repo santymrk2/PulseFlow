@@ -1,4 +1,4 @@
-import { variables } from "../../../stores"
+import { variables } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { sortByName } from "../../../components/helpers/array"
 import { useStore } from "../../hooks/useStore"

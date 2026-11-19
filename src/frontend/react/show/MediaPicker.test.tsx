@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { destroyMain, receiveToMain, sendMain } from "../../IPC/main"
+import { destroyMain, receiveToMain, sendMain } from "../../shared/core/ipc/main"
 import { MediaPicker } from "./MediaPicker"
 
-vi.mock("../../IPC/main", () => ({ receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn(), sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 
 afterEach(() => {

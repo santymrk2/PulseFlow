@@ -1,4 +1,4 @@
-import { cn } from "../../lib/utils"
+import { cn } from "../../shared/core/lib/utils"
 import type { DrawerTabIds } from "../../../types/Tabs"
 import { DropArea } from "../system/DropArea"
 import { AudioTabs } from "./navigation/AudioTabs"

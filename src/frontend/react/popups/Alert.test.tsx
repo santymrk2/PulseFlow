@@ -1,16 +1,16 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
-import { sendMain } from "../../IPC/main"
-import { activePopup, alertMessage, dictionary } from "../../stores"
+import { sendMain } from "../../shared/core/ipc/main"
+import { activePopup, alertMessage, dictionary } from "../../shared/core/stores"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Alert } from "./Alert"
 
 vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 // Loader sigue siendo Svelte: acá sólo importa que se monte
 vi.mock("../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Loader") }))
 

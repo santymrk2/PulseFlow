@@ -65,7 +65,7 @@ vi.mock("../../components/output/preview/SpotifyManager", () => {
         togglePlay: mocks.togglePlay
     }
 })
-vi.mock("../../IPC/main", () => ({ sendMain: (...args: unknown[]) => mocks.sendMain(...args) }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: (...args: unknown[]) => mocks.sendMain(...args) }))
 vi.mock("../../../types/IPC/Main", () => ({ Main: { URL: "URL" } }))
 vi.mock("../helpers/Icon", () => ({ Icon: () => <span data-testid="icon" /> }))
 vi.mock("../helpers/T", () => ({ T: ({ id }: { id: string }) => <span>{id}</span> }))

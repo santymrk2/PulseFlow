@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { outputs, previewOutputId, styles } from "../../stores"
+import { outputs, previewOutputId, styles } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Zoomed } from "./Zoomed"
 

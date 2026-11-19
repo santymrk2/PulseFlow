@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activePlaylist, activePopup, activeRename, audioFolders, audioPlaylists, drawerTabsData, effectsLibrary, labelsDisabled, media, outLocked, selectAllAudio, selected } from "../../../stores"
+import { activePlaylist, activePopup, activeRename, audioFolders, audioPlaylists, drawerTabsData, effectsLibrary, labelsDisabled, media, outLocked, selectAllAudio, selected } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { Audio } from "./Audio"
@@ -17,7 +17,7 @@ interface ClickDetail {
 
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../IPC/main", () => ({ requestMain: vi.fn(() => Promise.resolve({})) }))
+vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(() => Promise.resolve({})) }))
 vi.mock("../../../audio/audioPlayer", () => ({
     AudioPlayer: { getDurationSync: vi.fn(() => 30), getKey: vi.fn((p: string) => p), getAudioType: vi.fn(() => "music"), start: vi.fn(), updateVolume: vi.fn(), getDuration: vi.fn(() => Promise.resolve(30)) }
 }))

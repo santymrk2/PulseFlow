@@ -1,4 +1,4 @@
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import { Icon } from "../../helpers/Icon"
 import { Button } from "../button/Button"
 import styles from "./ChoiceGrid.module.css"

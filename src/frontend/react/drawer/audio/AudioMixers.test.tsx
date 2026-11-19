@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
-import { audioRouting, outputs } from "../../../stores"
+import { audioRouting, outputs } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { AudioMixers } from "./AudioMixers"

@@ -1,6 +1,6 @@
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import type { Item, Line } from "../../../../types/Show"
-import { styles } from "../../../stores"
+import { styles } from "../../../shared/core/stores"
 import { clone } from "../../helpers/array"
 import { getFirstActiveOutput } from "../../helpers/output"
 import { getStyles } from "../../helpers/style"

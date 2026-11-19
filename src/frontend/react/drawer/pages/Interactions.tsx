@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { uid } from "uid"
 import type { Interaction, InteractionInput } from "../../../../types/Main"
-import { activeInteractions, activePopup, activeRename, interactions, labelsDisabled, openedInteractionId, popupData } from "../../../stores"
+import { activeInteractions, activePopup, activeRename, interactions, labelsDisabled, openedInteractionId, popupData } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { clone, keysToID, sortByName } from "../../../components/helpers/array"
 import { formatTimeInteraction, getInteraction, initConnection, startInteraction, stopInteraction } from "../../../components/drawer/pages/interactions"

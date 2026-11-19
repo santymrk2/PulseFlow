@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { act, cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { obsData } from "../../../stores"
+import { obsData } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { OBSInfo } from "./OBSInfo"
 

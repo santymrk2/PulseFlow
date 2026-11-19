@@ -3,7 +3,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { EditboxPlain } from "./EditboxPlain"
 
-vi.mock("../../../stores", () => ({
+vi.mock("../../../shared/core/stores", () => ({
     activeEdit: {
         subscribe: (r: any) => {
             r({ items: [0] })

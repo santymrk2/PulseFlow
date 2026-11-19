@@ -1,5 +1,5 @@
 import { useState, type KeyboardEvent } from "react"
-import { actions, activeProject, editingProjectTemplate, projects, projectTemplates, special } from "../../stores"
+import { actions, activeProject, editingProjectTemplate, projects, projectTemplates, special } from "../../shared/core/stores"
 import { getActionIcon, runAction } from "../../components/actions/actions"
 import { keysToID, sortByName } from "../../components/helpers/array"
 import { translateText } from "../../utils/language"

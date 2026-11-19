@@ -1,5 +1,5 @@
 import { useEffect, useRef, type CSSProperties, type MouseEvent, type ReactNode } from "react"
-import { activePopup, os } from "../../../stores"
+import { activePopup, os } from "../../../shared/core/stores"
 import { MENU_BAR_HEIGHT } from "../../../utils/common"
 import { translateText } from "../../../utils/language"
 import { Icon } from "../../helpers/Icon"

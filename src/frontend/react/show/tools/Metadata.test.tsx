@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeShow, customMetadata, dictionary, showsCache } from "../../../stores"
+import { activeShow, customMetadata, dictionary, showsCache } from "../../../shared/core/stores"
 import { history } from "../../../components/helpers/history"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { Metadata } from "./Metadata"

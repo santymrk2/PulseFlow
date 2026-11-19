@@ -13,9 +13,9 @@
 
 import { getDocument, GlobalWorkerOptions } from "pdfjs-dist"
 import { Main } from "../../types/IPC/Main"
-import { requestMain } from "../IPC/main"
+import { requestMain } from "../shared/core/ipc/main"
 import { encodeFilePath, getFileName, locateMediaFile, removeExtension } from "../components/helpers/media"
-import { pdfImports } from "../stores"
+import { pdfImports } from "../shared/core/stores"
 import { createImageShow } from "./imageShow"
 
 // Mismo worker que usa el resto de la app (viene en `public/assets`).

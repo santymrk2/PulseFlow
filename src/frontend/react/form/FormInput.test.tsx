@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { ReactNode } from "react"
 
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
-vi.mock("../../stores", () => ({
+vi.mock("../../shared/core/stores", () => ({
     special: { subscribe: () => () => {} },
     activePage: { subscribe: () => () => {} },
     activeEdit: { subscribe: () => () => {} },

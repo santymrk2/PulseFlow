@@ -1,11 +1,11 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { uid } from "uid"
 import type { Event } from "../../types/Calendar"
 import { getAvailableColor } from "../components/drawer/calendar/calendars"
 import { createRepeatedEvents } from "../components/drawer/calendar/event"
 import { clone } from "../components/helpers/array"
 import { addZero } from "../components/helpers/time"
-import { calendars, events } from "../stores"
+import { calendars, events } from "../shared/core/stores"
 
 // https://github.com/adrianlee44/ical2json/blob/main/src/ical2json.ts
 const NEW_LINE = /\r\n|\n|\r/

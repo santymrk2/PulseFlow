@@ -1,6 +1,6 @@
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import type { Show, Slide } from "../../../../types/Show"
-import { cachedShowsData, groups, refreshEditSlide, showsCache } from "../../../stores"
+import { cachedShowsData, groups, refreshEditSlide, showsCache } from "../../../shared/core/stores"
 import { clone, sortByName } from "../../helpers/array"
 import { history } from "../../helpers/history"
 import { getSlideText } from "../../edit/scripts/textStyle"

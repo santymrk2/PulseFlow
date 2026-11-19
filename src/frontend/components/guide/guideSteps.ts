@@ -1,5 +1,5 @@
-import { get } from "../../lib/store"
-import { activeDrawerTab, activePage, activePopup, activeProject, activeShow, drawer, focusMode, outputCache, projects, projectView, showRecentlyUsedProjects, shows, showsCache } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { activeDrawerTab, activePage, activePopup, activeProject, activeShow, drawer, focusMode, outputCache, projects, projectView, showRecentlyUsedProjects, shows, showsCache } from "../../shared/core/stores"
 import { DEFAULT_DRAWER_HEIGHT } from "../../utils/common"
 import { createDefaultShow } from "../../utils/createData"
 import { translateText } from "../../utils/language"

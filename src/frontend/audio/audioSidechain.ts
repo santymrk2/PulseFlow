@@ -1,6 +1,6 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import type { AudioRoutingConnection } from "../../types/AudioRouting"
-import { audioRouting, channelSidechainMultipliers } from "../stores"
+import { audioRouting, channelSidechainMultipliers } from "../shared/core/stores"
 import { dbToGain, MIN_DB } from "./dBUtils"
 import { AudioInputCapture } from "./routing/audioInputCapture"
 import { AudioRoutingManager } from "./routing/audioRoutingManager"

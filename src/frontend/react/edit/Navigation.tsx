@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from "react"
 import type { ClickEvent } from "../../../types/Main"
 import type { ShowRef } from "../../../types/Projects"
-import { activeEdit, activePage, activeShow, editHistory, editMode, effects, focusMode, labelsDisabled, overlays, refreshEditSlide, scenes, shows, templates } from "../../stores"
+import { activeEdit, activePage, activeShow, editHistory, editMode, effects, focusMode, labelsDisabled, overlays, refreshEditSlide, scenes, shows, templates } from "../../shared/core/stores"
 import { getAccess } from "../../utils/profile"
 import { clone } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"

@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { format } from "../../components/context/menuClick"
-import { activePopup, dictionary, popupData } from "../../stores"
+import { activePopup, dictionary, popupData } from "../../shared/core/stores"
 import { newToast } from "../../utils/common"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
 import { clearFields, fields, fire } from "../test/kitMocks"

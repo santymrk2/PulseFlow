@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
 import type { Effect } from "../../../../types/Effects"
-import { activeEdit, activePage, activeShow, effects, mediaOptions, outputs, previewOutputId, styles as stylesStore } from "../../../stores"
+import { activeEdit, activePage, activeShow, effects, mediaOptions, outputs, previewOutputId, styles as stylesStore } from "../../../shared/core/stores"
 import { addProjectItem } from "../../../converters/project"
 import { clone, keysToID, sortByName } from "../../../components/helpers/array"
 import { findMatchingOut, getResolution } from "../../../components/helpers/output"

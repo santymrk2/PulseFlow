@@ -1,6 +1,6 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { ShowList } from "../../types/Show"
-import { textCache } from "../stores"
+import { textCache } from "../shared/core/stores"
 import { formatSearch, tokenize } from "./search"
 
 // https://github.com/ChurchApps/FreeShow/pull/2790

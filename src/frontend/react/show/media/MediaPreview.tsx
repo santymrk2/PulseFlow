@@ -1,7 +1,7 @@
 import { useEffect, useState, type CSSProperties } from "react"
 import type { MediaStyle } from "../../../../types/Main"
 import type { ProjectShowRef } from "../../../../types/Projects"
-import { activeShow, media, outLocked, outputs, styles } from "../../../stores"
+import { activeShow, media, outLocked, outputs, styles } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getMedia, getMediaLayerType, getMediaStyle } from "../../../components/helpers/media"
 import { getActiveOutputs, getCurrentStyle, setOutput } from "../../../components/helpers/output"

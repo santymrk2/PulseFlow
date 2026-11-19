@@ -1,6 +1,6 @@
 import { uid } from "uid"
 import type { Slide, SlideData } from "../../types/Show"
-import { ShowObj } from "../classes/Show"
+import { ShowObj } from "../shared/core/classes/Show"
 import { getFileName, removeExtension } from "../components/helpers/media"
 import { checkName } from "../components/helpers/show"
 import { createCategory, setTempShows } from "./importHelpers"

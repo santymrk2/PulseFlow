@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useCallback, useEffect, useRef, useState } from "react"
-import { activePage, activePopup, contextActive, contextData, currentWindow, dictionary, localeDirection, os, serverData, slideDeleteHighlight, special, spellcheck, theme, themes } from "../../stores"
+import { activePage, activePopup, contextActive, contextData, currentWindow, dictionary, localeDirection, os, serverData, slideDeleteHighlight, special, spellcheck, theme, themes } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { closeContextMenu } from "../../utils/shortcuts"
 import { getEditItems } from "../../components/edit/scripts/itemHelpers"

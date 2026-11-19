@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { activePopup, activeProject, projects, projectView, quickSearchActive, showRecentlyUsedProjects, shows, special, version } from "../../stores"
+import { activePopup, activeProject, projects, projectView, quickSearchActive, showRecentlyUsedProjects, shows, special, version } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { history } from "../../components/helpers/history"
 import { useStore } from "../hooks/useStore"

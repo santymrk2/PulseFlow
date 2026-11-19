@@ -30,7 +30,7 @@ vi.mock("@vimeo/player", () => ({
         }
     }
 }))
-vi.mock("../../../stores", () => ({
+vi.mock("../../../shared/core/stores", () => ({
     focusMode: { subscribe: (fn: (value: unknown) => void) => (fn(false), () => {}) },
     theme: { subscribe: (fn: (value: unknown) => void) => (fn("default"), () => {}) },
     themes: { subscribe: (fn: (value: unknown) => void) => (fn({ default: { colors: { secondary: "white" } } }), () => {}) }

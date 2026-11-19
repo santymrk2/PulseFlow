@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { media } from "../../../stores"
+import { media } from "../../../shared/core/stores"
 import { cameraManager, type CameraData } from "../../../media/cameraManager"
 import { sortByName } from "../../../components/helpers/array"
 import { getMediaStyle } from "../../../components/helpers/media"

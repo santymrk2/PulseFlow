@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { activeShow, customMetadata, dictionary, shows, showsCache } from "../../../stores"
+import { activeShow, customMetadata, dictionary, shows, showsCache } from "../../../shared/core/stores"
 import { history } from "../../../components/helpers/history"
 import { getCustomMetadata, initializeMetadata } from "../../../components/helpers/show"
 import { translateText } from "../../../utils/language"

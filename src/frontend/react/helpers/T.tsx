@@ -1,4 +1,4 @@
-import { dictionary } from "../../stores"
+import { dictionary } from "../../shared/core/stores"
 import { useStore } from "../hooks/useStore"
 
 export interface TProps {

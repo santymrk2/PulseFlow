@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../../types/Show"
 import { Editbox } from "./Editbox"
 
-vi.mock("../../../stores", () => {
+vi.mock("../../../shared/core/stores", () => {
     const makeStore = (value: unknown) => ({
         subscribe: (run: (v: unknown) => void) => {
             run(value)

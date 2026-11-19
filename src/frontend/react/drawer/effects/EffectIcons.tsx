@@ -1,5 +1,5 @@
 import { useStore } from "../../hooks/useStore"
-import { dictionary, effects, outputs } from "../../../stores"
+import { dictionary, effects, outputs } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { Icon } from "../../helpers/Icon"
 import { Button } from "../../ui/button/Button"

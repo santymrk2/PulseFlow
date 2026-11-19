@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import type { EffectItem, EffectType } from "../../../types/Effects"
 import { effectItems } from "../../components/output/effects/effectItems"
-import { activeEdit, activePopup, effects } from "../../stores"
+import { activeEdit, activePopup, effects } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { Card } from "../drawer/Card"
 import { useStore } from "../hooks/useStore"

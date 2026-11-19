@@ -1,7 +1,7 @@
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react"
 import { Main } from "../../../types/IPC/Main"
 import { ToMain } from "../../../types/IPC/ToMain"
-import { destroyMain, receiveToMain, sendMain } from "../../IPC/main"
+import { destroyMain, receiveToMain, sendMain } from "../../shared/core/ipc/main"
 import { Button } from "../ui/button/Button"
 
 export interface MediaPickerProps {

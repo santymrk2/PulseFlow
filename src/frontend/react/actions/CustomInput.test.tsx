@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { ReactNode } from "react"
 
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
-vi.mock("../../IPC/main", () => ({ requestMain: vi.fn(async () => []) }))
+vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(async () => []) }))
 vi.mock("../../audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn(async () => []) } }))
 vi.mock("../../audio/routing/audioRoutingManager", () => ({ AudioRoutingManager: { sortChannels: (x: unknown) => x } }))
 vi.mock("../../media/cameraManager", () => ({ cameraManager: { getCamerasList: vi.fn(async () => []) } }))

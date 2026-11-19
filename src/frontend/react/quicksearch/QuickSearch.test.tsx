@@ -29,7 +29,7 @@ const mocks = vi.hoisted(() => {
     }
 })
 
-vi.mock("../../stores", () => ({
+vi.mock("../../shared/core/stores", () => ({
     quickSearchActive: mocks.quickSearchActive,
     special: mocks.special,
     theme: mocks.theme,

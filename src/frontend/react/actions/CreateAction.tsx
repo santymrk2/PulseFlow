@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { useEffect, useMemo, useState } from "react"
-import { actionRevealUsed, actions, activePopup, ai, audioPlaylists, audioStreams, categories, effects, emitters, looks, obsData, outputs, overlays, popupData, projects, scenes, shows, stageShows, styles, templates, timers, variables } from "../../stores"
+import { actionRevealUsed, actions, activePopup, ai, audioPlaylists, audioStreams, categories, effects, emitters, looks, obsData, outputs, overlays, popupData, projects, scenes, shows, stageShows, styles, templates, timers, variables } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { formatSearch } from "../../utils/search"
 import { Icon } from "../helpers/Icon"

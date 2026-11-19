@@ -1,6 +1,6 @@
 import type { AnimationAction } from "../../../types/Output"
 import type { AnimationData } from "../../../types/Show"
-import { activeAnimate } from "../../stores"
+import { activeAnimate } from "../../shared/core/stores"
 import { wait } from "../../utils/common"
 import { clone } from "../helpers/array"
 import { getExtension, getMediaType } from "../helpers/media"

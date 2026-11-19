@@ -1,5 +1,5 @@
 import { useEffect, useRef, type CSSProperties, type FormEvent, type KeyboardEvent } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import styles from "./Input.module.css"
 
 // Port de ui/input/input.svelte. Eventos DOM reenviados. `value` es de una vía, como en Svelte:

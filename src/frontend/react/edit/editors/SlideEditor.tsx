@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import type { MediaStyle } from "../../../../types/Main"
-import { activeEdit, activePopup, activeShow, alertMessage, editMode, focusMode, media, outputs, overlays, playerVideos, resized, showsCache, slideNotesActive, special, styles as stylesStore, previewOutputId } from "../../../stores"
+import { activeEdit, activePopup, activeShow, alertMessage, editMode, focusMode, media, outputs, overlays, playerVideos, resized, showsCache, slideNotesActive, special, styles as stylesStore, previewOutputId } from "../../../shared/core/stores"
 import { transposeText } from "../../../utils/chordTranspose"
 import { DEFAULT_WIDTH } from "../../../utils/common"
 import { translateText } from "../../../utils/language"

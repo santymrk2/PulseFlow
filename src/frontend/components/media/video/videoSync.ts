@@ -1,4 +1,4 @@
-import { playingVideoState } from "../../../stores"
+import { playingVideoState } from "../../../shared/core/stores"
 import type { PlayingVideoState } from "./videoPlayer"
 
 export function videoSync(path: string, outputId: string, callback: (state: PlayingVideoState) => void) {

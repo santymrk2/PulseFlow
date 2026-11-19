@@ -1,6 +1,6 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { Time } from "../../../types/Main"
-import { dictionary } from "../../stores"
+import { dictionary } from "../../shared/core/stores"
 
 export function secondsToTime(seconds: number): Time {
     // turn to positive (timers have custom negative placed before)

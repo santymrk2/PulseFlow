@@ -1,7 +1,7 @@
 import { useState } from "react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { addEffectToStack, EFFECTS_LIST, type EffectType } from "../../audio/effects/audioEffectsHelpers"
-import { activeAudioEffects, activePopup, popupData } from "../../stores"
+import { activeAudioEffects, activePopup, popupData } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { Button } from "../ui/button/Button"
 

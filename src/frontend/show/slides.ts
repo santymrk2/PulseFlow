@@ -1,4 +1,4 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { uid } from "uid"
 import type { Item, Layout, LayoutRef, Line, Show, Slide, SlideData } from "../../types/Show"
 import { getItemText, getLineText } from "../components/edit/scripts/textStyle"
@@ -8,7 +8,7 @@ import { addParents, cloneSlide, getCurrentLayout } from "../components/helpers/
 import { addToPos } from "../components/helpers/mover"
 import { getLayoutRef } from "../components/helpers/show"
 import { _show } from "../components/helpers/shows"
-import { activeEdit, activeShow, refreshEditSlide, slidesOptions } from "../stores"
+import { activeEdit, activeShow, refreshEditSlide, slidesOptions } from "../shared/core/stores"
 
 // only available with right click: "simple", "groups"
 const slidesViews = { grid: "list", list: "lyrics", lyrics: "grid", simple: "grid", groups: "grid" }

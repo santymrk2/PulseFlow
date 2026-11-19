@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { NDI } from "../../../../types/Channels"
-import { special } from "../../../stores"
+import { special } from "../../../shared/core/stores"
 import { destroy, receive, send } from "../../../utils/request"
 import { Loader } from "../../main/Loader"
 import { T } from "../../helpers/T"

@@ -2,7 +2,7 @@
 // Puro (sin stores): `sceneGraph.ts` arma el `StageContext` con los textos ya resueltos.
 import type { SceneItem, SceneTextItem } from "../../../types/SceneGraph"
 import type { StageItem, StageLayout } from "../../../types/Stage"
-import { imageExtensions, videoExtensions } from "../../values/extensions"
+import { imageExtensions, videoExtensions } from "../../shared/core/values/extensions"
 import { variableText, type VariableValue } from "./dynamicItemText"
 import { sceneMediaItem, sceneTextItem, sceneTextSpan } from "./sceneGraphPayload"
 import { parseBoxStyle, parseCssColor, parseItemBox, parseTextAlign, parseTextStyle, parseVerticalAlign } from "./sceneStyle"

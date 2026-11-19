@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { allOutputs, outputs, stageShows } from "../../stores"
+import { allOutputs, outputs, stageShows } from "../../shared/core/stores"
 import { getSortedStageItems, shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
 import { getAccess } from "../../utils/profile"
 import { getSlideTextItems } from "../../components/stage/stage"
@@ -27,7 +27,7 @@ vi.mock("../ui/hidden-input/HiddenInput", () => ({
         </span>
     )
 }))
-vi.mock("../stage/Stagebox", async () => ({ Stagebox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Stagebox") }))
+vi.mock("./Stagebox", async () => ({ Stagebox: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Stagebox") }))
 vi.mock("../helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../system/SelectElem", () => ({
     SelectElem: ({ children }: { children: ReactNode }) => <div data-select>{children}</div>

@@ -1,11 +1,11 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { sendMain } from "../../IPC/main"
+import { sendMain } from "../../shared/core/ipc/main"
 import { Main } from "../../../types/IPC/Main"
 import { clearAll } from "../../components/output/clear"
-import { activeEdit, activePage, activePopup, activeShow, deletedShows, dictionary, renamedShows, scripturesCache } from "../../stores"
+import { activeEdit, activePage, activePopup, activeShow, deletedShows, dictionary, renamedShows, scripturesCache } from "../../shared/core/stores"
 import { save } from "../../utils/save"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
@@ -14,7 +14,7 @@ import { ResetAll } from "./ResetAll"
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../components/output/clear", () => ({ clearAll: vi.fn() }))
 vi.mock("../../utils/save", () => ({ save: vi.fn() }))
 

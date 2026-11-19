@@ -1,8 +1,8 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import type { DropdownOptions } from "../../types/Input"
 import type { Dictionary } from "../../types/Settings"
 import { sortByName } from "../components/helpers/array"
-import { dictionary, language, localeDirection } from "../stores"
+import { dictionary, language, localeDirection } from "../shared/core/stores"
 import { isMainWindow } from "./common"
 import { languageFlags, languages, replace } from "./languageData"
 

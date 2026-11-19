@@ -1,11 +1,11 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { AudioAnalyser } from "../../audio/audioAnalyser"
-import { sendMain } from "../../IPC/main"
-import { activePopup, dictionary, maxConnections, os, outputs, popupData, ports, serverData, special } from "../../stores"
+import { sendMain } from "../../shared/core/ipc/main"
+import { activePopup, dictionary, maxConnections, os, outputs, popupData, ports, serverData, special } from "../../shared/core/stores"
 import { startRemoteController, stopRemoteController } from "../../utils/remoteController"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { clearIslands, islands } from "../test/islandMock"
@@ -14,7 +14,7 @@ import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Connect } from "./Connect"
 
 vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: { recorderActivate: vi.fn() } }))
 vi.mock("../../utils/remoteController", () => ({ startRemoteController: vi.fn(), stopRemoteController: vi.fn() }))
 vi.mock("qrcode-generator", () => ({

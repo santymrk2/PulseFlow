@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import type { StageItem } from "../../../types/Stage"
-import { activeStage, allOutputs, currentOutputSettings, outputs, stageShows, toggleOutputEnabled } from "../../stores"
+import { activeStage, allOutputs, currentOutputSettings, outputs, stageShows, toggleOutputEnabled } from "../../shared/core/stores"
 import { centerZoom } from "../../components/edit/scripts/zoom"
 import { getSortedStageItems, shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
 import { history } from "../../components/helpers/history"

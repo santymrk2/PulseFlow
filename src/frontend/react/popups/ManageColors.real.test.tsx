@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { defaultColors } from "../../components/helpers/color"
-import { special } from "../../stores"
+import { special } from "../../shared/core/stores"
 import styles from "../ui/color-field/ColorField.module.css"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"

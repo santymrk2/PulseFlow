@@ -1,5 +1,5 @@
-import { get } from "../../../lib/store"
-import { activeEdit, activePage, drawerTabsData, effects, overlays, templates } from "../../../stores"
+import { get } from "../../../shared/core/lib/store"
+import { activeEdit, activePage, drawerTabsData, effects, overlays, templates } from "../../../shared/core/stores"
 
 // Theme editor y Overlay editor: la página Edit con una plantilla / overlay / efecto abierto. Se abre el que ya se estaba
 // editando, y si no, el primero de la categoría elegida (o el primero que haya).

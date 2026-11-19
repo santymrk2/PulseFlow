@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { uid } from "uid"
 import { DEFAULT_EFFECT_CONFIGS, setEffectConfig, subscribeEffect, type EffectKey, type EffectType } from "../../../../audio/effects/audioEffectsHelpers"
-import { audioEffectPresets } from "../../../../stores"
+import { audioEffectPresets } from "../../../../shared/core/stores"
 import { translateText } from "../../../../utils/language"
 import { clone, keysToID } from "../../../../components/helpers/array"
 import { useStore } from "../../../hooks/useStore"

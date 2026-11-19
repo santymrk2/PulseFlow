@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { activeDays, calendarAddShow, drawerTabsData, events, language, nextActionEventPaused, nextActionEventStart, shows, special } from "../../../stores"
+import { activeDays, calendarAddShow, drawerTabsData, events, language, nextActionEventPaused, nextActionEventStart, shows, special } from "../../../shared/core/stores"
 import type { DropdownOptions } from "../../../../types/Input"
 import { getSelectedEvents } from "../../../components/drawer/calendar/calendar"
 import { CalendarsManagement } from "../calendar/CalendarsManagement"

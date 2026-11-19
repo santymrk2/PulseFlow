@@ -1,4 +1,4 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { Main } from "../../types/IPC/Main"
 import type { Projects } from "../../types/Projects"
 import type { Shows } from "../../types/Show"
@@ -8,8 +8,8 @@ import { stopMediaRecorder } from "../components/drawer/live/recorder"
 import { stopAllInteractions } from "../components/drawer/pages/interactions"
 import { clone, keysToID, removeDeleted } from "../components/helpers/array"
 import { isOutCleared, updateSyncedOutputs } from "../components/helpers/output"
-import { sendMain } from "../IPC/main"
-import { invokeCommand } from "../IPC/tauri"
+import { sendMain } from "../shared/core/ipc/main"
+import { invokeCommand } from "../shared/core/ipc/tauri"
 import {
     actionTags,
     actions,
@@ -116,7 +116,7 @@ import {
     variableTags,
     variables,
     videoMarkers
-} from "../stores"
+} from "../shared/core/stores"
 import type { SaveActions, SaveData, SaveList, SaveListSettings, SaveListSyncedSettings } from "./../../types/Save"
 import { isSyncing, socketDisconnect, syncWithCloud } from "./cloudSync"
 import { newToast, setStatus, startAutosave } from "./common"

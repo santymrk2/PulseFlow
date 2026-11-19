@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties, type MouseEvent as ReactMouseEvent } from "react"
 import type { StageLayout } from "../../../types/Stage"
-import { allOutputs, outputs, stageShows } from "../../stores"
+import { allOutputs, outputs, stageShows } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getAccess } from "../../utils/profile"
 import { getSortedStageItems, shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"

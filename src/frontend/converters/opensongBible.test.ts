@@ -1,6 +1,6 @@
 import "./testEnv"
 import { describe, expect, it, vi } from "vitest"
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { fixture } from "./converterTestKit"
 
 const { setActiveScripture } = vi.hoisted(() => ({ setActiveScripture: vi.fn() }))
@@ -8,7 +8,7 @@ vi.mock("./bible", () => ({ setActiveScripture }))
 vi.mock("./importHelpers", () => ({ setTempShows: vi.fn(), createCategory: vi.fn(() => "cat") }))
 
 const { convertOpenSongBible } = await import("./opensong")
-const { scripturesCache } = await import("../stores")
+const { scripturesCache } = await import("../shared/core/stores")
 
 describe("convertOpenSongBible", () => {
     it("convierte una Biblia de OpenSong real: libro, capítulo y versículos", () => {

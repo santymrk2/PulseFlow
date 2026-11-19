@@ -1,11 +1,11 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { CSSProperties, FormEvent } from "react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { toggleChannelRecording } from "../../../audio/audioChannelRecorder"
 import { AudioPlayer } from "../../../audio/audioPlayer"
-import { activeAudioEffects, audioChannelsData, recordingChannels } from "../../../stores"
+import { activeAudioEffects, audioChannelsData, recordingChannels } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { AudioChannelMixer } from "./AudioChannelMixer"

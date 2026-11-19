@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { guideActive, os } from "../../stores"
+import { guideActive, os } from "../../shared/core/stores"
 import { wait } from "../../utils/common"
 import { translateText } from "../../utils/language"
 import { useStore } from "../hooks/useStore"

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { computeDisplayLayout, type LayoutDisplay } from "../../components/screens/displayLayout"
-import { cn } from "../../lib/utils"
+import { cn } from "../../shared/core/lib/utils"
 import { Icon } from "../helpers/Icon"
 import styles from "./DisplayLayout.module.css"
 

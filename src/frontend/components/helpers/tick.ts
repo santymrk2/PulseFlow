@@ -1,5 +1,5 @@
-import { get } from "../../lib/store"
-import { outputs, slideTimers } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { outputs, slideTimers } from "../../shared/core/stores"
 import { playFolder } from "../../utils/shortcuts"
 import { clone } from "./array"
 import { startFolderTimer } from "./output"

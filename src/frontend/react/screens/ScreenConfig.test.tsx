@@ -1,21 +1,21 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { OUTPUT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
 import { deleteAction } from "../../components/helpers/clipboard"
 import { addOutput, enableStageOutput } from "../../components/helpers/output"
-import { requestMain } from "../../IPC/main"
-import { invokeCommand } from "../../IPC/tauri"
-import { currentOutputSettings, outputs, outputState } from "../../stores"
+import { requestMain } from "../../shared/core/ipc/main"
+import { invokeCommand } from "../../shared/core/ipc/tauri"
+import { currentOutputSettings, outputs, outputState } from "../../shared/core/stores"
 import { send } from "../../utils/request"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ScreenConfig } from "./ScreenConfig"
 
 vi.mock("../../utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 36 }))
-vi.mock("../../IPC/main", () => ({ requestMain: vi.fn() }))
-vi.mock("../../IPC/tauri", () => ({ invokeCommand: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/tauri", () => ({ invokeCommand: vi.fn() }))
 vi.mock("../../utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../components/helpers/clipboard", () => ({ deleteAction: vi.fn(), duplicate: vi.fn() }))
 vi.mock("../../components/helpers/output", () => ({ toggleOutputs: vi.fn(), addOutput: vi.fn(), enableStageOutput: vi.fn() }))

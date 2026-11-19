@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it } from "vitest"
-import { metronome, metronomeTimer } from "../../../stores"
+import { metronome, metronomeTimer } from "../../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { MetronomeVisualizer } from "./MetronomeVisualizer"
 

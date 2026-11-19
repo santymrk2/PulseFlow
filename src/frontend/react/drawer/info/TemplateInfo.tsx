@@ -1,4 +1,4 @@
-import { special } from "../../../stores"
+import { special } from "../../../shared/core/stores"
 import { useStore } from "../../hooks/useStore"
 import { Center } from "../../system/Center"
 import { Clock } from "../../system/Clock"

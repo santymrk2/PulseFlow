@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import styles from "./Capsule.module.css"
 
 // Port de ui/capsule/capsule.svelte: grupo de botones de la barra superior (32 px, borde de 1 px, radio de botón).

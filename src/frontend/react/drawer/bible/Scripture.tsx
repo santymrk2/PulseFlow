@@ -2,7 +2,7 @@ import { createElement, useEffect, useRef, useState, type MouseEvent as ReactMou
 import type { Verse } from "json-bible/lib/Bible"
 import type { VerseReference } from "json-bible/lib/reference"
 import { defaultBibleBookNames } from "../../../converters/bebliaBible"
-import { activeEdit, activeScripture, activeTriggerFunction, customScriptureBooks, notFound, openScripture, outLocked, outputs, resized, scriptureHistory, scriptureMode, scriptures, scriptureSettings, selected } from "../../../stores"
+import { activeEdit, activeScripture, activeTriggerFunction, customScriptureBooks, notFound, openScripture, outLocked, outputs, resized, scriptureHistory, scriptureMode, scriptures, scriptureSettings, selected } from "../../../shared/core/stores"
 import { wait } from "../../../utils/common"
 import { translateText } from "../../../utils/language"
 import { getNormalizedKey } from "../../../utils/shortcuts"

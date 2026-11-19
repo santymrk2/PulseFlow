@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { actionHistory, activeTimers, drawerTabsData } from "../../../stores"
+import { actionHistory, activeTimers, drawerTabsData } from "../../../shared/core/stores"
 import { useStore } from "../../hooks/useStore"
 import { InteractionsInfo } from "../pages/InteractionsInfo"
 import { TimerInfo } from "../timers/TimerInfo"

@@ -1,14 +1,14 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
-import { activeRecording, activeShow, cloudSyncData, drawerTabsData, special } from "../../../stores"
+import { activeRecording, activeShow, cloudSyncData, drawerTabsData, special } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { MediaInfo } from "./MediaInfo"
 
 const ipc = vi.hoisted(() => ({ request: vi.fn(), send: vi.fn() }))
-vi.mock("../../../IPC/main", () => ({ requestMain: ipc.request, sendMain: ipc.send }))
+vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: ipc.request, sendMain: ipc.send }))
 vi.mock("../../../components/helpers/media", async () => {
     const actual = await vi.importActual<typeof import("../../../components/helpers/media")>("../../../components/helpers/media")
     return { ...actual, getMediaInfo: vi.fn(() => Promise.resolve(null)) }

@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../components/helpers/history"
-import { activeProfile, activeRename, activeTriggerFunction, profiles, selectedProfile } from "../../stores"
+import { activeProfile, activeRename, activeTriggerFunction, profiles, selectedProfile } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ProfilesTabs } from "./ProfilesTabs"

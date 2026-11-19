@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { popupData } from "../../stores"
+import { popupData } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { setPopupSubmit } from "../../utils/popup"
 import { ChoiceGrid } from "../ui/choice-grid/ChoiceGrid"

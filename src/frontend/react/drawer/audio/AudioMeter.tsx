@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type MouseEvent } from "react"
 import { dbToLinear, MIN_DB } from "../../../audio/dBUtils"
 import { AudioInputCapture } from "../../../audio/routing/audioInputCapture"
-import { activeDrawerTab, activePage, audioChannelsData, audioRouting, drawer } from "../../../stores"
+import { activeDrawerTab, activePage, audioChannelsData, audioRouting, drawer } from "../../../shared/core/stores"
 import { DEFAULT_DRAWER_HEIGHT } from "../../../utils/common"
 import { useStore } from "../../hooks/useStore"
 import { AudioSidechain } from "./effects/AudioSidechain"

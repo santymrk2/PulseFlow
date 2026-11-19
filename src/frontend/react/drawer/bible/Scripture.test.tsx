@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeEdit, activeScripture, activeTriggerFunction, customScriptureBooks, dictionary, drawerTabsData, notFound, openScripture, outLocked, resized, scriptureHistory, scriptureMode, scriptures, scriptureSettings, selected } from "../../../stores"
+import { activeEdit, activeScripture, activeTriggerFunction, customScriptureBooks, dictionary, drawerTabsData, notFound, openScripture, outLocked, resized, scriptureHistory, scriptureMode, scriptures, scriptureSettings, selected } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { Scripture } from "./Scripture"
@@ -17,7 +17,7 @@ const { loadJsonBibleMock, playScriptureMock, swapPreviewBibleMock, outputFlag }
 vi.mock("../../../utils/common", () => ({ ...commonMock(), wait: () => Promise.resolve() }))
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../classes/Show", () => ({ ShowObj: class ShowObj {} }))
+vi.mock("../../../shared/core/classes/Show", () => ({ ShowObj: class ShowObj {} }))
 // El módulo real arrastra ciclos (actions → apiHelper → scripture) que rompen la carga en el
 // entorno de test; acá se reemplaza por las funciones puras que usa el componente.
 vi.mock("../../../components/drawer/bible/scripture", () => {

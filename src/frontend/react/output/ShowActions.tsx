@@ -1,6 +1,6 @@
 import type { Output } from "../../../types/Output"
 import type { LayoutRef } from "../../../types/Show"
-import { activeEdit, activePage, activePopup, activeShow, outLocked, popupData, showsCache } from "../../stores"
+import { activeEdit, activePage, activePopup, activeShow, outLocked, popupData, showsCache } from "../../shared/core/stores"
 import { refreshOut, setOutput } from "../../components/helpers/output"
 import { OutputHelper } from "../../components/helpers/OutputHelper"
 import { getLayoutRef } from "../../components/helpers/show"

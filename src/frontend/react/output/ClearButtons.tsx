@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { clearAudio } from "../../audio/audioFading"
-import { activeTimers, dictionary, isFadingOut, isTimelinePlaying, labelsDisabled, media, outLocked, outputCache, outputs, overlayTimers, playingAudio, playingMetronome, styles, timelineRecordingAction } from "../../stores"
+import { activeTimers, dictionary, isFadingOut, isTimelinePlaying, labelsDisabled, media, outLocked, outputCache, outputs, overlayTimers, playingAudio, playingMetronome, styles, timelineRecordingAction } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { presentationControllersKeysDisabled } from "../../utils/shortcuts"
 import { getMediaLayerType } from "../../components/helpers/media"

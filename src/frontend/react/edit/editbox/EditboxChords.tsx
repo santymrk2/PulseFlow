@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type DragEvent, type MouseEvent } from "react"
 import type { Chords, Item } from "../../../../types/Show"
-import { activeDropId, popupData, selected, storedChordsData } from "../../../stores"
+import { activeDropId, popupData, selected, storedChordsData } from "../../../shared/core/stores"
 import { waitForPopupData } from "../../../utils/popup"
 import { clone } from "../../../components/helpers/array"
 import { deleteAction } from "../../../components/helpers/clipboard"

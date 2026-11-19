@@ -1,6 +1,6 @@
 import type { MediaStyle } from "../../../types/Main"
 import { getMediaStyle } from "../../components/helpers/media"
-import { activeEdit, media } from "../../stores"
+import { activeEdit, media } from "../../shared/core/stores"
 import { Cam } from "../drawer/live/Cam"
 import { useStore } from "../hooks/useStore"
 

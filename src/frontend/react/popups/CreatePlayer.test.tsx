@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { getUrlTimestamp, getVimeoData, getYouTubeData } from "../../components/drawer/player/playerHelper"
 import { addVideoMarker } from "../../components/helpers/media"
-import { dictionary, playerVideos, popupData } from "../../stores"
+import { dictionary, playerVideos, popupData } from "../../shared/core/stores"
 import { newToast } from "../../utils/common"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"

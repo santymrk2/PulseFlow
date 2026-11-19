@@ -1,6 +1,6 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import type { Popups } from "../../types/Main"
-import { activePopup, popupData } from "../stores"
+import { activePopup, popupData } from "../shared/core/stores"
 
 export function waitForPopupData(popupId: Popups): Promise<any> {
     const promise = new Promise((resolve) => {

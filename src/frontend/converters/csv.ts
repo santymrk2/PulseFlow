@@ -1,12 +1,12 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { uid } from "uid"
 import type { Item, Slide } from "../../types/Show"
-import { ShowObj } from "../classes/Show"
+import { ShowObj } from "../shared/core/classes/Show"
 import { DEFAULT_ITEM_STYLE } from "../components/edit/scripts/itemHelpers"
 import { clone } from "../components/helpers/array"
 import { setQuickAccessMetadata } from "../components/helpers/setShow"
 import { checkName } from "../components/helpers/show"
-import { activePopup, alertMessage, drawerTabsData } from "../stores"
+import { activePopup, alertMessage, drawerTabsData } from "../shared/core/stores"
 import { setTempShows } from "./importHelpers"
 
 const DEFAULT_SLIDE = { group: "", color: "", globalGroup: "verse", settings: {}, notes: "", items: [] }

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
-import { activeStage, labelsDisabled, outputs, stageShows } from "../../stores"
+import { activeStage, labelsDisabled, outputs, stageShows } from "../../shared/core/stores"
 import { getAccess } from "../../utils/profile"
 import { keysToID, sortByName } from "../../components/helpers/array"
 import { history } from "../../components/helpers/history"

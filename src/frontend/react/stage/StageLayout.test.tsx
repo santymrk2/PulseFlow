@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { useEffect, type ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeStage, allOutputs, currentOutputSettings, outputs, stageShows, toggleOutputEnabled } from "../../stores"
+import { activeStage, allOutputs, currentOutputSettings, outputs, stageShows, toggleOutputEnabled } from "../../shared/core/stores"
 import { centerZoom } from "../../components/edit/scripts/zoom"
 import { getSortedStageItems } from "../../components/edit/scripts/itemHelpers"
 import { history } from "../../components/helpers/history"
@@ -13,7 +13,7 @@ import { getStyleResolution } from "../../components/slide/getStyleResolution"
 import { getAccess } from "../../utils/profile"
 import { StageLayout } from "./StageLayout"
 
-vi.mock("../../stores", () => {
+vi.mock("../../shared/core/stores", () => {
     function makeStore(initial: unknown) {
         let value = initial
         const listeners = new Set<(next: unknown) => void>()

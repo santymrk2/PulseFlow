@@ -23,7 +23,7 @@ const mocks = vi.hoisted(() => {
     }
 })
 
-vi.mock("../../stores", () => ({
+vi.mock("../../shared/core/stores", () => ({
     overlays: mocks.stores.overlays,
     effects: mocks.stores.effects,
     overlayCategories: mocks.stores.overlayCategories,

@@ -8,7 +8,7 @@ import { shouldStartDrag } from "../../components/system/dragThreshold"
 import { getRadius, moveBox, resizeBox, rotateBox } from "../../components/system/textbox"
 import { Snaplines, type Snapline, type SnaplinesMouse } from "./Snaplines"
 
-vi.mock("../../stores", () => ({
+vi.mock("../../shared/core/stores", () => ({
     outputs: {
         subscribe: (run: (value: Record<string, unknown>) => void) => {
             run({})

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState, type ClipboardEvent as ReactClipb
 import { uid } from "uid"
 import type { Chords, Item, Line } from "../../../../types/Show"
 import { splitCustomDynamicValues } from "../../../show/slides"
-import { activeEdit, activeShow, activeStage, overlays, redoHistory, refreshListBoxes, showsCache, special, stageShows, templates } from "../../../stores"
+import { activeEdit, activeShow, activeStage, overlays, redoHistory, refreshListBoxes, showsCache, special, stageShows, templates } from "../../../shared/core/stores"
 import { newToast } from "../../../utils/common"
 import { getNormalizedKey, isComposing, isFormattingKey } from "../../../utils/shortcuts"
 import { clone } from "../../../components/helpers/array"

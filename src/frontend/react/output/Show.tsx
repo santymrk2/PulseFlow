@@ -1,7 +1,7 @@
 import { useState, type KeyboardEvent as ReactKeyboardEvent } from "react"
 import type { Output } from "../../../types/Output"
 import type { LayoutRef } from "../../../types/Show"
-import { activeFocus, activeShow, focusMode, outLocked, outputs, playingVideoState, presentationData, showsCache } from "../../stores"
+import { activeFocus, activeShow, focusMode, outLocked, outputs, playingVideoState, presentationData, showsCache } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { getFileName, removeExtension } from "../../components/helpers/media"
 import { formatUrl, getOutputtedWebsites, sendWebsiteKey, toggleWebsiteMute, triggerWebsiteAction } from "../../components/helpers/websiteControls"

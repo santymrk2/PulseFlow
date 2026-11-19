@@ -2,13 +2,13 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { sendMain } from "../../IPC/main"
-import { activeEdit, activePage, activePopup, autoOpenedTimeline, openToolsTab, outputs, showNotesActive, shows, showsCache, special, styles as stylesStore, templates } from "../../stores"
+import { sendMain } from "../../shared/core/ipc/main"
+import { activeEdit, activePage, activePopup, autoOpenedTimeline, openToolsTab, outputs, showNotesActive, shows, showsCache, special, styles as stylesStore, templates } from "../../shared/core/stores"
 import { history } from "../../components/helpers/history"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ShowHeader } from "./ShowHeader"
 
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn(), Main: { URL: "url" } }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), Main: { URL: "url" } }))
 vi.mock("../../utils/language", () => ({ translateText: vi.fn((id: string, _a?: unknown, params?: string[]) => (params?.[0] ? `${id} ${params[0]}` : id)) }))
 vi.mock("../../components/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/helpers/output", () => ({ allOutputsHasStyleTemplate: vi.fn(() => false), getFirstActiveOutput: vi.fn(() => null) }))

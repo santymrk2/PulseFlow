@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { os } from "../../stores"
+import { os } from "../../shared/core/stores"
 import { useStore } from "../hooks/useStore"
 import { Tooltip, type TooltipPart } from "./Tooltip"
 

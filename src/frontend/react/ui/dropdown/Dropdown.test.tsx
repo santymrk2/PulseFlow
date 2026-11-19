@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import type { Option } from "../../../../types/Main"
-import { dictionary } from "../../../stores"
+import { dictionary } from "../../../shared/core/stores"
 import { fireWheel } from "../../test/fireWheel"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"

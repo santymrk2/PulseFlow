@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../components/helpers/history"
 import { applyLook, createLook } from "../../components/helpers/looks"
-import { activeLook, looks, outputs } from "../../stores"
+import { activeLook, looks, outputs } from "../../shared/core/stores"
 import { confirmCustom } from "../../utils/popup"
 import { save } from "../../utils/save"
 import type { Look, LookScreen } from "../../../types/Settings"

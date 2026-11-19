@@ -3,13 +3,13 @@ import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
 import { ToMain } from "../../../../types/IPC/ToMain"
-import { destroyMain, receiveToMain, sendMain } from "../../../IPC/main"
+import { destroyMain, receiveToMain, sendMain } from "../../../shared/core/ipc/main"
 import { commonMock } from "../../test/mockCommon"
 import { FolderField } from "./FolderField"
 import styles from "./FolderField.module.css"
 
 vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../IPC/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener-1"), destroyMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener-1"), destroyMain: vi.fn() }))
 
 afterEach(() => {
     cleanup()

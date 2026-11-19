@@ -1,7 +1,7 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { Main } from "../../../types/IPC/Main"
-import { sendMain } from "../../IPC/main"
-import { timecode } from "../../stores"
+import { sendMain } from "../../shared/core/ipc/main"
+import { timecode } from "../../shared/core/stores"
 import { getActiveTimelinePlayback } from "./TimelinePlayback"
 
 export function updateTimelineTime(timeMs: number) {

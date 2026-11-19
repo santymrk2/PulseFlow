@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react"
-import { outputs } from "../../stores"
+import { outputs } from "../../shared/core/stores"
 import { throttle } from "../../utils/common"
 import { stopResizing } from "../../utils/cursor"
 import { DEFAULT_BOUNDS, getActiveOutputs, getOutputResolution, getStageResolution } from "../../components/helpers/output"

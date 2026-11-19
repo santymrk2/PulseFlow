@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { addCanvaPresentationAsShow } from "../../../converters/canvaPresentation"
-import { activeCanvaPresentation } from "../../../stores"
+import { activeCanvaPresentation } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { CanvaInfo } from "./CanvaInfo"
 

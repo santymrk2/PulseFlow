@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject, type WheelEvent } from "react"
-import { cn } from "../../lib/utils"
+import { cn } from "../../shared/core/lib/utils"
 import styles from "./Autoscroll.module.css"
 
 // dispatch("wheel", { event }) → onWheel({ event }) con el evento nativo.

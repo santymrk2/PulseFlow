@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, waitFor } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 
 const mocks = vi.hoisted(() => {
     function writable<T>(value: T) {
@@ -40,7 +40,7 @@ const mocks = vi.hoisted(() => {
     }
 })
 
-vi.mock("../../stores", () => mocks)
+vi.mock("../../shared/core/stores", () => mocks)
 vi.mock("../../utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../utils/shortcuts", () => ({ closeContextMenu: () => mocks.contextActive.set(false) }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ getEditItems: () => [] }))

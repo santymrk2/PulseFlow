@@ -1,5 +1,5 @@
 import { getDateAndTimeString, timeAgo } from "../../components/helpers/time"
-import { actionHistory } from "../../stores"
+import { actionHistory } from "../../shared/core/stores"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"
 import { Button } from "../ui/button/Button"

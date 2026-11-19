@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeShow, autoOpenedTimeline, outLocked, projects, resized, showsCache, special, templateApplied } from "../../stores"
+import { activeShow, autoOpenedTimeline, outLocked, projects, resized, showsCache, special, templateApplied } from "../../shared/core/stores"
 import { clearIslands } from "../test/islandMock"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Show } from "./Show"

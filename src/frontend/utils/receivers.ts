@@ -1,4 +1,4 @@
-import { get } from "../lib/store"
+import { get } from "../shared/core/lib/store"
 import { CLOUD, CONTROLLER, NDI, OMT, OUTPUT, OUTPUT_STREAM, REMOTE, STAGE } from "../../types/Channels"
 import type { ClientMessage } from "../../types/Socket"
 import { AudioMicrophone } from "../audio/audioMicrophone"
@@ -7,7 +7,7 @@ import { runAction } from "../components/actions/actions"
 import { handleRecorderFrame } from "../components/drawer/live/recorder"
 import { getDynamicValue } from "../components/edit/scripts/itemHelpers"
 import { clone } from "../components/helpers/array"
-import { receiveMainGlobal } from "../IPC/main"
+import { receiveMainGlobal } from "../shared/core/ipc/main"
 import {
     actions,
     activePopup,
@@ -62,7 +62,7 @@ import {
     variables,
     visualizerData,
     websiteAction
-} from "../stores"
+} from "../shared/core/stores"
 import { newToast } from "./common"
 import { syncDrive } from "./drive"
 import { setLanguage } from "./language"

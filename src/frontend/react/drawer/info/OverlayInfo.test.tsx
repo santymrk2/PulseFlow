@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it } from "vitest"
-import { drawerTabsData } from "../../../stores"
+import { drawerTabsData } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { OverlayInfo } from "./OverlayInfo"
 import styles from "./OverlayInfo.module.css"

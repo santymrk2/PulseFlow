@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
-import { activeEdit, overlays, scenes, selected, styles } from "../../stores"
+import { activeEdit, overlays, scenes, selected, styles } from "../../shared/core/stores"
 import { SceneTools } from "./SceneTools"
 
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: {} }))

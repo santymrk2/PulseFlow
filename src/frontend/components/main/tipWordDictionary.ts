@@ -1,5 +1,5 @@
-import { get } from "../../lib/store"
-import { language } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { language } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 
 const dictionary = [

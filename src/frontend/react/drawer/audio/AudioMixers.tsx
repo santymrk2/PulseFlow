@@ -1,5 +1,5 @@
 import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
-import { audioRouting, outputs } from "../../../stores"
+import { audioRouting, outputs } from "../../../shared/core/stores"
 import { keysToID } from "../../../components/helpers/array"
 import { translateText } from "../../../utils/language"
 import { useStore } from "../../hooks/useStore"

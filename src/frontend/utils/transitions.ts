@@ -1,6 +1,6 @@
 import type { TransitionType } from "./../../types/Show"
 import type { API_transition } from "../components/actions/api"
-import { transitionData } from "../stores"
+import { transitionData } from "../shared/core/stores"
 
 export const transitionTypes: { id: TransitionType; name: string }[] = [
     { id: "none", name: "transition.none" },

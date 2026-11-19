@@ -1,11 +1,11 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { ToMain } from "../../../types/IPC/ToMain"
-import { receiveToMain, requestMain, sendMain } from "../../IPC/main"
-import { activePopup, alertMessage, autosave, cloudSyncData, dataPath, driveData, driveKeys, providerConnections, saved, special, statusIndicator } from "../../stores"
+import { receiveToMain, requestMain, sendMain } from "../../shared/core/ipc/main"
+import { activePopup, alertMessage, autosave, cloudSyncData, dataPath, driveData, driveKeys, providerConnections, saved, special, statusIndicator } from "../../shared/core/stores"
 import { changeTeam, setupCloudSync, socketDisconnect, updateCloudDeviceName } from "../../utils/cloudSync"
 import { startAutosave, wait } from "../../utils/common"
 import { validateKeys } from "../../utils/drive"
@@ -22,7 +22,7 @@ vi.mock("../../utils/common", () => ({
     startAutosave: vi.fn(),
     wait: vi.fn(async () => "ended")
 }))
-vi.mock("../../IPC/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn() }))
 vi.mock("../../utils/save", () => ({ save: vi.fn() }))
 vi.mock("../../utils/drive", () => ({ validateKeys: vi.fn() }))
 vi.mock("../../utils/cloudSync", () => ({ changeTeam: vi.fn(), setupCloudSync: vi.fn(), socketDisconnect: vi.fn(async () => {}), updateCloudDeviceName: vi.fn() }))

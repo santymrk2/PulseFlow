@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import Camera from "./Camera"
 
 vi.mock("../../media/cameraManager", () => ({ cameraManager: { attachCamera: vi.fn(async () => "ok"), detachCamera: vi.fn() } }))
-vi.mock("../../stores", () => ({ media: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) } }))
+vi.mock("../../shared/core/stores", () => ({ media: { subscribe: (fn: (value: unknown) => void) => (fn({}), () => {}) } }))
 vi.mock("../../components/helpers/cropping", () => ({ getCropState: () => ({ mediaCropGeometry: "", cropHasValues: false, mediaContainerStyle: "" }) }))
 vi.mock("../../components/helpers/media", () => ({ getMediaStyle: () => ({ style: "", filter: "", fit: "contain", flipped: false, flippedY: false, cropping: {} }) }))
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))

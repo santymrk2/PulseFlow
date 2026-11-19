@@ -1,4 +1,4 @@
-import { requestMain } from "../IPC/main"
+import { requestMain } from "../shared/core/ipc/main"
 import { Main } from "../../types/IPC/Main"
 
 const cachedData: { [key: string]: { time: number; data: string } } = {}

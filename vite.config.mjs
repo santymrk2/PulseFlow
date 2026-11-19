@@ -1,5 +1,4 @@
 import react from "@vitejs/plugin-react"
-import { fileURLToPath } from "node:url"
 import { defineConfig } from "vite"
 
 export default defineConfig({
@@ -20,10 +19,6 @@ export default defineConfig({
         emptyOutDir: true
     },
     resolve: {
-        dedupe: ["react", "react-dom"],
-        alias: {
-            // `$lib/*` → `src/frontend/lib/*`
-            $lib: fileURLToPath(new URL("./src/frontend/lib", import.meta.url))
-        }
+        dedupe: ["react", "react-dom"]
     }
 })

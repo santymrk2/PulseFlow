@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeProject, activeShow, allOutputs, groups, outputs, projects, showsCache } from "../../../stores"
+import { activeProject, activeShow, allOutputs, groups, outputs, projects, showsCache } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { SlideProgress } from "./SlideProgress"
 

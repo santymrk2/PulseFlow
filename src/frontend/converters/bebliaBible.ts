@@ -1,7 +1,7 @@
 import type { Bible, Book, Chapter, Verse } from "json-bible/lib/Bible"
 import { uid } from "uid"
 import { formatToFileName } from "../components/helpers/show"
-import { scriptures, scripturesCache } from "./../stores"
+import { scriptures, scripturesCache } from "../shared/core/stores"
 import { setActiveScripture } from "./bible"
 import { xml2json } from "./xml"
 import { confirmCustom, promptCustom } from "../utils/popup"

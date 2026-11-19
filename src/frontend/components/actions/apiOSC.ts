@@ -1,5 +1,5 @@
 import { Main } from "../../../types/IPC/Main"
-import { sendMain } from "../../IPC/main"
+import { sendMain } from "../../shared/core/ipc/main"
 import { getDynamicValue } from "../edit/scripts/itemHelpers"
 
 // Examples: /show/<id>/start | /slide/next | /clear/all

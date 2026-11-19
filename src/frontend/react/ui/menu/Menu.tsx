@@ -1,5 +1,5 @@
 import { useEffect, useRef, type ReactNode } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import styles from "./Menu.module.css"
 
 // Port de ui/menu/menu.svelte. Desplegable simple: el padre pone un contenedor `relative` alrededor del disparador y este

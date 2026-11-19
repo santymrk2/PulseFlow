@@ -2,7 +2,7 @@
 import { act, cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../types/Show"
-import { slidesOptions } from "../../stores"
+import { slidesOptions } from "../../shared/core/stores"
 import autosize from "../../components/edit/scripts/autosize"
 import { clearIslands, islands } from "../test/islandMock"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"

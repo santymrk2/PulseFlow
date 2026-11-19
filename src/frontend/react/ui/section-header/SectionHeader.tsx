@@ -1,5 +1,5 @@
 import type { ReactNode } from "react"
-import { cn } from "../../../lib/utils"
+import { cn } from "../../../shared/core/lib/utils"
 import styles from "./SectionHeader.module.css"
 
 // Port de ui/section-header/section-header.svelte: título de sección de 28 px. `actions` va a la derecha (ej. "+").

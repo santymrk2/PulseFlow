@@ -10,14 +10,14 @@
 // F4.6: los items de las overlays activas viajan en `overlays`, una capa propia que el engine
 // dibuja encima de la slide (fondo → medios de la slide → texto de la slide → medios → texto de
 // los overlays). El engine no respeta el orden de apilado de la slide (fondo → medios → texto).
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import dayjs from "dayjs"
 import localizedFormat from "dayjs/plugin/localizedFormat"
 import { OUTPUT } from "../../../types/Channels"
 import type { Output, PrefetchPayload } from "../../../types/Output"
 import type { SceneBackground, SceneGraph, SceneItem, SceneMediaItem, SceneTextItem, SceneTextSpan, SceneTransition } from "../../../types/SceneGraph"
 import type { Item, OutSlide, Slide } from "../../../types/Show"
-import { activeTimers, events, media, overlays, outputs, playingVideoState, showsCache, stageShows, styles, timeFormat as timeFormatStore, timers, transitionData, variables } from "../../stores"
+import { activeTimers, events, media, overlays, outputs, playingVideoState, showsCache, stageShows, styles, timeFormat as timeFormatStore, timers, transitionData, variables } from "../../shared/core/stores"
 import { send } from "../../utils/request"
 import { getItemText } from "../edit/scripts/textStyle"
 import { shouldItemBeShown } from "../edit/scripts/itemHelpers"

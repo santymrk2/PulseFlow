@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import type { ReactNode } from "react"
 
 vi.mock("../../hooks/useStore", () => ({ useStore: () => ({ v1: { name: "Var 1", type: "text" } }) }))
-vi.mock("../../../stores", () => ({ variables: {} }))
+vi.mock("../../../shared/core/stores", () => ({ variables: {} }))
 vi.mock("../../../utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../../components/helpers/array", () => ({ sortByName: (a: unknown[]) => a }))
 vi.mock("../../ui/select-field/SelectField", () => ({ SelectField: ({ label }: { label?: string }) => <div data-testid="select">{label}</div> }))

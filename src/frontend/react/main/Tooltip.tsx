@@ -1,4 +1,4 @@
-import { special } from "../../stores"
+import { special } from "../../shared/core/stores"
 import { cssTextToStyle } from "../helpers/cssTextToStyle"
 import { useStore } from "../hooks/useStore"
 import styles from "./Tooltip.module.css"

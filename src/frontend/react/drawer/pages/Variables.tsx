@@ -1,6 +1,6 @@
 import { Fragment, useEffect } from "react"
 import type { Variable } from "../../../../types/Main"
-import { activePopup, activeProfile, activeVariableTagFilter, disableDragging, labelsDisabled, randomNumberVariable, selected, variables } from "../../../stores"
+import { activePopup, activeProfile, activeVariableTagFilter, disableDragging, labelsDisabled, randomNumberVariable, selected, variables } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getAccess } from "../../../utils/profile"
 import { resetVariable } from "../../../components/actions/apiHelper"

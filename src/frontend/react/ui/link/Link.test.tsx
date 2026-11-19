@@ -2,10 +2,10 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
-import { sendMain } from "../../../IPC/main"
+import { sendMain } from "../../../shared/core/ipc/main"
 import { Link } from "./Link"
 
-vi.mock("../../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 
 afterEach(() => {
     cleanup()

@@ -1,16 +1,16 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
-import { sendMain } from "../../IPC/main"
-import { activePopup, dataPath, popupData, settingsTab } from "../../stores"
+import { sendMain } from "../../shared/core/ipc/main"
+import { activePopup, dataPath, popupData, settingsTab } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { SettingsTools } from "./SettingsTools"
 
 vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 
 let restaurar: () => void = () => {}
 afterEach(() => {

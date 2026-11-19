@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../../lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeAudioEffects, activePopup, dataPath, special } from "../../../stores"
+import { activeAudioEffects, activePopup, dataPath, special } from "../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { AudioInfo } from "./AudioInfo"
 
@@ -15,7 +15,7 @@ vi.mock("../../../audio/audioFading", () => ({
     }
 }))
 vi.mock("../../../components/media/video/videoPlayer", () => ({ VideoPlayer: { hasAudibleVideo: () => fading.audible } }))
-vi.mock("../../../IPC/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn() }))
 vi.mock("../audio/AudioMixers", () => ({ AudioMixers: () => <div data-isla="AudioMixers" /> }))
 vi.mock("../audio/effects/AudioEffects", () => ({ AudioEffects: () => <div data-testid="efectos" /> }))
 vi.mock("../../../utils/common", () => ({ isMainWindow: () => false, newToast: () => {}, wait: () => Promise.resolve() }))

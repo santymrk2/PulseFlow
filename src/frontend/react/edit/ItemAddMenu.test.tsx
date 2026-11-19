@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeEdit, activePage, activePopup, activeStage, dictionary, selected, stageShows } from "../../stores"
+import { activeEdit, activePage, activePopup, activeStage, dictionary, selected, stageShows } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ItemAddMenu } from "./ItemAddMenu"
 

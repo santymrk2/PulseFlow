@@ -1,7 +1,7 @@
 import { useEffect, useState, type CSSProperties } from "react"
 import type { Item } from "../../../../types/Show"
 import type { StageItem } from "../../../../types/Stage"
-import { activeDrawerTab, activeTimers, drawer, timers } from "../../../stores"
+import { activeDrawerTab, activeTimers, drawer, timers } from "../../../shared/core/stores"
 import { getCurrentTimerValue } from "../../../components/drawer/timers/timers"
 import { setDrawerTabData } from "../../../components/helpers/historyHelpers"
 import { getStyles } from "../../../components/helpers/style"

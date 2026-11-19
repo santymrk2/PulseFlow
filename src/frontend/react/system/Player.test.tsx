@@ -13,7 +13,7 @@ const stores = vi.hoisted(() => {
     }
 })
 
-vi.mock("../../stores", () => stores)
+vi.mock("../../shared/core/stores", () => stores)
 vi.mock("../hooks/useStore", () => ({
     useStore: (store: unknown) => {
         if (store === stores.activeProject) return null

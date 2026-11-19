@@ -1,9 +1,9 @@
 import { get } from "../lib/store"
 import { uid } from "uid"
-import type { Show } from "../../types/Show"
-import { _show } from "../components/helpers/shows"
+import type { Show } from "../../../../types/Show"
+import { _show } from "../../../components/helpers/shows"
 import { activeShow, templates } from "../stores"
-import { translateText } from "../utils/language"
+import { translateText } from "../../../utils/language"
 
 export class ShowObj implements Show {
     name: string

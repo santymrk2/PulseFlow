@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { loadCustomFont } from "../../components/helpers/fonts"
-import { customFonts, special } from "../../stores"
+import { customFonts, special } from "../../shared/core/stores"
 import { newToast } from "../../utils/common"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"

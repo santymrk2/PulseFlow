@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { setCalendarColor } from "../../components/drawer/calendar/calendars"
 import { history } from "../../components/helpers/history"
-import { activePopup, activeProject, activeShow, audioRouting, calendars, dictionary, editingProjectTemplate, effects, globalTags, outputs, overlays, profiles, projects, projectTemplates, selected, showsCache, templates } from "../../stores"
+import { activePopup, activeProject, activeShow, audioRouting, calendars, dictionary, editingProjectTemplate, effects, globalTags, outputs, overlays, profiles, projects, projectTemplates, selected, showsCache, templates } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { Color } from "./Color"

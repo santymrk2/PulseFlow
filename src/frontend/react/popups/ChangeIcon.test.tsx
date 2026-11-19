@@ -1,16 +1,16 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { addItem } from "../../components/edit/scripts/itemHelpers"
-import { activePopup, categories, customizedIcons, dictionary, popupData, selected } from "../../stores"
+import { activePopup, categories, customizedIcons, dictionary, popupData, selected } from "../../shared/core/stores"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ChangeIcon } from "./ChangeIcon"
 
 vi.mock("../../utils/common", () => commonMock())
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ addItem: vi.fn() }))
-vi.mock("../../values/customIcons", () => ({ customIcons: { empty: "<path/>", star: "<path/>", heart_icon: "<path/>" }, customIconsColors: { star: "#ffcc00" } }))
+vi.mock("../../shared/core/values/customIcons", () => ({ customIcons: { empty: "<path/>", star: "<path/>", heart_icon: "<path/>" }, customIconsColors: { star: "#ffcc00" } }))
 
 let restaurar: () => void = () => {}
 function montar(sel: { id: string | null; data: unknown[] }, icons = { disabled: [] as string[], svg: [] as { id: string; path: string }[] }) {

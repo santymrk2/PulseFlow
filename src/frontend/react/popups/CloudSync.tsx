@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { Tip } from "../main/Tip"
-import { popupData } from "../../stores"
+import { popupData } from "../../shared/core/stores"
 import { chooseTeam } from "../../utils/cloudSync"
 import { ChoiceGrid, type ChoiceOption } from "../ui/choice-grid/ChoiceGrid"
 

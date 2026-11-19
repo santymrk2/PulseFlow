@@ -1,18 +1,18 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen, within } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { OUTPUT } from "../../../types/Channels"
 import { deleteAction, duplicate } from "../../components/helpers/clipboard"
 import { toggleOutputs } from "../../components/helpers/output"
-import { invokeCommand } from "../../IPC/tauri"
-import { activePage, activePopup, activeStage, currentOutputSettings, outputs, popupData, stageShows } from "../../stores"
+import { invokeCommand } from "../../shared/core/ipc/tauri"
+import { activePage, activePopup, activeStage, currentOutputSettings, outputs, popupData, stageShows } from "../../shared/core/stores"
 import { send } from "../../utils/request"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ScreenDetail } from "./ScreenDetail"
 
 vi.mock("../../utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../IPC/tauri", () => ({ invokeCommand: vi.fn() }))
+vi.mock("../../shared/core/ipc/tauri", () => ({ invokeCommand: vi.fn() }))
 vi.mock("../../components/helpers/clipboard", () => ({ deleteAction: vi.fn(), duplicate: vi.fn() }))
 vi.mock("../../components/helpers/output", () => ({ toggleOutputs: vi.fn() }))
 vi.mock("../../utils/request", () => ({ send: vi.fn() }))

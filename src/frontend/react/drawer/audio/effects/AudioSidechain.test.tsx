@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { channelSidechainMultipliers } from "../../../../stores"
+import { channelSidechainMultipliers } from "../../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../../test/storeTestKit"
 import { AudioSidechain } from "./AudioSidechain"
 

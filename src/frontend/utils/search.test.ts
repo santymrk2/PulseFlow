@@ -8,7 +8,7 @@ const h = vi.hoisted(() => {
     }
     return { textCache: makeStore({}), categories: makeStore({}), drawerTabsData: makeStore({}) }
 })
-vi.mock("../stores", () => ({ textCache: h.textCache, categories: h.categories, drawerTabsData: h.drawerTabsData }))
+vi.mock("../shared/core/stores", () => ({ textCache: h.textCache, categories: h.categories, drawerTabsData: h.drawerTabsData }))
 vi.mock("../components/helpers/array", () => ({
     sortObjectNumbers: (arr: any[], key: string, desc = false) => [...arr].sort((a, b) => (desc ? (b[key] || 0) - (a[key] || 0) : (a[key] || 0) - (b[key] || 0)))
 }))

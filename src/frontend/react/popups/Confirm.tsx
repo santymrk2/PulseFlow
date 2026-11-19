@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
-import { get } from "../../lib/store"
-import { activePopup, popupData } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { activePopup, popupData } from "../../shared/core/stores"
 import { setPopupSubmit } from "../../utils/popup"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"

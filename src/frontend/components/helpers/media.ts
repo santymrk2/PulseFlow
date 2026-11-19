@@ -1,17 +1,17 @@
 // ----- FreeShow -----
 // This is for media/file functions
 
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { ContentProviderId } from "../../../types/ContentProvider"
 import { Main } from "../../../types/IPC/Main"
 import type { FileFolder, MediaStyle, Subtitle } from "../../../types/Main"
 import type { Cropping, Styles } from "../../../types/Settings"
 import type { ShowType } from "../../../types/Show"
-import { requestMain, sendMain } from "../../IPC/main"
-import { audioFolders, cachePath, loadedMediaThumbnails, media, mediaFolders, special, videoMarkers } from "../../stores"
+import { requestMain, sendMain } from "../../shared/core/ipc/main"
+import { audioFolders, cachePath, loadedMediaThumbnails, media, mediaFolders, special, videoMarkers } from "../../shared/core/stores"
 import { addToMediaFolder } from "../../utils/cloudSync"
 import { isMainWindow, newToast, wait, waitUntilValueIsDefined } from "../../utils/common"
-import { audioExtensions, imageExtensions, mediaExtensions, presentationExtensions, videoExtensions } from "../../values/extensions"
+import { audioExtensions, imageExtensions, mediaExtensions, presentationExtensions, videoExtensions } from "../../shared/core/values/extensions"
 import type { API_media, API_slide_thumbnail } from "../actions/api"
 import { clone } from "./array"
 import { toDisplayUrl } from "./assetUrl"

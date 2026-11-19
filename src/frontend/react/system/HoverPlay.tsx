@@ -1,9 +1,9 @@
 import { useEffect, useState, type CSSProperties, type HTMLAttributes } from "react"
-import { dictionary } from "../../stores"
+import { dictionary } from "../../shared/core/stores"
 import { translateText } from "../../utils/language"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
-import { cn } from "../../lib/utils"
+import { cn } from "../../shared/core/lib/utils"
 import styles from "./HoverPlay.module.css"
 
 // Port de components/helpers/HoverPlay.svelte. on:click/dblclick/mousedown/contextmenu y {...$$restProps} → props del div.

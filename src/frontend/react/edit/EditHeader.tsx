@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { activeEdit, activePopup, editMode, groups, showsCache, slideNotesActive, special, templates } from "../../stores"
+import { activeEdit, activePopup, editMode, groups, showsCache, slideNotesActive, special, templates } from "../../shared/core/stores"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { useStore } from "../hooks/useStore"

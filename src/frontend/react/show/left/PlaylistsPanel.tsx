@@ -1,5 +1,5 @@
 import { buildProjectTree } from "../../../components/show/projectTree"
-import { activeProfile, folders, leftSource, projects, sorted } from "../../../stores"
+import { activeProfile, folders, leftSource, projects, sorted } from "../../../shared/core/stores"
 import { translateText } from "../../../utils/language"
 import { getAccess } from "../../../utils/profile"
 import { useStore } from "../../hooks/useStore"

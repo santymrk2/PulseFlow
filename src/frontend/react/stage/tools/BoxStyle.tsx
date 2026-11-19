@@ -1,6 +1,6 @@
 import { useRef } from "react"
 import type { StageItem } from "../../../../types/Stage"
-import { activeStage, stageShows, theme, themes } from "../../../stores"
+import { activeStage, stageShows, theme, themes } from "../../../shared/core/stores"
 import { MAX_FONT_SIZE } from "../../../components/edit/scripts/autosize"
 import { addStyleString } from "../../../components/edit/scripts/textStyle"
 import type { EditBoxSection, EditInput } from "../../../components/edit/values/boxes"

@@ -1,6 +1,6 @@
 import { useEffect, useState, type ReactNode } from "react"
-import { get } from "../../lib/store"
-import { activePopup, popupData } from "../../stores"
+import { get } from "../../shared/core/lib/store"
+import { activePopup, popupData } from "../../shared/core/stores"
 import { BMDStreams } from "../drawer/live/BMDStreams"
 import { Cameras } from "../drawer/live/Cameras"
 import { NDIStreams } from "../drawer/live/NDIStreams"

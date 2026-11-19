@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { cleanup, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { getContrast } from "../../components/helpers/color"
-import { activeRename, dictionary, fullColors, templates } from "../../stores"
+import { activeRename, dictionary, fullColors, templates } from "../../shared/core/stores"
 import { getAccess } from "../../utils/profile"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"

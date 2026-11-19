@@ -3,13 +3,13 @@ import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../../types/IPC/Main"
 import { ToMain } from "../../../../types/IPC/ToMain"
-import { destroyMain, receiveToMain, sendMain } from "../../../IPC/main"
+import { destroyMain, receiveToMain, sendMain } from "../../../shared/core/ipc/main"
 import { commonMock } from "../../test/mockCommon"
 import { FileField } from "./FileField"
 import styles from "./FileField.module.css"
 
 vi.mock("../../../utils/common", () => commonMock())
-vi.mock("../../../IPC/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener-2"), destroyMain: vi.fn() }))
+vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener-2"), destroyMain: vi.fn() }))
 // getFileName vive en helpers/media, que arrastra el módulo de audio (necesita AudioWorkletNode, que no existe en happy-dom)
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))

@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../components/helpers/history"
-import { actionMoreOptionsUsed, actions, activePopup, activeShow, dictionary, overlays, popupData } from "../../stores"
+import { actionMoreOptionsUsed, actions, activePopup, activeShow, dictionary, overlays, popupData } from "../../shared/core/stores"
 import { clearIslands, islands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
@@ -12,7 +12,7 @@ import { Action } from "./Action"
 const layout = vi.hoisted(() => ({ ref: [] as { data?: { actions?: { slideActions?: { id: string; triggers?: string[] }[] } } }[] }))
 
 vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../IPC/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener-1"), destroyMain: vi.fn() }))
+vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener-1"), destroyMain: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))

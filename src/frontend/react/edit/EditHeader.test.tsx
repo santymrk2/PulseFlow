@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeEdit, activePopup, editMode, groups, showsCache, slideNotesActive, special, templates } from "../../stores"
+import { activeEdit, activePopup, editMode, groups, showsCache, slideNotesActive, special, templates } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { EditHeader } from "./EditHeader"
 

@@ -1,6 +1,6 @@
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import type { Project } from "../../../types/Projects"
-import { overlays, playerVideos, showsCache } from "../../stores"
+import { overlays, playerVideos, showsCache } from "../../shared/core/stores"
 import { newToast } from "../../utils/common"
 import { loadShows } from "../helpers/setShow"
 import { _show } from "../helpers/shows"

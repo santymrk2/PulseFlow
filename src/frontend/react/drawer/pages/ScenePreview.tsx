@@ -1,6 +1,6 @@
 import type { Scene } from "../../../../types/Show"
 import { getAllActiveOutputIds, getAllNormalOutputs } from "../../../components/helpers/output"
-import { outputs } from "../../../stores"
+import { outputs } from "../../../shared/core/stores"
 import { useStore } from "../../hooks/useStore"
 import { Output } from "../../output/Output"
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { obsData } from "../../../stores"
+import { obsData } from "../../../shared/core/stores"
 import { connectToOBS } from "../../../utils/obsTalk"
 import { T } from "../../helpers/T"
 import { Icon } from "../../helpers/Icon"

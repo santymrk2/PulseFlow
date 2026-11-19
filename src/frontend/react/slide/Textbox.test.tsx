@@ -1,10 +1,10 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, waitFor } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { OUTPUT } from "../../../types/Channels"
 import type { Item } from "../../../types/Show"
-import { groups, outputs, overlays, scriptureSettings, showsCache, styles, templates, variables } from "../../stores"
+import { groups, outputs, overlays, scriptureSettings, showsCache, styles, templates, variables } from "../../shared/core/stores"
 import autosize from "../../components/edit/scripts/autosize"
 import { clearAutoSizeCache } from "../../components/slide/autosizeCache"
 import { send } from "../../utils/request"

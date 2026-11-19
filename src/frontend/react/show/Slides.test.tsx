@@ -2,7 +2,7 @@
 import { cleanup, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeEdit, activeFocus, activePage, activePopup, cachedShowsData, categories, focusMode, groups, lessonsLoaded, notFound, outLocked, outputs, outputSlideCache, showsCache, slidesOptions, special, templates } from "../../stores"
+import { activeEdit, activeFocus, activePage, activePopup, cachedShowsData, categories, focusMode, groups, lessonsLoaded, notFound, outLocked, outputs, outputSlideCache, showsCache, slidesOptions, special, templates } from "../../shared/core/stores"
 import { hasNewerUpdate } from "../../utils/common"
 import { getActiveOutputs } from "../../components/helpers/output"
 import { getCachedShow } from "../../components/helpers/show"

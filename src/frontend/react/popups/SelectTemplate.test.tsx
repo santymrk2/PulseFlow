@@ -1,8 +1,8 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activePopup, activeStyle, dictionary, drawerTabsData, outputs, popupData, previewOutputId, scriptures, styles, templates } from "../../stores"
+import { activePopup, activeStyle, dictionary, drawerTabsData, outputs, popupData, previewOutputId, scriptures, styles, templates } from "../../shared/core/stores"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../utils/popup"
 import { clearIslands, islands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"

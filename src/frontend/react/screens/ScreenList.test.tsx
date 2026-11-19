@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen, within } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { toggleOutputs } from "../../components/helpers/output"
-import { outputs, outputState } from "../../stores"
+import { outputs, outputState } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { ScreenList } from "./ScreenList"
 

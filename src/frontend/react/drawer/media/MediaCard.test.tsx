@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { activeShow, media, mediaOptions, mediaTags, outLocked, outputs, styles as stylesStore } from "../../../stores"
+import { activeShow, media, mediaOptions, mediaTags, outLocked, outputs, styles as stylesStore } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { MediaCard } from "./MediaCard"

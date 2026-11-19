@@ -1,9 +1,9 @@
 // @vitest-environment happy-dom
 import { act, cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
-import { get } from "../../lib/store"
+import { get } from "../../shared/core/lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import type { TabsObj } from "../../../types/Tabs"
-import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../stores"
+import { activePage, dictionary, labelsDisabled, openToolsTab } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Tabs } from "./Tabs"
 

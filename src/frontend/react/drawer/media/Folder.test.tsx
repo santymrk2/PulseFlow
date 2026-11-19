@@ -1,7 +1,7 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { mediaOptions } from "../../../stores"
+import { mediaOptions } from "../../../shared/core/stores"
 import { commonMock } from "../../test/mockCommon"
 import { clearIslands } from "../../test/islandMock"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
