@@ -8,8 +8,8 @@ import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { PowerPointPreview } from "./PowerPointPreview"
 
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: (path: string) => path, removeExtension: (name: string) => name }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getOutputContent: vi.fn(() => ({})), getActiveOutputs: vi.fn(() => ["out1"]), setOutput: vi.fn() }))

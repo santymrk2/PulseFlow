@@ -7,7 +7,7 @@ import { getActiveOutputs, getOutputContent, isOutCleared } from "../../shared/u
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ClearButtons } from "./ClearButtons"
 
-vi.mock("../../audio/audioFading", () => ({ clearAudio: vi.fn() }))
+vi.mock("../../shared/audio/audioFading", () => ({ clearAudio: vi.fn() }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../app/wiring/shortcuts", () => ({ presentationControllersKeysDisabled: vi.fn(() => false) }))
 vi.mock("../../shared/utils/helpers/media", () => ({ getMediaLayerType: vi.fn(() => "background") }))

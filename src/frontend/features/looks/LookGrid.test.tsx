@@ -7,8 +7,8 @@ import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { LookGrid } from "./LookGrid"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 const salida = (id: string, name: string) => ({ id, name, enabled: true, active: true, color: "", bounds: { x: 0, y: 0, width: 1, height: 1 }, screen: null })
 const pantallas = [salida("a", "Sala"), salida("b", "")]

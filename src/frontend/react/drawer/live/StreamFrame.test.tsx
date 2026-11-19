@@ -22,9 +22,9 @@ vi.mock("../../../components/drawer/live/streamCanvas", () => ({
     }
 }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(() => "out-1") }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
 vi.mock("../Card", () => ({
     Card: ({ label, onClick, children }: { label: string; onClick?: (e: MouseEvent<HTMLButtonElement>) => void; children?: ReactNode }) => (

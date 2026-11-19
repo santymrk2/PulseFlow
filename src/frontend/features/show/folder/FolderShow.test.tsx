@@ -2,8 +2,8 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { clearAudio } from "../../../audio/audioFading"
-import { AudioPlayer } from "../../../audio/audioPlayer"
+import { clearAudio } from "../../../shared/audio/audioFading"
+import { AudioPlayer } from "../../../shared/audio/audioPlayer"
 import { setOutput } from "../../../shared/utils/helpers/output"
 import { requestMain } from "../../../shared/core/ipc/main"
 import { activePopup, activeProject, focusMode, media, outLocked, outputs, playingAudio, popupData, projects, styles } from "../../../shared/core/stores"
@@ -11,8 +11,8 @@ import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { FolderShow } from "./FolderShow"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(async () => ({})), sendMain: vi.fn() }))
-vi.mock("../../../audio/audioFading", () => ({ clearAudio: vi.fn() }))
-vi.mock("../../../audio/audioPlayer", () => ({
+vi.mock("../../../shared/audio/audioFading", () => ({ clearAudio: vi.fn() }))
+vi.mock("../../../shared/audio/audioPlayer", () => ({
     AudioPlayer: { start: vi.fn(), getPlaying: vi.fn(() => false) }
 }))
 vi.mock("../../../shared/utils/helpers/array", () => ({

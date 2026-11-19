@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
-import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
-import { GAIN_FILTER_TYPES, type FilterConfig, type FilterType, updateFilterConfig } from "../../../../audio/effects/audioFilter"
+import { subscribeEffect } from "../../../../shared/audio/effects/audioEffectsHelpers"
+import { GAIN_FILTER_TYPES, type FilterConfig, type FilterType, updateFilterConfig } from "../../../../shared/audio/effects/audioFilter"
 import { InputRow } from "../../../../shared/ui/kit/input-row/InputRow"
 import { NumberField } from "../../../../shared/ui/kit/number-field/NumberField"
 import { SelectField } from "../../../../shared/ui/kit/select-field/SelectField"

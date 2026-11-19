@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { AudioPlayer } from "../../../../audio/audioPlayer"
+import { AudioPlayer } from "../../../../shared/audio/audioPlayer"
 import { getFileName } from "../../../../shared/utils/helpers/media"
 import { activeShow, outLocked, playingAudio } from "../../../../shared/core/stores"
 import { useStore } from "../../../../shared/ui/hooks/useStore"

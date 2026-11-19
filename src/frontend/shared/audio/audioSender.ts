@@ -1,9 +1,9 @@
-import { get } from "../shared/core/lib/store"
-import { AUDIO } from "../../types/Channels"
-import { keysToID } from "../shared/utils/helpers/array"
-import { getFirstActiveOutput } from "../shared/utils/helpers/output"
-import { audioRouting, currentWindow, disabledServers, outputs, serverData, special } from "../shared/core/stores"
-import { send } from "../shared/utils/request"
+import { get } from "../core/lib/store"
+import { AUDIO } from "../../../types/Channels"
+import { keysToID } from "../utils/helpers/array"
+import { getFirstActiveOutput } from "../utils/helpers/output"
+import { audioRouting, currentWindow, disabledServers, outputs, serverData, special } from "../core/stores"
+import { send } from "../utils/request"
 
 export class AudioSender {
     private static processors = new Map<string, { proc: AudioNode; destNode: AudioNode }>()

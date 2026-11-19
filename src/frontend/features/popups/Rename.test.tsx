@@ -14,8 +14,8 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/stor
 import { Rename } from "./Rename"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))

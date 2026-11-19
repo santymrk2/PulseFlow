@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react"
 import type { Media, Slide, SlideData } from "../../../types/Show"
-import { AudioPlayer } from "../../audio/audioPlayer"
+import { AudioPlayer } from "../../shared/audio/audioPlayer"
 import { activeShow, activeTimers, outputs, shows } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
 import { translateText } from "../../shared/utils/language"

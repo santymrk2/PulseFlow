@@ -21,9 +21,9 @@ vi.mock("./CalendarInfo", () => ({ CalendarInfo: child("calendar") }))
 vi.mock("./FunctionsInfo", () => ({ FunctionsInfo: () => <div data-testid="functions" /> }))
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {

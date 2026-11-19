@@ -10,8 +10,8 @@ import { CreateCalendarShow } from "./CreateCalendarShow"
 const { createSlidesMock, historyMock } = vi.hoisted(() => ({ createSlidesMock: vi.fn(), historyMock: vi.fn() }))
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/drawer/calendar/calendar", () => ({ createSlides: createSlidesMock }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
 

@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, render } from "@testing-library/react"
 import { get } from "../../../shared/core/lib/store"
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { AudioMicrophone } from "../../../audio/audioMicrophone"
+import { AudioMicrophone } from "../../../shared/audio/audioMicrophone"
 import { activePopup, dictionary, playingAudio, popupData, special } from "../../../shared/core/stores"
 import { commonMock } from "../../../shared/test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
@@ -10,9 +10,9 @@ import { AudioRoutingNode, type AudioRoutingNodeProps } from "./AudioRoutingNode
 import styles from "./AudioRoutingNode.module.css"
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { start: vi.fn() } }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioMicrophone", () => ({ AudioMicrophone: { start: vi.fn() } }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../react/drawer/audio/AudioMeter", () => ({ AudioMeter: ({ channelId }: { channelId: string }) => <div data-meter={channelId} /> }))
 
 let restaurar: () => void = () => {}

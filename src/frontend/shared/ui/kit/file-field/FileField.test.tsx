@@ -11,8 +11,8 @@ import styles from "./FileField.module.css"
 vi.mock("../../../utils/common", () => commonMock())
 vi.mock("../../../core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener-2"), destroyMain: vi.fn() }))
 // getFileName vive en helpers/media, que arrastra el módulo de audio (necesita AudioWorkletNode, que no existe en happy-dom)
-vi.mock("../../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../audio/audioProcessor", () => ({}))
+vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 afterEach(() => {
     cleanup()

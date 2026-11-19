@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ChangeEvent, type CSSProperties, type DragEvent as ReactDragEvent, type KeyboardEvent as ReactKeyboardEvent } from "react"
 import { uid } from "uid"
 import type { TimelineAction } from "../../../types/Show"
-import { createWaveform } from "../../audio/audioWaveform"
+import { createWaveform } from "../../shared/audio/audioWaveform"
 import { activeEdit, activePopup, activeShow, activeTriggerFunction, dictionary, resized, selected, showsCache, special, timecode, timeline as timelineStore } from "../../shared/core/stores"
 import { DEFAULT_WIDTH } from "../../shared/utils/common"
 import { translateText } from "../../shared/utils/language"

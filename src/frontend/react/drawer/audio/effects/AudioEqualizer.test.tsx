@@ -1,22 +1,22 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { AudioEqualizer as AudioEqualizerEngine, updateEqualizerBands } from "../../../../audio/effects/audioEqualizer"
-import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
+import { AudioEqualizer as AudioEqualizerEngine, updateEqualizerBands } from "../../../../shared/audio/effects/audioEqualizer"
+import { subscribeEffect } from "../../../../shared/audio/effects/audioEffectsHelpers"
 import { AudioEqualizer } from "./AudioEqualizer"
 
-vi.mock("../../../../audio/effects/audioEffectsHelpers", async (importOriginal) => ({
-    ...(await importOriginal<typeof import("../../../../audio/effects/audioEffectsHelpers")>()),
+vi.mock("../../../../shared/audio/effects/audioEffectsHelpers", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("../../../../shared/audio/effects/audioEffectsHelpers")>()),
     subscribeEffect: vi.fn(() => () => {})
 }))
-vi.mock("../../../../audio/effects/audioEqualizer", async (importOriginal) => ({
-    ...(await importOriginal<typeof import("../../../../audio/effects/audioEqualizer")>()),
+vi.mock("../../../../shared/audio/effects/audioEqualizer", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("../../../../shared/audio/effects/audioEqualizer")>()),
     updateEqualizerBands: vi.fn()
 }))
 vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../../audio/spectrumAnalyzer", () => ({
+vi.mock("../../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../../shared/audio/spectrumAnalyzer", () => ({
     SpectrumAnalyzer: class {
         start() {}
         setChannel() {}

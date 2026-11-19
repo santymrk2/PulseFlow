@@ -7,8 +7,8 @@ import { looseEntry, storeEntry, setStoresForTest } from "../../shared/test/stor
 import { SkeletonSlide } from "./SkeletonSlide"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 const slide = { group: "Culto" } as Slide
 

@@ -12,8 +12,8 @@ vi.mock("../../../shared/utils/helpers/dynamicItemText", () => ({ visibleEvents:
 vi.mock("../../../shared/utils/helpers/array", () => ({ keysToID: vi.fn(() => []), clone: (v: unknown) => (v === undefined ? v : structuredClone(v)) }))
 vi.mock("../../../shared/utils/helpers/historyHelpers", () => ({ setDrawerTabData: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 let restore: () => void = () => {}
 beforeEach(() => {

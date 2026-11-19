@@ -4,10 +4,10 @@ import { get } from "../../../shared/core/lib/store"
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, audioChannelsData, audioEffects, audioPlaylists, audioRouting, dictionary, outputs, popupData, selected, special } from "../../../shared/core/stores"
 import type { AudioRoutingConfig } from "../../../../types/AudioRouting"
-import { AudioMicrophone } from "../../../audio/audioMicrophone"
-import { AudioPlayer } from "../../../audio/audioPlayer"
-import { syncOutputAudioChannels } from "../../../audio/routing/audioRoutingInit"
-import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
+import { AudioMicrophone } from "../../../shared/audio/audioMicrophone"
+import { AudioPlayer } from "../../../shared/audio/audioPlayer"
+import { syncOutputAudioChannels } from "../../../shared/audio/routing/audioRoutingInit"
+import { AudioRoutingManager } from "../../../shared/audio/routing/audioRoutingManager"
 import { getAllOutputs } from "../../../shared/utils/helpers/output"
 import { newToast } from "../../../shared/utils/common"
 import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
@@ -16,13 +16,13 @@ import styles from "./AudioRouting.module.css"
 import nodeStyles from "./AudioRoutingNode.module.css"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
-vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { getInputs: vi.fn(), start: vi.fn() } }))
-vi.mock("../../../audio/audioPlayer", () => ({ AudioPlayer: { getOutputs: vi.fn() } }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioMicrophone", () => ({ AudioMicrophone: { getInputs: vi.fn(), start: vi.fn() } }))
+vi.mock("../../../shared/audio/audioPlayer", () => ({ AudioPlayer: { getOutputs: vi.fn() } }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 // deduplicateConnections real sólo quita repetidos exactos; acá basta la identidad (las pruebas no repiten conexiones)
-vi.mock("../../../audio/routing/audioRoutingInit", () => ({ syncOutputAudioChannels: vi.fn(), deduplicateConnections: (c: unknown) => c }))
-vi.mock("../../../audio/routing/audioRoutingManager", () => ({ AudioRoutingManager: { sortChannels: vi.fn((a: unknown) => a) } }))
+vi.mock("../../../shared/audio/routing/audioRoutingInit", () => ({ syncOutputAudioChannels: vi.fn(), deduplicateConnections: (c: unknown) => c }))
+vi.mock("../../../shared/audio/routing/audioRoutingManager", () => ({ AudioRoutingManager: { sortChannels: vi.fn((a: unknown) => a) } }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getAllOutputs: vi.fn() }))
 vi.mock("../../../react/drawer/audio/AudioMeter", () => ({ AudioMeter: () => <div data-meter /> }))
 

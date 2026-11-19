@@ -5,9 +5,9 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { activeEdit, outputs, previewOutputId, scenes, styles } from "../../shared/core/stores"
 import { SceneEditor } from "./SceneEditor"
 
-vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: {} }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioPlayer", () => ({ AudioPlayer: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../drawer/pages/ScenePreview", () => ({
     ScenePreview: () => <div data-testid="scene-preview" />
 }))

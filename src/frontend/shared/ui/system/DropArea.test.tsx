@@ -11,8 +11,8 @@ import styles from "./DropArea.module.css"
 const { proyecto } = vi.hoisted(() => ({ proyecto: vi.fn() }))
 vi.mock("../../utils/helpers/dropActions", () => ({ dropActions: { project: proyecto } }))
 vi.mock("../../utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../audio/audioProcessor", () => ({}))
+vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 let restaurar: () => void = () => {}
 const preparar = (sel: { id: any; data: any[] }) => (restaurar = setStoresForTest([storeEntry(selected, sel), storeEntry(dictionary, { main: { drop: "Soltar acá" } }), storeEntry(activePage, "show")]))

@@ -1,12 +1,12 @@
-import { get } from "../shared/core/lib/store"
-import { Main } from "../../types/IPC/Main"
-import { sendMain } from "../shared/core/ipc/main"
-import { recordingChannels, special } from "../shared/core/stores"
-import { newToast } from "../shared/utils/common"
+import { get } from "../core/lib/store"
+import { Main } from "../../../types/IPC/Main"
+import { sendMain } from "../core/ipc/main"
+import { recordingChannels, special } from "../core/stores"
+import { newToast } from "../utils/common"
 import { AudioAnalyser } from "./audioAnalyser"
 import { AudioRoutingManager } from "./routing/audioRoutingManager"
 
-import { getRecordingFileName } from "../components/drawer/live/recorder"
+import { getRecordingFileName } from "../../components/drawer/live/recorder"
 
 const activeRecorders: { [channelId: string]: { recorder: MediaRecorder; stream: MediaStream; onstopPromise: Promise<void> } } = {}
 const options: any = { mimeType: "audio/webm; codecs=opus" }

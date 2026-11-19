@@ -9,10 +9,10 @@ import { AudioStreams } from "./AudioStreams"
 
 const mocks = vi.hoisted(() => ({ start: vi.fn(() => Promise.resolve(true)) }))
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioPlayer", () => ({ AudioPlayer: { start: mocks.start } }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../shared/audio/audioPlayer", () => ({ AudioPlayer: { start: mocks.start } }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 vi.mock("../../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Loader") }))
 vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
 

@@ -2,16 +2,16 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { AudioPlayer } from "../../../../audio/audioPlayer"
+import { AudioPlayer } from "../../../../shared/audio/audioPlayer"
 import { playingAudio, selected } from "../../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../../../shared/test/storeTestKit"
 import { AudioEffect } from "./AudioEffect"
 
 vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../../../audio/audioPlayer", () => ({ AudioPlayer: { getAudio: vi.fn(), start: vi.fn() } }))
-vi.mock("../../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../../shared/audio/audioPlayer", () => ({ AudioPlayer: { getAudio: vi.fn(), start: vi.fn() } }))
+vi.mock("../../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 vi.mock("../../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children?: ReactNode }) => <div data-select-elem>{children}</div> }))
 
 let restaurar: () => void = () => {}

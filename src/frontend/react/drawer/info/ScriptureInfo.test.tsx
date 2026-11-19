@@ -38,9 +38,9 @@ vi.mock("../../../features/slide/Zoomed", () => ({
     )
 }))
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 
 const BIBLE = { chapters: [1], activeVerses: [[1]], verses: [{}] }
 let restaurar: () => void = () => {}

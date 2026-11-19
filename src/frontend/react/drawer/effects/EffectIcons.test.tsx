@@ -8,8 +8,8 @@ import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { EffectIcons } from "./EffectIcons"
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 const dict = {
     actions: { remove: "Quitar", specific_outputs: "Salidas específicas" },

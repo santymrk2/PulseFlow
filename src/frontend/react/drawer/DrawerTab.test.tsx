@@ -10,8 +10,8 @@ import { DrawerTab, type DrawerTabCategory } from "./DrawerTab"
 import styles from "./DrawerTab.module.css"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 interface ClickDetail {
     ctrl: boolean

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ComponentType } from "react"
 import { get } from "../../shared/core/lib/store"
 import type { Popups } from "../../../types/Main"
-import { EFFECTS_LIST } from "../../audio/effects/audioEffectsHelpers"
+import { EFFECTS_LIST } from "../../shared/audio/effects/audioEffectsHelpers"
 import { activePopup, alertMessage, os, popupData, special } from "../../shared/core/stores"
 import { MENU_BAR_HEIGHT } from "../../shared/utils/common"
 import { translateText } from "../../shared/utils/language"

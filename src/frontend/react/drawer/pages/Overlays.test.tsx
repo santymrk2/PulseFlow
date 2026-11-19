@@ -16,8 +16,8 @@ const { historyMock, toggleOverlayOutputMock, addProjectItemMock, findMatchingOu
 }))
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock }))
 vi.mock("../../../shared/utils/helpers/overlayOutput", () => ({ toggleOverlayOutput: toggleOverlayOutputMock }))

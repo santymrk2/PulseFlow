@@ -11,7 +11,7 @@ import { ShowButton } from "./ShowButton"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
-vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: { getPlaying: vi.fn(() => null) } }))
+vi.mock("../../shared/audio/audioPlayer", () => ({ AudioPlayer: { getPlaying: vi.fn(() => null) } }))
 vi.mock("../../shared/utils/helpers/media", () => ({
     encodeFilePath: vi.fn((path: string) => path),
     getExtension: vi.fn(() => ""),

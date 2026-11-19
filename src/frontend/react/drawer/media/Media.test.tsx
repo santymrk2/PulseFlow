@@ -11,8 +11,8 @@ import { Media } from "./Media"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("./pixabay", () => ({ loadFromPixabay: vi.fn(() => Promise.resolve([])) }))
 vi.mock("./unsplash", () => ({ loadFromUnsplash: vi.fn(() => Promise.resolve([])) }))
 vi.mock("../../../components/drawer/media/pixabay", () => ({ loadFromPixabay: vi.fn(() => Promise.resolve([])) }))

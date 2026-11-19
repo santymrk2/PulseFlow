@@ -12,8 +12,8 @@ import { Other } from "./Other"
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 // SelectField llega a helpers/media (getFileName), que arrastra el módulo de audio
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 type Respuestas = { autoErrorReporting?: unknown; disableHardwareAcceleration?: unknown; graphicsDevice?: unknown; devices?: { value: string; label?: string }[] }
 function responder(r: Respuestas) {

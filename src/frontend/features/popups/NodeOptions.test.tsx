@@ -2,8 +2,8 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { AudioMicrophone } from "../../audio/audioMicrophone"
-import { AudioPlayer } from "../../audio/audioPlayer"
+import { AudioMicrophone } from "../../shared/audio/audioMicrophone"
+import { AudioPlayer } from "../../shared/audio/audioPlayer"
 import { audioChannelsData, audioRouting, popupData, special } from "../../shared/core/stores"
 import { clearFields, fire } from "../../shared/test/kitMocks"
 import { commonMock } from "../../shared/test/mockCommon"
@@ -11,13 +11,13 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/stor
 import { NodeOptions } from "./NodeOptions"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
-vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: { updateVolume: vi.fn() } }))
-vi.mock("../../audio/audioMicrophone", () => ({ AudioMicrophone: { setChannelCount: vi.fn() } }))
+vi.mock("../../shared/audio/audioPlayer", () => ({ AudioPlayer: { updateVolume: vi.fn() } }))
+vi.mock("../../shared/audio/audioMicrophone", () => ({ AudioMicrophone: { setChannelCount: vi.fn() } }))
 vi.mock("../../shared/ui/kit/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 vi.mock("../../shared/ui/kit/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))

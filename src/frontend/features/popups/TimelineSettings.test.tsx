@@ -9,8 +9,8 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { TimelineSettings } from "./TimelineSettings"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../timeline/logic/timeline", () => ({ formatTime: (ms: number) => `fmt:${ms}`, parseTime: (str: string) => str.length }))
 vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 

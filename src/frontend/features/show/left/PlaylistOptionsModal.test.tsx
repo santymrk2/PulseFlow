@@ -12,8 +12,8 @@ import { PlaylistOptionsModal } from "./PlaylistOptionsModal"
 const { modalProps } = vi.hoisted(() => ({ modalProps: { current: {} as Record<string, unknown> } }))
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("./ModalBase", () => ({
     ModalBase: (props: { title?: string; width?: number; height?: number; lockOutsideClick?: boolean; children?: ReactNode }) => {
         modalProps.current = props

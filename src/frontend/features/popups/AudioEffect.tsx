@@ -1,6 +1,6 @@
 import { useEffect, useState, type ComponentType } from "react"
 import { get } from "../../shared/core/lib/store"
-import type { EffectType } from "../../audio/effects/audioEffectsHelpers"
+import type { EffectType } from "../../shared/audio/effects/audioEffectsHelpers"
 import { activeAudioEffects, popupData } from "../../shared/core/stores"
 import { useStore } from "../../shared/ui/hooks/useStore"
 import { AudioCompressor } from "../../react/drawer/audio/effects/AudioCompressor"

@@ -10,8 +10,8 @@ import { LibrariesPanel } from "./LibrariesPanel"
 
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 const dict = { ui: { libraries: "Bibliotecas", new_library: "Nueva biblioteca" }, category: { unlabeled: "Sin etiqueta" } }
 const timestamps = { created: 1700000000000, modified: null, used: null }

@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { fadeinAllPlayingAudio, fadeoutAllPlayingAudio, isAllAudioFading } from "../../../audio/audioFading"
+import { fadeinAllPlayingAudio, fadeoutAllPlayingAudio, isAllAudioFading } from "../../../shared/audio/audioFading"
 import { activeAudioEffects, activePopup, dataPath, special } from "../../../shared/core/stores"
 import { VideoPlayer } from "../../../features/media/logic/video/videoPlayer"
 import { useStore } from "../../../shared/ui/hooks/useStore"

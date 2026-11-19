@@ -13,8 +13,8 @@ import { looseEntry, type StoreEntry, setStoresForTest, storeEntry } from "../..
 import { PlaylistAddMenu } from "./PlaylistAddMenu"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("uid", () => ({ uid: vi.fn(() => "uid-1") }))

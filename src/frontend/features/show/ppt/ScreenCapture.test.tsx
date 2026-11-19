@@ -8,8 +8,8 @@ import { ScreenCapture } from "./ScreenCapture"
 
 const windows = [{ id: 1, name: "PowerPoint - Predicación" }]
 
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn((_main, _data, callback) => callback(windows)) }))
 vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: (path: string) => path, removeExtension: (name: string) => name.split(".")[0] }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getAllActiveOutputIds: vi.fn(() => ["out1"]) }))

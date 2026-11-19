@@ -15,8 +15,8 @@ const { loadJsonBibleMock, playScriptureMock, swapPreviewBibleMock, outputFlag }
 }))
 
 vi.mock("../../../shared/utils/common", () => ({ ...commonMock(), wait: () => Promise.resolve() }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/classes/Show", () => ({ ShowObj: class ShowObj {} }))
 // El módulo real arrastra ciclos (actions → apiHelper → scripture) que rompen la carga en el
 // entorno de test; acá se reemplaza por las funciones puras que usa el componente.

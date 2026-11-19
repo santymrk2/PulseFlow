@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react"
 import type { ShowType } from "../../../types/Show"
-import { AudioPlayer } from "../../audio/audioPlayer"
+import { AudioPlayer } from "../../shared/audio/audioPlayer"
 import { activeEdit, activeFocus, activePage, activeProject, activeShow, categories, editingProjectTemplate, effects, focusMode, globalTags, media, notFound, outLocked, outputs, overlayCategories, overlays, playerVideos, playingAudio, projects, projectTemplates, refreshEditSlide, shows, showsCache, special, styles as stylesStore } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { getAccess } from "../../shared/utils/profile"

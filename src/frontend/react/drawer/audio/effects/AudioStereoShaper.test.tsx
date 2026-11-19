@@ -2,18 +2,18 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
-import { updateStereoShaperConfig } from "../../../../audio/effects/audioStereoShaper"
+import { subscribeEffect } from "../../../../shared/audio/effects/audioEffectsHelpers"
+import { updateStereoShaperConfig } from "../../../../shared/audio/effects/audioStereoShaper"
 import { AudioStereoShaper } from "./AudioStereoShaper"
 
-vi.mock("../../../../audio/effects/audioEffectsHelpers", async (importOriginal) => ({
-    ...(await importOriginal<typeof import("../../../../audio/effects/audioEffectsHelpers")>()),
+vi.mock("../../../../shared/audio/effects/audioEffectsHelpers", async (importOriginal) => ({
+    ...(await importOriginal<typeof import("../../../../shared/audio/effects/audioEffectsHelpers")>()),
     subscribeEffect: vi.fn(() => () => {})
 }))
-vi.mock("../../../../audio/effects/audioStereoShaper", () => ({ updateStereoShaperConfig: vi.fn() }))
-vi.mock("../../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../../shared/audio/effects/audioStereoShaper", () => ({ updateStereoShaperConfig: vi.fn() }))
+vi.mock("../../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 vi.mock("../../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../../shared/ui/kit/input-row/InputRow", () => ({ InputRow: ({ children }: { children?: ReactNode }) => <div>{children}</div> }))
 vi.mock("../../../../shared/ui/kit/number-field/NumberField", () => ({ NumberField: ({ label, onChange }: { label: string; onChange?: (value: number) => void }) => <button onClick={() => onChange?.(150)}>{label}</button> }))

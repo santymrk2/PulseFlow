@@ -10,8 +10,8 @@ vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn(() => ({ get: () => "" })) }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 let restore: () => void = () => {}
 afterEach(() => {

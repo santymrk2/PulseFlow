@@ -8,8 +8,8 @@ import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { TimerInfo } from "./TimerInfo"
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 const dict = {
     media: { play: "Reproducir" },

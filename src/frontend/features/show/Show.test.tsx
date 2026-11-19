@@ -7,8 +7,8 @@ import { clearIslands } from "../../shared/test/islandMock"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Show } from "./Show"
 
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/common", () => ({ DEFAULT_WIDTH: 250 }))
 vi.mock("../../components/drawer/timers/timers", () => ({ createGlobalTimerFromLocalTimer: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({ setOutput: vi.fn() }))

@@ -10,8 +10,8 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/stor
 import { SetTime } from "./SetTime"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "sl1" }]) }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))

@@ -14,8 +14,8 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/stor
 import { UpdateManager } from "./UpdateManager"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (value: string) => value }))
 vi.mock("../../shared/utils/checkForUpdates", () => ({ getUpdateData: vi.fn() }))
 vi.mock("../../shared/utils/popup", () => ({ setPopupSubmit: vi.fn(() => () => {}) }))

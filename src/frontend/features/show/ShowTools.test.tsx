@@ -7,8 +7,8 @@ import { _show } from "../../shared/utils/helpers/shows"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ShowTools } from "./ShowTools"
 
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getActiveOutputs: vi.fn(() => []) }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))

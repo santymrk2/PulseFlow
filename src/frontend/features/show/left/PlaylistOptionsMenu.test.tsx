@@ -12,8 +12,8 @@ import { looseEntry, type StoreEntry, setStoresForTest } from "../../../shared/t
 import { PlaylistOptionsMenu } from "./PlaylistOptionsMenu"
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../export/logic/project", () => ({ exportProject: vi.fn() }))
 vi.mock("../../export/logic/projectLink", () => ({ shareProjectLink: vi.fn() }))

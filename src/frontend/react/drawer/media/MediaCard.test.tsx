@@ -7,8 +7,8 @@ import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { MediaCard } from "./MediaCard"
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("./MediaLoader", () => ({ MediaLoader: (props: Record<string, unknown>) => <span data-view="MediaLoader" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} /> }))
 vi.mock("../../../shared/utils/helpers/media", async () => {
     const actual = await vi.importActual<typeof import("../../../shared/utils/helpers/media")>("../../../shared/utils/helpers/media")

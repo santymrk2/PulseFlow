@@ -8,9 +8,9 @@ import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { AudioEffect } from "./AudioEffect"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 
 // Los efectos ya son React: verificamos cuál se monta y con qué props.
 vi.mock("../../react/drawer/audio/effects/AudioCompressor", () => ({ AudioCompressor: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioCompressor" data-effect-id={effectId} data-channel-id={channelId} /> }))

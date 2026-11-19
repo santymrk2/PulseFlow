@@ -5,8 +5,8 @@ import type { ReactNode } from "react"
 
 vi.mock("../../shared/ui/hooks/useStore", () => ({ useStore: () => ({}) }))
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(async () => []) }))
-vi.mock("../../audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn(async () => []) } }))
-vi.mock("../../audio/routing/audioRoutingManager", () => ({ AudioRoutingManager: { sortChannels: (x: unknown) => x } }))
+vi.mock("../../shared/audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn(async () => []) } }))
+vi.mock("../../shared/audio/routing/audioRoutingManager", () => ({ AudioRoutingManager: { sortChannels: (x: unknown) => x } }))
 vi.mock("../../features/media/logic/cameraManager", () => ({ cameraManager: { getCamerasList: vi.fn(async () => []) } }))
 vi.mock("../../app/wiring/obsTalk", () => ({ obsGetScenes: vi.fn(async () => []) }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))

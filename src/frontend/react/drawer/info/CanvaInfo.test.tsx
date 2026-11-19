@@ -8,9 +8,9 @@ import { CanvaInfo } from "./CanvaInfo"
 
 vi.mock("../../../converters/canvaPresentation", () => ({ addCanvaPresentationAsShow: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 
 const PRESENTATION = { designId: "abc123", presentationName: "Charlas", slideCount: 4, thumbnail: "thumb.jpg" }
 let restaurar: () => void = () => {}

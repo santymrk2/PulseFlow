@@ -14,8 +14,8 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/stor
 import { OutputSelector } from "./OutputSelector"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn() }))
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../settings/logic/openSettings", () => ({ openSettings: vi.fn() }))

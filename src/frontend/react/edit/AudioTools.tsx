@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { AudioPlayer } from "../../audio/audioPlayer"
+import { AudioPlayer } from "../../shared/audio/audioPlayer"
 import { EditValues } from "./tools/EditValues"
 import { audioSections } from "../../components/edit/values/media"
 import { setBoxInputValue } from "../../components/edit/values/boxes"

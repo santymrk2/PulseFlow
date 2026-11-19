@@ -9,8 +9,8 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { SlideItems } from "./SlideItems"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/edit/scripts/autosize", () => ({ default: vi.fn(() => 42) }))
 
 function viewMock(name: string) {

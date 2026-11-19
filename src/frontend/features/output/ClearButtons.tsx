@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { clearAudio } from "../../audio/audioFading"
+import { clearAudio } from "../../shared/audio/audioFading"
 import { activeTimers, dictionary, isFadingOut, isTimelinePlaying, labelsDisabled, media, outLocked, outputCache, outputs, overlayTimers, playingAudio, playingMetronome, styles, timelineRecordingAction } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { presentationControllersKeysDisabled } from "../../app/wiring/shortcuts"

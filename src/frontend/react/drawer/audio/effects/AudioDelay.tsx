@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
-import { type DelayConfig, updateDelayConfig } from "../../../../audio/effects/audioDelay"
-import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
+import { type DelayConfig, updateDelayConfig } from "../../../../shared/audio/effects/audioDelay"
+import { subscribeEffect } from "../../../../shared/audio/effects/audioEffectsHelpers"
 import { InputRow } from "../../../../shared/ui/kit/input-row/InputRow"
 import { NumberField } from "../../../../shared/ui/kit/number-field/NumberField"
 import { useElementWidth } from "./hooks"

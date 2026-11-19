@@ -1,14 +1,14 @@
 // @vitest-environment happy-dom
 import { cleanup, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
+import { AudioRoutingManager } from "../../../shared/audio/routing/audioRoutingManager"
 import { audioRouting, outputs } from "../../../shared/core/stores"
 import { commonMock } from "../../../shared/test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { AudioMixers } from "./AudioMixers"
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/routing/audioRoutingManager", () => ({
+vi.mock("../../../shared/audio/routing/audioRoutingManager", () => ({
     AudioRoutingManager: { sortChannels: vi.fn((config) => config) }
 }))
 vi.mock("./AudioChannelMixer", () => ({

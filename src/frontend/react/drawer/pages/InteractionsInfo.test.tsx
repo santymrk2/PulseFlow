@@ -9,8 +9,8 @@ import { InteractionsInfo } from "./InteractionsInfo"
 const { generateSlideMock, getInteractionMock } = vi.hoisted(() => ({ generateSlideMock: vi.fn(), getInteractionMock: vi.fn() }))
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/drawer/pages/interactionSlides", () => ({ generateSlide: generateSlideMock }))
 vi.mock("../../../components/drawer/pages/interactions", () => ({ getInteraction: getInteractionMock }))
 

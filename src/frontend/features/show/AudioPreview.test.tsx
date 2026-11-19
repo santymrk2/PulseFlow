@@ -3,14 +3,14 @@ import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/re
 import { get } from "../../shared/core/lib/store"
 import type { ChangeEvent, FormEvent, ReactNode } from "react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { AudioAnalyser } from "../../audio/audioAnalyser"
-import { clearAudio } from "../../audio/audioFading"
-import { AudioPlayer } from "../../audio/audioPlayer"
+import { AudioAnalyser } from "../../shared/audio/audioAnalyser"
+import { clearAudio } from "../../shared/audio/audioFading"
+import { AudioPlayer } from "../../shared/audio/audioPlayer"
 import { focusMode, media, outLocked, playingAudio } from "../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { AudioPreview } from "./AudioPreview"
 
-vi.mock("../../audio/audioPlayer", () => ({
+vi.mock("../../shared/audio/audioPlayer", () => ({
     AudioPlayer: {
         start: vi.fn(),
         getDuration: vi.fn(async () => 120),
@@ -18,8 +18,8 @@ vi.mock("../../audio/audioPlayer", () => ({
         setTime: vi.fn(() => false)
     }
 }))
-vi.mock("../../audio/audioFading", () => ({ clearAudio: vi.fn() }))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: { getAnalysers: vi.fn(() => []), releaseAnalyser: vi.fn() } }))
+vi.mock("../../shared/audio/audioFading", () => ({ clearAudio: vi.fn() }))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: { getAnalysers: vi.fn(() => []), releaseAnalyser: vi.fn() } }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../shared/ui/kit/button/Button", () => ({

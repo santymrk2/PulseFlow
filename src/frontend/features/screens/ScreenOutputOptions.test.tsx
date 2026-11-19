@@ -4,7 +4,7 @@ import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { BLACKMAGIC, NDI, OMT, OUTPUT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
-import { AudioAnalyser } from "../../audio/audioAnalyser"
+import { AudioAnalyser } from "../../shared/audio/audioAnalyser"
 import { addRtmpDestination, checkFFmpeg, removeRtmpDestination, startRtmpStreaming, startStreaming, stopRtmpStreaming, stopStreaming, updateOutputRtmpData, updateOutputWebrtcData, updateRtmpDestination } from "../../shared/utils/helpers/output"
 import { requestMain } from "../../shared/core/ipc/main"
 import { activePopup, alertMessage, currentOutputSettings, ndiData, omtData, os, outputs, rtmpStatus, saved } from "../../shared/core/stores"
@@ -16,8 +16,8 @@ import { ScreenOutputOptions } from "./ScreenOutputOptions"
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn() }))
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn(), receive: vi.fn(), destroy: vi.fn() }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: { recorderActivate: vi.fn(), recorderDeactivate: vi.fn() } }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: { recorderActivate: vi.fn(), recorderDeactivate: vi.fn() } }))
 vi.mock("../../shared/utils/helpers/output", () => ({
     addRtmpDestination: vi.fn(),
     checkFFmpeg: vi.fn(),

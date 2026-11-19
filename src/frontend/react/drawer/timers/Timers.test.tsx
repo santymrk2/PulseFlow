@@ -10,8 +10,8 @@ import { Timers } from "./Timers"
 const { openDrawerMock, customActionActivationMock } = vi.hoisted(() => ({ openDrawerMock: vi.fn(), customActionActivationMock: vi.fn() }))
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/actions/actions", () => ({ customActionActivation: customActionActivationMock, runActionId: vi.fn() }))
 vi.mock("../../../components/edit/scripts/edit", () => ({ openDrawer: openDrawerMock }))
 vi.mock("../../../features/slide/views/Timer", async () => ({ Timer: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Timer") }))

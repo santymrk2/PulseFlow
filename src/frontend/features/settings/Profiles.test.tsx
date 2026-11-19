@@ -10,8 +10,8 @@ import { Profiles } from "./Profiles"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 const perfil = (extra = {}) => ({ name: "Ana", color: "", image: "", access: {}, ...extra })
 const UPDATE = (access: object, override: string) => ({ id: "UPDATE", newData: { key: "access", data: access }, oldData: { id: "a" }, location: { page: "settings", id: "settings_profile", override } })

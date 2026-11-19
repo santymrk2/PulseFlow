@@ -10,8 +10,8 @@ import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { Timer } from "./Timer"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/drawer/timers/timers", () => ({ getCurrentTimerValue: vi.fn(() => 90) }))
 vi.mock("../../../shared/utils/helpers/historyHelpers", () => ({ setDrawerTabData: vi.fn() }))
 

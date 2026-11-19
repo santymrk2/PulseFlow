@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react"
 import { OUTPUT } from "../../../../types/Channels"
 import type { Item } from "../../../../types/Show"
-import { AudioAnalyser } from "../../../audio/audioAnalyser"
+import { AudioAnalyser } from "../../../shared/audio/audioAnalyser"
 import { currentWindow as currentWindowStore, visualizerData } from "../../../shared/core/stores"
 import { send } from "../../../shared/utils/request"
 import { drawKaleidoscope } from "../logic/views/visualizerKaleidoscope"

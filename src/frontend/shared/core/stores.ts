@@ -31,7 +31,7 @@ import type { AiSuggestion } from "../../../types/ai/Ai"
 import type { AiSettings } from "../../../types/ai/AiSettings"
 import type { Outputs, RtmpStatus, SyncedOutputs } from "../../../types/Output"
 import type { DrawerTabIds } from "../../../types/Tabs"
-import type { AudioData } from "../../audio/audioPlayer"
+import type { AudioData } from "../audio/audioPlayer"
 import type { WebsiteAction } from "../utils/helpers/websiteControls"
 import type { PlayingVideoState, VideoAudioData } from "../../features/media/logic/video/videoPlayer"
 

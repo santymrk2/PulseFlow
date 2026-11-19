@@ -2,8 +2,8 @@
 // Escribe: timecode en cada cambio; consulta las salidas/entradas según modo y tipo (LTC/MTC, send/receive).
 import { useEffect, useState } from "react"
 import { Main } from "../../../types/IPC/Main"
-import { AudioMicrophone } from "../../audio/audioMicrophone"
-import { AudioPlayer } from "../../audio/audioPlayer"
+import { AudioMicrophone } from "../../shared/audio/audioMicrophone"
+import { AudioPlayer } from "../../shared/audio/audioPlayer"
 import { requestMain } from "../../shared/core/ipc/main"
 import { timecode } from "../../shared/core/stores"
 import { useStore } from "../../shared/ui/hooks/useStore"

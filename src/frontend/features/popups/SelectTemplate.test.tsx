@@ -10,8 +10,8 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/stor
 import { SelectTemplate } from "./SelectTemplate"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../../react/drawer/Card", async () => {
     const { islands } = await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")

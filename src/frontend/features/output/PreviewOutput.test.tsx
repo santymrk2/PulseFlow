@@ -23,9 +23,9 @@ vi.hoisted(() => {
     }
 })
 
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../audio/audioChannelRecorder", () => ({ AudioChannelRecorder: {}, stopAllChannelRecordings: () => {}, stopChannelRecording: () => {}, startChannelRecording: () => {}, toggleChannelRecording: () => {}, isChannelRecording: () => false }))
-vi.mock("../../audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioChannelRecorder", () => ({ AudioChannelRecorder: {}, stopAllChannelRecordings: () => {}, stopChannelRecording: () => {}, startChannelRecording: () => {}, toggleChannelRecording: () => {}, isChannelRecording: () => false }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/utils/helpers/historyHelpers", () => ({ _updaters: {}, history: () => {} }))
 vi.mock("../../components/actions/apiHelper", () => ({}))
 vi.mock("../../app/wiring/save", () => ({}))

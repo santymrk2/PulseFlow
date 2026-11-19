@@ -1,4 +1,4 @@
-import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
+import { AudioRoutingManager } from "../../../shared/audio/routing/audioRoutingManager"
 import { audioRouting, outputs } from "../../../shared/core/stores"
 import { keysToID } from "../../../shared/utils/helpers/array"
 import { translateText } from "../../../shared/utils/language"

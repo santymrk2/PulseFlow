@@ -1,4 +1,4 @@
-import { gainToDb, MIN_DB } from "../../../../audio/dBUtils"
+import { gainToDb, MIN_DB } from "../../../../shared/audio/dBUtils"
 import { channelSidechainMultipliers } from "../../../../shared/core/stores"
 import { translateText } from "../../../../shared/utils/language"
 import { useStore } from "../../../../shared/ui/hooks/useStore"

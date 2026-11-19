@@ -7,9 +7,9 @@ import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { EditValues } from "./EditValues"
 
 vi.mock("@soundtouchjs/audio-worklet", () => ({ SoundTouchNode: class {} }))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: { getAnalyser: () => null } }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioPlayer", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: { getAnalyser: () => null } }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioPlayer", () => ({}))
 vi.mock("../../../shared/utils/common", () => ({ throttle: (_id: string, value: unknown, cb: (v: unknown) => void) => cb(value) }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: (id: string) => id }))
 vi.mock("../../../shared/core/values/extensions", () => ({ mediaExtensions: [], audioExtensions: [], videoExtensions: [], imageExtensions: [], presentationExtensions: [] }))

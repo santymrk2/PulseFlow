@@ -11,8 +11,8 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/stor
 import { SelectOverlay } from "./SelectOverlay"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../../react/drawer/Card", async () => {

@@ -3,8 +3,8 @@ import { cleanup, render, waitFor } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
-import { AudioMicrophone } from "../../audio/audioMicrophone"
-import { AudioPlayer } from "../../audio/audioPlayer"
+import { AudioMicrophone } from "../../shared/audio/audioMicrophone"
+import { AudioPlayer } from "../../shared/audio/audioPlayer"
 import { requestMain } from "../../shared/core/ipc/main"
 import { timecode } from "../../shared/core/stores"
 import { clearFields, fields, fire } from "../../shared/test/kitMocks"
@@ -13,10 +13,10 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Timecode } from "./Timecode"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: { getOutputs: vi.fn() } }))
-vi.mock("../../audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn() } }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioPlayer", () => ({ AudioPlayer: { getOutputs: vi.fn() } }))
+vi.mock("../../shared/audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn() } }))
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn() }))
 vi.mock("../../shared/ui/kit/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 vi.mock("../../shared/ui/kit/number-field/NumberField", async () => ({ NumberField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))

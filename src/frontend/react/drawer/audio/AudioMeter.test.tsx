@@ -7,7 +7,7 @@ import { commonMock } from "../../../shared/test/mockCommon"
 import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { AudioMeter } from "./AudioMeter"
 
-vi.mock("../../../audio/routing/audioInputCapture", () => ({
+vi.mock("../../../shared/audio/routing/audioInputCapture", () => ({
     AudioInputCapture: { getInstance: () => ({ getVisualizerData: vi.fn(() => undefined) }) }
 }))
 vi.mock("../../../shared/utils/common", () => ({ ...commonMock(), DEFAULT_DRAWER_HEIGHT: 300 }))

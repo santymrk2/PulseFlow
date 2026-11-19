@@ -1,6 +1,6 @@
 import { get } from "../../shared/core/lib/store"
 import { OUTPUT, REMOTE, STAGE } from "../../../types/Channels"
-import { AudioPlayer } from "../../audio/audioPlayer"
+import { AudioPlayer } from "../../shared/audio/audioPlayer"
 import { midiInListen } from "../../components/actions/midi"
 import { scenesHaveClock, sendOutputScenes } from "../../shared/utils/helpers/sceneGraph"
 import { shouldResendForVideo, videoSyncFields, type VideoSyncFields } from "../../shared/utils/helpers/videoSync"

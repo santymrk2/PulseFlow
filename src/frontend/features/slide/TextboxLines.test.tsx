@@ -9,8 +9,8 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { TextboxLines, type TextboxLinesProps } from "./TextboxLines"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/showActions", () => ({ replaceDynamicValues: vi.fn((value: string) => value) }))
 vi.mock("./logic/wordOverride", () => ({
     applyStyleOverrides: vi.fn((lines) => lines.map((line: { text?: unknown[] }) => ({ ...line, text: [{ value: "override", style: "color: green;" }] })))

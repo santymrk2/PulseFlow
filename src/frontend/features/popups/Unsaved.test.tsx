@@ -11,8 +11,8 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../shared/test/stor
 import { Unsaved } from "./Unsaved"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (value: string) => value }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../app/wiring/save", () => ({ closeApp: vi.fn(), save: vi.fn(), saveComplete: vi.fn() }))

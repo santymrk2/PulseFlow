@@ -10,8 +10,8 @@ import { Templates } from "./Templates"
 const { historyMock, deselectMock } = vi.hoisted(() => ({ historyMock: vi.fn(), deselectMock: vi.fn() }))
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), getFirstActiveOutput: () => null }))
 vi.mock("../../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [] }))

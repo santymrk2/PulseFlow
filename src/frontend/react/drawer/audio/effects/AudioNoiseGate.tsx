@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
-import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
-import { type NoiseGateConfig, updateNoiseGateConfig } from "../../../../audio/effects/audioNoiseGate"
+import { subscribeEffect } from "../../../../shared/audio/effects/audioEffectsHelpers"
+import { type NoiseGateConfig, updateNoiseGateConfig } from "../../../../shared/audio/effects/audioNoiseGate"
 import { InputRow } from "../../../../shared/ui/kit/input-row/InputRow"
 import { NumberField } from "../../../../shared/ui/kit/number-field/NumberField"
 import type { AudioEffectProps } from "./AudioDelay"

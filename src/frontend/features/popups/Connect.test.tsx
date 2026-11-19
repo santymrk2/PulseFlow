@@ -3,7 +3,7 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
-import { AudioAnalyser } from "../../audio/audioAnalyser"
+import { AudioAnalyser } from "../../shared/audio/audioAnalyser"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, dictionary, maxConnections, os, outputs, popupData, ports, serverData, special } from "../../shared/core/stores"
 import { startRemoteController, stopRemoteController } from "../../app/wiring/remoteController"
@@ -15,7 +15,7 @@ import { Connect } from "./Connect"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: { recorderActivate: vi.fn() } }))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: { recorderActivate: vi.fn() } }))
 vi.mock("../../app/wiring/remoteController", () => ({ startRemoteController: vi.fn(), stopRemoteController: vi.fn() }))
 vi.mock("qrcode-generator", () => ({
     default: () => {

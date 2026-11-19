@@ -10,8 +10,8 @@ import { CalendarsManagement } from "./CalendarsManagement"
 const { newToastMock, fetchMock } = vi.hoisted(() => ({ newToastMock: vi.fn(), fetchMock: vi.fn() }))
 
 vi.mock("../../../shared/utils/common", () => ({ ...commonMock(), newToast: newToastMock }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/drawer/calendar/calendars", async (importOriginal) => ({ ...(await importOriginal<typeof import("../../../components/drawer/calendar/calendars")>()), fetchAndImportIcs: fetchMock }))
 
 const dict = {

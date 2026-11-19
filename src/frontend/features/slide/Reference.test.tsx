@@ -11,8 +11,8 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Reference } from "./Reference"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../shared/utils/helpers/historyHelpers", () => ({ setDrawerTabData: vi.fn() }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))

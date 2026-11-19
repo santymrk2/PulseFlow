@@ -20,8 +20,8 @@ vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../../shared/utils/helpers/clipboard", () => ({ deleteAction: vi.fn(), duplicate: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({ toggleOutputs: vi.fn(), addOutput: vi.fn(), enableStageOutput: vi.fn() }))
 vi.mock("./ScreenOutputOptions", () => ({ ScreenOutputOptions: () => null }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 class FakeResizeObserver {
     observe = vi.fn()

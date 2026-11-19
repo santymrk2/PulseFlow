@@ -9,9 +9,9 @@ import { Cameras } from "./Cameras"
 
 const mocks = vi.hoisted(() => ({ list: vi.fn(), clearBad: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 vi.mock("../../../features/media/logic/cameraManager", () => ({ cameraManager: { getCamerasList: mocks.list, clearBadCamera: mocks.clearBad } }))
 vi.mock("./Cam", () => ({
     Cam: ({ cam, style, onClick }: { cam: { id: string; name: string }; style: string; onClick?: (e: MouseEvent<HTMLButtonElement>) => void }) => (

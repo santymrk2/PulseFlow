@@ -4,7 +4,7 @@ import { Main } from "../../../../types/IPC/Main"
 import type { Clipboard } from "../../../../types/Main"
 import type { Folder, Project } from "../../../../types/Projects"
 import type { Item } from "../../../../types/Show"
-import { removeOutputAudioChannel } from "../../../audio/routing/audioRoutingInit"
+import { removeOutputAudioChannel } from "../../audio/routing/audioRoutingInit"
 import { getProjectsInFolder } from "../../../converters/project"
 import { sendMain } from "../../core/ipc/main"
 import {

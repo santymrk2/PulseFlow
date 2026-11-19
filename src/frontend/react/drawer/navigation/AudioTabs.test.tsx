@@ -10,7 +10,7 @@ import { AudioTabs } from "./AudioTabs"
 
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../shared/utils/profile", () => ({ getAccess: () => ({}) }))
-vi.mock("../../../audio/audioPlaylist", () => ({ AudioPlaylist: { start: vi.fn() } }))
+vi.mock("../../../shared/audio/audioPlaylist", () => ({ AudioPlaylist: { start: vi.fn() } }))
 vi.mock("../../../shared/utils/helpers/dropActions", () => ({ addDrawerFolder: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/media", () => ({ countFolderMediaItems: () => ({ folder: 0, audio: 0, video: 0, image: 0 }) }))
 vi.mock("../../../shared/core/ipc/main", () => ({

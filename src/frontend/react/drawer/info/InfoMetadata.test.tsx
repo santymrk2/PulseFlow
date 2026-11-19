@@ -5,9 +5,9 @@ import { InfoMetadata } from "./InfoMetadata"
 
 // Evita el ciclo language → common → save → apiHelper → historyHelpers (projectReplacers llama translateText al cargar).
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 
 afterEach(cleanup)
 

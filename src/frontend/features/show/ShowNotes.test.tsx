@@ -7,8 +7,8 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ShowNotes } from "./ShowNotes"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/common", () => ({ DEFAULT_WIDTH: 300 }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../shared/utils/helpers/shows", () => ({

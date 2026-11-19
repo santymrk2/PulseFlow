@@ -1,6 +1,6 @@
 import { get } from "../../../shared/core/lib/store"
-import { AudioAnalyser } from "../../../audio/audioAnalyser"
-import { AudioRoutingManager } from "../../../audio/routing/audioRoutingManager"
+import { AudioAnalyser } from "../../../shared/audio/audioAnalyser"
+import { AudioRoutingManager } from "../../../shared/audio/routing/audioRoutingManager"
 import { customMetadata, metronome, metronomeTimer, playingMetronome, special } from "../../../shared/core/stores"
 import type { MetronomeSettings } from "../../../types/Audio"
 import type { API_metronome } from "../../actions/api"

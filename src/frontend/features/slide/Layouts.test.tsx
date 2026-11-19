@@ -13,8 +13,8 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Layouts } from "./Layouts"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
 vi.mock("../show/logic/slides", () => ({ changeSlidesView: vi.fn() }))

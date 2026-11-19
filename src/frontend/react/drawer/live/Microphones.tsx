@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { AudioMicrophone } from "../../../audio/audioMicrophone"
+import { AudioMicrophone } from "../../../shared/audio/audioMicrophone"
 import { T } from "../../../shared/ui/helpers/T"
 import { Center } from "../../../shared/ui/system/Center"
 import { SelectElem } from "../../../shared/ui/system/SelectElem"

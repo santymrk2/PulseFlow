@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { Main } from "../../../../types/IPC/Main"
-import { AudioMicrophone } from "../../../audio/audioMicrophone"
+import { AudioMicrophone } from "../../../shared/audio/audioMicrophone"
 import { sendMain } from "../../../shared/core/ipc/main"
 import { activeFocus, activeShow, focusMode, playingAudio } from "../../../shared/core/stores"
 import { Icon } from "../../../shared/ui/helpers/Icon"

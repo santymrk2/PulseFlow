@@ -10,8 +10,8 @@ import { Actions } from "./Actions"
 const { runActionMock, receivedMidiMock } = vi.hoisted(() => ({ runActionMock: vi.fn(), receivedMidiMock: vi.fn() }))
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../components/actions/actions", () => ({ runAction: runActionMock, getActionIcon: () => "icon" }))
 vi.mock("../../../components/actions/midi", () => ({ convertOldMidiToNewAction: (action: unknown) => action, midiToNote: () => "C4", receivedMidi: receivedMidiMock }))
 

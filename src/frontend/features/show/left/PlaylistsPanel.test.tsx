@@ -7,8 +7,8 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/s
 import { PlaylistsPanel } from "./PlaylistsPanel"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, MENU_BAR_HEIGHT: 25 }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 let projectListProps: { tree?: unknown[]; readOnly?: boolean; selectedId?: string | null } = {}
 vi.mock("../ProjectList", () => ({

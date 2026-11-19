@@ -7,7 +7,7 @@ import { clone } from "../../../shared/utils/helpers/array"
 import { _show } from "../../../shared/utils/helpers/shows"
 import { getExtension, getMediaType, getVideoDuration } from "../../../shared/utils/helpers/media"
 import { getLayoutRef } from "../../../shared/utils/helpers/show"
-import { AudioPlayer } from "../../../audio/audioPlayer"
+import { AudioPlayer } from "../../../shared/audio/audioPlayer"
 import { timelineSections } from "./timeline"
 import { loadShows } from "../../../shared/utils/helpers/setShow"
 

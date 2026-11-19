@@ -2,13 +2,13 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { addEffectToStack } from "../../audio/effects/audioEffectsHelpers"
+import { addEffectToStack } from "../../shared/audio/effects/audioEffectsHelpers"
 import { activeAudioEffects, activePopup, dictionary, popupData } from "../../shared/core/stores"
 import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { AddAudioEffect } from "./AddAudioEffect"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../audio/effects/audioEffectsHelpers", () => ({
+vi.mock("../../shared/audio/effects/audioEffectsHelpers", () => ({
     EFFECTS_LIST: [
         { id: "equalizer", label: "audio_effects.equalizer", description: "audio_effects.equalizer_desc", color: "#112233" },
         { id: "reverb", label: "audio_effects.reverb", description: "audio_effects.reverb_desc", color: "#445566" }

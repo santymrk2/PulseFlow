@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type CSSProperties } from "react"
-import { subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
-import { type StereoShaperConfig, updateStereoShaperConfig } from "../../../../audio/effects/audioStereoShaper"
+import { subscribeEffect } from "../../../../shared/audio/effects/audioEffectsHelpers"
+import { type StereoShaperConfig, updateStereoShaperConfig } from "../../../../shared/audio/effects/audioStereoShaper"
 import { InputRow } from "../../../../shared/ui/kit/input-row/InputRow"
 import { NumberField } from "../../../../shared/ui/kit/number-field/NumberField"
 import type { AudioEffectProps } from "./AudioDelay"

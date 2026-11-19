@@ -16,8 +16,8 @@ vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: v
 vi.mock("../../shared/utils/helpers/output", () => ({ checkWindowCapture: vi.fn() }))
 vi.mock("../../app/wiring/remoteController", () => ({ startRemoteController: vi.fn(), stopRemoteController: vi.fn() }))
 vi.mock("../../app/wiring/startup", () => ({ contentProviderSync: vi.fn() }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 // El port Tip se mockea como isla: acá sólo importa con qué props se monta.
 vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 

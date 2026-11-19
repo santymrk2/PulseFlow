@@ -12,8 +12,8 @@ import { Shows } from "./Shows"
 const { historyMock, updateShowsListMock } = vi.hoisted(() => ({ historyMock: vi.fn(), updateShowsListMock: vi.fn() }))
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/classes/Show", () => ({ ShowObj: class ShowObj {} }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
 vi.mock("../../../shared/utils/helpers/show", () => ({ updateShowsList: updateShowsListMock }))

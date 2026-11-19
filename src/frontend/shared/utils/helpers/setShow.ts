@@ -1,7 +1,7 @@
 import { get } from "../../core/lib/store"
 import { uid } from "uid"
 import type { Show, TimelineAction } from "../../../../types/Show"
-import { AudioPlayer } from "../../../audio/audioPlayer"
+import { AudioPlayer } from "../../audio/audioPlayer"
 import type { ShowObj } from "../../core/classes/Show"
 import { fixShowIssues } from "../../../converters/importHelpers"
 import { requestMain } from "../../core/ipc/main"

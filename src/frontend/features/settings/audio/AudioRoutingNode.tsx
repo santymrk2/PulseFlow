@@ -1,5 +1,5 @@
 import type { CSSProperties, MouseEvent } from "react"
-import { AudioMicrophone } from "../../../audio/audioMicrophone"
+import { AudioMicrophone } from "../../../shared/audio/audioMicrophone"
 import { cn } from "../../../shared/core/lib/utils"
 import { activePopup, playingAudio, popupData, special } from "../../../shared/core/stores"
 import { translateText } from "../../../shared/utils/language"

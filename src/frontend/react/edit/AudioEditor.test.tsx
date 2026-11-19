@@ -5,7 +5,7 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { activeEdit, activeShow, media } from "../../shared/core/stores"
 import { AudioEditor } from "./AudioEditor"
 
-vi.mock("../../audio/audioPlayer", () => ({
+vi.mock("../../shared/audio/audioPlayer", () => ({
     AudioPlayer: {
         getDuration: () => Promise.resolve(0),
         getStartTime: () => 0,
@@ -13,7 +13,7 @@ vi.mock("../../audio/audioPlayer", () => ({
     }
 }))
 
-vi.mock("../../audio/audioWaveform", () => ({
+vi.mock("../../shared/audio/audioWaveform", () => ({
     WAVEFORM_SAMPLES: 8,
     createWaveform: () => Promise.resolve()
 }))

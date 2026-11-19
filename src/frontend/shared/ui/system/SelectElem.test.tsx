@@ -10,8 +10,8 @@ import styles from "./SelectElem.module.css"
 
 vi.mock("../../utils/common", () => commonMock())
 // SelectElem arrastra (vía helpers) el módulo de audio, que necesita AudioContext/AudioWorkletNode (no existen en happy-dom)
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../audio/audioProcessor", () => ({}))
+vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 let restaurar: () => void = () => {}
 const vacio = storeEntry(selected, { id: null, data: [] })

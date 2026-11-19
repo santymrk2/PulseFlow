@@ -15,8 +15,8 @@ vi.mock("../../shared/core/stores", () => ({
     playingMetronome: { subscribe: (fn: (value: unknown) => void) => (fn(true), () => {}) }
 }))
 vi.mock("../../shared/ui/hooks/useStore", () => ({ useStore: (s: unknown) => (String(s).includes("playingMetronome") ? true : String(s).includes("metronome") ? { tempo: 120, beats: 4 } : {}) }))
-vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: { getPath: () => "a.mp3", getDuration: async () => 0, start: vi.fn() } }))
-vi.mock("../../audio/audioPlaylist", () => ({ AudioPlaylist: { next: vi.fn() } }))
+vi.mock("../../shared/audio/audioPlayer", () => ({ AudioPlayer: { getPath: () => "a.mp3", getDuration: async () => 0, start: vi.fn() } }))
+vi.mock("../../shared/audio/audioPlaylist", () => ({ AudioPlaylist: { next: vi.fn() } }))
 vi.mock("../../shared/utils/clickable", () => ({ triggerClickOnEnterSpace: vi.fn() }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (t: string) => t }))
 vi.mock("../../shared/utils/helpers/media", () => ({ getFileName: (p: string) => p, removeExtension: (p: string) => p }))

@@ -2,14 +2,14 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { resetAudioRouting } from "../../audio/routing/audioRoutingInit"
+import { resetAudioRouting } from "../../shared/audio/routing/audioRoutingInit"
 import { activePopup, dictionary, settingsTab } from "../../shared/core/stores"
 import { commonMock } from "../../shared/test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { Settings } from "./Settings"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/routing/audioRoutingInit", () => ({ resetAudioRouting: vi.fn() }))
+vi.mock("../../shared/audio/routing/audioRoutingInit", () => ({ resetAudioRouting: vi.fn() }))
 vi.mock("./General", () => ({ General: () => <div>stub-general</div> }))
 vi.mock("./Files", () => ({ Files: () => <div>stub-files</div> }))
 vi.mock("./FilesButtons", () => ({ FilesButtons: () => <div>stub-files-buttons</div> }))

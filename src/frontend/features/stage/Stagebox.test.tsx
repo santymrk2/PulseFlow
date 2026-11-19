@@ -15,8 +15,8 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Stagebox } from "./Stagebox"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/cursor", () => ({ startResizing: vi.fn() }))
 vi.mock("../../app/wiring/stageTalk", () => ({ sendBackgroundToStage: vi.fn(async () => null) }))

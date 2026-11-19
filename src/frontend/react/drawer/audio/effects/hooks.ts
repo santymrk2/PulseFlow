@@ -1,6 +1,6 @@
 import { useEffect, useState, type RefObject } from "react"
-import { MAX_DB, MIN_DB } from "../../../../audio/dBUtils"
-import { AudioAnalyser } from "../../../../audio/audioAnalyser"
+import { MAX_DB, MIN_DB } from "../../../../shared/audio/dBUtils"
+import { AudioAnalyser } from "../../../../shared/audio/audioAnalyser"
 
 // Equivalente a `bind:clientWidth` de Svelte: mide el ancho del contenedor y reacciona a resize.
 // Si no hay ResizeObserver (tests, entornos sin DOM completo) se conserva el ancho por defecto.

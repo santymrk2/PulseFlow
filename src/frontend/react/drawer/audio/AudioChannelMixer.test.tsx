@@ -3,8 +3,8 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { CSSProperties, FormEvent } from "react"
 import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { toggleChannelRecording } from "../../../audio/audioChannelRecorder"
-import { AudioPlayer } from "../../../audio/audioPlayer"
+import { toggleChannelRecording } from "../../../shared/audio/audioChannelRecorder"
+import { AudioPlayer } from "../../../shared/audio/audioPlayer"
 import { activeAudioEffects, audioChannelsData, recordingChannels } from "../../../shared/core/stores"
 import { commonMock } from "../../../shared/test/mockCommon"
 import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
@@ -18,8 +18,8 @@ interface ClickDetail {
     target: EventTarget
 }
 
-vi.mock("../../../audio/audioChannelRecorder", () => ({ toggleChannelRecording: vi.fn() }))
-vi.mock("../../../audio/audioPlayer", () => ({ AudioPlayer: { updateVolume: vi.fn() } }))
+vi.mock("../../../shared/audio/audioChannelRecorder", () => ({ toggleChannelRecording: vi.fn() }))
+vi.mock("../../../shared/audio/audioPlayer", () => ({ AudioPlayer: { updateVolume: vi.fn() } }))
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("./AudioMeter", () => ({ AudioMeter: () => <div data-testid="audio-meter" /> }))
 vi.mock("../../../shared/ui/kit/slider/Slider", () => ({

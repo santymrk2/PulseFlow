@@ -11,9 +11,9 @@ vi.mock("../calendar/CreateCalendarShow", () => ({ CreateCalendarShow: ({ curren
 vi.mock("../calendar/Day", () => ({ Day: ({ type }: { type: string }) => <div data-isla="Day" data-type={type} /> }))
 vi.mock("../../../components/drawer/calendar/calendar", () => ({ getSelectedEvents: () => [{ id: "evt" }] }))
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {

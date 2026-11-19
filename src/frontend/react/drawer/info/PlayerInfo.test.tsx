@@ -14,9 +14,9 @@ vi.mock("../../../shared/utils/request", () => ({ send: mocks.send }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getAllNormalOutputs: () => mocks.outputs }))
 vi.mock("./CanvaInfo", () => ({ CanvaInfo: () => <div data-testid="canva" /> }))
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {} }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {

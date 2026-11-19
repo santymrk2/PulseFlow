@@ -4,8 +4,8 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import SlideContent from "./SlideContent"
 
 vi.mock("../../shared/ui/hooks/useStore", () => ({ useStore: () => ({}) }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/array", () => ({ clone: (value: unknown) => JSON.parse(JSON.stringify(value)) }))
 vi.mock("../../shared/utils/helpers/fonts", () => ({ loadCustomFonts: () => {} }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getStyleTemplate: () => ({}), itemNeedsAutoSize: () => false, slideHasAutoSizeItem: () => false }))

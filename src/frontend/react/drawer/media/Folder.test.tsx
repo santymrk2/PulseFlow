@@ -8,8 +8,8 @@ import { setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { Folder } from "./Folder"
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Loader") }))
 
 let restaurar: () => void = () => {}

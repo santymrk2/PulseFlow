@@ -6,8 +6,8 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Zoomed } from "./Zoomed"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/output", () => ({
     DEFAULT_BOUNDS: { width: 1920, height: 1080 },
     getActiveOutputs: vi.fn(() => ["out1"]),

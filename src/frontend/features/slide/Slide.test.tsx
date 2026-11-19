@@ -10,8 +10,8 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Slide } from "./Slide"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, wait: vi.fn(async () => "ended") }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({ global: "edit" })) }))
 vi.mock("../show/logic/slides", () => ({ removeTagsAndContent: vi.fn((value: string) => value) }))

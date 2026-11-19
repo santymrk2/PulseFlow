@@ -16,8 +16,8 @@ const { setOutputMock, findMatchingOutMock, clearBackgroundMock, clearSlideMock 
 }))
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock, setOutput: setOutputMock }))
 vi.mock("../../../features/output/logic/clear", () => ({ clearBackground: clearBackgroundMock, clearSlide: clearSlideMock }))
 

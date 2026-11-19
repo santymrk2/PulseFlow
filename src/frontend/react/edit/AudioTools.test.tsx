@@ -9,7 +9,7 @@ vi.mock("./tools/EditValues", () => ({
     EditValues: () => <div data-testid="edit-values" />
 }))
 
-vi.mock("../../audio/audioPlayer", () => ({
+vi.mock("../../shared/audio/audioPlayer", () => ({
     AudioPlayer: {
         getDuration: () => Promise.resolve(0),
         updateVolume: () => {},
@@ -17,8 +17,8 @@ vi.mock("../../audio/audioPlayer", () => ({
         setTempo: () => {}
     }
 }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
 
 afterEach(() => {

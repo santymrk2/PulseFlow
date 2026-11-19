@@ -7,7 +7,7 @@ import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { AudioInfo } from "./AudioInfo"
 
 const fading = vi.hoisted(() => ({ fadein: vi.fn(), fadeout: vi.fn(), audible: false, fading: false }))
-vi.mock("../../../audio/audioFading", () => ({
+vi.mock("../../../shared/audio/audioFading", () => ({
     fadeinAllPlayingAudio: () => fading.fadein(),
     fadeoutAllPlayingAudio: () => fading.fadeout(),
     get isAllAudioFading() {
@@ -19,9 +19,9 @@ vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMa
 vi.mock("../audio/AudioMixers", () => ({ AudioMixers: () => <div data-isla="AudioMixers" /> }))
 vi.mock("../audio/effects/AudioEffects", () => ({ AudioEffects: () => <div data-testid="efectos" /> }))
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: () => {}, wait: () => Promise.resolve() }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {

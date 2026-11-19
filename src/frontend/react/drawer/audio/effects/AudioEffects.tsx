@@ -1,5 +1,5 @@
 import type { CSSProperties, MouseEvent } from "react"
-import { EFFECTS_LIST, getEffectStack, moveEffectInStack, toggleEffectInStack } from "../../../../audio/effects/audioEffectsHelpers"
+import { EFFECTS_LIST, getEffectStack, moveEffectInStack, toggleEffectInStack } from "../../../../shared/audio/effects/audioEffectsHelpers"
 import { activeAudioEffects, activePopup, audioEffects, popupData } from "../../../../shared/core/stores"
 import { translateText } from "../../../../shared/utils/language"
 import { useStore } from "../../../../shared/ui/hooks/useStore"

@@ -16,8 +16,8 @@ vi.mock("../../shared/core/ipc/tauri", () => ({ invokeCommand: vi.fn() }))
 vi.mock("../../shared/utils/helpers/clipboard", () => ({ deleteAction: vi.fn(), duplicate: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({ toggleOutputs: vi.fn() }))
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("./ScreenOutputOptions", () => ({ ScreenOutputOptions: () => <div data-testid="envio" /> }))
 vi.mock("../../shared/ui/kit/color-field/ColorField", () => ({
     ColorField: ({ value, onChange }: { value: string; onChange: (v: string) => void }) => (

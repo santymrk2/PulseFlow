@@ -38,10 +38,10 @@ vi.mock("../../shared/utils/language", () => ({
 }))
 
 // @soundtouchjs/audio-worklet requiere AudioWorkletNode, ausente en happy-dom
-vi.mock("../../audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
 
 // AudioAnalyser crea un AudioContext a nivel de módulo, ausente en happy-dom
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 const output = (background: { type: string; path: string } | null = null) => ({ id: "o1", enabled: true, active: true, name: "O1", out: { background } })
 

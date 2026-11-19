@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { AudioPlayer } from "../../../audio/audioPlayer"
+import { AudioPlayer } from "../../../shared/audio/audioPlayer"
 import { audioStreams, playingAudio } from "../../../shared/core/stores"
 import { keysToID, sortByName } from "../../../shared/utils/helpers/array"
 import { Loader } from "../../main/Loader"

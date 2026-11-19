@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { setEffectConfig, subscribeEffect } from "../../../../audio/effects/audioEffectsHelpers"
+import { setEffectConfig, subscribeEffect } from "../../../../shared/audio/effects/audioEffectsHelpers"
 import { audioEffectPresets } from "../../../../shared/core/stores"
 import { looseEntry, setStoresForTest } from "../../../../shared/test/storeTestKit"
 import { AudioEffectPresets } from "./AudioEffectPresets"
@@ -12,8 +12,8 @@ interface Option {
     value: string
 }
 
-vi.mock("../../../../audio/effects/audioEffectsHelpers", async (importOriginal) => {
-    const actual = await importOriginal<typeof import("../../../../audio/effects/audioEffectsHelpers")>()
+vi.mock("../../../../shared/audio/effects/audioEffectsHelpers", async (importOriginal) => {
+    const actual = await importOriginal<typeof import("../../../../shared/audio/effects/audioEffectsHelpers")>()
     return {
         ...actual,
         subscribeEffect: vi.fn((key: string, callback: (config: object) => void) => {

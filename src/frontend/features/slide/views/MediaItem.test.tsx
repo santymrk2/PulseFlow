@@ -10,8 +10,8 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/s
 import { MediaItem } from "./MediaItem"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../react/drawer/media/Image", () => ({
     Image: ({ src, style }: { src: string; style?: CSSProperties | string }) => (
         <img

@@ -12,8 +12,8 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ResetAll } from "./ResetAll"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../output/logic/clear", () => ({ clearAll: vi.fn() }))
 vi.mock("../../app/wiring/save", () => ({ save: vi.fn() }))

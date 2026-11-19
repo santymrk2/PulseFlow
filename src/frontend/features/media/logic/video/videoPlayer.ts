@@ -2,8 +2,8 @@
 
 import { get } from "../../../../shared/core/lib/store"
 import { Main } from "../../../../../types/IPC/Main"
-import { AudioAnalyser } from "../../../../audio/audioAnalyser"
-import { fadeinAllPlayingAudio, fadeoutAllPlayingAudio } from "../../../../audio/audioFading"
+import { AudioAnalyser } from "../../../../shared/audio/audioAnalyser"
+import { fadeinAllPlayingAudio, fadeoutAllPlayingAudio } from "../../../../shared/audio/audioFading"
 import { requestMain } from "../../../../shared/core/ipc/main"
 import { media, outputs, playerVideos, playingVideos, playingVideoState, special, styles, transitionData } from "../../../../shared/core/stores"
 import { playFolder } from "../../../../app/wiring/shortcuts"

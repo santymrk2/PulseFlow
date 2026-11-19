@@ -1,7 +1,7 @@
 import { get } from "../../shared/core/lib/store"
 import { CLOUD, CONTROLLER, NDI, OMT, OUTPUT, OUTPUT_STREAM, REMOTE, STAGE } from "../../../types/Channels"
 import type { ClientMessage } from "../../../types/Socket"
-import { MIN_DB } from "../../audio/dBUtils"
+import { MIN_DB } from "../../shared/audio/dBUtils"
 import { runAction } from "../../components/actions/actions"
 import { handleRecorderFrame } from "../../components/drawer/live/recorder"
 import { getDynamicValue } from "../../components/edit/scripts/itemHelpers"

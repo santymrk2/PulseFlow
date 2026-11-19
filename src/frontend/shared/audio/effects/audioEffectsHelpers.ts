@@ -1,10 +1,10 @@
 // Shared store helpers for audio effect integration layers.
 // Eliminates the repeated read/write boilerplate across effect modules.
 
-import { get } from "../../shared/core/lib/store"
+import { get } from "../../core/lib/store"
 import { uid } from "uid"
-import { clone } from "../../shared/utils/helpers/array"
-import { activeAudioEffects, audioEffects, type AudioEffectInstance, type AudioEffectsConfig } from "../../shared/core/stores"
+import { clone } from "../../utils/helpers/array"
+import { activeAudioEffects, audioEffects, type AudioEffectInstance, type AudioEffectsConfig } from "../../core/stores"
 
 export const ALL_EFFECT_KEYS = ["equalizer", "filter", "noiseGate", "compressor", "limiter", "reverb", "delay", "stereoShaper"] as const
 export type EffectType = (typeof ALL_EFFECT_KEYS)[number]

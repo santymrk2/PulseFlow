@@ -37,7 +37,7 @@ vi.hoisted(() => {
 
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
-vi.mock("../../../audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn(), start: mocks.start } }))
+vi.mock("../../../shared/audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn(), start: mocks.start } }))
 vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ onClick, onDblClick, children, disabled }: { onClick?: (d: { ctrl: boolean }, e: MouseEvent<HTMLButtonElement>) => void; onDblClick?: (d: { ctrl: boolean }, e: MouseEvent<HTMLButtonElement>) => void; children?: ReactNode; disabled?: boolean }) => (

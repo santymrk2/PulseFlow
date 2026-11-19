@@ -4,7 +4,7 @@ import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../../types/Show"
 import { OUTPUT } from "../../../../types/Channels"
-import { AudioAnalyser } from "../../../audio/audioAnalyser"
+import { AudioAnalyser } from "../../../shared/audio/audioAnalyser"
 import { currentWindow, visualizerData } from "../../../shared/core/stores"
 import { send } from "../../../shared/utils/request"
 import { drawKaleidoscope } from "../logic/views/visualizerKaleidoscope"
@@ -13,8 +13,8 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/s
 import { Visualizer } from "./Visualizer"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: { getAnalysers: vi.fn(() => []) } }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: { getAnalysers: vi.fn(() => []) } }))
 vi.mock("../../../shared/utils/request", () => ({ send: vi.fn() }))
 vi.mock("../logic/views/visualizerKaleidoscope", () => ({ drawKaleidoscope: vi.fn() }))
 vi.mock("../logic/views/visualizerParticles", () => ({ drawParticles: vi.fn() }))

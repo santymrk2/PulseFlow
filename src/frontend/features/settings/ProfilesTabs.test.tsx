@@ -11,8 +11,8 @@ import { ProfilesTabs } from "./ProfilesTabs"
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("uid", () => ({ uid: () => "nuevo-id" }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 const perfil = (name: string, extra = {}) => ({ name, color: "#ff0000", image: "", access: {}, ...extra })
 

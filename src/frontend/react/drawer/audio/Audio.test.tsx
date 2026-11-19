@@ -15,13 +15,13 @@ interface ClickDetail {
     target: EventTarget
 }
 
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/ipc/main", () => ({ requestMain: vi.fn(() => Promise.resolve({})) }))
-vi.mock("../../../audio/audioPlayer", () => ({
+vi.mock("../../../shared/audio/audioPlayer", () => ({
     AudioPlayer: { getDurationSync: vi.fn(() => 30), getKey: vi.fn((p: string) => p), getAudioType: vi.fn(() => "music"), start: vi.fn(), updateVolume: vi.fn(), getDuration: vi.fn(() => Promise.resolve(30)) }
 }))
-vi.mock("../../../audio/audioPlaylist", () => ({ AudioPlaylist: { update: vi.fn(), start: vi.fn(), stop: vi.fn() } }))
+vi.mock("../../../shared/audio/audioPlaylist", () => ({ AudioPlaylist: { update: vi.fn(), start: vi.fn(), stop: vi.fn() } }))
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../live/Microphones", () => ({ Microphones: () => <div data-testid="microphones" /> }))
 vi.mock("../live/AudioStreams", () => ({ AudioStreams: () => <div data-testid="audio-streams" /> }))

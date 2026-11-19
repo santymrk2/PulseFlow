@@ -14,9 +14,9 @@ vi.mock("../../../shared/utils/helpers/show", () => ({ updateCachedShows: vi.fn(
 vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: () => ({ slides: () => ({ items: () => ({ lines: () => ({ get: () => mocks.lines }) }) }) }) }))
 vi.mock("../../../shared/ui/system/Clock", () => ({ Clock: () => <div data-isla="Clock" /> }))
 vi.mock("../../../shared/ui/system/Date", () => ({ Date: () => <div data-isla="Date" /> }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 
 const SHOW = { id: "sh1", name: "Mi show", type: "show", category: "cat1", quickAccess: { tags: ["tag1"] }, timestamps: { created: 1700000000000 } }
 let restaurar: () => void = () => {}

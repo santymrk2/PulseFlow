@@ -9,8 +9,8 @@ import { Canva } from "./Canva"
 
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 let restaurar: () => void = () => {}
 

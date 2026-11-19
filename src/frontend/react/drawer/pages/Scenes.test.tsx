@@ -10,8 +10,8 @@ import { Scenes } from "./Scenes"
 const { historyMock, startSceneMock, findMatchingOutMock } = vi.hoisted(() => ({ historyMock: vi.fn(), startSceneMock: vi.fn(), findMatchingOutMock: vi.fn(() => null) }))
 
 vi.mock("../../../shared/utils/common", () => commonMock())
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 16, height: 9 }), findMatchingOut: findMatchingOutMock, startScene: startSceneMock }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
 vi.mock("./ScenePreview", () => ({ ScenePreview: ({ scene }: { scene: { id: string } }) => <div data-testid={`preview-${scene.id}`} /> }))

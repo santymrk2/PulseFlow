@@ -27,8 +27,8 @@ vi.mock("../../app/wiring/save", () => ({ save: vi.fn() }))
 vi.mock("../../shared/utils/drive", () => ({ validateKeys: vi.fn() }))
 vi.mock("../../app/wiring/cloudSync", () => ({ changeTeam: vi.fn(), setupCloudSync: vi.fn(), socketDisconnect: vi.fn(async () => {}), updateCloudDeviceName: vi.fn() }))
 // getFileName (FileField) vive en helpers/media, que arrastra el módulo de audio
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 const respuestas: { mediaPath: string; providerDisconnect: { success: boolean }; readFile: { content?: string }; restore: { success: boolean; error?: string } } = { mediaPath: "", providerDisconnect: { success: true }, readFile: {}, restore: { success: true } }
 

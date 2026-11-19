@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
-import { AudioPlayer } from "../../../audio/audioPlayer"
-import { AudioPlaylist } from "../../../audio/audioPlaylist"
+import { AudioPlayer } from "../../../shared/audio/audioPlayer"
+import { AudioPlaylist } from "../../../shared/audio/audioPlaylist"
 import { addProjectItem } from "../../../converters/project"
 import { activePlaylist, activeShow, media, outLocked, playingAudio } from "../../../shared/core/stores"
 import { joinTime, secondsToTime } from "../../../shared/utils/helpers/time"

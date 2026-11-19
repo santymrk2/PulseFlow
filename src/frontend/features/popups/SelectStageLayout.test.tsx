@@ -13,8 +13,8 @@ import { SelectStageLayout } from "./SelectStageLayout"
 const { portProps } = vi.hoisted(() => ({ portProps: {} as Record<string, Record<string, unknown>> }))
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("uid", () => ({ uid: vi.fn(() => "layout-nuevo") }))

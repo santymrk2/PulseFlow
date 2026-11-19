@@ -2,8 +2,8 @@
 import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import type { ReactNode } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { AudioPlayer } from "../../../audio/audioPlayer"
-import { AudioPlaylist } from "../../../audio/audioPlaylist"
+import { AudioPlayer } from "../../../shared/audio/audioPlayer"
+import { AudioPlaylist } from "../../../shared/audio/audioPlaylist"
 import { addProjectItem } from "../../../converters/project"
 import { activePlaylist, activeShow, media, outLocked, playingAudio } from "../../../shared/core/stores"
 import { commonMock } from "../../../shared/test/mockCommon"
@@ -18,7 +18,7 @@ interface ClickDetail {
     target: EventTarget
 }
 
-vi.mock("../../../audio/audioPlayer", () => ({
+vi.mock("../../../shared/audio/audioPlayer", () => ({
     AudioPlayer: {
         getDuration: vi.fn(() => Promise.resolve(30)),
         getKey: vi.fn((path: string, index?: number) => (index === undefined ? path : `${path}:${index}`)),
@@ -26,7 +26,7 @@ vi.mock("../../../audio/audioPlayer", () => ({
         start: vi.fn()
     }
 }))
-vi.mock("../../../audio/audioPlaylist", () => ({ AudioPlaylist: { start: vi.fn() } }))
+vi.mock("../../../shared/audio/audioPlaylist", () => ({ AudioPlaylist: { start: vi.fn() } }))
 vi.mock("../../../converters/project", () => ({ addProjectItem: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div>{children}</div> }))

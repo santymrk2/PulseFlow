@@ -6,8 +6,8 @@ import { findMatchingOut, getActiveOutputs, setOutput } from "../../../shared/ut
 import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { OverlayPreview } from "./OverlayPreview"
 
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(() => null), getActiveOutputs: vi.fn(() => ["out1"]), setOutput: vi.fn() }))
 vi.mock("../../../shared/ui/system/HoverPlay", () => ({

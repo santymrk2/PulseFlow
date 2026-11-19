@@ -16,8 +16,8 @@ vi.mock("../../../../components/edit/scripts/edit", () => ({
     getGradientOpacity: (value: string) => (value.includes("alpha") ? 0.4 : 1),
     addOpacityToGradient: vi.fn((value: string, alpha: number) => `${value}@${alpha}`)
 }))
-vi.mock("../../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../audio/audioProcessor", () => ({}))
+vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 // Vitest corre en node y Svelte resuelve su build de servidor (mount no existe); acá se fuerza el de cliente
 ;(globalThis as { IS_REACT_ACT_ENVIRONMENT?: boolean }).IS_REACT_ACT_ENVIRONMENT = true
 

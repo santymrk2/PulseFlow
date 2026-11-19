@@ -13,8 +13,8 @@ import { Textbox } from "./Textbox"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, wait: vi.fn(() => Promise.resolve("ended")) }))
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../components/edit/scripts/autosize", () => ({ default: vi.fn(() => 42) }))
 vi.mock("../../shared/utils/helpers/showActions", () => ({ createCSSVariables: vi.fn(() => "--variable-test: 1;") }))
 vi.mock("../../shared/utils/helpers/output", () => ({

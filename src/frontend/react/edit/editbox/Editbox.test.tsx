@@ -87,9 +87,9 @@ vi.mock("../../../shared/utils/profile", () => ({ getAccess: () => ({ global: "w
 vi.mock("../../../app/wiring/shortcuts", () => ({ isComposing: () => false, getNormalizedKey: () => "v", isFormattingKey: () => false }))
 vi.mock("../../../shared/utils/common", () => ({ newToast: vi.fn() }))
 
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioSender", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ getAnalyser: () => null }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioSender", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ getAnalyser: () => null }))
 vi.mock("../../../shared/utils/helpers/clipboard", () => ({ deleteAction: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/media", () => ({ getExtension: () => "", getFileName: () => "", getMediaType: () => "image" }))

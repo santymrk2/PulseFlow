@@ -5,7 +5,7 @@ import { Main } from "../../../../types/IPC/Main"
 import type { Output, Outputs, RtmpDestination } from "../../../../types/Output"
 import type { Resolution, Styles } from "../../../../types/Settings"
 import type { Item, Layout, LayoutRef, Media, OutSlide, Show, Slide, SlideData, Template, TemplateSettings, Transition } from "../../../../types/Show"
-import { AudioAnalyser } from "../../../audio/audioAnalyser"
+import { AudioAnalyser } from "../../audio/audioAnalyser"
 import { requestMain, sendMain } from "../../core/ipc/main"
 import { invokeCommand } from "../../core/ipc/tauri"
 import {

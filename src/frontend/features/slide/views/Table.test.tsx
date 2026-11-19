@@ -8,8 +8,8 @@ import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/s
 import { Table } from "./Table"
 
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
-vi.mock("../../../audio/audioProcessor", () => ({}))
-vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 
 let restore: () => void = () => {}
 beforeEach(() => {

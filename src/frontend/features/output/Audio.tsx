@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
-import { AudioPlayer } from "../../audio/audioPlayer"
-import { AudioPlaylist } from "../../audio/audioPlaylist"
+import { AudioPlayer } from "../../shared/audio/audioPlayer"
+import { AudioPlaylist } from "../../shared/audio/audioPlaylist"
 import { activeFocus, activePlaylist, activeShow, audioPlaylists, focusMode, metronome, outLocked, playingAudio, playingMetronome } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { getFileName, removeExtension } from "../../shared/utils/helpers/media"

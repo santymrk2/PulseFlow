@@ -11,8 +11,8 @@ import { clearIslands } from "../../shared/test/islandMock"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { Slides } from "./Slides"
 
-vi.mock("../../audio/audioProcessor", () => ({}))
-vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
+vi.mock("../../shared/audio/audioProcessor", () => ({}))
+vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/common", () => ({ hasNewerUpdate: vi.fn(async () => false), wait: vi.fn(async () => {}) }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../../shared/utils/helpers/fonts", () => ({ loadCustomFonts: vi.fn() }))
