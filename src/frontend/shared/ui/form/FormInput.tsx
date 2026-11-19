@@ -70,7 +70,7 @@ export function FormInput({ input, hasTimelineAction = false, onChange, onKeyfra
     }
 
     const settings = (inp.settings || {}) as Loose
-    const commonProps = { label, ...(inp as object), ...(settings as object), style: inp.style ? cssTextToStyle(String(inp.style)) : undefined, hasTimelineAction, enableKeyframe } as never
+    const commonProps = { label, ...(inp as object), ...(settings as object), ...(inp.style ? { style: cssTextToStyle(String(inp.style)) } : {}), hasTimelineAction, enableKeyframe } as never
 
     if (inputType === "string") return <TextField value={String(inp.value ?? "")} {...commonProps} onChange={(v) => changed(v)} onInput={(v) => changed(v)} />
     if (inputType === "number") return <NumberField value={Number(inp.value ?? 0)} {...commonProps} onChange={(v) => changed(v)} onInput={(v) => changed(v)} onKeyframe={onKeyframe ? (v) => onKeyframe(v) : undefined} />

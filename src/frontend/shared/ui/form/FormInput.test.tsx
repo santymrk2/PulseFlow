@@ -45,4 +45,9 @@ describe("FormInput", () => {
         expect(field.getAttribute("data-style-type")).toBe("object")
         expect(field.style.flex).toContain("1")
     })
+
+    it("conserva settings.style cuando el input no trae style propio", () => {
+        const { container } = render(<FormInput input={{ type: "number", name: "N", value: 1, settings: { style: { flex: "2" } } } as unknown as never} />)
+        expect((container.querySelector("input") as HTMLInputElement).style.flex).toContain("2")
+    })
 })
