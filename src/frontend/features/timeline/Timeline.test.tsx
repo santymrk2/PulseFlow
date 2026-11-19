@@ -87,16 +87,16 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/common", () => ({ ...commonMock(), DEFAULT_WIDTH: 290 }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../components/timeline/TimelinePlayback", () => ({
+vi.mock("./logic/TimelinePlayback", () => ({
     TimelinePlayback: FakePlayback,
     getActiveTimelinePlayback: vi.fn(() => null)
 }))
-vi.mock("../../components/timeline/TimelineActions", () => ({ TimelineActions: FakeActions }))
-vi.mock("../../components/timeline/ShowTimeline", () => ({
+vi.mock("./logic/TimelineActions", () => ({ TimelineActions: FakeActions }))
+vi.mock("./logic/ShowTimeline", () => ({
     ShowTimeline: { isRecordingActive: vi.fn(() => false), toggleRecording: vi.fn(() => true) }
 }))
-vi.mock("../../components/timeline/timeline", async () => {
-    const actual = await vi.importActual<typeof import("../../components/timeline/timeline")>("../../components/timeline/timeline")
+vi.mock("./logic/timeline", async () => {
+    const actual = await vi.importActual<typeof import("./logic/timeline")>("./logic/timeline")
     return { ...actual, timelineZoom: vi.fn(async (_e: WheelEvent, zoom: number) => zoom * 1.1) }
 })
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))

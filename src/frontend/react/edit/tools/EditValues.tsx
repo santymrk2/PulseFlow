@@ -10,7 +10,7 @@ import { clone, keysToID, sortByName } from "../../../shared/utils/helpers/array
 import { getFilters, getStyles } from "../../../shared/utils/helpers/style"
 import { FormInput } from "../../../shared/ui/form/FormInput"
 import { getIsoLanguages } from "../../../components/main/popups/localization/translation"
-import { SlideTimeline } from "../../../components/timeline/SlideTimeline"
+import { SlideTimeline } from "../../../features/timeline/logic/SlideTimeline"
 import { parseShadowValue } from "../../../components/edit/scripts/edit"
 import { filterItemStyle, mergeWithStyle } from "../../../components/edit/scripts/itemClipboard"
 import { getShapeOutsideStyle, parseShapeOutsideValue } from "../../../components/edit/scripts/shapeOutside"

@@ -1,11 +1,11 @@
-import { get, type Unsubscriber } from "../../shared/core/lib/store"
-import type { LayoutRef } from "../../../types/Show"
-import { actions, activeShow, outputs, showsCache, timelineRecordingAction } from "../../shared/core/stores"
-import { actionData } from "../actions/actionData"
-import { getFirstActiveOutput, setOutput } from "../../shared/utils/helpers/output"
-import { updateOut } from "../../shared/utils/helpers/showActions"
-import { _show } from "../../shared/utils/helpers/shows"
-import { clone } from "../../shared/utils/helpers/array"
+import { get, type Unsubscriber } from "../../../shared/core/lib/store"
+import type { LayoutRef } from "../../../../types/Show"
+import { actions, activeShow, outputs, showsCache, timelineRecordingAction } from "../../../shared/core/stores"
+import { actionData } from "../../../components/actions/actionData"
+import { getFirstActiveOutput, setOutput } from "../../../shared/utils/helpers/output"
+import { updateOut } from "../../../shared/utils/helpers/showActions"
+import { _show } from "../../../shared/utils/helpers/shows"
+import { clone } from "../../../shared/utils/helpers/array"
 
 type TimelineActionPass = { type: string; name: string; color?: string; data: any }
 

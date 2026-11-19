@@ -138,7 +138,7 @@ vi.mock("../../slide/Zoomed", () => ({ Zoomed: ({ children }: any) => <div>{chil
 vi.mock("../../slide/Textbox", () => ({ Textbox: () => <div /> }))
 vi.mock("../../drawer/media/MediaLoader", () => ({ MediaLoader: () => <div /> }))
 vi.mock("../../show/tools/Notes", () => ({ Notes: () => <div /> }))
-vi.mock("../../timeline/Timeline", () => ({ Timeline: () => <div /> }))
+vi.mock("../../../features/timeline/Timeline", () => ({ Timeline: () => <div /> }))
 vi.mock("../editbox/Editbox", () => ({ Editbox: () => <div data-testid="editbox" /> }))
 vi.mock("../EditHeader", () => ({ EditHeader: () => <div /> }))
 

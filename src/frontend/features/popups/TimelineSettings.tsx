@@ -1,6 +1,6 @@
 // Port de components/main/popups/TimelineSettings.svelte. Lee: timeline.startTime (ms).
 // Escribe: timeline.startTime con parseTime del valor del campo.
-import { formatTime, parseTime } from "../../components/timeline/timeline"
+import { formatTime, parseTime } from "../timeline/logic/timeline"
 import { timeline } from "../../shared/core/stores"
 import { useStore } from "../../shared/ui/hooks/useStore"
 import { TextField } from "../../shared/ui/kit/text-field/TextField"

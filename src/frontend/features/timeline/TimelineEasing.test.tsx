@@ -2,7 +2,7 @@
 import { cleanup, fireEvent, render } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import type { TimelineAction } from "../../../types/Show"
-import type { TimelineActions } from "../../components/timeline/TimelineActions"
+import type { TimelineActions } from "./logic/TimelineActions"
 import { TimelineEasing, type TimelineEasingProps } from "./TimelineEasing"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))

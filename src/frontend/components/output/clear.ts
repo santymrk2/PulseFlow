@@ -8,7 +8,7 @@ import { startMetronome } from "../drawer/audio/metronome"
 import { clone } from "../../shared/utils/helpers/array"
 import { clearOverlayTimer, getAllActiveOutputIds, getAllActiveOutputs, isOutCleared, setOutput } from "../../shared/utils/helpers/output"
 import { _show } from "../../shared/utils/helpers/shows"
-import { getActiveTimelinePlayback } from "../timeline/TimelinePlayback"
+import { getActiveTimelinePlayback } from "../../features/timeline/logic/TimelinePlayback"
 
 export function clearAll(button = false) {
     if (get(outLocked)) return

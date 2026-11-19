@@ -11,7 +11,7 @@ import { TimelineSettings } from "./TimelineSettings"
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/timeline/timeline", () => ({ formatTime: (ms: number) => `fmt:${ms}`, parseTime: (str: string) => str.length }))
+vi.mock("../timeline/logic/timeline", () => ({ formatTime: (ms: number) => `fmt:${ms}`, parseTime: (str: string) => str.length }))
 vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 let restaurar: () => void = () => {}

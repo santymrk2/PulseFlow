@@ -16,7 +16,7 @@ vi.mock("../../../shared/core/values/extensions", () => ({ mediaExtensions: [], 
 vi.mock("../../../components/drawer/timers/timers", () => ({ getSortedTimers: () => [] }))
 vi.mock("../../../shared/utils/helpers/style", () => ({ getFilters: () => ({}), getStyles: () => ({}) }))
 vi.mock("../../../components/main/popups/localization/translation", () => ({ getIsoLanguages: () => [] }))
-vi.mock("../../../components/timeline/SlideTimeline", () => ({ SlideTimeline: { hasActionWithKey: () => false, hasActionAtTime: () => false, addKeyframe: vi.fn() } }))
+vi.mock("../../../features/timeline/logic/SlideTimeline", () => ({ SlideTimeline: { hasActionWithKey: () => false, hasActionAtTime: () => false, addKeyframe: vi.fn() } }))
 vi.mock("../../../components/edit/scripts/edit", () => ({ parseShadowValue: () => [] }))
 vi.mock("../../../components/edit/scripts/itemClipboard", () => ({ filterItemStyle: (s: string) => s || "", mergeWithStyle: (v: string) => v }))
 vi.mock("../../../components/edit/scripts/shapeOutside", () => ({ getShapeOutsideStyle: () => "", parseShapeOutsideValue: () => [] }))

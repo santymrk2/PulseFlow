@@ -1,4 +1,4 @@
-import type { TimelineAction } from "../../../types/Show"
+import type { TimelineAction } from "../../../../types/Show"
 
 export interface EasingHandles {
     x1: number

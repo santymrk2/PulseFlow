@@ -28,7 +28,7 @@ import { clearAll, clearBackground, clearOverlay, clearOverlays, clearScene, cle
 import { fadePause, skipNext, skipPrev, spotifyPause, spotifyPlay } from "../output/preview/SpotifyManager"
 import { formatText } from "../show/formatTextEditor"
 import { getPlainEditorText } from "../show/getTextEditor"
-import { pauseTimeline, setTimelineTime, startTimeline, stopTimeline } from "../timeline/TimelinePlayback"
+import { pauseTimeline, setTimelineTime, startTimeline, stopTimeline } from "../../features/timeline/logic/TimelinePlayback"
 import { runActionByName, runActionId, toggleAction } from "./actions"
 import { getActions, getOutput, getOutputGroupName, getOutputSlideText, getPlayingAudioData, getPlayingAudioDuration, getPlayingAudioTime, getPlayingPlaylist, getPlayingVideoDuration, getPlayingVideoState, getPlayingVideoTime, getPlaylists, getProject, getProjects, getShow, getShowLayout, getShows, getSlide, getVariable, getVariables } from "./apiGet"
 import {
