@@ -40,7 +40,7 @@ Download the latest installer from the [Releases page](https://github.com/santym
 5. `bun run setup:sidecars --only-host` (once)
 6. `bun run dev:tauri` (frontend only: `bun run dev`)
 
-Tests: `bun run test:unit`, `bun run test:react`, `bun run test:budget`, and `cd src-tauri && cargo test --lib`. Agent rules live in [`AGENTS.md`](AGENTS.md).
+Tests: `bun run test:unit`, `bun run test:types`, `bun run test:budget`, and `cd src-tauri && cargo test --lib`. Agent rules live in [`AGENTS.md`](AGENTS.md).
 
 ## Report an issue or request a feature
 

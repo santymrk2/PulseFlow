@@ -18,7 +18,7 @@ diferenciarse, usá `cfg(target_os = "macos")` / `cfg(target_os = "windows")`.
 | Frontend dev | `bun run dev` |
 | App completa | `bun run dev:tauri` (requiere `bun run setup:sidecars --only-host` una vez) |
 | Tests JS | `bun run test:unit` |
-| Tipos React | `bun run test:react` |
+| Tipos (todo el frontend) | `bun run test:types` |
 | Presupuesto de calidad | `bun run test:budget` |
 | Formato | `bunx prettier --config config/formatting/.prettierrc.yaml --check <archivos tocados en src/>` |
 | Rust | `cd src-tauri && cargo check && cargo clippy --all-targets -- -D warnings && cargo test --lib` |
@@ -76,12 +76,12 @@ prettier sobre `.md` ni el resto de la configuración.
 - CSS Modules (`Nombre.module.css`): **sólo se hashean las clases**. Por eso:
   - Prohibido un selector que empiece por elemento (`div {}`, `span[role]`, `input::placeholder`): es **global**
     y rompe toda la app. Siempre una clase: `.root {}`, `.toggle:focus`, `.field::placeholder`. Lo controla
-    `react/cssModulesScope.test.ts`.
+    `arch/cssModulesScope.test.ts`.
   - Una clase del módulo se aplica con `styles.x`, nunca como string `"x"`; el string no matchea. Un literal
     sólo tiene sentido como gancho para CSS `:global(.x)` o para `querySelector`, y va **además** de `styles.x`.
   - Toda `styles.x` usada en un `.tsx` existe en su módulo. Las clases kebab-case se leen en camelCase
     (`.action-clip` → `styles.actionClip`, por `localsConvention` en `vite.config.mjs`). Lo controla
-    `react/cssModulesClasses.test.ts`.
+    `arch/cssModulesClasses.test.ts`.
 
 ## Varios agentes en paralelo
 

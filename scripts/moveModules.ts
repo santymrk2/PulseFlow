@@ -15,10 +15,14 @@ interface Resolved {
 
 const CANDIDATE_SUFFIXES = ["", ".ts", ".tsx", ".js", ".mjs", "/index.ts", "/index.tsx"]
 
-// prefijo (from / import / import( / vi.xxx() + comilla + ruta relativa + misma comilla
-const SPECIFIER = /(\bfrom\s*|\bimport\s*\(?\s*|\bvi\.(?:mock|doMock|unmock|importActual|importMock)\s*\(\s*)(["'])(\.{1,2}\/[^"'\n]*)\2/g
+// prefijo (from / import / import( / vi.xxx() o vi.xxx<genérico>() + comilla + ruta relativa + misma comilla
+const VI_CALL = "\\bvi\\.(?:mock|doMock|unmock|importActual|importMock)"
+const SPECIFIER = new RegExp(`(\\bfrom\\s*|\\bimport\\s*\\(?\\s*|${VI_CALL}\\s*\\(\\s*|(?<=${VI_CALL}\\s*<[^>\\n]*>\\s*\\(\\s*))(["'])(\\.{1,2}/[^"'\\n]*)\\2`, "g")
 
 const toPosix = (p: string) => p.replace(/\\/g, "/")
+
+/** Rutas relativas de un archivo, en las mismas formas que reescribe `rewriteSpecifiers`. */
+export const listSpecifiers = (code: string): string[] => [...code.matchAll(SPECIFIER)].map((m) => m[3])
 
 export function buildFileMap(moves: Move[], allFiles: string[]): Map<string, string> {
     const map = new Map<string, string>()

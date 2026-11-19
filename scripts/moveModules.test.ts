@@ -46,6 +46,10 @@ describe("rewriteSpecifiers", () => {
         const out = run(`vi.mock("../b/Y", async () => ({}))`, "src/a/X.test.tsx", moveB)
         expect(out.code).toBe(`vi.mock("../z/b/Y", async () => ({}))`)
     })
+    it("vi.importActual con genérico: reescribe las dos rutas", () => {
+        const code = `vi.importActual<typeof import("../b/Y")>("../b/Y")`
+        expect(run(code, "src/a/X.test.tsx", moveB).code).toBe(`vi.importActual<typeof import("../z/b/Y")>("../z/b/Y")`)
+    })
     it("import() dinámico", () => {
         const code = `const L = lazy(() => import('./Lazy'))`
         expect(run(code, "src/b/Y.tsx", [{ from: "src/b/Y.tsx", to: "src/q/Y.tsx" }]).code).toBe(`const L = lazy(() => import('../b/Lazy'))`)

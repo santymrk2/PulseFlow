@@ -7,7 +7,7 @@ import { describe, expect, it } from "vitest"
 // Este test marca cada selector cuyo primer compuesto no tiene una clase de nivel superior ni está
 // dentro de :global(...) / :root.
 
-const REACT_DIR = __dirname
+const FRONTEND_DIR = join(__dirname, "..")
 
 interface Leak {
     file: string
@@ -120,11 +120,11 @@ function isLeak(selector: string): boolean {
 }
 
 function findLeaks(): Leak[] {
-    return listModuleCss(REACT_DIR).flatMap((path) => {
+    return listModuleCss(FRONTEND_DIR).flatMap((path) => {
         const css = stripComments(readFileSync(path, "utf8"))
         const hits: RuleHit[] = []
         collectRules(css, 0, css.length, hits)
-        const file = relative(REACT_DIR, path)
+        const file = relative(FRONTEND_DIR, path)
         return hits.flatMap(({ prelude, offset }) => {
             const selectors = splitTopLevel(prelude, ",")
             return selectors

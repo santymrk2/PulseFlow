@@ -17,7 +17,7 @@ export const countRgb = (text: string) => count(text, RGB)
 
 /**
  * Mide `any` en `.ts`/`.tsx` (sin contar los tests) y los colores literales (hex y `rgb()`) en
- * `.tsx` y `react/ (*.module.css)`. `excludedColorPaths` son prefijos de ruta (plantillas o datos
+ * `.tsx` y `frontend/ (*.module.css)`. `excludedColorPaths` son prefijos de ruta (plantillas o datos
  * de ejemplo) que no cuentan para los colores.
  */
 export function measureSources(files: { path: string; text: string }[], excludedColorPaths: string[] = []): Measures {
@@ -26,7 +26,7 @@ export function measureSources(files: { path: string; text: string }[], excluded
     let rgbColors = 0
 
     for (const file of files) {
-        const isModuleCss = file.path.startsWith("src/frontend/react/") && file.path.endsWith(".module.css")
+        const isModuleCss = file.path.startsWith("src/frontend/") && file.path.endsWith(".module.css")
         const hasColors = file.path.endsWith(".tsx") || isModuleCss
         const hasCode = file.path.endsWith(".ts") || file.path.endsWith(".tsx")
         if (!hasCode && !isModuleCss) continue

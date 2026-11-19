@@ -140,3 +140,16 @@ dentro de `setTimeout(() => { … }, 12000)` (esperar a que cargue la UI). Quita
 - Reproducción real de media/audio, timeline en uso, ejecución de acciones, cloud (ChurchApps) y MIDI/NDI.
 - Los popups se abrieron sin datos de contexto (F02, F03, F13 pueden ser artefactos de la sonda).
 - Sólo macOS Apple Silicon. Windows no se probó.
+
+## Imports rotos preexistentes
+
+Los encontró `src/frontend/arch/relativeSpecifiers.test.ts` (rutas relativas que no resuelven a ningún archivo). No se
+arreglaron para no cambiar el comportamiento de los tests; están en `KNOWN_BROKEN` de ese test, que sólo puede achicarse.
+
+- `src/frontend/components/drawer/audio/metronome.ts` → `../../../types/Audio`
+- `src/frontend/components/helpers/looks.migration.test.ts` → `../../../../types/Output` y `../../../../types/Settings`
+- `src/frontend/react/drawer/media/Media.test.tsx` → `vi.mock("./pixabay")` y `vi.mock("./unsplash")`
+- `src/frontend/react/show/Show.test.tsx` → `vi.mock("./MediaPreview")`
+
+Además: la línea base de 168 errores de `tsc` incluía 8 de `node_modules/json-bible`; dentro de `src/frontend/` son 160, y
+ese es el `MAX_ERRORS` de `scripts/check-types.ts`.

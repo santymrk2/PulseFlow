@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest"
 // Cada acceso `styles.nombre` / `styles["nombre"]` de un .tsx tiene que existir como clase local del
 // .module.css importado; si no, da undefined y el estilo se perdió (o el acceso está muerto).
 
-const REACT_DIR = __dirname
+const FRONTEND_DIR = join(__dirname, "..")
 
 function listFiles(dir: string, match: (name: string) => boolean): string[] {
     return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
@@ -79,9 +79,9 @@ interface Leak {
 }
 
 function findLeaks(): Leak[] {
-    return listFiles(REACT_DIR, (n) => n.endsWith(".tsx") && !n.endsWith(".test.tsx")).flatMap((path) => {
+    return listFiles(FRONTEND_DIR, (n) => n.endsWith(".tsx") && !n.endsWith(".test.tsx")).flatMap((path) => {
         const src = stripComments(readFileSync(path, "utf8"))
-        const file = relative(REACT_DIR, path)
+        const file = relative(FRONTEND_DIR, path)
         const leaks: Leak[] = []
         for (const [, local, cssPath] of src.matchAll(/import\s+(\w+)\s+from\s+["'](\.[^"']*\.module\.css)["']/g)) {
             const classes = localClasses(resolve(dirname(path), cssPath))

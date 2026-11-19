@@ -1,6 +1,6 @@
 // Trinquete de calidad (F13.2): `bun run test:budget`.
 //
-// Mide (1) `: any` / `as any` y (2) colores literales en `.tsx` y `react/ (*.module.css)`, y los
+// Mide (1) `: any` / `as any` y (2) colores literales en `.tsx` y `frontend/ (*.module.css)`, y los
 // compara con `config/quality-budget.json`. Si algún número SUBE, falla; si BAJA, imprime el valor
 // nuevo para actualizar el json en el mismo commit (o `--update` lo escribe).
 //
