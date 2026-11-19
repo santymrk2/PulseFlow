@@ -38,9 +38,9 @@ describe("About", () => {
         expect(get(activePopup)).toBe("update_manager")
     })
 
-    it("hay_15_links_(14_recursos_y_GitHub)_y_NDI_conserva_su_titulo", () => {
+    it("hay_13_links_(12_recursos_y_GitHub)_y_NDI_conserva_su_titulo", () => {
         const { container } = render(<About />)
-        expect(container.querySelectorAll("a[href='#void']").length).toBe(15)
+        expect(container.querySelectorAll("a[href='#void']").length).toBe(13)
         const ndi = screen.getByText("NDI® SDK (IP-streaming)").closest("span")
         expect(ndi?.getAttribute("data-title")).toBe("NDI® is a registered trademark of Vizrt NDI AB.")
     })

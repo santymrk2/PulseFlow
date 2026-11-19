@@ -36,8 +36,6 @@ const SHARED_EXCEPTIONS: string[] = [
     "src/frontend/shared/ui/kit/select-field/SelectField.test.tsx",
     "src/frontend/shared/ui/kit/select-field/SelectField.tsx",
     "src/frontend/shared/ui/kit/text-field/TextField.shortcuts.test.tsx",
-    "src/frontend/shared/ui/system/Player.test.tsx",
-    "src/frontend/shared/ui/system/Player.tsx",
     "src/frontend/shared/utils/common.ts",
     "src/frontend/shared/utils/drive.ts",
     "src/frontend/shared/utils/helpers/OutputHelper.ts",
