@@ -21,7 +21,7 @@ vi.mock("../../shared/utils/helpers/looks", () => ({
 }))
 vi.mock("../../shared/utils/popup", () => ({ confirmCustom: vi.fn() }))
 vi.mock("../../app/wiring/save", () => ({ save: vi.fn() }))
-vi.mock("../../react/looks/LookGrid", () => ({
+vi.mock("../looks/LookGrid", () => ({
     LookGrid: ({ onCell }: { onCell?: (detail: { outputId: string; patch: Partial<LookScreen> }) => void }) => (
         <div>
             <span>LookGrid</span>
