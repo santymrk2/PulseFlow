@@ -53,13 +53,16 @@ prettier sobre `.md` ni el resto de la configuración.
 
 ## Reglas de React
 
-- El código React vive en `src/frontend/react/`. Un componente por archivo `PascalCase.tsx` y su test al lado
-  (`Nombre.test.tsx`, primera línea `// @vitest-environment happy-dom`).
+- El código del frontend vive en `src/frontend/app/` (armazón: `main.tsx`, `App`, `MainLayout`, `main/`, `guide/`),
+  `src/frontend/features/<x>/` (la UI en la raíz, la lógica en `logic/`) y `src/frontend/shared/` (`core`, `utils`,
+  `ui`, `test`). `shared/` no importa de `features/` ni de `app/` (ver `src/frontend/arch/sharedBoundary.test.ts`).
+  Un componente por archivo `PascalCase.tsx` y su test al lado (`Nombre.test.tsx`, primera línea
+  `// @vitest-environment happy-dom`).
 - React 19 con React Compiler: **prohibidos** `useMemo`, `useCallback` y `memo`. Imports nombrados
   (`import { useState } from "react"`), nunca `import React` ni `import * as React`. `ref` es una prop: sin
   `forwardRef`. Es una SPA de Vite: no hay Server Components ni `"use client"`.
-- Estado: los stores de `src/frontend/stores.ts` (implementación propia en `src/frontend/lib/store.ts`) se leen
-  con `useStore(store)` (`react/hooks/useStore.ts`) y se escriben con `store.set`/`store.update`. No se crean
+- Estado: los stores de `src/frontend/shared/core/stores.ts` (implementación propia en `src/frontend/shared/core/lib/store.ts`) se leen
+  con `useStore(store)` (`shared/ui/hooks/useStore.ts`) y se escriben con `store.set`/`store.update`. No se crean
   stores ni contextos nuevos para algo que ya existe.
 - Eventos: los componentes exponen callbacks como props `onX(detail)`.
 - TypeScript: nada de `any` (usar `unknown` y guardas de tipo); `import type` para tipos; interfaces planas (un

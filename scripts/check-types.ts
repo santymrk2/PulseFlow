@@ -2,7 +2,7 @@
 // MAX_ERRORS sólo baja (la línea base de 168 incluía 8 errores de node_modules/json-bible, fuera de src/frontend): cuando el conteo real es menor, se baja acá.
 import { parseTscErrors } from "./checkTypes"
 
-export const MAX_ERRORS = 98
+export const MAX_ERRORS = 95
 
 const run = Bun.spawnSync(["bunx", "tsc", "-p", "src/frontend/tsconfig.json", "--noEmit", "--pretty", "false"], { stdout: "pipe", stderr: "pipe" })
 const output = run.stdout.toString() + run.stderr.toString()

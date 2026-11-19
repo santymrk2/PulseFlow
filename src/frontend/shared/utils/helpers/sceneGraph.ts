@@ -165,7 +165,7 @@ function buildTextItem(item: Item, index: number, allItems: Item[], dynamicRef: 
     })
 }
 
-function buildMediaItem(item: Item, index: number, allItems: Item[], outputId: string, resolution: { width: number; height: number }, lineWindow: LineWindow): SceneMediaItem | null {
+function buildMediaItem(item: Item, _index: number, allItems: Item[], outputId: string, resolution: { width: number; height: number }, lineWindow: LineWindow): SceneMediaItem | null {
     if (item.type !== "media") return null
     if (!shouldItemBeShown(item, allItems, { outputId, type: "default" })) return null
     if (item.clickReveal && lineWindow.clickRevealed === false) return null

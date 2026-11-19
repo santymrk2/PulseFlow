@@ -165,7 +165,7 @@ export class StreamCanvasRenderer {
             canvas.height = height
         }
 
-        let pixels: Uint8ClampedArray
+        let pixels: Uint8ClampedArray<ArrayBuffer>
         if (format === "uyvy") {
             pixels = uyvyToRGBA(data, width, height)
         } else {

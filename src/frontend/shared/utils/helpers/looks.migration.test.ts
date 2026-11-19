@@ -209,7 +209,7 @@ describe("puente Look → styles (F10.2)", () => {
         // out1 hereda la transición de styleA (300ms) y tiene prioridad sobre transitionMs
         const style = buildLookStyle(look, look.screens.out1)
 
-        expect(style.transition.text.duration).toBe(300)
+        expect(style.transition?.text.duration).toBe(300)
     })
 
     it("computeLookOutputPointers sólo apunta las salidas que cambian y no toca el stage", () => {
