@@ -10,7 +10,7 @@ import { CloudSync } from "./CloudSync"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../app/wiring/cloudSync", () => ({ chooseTeam: vi.fn() }))
-vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../app/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 const teams = [
     { id: "t1", churchId: "ch", name: "Equipo A", icon: "people" },

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { OMT } from "../../../../types/Channels"
 import { destroy, receive, send } from "../../../shared/utils/request"
-import { Loader } from "../../../react/main/Loader"
+import { Loader } from "../../../app/main/Loader"
 import { T } from "../../../shared/ui/helpers/T"
 import { Center } from "../../../shared/ui/system/Center"
 import { OMTStream } from "./OMTStream"

@@ -12,7 +12,7 @@ import { getActiveOutputs, refreshOut, setOutput } from "../../shared/utils/help
 import { getCachedShow } from "../../shared/utils/helpers/show"
 import { checkActionTrigger, getFewestOutputLines, getFewestOutputLinesReveal, getItemWithMostLines, updateOut } from "../../shared/utils/helpers/showActions"
 import { _show } from "../../shared/utils/helpers/shows"
-import { Loader } from "../../react/main/Loader"
+import { Loader } from "../../app/main/Loader"
 import { T } from "../../shared/ui/helpers/T"
 import { useStore } from "../../shared/ui/hooks/useStore"
 import { SkeletonSlide } from "../slide/SkeletonSlide"

@@ -13,7 +13,7 @@ import { useStore } from "../../../shared/ui/hooks/useStore"
 import { Button } from "../../../shared/ui/kit/button/Button"
 import { FloatingBar } from "../../../shared/ui/kit/floating-bar/FloatingBar"
 import { ZoomControl } from "../../../shared/ui/kit/zoom-control/ZoomControl"
-import { Loader } from "../../../react/main/Loader"
+import { Loader } from "../../../app/main/Loader"
 import { clearBackground } from "../../output/logic/clear"
 import stylesModule from "./PdfPreview.module.css"
 

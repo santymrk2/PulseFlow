@@ -12,7 +12,7 @@ import css from "./ManageIcons.module.css"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("uid", () => ({ uid: () => "id-nuevo" }))
-vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../app/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 const ids = Object.keys(customIcons)
 const coloreado = ids.find((id) => customIconsColors[id]) as string

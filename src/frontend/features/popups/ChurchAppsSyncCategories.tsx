@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { keysToID, sortByName } from "../../shared/utils/helpers/array"
-import { Tip } from "../../react/main/Tip"
+import { Tip } from "../../app/main/Tip"
 import { categories, contentProviderData, shows } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { CheckboxField } from "../../shared/ui/kit/checkbox-field/CheckboxField"

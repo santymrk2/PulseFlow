@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { defaultColors, defaultGradients } from "../../shared/utils/helpers/color"
-import { Tip } from "../../react/main/Tip"
+import { Tip } from "../../app/main/Tip"
 import { special } from "../../shared/core/stores"
 import { T } from "../../shared/ui/helpers/T"
 import { Button } from "../../shared/ui/kit/button/Button"

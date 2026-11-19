@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { Loader } from "../../react/main/Loader"
+import { Loader } from "../../app/main/Loader"
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../shared/core/ipc/main"
 import { alertUpdates, special, version } from "../../shared/core/stores"

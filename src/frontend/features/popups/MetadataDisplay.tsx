@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import type { Metadata } from "../../../types/Settings"
-import { Tip } from "../../react/main/Tip"
+import { Tip } from "../../app/main/Tip"
 import { clone } from "../../shared/utils/helpers/array"
 import { metadataDisplayValues } from "../../shared/utils/helpers/show"
 import { activeEdit, activePage, activePopup, categories, currentMetadataPopupData, popupData, styles, templates } from "../../shared/core/stores"

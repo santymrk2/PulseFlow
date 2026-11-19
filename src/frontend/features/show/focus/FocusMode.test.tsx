@@ -11,7 +11,7 @@ import { FocusMode } from "./FocusMode"
 vi.mock("../logic/focus/focus", () => ({ getAllProjectItems: vi.fn(async () => []) }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ getActiveOutputs: vi.fn(() => []) }))
 vi.mock("../../../shared/utils/common", () => ({ hasNewerUpdate: vi.fn(async () => false) }))
-vi.mock("../../../react/main/Loader", () => ({ Loader: () => <div data-testid="loader" /> }))
+vi.mock("../../../app/main/Loader", () => ({ Loader: () => <div data-testid="loader" /> }))
 vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
 vi.mock("../../../shared/ui/system/Center", () => ({ Center: ({ children }: { children?: ReactNode }) => <div data-testid="center">{children}</div> }))

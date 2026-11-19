@@ -21,7 +21,7 @@ vi.mock("./Connection", () => ({ Connection: () => <div data-isla="Connection" /
 vi.mock("./Profiles", () => ({ Profiles: () => <div data-isla="Profiles" /> }))
 vi.mock("./ProfilesButtons", () => ({ ProfilesButtons: () => <div data-isla="ProfilesButtons" /> }))
 vi.mock("./ProfilesTabs", () => ({ ProfilesTabs: () => <div data-isla="ProfilesTabs" /> }))
-vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../app/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 let restaurar: () => void = () => {}
 beforeEach(() => {

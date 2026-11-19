@@ -3,7 +3,7 @@ import { activeProject, activeShow, autoOpenedTimeline, outLocked, projects, res
 import { DEFAULT_WIDTH } from "../../shared/utils/common"
 import { createGlobalTimerFromLocalTimer } from "../drawer/logic/timers/timers"
 import { setOutput } from "../../shared/utils/helpers/output"
-import { Splash } from "../../react/main/Splash"
+import { Splash } from "../../app/main/Splash"
 import { Camera } from "../output/Camera"
 import { Layouts } from "../slide/Layouts"
 import { Timeline } from "../timeline/Timeline"

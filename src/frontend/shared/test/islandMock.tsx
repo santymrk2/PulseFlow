@@ -9,7 +9,7 @@ export const islands: Record<string, IslandCall> = {}
 
 // Doble de un port React: conserva el registro `islands[nombre]` que usan las aserciones heredadas y
 // expone además `data-isla`/`data-props` en el DOM. Uso en tests:
-// vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("./islandMock")>("./islandMock")).makePortMock("Tip") }))
+// vi.mock("../../app/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("./islandMock")>("./islandMock")).makePortMock("Tip") }))
 export function makePortMock(name: string) {
     return function PortMock(props: Record<string, unknown>) {
         islands[name] = { props }

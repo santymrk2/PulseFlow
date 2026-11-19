@@ -12,7 +12,7 @@ import { CleaningUtility } from "./CleaningUtility"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn(), receiveMain: vi.fn(() => "listener-1"), destroyMain: vi.fn() }))
-vi.mock("../../react/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
+vi.mock("../../app/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 
 const SHOWS = { a: { name: "Amazing Grace" }, b: { name: "Amazing Grace 2" }, c: { name: "Otra" }, d: { name: "" } }
 let restaurar: () => void = () => {}

@@ -1,7 +1,7 @@
 import { translateText } from "../../shared/utils/language"
 import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
 import { Icon } from "../../shared/ui/helpers/Icon"
-import { markTipString } from "../../components/main/tipWordDictionary"
+import { markTipString } from "./logic/tipWordDictionary"
 import styles from "./Tip.module.css"
 
 export interface TipProps {

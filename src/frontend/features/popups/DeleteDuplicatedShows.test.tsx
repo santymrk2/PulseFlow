@@ -16,7 +16,7 @@ vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/setShow", () => ({ loadShows: vi.fn(async () => {}) }))
 vi.mock("../edit/logic/scripts/textStyle", () => ({ getTextLines: (slide: { lines: string[] }) => slide.lines }))
 vi.mock("../../shared/utils/helpers/time", () => ({ dateToString: (d: number) => `fecha:${d}` }))
-vi.mock("../../react/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
+vi.mock("../../app/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 vi.mock("../../shared/ui/kit/textarea-field/TextareaField", async () => ({ TextareaField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 const cache = (...lines: string[]) => ({ slides: { s: { lines } } })

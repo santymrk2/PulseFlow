@@ -1,5 +1,5 @@
-import { get } from "../../shared/core/lib/store"
-import { drawerTabsData, language } from "../../shared/core/stores"
+import { get } from "../../../shared/core/lib/store"
+import { drawerTabsData, language } from "../../../shared/core/stores"
 
 // https://votd.org/
 // https://github.com/ChurchApps/VotdContent/blob/main/index.html

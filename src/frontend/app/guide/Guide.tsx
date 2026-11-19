@@ -6,7 +6,7 @@ import { useStore } from "../../shared/ui/hooks/useStore"
 import { Icon } from "../../shared/ui/helpers/Icon"
 import { T } from "../../shared/ui/helpers/T"
 import { Button } from "../../shared/ui/kit/button/Button"
-import { guideSteps } from "../../components/guide/guideSteps"
+import { guideSteps } from "./logic/guideSteps"
 import styles from "./Guide.module.css"
 
 interface GuideStep {

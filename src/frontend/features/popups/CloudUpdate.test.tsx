@@ -9,7 +9,7 @@ import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { CloudUpdate } from "./CloudUpdate"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../react/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
+vi.mock("../../app/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 
 let restaurar: () => void = () => {}
 function montar(data: unknown) {

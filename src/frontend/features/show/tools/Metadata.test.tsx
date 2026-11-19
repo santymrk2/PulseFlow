@@ -9,7 +9,7 @@ import { Metadata } from "./Metadata"
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/show", () => ({ getCustomMetadata: () => ({ number: "", title: "" }), initializeMetadata: () => ({ number: "", title: "" }) }))
-vi.mock("../../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../../app/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../../shared/test/islandMock")>("../../../shared/test/islandMock")).makePortMock("Tip") }))
 vi.mock("../../../shared/ui/kit/text-field/TextField", () => ({ TextField: ({ label, value }: { label: string; value: string }) => <label data-field={label}>{value}</label> }))
 vi.mock("../../../shared/ui/kit/number-field/NumberField", () => ({ NumberField: ({ label }: { label: string }) => <label data-field={label} /> }))
 

@@ -13,7 +13,7 @@ import { CustomAction } from "./CustomAction"
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
 vi.mock("../../shared/ui/kit/select-field/SelectField", async () => ({ SelectField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
-vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../app/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 let restaurar: () => void = () => {}
 function montar(data: object, customAction = "") {

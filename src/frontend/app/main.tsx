@@ -2,12 +2,12 @@
 // React app entry point (F24.23)
 
 import { createRoot } from "react-dom/client"
-import { App } from "./react/App"
+import { App } from "./App"
 import "@fontsource-variable/geist"
 import "@fontsource-variable/geist-mono"
-import { setupTauriApi } from "./shared/core/ipc/tauri"
-import { initMenuActions } from "./app/wiring/shortcuts"
-import { activePopup } from "./shared/core/stores"
+import { setupTauriApi } from "../shared/core/ipc/tauri"
+import { initMenuActions } from "./wiring/shortcuts"
+import { activePopup } from "../shared/core/stores"
 
 // set up the Tauri IPC bridge (replaces the Electron preload's window.api)
 setupTauriApi()

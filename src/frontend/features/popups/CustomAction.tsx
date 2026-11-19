@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { _show } from "../../shared/utils/helpers/shows"
-import { Tip } from "../../react/main/Tip"
+import { Tip } from "../../app/main/Tip"
 import { actions, activePopup, activeShow, popupData, scenes, showsCache } from "../../shared/core/stores"
 import { useStore } from "../../shared/ui/hooks/useStore"
 import { Button } from "../../shared/ui/kit/button/Button"

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { get } from "../../shared/core/lib/store"
-import { Tip } from "../../react/main/Tip"
+import { Tip } from "../../app/main/Tip"
 import { actions, activePopup, categories, popupData } from "../../shared/core/stores"
 import { useStore } from "../../shared/ui/hooks/useStore"
 import { Button } from "../../shared/ui/kit/button/Button"

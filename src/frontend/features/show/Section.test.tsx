@@ -7,7 +7,7 @@ import { Section } from "./Section"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../actions/logic/actions", () => ({ getActionIcon: vi.fn(() => "play"), runAction: vi.fn() }))
-vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../app/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: () => <span data-icon /> }))
 vi.mock("../../shared/ui/kit/button/Button", () => ({
     Button: ({ children, onClick, title }: { children: unknown; onClick?: () => void; title?: string }) => (

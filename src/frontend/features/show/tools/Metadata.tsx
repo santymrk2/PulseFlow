@@ -3,7 +3,7 @@ import { activeShow, customMetadata, dictionary, shows, showsCache } from "../..
 import { history } from "../../../shared/utils/helpers/history"
 import { getCustomMetadata, initializeMetadata } from "../../../shared/utils/helpers/show"
 import { translateText } from "../../../shared/utils/language"
-import { Tip } from "../../../react/main/Tip"
+import { Tip } from "../../../app/main/Tip"
 import { TextField } from "../../../shared/ui/kit/text-field/TextField"
 import { NumberField } from "../../../shared/ui/kit/number-field/NumberField"
 import { useStore } from "../../../shared/ui/hooks/useStore"

@@ -7,7 +7,7 @@ import { Icon } from "../../shared/ui/helpers/Icon"
 import { T } from "../../shared/ui/helpers/T"
 import { Button } from "../../shared/ui/kit/button/Button"
 import { Link } from "../../shared/ui/kit/link/Link"
-import { getVOTD } from "../../components/main/votd"
+import { getVOTD } from "./logic/votd"
 import styles from "./Splash.module.css"
 
 function extractLinksAndCleanText(text: string): { text: string; links: string[] } {

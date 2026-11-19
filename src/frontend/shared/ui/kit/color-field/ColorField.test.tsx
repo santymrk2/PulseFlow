@@ -8,7 +8,7 @@ import { commonMock } from "../../../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../../../test/storeTestKit"
 import { ColorField } from "./ColorField"
 import styles from "./ColorField.module.css"
-import tabsStyles from "../../../../react/main/Tabs.module.css"
+import tabsStyles from "../../../../app/main/Tabs.module.css"
 
 vi.mock("../../../utils/common", () => commonMock())
 // edit.ts arrastra medio frontend; ColorField sólo usa dos funciones puras de gradientes: se mockea el borde

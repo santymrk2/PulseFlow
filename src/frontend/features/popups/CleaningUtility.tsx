@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { Main } from "../../../types/IPC/Main"
-import { Loader } from "../../react/main/Loader"
+import { Loader } from "../../app/main/Loader"
 import { destroyMain, receiveMain, requestMain, sendMain } from "../../shared/core/ipc/main"
 import { activePage, activePopup, deletedShows, popupData, shows, showsCache } from "../../shared/core/stores"
 import { T } from "../../shared/ui/helpers/T"

@@ -20,7 +20,7 @@ vi.mock("../../shared/utils/language", () => ({ translateText: (value: string) =
 vi.mock("../../shared/utils/checkForUpdates", () => ({ getUpdateData: vi.fn() }))
 vi.mock("../../shared/utils/popup", () => ({ setPopupSubmit: vi.fn(() => () => {}) }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
-vi.mock("../../react/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
+vi.mock("../../app/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 vi.mock("../../shared/ui/kit/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 const UPDATE = { latestVersion: "2.0.0", changelog: "- nuevo\r\n- arreglos", hasUpdate: true }

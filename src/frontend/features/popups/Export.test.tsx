@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { EXPORT } from "../../../types/Channels"
 import { Main } from "../../../types/IPC/Main"
 import { exportProject } from "../export/logic/project"
-import { convertShowSlidesToImages } from "../../components/main/popups/export/exportHelper"
+import { convertShowSlidesToImages } from "./logic/export/exportHelper"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, activeProject, activeShow, dictionary, projects, selected, shows, showsCache, special } from "../../shared/core/stores"
 import { send } from "../../shared/utils/request"
@@ -27,14 +27,14 @@ vi.mock("../export/logic/project", () => ({ exportProject: vi.fn() }))
 vi.mock("../../shared/utils/helpers/setShow", () => ({ loadShows: vi.fn(async () => {}) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
 vi.mock("../../shared/utils/helpers/media", () => ({ getSlideThumbnail: vi.fn() }))
-vi.mock("../../components/main/popups/export/exportHelper", async () => ({ ...(await vi.importActual<typeof import("../../components/main/popups/export/exportHelper")>("../../components/main/popups/export/exportHelper")), convertShowSlidesToImages: vi.fn() }))
+vi.mock("./logic/export/exportHelper", async () => ({ ...(await vi.importActual<typeof import("./logic/export/exportHelper")>("./logic/export/exportHelper")), convertShowSlidesToImages: vi.fn() }))
 vi.mock("./PdfExport", () => ({
     PdfExport: (props: { pdfOptions: Record<string, unknown>; onChange?: (o: Record<string, unknown>) => void }) => {
         pdf.props = props
         return null
     }
 }))
-vi.mock("../../react/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
+vi.mock("../../app/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 vi.mock("../../shared/ui/kit/toggle-field/ToggleField", async () => ({ ToggleField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 const dict = { export: { option_type: "Tipo", option_format: "Formato", export_as: "Exportar como {}", export: "Exportar", current_project: "Proyecto actual", selected_shows: "Shows elegidos", all_shows: "Todos", project: "Proyecto", include_media: "Incluir media" }, formats: { show: "Show" }, edit: { text: "Texto" }, items: { image: "Imagen" } }

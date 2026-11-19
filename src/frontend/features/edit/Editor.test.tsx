@@ -115,7 +115,7 @@ vi.mock("../../shared/ui/kit/button/Button", () => ({ Button: ({ children, onCli
 vi.mock("../../shared/ui/kit/floating-bar/FloatingBar", () => ({ FloatingBar: ({ children }: any) => <div>{children}</div> }))
 vi.mock("./editors/SlideEditor", () => ({ SlideEditor: () => <div data-testid="slide-editor" /> }))
 vi.mock("../show/TextEditor", () => ({ TextEditor: () => <div data-testid="text-editor" /> }))
-vi.mock("../../react/main/Splash", () => ({ Splash: () => <div /> }))
+vi.mock("../../app/main/Splash", () => ({ Splash: () => <div /> }))
 vi.mock("./OverlayEditor", () => ({ OverlayEditor: () => <div data-testid="overlay-editor" /> }))
 vi.mock("./TemplateEditor", () => ({ TemplateEditor: () => <div data-testid="template-editor" /> }))
 vi.mock("./MediaEditor", () => ({ MediaEditor: () => <div data-testid="media-editor" /> }))

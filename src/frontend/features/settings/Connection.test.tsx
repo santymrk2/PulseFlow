@@ -19,7 +19,7 @@ vi.mock("../../app/wiring/startup", () => ({ contentProviderSync: vi.fn() }))
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 // El port Tip se mockea como isla: acá sólo importa con qué props se monta.
-vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../app/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 const respuestas: { ip?: string[]; teams: { id: string; name: string; current: boolean }[]; switchTeam: { success: boolean }; disconnect: { success: boolean } } = { ip: undefined, teams: [], switchTeam: { success: true }, disconnect: { success: true } }
 

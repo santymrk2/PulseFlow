@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { Main } from "../../../types/IPC/Main"
-import { Tip } from "../../react/main/Tip"
+import { Tip } from "../../app/main/Tip"
 import { importFromClipboard } from "../import/importHelpers"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, alertMessage, os, popupData } from "../../shared/core/stores"

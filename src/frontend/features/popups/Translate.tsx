@@ -9,8 +9,8 @@ import { useStore } from "../../shared/ui/hooks/useStore"
 import { Button } from "../../shared/ui/kit/button/Button"
 import { InputRow } from "../../shared/ui/kit/input-row/InputRow"
 import { SelectField } from "../../shared/ui/kit/select-field/SelectField"
-import { isoLanguages } from "../../components/main/popups/localization/isoLanguages"
-import { getIsoLanguages, removeTranslationFromShow, translateShow } from "../../components/main/popups/localization/translation"
+import { isoLanguages } from "./logic/localization/isoLanguages"
+import { getIsoLanguages, removeTranslationFromShow, translateShow } from "./logic/localization/translation"
 import styles from "./Translate.module.css"
 
 // Port de components/main/popups/localization/Translate.svelte. Lee: special.translationLanguage, activeShow/showsCache (al montar).

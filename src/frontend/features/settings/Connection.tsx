@@ -9,7 +9,7 @@ import { startRemoteController, stopRemoteController } from "../../app/wiring/re
 import { contentProviderSync } from "../../app/wiring/startup"
 import { Icon } from "../../shared/ui/helpers/Icon"
 import { T } from "../../shared/ui/helpers/T"
-import { Tip } from "../../react/main/Tip"
+import { Tip } from "../../app/main/Tip"
 import { useStore } from "../../shared/ui/hooks/useStore"
 import { Button } from "../../shared/ui/kit/button/Button"
 import { InputRow } from "../../shared/ui/kit/input-row/InputRow"

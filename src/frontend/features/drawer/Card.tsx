@@ -1,6 +1,6 @@
 import { useState, type CSSProperties, type MouseEvent, type ReactNode } from "react"
 import type { Resolution } from "../../../types/Settings"
-import { Loader } from "../../react/main/Loader"
+import { Loader } from "../../app/main/Loader"
 import { triggerClickOnEnterSpace } from "../../shared/ui/helpers/triggerClickOnEnterSpace"
 import { cn } from "../../shared/core/lib/utils"
 import { dictionary, mediaOptions, outputs, previewOutputId, styles as stylesStore } from "../../shared/core/stores"

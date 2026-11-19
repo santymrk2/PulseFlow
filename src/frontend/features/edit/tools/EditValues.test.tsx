@@ -15,7 +15,7 @@ vi.mock("../../../shared/utils/language", () => ({ translateText: (id: string) =
 vi.mock("../../../shared/core/values/extensions", () => ({ mediaExtensions: [], audioExtensions: [], videoExtensions: [], imageExtensions: [], presentationExtensions: [] }))
 vi.mock("../../drawer/logic/timers/timers", () => ({ getSortedTimers: () => [] }))
 vi.mock("../../../shared/utils/helpers/style", () => ({ getFilters: () => ({}), getStyles: () => ({}) }))
-vi.mock("../../../components/main/popups/localization/translation", () => ({ getIsoLanguages: () => [] }))
+vi.mock("../../popups/logic/localization/translation", () => ({ getIsoLanguages: () => [] }))
 vi.mock("../../timeline/logic/SlideTimeline", () => ({ SlideTimeline: { hasActionWithKey: () => false, hasActionAtTime: () => false, addKeyframe: vi.fn() } }))
 vi.mock("../logic/scripts/edit", () => ({ parseShadowValue: () => [] }))
 vi.mock("../logic/scripts/itemClipboard", () => ({ filterItemStyle: (s: string) => s || "", mergeWithStyle: (v: string) => v }))

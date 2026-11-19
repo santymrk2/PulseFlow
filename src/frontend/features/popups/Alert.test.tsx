@@ -12,7 +12,7 @@ import { Alert } from "./Alert"
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 // Loader sigue siendo Svelte: acá sólo importa que se monte
-vi.mock("../../react/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
+vi.mock("../../app/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 
 let restaurar: () => void = () => {}
 function montar(mensaje: string) {

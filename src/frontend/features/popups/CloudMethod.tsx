@@ -1,5 +1,5 @@
 import { activePopup, cloudSyncData } from "../../shared/core/stores"
-import { Tip } from "../../react/main/Tip"
+import { Tip } from "../../app/main/Tip"
 import { syncWithCloud } from "../../app/wiring/cloudSync"
 import { translateText } from "../../shared/utils/language"
 import { Icon } from "../../shared/ui/helpers/Icon"

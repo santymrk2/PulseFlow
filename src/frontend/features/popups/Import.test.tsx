@@ -14,7 +14,7 @@ import { Import } from "./Import"
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../import/importHelpers", () => ({ importFromClipboard: vi.fn() }))
-vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../app/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 const dict = { formats: { show: "Show", project: "Proyecto", template: "Plantilla", overlay: "Overlay", action: "Acción", text: "Texto", clipboard: "Portapapeles" }, stage: { stage_layout: "Stage" }, create_show: { more_options: "Más" }, info: { slides: "Diapositivas" } }
 let restaurar: () => void = () => {}

@@ -11,7 +11,7 @@ import { Popup } from "./Popup"
 
 vi.mock("../../shared/utils/common", () => ({ ...commonMock(), MENU_BAR_HEIGHT: 36 }))
 vi.mock("../../shared/utils/popup", () => ({ clearPopupSubmit: vi.fn() }))
-vi.mock("../../app/wiring/shortcuts", () => ({ disablePopupClose: [] }))
+vi.mock("../wiring/shortcuts", () => ({ disablePopupClose: [] }))
 vi.mock("../../shared/audio/effects/audioEffectsHelpers", () => ({ EFFECTS_LIST: [] }))
 vi.mock("../../features/popups/registry", () => {
     const stub = (id: string) => () => createElement("div", { "data-testid": `react-${id}` }, id)
@@ -41,6 +41,6 @@ describe("Popup", () => {
         await act(async () => {})
 
         expect(screen.getByTestId(`react-${id}`)).toBeTruthy()
-        expect(readFileSync("src/frontend/react/main/Popup.tsx", "utf8")).not.toContain("SvelteIsland")
+        expect(readFileSync("src/frontend/app/main/Popup.tsx", "utf8")).not.toContain("SvelteIsland")
     })
 })

@@ -1,4 +1,4 @@
-import { Loader } from "../../react/main/Loader"
+import { Loader } from "../../app/main/Loader"
 import { activePopup, popupData } from "../../shared/core/stores"
 import { Icon } from "../../shared/ui/helpers/Icon"
 import { useStore } from "../../shared/ui/hooks/useStore"

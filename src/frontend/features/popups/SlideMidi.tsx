@@ -5,7 +5,7 @@ import type { API_midi } from "../actions/logic/api"
 import { midiInListen } from "../actions/logic/midi"
 import { clone } from "../../shared/utils/helpers/array"
 import { MidiValues } from "../actions/MidiValues"
-import { Tip } from "../../react/main/Tip"
+import { Tip } from "../../app/main/Tip"
 import { actions, activeShow, popupData } from "../../shared/core/stores"
 
 // Port de components/main/popups/SlideMidi.svelte. Lee: popupData (id, index, indexes), actions y activeShow.

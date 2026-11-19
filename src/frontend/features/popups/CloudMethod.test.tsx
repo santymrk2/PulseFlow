@@ -11,7 +11,7 @@ import { CloudMethod } from "./CloudMethod"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../app/wiring/cloudSync", () => ({ syncWithCloud: vi.fn() }))
-vi.mock("../../react/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
+vi.mock("../../app/main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Tip") }))
 
 let restaurar: () => void = () => {}
 function montar() {

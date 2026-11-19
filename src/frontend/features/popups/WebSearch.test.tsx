@@ -14,7 +14,7 @@ import { WebSearch, type LyricData } from "./WebSearch"
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveMain: vi.fn((id: string) => `id-${id}`), destroyMain: vi.fn() }))
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (value: string) => value }))
-vi.mock("../../react/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
+vi.mock("../../app/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 
 const SONG = (title: string, artist: string, source: LyricSearchResult["source"] = "Genius"): LyricSearchResult => ({ key: title, title, artist, source })
 const searchListener = () => vi.mocked(receiveMain).mock.calls[0][1] as (data: LyricSearchResult[]) => void

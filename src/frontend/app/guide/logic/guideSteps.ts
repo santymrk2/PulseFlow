@@ -1,12 +1,12 @@
-import { get } from "../../shared/core/lib/store"
-import { activeDrawerTab, activePage, activePopup, activeProject, activeShow, drawer, focusMode, outputCache, projects, projectView, showRecentlyUsedProjects, shows, showsCache } from "../../shared/core/stores"
-import { DEFAULT_DRAWER_HEIGHT } from "../../shared/utils/common"
-import { createDefaultShow } from "../../app/wiring/createData"
-import { translateText } from "../../shared/utils/language"
-import { keysToID, removeDeleted } from "../../shared/utils/helpers/array"
-import { OutputHelper } from "../../shared/utils/helpers/OutputHelper"
-import { loadShows } from "../../shared/utils/helpers/setShow"
-import { clearAll } from "../../features/output/logic/clear"
+import { get } from "../../../shared/core/lib/store"
+import { activeDrawerTab, activePage, activePopup, activeProject, activeShow, drawer, focusMode, outputCache, projects, projectView, showRecentlyUsedProjects, shows, showsCache } from "../../../shared/core/stores"
+import { DEFAULT_DRAWER_HEIGHT } from "../../../shared/utils/common"
+import { createDefaultShow } from "../../wiring/createData"
+import { translateText } from "../../../shared/utils/language"
+import { keysToID, removeDeleted } from "../../../shared/utils/helpers/array"
+import { OutputHelper } from "../../../shared/utils/helpers/OutputHelper"
+import { loadShows } from "../../../shared/utils/helpers/setShow"
+import { clearAll } from "../../../features/output/logic/clear"
 
 export const guideSteps = [
     {

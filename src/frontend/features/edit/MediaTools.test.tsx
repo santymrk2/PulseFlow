@@ -10,7 +10,7 @@ vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v ?? null)) }))
-vi.mock("../../react/main/Tabs", () => ({
+vi.mock("../../app/main/Tabs", () => ({
     Tabs: (props: { tabs: Record<string, unknown>; active: string; onActiveChange?: (id: string) => void }) => (
         <div data-testid="tabs">
             {Object.keys(props.tabs).map((id) => (

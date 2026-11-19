@@ -1,6 +1,6 @@
 import { useRef, useState } from "react"
 import { get } from "../../shared/core/lib/store"
-import { Tip } from "../../react/main/Tip"
+import { Tip } from "../../app/main/Tip"
 import { popupData } from "../../shared/core/stores"
 import { chooseTeam } from "../../app/wiring/cloudSync"
 import { ChoiceGrid, type ChoiceOption } from "../../shared/ui/kit/choice-grid/ChoiceGrid"
