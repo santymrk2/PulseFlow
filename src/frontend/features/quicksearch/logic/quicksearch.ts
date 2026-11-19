@@ -1,6 +1,6 @@
-import { get } from "../../shared/core/lib/store"
+import { get } from "../../../shared/core/lib/store"
 import { uid } from "uid"
-import { sendMain } from "../../shared/core/ipc/main"
+import { sendMain } from "../../../shared/core/ipc/main"
 import {
     actions,
     activeEdit,
@@ -41,23 +41,23 @@ import {
     sortedShowsList,
     stageShows,
     styles
-} from "../../shared/core/stores"
-import { openSettings } from "../settings/openSettings"
-import { triggerFunction } from "../../shared/utils/common"
-import { translateText } from "../../shared/utils/language"
-import { getAccess } from "../../shared/utils/profile"
-import { formatSearch, showSearch } from "../../shared/utils/search"
-import { runAction } from "../actions/actions"
-import { sortByClosestMatch } from "../actions/apiHelper"
-import { menuClick } from "../../shared/ui/context/logic/menuClick"
-import { openDrawer } from "../edit/scripts/edit"
-import { addItem } from "../edit/scripts/itemHelpers"
-import { slideItems, stageItems } from "../edit/values/items"
-import { keysToID } from "../../shared/utils/helpers/array"
-import { duplicate } from "../../shared/utils/helpers/clipboard"
-import { history } from "../../shared/utils/helpers/history"
-import { addStageItem } from "../stage/stage"
-import { Main } from "./../../../types/IPC/Main"
+} from "../../../shared/core/stores"
+import { openSettings } from "../../../components/settings/openSettings"
+import { triggerFunction } from "../../../shared/utils/common"
+import { translateText } from "../../../shared/utils/language"
+import { getAccess } from "../../../shared/utils/profile"
+import { formatSearch, showSearch } from "../../../shared/utils/search"
+import { runAction } from "../../../components/actions/actions"
+import { sortByClosestMatch } from "../../../components/actions/apiHelper"
+import { menuClick } from "../../../shared/ui/context/logic/menuClick"
+import { openDrawer } from "../../../components/edit/scripts/edit"
+import { addItem } from "../../../components/edit/scripts/itemHelpers"
+import { slideItems, stageItems } from "../../../components/edit/values/items"
+import { keysToID } from "../../../shared/utils/helpers/array"
+import { duplicate } from "../../../shared/utils/helpers/clipboard"
+import { history } from "../../../shared/utils/helpers/history"
+import { addStageItem } from "../../../components/stage/stage"
+import { Main } from "../../../../types/IPC/Main"
 import { getMediaResults, showResult } from "./quicksearchData"
 
 interface QuickSearchValue {

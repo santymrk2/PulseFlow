@@ -20,7 +20,7 @@ import { SettingsModal } from "./settings/SettingsModal"
 import { ContextMenu } from "../shared/ui/context/ContextMenu"
 import { Pdf } from "./export/Pdf"
 import { Guide } from "./guide/Guide"
-import { QuickSearch } from "./quicksearch/QuickSearch"
+import { QuickSearch } from "../features/quicksearch/QuickSearch"
 import styles from "./App.module.css"
 
 let startupCalled = false

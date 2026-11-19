@@ -35,12 +35,12 @@ vi.mock("../../shared/core/stores", () => ({
     theme: mocks.theme,
     themes: mocks.themes
 }))
-vi.mock("../../components/quicksearch/quicksearch", () => ({
+vi.mock("./logic/quicksearch", () => ({
     quicksearch: async () => [],
     quickSearchCategoryNames: {},
     selectQuicksearchValue: vi.fn()
 }))
-vi.mock("../../components/quicksearch/searchHighlight", () => ({ highlightText: (t: string) => t }))
+vi.mock("./logic/searchHighlight", () => ({ highlightText: (t: string) => t }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../app/wiring/shortcuts", () => ({ getNormalizedKey: (e: { key: string }) => e.key }))
 
