@@ -135,6 +135,9 @@ body,
     position: relative;
     width: 100%;
     height: 100%;
+    /* app de escritorio: el documento nunca scrollea (ni rebota); cada panel tiene su propio scroll */
+    overflow: hidden;
+    overscroll-behavior: none;
 }
 
 body {
