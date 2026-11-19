@@ -17,7 +17,7 @@ vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../shared/core/classes/Show", () => ({ ShowObj: class ShowObj {} }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: historyMock }))
 vi.mock("../../../shared/utils/helpers/show", () => ({ updateShowsList: updateShowsListMock }))
-vi.mock("../../show/ShowButton", () => ({
+vi.mock("../../../features/show/ShowButton", () => ({
     ShowButton: (props: Record<string, unknown>) => <div data-isla="ShowButton" data-props={JSON.stringify(props)} />
 }))
 vi.mock("../VirtualList", () => ({

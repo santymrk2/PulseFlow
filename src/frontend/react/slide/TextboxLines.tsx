@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type CSSProperties, type Ref } from "react
 import type { Styles } from "../../../types/Settings"
 import type { Item, TemplateStyleOverride } from "../../../types/Show"
 import { cn } from "../../shared/core/lib/utils"
-import { createVirtualBreaks } from "../../show/slides"
+import { createVirtualBreaks } from "../../features/show/logic/slides"
 import { outputs, slidesOptions, styles as stylesStore, variables } from "../../shared/core/stores"
 import { getItemText } from "../../components/edit/scripts/textStyle"
 import { clone } from "../../shared/utils/helpers/array"

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState, type ClipboardEvent as ReactClipboardEvent, type KeyboardEvent as ReactKeyboardEvent } from "react"
 import { uid } from "uid"
 import type { Chords, Item, Line } from "../../../../types/Show"
-import { splitCustomDynamicValues } from "../../../show/slides"
+import { splitCustomDynamicValues } from "../../../features/show/logic/slides"
 import { activeEdit, activeShow, activeStage, overlays, redoHistory, refreshListBoxes, showsCache, special, stageShows, templates } from "../../../shared/core/stores"
 import { newToast } from "../../../shared/utils/common"
 import { getNormalizedKey, isComposing, isFormattingKey } from "../../../app/wiring/shortcuts"

@@ -4,7 +4,7 @@ import { getAccess } from "../../shared/utils/profile"
 import { history } from "../../shared/utils/helpers/history"
 import { Overlays } from "../drawer/pages/Overlays"
 import { useStore } from "../../shared/ui/hooks/useStore"
-import { LeftPanel } from "../show/left/LeftPanel"
+import { LeftPanel } from "../../features/show/left/LeftPanel"
 import { Button } from "../../shared/ui/kit/button/Button"
 import { CategoryPicker } from "./CategoryPicker"
 

@@ -11,7 +11,7 @@ vi.mock("../../media/cameraManager", () => ({ cameraManager: { getCamerasList: v
 vi.mock("../../app/wiring/obsTalk", () => ({ obsGetScenes: vi.fn(async () => []) }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../shared/utils/helpers/array", () => ({ keysToID: () => [], sortByName: (a: unknown[]) => a }))
-vi.mock("../../components/show/tools/groups", () => ({ getGlobalGroupName: () => "" }))
+vi.mock("../../features/show/logic/tools/groups", () => ({ getGlobalGroupName: () => "" }))
 vi.mock("../../shared/ui/kit/button/Button", () => ({ Button: ({ children }: { children?: ReactNode }) => <button>{children}</button> }))
 vi.mock("../../shared/ui/kit/number-field/NumberField", () => ({ NumberField: () => <input type="number" /> }))
 vi.mock("../../shared/ui/kit/select-field/SelectField", () => ({ SelectField: () => <select /> }))

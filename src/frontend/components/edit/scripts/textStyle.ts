@@ -1,5 +1,5 @@
 import type { Item, Line, Slide } from "../../../../types/Show"
-import { replaceVirtualBreaks } from "../../../show/slides"
+import { replaceVirtualBreaks } from "../../../features/show/logic/slides"
 
 // add new style to text by selection
 export function addStyle(selection: { start: number; end: number }[], item: Item, style: string | any[]): Item {

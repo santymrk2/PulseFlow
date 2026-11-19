@@ -11,7 +11,7 @@ import { ShowObj } from "../../../core/classes/Show"
 import { markItemsAsPlayed } from "../../../../converters/project"
 import { sendMain } from "../../../core/ipc/main"
 import { cameraManager } from "../../../../media/cameraManager"
-import { changeSlideGroups, mergeSlides, mergeTextboxes, splitItemInTwo, VIRTUAL_BREAK_CHAR } from "../../../../show/slides"
+import { changeSlideGroups, mergeSlides, mergeTextboxes, splitItemInTwo, VIRTUAL_BREAK_CHAR } from "../../../../features/show/logic/slides"
 import {
     $,
     actions,
@@ -115,7 +115,7 @@ import { bindSlidesToOutput, checkName, formatToFileName, getLayoutRef, openShow
 import { sendMidi } from "../../../utils/helpers/showActions"
 import { _show } from "../../../utils/helpers/shows"
 import { getMenuTagId, openTagManager, toggleSelectionTags, toggleTagFilter } from "../../../utils/helpers/tags"
-import { addShowsToProject } from "../../../../components/show/project"
+import { addShowsToProject } from "../../../../features/show/logic/project"
 import { clearSlide } from "../../../../components/output/clear"
 import { activeProject } from "../../../core/stores"
 import type { ContextMenuItem } from "./contextMenus"

@@ -10,7 +10,7 @@ vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => i
 vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../drawer/pages/Templates", () => ({ Templates: () => <div data-comp="templates" /> }))
-vi.mock("../show/left/LeftPanel", () => ({
+vi.mock("../../features/show/left/LeftPanel", () => ({
     LeftPanel: ({ children, title }: { children?: ReactNode; title?: string }) => (
         <div>
             <h1>{title}</h1>

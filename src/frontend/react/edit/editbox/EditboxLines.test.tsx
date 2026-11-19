@@ -68,7 +68,7 @@ vi.mock("../../../shared/core/stores", () => ({
 }))
 vi.mock("../../../shared/utils/common", () => ({ newToast: vi.fn() }))
 vi.mock("../../../app/wiring/shortcuts", () => ({ getNormalizedKey: () => "", isComposing: () => false, isFormattingKey: () => false }))
-vi.mock("../../../show/slides", () => ({ splitCustomDynamicValues: () => null }))
+vi.mock("../../../features/show/logic/slides", () => ({ splitCustomDynamicValues: () => null }))
 vi.mock("../../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => (v === undefined ? v : JSON.parse(JSON.stringify(v))) }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/mover", () => ({ addToPos: (a: unknown[]) => a }))

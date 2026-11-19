@@ -1,7 +1,7 @@
 import { get } from "../../core/lib/store"
 import { uid } from "uid"
 import type { Item, Slide, SlideData, Template } from "../../../../types/Show"
-import { breakLongLines, removeItemValues } from "../../../show/slides"
+import { breakLongLines, removeItemValues } from "../../../features/show/logic/slides"
 import { activeEdit, activeLook, activePage, activePopup, activeProject, activeShow, alertMessage, cachedShowsData, deletedShows, groups, notFound, outputs, projects, refreshEditSlide, renamedShows, shows, showsCache, templates } from "../../core/stores"
 import { save } from "../../../app/wiring/save"
 import { EMPTY_SHOW_SLIDE } from "../../core/values/empty"

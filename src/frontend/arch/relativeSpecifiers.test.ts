@@ -12,7 +12,7 @@ const ROOT = join(__dirname, "../../..")
 const FRONTEND_DIR = join(ROOT, "src/frontend")
 
 // "<archivo relativo a la raíz>|<specifier>"
-const KNOWN_BROKEN = ["src/frontend/components/drawer/audio/metronome.ts|../../../types/Audio", "src/frontend/react/drawer/media/Media.test.tsx|./pixabay", "src/frontend/react/drawer/media/Media.test.tsx|./unsplash", "src/frontend/react/show/Show.test.tsx|./MediaPreview"]
+const KNOWN_BROKEN = ["src/frontend/components/drawer/audio/metronome.ts|../../../types/Audio", "src/frontend/react/drawer/media/Media.test.tsx|./pixabay", "src/frontend/react/drawer/media/Media.test.tsx|./unsplash", "src/frontend/features/show/Show.test.tsx|./MediaPreview"]
 
 function listSources(dir: string): string[] {
     return readdirSync(dir, { withFileTypes: true }).flatMap((entry) => {
