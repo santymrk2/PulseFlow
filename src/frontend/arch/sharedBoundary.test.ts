@@ -47,6 +47,7 @@ const SHARED_EXCEPTIONS: string[] = [
     "src/frontend/shared/utils/helpers/historyActions.ts",
     "src/frontend/shared/utils/helpers/historyHelpers.ts",
     "src/frontend/shared/utils/helpers/looks.migration.test.ts",
+    "src/frontend/shared/utils/helpers/looks.presets.test.ts",
     "src/frontend/shared/utils/helpers/looks.ts",
     "src/frontend/shared/utils/helpers/media.ts",
     "src/frontend/shared/utils/helpers/output.ts",
