@@ -17,7 +17,7 @@ vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../ShowButton", () => ({
     ShowButton: (props: Record<string, unknown>) => <div data-isla="ShowButton" data-props={JSON.stringify(props)} />
 }))
-vi.mock("../../../react/drawer/VirtualList", () => ({
+vi.mock("../../drawer/VirtualList", () => ({
     VirtualList: ({ items, activeIndex, render }: { items: ShowList[]; activeIndex?: number | null; render: (item: ShowList, index: number) => ReactNode }) => (
         <div data-active-index={activeIndex ?? ""}>
             {items.map((item, index) => (

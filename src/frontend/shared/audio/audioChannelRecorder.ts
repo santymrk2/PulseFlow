@@ -6,7 +6,7 @@ import { newToast } from "../utils/common"
 import { AudioAnalyser } from "./audioAnalyser"
 import { AudioRoutingManager } from "./routing/audioRoutingManager"
 
-import { getRecordingFileName } from "../../components/drawer/live/recorder"
+import { getRecordingFileName } from "../../features/drawer/logic/live/recorder"
 
 const activeRecorders: { [channelId: string]: { recorder: MediaRecorder; stream: MediaStream; onstopPromise: Promise<void> } } = {}
 const options: any = { mimeType: "audio/webm; codecs=opus" }

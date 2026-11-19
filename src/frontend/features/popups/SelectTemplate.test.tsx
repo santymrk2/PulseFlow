@@ -13,7 +13,7 @@ vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
-vi.mock("../../react/drawer/Card", async () => {
+vi.mock("../drawer/Card", async () => {
     const { islands } = await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")
     return {
         Card: (props: Record<string, unknown>) => {
@@ -22,7 +22,7 @@ vi.mock("../../react/drawer/Card", async () => {
         }
     }
 })
-vi.mock("../../react/drawer/pages/TemplateSlide", async () => ({ TemplateSlide: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("TemplateSlide") }))
+vi.mock("../drawer/pages/TemplateSlide", async () => ({ TemplateSlide: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("TemplateSlide") }))
 vi.mock("../../shared/ui/kit/text-field/TextField", () => ({
     TextField: ({ label, onInput }: { label: string; onInput?: (v: string) => void }) => <input data-label={label} onChange={(e) => onInput?.(e.currentTarget.value)} />
 }))

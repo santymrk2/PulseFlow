@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { get } from "../../shared/core/lib/store"
-import { setCalendarColor } from "../../components/drawer/calendar/calendars"
+import { setCalendarColor } from "../drawer/logic/calendar/calendars"
 import { history } from "../../shared/utils/helpers/history"
 import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { _show } from "../../shared/utils/helpers/shows"

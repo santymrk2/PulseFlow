@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
-import { fetchAndImportIcs } from "../../components/drawer/calendar/calendars"
+import { fetchAndImportIcs } from "../drawer/logic/calendar/calendars"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, alertMessage, dictionary } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
@@ -13,7 +13,7 @@ import { ImportCalendar } from "./ImportCalendar"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
-vi.mock("../../components/drawer/calendar/calendars", () => ({ fetchAndImportIcs: vi.fn() }))
+vi.mock("../drawer/logic/calendar/calendars", () => ({ fetchAndImportIcs: vi.fn() }))
 vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))
 
 let restaurar: () => void = () => {}

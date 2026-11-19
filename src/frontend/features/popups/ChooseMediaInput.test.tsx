@@ -20,12 +20,12 @@ const details = vi.hoisted(() => ({
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
-vi.mock("../../react/drawer/live/Cameras", () => ({ Cameras: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="Cameras" onClick={() => onClick?.(details.Cameras)} /> }))
-vi.mock("../../react/drawer/live/Screens", () => ({ Screens: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="Screens" onClick={() => onClick?.(details.Screens)} /> }))
-vi.mock("../../react/drawer/live/Windows", () => ({ Windows: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="Windows" onClick={() => onClick?.(details.Windows)} /> }))
-vi.mock("../../react/drawer/live/NDIStreams", () => ({ NDIStreams: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="NDIStreams" onClick={() => onClick?.(details.NDIStreams)} /> }))
-vi.mock("../../react/drawer/live/OMTStreams", () => ({ OMTStreams: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="OMTStreams" onClick={() => onClick?.(details.OMTStreams)} /> }))
-vi.mock("../../react/drawer/live/BMDStreams", () => ({ BMDStreams: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="BMDStreams" onClick={() => onClick?.(details.BMDStreams)} /> }))
+vi.mock("../drawer/live/Cameras", () => ({ Cameras: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="Cameras" onClick={() => onClick?.(details.Cameras)} /> }))
+vi.mock("../drawer/live/Screens", () => ({ Screens: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="Screens" onClick={() => onClick?.(details.Screens)} /> }))
+vi.mock("../drawer/live/Windows", () => ({ Windows: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="Windows" onClick={() => onClick?.(details.Windows)} /> }))
+vi.mock("../drawer/live/NDIStreams", () => ({ NDIStreams: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="NDIStreams" onClick={() => onClick?.(details.NDIStreams)} /> }))
+vi.mock("../drawer/live/OMTStreams", () => ({ OMTStreams: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="OMTStreams" onClick={() => onClick?.(details.OMTStreams)} /> }))
+vi.mock("../drawer/live/BMDStreams", () => ({ BMDStreams: ({ onClick }: { onClick?: (d: unknown) => void }) => <button data-testid="BMDStreams" onClick={() => onClick?.(details.BMDStreams)} /> }))
 
 let restaurar: () => void = () => {}
 function montar(data: object = {}) {

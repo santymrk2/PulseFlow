@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
-import { getShortBibleName } from "../../components/drawer/bible/scripture"
+import { getShortBibleName } from "../drawer/logic/bible/scripture"
 import { keysToID, sortByName } from "../../shared/utils/helpers/array"
 import { activePopup, scriptures } from "../../shared/core/stores"
 import { setPopupSubmit } from "../../shared/utils/popup"

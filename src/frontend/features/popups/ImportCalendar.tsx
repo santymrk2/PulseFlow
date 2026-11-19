@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { Main } from "../../../types/IPC/Main"
-import { fetchAndImportIcs } from "../../components/drawer/calendar/calendars"
+import { fetchAndImportIcs } from "../drawer/logic/calendar/calendars"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, alertMessage } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"

@@ -29,7 +29,7 @@ vi.mock("../../../shared/utils/helpers/media", () => ({
 }))
 vi.mock("../../../shared/utils/helpers/output", () => ({ findMatchingOut: vi.fn(() => null), getActiveOutputs: vi.fn(() => []), getCurrentStyle: vi.fn(() => ({})), getResolution: vi.fn(() => [1920, 1080]), setOutput: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/shows", () => ({ _show: vi.fn() }))
-vi.mock("../../../react/drawer/media/MediaLoader", () => ({ MediaLoader: () => <div data-testid="media-loader" /> }))
+vi.mock("../../drawer/media/MediaLoader", () => ({ MediaLoader: () => <div data-testid="media-loader" /> }))
 vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))
 vi.mock("../../slide/Textbox", () => ({ Textbox: () => <div /> }))

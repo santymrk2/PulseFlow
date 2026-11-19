@@ -136,7 +136,7 @@ vi.mock("../../../shared/ui/system/Resizeable", () => ({ Resizeable: ({ children
 vi.mock("../../../shared/ui/system/Snaplines", () => ({ Snaplines: () => <div /> }))
 vi.mock("../../../features/slide/Zoomed", () => ({ Zoomed: ({ children }: any) => <div>{children}</div> }))
 vi.mock("../../../features/slide/Textbox", () => ({ Textbox: () => <div /> }))
-vi.mock("../../drawer/media/MediaLoader", () => ({ MediaLoader: () => <div /> }))
+vi.mock("../../../features/drawer/media/MediaLoader", () => ({ MediaLoader: () => <div /> }))
 vi.mock("../../../features/show/tools/Notes", () => ({ Notes: () => <div /> }))
 vi.mock("../../../features/timeline/Timeline", () => ({ Timeline: () => <div /> }))
 vi.mock("../editbox/Editbox", () => ({ Editbox: () => <div data-testid="editbox" /> }))

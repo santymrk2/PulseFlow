@@ -8,7 +8,7 @@ import { activeEdit, activeShow, activeStage, activeTimers, allOutputs, audioCha
 import { isOutputWindow } from "../../../shared/utils/common"
 import { send } from "../../../shared/utils/request"
 import { addSlideAction } from "../../actions/actions"
-import { createNewTimer, getCurrentTimerValue } from "../../drawer/timers/timers"
+import { createNewTimer, getCurrentTimerValue } from "../../../features/drawer/logic/timers/timers"
 import { clone, keysToID, sortByName } from "../../../shared/utils/helpers/array"
 import { history } from "../../../shared/utils/helpers/history"
 import { getFirstActiveOutput, getStageOutputId, isOutputBound } from "../../../shared/utils/helpers/output"

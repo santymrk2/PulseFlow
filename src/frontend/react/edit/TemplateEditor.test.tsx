@@ -11,7 +11,7 @@ const mocks = vi.hoisted(() => ({
     history: vi.fn()
 }))
 
-vi.mock("../drawer/pages/TemplateSlide", () => ({
+vi.mock("../../features/drawer/pages/TemplateSlide", () => ({
     TemplateSlide: ({ onNewStylesChange }: { onNewStylesChange?: (styles: { [key: string]: string | number }) => void }) => {
         mocks.emitNewStyles = onNewStylesChange ?? null
         return <div data-testid="template-slide" />

@@ -5,7 +5,7 @@ import { addProjectItem, addToProject, updateRecentlyAddedFiles } from "../../co
 import { actions, activeFocus, activeProject, activeShow, contextActive, drawer, editingProjectTemplate, focusMode, fullColors, playerVideos, projects, projectTemplates, recentFiles, selected, special } from "../../shared/core/stores"
 import { getAccess } from "../../shared/utils/profile"
 import { getActionIcon } from "../../components/actions/actions"
-import { getTimeUntilClock } from "../../components/drawer/timers/timers"
+import { getTimeUntilClock } from "../drawer/logic/timers/timers"
 import { clone } from "../../shared/utils/helpers/array"
 import { brightenDarkColor, fadeColor, getContrast } from "../../shared/utils/helpers/color"
 import { getExtension, getFileName, getMediaType, removeExtension } from "../../shared/utils/helpers/media"

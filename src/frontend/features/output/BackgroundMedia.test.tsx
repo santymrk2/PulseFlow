@@ -9,9 +9,9 @@ vi.mock("../../shared/utils/helpers/media", () => ({ getMediaStyle: () => ({}) }
 vi.mock("./Window", async () => ({ Window: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Window") }))
 vi.mock("./Camera", () => ({ Camera: () => <div data-testid="camera" /> }))
 vi.mock("./OutputTransition", () => ({ OutputTransition: ({ children }: { children?: React.ReactNode }) => <div>{children}</div> }))
-vi.mock("../../react/drawer/live/BMDStream", () => ({ BMDStream: () => null }))
-vi.mock("../../react/drawer/live/NDIStream", () => ({ NDIStream: () => null }))
-vi.mock("../../react/drawer/live/OMTStream", () => ({ OMTStream: () => null }))
+vi.mock("../drawer/live/BMDStream", () => ({ BMDStream: () => null }))
+vi.mock("../drawer/live/NDIStream", () => ({ NDIStream: () => null }))
+vi.mock("../drawer/live/OMTStream", () => ({ OMTStream: () => null }))
 
 afterEach(cleanup)
 

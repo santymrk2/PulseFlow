@@ -5,7 +5,7 @@ import { TimerControls } from "./TimerControls"
 
 const timersMock = vi.fn((_props?: { onlyPlaying?: boolean }) => <div data-testid="timers" />)
 
-vi.mock("../../react/drawer/timers/Timers", () => ({
+vi.mock("../drawer/timers/Timers", () => ({
     Timers: (props: { onlyPlaying?: boolean }) => timersMock(props)
 }))
 

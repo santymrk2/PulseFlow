@@ -4,7 +4,7 @@ import { get } from "../../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../../types/Show"
 import { activeDrawerTab, activeTimers, drawer, timers } from "../../../shared/core/stores"
-import { getCurrentTimerValue } from "../../../components/drawer/timers/timers"
+import { getCurrentTimerValue } from "../../drawer/logic/timers/timers"
 import { setDrawerTabData } from "../../../shared/utils/helpers/historyHelpers"
 import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
 import { Timer } from "./Timer"
@@ -12,7 +12,7 @@ import { Timer } from "./Timer"
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../components/drawer/timers/timers", () => ({ getCurrentTimerValue: vi.fn(() => 90) }))
+vi.mock("../../drawer/logic/timers/timers", () => ({ getCurrentTimerValue: vi.fn(() => 90) }))
 vi.mock("../../../shared/utils/helpers/historyHelpers", () => ({ setDrawerTabData: vi.fn() }))
 
 let restore: () => void = () => {}

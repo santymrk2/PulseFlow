@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { renameCalendar } from "../../components/drawer/calendar/calendars"
+import { renameCalendar } from "../drawer/logic/calendar/calendars"
 import { history } from "../../shared/utils/helpers/history"
 import { getLayoutRef } from "../../shared/utils/helpers/show"
 import { _show } from "../../shared/utils/helpers/shows"
@@ -20,7 +20,7 @@ vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/utils/helpers/caretHelper", () => ({ pasteText: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ newDropdown: { "new.timer": vi.fn() } }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../../components/drawer/calendar/calendars", () => ({ renameCalendar: vi.fn() }))
+vi.mock("../drawer/logic/calendar/calendars", () => ({ renameCalendar: vi.fn() }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn(() => ({ slides: () => ({ get: () => [undefined], set: vi.fn() }), layouts: () => ({ get: () => [] }) })) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))
 vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))

@@ -7,7 +7,7 @@ import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import Preview from "./Preview"
 
 vi.mock("./MultiOutputs", () => ({ MultiOutputs: () => <div data-testid="multi-outputs" /> }))
-vi.mock("../../react/drawer/audio/AudioMeter", () => ({ AudioMeter: ({ preview }: { preview?: boolean }) => <div data-testid="audio-meter" data-preview={String(preview)} /> }))
+vi.mock("../drawer/audio/AudioMeter", () => ({ AudioMeter: ({ preview }: { preview?: boolean }) => <div data-testid="audio-meter" data-preview={String(preview)} /> }))
 vi.mock("./ShowActions", () => ({
     ShowActions: ({ linesIndex, maxLines }: { linesIndex: number | null; maxLines: number | null }) => <div data-testid="show-actions" data-lines={linesIndex} data-max={maxLines} />
 }))

@@ -18,7 +18,7 @@ vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../settings/logic/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../slide/logic/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
-vi.mock("../../react/drawer/Card", async () => {
+vi.mock("../drawer/Card", async () => {
     const { islands } = await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")
     return {
         Card: (props: Record<string, unknown>) => {

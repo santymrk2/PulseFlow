@@ -9,7 +9,7 @@ import { ThemeNavigation } from "./ThemeNavigation"
 vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
-vi.mock("../drawer/pages/Templates", () => ({ Templates: () => <div data-comp="templates" /> }))
+vi.mock("../../features/drawer/pages/Templates", () => ({ Templates: () => <div data-comp="templates" /> }))
 vi.mock("../../features/show/left/LeftPanel", () => ({
     LeftPanel: ({ children, title }: { children?: ReactNode; title?: string }) => (
         <div>

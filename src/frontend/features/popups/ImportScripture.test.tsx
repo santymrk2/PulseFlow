@@ -3,7 +3,7 @@ import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
-import { getApiBiblesList } from "../../components/drawer/bible/scripture"
+import { getApiBiblesList } from "../drawer/logic/bible/scripture"
 import { requestMain, sendMain } from "../../shared/core/ipc/main"
 import { dictionary, scriptures } from "../../shared/core/stores"
 import { clearFields, fire } from "../../shared/test/kitMocks"
@@ -13,7 +13,7 @@ import { ImportScripture } from "./ImportScripture"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))
-vi.mock("../../components/drawer/bible/scripture", () => ({ getApiBiblesList: vi.fn(), customBibleData: (a: object) => ({ ...a }) }))
+vi.mock("../drawer/logic/bible/scripture", () => ({ getApiBiblesList: vi.fn(), customBibleData: (a: object) => ({ ...a }) }))
 vi.mock("../../react/main/Loader", async () => ({ Loader: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Loader") }))
 vi.mock("uid", () => ({ uid: () => "nuevo" }))
 vi.mock("../../shared/ui/kit/text-field/TextField", async () => ({ TextField: (await vi.importActual<typeof import("../../shared/test/kitMocks")>("../../shared/test/kitMocks")).FieldMock }))

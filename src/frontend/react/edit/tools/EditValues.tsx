@@ -5,7 +5,7 @@ import { actions, activeEdit, activePage, activeStage, outputs, special, timers 
 import { throttle } from "../../../shared/utils/common"
 import { translateText } from "../../../shared/utils/language"
 import { mediaExtensions } from "../../../shared/core/values/extensions"
-import { getSortedTimers } from "../../../components/drawer/timers/timers"
+import { getSortedTimers } from "../../../features/drawer/logic/timers/timers"
 import { clone, keysToID, sortByName } from "../../../shared/utils/helpers/array"
 import { getFilters, getStyles } from "../../../shared/utils/helpers/style"
 import { FormInput } from "../../../shared/ui/form/FormInput"

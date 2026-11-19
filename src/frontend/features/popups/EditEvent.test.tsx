@@ -2,7 +2,7 @@
 import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { createCustomCalendar } from "../../components/drawer/calendar/calendars"
+import { createCustomCalendar } from "../drawer/logic/calendar/calendars"
 import { history } from "../../shared/utils/helpers/history"
 import { activeDays, activePopup, calendars, dictionary, drawerTabsData, eventEdit, events, popupData } from "../../shared/core/stores"
 import { clearFields, fields, fire } from "../../shared/test/kitMocks"
@@ -14,11 +14,11 @@ import { EditEvent } from "./EditEvent"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
-vi.mock("../../components/drawer/calendar/calendar", () => ({
+vi.mock("../drawer/logic/calendar/calendar", () => ({
     getTime: (date: Date) => ("0" + date.getHours()).slice(-2) + ":" + ("0" + date.getMinutes()).slice(-2),
     isSameDay: (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate()
 }))
-vi.mock("../../components/drawer/calendar/calendars", () => ({ createCustomCalendar: vi.fn(), isCalendarImported: (cal?: { url?: string; custom?: boolean } | null) => (cal ? !!cal.url || !cal.custom : false) }))
+vi.mock("../drawer/logic/calendar/calendars", () => ({ createCustomCalendar: vi.fn(), isCalendarImported: (cal?: { url?: string; custom?: boolean } | null) => (cal ? !!cal.url || !cal.custom : false) }))
 vi.mock("uid", () => ({ uid: vi.fn() }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../components/actions/actionData", () => ({ actionData: { start_show: { name: "Iniciar show" } } }))

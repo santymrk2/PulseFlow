@@ -8,7 +8,7 @@ import { SceneEditor } from "./SceneEditor"
 vi.mock("../../shared/audio/audioPlayer", () => ({ AudioPlayer: {} }))
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../drawer/pages/ScenePreview", () => ({
+vi.mock("../../features/drawer/pages/ScenePreview", () => ({
     ScenePreview: () => <div data-testid="scene-preview" />
 }))
 

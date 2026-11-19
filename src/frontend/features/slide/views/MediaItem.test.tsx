@@ -12,7 +12,7 @@ import { MediaItem } from "./MediaItem"
 vi.mock("../../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../react/drawer/media/Image", () => ({
+vi.mock("../../drawer/media/Image", () => ({
     Image: ({ src, style }: { src: string; style?: CSSProperties | string }) => (
         <img
             data-testid="island"

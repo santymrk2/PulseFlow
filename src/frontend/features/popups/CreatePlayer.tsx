@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { get } from "../../shared/core/lib/store"
 import { uid } from "uid"
-import { getUrlTimestamp, getVimeoData, getYouTubeData, trimPlayerId } from "../../components/drawer/player/playerHelper"
+import { getUrlTimestamp, getVimeoData, getYouTubeData, trimPlayerId } from "../drawer/logic/player/playerHelper"
 import { clone } from "../../shared/utils/helpers/array"
 import { addVideoMarker } from "../../shared/utils/helpers/media"
 import { joinTime, secondsToTime } from "../../shared/utils/helpers/time"

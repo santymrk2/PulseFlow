@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { get } from "../../../shared/core/lib/store"
 import { activeDrawerTab, drawer, events } from "../../../shared/core/stores"
-import { getTime } from "../../../components/drawer/calendar/calendar"
+import { getTime } from "../../drawer/logic/calendar/calendar"
 import { keysToID } from "../../../shared/utils/helpers/array"
 import { visibleEvents } from "../../../shared/utils/helpers/dynamicItemText"
 import { setDrawerTabData } from "../../../shared/utils/helpers/historyHelpers"

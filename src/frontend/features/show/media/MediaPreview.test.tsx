@@ -21,7 +21,7 @@ vi.mock("../../../shared/utils/helpers/output", () => ({
 }))
 vi.mock("../../output/logic/clear", () => ({ clearSlide: vi.fn() }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../react/drawer/media/Image", () => ({ Image: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} /> }))
+vi.mock("../../drawer/media/Image", () => ({ Image: ({ src, alt }: { src: string; alt: string }) => <img src={src} alt={alt} /> }))
 vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../../shared/ui/system/Center", () => ({ Center: ({ children }: { children: ReactNode }) => <div>{children}</div> }))
 vi.mock("../../../shared/ui/system/HoverPlay", () => ({ HoverPlay: ({ children, onClick }: { children: ReactNode; onClick?: () => void }) => <div onClick={onClick}>{children}</div> }))

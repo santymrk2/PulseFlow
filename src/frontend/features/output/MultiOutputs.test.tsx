@@ -7,7 +7,7 @@ import { MultiOutputs } from "./MultiOutputs"
 
 vi.mock("../settings/logic/openSettings", () => ({ openSettings: vi.fn() }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../components/drawer/live/recorder", () => ({ stopMediaRecorder: vi.fn() }))
+vi.mock("../drawer/logic/live/recorder", () => ({ stopMediaRecorder: vi.fn() }))
 vi.mock("../../components/edit/scripts/edit", () => ({ openDrawer: vi.fn() }))
 vi.mock("../../shared/utils/helpers/array", () => ({
     clone: vi.fn((v: unknown) => v),
@@ -27,7 +27,7 @@ vi.mock("../../shared/utils/helpers/rtmpDestinations", () => ({ getUnhealthyDest
 vi.mock("../../shared/utils/helpers/show", () => ({ bindSlidesToOutput: vi.fn(), getLayoutRef: vi.fn(() => []) }))
 vi.mock("../../shared/utils/helpers/shows", () => ({ _show: vi.fn(() => ({ get: vi.fn(() => null) })) }))
 vi.mock("./PreviewOutput", () => ({ PreviewOutput: () => <div data-testid="preview-output" /> }))
-vi.mock("../../react/drawer/audio/AudioMeter", () => ({ AudioMeter: () => <div data-testid="audio-meter" /> }))
+vi.mock("../drawer/audio/AudioMeter", () => ({ AudioMeter: () => <div data-testid="audio-meter" /> }))
 vi.mock("../../shared/ui/kit/select-field/SelectField", () => ({
     SelectField: ({ value, options, onChange }: { value: string; options: { value: string; label: string }[]; onChange?: (v: string | null) => void }) => (
         <select data-testid="output-select" value={value} onChange={(e) => onChange?.(e.target.value)}>

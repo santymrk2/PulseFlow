@@ -2,7 +2,7 @@
 import { cleanup, render } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
-import { getUrlTimestamp, getVimeoData, getYouTubeData } from "../../components/drawer/player/playerHelper"
+import { getUrlTimestamp, getVimeoData, getYouTubeData } from "../drawer/logic/player/playerHelper"
 import { addVideoMarker } from "../../shared/utils/helpers/media"
 import { dictionary, playerVideos, popupData } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
@@ -12,7 +12,7 @@ import { CreatePlayer } from "./CreatePlayer"
 
 vi.mock("uid", () => ({ uid: () => "nuevo" }))
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
-vi.mock("../../components/drawer/player/playerHelper", () => ({
+vi.mock("../drawer/logic/player/playerHelper", () => ({
     getUrlTimestamp: vi.fn(() => 0),
     getVimeoData: vi.fn(async () => ({ name: "Vimeo name" })),
     getYouTubeData: vi.fn(async () => ({ name: "YT name" })),

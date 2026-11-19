@@ -7,7 +7,7 @@ import { drawerTabsData, scriptures, scripturesCache, textCache } from "../../..
 import { buildBibleIndex, fastBibleSearch } from "../../../shared/utils/searchFast"
 import { getTextSnippet } from "./searchHighlight"
 import { sortByClosestMatch } from "../../../components/actions/apiHelper"
-import { loadJsonBible } from "../../../components/drawer/bible/scripture"
+import { loadJsonBible } from "../../drawer/logic/bible/scripture"
 import { getExtension, getMediaType } from "../../../shared/utils/helpers/media"
 
 export function showResult(show: ShowList, rawSearchValue: string) {

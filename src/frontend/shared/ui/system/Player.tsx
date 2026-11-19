@@ -3,8 +3,8 @@ import { activeProject, activeShow, playerVideos, projects } from "../../core/st
 import { useStore } from "../hooks/useStore"
 import { _show } from "../../utils/helpers/shows"
 import { videoSync } from "../../../features/media/logic/video/videoSync"
-import { Vimeo } from "../../../react/drawer/player/Vimeo"
-import { YouTube } from "../../../react/drawer/player/YouTube"
+import { Vimeo } from "../../../features/drawer/player/Vimeo"
+import { YouTube } from "../../../features/drawer/player/YouTube"
 
 export interface PlayerVideoData {
     muted: boolean

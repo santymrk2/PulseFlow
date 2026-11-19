@@ -9,7 +9,7 @@ import { CameraEditor } from "./CameraEditor"
 vi.mock("../../shared/audio/audioPlayer", () => ({ AudioPlayer: {} }))
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../drawer/live/Cam", async () => ({ Cam: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Cam") }))
+vi.mock("../../features/drawer/live/Cam", async () => ({ Cam: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Cam") }))
 
 afterEach(() => {
     cleanup()

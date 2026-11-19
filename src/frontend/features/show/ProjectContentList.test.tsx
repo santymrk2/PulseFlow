@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 import { actions, activeFocus, activeProject, activeShow, contextActive, drawer, editingProjectTemplate, focusMode, fullColors, playerVideos, projects, projectTemplates, recentFiles, selected, special } from "../../shared/core/stores"
 import { getAccess } from "../../shared/utils/profile"
 import { addProjectItem } from "../../converters/project"
-import { getTimeUntilClock } from "../../components/drawer/timers/timers"
+import { getTimeUntilClock } from "../drawer/logic/timers/timers"
 import { getFileName, removeExtension } from "../../shared/utils/helpers/media"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ProjectContentList } from "./ProjectContentList"
@@ -13,7 +13,7 @@ import { ProjectContentList } from "./ProjectContentList"
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("../../converters/project", () => ({ addProjectItem: vi.fn(), addToProject: vi.fn(), updateRecentlyAddedFiles: vi.fn() }))
 vi.mock("../../components/actions/actions", () => ({ getActionIcon: vi.fn(() => "") }))
-vi.mock("../../components/drawer/timers/timers", () => ({ getTimeUntilClock: vi.fn(() => 0) }))
+vi.mock("../drawer/logic/timers/timers", () => ({ getTimeUntilClock: vi.fn(() => 0) }))
 vi.mock("../../shared/utils/helpers/array", () => ({ clone: vi.fn((value: unknown) => value) }))
 vi.mock("../../shared/utils/helpers/color", () => ({ brightenDarkColor: vi.fn((value: string) => value), fadeColor: vi.fn((value: string) => value), getContrast: vi.fn(() => "#fff") }))
 vi.mock("../../shared/utils/helpers/media", () => ({ getExtension: vi.fn(() => ""), getFileName: vi.fn((path: string) => path), getMediaType: vi.fn(() => "image"), removeExtension: vi.fn((name: string) => name) }))

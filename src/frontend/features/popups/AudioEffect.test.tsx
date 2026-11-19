@@ -13,15 +13,15 @@ vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
 
 // Los efectos ya son React: verificamos cuál se monta y con qué props.
-vi.mock("../../react/drawer/audio/effects/AudioCompressor", () => ({ AudioCompressor: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioCompressor" data-effect-id={effectId} data-channel-id={channelId} /> }))
-vi.mock("../../react/drawer/audio/effects/AudioDelay", () => ({ AudioDelay: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioDelay" data-effect-id={effectId} data-channel-id={channelId} /> }))
-vi.mock("../../react/drawer/audio/effects/AudioEqualizer", () => ({ AudioEqualizer: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioEqualizer" data-effect-id={effectId} data-channel-id={channelId} /> }))
-vi.mock("../../react/drawer/audio/effects/AudioFilter", () => ({ AudioFilter: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioFilter" data-effect-id={effectId} data-channel-id={channelId} /> }))
-vi.mock("../../react/drawer/audio/effects/AudioLimiter", () => ({ AudioLimiter: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioLimiter" data-effect-id={effectId} data-channel-id={channelId} /> }))
-vi.mock("../../react/drawer/audio/effects/AudioNoiseGate", () => ({ AudioNoiseGate: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioNoiseGate" data-effect-id={effectId} data-channel-id={channelId} /> }))
-vi.mock("../../react/drawer/audio/effects/AudioReverb", () => ({ AudioReverb: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioReverb" data-effect-id={effectId} data-channel-id={channelId} /> }))
-vi.mock("../../react/drawer/audio/effects/AudioStereoShaper", () => ({ AudioStereoShaper: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioStereoShaper" data-effect-id={effectId} data-channel-id={channelId} /> }))
-vi.mock("../../react/drawer/audio/effects/AudioEffectPresets", () => ({
+vi.mock("../drawer/audio/effects/AudioCompressor", () => ({ AudioCompressor: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioCompressor" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioDelay", () => ({ AudioDelay: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioDelay" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioEqualizer", () => ({ AudioEqualizer: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioEqualizer" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioFilter", () => ({ AudioFilter: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioFilter" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioLimiter", () => ({ AudioLimiter: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioLimiter" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioNoiseGate", () => ({ AudioNoiseGate: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioNoiseGate" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioReverb", () => ({ AudioReverb: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioReverb" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioStereoShaper", () => ({ AudioStereoShaper: ({ effectId, channelId }: { effectId?: string; channelId?: string }) => <div data-efecto="AudioStereoShaper" data-effect-id={effectId} data-channel-id={channelId} /> }))
+vi.mock("../drawer/audio/effects/AudioEffectPresets", () => ({
     AudioEffectPresets: ({ effectKey, channelId, effectId }: { effectKey?: string; channelId?: string; effectId?: string }) => <div data-efecto="AudioEffectPresets" data-effect-key={effectKey} data-channel-id={channelId} data-effect-id={effectId} />
 }))
 

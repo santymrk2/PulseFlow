@@ -34,14 +34,14 @@ vi.mock("../../../shared/utils/helpers/output", () => ({
 }))
 vi.mock("../../output/logic/clear", () => ({ clearBackground: vi.fn(), clearSlide: vi.fn() }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../react/drawer/Card", () => ({
+vi.mock("../../drawer/Card", () => ({
     Card: ({ label, onClick, children }: { label: string; onClick?: () => void; children?: ReactNode }) => (
         <div data-testid="card" data-label={label} onClick={onClick}>
             {children}
         </div>
     )
 }))
-vi.mock("../../../react/drawer/media/MediaLoader", () => ({ MediaLoader: ({ path }: { path: string }) => <div data-testid="media-loader" data-path={path} /> }))
+vi.mock("../../drawer/media/MediaLoader", () => ({ MediaLoader: ({ path }: { path: string }) => <div data-testid="media-loader" data-path={path} /> }))
 vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
 vi.mock("../../../shared/ui/kit/button/Button", () => ({

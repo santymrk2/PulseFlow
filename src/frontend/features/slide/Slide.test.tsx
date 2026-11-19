@@ -37,7 +37,7 @@ vi.mock("../../shared/utils/helpers/show", () => ({ getGroupName: vi.fn(() => "G
 vi.mock("../../shared/utils/helpers/shows", () => ({
     _show: vi.fn(() => ({ layouts: () => ({ ref: () => [[]] }) }))
 }))
-vi.mock("../../react/drawer/media/MediaLoader", () => ({
+vi.mock("../drawer/media/MediaLoader", () => ({
     MediaLoader: (props: Record<string, unknown>) => <span data-view="MediaLoader" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
 }))
 vi.mock("../../react/edit/editbox/Editbox", async () => ({ Editbox: (await vi.importActual<typeof import("../../shared/test/islandMock")>("../../shared/test/islandMock")).makePortMock("Editbox") }))

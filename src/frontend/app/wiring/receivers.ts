@@ -3,7 +3,7 @@ import { CLOUD, CONTROLLER, NDI, OMT, OUTPUT, OUTPUT_STREAM, REMOTE, STAGE } fro
 import type { ClientMessage } from "../../../types/Socket"
 import { MIN_DB } from "../../shared/audio/dBUtils"
 import { runAction } from "../../components/actions/actions"
-import { handleRecorderFrame } from "../../components/drawer/live/recorder"
+import { handleRecorderFrame } from "../../features/drawer/logic/live/recorder"
 import { getDynamicValue } from "../../components/edit/scripts/itemHelpers"
 import { receiveMainGlobal } from "../../shared/core/ipc/main"
 import { actions, activePopup, activeShow, alertMessage, audioChannelsData, driveData, focusMode, ndiData, omtData, outputDisplay, outputs, outputState, popupData, previewBuffers, shows, showsCache } from "../../shared/core/stores"

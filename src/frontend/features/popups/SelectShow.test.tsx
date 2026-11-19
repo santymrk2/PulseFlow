@@ -11,7 +11,7 @@ import { SelectShow } from "./SelectShow"
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../react/drawer/VirtualList", () => ({
+vi.mock("../drawer/VirtualList", () => ({
     VirtualList: ({ items, render }: { items: { id: string; name: string; private?: boolean }[]; render: (item: { id: string; name: string; private?: boolean }) => ReactNode }) => (
         <div>
             {items.map((item, i) => (

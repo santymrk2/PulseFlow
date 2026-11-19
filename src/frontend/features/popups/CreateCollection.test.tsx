@@ -10,7 +10,7 @@ import { CreateCollection } from "./CreateCollection"
 
 vi.mock("uid", () => ({ uid: () => "col1" }))
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../components/drawer/bible/scripture", () => ({ getShortBibleName: (n: string) => n.slice(0, 3) }))
+vi.mock("../drawer/logic/bible/scripture", () => ({ getShortBibleName: (n: string) => n.slice(0, 3) }))
 
 const SCRIPTURES = {
     bible_a: { name: "Reina Valera", id: "rv" },
