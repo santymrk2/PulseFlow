@@ -64,7 +64,7 @@ Lo usan las tareas 5 a 13. Cada una indica sus pares `origen=destino` y su lista
 
 ---
 
-### Tarea 1: Diagnóstico
+### Task 1: Diagnóstico
 
 **Archivos:** crear `docs/diagnostico.md`. Sonda temporal en `src/frontend/main.tsx` (**no se commitea**).
 
@@ -106,7 +106,7 @@ Lo usan las tareas 5 a 13. Cada una indica sus pares `origen=destino` y su lista
 
 ---
 
-### Tarea 2: Sacar Tailwind
+### Task 2: Sacar Tailwind
 
 **Archivos:**
 - Modificar: `src/frontend/react/edit/CategoryPicker.tsx`, `src/frontend/react/ui/menu/MenuItem.tsx`,
@@ -154,7 +154,7 @@ Lo usan las tareas 5 a 13. Cada una indica sus pares `origen=destino` y su lista
 
 ---
 
-### Tarea 3: Script de mudanza
+### Task 3: Script de mudanza
 
 **Archivos:** crear `scripts/moveModules.ts` (lógica), `scripts/move-modules.ts` (CLI) y `scripts/moveModules.test.ts`.
 
@@ -212,7 +212,7 @@ Lo usan las tareas 5 a 13. Cada una indica sus pares `origen=destino` y su lista
 
 ---
 
-### Tarea 4: Chequeo de tipos de todo el frontend y tests de arquitectura
+### Task 4: Chequeo de tipos de todo el frontend y tests de arquitectura
 
 **Archivos:**
 - Renombrar: `scripts/check-react-types.ts` → `scripts/check-types.ts`; `scripts/checkReactTypes.ts` →
@@ -253,7 +253,7 @@ siguientes. `bun run test:types` falla si hay más errores que `MAX_ERRORS`. Si 
 
 ---
 
-### Tarea 5: `shared/core`
+### Task 5: `shared/core`
 
 Pares para MUD:
 - `src/frontend/stores.ts=src/frontend/shared/core/stores.ts`
@@ -269,7 +269,7 @@ Antes de MUD-1:
 
 Mismo commit que MUD-3. Humo: la app arranca y abre Show.
 
-### Tarea 6: `shared/utils`
+### Task 6: `shared/utils`
 
 Pares:
 - `src/frontend/components/helpers=src/frontend/shared/utils/helpers`
@@ -277,7 +277,7 @@ Pares:
 
 Humo: Show, Edit y drawer Media.
 
-### Tarea 7: `app/wiring`
+### Task 7: `app/wiring`
 
 Pares: `src/frontend/IPC/responsesMain.ts` y estos archivos de `src/frontend/utils/` → `src/frontend/app/wiring/`:
 - `startup`, `save`, `receivers`
@@ -288,7 +288,7 @@ Pares: `src/frontend/IPC/responsesMain.ts` y estos archivos de `src/frontend/uti
 Cada uno va con su `.test.ts`, si existe. En MUD-4, `utils/receivers.ts` trae 40 errores de tipos. Humo: la app
 arranca, guarda (cambiar el nombre de `[diag] prueba` y reiniciar) y responde a los atajos.
 
-### Tarea 8: `shared/ui` y `shared/test`
+### Task 8: `shared/ui` y `shared/test`
 
 Pares:
 - `react/ui=shared/ui/kit`
@@ -304,24 +304,24 @@ Pares:
 
 Todo bajo `src/frontend/`. Humo: menú contextual en un show, un popup con campos de formulario y el drawer.
 
-### Tarea 9: Funcionalidades chicas
+### Task 9: Funcionalidades chicas
 
 Un ciclo MUD completo (un commit de mudanza) por cada una, en este orden:
 `popups`, `quicksearch`, `screens`, `looks`, `export`, `stage`, `timeline`. Para cada `<x>`, los pares son
 `src/frontend/react/<x>=src/frontend/features/<x>` y, si existe, `src/frontend/components/<x>=src/frontend/features/<x>/logic`.
 Humo: lo que diga `docs/diagnostico.md` para cada una.
 
-### Tarea 10: `show` y `slide`
+### Task 10: `show` y `slide`
 
 Primero `show`, con los pares de la regla general más `src/frontend/show/slides.ts=src/frontend/features/show/logic/slides.ts`.
 Después `slide`, con la regla general. Humo: abrir un show y navegar slides con el teclado.
 
-### Tarea 11: `settings`, `media` y `output`
+### Task 11: `settings`, `media` y `output`
 
 `media` lleva además `src/frontend/media/cameraManager.ts=src/frontend/features/media/logic/cameraManager.ts`.
 Humo: cada pestaña de settings, preview y salida, y limpiar salida.
 
-### Tarea 12: `drawer`, `import`, `actions` y `edit`
+### Task 12: `drawer`, `import`, `actions` y `edit`
 
 Un ciclo MUD por cada uno, en este orden:
 1. **`drawer`**: regla general más `src/frontend/audio=src/frontend/features/drawer/audio/logic`. Si
@@ -334,7 +334,7 @@ Un ciclo MUD por cada uno, en este orden:
 Humo: cada pestaña del drawer, importar un `.txt` como `[diag] import`, y el editor de slides (editar texto, mover
 una caja).
 
-### Tarea 13: `app/` y cierre
+### Task 13: `app/` y cierre
 
 - [ ] **13.1** MUD con estos pares:
   - `src/frontend/main.tsx=src/frontend/app/main.tsx`
