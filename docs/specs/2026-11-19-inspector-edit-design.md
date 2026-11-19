@@ -1,216 +1,207 @@
 # Inspector de Edit al estilo ProPresenter: diseño
 
-Fecha: 2026-11-19. Estado: borrador para aprobar.
+Fecha: 2026-11-19. Estado: para aprobar.
 
 ## Por qué
 
-El panel de edición (abajo a la derecha en Edit) es poco intuitivo:
+El panel de edición es poco intuitivo y, además, miente.
 
-- **Desplegar activa.** Abrir una sección como "Scrolling", "Shadow" o "List" ya le escribe valores al objeto. Lo hace `toggleSection` en `features/edit/tools/EditValues.tsx:276`, por `expandAutoValue`.
-- **No hay forma clara de apagar.** Cuando la sección tiene cambios, su encabezado queda deshabilitado (`disabled={hasChanged}`) y la única salida es "reset", que pierde lo que habías ajustado.
+- **Desplegar activa.**
+  - Abrir "Scrolling", "Shadow" o "List" ya le escribe valores al objeto (`toggleSection` en `features/edit/tools/EditValues.tsx:276`, por `expandAutoValue`).
+  - Para apagarlo no alcanza con plegar: el encabezado queda deshabilitado (`disabled={hasChanged}`) y la única salida es "reset", que pierde lo ajustado.
 - **Todo está repartido en seis lugares:**
   - las pestañas Texto, Ítem, Slide y Filtros;
-  - el menú contextual de la caja (acciones del ítem, transición, vincular a, condiciones);
+  - el menú contextual;
   - los botones de copiar, pegar y reset.
+- **Muestra opciones que no salen en pantalla.**
+  - La salida real la dibuja el motor nativo (Rust/WGPU), con la escena que arma `shared/utils/helpers/sceneGraph.ts` según el contrato de `src-tauri/src/render/scene.rs`.
+  - Rotación, sombra de caja, filtros, recorte, lista, acordes, scrolling, transición por objeto, timers, condiciones, varios tipos de objeto y más se ven en el editor y en el preview de la webview, pero **no en la proyección**.
+  - Para una app en vivo es una trampa: configurás algo, se ve bien, y el domingo no sale.
 
-La meta es ProPresenter: un inspector con **tres pestañas generales**, y dentro de cada una **propiedades agrupadas que se prenden y apagan con un checkbox**.
+La meta es el editor de ProPresenter:
+- inspector en pestañas, con propiedades agrupadas que se prenden y apagan con un checkbox;
+- columna derecha dedicada al inspector;
+- todo lo que se ve se puede usar.
 
-- Desplegar y activar quedan separados.
-- Apagar no borra los valores.
-- Copiamos cómo funciona, no el arte, los íconos ni los textos de ProPresenter.
+Copiamos cómo funciona, no el arte, los íconos ni los textos.
 
 ## Objetivos
 
-1. Un inspector nuevo con tres pestañas para el objeto seleccionado: **Forma**, **Contenido** y **Animación**.
-   - La pestaña del medio se llama "Texto" en objetos de texto y el nombre del tipo en los demás ("Media", "Reloj", "Tabla"…).
-2. Cada sección opcional tiene un **checkbox** (activar/desactivar) separado de la **flecha** (desplegar/plegar).
-   - Desplegar nunca modifica el objeto.
-3. Desactivar una sección **guarda sus valores** y los vuelve a aplicar al reactivarla: opción A, elegida por el usuario.
-4. **Sin objeto seleccionado**, el inspector muestra las propiedades del slide: fondo, media de fondo, plantilla y filtros del slide.
-   - En plantillas y overlays muestra lo que hoy muestran `TemplateStyle` y `OverlayStyle`.
-5. **Todo lo que hoy se puede tocar sigue disponible.** Nada se pierde en el reordenamiento: el mapeo completo está más abajo.
-6. **Con el drawer abierto, el editor se achica** al espacio que queda: el slide no queda tapado. Hoy el canvas y su barra quedan debajo del drawer, y el inspector se aplasta con "Copy" encima de "Text color".
+1. **Inspector con dos pestañas** para el objeto seleccionado: **Forma** y **Contenido**.
+   - Contenido se llama "Texto" en objetos de texto y el nombre del tipo en los demás ("Media", "Reloj"…).
+2. **Mostrar sólo lo que el motor dibuja** (tabla de abajo). Lo demás se oculta del inspector, sin borrar datos.
+3. **Checkbox y flecha separados:** el checkbox activa o desactiva, la flecha despliega o pliega. Desplegar nunca modifica el objeto.
+4. **Apagar guarda los valores** (opción A) y prenderlo los restaura.
+5. **Sin objeto seleccionado,** el inspector muestra el slide.
+6. **En Edit no se muestra el preview de salida.** La columna derecha queda entera para el inspector.
+7. **Con el drawer abierto, el editor se achica** y el slide no queda tapado.
+8. **La barra de "agregar objeto" sólo ofrece tipos que el motor dibuja.**
 
 ## No objetivos
 
-- Mover el inspector a la derecha, reescribir el canvas, los gestos, alinear/distribuir o los atajos. Eso es la reescritura grande (`docs/research/editor-slides.md`, fases F0–F7). El inspector nuevo se hace de forma que esa reescritura lo reuse tal cual.
-- Cambiar qué hace cada campo. Los campos, sus valores y cómo se guardan son los de hoy.
-- Las pestañas de arriba del editor (Slide / Chords / Text edit), que no se tocan.
+- Mover el inspector a otra columna, reescribir el canvas, los gestos, alinear/distribuir o los atajos. Eso es la reescritura grande (`docs/research/editor-slides.md`). El inspector nuevo se hace de forma que esa reescritura lo reuse.
+- Agregar al motor lo que hoy no dibuja (animación por objeto, rotación, sombras de caja…). Va al roadmap. Cuando el motor lo soporte, la sección vuelve al inspector.
+- Las pestañas de arriba del editor (Slide / Chords / Text edit).
 
-## Anti-objetivos (sería un fracaso aunque funcione)
+## Anti-objetivos
 
-- Que algún ajuste que hoy existe quede inaccesible.
-- Que un show viejo no cargue, o que cambie cómo se ve en la salida.
+- Que un show viejo no cargue, cambie cómo se ve en la salida o pierda datos.
 - Que desplegar una sección vuelva a cambiar el objeto.
+- Que, por ocultar el preview, deje de andar un atajo de salida (F1–F6, flechas).
 
 ## Enfoques considerados
 
-1. **Inspector nuevo encima de la lógica existente (elegido).** Componente nuevo con pestañas y secciones con checkbox. Reusa:
-   - los descriptores de campos (`logic/values/boxes.ts`, `item.ts`, `filters.ts`);
-   - los componentes de campo;
-   - las funciones que hoy leen y guardan estilos (`getBoxStyle`/`setBoxStyle`, `getItemStyle`/`setItemStyle`, `getSlideStyle`/`setSlideStyle`, `getFilterStyle`), que `EditTools.tsx` importa de `logic/scripts/itemClipboard`.
+1. **Inspector nuevo encima de la lógica existente (elegido).**
+   - Componente nuevo en `features/edit/inspector/`.
+   - Reusa los descriptores de campos (`logic/values/boxes.ts`, `item.ts`), los componentes de campo y las funciones de lectura y escritura de estilos (`getBoxStyle`/`setBoxStyle`, `getItemStyle`/`setItemStyle`, `getSlideStyle`/`setSlideStyle`, que `EditTools.tsx` importa de `logic/scripts/itemClipboard`).
+   - Reemplaza `EditTools` y `EditValues`.
+2. **Reacomodar el panel actual.** Emparcharía `EditValues`, el componente que mezcla desplegar con activar y que ya trajo bugs (F01, F04). Descartado.
 
-   Reemplaza `EditTools` y `EditValues`. Ataca la causa (el `EditValues` que mezcla desplegar con activar) y sirve para la reescritura grande.
-2. **Reacomodar el panel actual.** Mover secciones entre pestañas y agregar checkboxes al `EditValues` de hoy. Es más rápido, pero emparcha justo el componente con efectos encadenados que ya trajo bugs (F01, F04). Descartado.
+## El inspector
 
-## Mapeo completo
+"☐" = sección con checkbox (opción A). Sin "☐" = siempre activa.
 
-"☐" = sección con checkbox. Sin "☐" = siempre activa: se despliega, pero no se apaga.
+### Forma
 
-### Forma (`item.ts` y secciones de caja)
-
-| Sección | Hoy está en | Campos |
+| Sección | Campos | Hoy está en |
 |---|---|---|
-| Posición y tamaño | Ítem › position | left, top, width, height |
-| Transformación | Ítem › transform | opacity, rotate, scaleX, rotateX, perspective |
-| Relleno y esquinas | Ítem › default | background-color, padding, border-radius |
-| ☐ Borde | Ítem › border | border-width, -color, -style |
-| ☐ Sombra | Ítem › shadow | box-shadow |
-| ☐ Texto alrededor | Ítem › shape_outside | shape-outside |
-| ☐ Desenfoque de fondo | Ítem › backdrop_filters | backdrop-filter |
-| ☐ Filtros | `mediaSections`/`cameraSections` › filters | filter |
-| ☐ Recorte | `mediaSections`/`cameraSections` › cropping | cropping.* |
-| Avanzado (plegado) | Ítem › CSS | CSS de la caja |
+| Posición y tamaño | X, Y, ancho, alto | Ítem › position |
+| Apariencia | fondo, opacidad, esquinas, margen interno | Ítem › default + transform (sólo opacidad) |
+| ☐ Borde | grosor, color | Ítem › border (sin estilo de línea) |
 
-"Filtros" y "Recorte" sólo aparecen en los tipos de objeto que hoy los tienen.
+### Contenido: objeto de texto ("Texto")
 
-### Contenido
-
-**Si el objeto es texto, la pestaña se llama "Texto":**
-
-| Sección | Hoy está en | Campos |
+| Sección | Campos | Hoy está en |
 |---|---|---|
-| Fuente | Texto › default | familia, color, tamaño, ajuste automático, negrita, cursiva, subrayado, tachado |
-| Alineación | Texto › align | horizontal y vertical |
-| Espaciado | Texto › text | letter-spacing, word-spacing, text-transform, background-color, white-space |
-| Líneas | Texto › lines | line-height, lineGap, lineBg, opacity, lineRadius |
-| ☐ Contorno | Texto › outline | -webkit-text-stroke |
-| ☐ Sombra | Texto › shadow | text-shadow |
-| ☐ Lista | Texto › list | list.* |
-| ☐ Acordes | Texto › chords | chords.* |
-| ☐ Desplazamiento | Texto › scrolling | scrolling.* |
-| Avanzado (plegado) | Texto › CSS | CSS del texto |
+| Fuente | familia, tamaño, color, negrita/cursiva/subrayado/tachado, ajuste automático | Texto › default |
+| Párrafo | alineación horizontal y vertical, interlineado, espaciado de letras, mayúsculas/minúsculas | Texto › align + text + lines (sólo esos campos) |
+| ☐ Contorno | grosor, color | Texto › outline |
+| ☐ Sombra | desplazamiento X, Y, color (sin blur) | Texto › shadow |
+| Aparición | ☐ al hacer clic (`clickReveal`), ☐ línea por línea (`lineReveal`, sólo texto) | menú › Acciones del ítem |
 
-**Si el objeto no es texto,** la pestaña toma el nombre y el ícono del tipo (hoy `itemBoxes[type]` ya los da). Muestra las secciones de contenido de ese tipo de `boxes.ts`, igual que hoy: media, cámara, web, timer, reloj, slide_tracker, events, weather, visualizer, captions, current_output, icon, chart, table, qr_code. Lo que en esos tipos sea de forma (filtros, recorte) va a Forma, como dice la tabla anterior.
+En "Aparición" cada checkbox es el dato en sí: no guarda valores aparte.
 
-### Animación
+### Contenido: otros tipos
 
-Todos estos campos ya existen en el objeto. Hoy se cambian desde el menú contextual o desde popups.
+| Tipo | Campos |
+|---|---|
+| Media (imagen/video) | archivo, ajuste (contain/cover/fill) |
+| Reloj | las opciones de hoy, sin el tipo analógico |
+| Timer, contador de slides, eventos, variable | las opciones de contenido de hoy (`boxes.ts`) |
 
-| Sección | Hoy está en | Dato en el objeto |
-|---|---|---|
-| ☐ Transición | menú › Transición (popup `transition`) | `actions.transition` |
-| ☐ Aparecer al hacer clic | menú › Acciones del ítem | `clickReveal` |
-| ☐ Revelar línea por línea (sólo texto) | menú › Acciones del ítem | `lineReveal` |
-| ☐ Duración en pantalla | menú › Acciones del ítem (popup `set_time`) | `actions.displayDuration` |
-| ☐ Mostrar a los X s | ídem | `actions.showTimer` |
-| ☐ Ocultar a los X s | ídem | `actions.hideTimer` |
+Cada tipo muestra también "Aparición" (al hacer clic), porque `sceneGraph` la respeta en todos.
 
-Al final de la pestaña va el bloque **Interacción**: no es animación, pero es "qué hace el objeto en vivo", que es la idea del Build de ProPresenter.
+### Sin selección: Slide
 
-| Sección | Hoy está en | Dato |
-|---|---|---|
-| ☐ Acción al presionar / soltar | Texto › special | `button.press`, `button.release` |
-| Condiciones | menú › Condiciones | `conditions` |
-| Vincular a | menú › Vincular a | `bindings` |
+Color de fondo, media de fondo y plantilla (lo que hoy muestra `SlideStyle`). En plantillas y overlays, lo que hoy muestran `TemplateStyle` y `OverlayStyle`, filtrado con el mismo criterio.
 
-- **Transición, Condiciones y Vincular a** muestran un resumen y un botón que abre el mismo popup o menú de hoy. No se reescriben.
-- **Los timers** se editan en línea, con un campo numérico de segundos, escribiendo el mismo dato que el popup `set_time`.
-- **El menú contextual se queda como está:** son atajos, y no se borra código.
+Los filtros del slide se ocultan si el plan confirma que la escena no los lleva: `SceneBackground` no tiene campo de filtro.
 
-### Sin selección: el slide
+### Fijo arriba del inspector
 
-Muestra lo que hoy muestran las pestañas Slide y Filtros: color de fondo, media de fondo, plantilla y filtros del slide. En plantillas muestra `TemplateStyle` y en overlays `OverlayStyle`.
+Copiar, pegar y reset de estilo, con el comportamiento de hoy.
 
-### Lo que sale del inspector
+### Fuera del inspector
 
-- **Lista de objetos** (`ItemsList`, "ordenar ítems"). Va a la columna izquierda de Edit, debajo de la lista de slides, como la lista de objetos de ProPresenter. Mantiene subir y bajar.
-- **Copiar, pegar y reset de estilo.** Barrita fija arriba del inspector, siempre visible, con el mismo comportamiento de hoy.
-- **Formato** (buscar/reemplazar, mayúsculas) **y Orden** (al frente/atrás). Se quedan en el menú contextual: son acciones, no propiedades.
+- **Lista de objetos** (`ItemsList`). Pasa a la columna izquierda de Edit, debajo de los slides.
+- **Formato** (buscar y reemplazar, mayúsculas) **y Orden** (al frente, atrás). Se quedan en el menú contextual.
+
+## Lo que se oculta (vuelve cuando el motor lo dibuje)
+
+- **Forma:**
+  - rotación, escala, rotación 3D y perspectiva;
+  - sombra de caja;
+  - texto alrededor;
+  - desenfoque de fondo y filtros;
+  - estilo de línea del borde;
+  - CSS a mano.
+- **Texto:**
+  - espaciado entre palabras, "white-space" y fondo del texto;
+  - separación, fondo, opacidad y redondeo por línea;
+  - lista, acordes y desplazamiento;
+  - CSS a mano.
+- **Media dentro del slide:** recorte, espejar, blend, velocidad, loop y mute.
+- **Animación e interacción:**
+  - transición por objeto;
+  - mostrar u ocultar a los X s, y duración en pantalla;
+  - acción al presionar o soltar;
+  - condiciones;
+  - "vincular a" una salida.
+- **Tipos de objeto** (también salen de la barra de "agregar objeto"): cámara, web, clima, visualizador, subtítulos, salida actual, ícono, gráfico, tabla, QR, reloj analógico, botón y metrónomo.
+
+Reglas:
+- **Ocultar no borra:** los valores siguen en el archivo del show.
+- **Un objeto existente de un tipo oculto** se puede seleccionar, mover y borrar. Su pestaña de contenido dice "Este tipo de objeto todavía no se ve en la salida".
+- **El menú contextual** pierde las entradas de lo oculto (Transición, Acciones del ítem salvo las de Aparición, Vincular a, Condiciones). El código que implementan no se borra en este trabajo.
+- **Cada cosa oculta queda como ítem del roadmap del motor.**
 
 ## Checkbox: cómo funciona (opción A)
 
-- **Tildado** = la sección tiene valores distintos de los de por defecto. Es el mismo criterio que hoy usa `hasChangedValues`.
-- **Tildar una sección apagada:**
-  - si hay valores guardados en `item.inactive[sección]`, los aplica y borra esa entrada;
-  - si no hay, aplica los valores iniciales de `expandAutoValue` (lo que hoy pasa al desplegar).
-- **Destildar:** guarda en `item.inactive[sección]` los valores actuales de sus campos, tal como los lee el inspector. Después aplica los valores por defecto, que es lo mismo que hace hoy `resetSection`.
-- **La flecha** sólo despliega o pliega. Nunca escribe.
-- **Una sección siempre activa** (sin checkbox) mantiene el botón de reset de hoy.
-- **Todo pasa por `history`**, como hoy. Deshacer un tildado o un destildado vuelve al estado anterior, incluido `inactive`.
+Aplica a Borde, Contorno y Sombra.
 
-### Formato del dato nuevo
+- **Tildado** = la sección tiene valores distintos de los de por defecto (mismo criterio que `hasChangedValues`).
+- **Tildar:** si hay valores guardados en `item.inactive[sección]`, los aplica y borra la entrada. Si no, aplica un valor inicial visible:
+  - Borde: 2 px blanco;
+  - Contorno: 2 px negro;
+  - Sombra: 2 px / 2 px negro.
+- **Destildar:** guarda en `item.inactive[sección]` los valores actuales y aplica los de por defecto.
+- **Un tildado o destildado = una sola entrada de `history`,** que escribe los valores y `inactive` juntos. No se encadenan `changed()` con `setTimeout` como hoy.
+- **Varios objetos seleccionados:** cada uno guarda su propio `inactive`.
+
+### Dato nuevo
 
 ```ts
 // src/types/Show.ts, en Item
-inactive?: { [sectionId: string]: { [inputKey: string]: unknown } }
+inactive?: { [sectionId: string]: { [property: string]: string } }
 ```
 
-- **Opcional.** Los shows viejos cargan igual y no hace falta migración: AGENTS.md lo permite para un campo opcional nuevo.
-- **La salida no lo lee:** `sceneGraph` y el render siguen leyendo `style`, `lines`, etc., así que un valor apagado no se ve.
-- **Rust no lo toca:** `commands/shows.rs` recorre los objetos como JSON genérico.
-- **Las claves son las de la decisión 3** (más abajo): la propiedad CSS completa o la ruta del dato, no el campo del inspector.
-- **Copiar y pegar estilo no copia `inactive`.** Aplicar una plantilla tampoco lo pasa al show.
-- **Límite conocido.** Si el texto tiene estilos distintos en distintas partes (por ejemplo dos sombras en dos líneas), se guarda lo que muestra el inspector, que es lo de la selección o la primera línea. Al reactivar se aplica ese valor a todo. Es igual que hoy al editar desde el inspector.
+- **La clave es la propiedad CSS completa** (`border-width`, `-webkit-text-stroke`, `text-shadow`…) y el valor es la cadena CSS.
+- **Opcional:** los shows viejos cargan sin migración. La salida no lo lee. Rust no lo toca, porque `commands/shows.rs` recorre los objetos como JSON genérico.
+- **Copiar y pegar estilo no copia `inactive`,** y aplicar una plantilla no lo pasa al show.
+- **Límite conocido:** si el texto tiene valores distintos por parte, se guarda lo que muestra el inspector, como pasa hoy al editar desde el inspector.
 
-## Decisiones del controlador (revisables)
+## Preview oculto en Edit
 
-Salieron de la revisión del diseño. Son decisiones técnicas, no de producto; el usuario las puede revertir.
-
-1. **Un solo interruptor.** En Lista y Acordes, el checkbox de sección reemplaza al campo `list.enabled` / `chords.enabled`, que se oculta en el inspector nuevo. Tildar pone `enabled: true` y destildar `false`, con el resto de sus valores guardados en `inactive`.
-2. **Un tildado o destildado = una sola entrada de `history`.** Escribe en una operación los valores de la sección y `inactive`. Hace falta una ruta de escritura en lote: no se encadenan `changed()` con `setTimeout` como hoy en `resetSection`. Deshacer revierte todo junto.
-3. **Qué se guarda en `inactive`.** Se guarda por propiedad real y no por campo del inspector. Para estilos CSS, la clave es la propiedad (`box-shadow`, `text-shadow`, `filter`…) y el valor es la cadena CSS completa. Para datos del objeto, la ruta (`chords.size`, `scrolling.speed`, `actions.showTimer`…). Así los campos que comparten propiedad con `valueIndex` (las sombras) no colisionan.
-4. **Valor inicial al tildar sin nada guardado.** Toda sección con ☐ tiene uno que produce un cambio visible. Así, "tildado = distinto del default" se cumple apenas tildás:
-   - las que ya tienen `expandAutoValue` usan ese valor;
-   - Filtros: blur 2px;
-   - Desenfoque de fondo: blur 6px;
-   - Recorte: 10 % en cada lado;
-   - Transición: fundido de 500 ms;
-   - Aparecer al hacer clic y Revelar línea por línea: `true`;
-   - Duración en pantalla y los timers: 5 s;
-   - Acción al presionar: abre el selector de acción, y si se cancela queda destildado.
-5. **"Duración en pantalla" depende de "Aparecer al hacer clic".** Hoy sólo se usa con `clickReveal` (`Textbox.tsx:615-621`), así que queda deshabilitada, con una explicación, mientras "Aparecer al hacer clic" está apagado.
-6. **Tipos sin contenido propio.** `button`, `variable` y `metronome` existen en `ItemType` pero no en `itemBoxes`. La pestaña del medio muestra el nombre del tipo y el texto "Este objeto no tiene opciones de contenido". "Acción al presionar / soltar" aparece en los tipos que hoy tienen la sección `special`: texto e ícono.
-7. **Varios objetos seleccionados.** Tildar y destildar se aplican a cada objeto, y cada uno guarda su propio `inactive` con sus propios valores.
-8. **Tipado.** Se tipa `Item.actions`, hoy `any`, con `showTimer`, `hideTimer`, `displayDuration` y `transition`. Así el inspector no usa `any`.
+- **Hoy:** `MainLayout.tsx:93` monta `<Preview />` en todas las páginas, y `features/output/Preview.tsx:157-238` registra el `keydown` global de salida: F1–F6, flechas, número de slide, atajos de grupo y acciones por tecla.
+- **Antes de ocultarlo,** ese manejo pasa a un hook montado siempre en `MainLayout`, junto con cualquier otro efecto del Preview que no sea dibujar.
+- **Criterio:** en Edit no hay preview, y F1 (limpiar) y F6 (logo) siguen funcionando.
 
 ## Drawer y editor
 
-- Con el drawer abierto, el área central de Edit tiene que ocupar sólo el alto que queda. El canvas se escala para entrar entero, como ya lo hace cuando la ventana se achica.
-- La causa exacta se investiga en el plan. `Editor.module.css:12` ya tiene `min-height: 0`, así que el problema está en otro contenedor.
-- Criterio: con el drawer abierto a cualquier alto, el slide y la barra de herramientas del canvas se ven enteros.
+- **Hoy:** con el drawer abierto, el canvas y su barra quedan debajo del drawer, y el inspector se aplasta.
+- **Causa:** se investiga en el plan. `Editor.module.css:12` ya tiene `min-height: 0`, así que el problema está en otro contenedor.
+- **Criterio:** con el drawer abierto a cualquier alto, el slide y la barra del canvas se ven enteros.
 
 ## Restricciones
 
-- Reglas de AGENTS.md:
+- AGENTS.md:
   - React 19 con React Compiler, sin `useMemo`/`useCallback`/`memo`;
-  - CSS Modules con las variables del tema;
-  - `features/<x>/` con lógica en `logic/`;
+  - CSS Modules con variables del tema;
+  - `features/<x>/` con `logic/`;
   - sin dependencias nuevas;
   - sólo bun.
 - **Textos** por `translateText`, con claves nuevas en `public/lang/en.json` y `es.json`. **Íconos**, de los que ya usa la app.
-- **Ubicación:** el inspector nuevo vive en `src/frontend/features/edit/inspector/`. Lo que la reescritura grande vaya a reusar no depende de `EditTools`.
-- **El inspector viejo se borra** al final, una vez que el nuevo cubre todo el mapeo y está demostrado que nadie más lo usa (`rg`). Antes no.
+- **Lo que decide qué se muestra** es una lista explícita en un solo archivo (`inspector/logic/supported.ts`). Así, cuando el motor sume algo, se habilita en un lugar.
+- **El inspector viejo se borra al final,** cuando el nuevo cubre todo y `rg` demuestra que nadie más lo usa.
 
 ## Verificación
 
 - **Tests:**
-  - cada pestaña muestra las secciones del mapeo según el tipo de objeto;
-  - desplegar no llama a guardar;
-  - destildar guarda en `inactive` y resetea;
-  - retildar restaura y borra la entrada;
-  - deshacer funciona;
-  - un objeto sin `inactive` funciona.
+  - cada pestaña muestra exactamente las secciones de las tablas según el tipo de objeto;
+  - lo oculto no aparece;
+  - desplegar no escribe;
+  - destildar guarda y resetea, retildar restaura;
+  - un deshacer revierte el par completo;
+  - un objeto sin `inactive` funciona;
+  - los atajos F1/F6 funcionan con la página en Edit.
 - **En la app, con capturas:**
-  - un objeto de texto con sombra apagada y reactivada;
-  - un media con Forma y Contenido;
-  - Animación con un timer;
-  - el panel sin selección;
-  - el editor con el drawer abierto.
-- **Una sola vez al final:** `test:unit` completo (0 FAIL), `test:types` (≤36), arch tests, `test:budget` y prettier sobre lo tocado.
+  - texto con sombra apagada y reactivada;
+  - media;
+  - sin selección;
+  - Edit sin preview y con el drawer abierto;
+  - la barra de "agregar objeto".
+- **Una vez al final:** `test:unit` (0 FAIL), `test:types` (≤36), arch tests, `test:budget` y prettier sobre lo tocado.
 
 ## Queda a criterio de quien lo construya
 
-- Cómo se parte el componente (por pestaña, por sección).
-- El orden de las tandas.
-- El estilo visual exacto de las secciones y el checkbox, con los componentes de UI que ya existen.
+Cómo se parte el componente, el orden de las tandas y el estilo visual exacto, con los componentes de UI que ya existen.
