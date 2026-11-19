@@ -33,7 +33,7 @@ import type { Outputs, RtmpStatus, SyncedOutputs } from "../../../types/Output"
 import type { DrawerTabIds } from "../../../types/Tabs"
 import type { AudioData } from "../../audio/audioPlayer"
 import type { WebsiteAction } from "../utils/helpers/websiteControls"
-import type { PlayingVideoState, VideoAudioData } from "../../components/media/video/videoPlayer"
+import type { PlayingVideoState, VideoAudioData } from "../../features/media/logic/video/videoPlayer"
 
 // ----- TEMPORARY VARIABLES -----
 // Estado de sesión: no se persiste en disco (se recalcula al arrancar).

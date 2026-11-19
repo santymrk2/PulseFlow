@@ -5,7 +5,7 @@ import { activeFocus, activeShow, focusMode, outLocked, outputs, playingVideoSta
 import { translateText } from "../../shared/utils/language"
 import { getFileName, removeExtension } from "../../shared/utils/helpers/media"
 import { formatUrl, getOutputtedWebsites, sendWebsiteKey, toggleWebsiteMute, triggerWebsiteAction } from "../../shared/utils/helpers/websiteControls"
-import { VideoPlayer } from "../../components/media/video/videoPlayer"
+import { VideoPlayer } from "../../features/media/logic/video/videoPlayer"
 import { Icon } from "../../shared/ui/helpers/Icon"
 import { triggerClickOnEnterSpace } from "../../shared/ui/helpers/triggerClickOnEnterSpace"
 import { T } from "../../shared/ui/helpers/T"

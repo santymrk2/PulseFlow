@@ -14,7 +14,7 @@ vi.mock("../../../audio/audioFading", () => ({
         return fading.fading
     }
 }))
-vi.mock("../../../components/media/video/videoPlayer", () => ({ VideoPlayer: { hasAudibleVideo: () => fading.audible } }))
+vi.mock("../../../features/media/logic/video/videoPlayer", () => ({ VideoPlayer: { hasAudibleVideo: () => fading.audible } }))
 vi.mock("../../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn() }))
 vi.mock("../audio/AudioMixers", () => ({ AudioMixers: () => <div data-isla="AudioMixers" /> }))
 vi.mock("../audio/effects/AudioEffects", () => ({ AudioEffects: () => <div data-testid="efectos" /> }))

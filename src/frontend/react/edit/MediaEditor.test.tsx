@@ -42,7 +42,7 @@ vi.mock("../output/VideoSlider", () => ({
 vi.mock("../../audio/audioPlayer", () => ({ AudioPlayer: {} }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../components/media/video/videoPlayer", () => ({
+vi.mock("../../features/media/logic/video/videoPlayer", () => ({
     VideoPlayer: { getDuration: () => Promise.resolve(42) }
 }))
 

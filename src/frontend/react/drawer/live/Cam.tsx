@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type MouseEvent as ReactMouseEvent } from "react"
 import type { MediaStyle } from "../../../../types/Main"
-import { cameraManager, type CameraData } from "../../../media/cameraManager"
+import { cameraManager, type CameraData } from "../../../features/media/logic/cameraManager"
 import { media, os, outputs, special } from "../../../shared/core/stores"
 import { translateText } from "../../../shared/utils/language"
 import { getCropState } from "../../../shared/utils/helpers/cropping"

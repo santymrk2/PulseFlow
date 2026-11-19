@@ -13,7 +13,7 @@ vi.mock("../../shared/utils/helpers/time", () => ({
     joinTime: vi.fn((t: number[] | string) => (Array.isArray(t) ? t.join(":") : String(t))),
     secondsToTime: vi.fn((s: number) => [0, 0, Math.floor(s)])
 }))
-vi.mock("../../components/media/video/videoPlayer", () => ({ VideoPlayer: { seekTo: vi.fn(), pause: vi.fn(), play: vi.fn() } }))
+vi.mock("../../features/media/logic/video/videoPlayer", () => ({ VideoPlayer: { seekTo: vi.fn(), pause: vi.fn(), play: vi.fn() } }))
 
 afterEach(() => {
     cleanup()

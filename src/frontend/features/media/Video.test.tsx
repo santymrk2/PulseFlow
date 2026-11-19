@@ -8,13 +8,13 @@ vi.mock("../../shared/utils/helpers/media", () => ({
     encodeFilePath: (p: string) => p,
     isVideoSupported: vi.fn()
 }))
-vi.mock("../../components/media/video/softLoop", () => ({
+vi.mock("./logic/video/softLoop", () => ({
     SoftLoopSync: class {
         update() { return 0 }
         destroy() {}
     }
 }))
-vi.mock("../../components/media/video/videoSync", () => ({
+vi.mock("./logic/video/videoSync", () => ({
     clampPlaybackRate: (n: number) => n,
     syncVideoToAudio: vi.fn(),
     videoSync: () => () => {}

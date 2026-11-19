@@ -1,5 +1,5 @@
 import type { MouseEvent as ReactMouseEvent } from "react"
-import type { CameraData } from "../../../media/cameraManager"
+import type { CameraData } from "../../../features/media/logic/cameraManager"
 
 // `Screen` y el detalle de selección compartido por las listas de entradas de live/*.
 // Svelte despachaba CustomEvent("click", { detail: { event, screen | cam } }); en React son callbacks.

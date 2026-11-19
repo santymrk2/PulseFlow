@@ -10,7 +10,7 @@ import { duplicateEffectInStack, removeEffectFromStack } from "../../../../audio
 import { ShowObj } from "../../../core/classes/Show"
 import { markItemsAsPlayed } from "../../../../converters/project"
 import { sendMain } from "../../../core/ipc/main"
-import { cameraManager } from "../../../../media/cameraManager"
+import { cameraManager } from "../../../../features/media/logic/cameraManager"
 import { changeSlideGroups, mergeSlides, mergeTextboxes, splitItemInTwo, VIRTUAL_BREAK_CHAR } from "../../../../features/show/logic/slides"
 import {
     $,

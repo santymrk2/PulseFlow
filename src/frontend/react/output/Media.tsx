@@ -3,8 +3,8 @@ import type { MediaStyle } from "../../../types/Main"
 import type { OutBackground } from "../../../types/Show"
 import { downloadOnlineMedia, getExtension, getMediaType } from "../../shared/utils/helpers/media"
 import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
-import { Image } from "../media/Image"
-import { Video } from "../media/Video"
+import { Image } from "../../features/media/Image"
+import { Video } from "../../features/media/Video"
 import styles from "./Media.module.css"
 
 export interface VideoData {

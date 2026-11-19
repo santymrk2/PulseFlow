@@ -1,5 +1,5 @@
 import { useEffect, useRef, type CSSProperties } from "react"
-import { cameraManager } from "../../media/cameraManager"
+import { cameraManager } from "../../features/media/logic/cameraManager"
 import { media } from "../../shared/core/stores"
 import { getCropState } from "../../shared/utils/helpers/cropping"
 import { getMediaStyle } from "../../shared/utils/helpers/media"

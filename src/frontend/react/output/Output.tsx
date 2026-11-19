@@ -11,7 +11,7 @@ import { defaultLayers, getCurrentStyle, getMetadata, getOutputLines, getOutputT
 import { _show } from "../../shared/utils/helpers/shows"
 import { updateAnimation } from "../../components/output/animation"
 import { useStore } from "../../shared/ui/hooks/useStore"
-import { Image } from "../media/Image"
+import { Image } from "../../features/media/Image"
 import { Zoomed } from "../../features/slide/Zoomed"
 import { Background } from "./Background"
 import { EffectOutput } from "./EffectOutput"

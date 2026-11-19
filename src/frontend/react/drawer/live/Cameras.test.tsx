@@ -12,7 +12,7 @@ vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
-vi.mock("../../../media/cameraManager", () => ({ cameraManager: { getCamerasList: mocks.list, clearBadCamera: mocks.clearBad } }))
+vi.mock("../../../features/media/logic/cameraManager", () => ({ cameraManager: { getCamerasList: mocks.list, clearBadCamera: mocks.clearBad } }))
 vi.mock("./Cam", () => ({
     Cam: ({ cam, style, onClick }: { cam: { id: string; name: string }; style: string; onClick?: (e: MouseEvent<HTMLButtonElement>) => void }) => (
         <button data-style={style} onClick={onClick}>

@@ -7,8 +7,8 @@ import { activeProject, focusMode, media, outLocked, outputs, playingVideos, pro
 import { encodeFilePath, getMediaLayerType } from "../../shared/utils/helpers/media"
 import { getFirstActiveOutput } from "../../shared/utils/helpers/output"
 import { clearSlide } from "../../components/output/clear"
-import { SoftLoopSync } from "../../components/media/video/softLoop"
-import { syncVideoToAudio, videoSync } from "../../components/media/video/videoSync"
+import { SoftLoopSync } from "../media/logic/video/softLoop"
+import { syncVideoToAudio, videoSync } from "../media/logic/video/videoSync"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { VideoShow } from "./VideoShow"
 
@@ -26,8 +26,8 @@ vi.mock("../../shared/utils/helpers/media", () => ({
 vi.mock("../../shared/utils/helpers/output", () => ({ getFirstActiveOutput: vi.fn(() => null), setOutput: vi.fn() }))
 vi.mock("../../shared/utils/helpers/time", () => ({ joinTime: vi.fn((value: string) => value), secondsToTime: vi.fn((value: number) => String(value)) }))
 vi.mock("../../components/output/clear", () => ({ clearSlide: vi.fn() }))
-vi.mock("../../components/media/video/softLoop", () => ({ SoftLoopSync: vi.fn(() => ({ update: vi.fn(() => 0), destroy: vi.fn() })) }))
-vi.mock("../../components/media/video/videoSync", () => ({ syncVideoToAudio: vi.fn(), videoSync: vi.fn(() => () => {}) }))
+vi.mock("../media/logic/video/softLoop", () => ({ SoftLoopSync: vi.fn(() => ({ update: vi.fn(() => 0), destroy: vi.fn() })) }))
+vi.mock("../media/logic/video/videoSync", () => ({ syncVideoToAudio: vi.fn(), videoSync: vi.fn(() => () => {}) }))
 vi.mock("./logic/media/subtitles", () => ({ formatVTT: vi.fn((v: string) => v), SRTtoVTT: vi.fn((v: string) => v) }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id}>{id}</span> }))

@@ -61,7 +61,7 @@ import { customActionActivation, runAction } from "../../../components/actions/a
 import type { API_camera, API_screen, API_stage_output_layout } from "../../../components/actions/api"
 import { getItemText, getSlideText } from "../../../components/edit/scripts/textStyle"
 import type { EditInput } from "../../../components/edit/values/boxes"
-import { VideoPlayer } from "../../../components/media/video/videoPlayer"
+import { VideoPlayer } from "../../../features/media/logic/video/videoPlayer"
 import { clearBackground, clearSlide } from "../../../components/output/clear"
 import { areObjectsEqual, clone, keysToID, removeDuplicates, sortByName, sortObject } from "./array"
 import { referenceOutputId, resolveOutputAspect } from "./outputAspect"

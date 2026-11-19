@@ -13,7 +13,7 @@ vi.mock("./logic/contextMenus", () => ({
     }
 }))
 vi.mock("../../../audio/audioPlayer", () => ({ AudioPlayer: {} }))
-vi.mock("../../../media/cameraManager", () => ({ cameraManager: {} }))
+vi.mock("../../../features/media/logic/cameraManager", () => ({ cameraManager: {} }))
 vi.mock("../../utils/helpers/array", () => ({ keysToID: () => [] }))
 vi.mock("../../utils/helpers/media", () => ({ getExtension: () => "", getMediaType: () => "image" }))
 vi.mock("../../utils/helpers/show", () => ({ getLayoutRef: () => [], getSlideHighlightIndexes: () => [] }))

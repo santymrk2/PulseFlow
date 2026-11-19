@@ -25,7 +25,7 @@ vi.mock("./tools/EditValues", () => ({
     EditValues: () => <div data-testid="edit-values" />
 }))
 
-vi.mock("../../components/media/video/videoPlayer", () => ({
+vi.mock("../../features/media/logic/video/videoPlayer", () => ({
     VideoPlayer: {
         getDuration: () => Promise.resolve(0),
         updateProperties: () => {}

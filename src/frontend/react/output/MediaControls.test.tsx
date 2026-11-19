@@ -3,16 +3,16 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { focusMode, outLocked, playerVideos } from "../../shared/core/stores"
 import { clearBackground } from "../../components/output/clear"
-import { VideoPlayer } from "../../components/media/video/videoPlayer"
+import { VideoPlayer } from "../../features/media/logic/video/videoPlayer"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { MediaControls } from "./MediaControls"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/helpers/media", () => ({ getExtension: vi.fn(() => "mp4"), getMediaType: vi.fn(() => "video") }))
 vi.mock("../../shared/utils/helpers/get", () => ({ splitPath: vi.fn(() => ({ name: "clip.mp4" })) }))
-vi.mock("../../components/media/video/videoSync", () => ({ videoSync: vi.fn(() => () => {}) }))
+vi.mock("../../features/media/logic/video/videoSync", () => ({ videoSync: vi.fn(() => () => {}) }))
 vi.mock("../../components/output/clear", () => ({ clearBackground: vi.fn() }))
-vi.mock("../../components/media/video/videoPlayer", () => ({
+vi.mock("../../features/media/logic/video/videoPlayer", () => ({
     VideoPlayer: { play: vi.fn(), pause: vi.fn(), toggleMute: vi.fn(), toggleLoop: vi.fn(), seekTo: vi.fn() }
 }))
 vi.mock("./VideoSlider", () => ({ VideoSlider: () => <div data-testid="video-slider" /> }))

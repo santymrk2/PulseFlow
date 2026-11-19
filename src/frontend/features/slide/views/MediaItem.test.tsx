@@ -4,7 +4,7 @@ import type { CSSProperties } from "react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Item } from "../../../../types/Show"
 import { audioChannelsData, currentWindow, media as mediaStore, outputs, styles } from "../../../shared/core/stores"
-import { videoSync } from "../../../components/media/video/videoSync"
+import { videoSync } from "../../media/logic/video/videoSync"
 import { getCropState } from "../../../shared/utils/helpers/cropping"
 import { looseEntry, setStoresForTest, storeEntry } from "../../../shared/test/storeTestKit"
 import { MediaItem } from "./MediaItem"
@@ -45,13 +45,13 @@ vi.mock("../../../shared/utils/helpers/shows", () => ({
         get: () => ({ media: { bg1: { path: "/bg.mp4" } } })
     }))
 }))
-vi.mock("../../../components/media/video/softLoop", () => ({
+vi.mock("../../media/logic/video/softLoop", () => ({
     SoftLoopSync: class {
         update = vi.fn(() => 0.5)
         destroy = vi.fn()
     }
 }))
-vi.mock("../../../components/media/video/videoSync", () => ({
+vi.mock("../../media/logic/video/videoSync", () => ({
     videoSync: vi.fn(() => vi.fn()),
     syncVideoToAudio: vi.fn()
 }))

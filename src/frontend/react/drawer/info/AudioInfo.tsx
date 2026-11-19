@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { fadeinAllPlayingAudio, fadeoutAllPlayingAudio, isAllAudioFading } from "../../../audio/audioFading"
 import { activeAudioEffects, activePopup, dataPath, special } from "../../../shared/core/stores"
-import { VideoPlayer } from "../../../components/media/video/videoPlayer"
+import { VideoPlayer } from "../../../features/media/logic/video/videoPlayer"
 import { useStore } from "../../../shared/ui/hooks/useStore"
 import { T } from "../../../shared/ui/helpers/T"
 import { Button } from "../../../shared/ui/kit/button/Button"

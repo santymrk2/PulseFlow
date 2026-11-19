@@ -1,8 +1,8 @@
 // Camera management helper for keeping cameras active
-import { get } from "../shared/core/lib/store"
-import { Main } from "../../types/IPC/Main"
-import { sendMain } from "../shared/core/ipc/main"
-import { special } from "../shared/core/stores"
+import { get } from "../../../shared/core/lib/store"
+import { Main } from "../../../../types/IPC/Main"
+import { sendMain } from "../../../shared/core/ipc/main"
+import { special } from "../../../shared/core/stores"
 
 export interface CameraData {
     name: string

@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { useEffect, useMemo, useState } from "react"
 import { AudioPlayer } from "../../../audio/audioPlayer"
-import { cameraManager } from "../../../media/cameraManager"
+import { cameraManager } from "../../../features/media/logic/cameraManager"
 import {
     actions,
     activeEdit,

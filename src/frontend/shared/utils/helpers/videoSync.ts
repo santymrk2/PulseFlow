@@ -1,4 +1,4 @@
-import type { PlayingVideoState } from "../../../components/media/video/videoPlayer"
+import type { PlayingVideoState } from "../../../features/media/logic/video/videoPlayer"
 
 /** Lo que el engine necesita del transporte del webview para que su video lo siga (F23.14). */
 export interface VideoSyncFields {

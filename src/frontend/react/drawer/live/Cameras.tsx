@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { media } from "../../../shared/core/stores"
-import { cameraManager, type CameraData } from "../../../media/cameraManager"
+import { cameraManager, type CameraData } from "../../../features/media/logic/cameraManager"
 import { sortByName } from "../../../shared/utils/helpers/array"
 import { getMediaStyle } from "../../../shared/utils/helpers/media"
 import { T } from "../../../shared/ui/helpers/T"

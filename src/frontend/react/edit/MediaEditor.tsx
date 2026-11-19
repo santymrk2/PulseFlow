@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import type { MediaStyle } from "../../../types/Main"
 import { activeEdit, activeShow, media, outputs, playingVideoState, previewOutputId, styles } from "../../shared/core/stores"
-import { VideoPlayer } from "../../components/media/video/videoPlayer"
+import { VideoPlayer } from "../../features/media/logic/video/videoPlayer"
 import { getExtension, getMedia, getMediaStyle, getMediaType } from "../../shared/utils/helpers/media"
 import { getCurrentStyle, getFirstActiveOutput, getResolution } from "../../shared/utils/helpers/output"
 import { getStyleResolution } from "../../features/slide/logic/getStyleResolution"

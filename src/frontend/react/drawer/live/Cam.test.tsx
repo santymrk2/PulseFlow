@@ -21,7 +21,7 @@ vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../../audio/spectrumAnalyzer", () => ({ SpectrumAnalyzer: class {} }))
-vi.mock("../../../media/cameraManager", () => ({ cameraManager: { attachCamera: mocks.attach, detachCamera: mocks.detach, play: mocks.play, pause: mocks.pause, getStartupCameras: mocks.startup, setStartupCameras: mocks.setStartup } }))
+vi.mock("../../../features/media/logic/cameraManager", () => ({ cameraManager: { attachCamera: mocks.attach, detachCamera: mocks.detach, play: mocks.play, pause: mocks.pause, getStartupCameras: mocks.startup, setStartupCameras: mocks.setStartup } }))
 vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
 vi.mock("../../../shared/ui/system/SelectElem", () => ({ SelectElem: ({ children }: { children: ReactNode }) => <div data-testid="select">{children}</div> }))
 vi.mock("../../../shared/ui/kit/button/Button", () => ({

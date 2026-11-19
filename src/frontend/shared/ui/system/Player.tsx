@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { activeProject, activeShow, playerVideos, projects } from "../../core/stores"
 import { useStore } from "../hooks/useStore"
 import { _show } from "../../utils/helpers/shows"
-import { videoSync } from "../../../components/media/video/videoSync"
+import { videoSync } from "../../../features/media/logic/video/videoSync"
 import { Vimeo } from "../../../react/drawer/player/Vimeo"
 import { YouTube } from "../../../react/drawer/player/YouTube"
 
