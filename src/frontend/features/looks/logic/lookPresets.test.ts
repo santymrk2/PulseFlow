@@ -1,12 +1,12 @@
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { get } from "../../core/lib/store"
-import { activeLook, looks, outputs, styles } from "../../core/stores"
-import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
-import { createLookFromPreset, LOOK_PRESETS } from "./looks"
+import { get } from "../../../shared/core/lib/store"
+import { activeLook, looks, outputs, styles } from "../../../shared/core/stores"
+import { looseEntry, setStoresForTest } from "../../../shared/test/storeTestKit"
+import { createLookFromPreset, LOOK_PRESETS } from "./lookPresets"
 
 vi.mock("../../../app/wiring/save", () => ({ save: () => {} }))
-vi.mock("./history", () => ({ history: () => {} }))
-vi.mock("../language", () => ({ translateText: (id: string) => id, getLanguage: () => ({}), setLanguage: () => {} }))
+vi.mock("../../../shared/utils/helpers/history", () => ({ history: () => {} }))
+vi.mock("../../../shared/utils/language", () => ({ translateText: (id: string) => id, getLanguage: () => ({}), setLanguage: () => {} }))
 
 let restore = () => {}
 afterEach(() => restore())

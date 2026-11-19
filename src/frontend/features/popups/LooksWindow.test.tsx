@@ -3,7 +3,8 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { history } from "../../shared/utils/helpers/history"
-import { applyLook, createLook, createLookFromPreset } from "../../shared/utils/helpers/looks"
+import { applyLook, createLook } from "../../shared/utils/helpers/looks"
+import { createLookFromPreset } from "../looks/logic/lookPresets"
 import { activeLook, looks, outputs } from "../../shared/core/stores"
 import { confirmCustom } from "../../shared/utils/popup"
 import { save } from "../../app/wiring/save"
@@ -17,10 +18,9 @@ vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/helpers/looks", () => ({
     applyLook: vi.fn(),
     createLook: vi.fn(() => "l3"),
-    createLookFromPreset: vi.fn(() => "l4"),
-    LOOK_PRESETS: { default: {}, lyrics: {}, speaker: {} },
     isStageOutput: (output?: { stageOutput?: string }) => !!output?.stageOutput
 }))
+vi.mock("../looks/logic/lookPresets", () => ({ createLookFromPreset: vi.fn(() => "l4"), LOOK_PRESETS: { default: {}, lyrics: {}, speaker: {} } }))
 vi.mock("../../shared/utils/popup", () => ({ confirmCustom: vi.fn() }))
 vi.mock("../../app/wiring/save", () => ({ save: vi.fn() }))
 vi.mock("../looks/LookGrid", () => ({
