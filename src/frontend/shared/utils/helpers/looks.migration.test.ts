@@ -2,7 +2,7 @@
 // El fixture replica la estructura de un settings.json real de FreeShow
 // (outputs en formato viejo con `style`/`stageOutput`, estilos con `layers`
 // como array, looks con ids de estilo como strings).
-import { beforeEach, describe, expect, it, vi } from "vitest"
+import { describe, expect, it, vi } from "vitest"
 import type { Output, Outputs } from "../../../../types/Output"
 import type { Look, Styles } from "../../../../types/Settings"
 import { buildLookStyle, computeLookBridgeStyles, computeLookOutputPointers, LOOK_STYLE_PREFIX, lookStyleId, migrateLooksSettings, type LooksMigrationInput } from "./looks"
