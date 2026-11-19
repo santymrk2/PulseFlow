@@ -41,6 +41,7 @@ vi.mock("../../shared/ui/hooks/useStore", () => ({ useStore: () => ({ o1: { out:
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: () => ({ width: 1920, height: 1080 }) }))
 vi.mock("../slide/logic/getStyleResolution", () => ({ getStyleResolution: () => "width:100%" }))
 vi.mock("../stage/StageLayout", () => ({ StageLayout: () => <div data-testid="island" /> }))
+vi.mock("./Output", () => ({ Output: (props: { outputId: string; mirror: boolean; preview: boolean }) => <div data-testid="output" data-output-id={props.outputId} data-mirror={String(props.mirror)} data-preview={String(props.preview)} /> }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: () => <span /> }))
 
 import PreviewOutput from "./PreviewOutput"
@@ -51,5 +52,11 @@ describe("PreviewOutput", () => {
     it("renderiza", () => {
         const { container } = render(<PreviewOutput outputId="o1" />)
         expect(container.querySelector("div")).toBeTruthy()
+    })
+
+    it("monta <Output> de la salida en espejo, si no la preview queda negra (F11)", () => {
+        const { getByTestId } = render(<PreviewOutput outputId="o1" />)
+        const output = getByTestId("output")
+        expect(output.dataset).toMatchObject({ outputId: "o1", mirror: "true", preview: "true" })
     })
 })
