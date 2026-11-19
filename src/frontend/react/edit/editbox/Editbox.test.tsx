@@ -84,7 +84,7 @@ vi.mock("../../../shared/core/stores", () => {
 vi.mock("../../../shared/utils/cursor", () => ({ startResizing: vi.fn(), stopResizing: vi.fn() }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../../shared/utils/profile", () => ({ getAccess: () => ({ global: "write" }) }))
-vi.mock("../../../utils/shortcuts", () => ({ isComposing: () => false, getNormalizedKey: () => "v", isFormattingKey: () => false }))
+vi.mock("../../../app/wiring/shortcuts", () => ({ isComposing: () => false, getNormalizedKey: () => "v", isFormattingKey: () => false }))
 vi.mock("../../../shared/utils/common", () => ({ newToast: vi.fn() }))
 
 vi.mock("../../../audio/audioProcessor", () => ({}))

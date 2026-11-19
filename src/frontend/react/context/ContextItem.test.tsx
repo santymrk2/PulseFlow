@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from "vitest"
 
 vi.mock("../hooks/useStore", () => ({ useStore: () => ({}) }))
 vi.mock("../../components/context/menuClick", () => ({ menuClick: vi.fn() }))
-vi.mock("../../utils/shortcuts", () => ({ closeContextMenu: vi.fn() }))
+vi.mock("../../app/wiring/shortcuts", () => ({ closeContextMenu: vi.fn() }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../components/context/contextMenus", () => ({
     contextMenuItems: {

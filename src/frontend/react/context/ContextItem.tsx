@@ -45,7 +45,7 @@ import {
     undoHistory
 } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { closeContextMenu } from "../../utils/shortcuts"
+import { closeContextMenu } from "../../app/wiring/shortcuts"
 import { keysToID } from "../../shared/utils/helpers/array"
 import { isSettingsDisabled } from "../../components/settings/openSettings"
 import { Icon } from "../helpers/Icon"

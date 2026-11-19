@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { requestMain, sendMain } from "../../shared/core/ipc/main"
 import { activePopup, dataPath, dictionary, guideActive, language, popupData, timeFormat } from "../../shared/core/stores"
-import { createData } from "../../utils/createData"
+import { createData } from "../../app/wiring/createData"
 import { setLanguage } from "../../shared/utils/language"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { commonMock } from "../test/mockCommon"
@@ -14,7 +14,7 @@ import { Initialize } from "./Initialize"
 
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn(), requestMain: vi.fn() }))
-vi.mock("../../utils/createData", () => ({ createData: vi.fn() }))
+vi.mock("../../app/wiring/createData", () => ({ createData: vi.fn() }))
 // el módulo real arrastra un ciclo con common/stores al mockearlo parcialmente: se reemplaza entero con un translateText mínimo
 vi.mock("../../shared/utils/language", async () => {
     const { get } = await vi.importActual<typeof import("../../shared/core/lib/store")>("../../shared/core/lib/store")

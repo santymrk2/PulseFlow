@@ -11,7 +11,7 @@ import { buildLookStyle, computeLookBridgeStyles, computeLookOutputPointers, LOO
 // ejercita las funciones puras, así que se stubbean esos módulos. language se
 // mockea para cortar la cadena array → language → common → output → showActions →
 // pdfjs (que necesita DOM y el test corre en node).
-vi.mock("../../../utils/save", () => ({ save: () => {} }))
+vi.mock("../../../app/wiring/save", () => ({ save: () => {} }))
 vi.mock("./history", () => ({ history: () => {} }))
 vi.mock("../language", () => ({ translateText: (id: string) => id, getLanguage: () => ({}), setLanguage: () => {} }))
 

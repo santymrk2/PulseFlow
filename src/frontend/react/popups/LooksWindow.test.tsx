@@ -6,7 +6,7 @@ import { history } from "../../shared/utils/helpers/history"
 import { applyLook, createLook } from "../../shared/utils/helpers/looks"
 import { activeLook, looks, outputs } from "../../shared/core/stores"
 import { confirmCustom } from "../../shared/utils/popup"
-import { save } from "../../utils/save"
+import { save } from "../../app/wiring/save"
 import type { Look, LookScreen } from "../../../types/Settings"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
@@ -20,7 +20,7 @@ vi.mock("../../shared/utils/helpers/looks", () => ({
     isStageOutput: (output?: { stageOutput?: string }) => !!output?.stageOutput
 }))
 vi.mock("../../shared/utils/popup", () => ({ confirmCustom: vi.fn() }))
-vi.mock("../../utils/save", () => ({ save: vi.fn() }))
+vi.mock("../../app/wiring/save", () => ({ save: vi.fn() }))
 vi.mock("../looks/LookGrid", () => ({
     LookGrid: ({ onCell }: { onCell?: (detail: { outputId: string; patch: Partial<LookScreen> }) => void }) => (
         <div>

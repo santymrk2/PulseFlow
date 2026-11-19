@@ -5,7 +5,7 @@ import { cleanup, render } from "@testing-library/react"
 import { afterAll, afterEach, describe, expect, it, vi } from "vitest"
 import { get } from "../../../shared/core/lib/store"
 import { quickSearchActive } from "../../../shared/core/stores"
-import { keydown as globalKeydown } from "../../../utils/shortcuts"
+import { keydown as globalKeydown } from "../../../app/wiring/shortcuts"
 import { setStoresForTest, storeEntry } from "../../test/storeTestKit"
 import { TextField } from "./TextField"
 

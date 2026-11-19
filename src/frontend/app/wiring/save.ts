@@ -1,15 +1,15 @@
-import { get } from "../shared/core/lib/store"
-import { Main } from "../../types/IPC/Main"
-import type { Projects } from "../../types/Projects"
-import type { Shows } from "../../types/Show"
-import { stopAllChannelRecordings } from "../audio/audioChannelRecorder"
-import { customActionActivation } from "../components/actions/actions"
-import { stopMediaRecorder } from "../components/drawer/live/recorder"
-import { stopAllInteractions } from "../components/drawer/pages/interactions"
-import { clone, keysToID, removeDeleted } from "../shared/utils/helpers/array"
-import { isOutCleared, updateSyncedOutputs } from "../shared/utils/helpers/output"
-import { sendMain } from "../shared/core/ipc/main"
-import { invokeCommand } from "../shared/core/ipc/tauri"
+import { get } from "../../shared/core/lib/store"
+import { Main } from "../../../types/IPC/Main"
+import type { Projects } from "../../../types/Projects"
+import type { Shows } from "../../../types/Show"
+import { stopAllChannelRecordings } from "../../audio/audioChannelRecorder"
+import { customActionActivation } from "../../components/actions/actions"
+import { stopMediaRecorder } from "../../components/drawer/live/recorder"
+import { stopAllInteractions } from "../../components/drawer/pages/interactions"
+import { clone, keysToID, removeDeleted } from "../../shared/utils/helpers/array"
+import { isOutCleared, updateSyncedOutputs } from "../../shared/utils/helpers/output"
+import { sendMain } from "../../shared/core/ipc/main"
+import { invokeCommand } from "../../shared/core/ipc/tauri"
 import {
     actionTags,
     actions,
@@ -116,11 +116,11 @@ import {
     variableTags,
     variables,
     videoMarkers
-} from "../shared/core/stores"
-import type { SaveActions, SaveData, SaveList, SaveListSettings, SaveListSyncedSettings } from "./../../types/Save"
+} from "../../shared/core/stores"
+import type { SaveActions, SaveData, SaveList, SaveListSettings, SaveListSyncedSettings } from "../../../types/Save"
 import { isSyncing, socketDisconnect, syncWithCloud } from "./cloudSync"
-import { newToast, setStatus, startAutosave } from "../shared/utils/common"
-import { syncDrive } from "../shared/utils/drive"
+import { newToast, setStatus, startAutosave } from "../../shared/utils/common"
+import { syncDrive } from "../../shared/utils/drive"
 import { autoDisableRemoteController, stopRemoteController } from "./remoteController"
 
 export function save(closeWhenFinished = false, customTriggers: SaveActions = {}) {

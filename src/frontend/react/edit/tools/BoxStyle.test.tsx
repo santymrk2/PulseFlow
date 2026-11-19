@@ -5,7 +5,7 @@ import { activeEdit, activePopup, activeShow, alertMessage, categories, styles a
 import { looseEntry, setStoresForTest } from "../../test/storeTestKit"
 import { BoxStyle } from "./BoxStyle"
 
-vi.mock("../../../utils/shortcuts", () => ({ getNormalizedKey: (e: KeyboardEvent) => e.key, isFormattingKey: () => false }))
+vi.mock("../../../app/wiring/shortcuts", () => ({ getNormalizedKey: (e: KeyboardEvent) => e.key, isFormattingKey: () => false }))
 vi.mock("../../../shared/utils/common", () => ({ newToast: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/array", () => ({ clone: (v: unknown) => JSON.parse(JSON.stringify(v ?? null)) }))
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))

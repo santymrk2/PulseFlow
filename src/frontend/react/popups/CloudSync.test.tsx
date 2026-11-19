@@ -2,14 +2,14 @@
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { popupData } from "../../shared/core/stores"
-import { chooseTeam } from "../../utils/cloudSync"
+import { chooseTeam } from "../../app/wiring/cloudSync"
 import { commonMock } from "../test/mockCommon"
 import { clearIslands, islands } from "../test/islandMock"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { CloudSync } from "./CloudSync"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../utils/cloudSync", () => ({ chooseTeam: vi.fn() }))
+vi.mock("../../app/wiring/cloudSync", () => ({ chooseTeam: vi.fn() }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 const teams = [

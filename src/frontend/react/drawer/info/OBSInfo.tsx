@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react"
 import { obsData } from "../../../shared/core/stores"
-import { connectToOBS } from "../../../utils/obsTalk"
+import { connectToOBS } from "../../../app/wiring/obsTalk"
 import { wait } from "../../../shared/utils/common"
 import { useStore } from "../../hooks/useStore"
 import { cn } from "../../../shared/core/lib/utils"

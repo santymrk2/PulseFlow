@@ -11,7 +11,7 @@ import { cn } from "../../shared/core/lib/utils"
 import { activePopup, activeProject, activeShow, categories, drawerTabsData, formatNewShow, quickTextCache, shows, special, splitLines } from "../../shared/core/stores"
 import { newToast } from "../../shared/utils/common"
 import { translateText } from "../../shared/utils/language"
-import { getNormalizedKey } from "../../utils/shortcuts"
+import { getNormalizedKey } from "../../app/wiring/shortcuts"
 import { customIconsColors } from "../../shared/core/values/customIcons"
 
 import { T } from "../helpers/T"

@@ -42,7 +42,7 @@ vi.mock("../../components/quicksearch/quicksearch", () => ({
 }))
 vi.mock("../../components/quicksearch/searchHighlight", () => ({ highlightText: (t: string) => t }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
-vi.mock("../../utils/shortcuts", () => ({ getNormalizedKey: (e: { key: string }) => e.key }))
+vi.mock("../../app/wiring/shortcuts", () => ({ getNormalizedKey: (e: { key: string }) => e.key }))
 
 import { QuickSearch } from "./QuickSearch"
 

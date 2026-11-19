@@ -1,5 +1,5 @@
 import { activePopup } from "../../shared/core/stores"
-import { save } from "../../utils/save"
+import { save } from "../../app/wiring/save"
 import { Icon } from "../helpers/Icon"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"

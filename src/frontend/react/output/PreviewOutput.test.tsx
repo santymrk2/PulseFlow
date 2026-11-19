@@ -28,7 +28,7 @@ vi.mock("../../audio/audioChannelRecorder", () => ({ AudioChannelRecorder: {}, s
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../shared/utils/helpers/historyHelpers", () => ({ _updaters: {}, history: () => {} }))
 vi.mock("../../components/actions/apiHelper", () => ({}))
-vi.mock("../../utils/save", () => ({}))
+vi.mock("../../app/wiring/save", () => ({}))
 vi.mock("../../shared/core/stores", () => {
     const sub = (value: unknown) => ({ subscribe: (fn: (v: unknown) => void) => (fn(value), () => {}) })
     return {

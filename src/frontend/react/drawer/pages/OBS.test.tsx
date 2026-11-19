@@ -11,7 +11,7 @@ const { connectMock } = vi.hoisted(() => ({ connectMock: vi.fn() }))
 vi.mock("../../../shared/utils/common", () => commonMock())
 vi.mock("../../../audio/audioProcessor", () => ({}))
 vi.mock("../../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
-vi.mock("../../../utils/obsTalk", () => ({ connectToOBS: connectMock }))
+vi.mock("../../../app/wiring/obsTalk", () => ({ connectToOBS: connectMock }))
 
 type Message = { op: number; d?: Record<string, unknown> }
 type StateCallback = (connected: boolean, error?: string) => void

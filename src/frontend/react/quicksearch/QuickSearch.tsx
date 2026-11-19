@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react"
 import { quickSearchActive, special, theme, themes } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
-import { getNormalizedKey } from "../../utils/shortcuts"
+import { getNormalizedKey } from "../../app/wiring/shortcuts"
 import { hexToRgb } from "../../shared/utils/helpers/color"
 import { highlightText } from "../../components/quicksearch/searchHighlight"
 import { quicksearch, quickSearchCategoryNames, selectQuicksearchValue, type SearchCategory } from "../../components/quicksearch/quicksearch"

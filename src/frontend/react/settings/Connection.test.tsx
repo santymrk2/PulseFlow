@@ -6,16 +6,16 @@ import { Main } from "../../../types/IPC/Main"
 import { checkWindowCapture } from "../../shared/utils/helpers/output"
 import { requestMain, sendMain } from "../../shared/core/ipc/main"
 import { activePage, activePopup, activeShow, activeTriggerFunction, cloudSyncData, connections, contentProviderData, dictionary, disabledServers, maxConnections, notFound, obsData, outputs, popupData, ports, providerConnections, saved, serverData, special } from "../../shared/core/stores"
-import { startRemoteController, stopRemoteController } from "../../utils/remoteController"
-import { contentProviderSync } from "../../utils/startup"
+import { startRemoteController, stopRemoteController } from "../../app/wiring/remoteController"
+import { contentProviderSync } from "../../app/wiring/startup"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Connection } from "./Connection"
 
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false }))
 vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn() }))
 vi.mock("../../shared/utils/helpers/output", () => ({ checkWindowCapture: vi.fn() }))
-vi.mock("../../utils/remoteController", () => ({ startRemoteController: vi.fn(), stopRemoteController: vi.fn() }))
-vi.mock("../../utils/startup", () => ({ contentProviderSync: vi.fn() }))
+vi.mock("../../app/wiring/remoteController", () => ({ startRemoteController: vi.fn(), stopRemoteController: vi.fn() }))
+vi.mock("../../app/wiring/startup", () => ({ contentProviderSync: vi.fn() }))
 vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 // El port Tip se mockea como isla: acá sólo importa con qué props se monta.

@@ -15,7 +15,7 @@ vi.mock("../../shared/utils/cursor", () => ({ startResizing: cursor.empezar, sto
 vi.mock("../../shared/utils/common", () => ({ DEFAULT_WIDTH: 290, DEFAULT_DRAWER_HEIGHT: 300, MENU_BAR_HEIGHT: 25 }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: (id: string) => ({ global: cursor.globals[id] ?? "full" }) }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (text: string) => text }))
-vi.mock("../../utils/shortcuts", () => ({ getNormalizedKey: (e: KeyboardEvent) => e.key }))
+vi.mock("../../app/wiring/shortcuts", () => ({ getNormalizedKey: (e: KeyboardEvent) => e.key }))
 vi.mock("../system/Resizeable", () => ({
     Resizeable: ({ children }: { children?: ReactNode | ((width: number) => ReactNode) }) => <div data-resizeable="">{typeof children === "function" ? children(600) : children}</div>
 }))

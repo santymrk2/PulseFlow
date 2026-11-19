@@ -6,7 +6,7 @@ import { Main } from "../../../types/IPC/Main"
 import { AudioAnalyser } from "../../audio/audioAnalyser"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, dictionary, maxConnections, os, outputs, popupData, ports, serverData, special } from "../../shared/core/stores"
-import { startRemoteController, stopRemoteController } from "../../utils/remoteController"
+import { startRemoteController, stopRemoteController } from "../../app/wiring/remoteController"
 import { clearFields, fields, fire } from "../test/kitMocks"
 import { clearIslands, islands } from "../test/islandMock"
 import { commonMock } from "../test/mockCommon"
@@ -16,7 +16,7 @@ import { Connect } from "./Connect"
 vi.mock("../../shared/utils/common", () => commonMock())
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: { recorderActivate: vi.fn() } }))
-vi.mock("../../utils/remoteController", () => ({ startRemoteController: vi.fn(), stopRemoteController: vi.fn() }))
+vi.mock("../../app/wiring/remoteController", () => ({ startRemoteController: vi.fn(), stopRemoteController: vi.fn() }))
 vi.mock("qrcode-generator", () => ({
     default: () => {
         let text = ""

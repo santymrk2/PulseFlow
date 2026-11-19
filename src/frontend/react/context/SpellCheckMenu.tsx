@@ -1,7 +1,7 @@
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../shared/core/ipc/main"
 import { spellcheck } from "../../shared/core/stores"
-import { closeContextMenu } from "../../utils/shortcuts"
+import { closeContextMenu } from "../../app/wiring/shortcuts"
 import { translateText } from "../../shared/utils/language"
 import { triggerClickOnEnterSpace } from "../../shared/utils/clickable"
 import { useStore } from "../hooks/useStore"

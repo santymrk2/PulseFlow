@@ -4,7 +4,7 @@ import type { StageItem, StageLayout as TStageLayout } from "../../../types/Stag
 import { activePopup, activeStage, activeTimers, allOutputs, dictionary, outputs, outputSlideCache, refreshEditSlide, stageShows, timers, variables } from "../../shared/core/stores"
 import { startResizing } from "../../shared/utils/cursor"
 import { translateText } from "../../shared/utils/language"
-import { sendBackgroundToStage } from "../../utils/stageTalk"
+import { sendBackgroundToStage } from "../../app/wiring/stageTalk"
 import autosize from "../../components/edit/scripts/autosize"
 import { isConditionMet } from "../../components/edit/scripts/itemHelpers"
 import { getItemText } from "../../components/edit/scripts/textStyle"

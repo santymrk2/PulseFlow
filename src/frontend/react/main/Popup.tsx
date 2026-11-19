@@ -6,7 +6,7 @@ import { activePopup, alertMessage, os, popupData, special } from "../../shared/
 import { MENU_BAR_HEIGHT } from "../../shared/utils/common"
 import { translateText } from "../../shared/utils/language"
 import { clearPopupSubmit } from "../../shared/utils/popup"
-import { disablePopupClose } from "../../utils/shortcuts"
+import { disablePopupClose } from "../../app/wiring/shortcuts"
 import { reactPopups } from "../popups/registry"
 import { useStore } from "../hooks/useStore"
 import { T } from "../helpers/T"

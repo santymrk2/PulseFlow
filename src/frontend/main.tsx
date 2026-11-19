@@ -6,7 +6,7 @@ import { App } from "./react/App"
 import "@fontsource-variable/geist"
 import "@fontsource-variable/geist-mono"
 import { setupTauriApi } from "./shared/core/ipc/tauri"
-import { initMenuActions } from "./utils/shortcuts"
+import { initMenuActions } from "./app/wiring/shortcuts"
 import { activePopup } from "./shared/core/stores"
 
 // set up the Tauri IPC bridge (replaces the Electron preload's window.api)

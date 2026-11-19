@@ -9,7 +9,7 @@ import { convertShowSlidesToImages } from "../../components/main/popups/export/e
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, activeProject, activeShow, dictionary, projects, selected, shows, showsCache, special } from "../../shared/core/stores"
 import { send } from "../../shared/utils/request"
-import { save } from "../../utils/save"
+import { save } from "../../app/wiring/save"
 import { clearPopupSubmit, triggerPopupSubmit } from "../../shared/utils/popup"
 import { clearFields, fire } from "../test/kitMocks"
 import { clearIslands } from "../test/islandMock"
@@ -22,7 +22,7 @@ vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, wait: (
 vi.mock("../../converters/txt", () => ({ similarity: () => 0 }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../shared/utils/request", () => ({ send: vi.fn() }))
-vi.mock("../../utils/save", () => ({ save: vi.fn() }))
+vi.mock("../../app/wiring/save", () => ({ save: vi.fn() }))
 vi.mock("../../components/export/project", () => ({ exportProject: vi.fn() }))
 vi.mock("../../shared/utils/helpers/setShow", () => ({ loadShows: vi.fn(async () => {}) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => []) }))

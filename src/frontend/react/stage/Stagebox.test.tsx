@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { StageItem, StageLayout } from "../../../types/Stage"
 import { activePopup, activeStage, activeTimers, allOutputs, dictionary, outputs, outputSlideCache, refreshEditSlide, stageShows, timers, variables } from "../../shared/core/stores"
 import { startResizing } from "../../shared/utils/cursor"
-import { sendBackgroundToStage } from "../../utils/stageTalk"
+import { sendBackgroundToStage } from "../../app/wiring/stageTalk"
 import autosize from "../../components/edit/scripts/autosize"
 import { isConditionMet } from "../../components/edit/scripts/itemHelpers"
 import { loadThumbnail } from "../../shared/utils/helpers/media"
@@ -19,7 +19,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/cursor", () => ({ startResizing: vi.fn() }))
-vi.mock("../../utils/stageTalk", () => ({ sendBackgroundToStage: vi.fn(async () => null) }))
+vi.mock("../../app/wiring/stageTalk", () => ({ sendBackgroundToStage: vi.fn(async () => null) }))
 vi.mock("../../components/edit/scripts/autosize", () => ({ default: vi.fn(() => 64) }))
 vi.mock("../../components/edit/scripts/itemHelpers", () => ({ isConditionMet: vi.fn(() => true) }))
 vi.mock("../../components/edit/scripts/textStyle", () => ({ getItemText: vi.fn(() => "Texto del item") }))

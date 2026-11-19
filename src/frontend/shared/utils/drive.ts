@@ -5,7 +5,7 @@ import type { DriveData } from "../../../types/Main"
 import { activePopup, driveData, driveKeys, popupData } from "../core/stores"
 import { newToast } from "./common"
 import { send } from "./request"
-import { save } from "../../utils/save"
+import { save } from "../../app/wiring/save"
 
 export function validateKeys(file: string) {
     const keys = JSON.parse(file)

@@ -3,13 +3,13 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, describe, expect, it, vi } from "vitest"
 import { activePopup } from "../../shared/core/stores"
-import { save } from "../../utils/save"
+import { save } from "../../app/wiring/save"
 import { commonMock } from "../test/mockCommon"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { FilesButtons } from "./FilesButtons"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../utils/save", () => ({ save: vi.fn() }))
+vi.mock("../../app/wiring/save", () => ({ save: vi.fn() }))
 
 let restaurar: () => void = () => {}
 afterEach(() => {

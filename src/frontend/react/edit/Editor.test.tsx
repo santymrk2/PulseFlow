@@ -103,7 +103,7 @@ vi.mock("../../shared/core/stores", () => ({
         }
     }
 }))
-vi.mock("../../utils/cloudSync", () => ({ isActiveShowInUseByCloudUser: () => false }))
+vi.mock("../../app/wiring/cloudSync", () => ({ isActiveShowInUseByCloudUser: () => false }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({}) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: () => [{ id: "sl1" }] }))

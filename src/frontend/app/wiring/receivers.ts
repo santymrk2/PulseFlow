@@ -1,13 +1,13 @@
-import { get } from "../shared/core/lib/store"
-import { CLOUD, CONTROLLER, NDI, OMT, OUTPUT, OUTPUT_STREAM, REMOTE, STAGE } from "../../types/Channels"
-import type { ClientMessage } from "../../types/Socket"
-import { AudioMicrophone } from "../audio/audioMicrophone"
-import { MIN_DB } from "../audio/dBUtils"
-import { runAction } from "../components/actions/actions"
-import { handleRecorderFrame } from "../components/drawer/live/recorder"
-import { getDynamicValue } from "../components/edit/scripts/itemHelpers"
-import { clone } from "../shared/utils/helpers/array"
-import { receiveMainGlobal } from "../shared/core/ipc/main"
+import { get } from "../../shared/core/lib/store"
+import { CLOUD, CONTROLLER, NDI, OMT, OUTPUT, OUTPUT_STREAM, REMOTE, STAGE } from "../../../types/Channels"
+import type { ClientMessage } from "../../../types/Socket"
+import { AudioMicrophone } from "../../audio/audioMicrophone"
+import { MIN_DB } from "../../audio/dBUtils"
+import { runAction } from "../../components/actions/actions"
+import { handleRecorderFrame } from "../../components/drawer/live/recorder"
+import { getDynamicValue } from "../../components/edit/scripts/itemHelpers"
+import { clone } from "../../shared/utils/helpers/array"
+import { receiveMainGlobal } from "../../shared/core/ipc/main"
 import {
     actions,
     activePopup,
@@ -62,12 +62,12 @@ import {
     variables,
     visualizerData,
     websiteAction
-} from "../shared/core/stores"
-import { newToast } from "../shared/utils/common"
-import { syncDrive } from "../shared/utils/drive"
-import { setLanguage } from "../shared/utils/language"
+} from "../../shared/core/stores"
+import { newToast } from "../../shared/utils/common"
+import { syncDrive } from "../../shared/utils/drive"
+import { setLanguage } from "../../shared/utils/language"
 import { sendInitialOutputData } from "./listeners"
-import { receive, send } from "../shared/utils/request"
+import { receive, send } from "../../shared/utils/request"
 import { closeApp, save } from "./save"
 import { client } from "./sendData"
 import { previewShortcuts } from "./shortcuts"

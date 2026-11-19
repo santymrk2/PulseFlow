@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { Main } from "../../../types/IPC/Main"
 import { sendMain } from "../../shared/core/ipc/main"
 import { activePopup, dictionary, saved } from "../../shared/core/stores"
-import { closeApp, save, saveComplete } from "../../utils/save"
+import { closeApp, save, saveComplete } from "../../app/wiring/save"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { Unsaved } from "./Unsaved"
@@ -15,7 +15,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (value: string) => value }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
-vi.mock("../../utils/save", () => ({ closeApp: vi.fn(), save: vi.fn(), saveComplete: vi.fn() }))
+vi.mock("../../app/wiring/save", () => ({ closeApp: vi.fn(), save: vi.fn(), saveComplete: vi.fn() }))
 
 let restaurar: () => void = () => {}
 function montar(savedValue = false) {

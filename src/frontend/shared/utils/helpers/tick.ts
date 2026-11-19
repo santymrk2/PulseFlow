@@ -1,6 +1,6 @@
 import { get } from "../../core/lib/store"
 import { outputs, slideTimers } from "../../core/stores"
-import { playFolder } from "../../../utils/shortcuts"
+import { playFolder } from "../../../app/wiring/shortcuts"
 import { clone } from "./array"
 import { startFolderTimer } from "./output"
 import { OutputHelper } from "./OutputHelper"

@@ -3,14 +3,14 @@ import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { get } from "../../shared/core/lib/store"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activePopup, cloudSyncData, dictionary } from "../../shared/core/stores"
-import { syncWithCloud } from "../../utils/cloudSync"
+import { syncWithCloud } from "../../app/wiring/cloudSync"
 import { commonMock } from "../test/mockCommon"
 import { clearIslands, islands } from "../test/islandMock"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { CloudMethod } from "./CloudMethod"
 
 vi.mock("../../shared/utils/common", () => commonMock())
-vi.mock("../../utils/cloudSync", () => ({ syncWithCloud: vi.fn() }))
+vi.mock("../../app/wiring/cloudSync", () => ({ syncWithCloud: vi.fn() }))
 vi.mock("../main/Tip", async () => ({ Tip: (await vi.importActual<typeof import("../test/islandMock")>("../test/islandMock")).makePortMock("Tip") }))
 
 let restaurar: () => void = () => {}

@@ -2,7 +2,7 @@
 import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { get } from "../../shared/core/lib/store"
 import { activePopup, quickSearchActive } from "../../shared/core/stores"
-import { disablePopupClose, keydown } from "../../utils/shortcuts"
+import { disablePopupClose, keydown } from "../../app/wiring/shortcuts"
 import { setStoresForTest, storeEntry } from "../test/storeTestKit"
 
 // Initialize no decide si se puede cerrar: lo hace el marco (Esc en shortcuts.ts; clic afuera y X, que usan la misma lista).

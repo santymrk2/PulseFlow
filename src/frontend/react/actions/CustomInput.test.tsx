@@ -8,7 +8,7 @@ vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(async () => []
 vi.mock("../../audio/audioMicrophone", () => ({ AudioMicrophone: { getList: vi.fn(async () => []) } }))
 vi.mock("../../audio/routing/audioRoutingManager", () => ({ AudioRoutingManager: { sortChannels: (x: unknown) => x } }))
 vi.mock("../../media/cameraManager", () => ({ cameraManager: { getCamerasList: vi.fn(async () => []) } }))
-vi.mock("../../utils/obsTalk", () => ({ obsGetScenes: vi.fn(async () => []) }))
+vi.mock("../../app/wiring/obsTalk", () => ({ obsGetScenes: vi.fn(async () => []) }))
 vi.mock("../../shared/utils/language", () => ({ translateText: (s: string) => s }))
 vi.mock("../../shared/utils/helpers/array", () => ({ keysToID: () => [], sortByName: (a: unknown[]) => a }))
 vi.mock("../../components/show/tools/groups", () => ({ getGlobalGroupName: () => "" }))

@@ -1,12 +1,12 @@
-import { get } from "../shared/core/lib/store"
-import { OUTPUT, REMOTE, STAGE } from "../../types/Channels"
-import { AudioPlayer } from "../audio/audioPlayer"
-import { midiInListen } from "../components/actions/midi"
-import { scenesHaveClock, sendOutputScenes } from "../shared/utils/helpers/sceneGraph"
-import { shouldResendForVideo, videoSyncFields, type VideoSyncFields } from "../shared/utils/helpers/videoSync"
-import { getAllActiveOutputIds, getAllNormalOutputs, updateSyncedOutputs } from "../shared/utils/helpers/output"
-import { loadShows } from "../shared/utils/helpers/setShow"
-import { getShowCacheId, syncCachedShows, updateCachedShow, updateCachedShows, updateShowsList } from "../shared/utils/helpers/show"
+import { get } from "../../shared/core/lib/store"
+import { OUTPUT, REMOTE, STAGE } from "../../../types/Channels"
+import { AudioPlayer } from "../../audio/audioPlayer"
+import { midiInListen } from "../../components/actions/midi"
+import { scenesHaveClock, sendOutputScenes } from "../../shared/utils/helpers/sceneGraph"
+import { shouldResendForVideo, videoSyncFields, type VideoSyncFields } from "../../shared/utils/helpers/videoSync"
+import { getAllActiveOutputIds, getAllNormalOutputs, updateSyncedOutputs } from "../../shared/utils/helpers/output"
+import { loadShows } from "../../shared/utils/helpers/setShow"
+import { getShowCacheId, syncCachedShows, updateCachedShow, updateCachedShows, updateShowsList } from "../../shared/utils/helpers/show"
 import {
     $,
     actions,
@@ -62,11 +62,11 @@ import {
     transitionData,
     variables,
     variableTags
-} from "../shared/core/stores"
-import { hasNewerUpdate } from "../shared/utils/common"
-import { driveConnect } from "../shared/utils/drive"
+} from "../../shared/core/stores"
+import { hasNewerUpdate } from "../../shared/utils/common"
+import { driveConnect } from "../../shared/utils/drive"
 import { convertBackgrounds, getFilteredAudioChannels } from "./remoteTalk"
-import { send } from "../shared/utils/request"
+import { send } from "../../shared/utils/request"
 import { arrayToObject, eachConnection, filterObjectArray, sendData, timedout } from "./sendData"
 
 export function storeSubscriber() {

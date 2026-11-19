@@ -7,7 +7,7 @@ import { encodeFilePath, getFileName, isLocalFile, locateMediaFile, removeExtens
 import { checkNextAfterMedia } from "../shared/utils/helpers/showActions"
 import { requestMain, sendMain } from "../shared/core/ipc/main"
 import { activePlaylist, dictionary, media, outLocked, playingAudio, playingAudioPaths, special } from "../shared/core/stores"
-import { addToMediaFolder } from "../utils/cloudSync"
+import { addToMediaFolder } from "../app/wiring/cloudSync"
 import { AudioAnalyser } from "./audioAnalyser"
 import { clearAudio, clearing, currentlyCrossfadingIn, fadeInAudio, fadeOutAudio } from "./audioFading"
 import { AudioMultichannel } from "./audioMultichannel"

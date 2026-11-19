@@ -9,7 +9,7 @@ import { sendMain } from "../core/ipc/main"
 import { activePopup, activeTriggerFunction, autosave, currentWindow, disabledServers, drawer, errorHasOccurred, focusedArea, os, outputs, quickSearchActive, resized, serverData, statusIndicator, theme, themes, toastMessages, version } from "../core/stores"
 import { convertAutosave } from "../core/values/autosave"
 import { send } from "./request"
-import { save } from "../../utils/save"
+import { save } from "../../app/wiring/save"
 
 export const DEFAULT_WIDTH = 290 // --navigation-width (global.css) | resized (stores.ts & defaults.ts)
 export const DEFAULT_DRAWER_HEIGHT = 300

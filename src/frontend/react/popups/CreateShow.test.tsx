@@ -12,7 +12,7 @@ import { looseEntry, setStoresForTest, storeEntry } from "../test/storeTestKit"
 import { customIconsColors } from "../../shared/core/values/customIcons"
 import { CreateShow } from "./CreateShow"
 
-vi.mock("../../utils/shortcuts", () => ({ getNormalizedKey: (e: KeyboardEvent) => e.key }))
+vi.mock("../../app/wiring/shortcuts", () => ({ getNormalizedKey: (e: KeyboardEvent) => e.key }))
 vi.mock("uid", () => ({ uid: () => "cat-nueva" }))
 vi.mock("../../shared/utils/common", () => ({ isMainWindow: () => false, newToast: vi.fn() }))
 vi.mock("../../converters/txt", () => ({ convertText: vi.fn(), getQuickExample: () => "ejemplo", trimNameFromString: (t: string) => `nombre:${t.slice(0, 3)}` }))

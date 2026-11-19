@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import type { CustomFont, Item, ItemType, Slide } from "../../../../types/Show"
 import { activeEdit, activePopup, activeShow, alertMessage, categories, styles as outputStyles, overlays, selected, shownTips, showsCache, special, templates, theme, themes, timers } from "../../../shared/core/stores"
-import { getNormalizedKey, isFormattingKey } from "../../../utils/shortcuts"
+import { getNormalizedKey, isFormattingKey } from "../../../app/wiring/shortcuts"
 import { newToast } from "../../../shared/utils/common"
 import { clone } from "../../../shared/utils/helpers/array"
 import { history } from "../../../shared/utils/helpers/history"

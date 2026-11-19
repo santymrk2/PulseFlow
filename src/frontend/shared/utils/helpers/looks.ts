@@ -6,7 +6,7 @@ import { uid } from "uid"
 import type { Output, Outputs } from "../../../../types/Output"
 import type { Look, LookScreen, Styles } from "../../../../types/Settings"
 import { activeLook, looks, outputs, styles } from "../../core/stores"
-import { save } from "../../../utils/save"
+import { save } from "../../../app/wiring/save"
 import { clone } from "./array"
 import { history } from "./history"
 

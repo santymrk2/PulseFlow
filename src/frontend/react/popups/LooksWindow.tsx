@@ -6,7 +6,7 @@ import { applyLook, createLook, isStageOutput } from "../../shared/utils/helpers
 import { activeLook, looks, outputs } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { confirmCustom } from "../../shared/utils/popup"
-import { save } from "../../utils/save"
+import { save } from "../../app/wiring/save"
 import { Icon } from "../helpers/Icon"
 import { useStore } from "../hooks/useStore"
 import type { LookCellPatch } from "../looks/LookAdvanced"

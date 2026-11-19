@@ -2,7 +2,7 @@ import { get, type Writable } from "../../core/lib/store"
 import type { Selected } from "../../../../types/Main"
 import type { Tag } from "../../../../types/Show"
 import { activePopup, popupData } from "../../core/stores"
-import { closeContextMenu } from "../../../utils/shortcuts"
+import { closeContextMenu } from "../../../app/wiring/shortcuts"
 import { keysToID, sortByName, sortObject } from "./array"
 import type { ContextMenuItem } from "../../../components/context/contextMenus"
 

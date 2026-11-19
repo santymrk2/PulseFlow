@@ -8,7 +8,7 @@ import { CategoryPicker } from "./CategoryPicker"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: (id: string) => id }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: () => ({ global: "full" }) }))
-vi.mock("../../utils/createData", () => ({ setExampleEffects: vi.fn(), setExampleOverlays: vi.fn(), setExampleTemplates: vi.fn() }))
+vi.mock("../../app/wiring/createData", () => ({ setExampleEffects: vi.fn(), setExampleOverlays: vi.fn(), setExampleTemplates: vi.fn() }))
 vi.mock("../../shared/utils/helpers/clipboard", () => ({ deleteAction: vi.fn() }))
 vi.mock("../ui/button/Button", () => ({ Button: () => <button type="button">btn</button> }))
 vi.mock("../ui/input/Input", () => ({ Input: () => <input /> }))

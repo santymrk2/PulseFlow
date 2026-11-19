@@ -1,7 +1,7 @@
 import { formatSearch } from "../../shared/utils/search"
 import { contextMenuItems, type ContextMenuItem } from "./contextMenus"
 import { loadItems } from "./loadItems"
-import { closeContextMenu } from "../../utils/shortcuts"
+import { closeContextMenu } from "../../app/wiring/shortcuts"
 
 export interface FlatMenuItem {
     id: string

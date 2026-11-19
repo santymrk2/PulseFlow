@@ -3,7 +3,7 @@ import type { ToMainReceiveValue, ToMainSendPayloads } from "../../../../types/I
 import { ToMain } from "../../../../types/IPC/ToMain"
 import type { MainReceiveValue, MainReturnPayloads } from "../../../../types/IPC/Main"
 import { MAIN, Main, type MainSendValue } from "../../../../types/IPC/Main"
-import { mainResponses } from "../../../IPC/responsesMain"
+import { mainResponses } from "../../../app/wiring/responsesMain"
 
 // @ts-ignore // T extends keyof typeof Main
 export function requestMainMultiple<T extends Main>(object: { [K in T]: (data: MainReturnPayloads[K] | undefined) => void }) {

@@ -9,7 +9,7 @@ import { DEFAULT_DRAWER_HEIGHT, DEFAULT_WIDTH, MENU_BAR_HEIGHT } from "../../sha
 import { startResizing, stopResizing } from "../../shared/utils/cursor"
 import { translateText } from "../../shared/utils/language"
 import { getAccess } from "../../shared/utils/profile"
-import { getNormalizedKey } from "../../utils/shortcuts"
+import { getNormalizedKey } from "../../app/wiring/shortcuts"
 import { isTypingTarget } from "../../shared/utils/shortcutsHelper"
 import { drawerTabs } from "../../shared/core/values/tabs"
 import { Icon } from "../helpers/Icon"

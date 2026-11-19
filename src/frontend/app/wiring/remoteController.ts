@@ -1,8 +1,8 @@
 import { initializeApp } from "firebase/app"
 import { get, getDatabase, onValue, ref, remove, set } from "firebase/database"
-import { get as getStore } from "../shared/core/lib/store"
-import { activePopup, alertMessage, special } from "../shared/core/stores"
-import { OutputHelper } from "../shared/utils/helpers/OutputHelper"
+import { get as getStore } from "../../shared/core/lib/store"
+import { activePopup, alertMessage, special } from "../../shared/core/stores"
+import { OutputHelper } from "../../shared/utils/helpers/OutputHelper"
 
 // same config as firebaseUtils.ts
 const firebaseConfig = { apiKey: "AIzaSyD-2gS7z6g80igXOfj_j0oQcJk4TkZsa18", authDomain: "freeshow-net.firebaseapp.com", databaseURL: "https://freeshow-net-default-rtdb.europe-west1.firebasedatabase.app", projectId: "freeshow-net", storageBucket: "freeshow-net.firebasestorage.app", messagingSenderId: "100356822840", appId: "1:100356822840:web:55f56b5b65cb0bbcb1d3cd", measurementId: "G-SD9S3Z96DQ" }

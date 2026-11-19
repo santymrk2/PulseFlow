@@ -7,7 +7,7 @@ import { TextEditor } from "./TextEditor"
 
 vi.mock("../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
 vi.mock("../../shared/utils/common", () => ({ newToast: vi.fn() }))
-vi.mock("../../utils/shortcuts", () => ({ getNormalizedKey: vi.fn(() => "f") }))
+vi.mock("../../app/wiring/shortcuts", () => ({ getNormalizedKey: vi.fn(() => "f") }))
 vi.mock("../../shared/utils/chordTranspose", () => ({ transposeText: vi.fn((text: string) => text) }))
 vi.mock("../../components/show/formatTextEditor", () => ({ formatText: vi.fn() }))
 vi.mock("../../components/show/getTextEditor", () => ({ getPlainEditorText: vi.fn(() => "Texto plano") }))

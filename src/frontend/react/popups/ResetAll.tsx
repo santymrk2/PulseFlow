@@ -3,7 +3,7 @@ import type { SaveData } from "../../../types/Save"
 import { Main } from "../../../types/IPC/Main"
 import { clearAll } from "../../components/output/clear"
 import { activeEdit, activePage, activePopup, activeShow, deletedShows, renamedShows, scripturesCache } from "../../shared/core/stores"
-import { save } from "../../utils/save"
+import { save } from "../../app/wiring/save"
 import { T } from "../helpers/T"
 import { Button } from "../ui/button/Button"
 

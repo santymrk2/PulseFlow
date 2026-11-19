@@ -6,7 +6,7 @@ import { sendMain } from "../../shared/core/ipc/main"
 import { Main } from "../../../types/IPC/Main"
 import { clearAll } from "../../components/output/clear"
 import { activeEdit, activePage, activePopup, activeShow, deletedShows, dictionary, renamedShows, scripturesCache } from "../../shared/core/stores"
-import { save } from "../../utils/save"
+import { save } from "../../app/wiring/save"
 import { commonMock } from "../test/mockCommon"
 import { looseEntry, setStoresForTest } from "../test/storeTestKit"
 import { ResetAll } from "./ResetAll"
@@ -16,7 +16,7 @@ vi.mock("../../audio/audioProcessor", () => ({}))
 vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/core/ipc/main", () => ({ sendMain: vi.fn() }))
 vi.mock("../../components/output/clear", () => ({ clearAll: vi.fn() }))
-vi.mock("../../utils/save", () => ({ save: vi.fn() }))
+vi.mock("../../app/wiring/save", () => ({ save: vi.fn() }))
 
 let restaurar: () => void = () => {}
 function montar() {

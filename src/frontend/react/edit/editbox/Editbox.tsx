@@ -4,7 +4,7 @@ import { activeEdit, activeShow, openToolsTab, os, outputs, showsCache, special,
 import { startResizing } from "../../../shared/utils/cursor"
 import { translateText } from "../../../shared/utils/language"
 import { getAccess } from "../../../shared/utils/profile"
-import { isComposing } from "../../../utils/shortcuts"
+import { isComposing } from "../../../app/wiring/shortcuts"
 import { deleteAction } from "../../../shared/utils/helpers/clipboard"
 import { isCroppedItem } from "../../../shared/utils/helpers/cropping"
 import { history } from "../../../shared/utils/helpers/history"
