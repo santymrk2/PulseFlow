@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { outputs, previewOutputId, showsCache, styles as stylesStore } from "../../shared/core/stores"
 import { getItemText } from "../../components/edit/scripts/textStyle"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
-import { getStageTextLayoutOffset } from "../../components/stage/stage"
+import { getStageTextLayoutOffset } from "./logic/stage"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { SlideText } from "./SlideText"
 
@@ -16,12 +16,12 @@ vi.mock("../../components/edit/scripts/textStyle", () => ({ getItemText: vi.fn((
 vi.mock("../../shared/utils/helpers/output", () => ({ getResolution: vi.fn(() => ({ width: 1920, height: 1080 })) }))
 vi.mock("../../shared/utils/helpers/show", () => ({ getLayoutRef: vi.fn(() => [{ id: "s1" }]) }))
 vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
-vi.mock("../../components/stage/stage", () => ({ getStageTextLayoutOffset: vi.fn(() => 0) }))
-vi.mock("../slide/observeResize", () => ({ observeResize: vi.fn(() => ({ destroy: vi.fn() })) }))
-vi.mock("../slide/Textbox", () => ({
+vi.mock("./logic/stage", () => ({ getStageTextLayoutOffset: vi.fn(() => 0) }))
+vi.mock("../../react/slide/observeResize", () => ({ observeResize: vi.fn(() => ({ destroy: vi.fn() })) }))
+vi.mock("../../react/slide/Textbox", () => ({
     Textbox: (props: Record<string, unknown>) => <span data-view="Textbox" data-props={JSON.stringify(props, (_, value) => (typeof value === "function" ? undefined : value))} />
 }))
-vi.mock("../slide/Zoomed", () => ({
+vi.mock("../../react/slide/Zoomed", () => ({
     Zoomed: ({ children, ...props }: { children: ReactNode } & Record<string, unknown>) => (
         <div data-view="Zoomed" data-props={JSON.stringify(props)}>
             {children}

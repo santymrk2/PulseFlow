@@ -18,13 +18,13 @@ vi.mock("../../audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
 vi.mock("../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
 vi.mock("uid", () => ({ uid: vi.fn(() => "layout-nuevo") }))
-vi.mock("../../react/stage/StageSlide", () => ({
+vi.mock("../stage/StageSlide", () => ({
     StageSlide: (props: Record<string, unknown>) => {
         portProps.StageSlide = props
         return <div data-isla="StageSlide" />
     }
 }))
-vi.mock("../../react/stage/SkeletonStageSlide", () => ({
+vi.mock("../stage/SkeletonStageSlide", () => ({
     SkeletonStageSlide: (props: Record<string, unknown>) => {
         portProps.SkeletonStageSlide = props
         return <div data-isla="SkeletonStageSlide" />

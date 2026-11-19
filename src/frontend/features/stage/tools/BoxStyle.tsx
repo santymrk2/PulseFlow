@@ -9,9 +9,9 @@ import { clone } from "../../../shared/utils/helpers/array"
 import { history } from "../../../shared/utils/helpers/history"
 import { getCustomMetadata } from "../../../shared/utils/helpers/show"
 import { getStyles } from "../../../shared/utils/helpers/style"
-import { updateStageShow } from "../../../components/stage/stage"
-import { slideTextSections } from "../../../components/stage/values/text"
-import { EditValues } from "../../edit/tools/EditValues"
+import { updateStageShow } from "../logic/stage"
+import { slideTextSections } from "../logic/values/text"
+import { EditValues } from "../../../react/edit/tools/EditValues"
 import { useStore } from "../../../shared/ui/hooks/useStore"
 
 type StyleInput = Partial<EditInput> & { id: string; value: unknown; name?: string; key?: string; values?: { [key: string]: unknown } }

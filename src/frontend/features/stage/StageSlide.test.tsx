@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { allOutputs, outputs, stageShows } from "../../shared/core/stores"
 import { getSortedStageItems, shouldItemBeShown } from "../../components/edit/scripts/itemHelpers"
 import { getAccess } from "../../shared/utils/profile"
-import { getSlideTextItems } from "../../components/stage/stage"
+import { getSlideTextItems } from "./logic/stage"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { StageSlide } from "./StageSlide"
 
@@ -19,7 +19,7 @@ vi.mock("../../shared/utils/helpers/output", () => ({
     getStageOutputId: vi.fn(() => "stage1"),
     getStageResolution: vi.fn(() => ({ width: 1920, height: 1080 }))
 }))
-vi.mock("../../components/stage/stage", () => ({ getSlideTextItems: vi.fn(() => []), stageItemToItem: vi.fn((item) => item) }))
+vi.mock("./logic/stage", () => ({ getSlideTextItems: vi.fn(() => []), stageItemToItem: vi.fn((item) => item) }))
 vi.mock("../../shared/ui/kit/hidden-input/HiddenInput", () => ({
     HiddenInput: ({ onEdit }: { onEdit?: (detail: { value: string; id: string }) => void }) => (
         <span>
@@ -32,7 +32,7 @@ vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) 
 vi.mock("../../shared/ui/system/SelectElem", () => ({
     SelectElem: ({ children }: { children: ReactNode }) => <div data-select>{children}</div>
 }))
-vi.mock("../slide/Zoomed", () => ({
+vi.mock("../../react/slide/Zoomed", () => ({
     Zoomed: ({ children, onRatioChange, ...props }: { children: ReactNode; onRatioChange?: (ratio: number) => void } & Record<string, unknown>) => (
         <div data-view="Zoomed" data-props={JSON.stringify(props)}>
             <button data-testid="ratio" onClick={() => onRatioChange?.(0.5)} />

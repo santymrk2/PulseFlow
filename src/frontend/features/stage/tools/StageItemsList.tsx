@@ -7,7 +7,7 @@ import { getSortedStageItems, rearrangeStageItems } from "../../../components/ed
 import { getItemText } from "../../../components/edit/scripts/textStyle"
 import { clone } from "../../../shared/utils/helpers/array"
 import { getFileName } from "../../../shared/utils/helpers/media"
-import { getCustomStageLabel } from "../../../components/stage/stage"
+import { getCustomStageLabel } from "../logic/stage"
 import { Icon } from "../../../shared/ui/helpers/Icon"
 import { useStore } from "../../../shared/ui/hooks/useStore"
 import { Button } from "../../../shared/ui/kit/button/Button"

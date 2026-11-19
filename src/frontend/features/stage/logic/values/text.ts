@@ -1,4 +1,4 @@
-import { splitIntoRows, textSections, type EditBoxSection } from "../../edit/values/boxes"
+import { splitIntoRows, textSections, type EditBoxSection } from "../../../../components/edit/values/boxes"
 
 export const slideTextSections: { [key: string]: EditBoxSection } = {
     default: {

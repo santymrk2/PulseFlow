@@ -4,7 +4,7 @@ import { getStyleResolution } from "../../components/slide/getStyleResolution"
 import { Icon } from "../../shared/ui/helpers/Icon"
 import { cssTextToStyle } from "../../shared/ui/helpers/cssTextToStyle"
 import { useStore } from "../../shared/ui/hooks/useStore"
-import { StageLayout } from "../stage/StageLayout"
+import { StageLayout } from "../../features/stage/StageLayout"
 import styles from "./PreviewOutput.module.css"
 
 export interface PreviewOutputProps {

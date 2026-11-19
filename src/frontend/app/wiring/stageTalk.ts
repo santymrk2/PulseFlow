@@ -8,7 +8,7 @@ import { checkWindowCapture, getFirstOutput } from "../../shared/utils/helpers/o
 import { getCurrentProjectIndexes, getProjectItems } from "../../shared/utils/helpers/projectProgress"
 import { getGroupName, getLayoutRef } from "../../shared/utils/helpers/show"
 import { _show } from "../../shared/utils/helpers/shows"
-import { getCustomStageLabel } from "../../components/stage/stage"
+import { getCustomStageLabel } from "../../features/stage/logic/stage"
 import { actions, activeProject, activeShow, events, groups, media, metronome, metronomeTimer, outputs, projects, showsCache, stageShows, timeFormat, timers, variables } from "../../shared/core/stores"
 import { connections } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"

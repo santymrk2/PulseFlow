@@ -9,8 +9,8 @@ import { clone } from "../../../shared/utils/helpers/array"
 import { history } from "../../../shared/utils/helpers/history"
 import { percentageToAspectRatio, stylePosToPercentage } from "../../../shared/utils/helpers/output"
 import { getStyles } from "../../../shared/utils/helpers/style"
-import { updateStageShow } from "../../../components/stage/stage"
-import { EditValues } from "../../edit/tools/EditValues"
+import { updateStageShow } from "../logic/stage"
+import { EditValues } from "../../../react/edit/tools/EditValues"
 import { useStore } from "../../../shared/ui/hooks/useStore"
 
 // El Svelte original escribía `input.relative` e `input.input` sobre el detail de EditValues (tipado como any).

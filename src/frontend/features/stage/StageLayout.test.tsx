@@ -8,7 +8,7 @@ import { getSortedStageItems } from "../../components/edit/scripts/itemHelpers"
 import { history } from "../../shared/utils/helpers/history"
 import { enableStageOutput, getStageOutputId } from "../../shared/utils/helpers/output"
 import { openSettings } from "../../components/settings/openSettings"
-import { updateStageShow } from "../../components/stage/stage"
+import { updateStageShow } from "./logic/stage"
 import { getStyleResolution } from "../../components/slide/getStyleResolution"
 import { getAccess } from "../../shared/utils/profile"
 import { StageLayout } from "./StageLayout"
@@ -61,13 +61,13 @@ vi.mock("../../shared/utils/helpers/style", () => ({
     })
 }))
 vi.mock("../../components/settings/openSettings", () => ({ openSettings: vi.fn() }))
-vi.mock("../../components/stage/stage", () => ({ getSlideTextItems: vi.fn(() => []), stageItemToItem: vi.fn((item: unknown) => item), updateStageShow: vi.fn() }))
+vi.mock("./logic/stage", () => ({ getSlideTextItems: vi.fn(() => []), stageItemToItem: vi.fn((item: unknown) => item), updateStageShow: vi.fn() }))
 vi.mock("../../components/slide/getStyleResolution", () => ({ getStyleResolution: vi.fn(() => "width: 100%;") }))
 vi.mock("../../shared/utils/profile", () => ({ getAccess: vi.fn(() => ({})) }))
-vi.mock("../edit/ItemAddMenu", () => ({ ItemAddMenu: () => null }))
+vi.mock("../../react/edit/ItemAddMenu", () => ({ ItemAddMenu: () => null }))
 vi.mock("../../shared/ui/helpers/T", () => ({ T: ({ id }: { id: string }) => <span data-t={id} /> }))
 vi.mock("../../shared/ui/helpers/Icon", () => ({ Icon: ({ id }: { id: string }) => <span data-icon={id} /> }))
-vi.mock("../slide/Zoomed", () => ({
+vi.mock("../../react/slide/Zoomed", () => ({
     Zoomed: ({ background, children, onRatioChange }: { background: string; children: ReactNode; onRatioChange?: (ratio: number) => void }) => {
         useEffect(() => onRatioChange?.(2), [])
         return (
@@ -77,7 +77,7 @@ vi.mock("../slide/Zoomed", () => ({
         )
     }
 }))
-vi.mock("../slide/observeResize", () => ({
+vi.mock("../../react/slide/observeResize", () => ({
     observeResize: (_node: Element, cb: (rect: DOMRectReadOnly) => void) => {
         cb({ width: 800, height: 600 } as DOMRectReadOnly)
         return { destroy: () => {} }

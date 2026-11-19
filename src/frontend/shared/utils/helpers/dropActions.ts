@@ -17,7 +17,7 @@ import { addSlideAction, getActionTriggerId, isMatchingSlideAction } from "../..
 import { getActiveScripturesContent, getReferenceText, getScriptureShow, getScriptureSlidesNew } from "../../../components/drawer/bible/scripture"
 import { getVimeoData, getYouTubeData, trimPlayerId } from "../../../components/drawer/player/playerHelper"
 import { addItem, DEFAULT_ITEM_STYLE } from "../../../components/edit/scripts/itemHelpers"
-import { addStageItem } from "../../../components/stage/stage"
+import { addStageItem } from "../../../features/stage/logic/stage"
 import { clone, removeDuplicates } from "./array"
 import { projectDropFolders } from "./drop"
 import { history, historyAwait } from "./history"

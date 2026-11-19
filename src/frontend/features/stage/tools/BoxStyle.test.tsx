@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeStage, stageShows, theme, themes } from "../../../shared/core/stores"
 import { addStyleString } from "../../../components/edit/scripts/textStyle"
 import { history } from "../../../shared/utils/helpers/history"
-import { updateStageShow } from "../../../components/stage/stage"
+import { updateStageShow } from "../logic/stage"
 import { BoxStyle } from "./BoxStyle"
 
 type ChangeEvent = { detail: { id: string; key?: string; value: unknown; values: { value: unknown } } }
@@ -45,8 +45,8 @@ vi.mock("../../../components/edit/scripts/textStyle", () => ({ addStyleString: v
 vi.mock("../../../shared/utils/helpers/history", () => ({ history: vi.fn() }))
 vi.mock("../../../shared/utils/helpers/show", () => ({ getCustomMetadata: vi.fn(() => ({})) }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../components/stage/stage", () => ({ updateStageShow: vi.fn() }))
-vi.mock("../../edit/tools/EditValues", () => ({
+vi.mock("../logic/stage", () => ({ updateStageShow: vi.fn() }))
+vi.mock("../../../react/edit/tools/EditValues", () => ({
     EditValues: (props: EditValuesProps & { onChange: (input: unknown) => void }) => {
         islandProps = props
         onChange = (event: ChangeEvent) => props.onChange(event.detail)

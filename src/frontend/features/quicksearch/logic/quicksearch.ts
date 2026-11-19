@@ -56,7 +56,7 @@ import { slideItems, stageItems } from "../../../components/edit/values/items"
 import { keysToID } from "../../../shared/utils/helpers/array"
 import { duplicate } from "../../../shared/utils/helpers/clipboard"
 import { history } from "../../../shared/utils/helpers/history"
-import { addStageItem } from "../../../components/stage/stage"
+import { addStageItem } from "../../stage/logic/stage"
 import { Main } from "../../../../types/IPC/Main"
 import { getMediaResults, showResult } from "./quicksearchData"
 

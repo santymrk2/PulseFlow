@@ -6,7 +6,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { activeStage, dictionary, selected, stageShows, timers } from "../../../shared/core/stores"
 import { translateText } from "../../../shared/utils/language"
 import { getSortedStageItems, rearrangeStageItems } from "../../../components/edit/scripts/itemHelpers"
-import { getCustomStageLabel } from "../../../components/stage/stage"
+import { getCustomStageLabel } from "../logic/stage"
 import { StageItemsList } from "./StageItemsList"
 
 vi.mock("../../../shared/core/stores", () => {
@@ -42,7 +42,7 @@ vi.mock("../../../components/edit/scripts/itemHelpers", () => ({ getSortedStageI
 vi.mock("../../../components/edit/scripts/textStyle", () => ({ getItemText: vi.fn(() => "texto del item") }))
 vi.mock("../../../shared/utils/helpers/array", () => ({ clone: (value: unknown) => [...(value as unknown[])] }))
 vi.mock("../../../shared/utils/helpers/media", () => ({ getFileName: vi.fn(() => "video.mp4") }))
-vi.mock("../../../components/stage/stage", () => ({ getCustomStageLabel: vi.fn(() => "") }))
+vi.mock("../logic/stage", () => ({ getCustomStageLabel: vi.fn(() => "") }))
 vi.mock("../../../shared/ui/helpers/Icon", () => ({ Icon: ({ id, custom }: { id: string; custom?: boolean }) => <span data-icon={id} data-custom={custom} /> }))
 vi.mock("../../../shared/ui/kit/button/Button", () => ({
     Button: ({ id, children, icon, title, disabled, isActive, className, onClick }: { id?: string; children?: ReactNode; icon?: string; title?: string; disabled?: boolean; isActive?: boolean; className?: string; onClick?: (detail: { ctrl: boolean }) => void }) => (

@@ -5,7 +5,7 @@ import { activeStage, stageShows } from "../../../shared/core/stores"
 import { addFilterString } from "../../../components/edit/scripts/textStyle"
 import { history } from "../../../shared/utils/helpers/history"
 import { percentageToAspectRatio, stylePosToPercentage } from "../../../shared/utils/helpers/output"
-import { updateStageShow } from "../../../components/stage/stage"
+import { updateStageShow } from "../logic/stage"
 import { ItemStyle } from "./ItemStyle"
 
 type ChangeEvent = { detail: { id: string; key?: string; type?: string; value: unknown; values: { value: unknown } } }
@@ -75,8 +75,8 @@ vi.mock("../../../shared/utils/helpers/style", () => ({
     })
 }))
 vi.mock("../../../shared/utils/language", () => ({ translateText: vi.fn((id: string) => id) }))
-vi.mock("../../../components/stage/stage", () => ({ updateStageShow: vi.fn() }))
-vi.mock("../../edit/tools/EditValues", () => ({
+vi.mock("../logic/stage", () => ({ updateStageShow: vi.fn() }))
+vi.mock("../../../react/edit/tools/EditValues", () => ({
     EditValues: (props: EditValuesProps & { onChange: (input: unknown) => void }) => {
         islandProps = props
         onChange = (event: ChangeEvent) => props.onChange(event.detail)
