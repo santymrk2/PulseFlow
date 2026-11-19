@@ -57,6 +57,9 @@ describe("rewriteSpecifiers", () => {
         const out = run(`import { z } from "../c"`, "src/a/X.tsx", [{ from: "src/c", to: "src/w/c" }])
         expect(out.code).toBe(`import { z } from "../w/c"`)
     })
+    it("ruta que no cambia queda con su forma original", () => {
+        expect(run(`import Y from "./../b/Y"`, "src/a/X.tsx", [{ from: "src/q", to: "src/r" }]).code).toBe(`import Y from "./../b/Y"`)
+    })
     it("no toca paquetes", () => {
         const code = `import r from "react"\nimport { invoke } from "@tauri-apps/api/core"`
         expect(run(code, "src/a/X.tsx", moveB)).toEqual({ code, unresolved: [] })

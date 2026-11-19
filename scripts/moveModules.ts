@@ -60,6 +60,8 @@ export function rewriteSpecifiers(code: string, oldPath: string, newPath: string
         let rel = posix.relative(posix.dirname(toPosix(newPath)), styled)
         if (rel === "") rel = "."
         else if (!rel.startsWith(".")) rel = "./" + rel
+        // `./../x` y `../x` son lo mismo: si la ruta no cambió se deja como estaba
+        if (posix.normalize(rel) === posix.normalize(spec)) return match
         return `${prefix}${quote}${rel}${quote}`
     })
     return { code: out, unresolved }
