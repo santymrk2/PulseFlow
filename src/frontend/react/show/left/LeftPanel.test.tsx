@@ -33,8 +33,8 @@ describe("LeftPanel", () => {
             </LeftPanel>
         )
         const header = container.querySelector("header") as HTMLElement
-        expect(header.querySelector(".bg-primary")).toBeNull()
-        expect(header.querySelector(".text-muted-foreground")).toBeNull()
+        expect(header.querySelector(`.${styles.context}`)).toBeNull()
+        expect(header.querySelector(`.${styles.count}`)).toBeNull()
         expect(header.children).toHaveLength(1)
         expect(container.querySelector("section > div")?.className).toContain(styles.body)
     })
