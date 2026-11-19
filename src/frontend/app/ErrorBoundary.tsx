@@ -4,6 +4,7 @@ import styles from "./ErrorBoundary.module.css"
 
 interface ErrorBoundaryProps {
     children: ReactNode
+    onReset?: () => void
 }
 
 interface ErrorBoundaryState {
@@ -22,6 +23,11 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
         console.error("[ErrorBoundary]", error, info.componentStack)
     }
 
+    reset = () => {
+        this.props.onReset?.()
+        this.setState({ error: null })
+    }
+
     render() {
         const { error } = this.state
         if (!error) return this.props.children
@@ -31,7 +37,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
                 <h2 className={styles.title}>Algo salió mal</h2>
                 <pre className={styles.message}>{error.message}</pre>
                 <div className={styles.actions}>
-                    <button onClick={() => this.setState({ error: null })}>Reintentar</button>
+                    <button onClick={this.reset}>Reintentar</button>
                     <button onClick={() => location.reload()}>Recargar</button>
                 </div>
             </div>

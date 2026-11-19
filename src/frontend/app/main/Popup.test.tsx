@@ -1,9 +1,10 @@
 // @vitest-environment happy-dom
-import { act, cleanup, render, screen } from "@testing-library/react"
+import { act, cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { createElement } from "react"
 import { readFileSync } from "node:fs"
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import type { Popups } from "../../../types/Main"
+import { get } from "../../shared/core/lib/store"
 import { activePopup, popupData } from "../../shared/core/stores"
 import { commonMock } from "../../shared/test/mockCommon"
 import { storeEntry, setStoresForTest } from "../../shared/test/storeTestKit"
@@ -18,6 +19,9 @@ vi.mock("../../features/popups/registry", () => {
     return {
         reactPopups: {
             effect_items: stub("effect_items"),
+            looks_roto: () => {
+                throw new Error("popup roto")
+            },
             kit_demo: stub("kit_demo"),
             looks: stub("looks"),
             screen_config: stub("screen_config")
@@ -42,5 +46,20 @@ describe("Popup", () => {
 
         expect(screen.getByTestId(`react-${id}`)).toBeTruthy()
         expect(readFileSync("src/frontend/app/main/Popup.tsx", "utf8")).not.toContain("SvelteIsland")
+    })
+
+    it("un popup que tira error muestra el panel dentro del popup y no tira el resto", () => {
+        vi.spyOn(console, "error").mockImplementation(() => {})
+        activePopup.set("looks_roto" as Popups)
+        render(
+            <>
+                <div data-testid="hermano" />
+                <Popup />
+            </>
+        )
+        expect(screen.getByTestId("hermano")).toBeTruthy()
+        expect(screen.getByRole("alert").textContent).toContain("popup roto")
+        fireEvent.click(screen.getByText("Reintentar"))
+        expect(get(activePopup)).toBeNull()
     })
 })

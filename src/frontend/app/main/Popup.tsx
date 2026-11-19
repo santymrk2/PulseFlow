@@ -10,6 +10,7 @@ import { disablePopupClose } from "../wiring/shortcuts"
 import { reactPopups } from "../../features/popups/registry"
 import { useStore } from "../../shared/ui/hooks/useStore"
 import { T } from "../../shared/ui/helpers/T"
+import { ErrorBoundary } from "../ErrorBoundary"
 import { Button } from "../../shared/ui/kit/button/Button"
 import styles from "./Popup.module.css"
 
@@ -69,11 +70,18 @@ export function Popup() {
         setScrolled(e.currentTarget.scrollTop > 0)
     }
 
+    const closePopup = () => activePopup.set(null)
+
     if (popupId === null) return null
 
     const ReactPopup = reactPopups[popupId] as ComponentType | undefined
 
-    if (FULL_MODALS.includes(popupId)) return ReactPopup ? <ReactPopup /> : null
+    if (FULL_MODALS.includes(popupId))
+        return ReactPopup ? (
+            <ErrorBoundary onReset={closePopup}>
+                <ReactPopup />
+            </ErrorBoundary>
+        ) : null
 
     return (
         <div style={isWindows ? { height: `calc(100% - ${MENU_BAR_HEIGHT}px)` } : undefined} className={`${styles.popup}${isOptimized ? ` ${styles.isOptimized}` : ""}`} onMouseDown={mousedown}>
@@ -101,7 +109,13 @@ export function Popup() {
                 ) : null}
 
                 <div className={styles.scroll} style={{ ["--top-height" as string]: `${isWindows ? MENU_BAR_HEIGHT : 0}px` }} onScroll={onScroll}>
-                    <div className={styles.body}>{ReactPopup ? <ReactPopup /> : null}</div>
+                    <div className={styles.body}>
+                        {ReactPopup ? (
+                            <ErrorBoundary onReset={closePopup}>
+                                <ReactPopup />
+                            </ErrorBoundary>
+                        ) : null}
+                    </div>
                 </div>
             </div>
         </div>
