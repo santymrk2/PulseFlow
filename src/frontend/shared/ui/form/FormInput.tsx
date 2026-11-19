@@ -15,6 +15,7 @@ import { TextField } from "../kit/text-field/TextField"
 import { TimeField } from "../kit/time-field/TimeField"
 import { MidiValues } from "../../../features/actions/MidiValues"
 import { RestValues } from "../../../features/actions/RestValues"
+import { cssTextToStyle } from "../helpers/cssTextToStyle"
 
 type Loose = Record<string, unknown>
 
@@ -69,7 +70,7 @@ export function FormInput({ input, hasTimelineAction = false, onChange, onKeyfra
     }
 
     const settings = (inp.settings || {}) as Loose
-    const commonProps = { label, ...(inp as object), ...(settings as object), hasTimelineAction, enableKeyframe } as never
+    const commonProps = { label, ...(inp as object), ...(settings as object), style: inp.style ? cssTextToStyle(String(inp.style)) : undefined, hasTimelineAction, enableKeyframe } as never
 
     if (inputType === "string") return <TextField value={String(inp.value ?? "")} {...commonProps} onChange={(v) => changed(v)} onInput={(v) => changed(v)} />
     if (inputType === "number") return <NumberField value={Number(inp.value ?? 0)} {...commonProps} onChange={(v) => changed(v)} onInput={(v) => changed(v)} onKeyframe={onKeyframe ? (v) => onKeyframe(v) : undefined} />
