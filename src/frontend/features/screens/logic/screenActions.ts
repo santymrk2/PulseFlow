@@ -1,7 +1,8 @@
 // Reglas puras para eliminar pantallas (salidas) de la configuración.
 // Sin stores ni IPC: lo que toca la app vive en `react/screens/ScreenDetail.tsx`.
 
-type ScreenLike = { stageOutput?: unknown; kind?: string }
+// `name` no se usa acá: está para que el tipo no sea "débil" (sin propiedades en común) y TS acepte `Output`.
+type ScreenLike = { name?: string; stageOutput?: unknown; kind?: string }
 
 const isStage = (output: ScreenLike) => !!output.stageOutput || output.kind === "stage"
 
