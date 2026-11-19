@@ -1,10 +1,11 @@
 import { useEffect, useRef, useState } from "react"
 import { clearAudio } from "../../shared/audio/audioFading"
-import { activeTimers, dictionary, isFadingOut, isTimelinePlaying, labelsDisabled, media, outLocked, outputCache, outputs, overlayTimers, playingAudio, playingMetronome, styles, timelineRecordingAction } from "../../shared/core/stores"
+import { activeTimers, dictionary, isFadingOut, isTimelinePlaying, labelsDisabled, media, outLocked, outputCache, outputs, overlayTimers, playingAudio, playingMetronome, special, styles, timelineRecordingAction } from "../../shared/core/stores"
 import { translateText } from "../../shared/utils/language"
 import { presentationControllersKeysDisabled } from "../../app/wiring/shortcuts"
 import { getMediaLayerType } from "../../shared/utils/helpers/media"
 import { getActiveOutputs, getOutputContent, isOutCleared } from "../../shared/utils/helpers/output"
+import { clearToLogo } from "./logic/clearToLogo"
 import { clearAll, clearBackground, clearOverlays, clearScene, clearSlide, clearTimers, restoreOutput } from "./logic/clear"
 import { Icon } from "../../shared/ui/helpers/Icon"
 import { T } from "../../shared/ui/helpers/T"
@@ -34,6 +35,7 @@ export function ClearButtons({ autoChange, activeClear, onAutoChangeChange, onUp
     const currentIsTimelinePlaying = useStore(isTimelinePlaying)
     const currentLabelsDisabled = useStore(labelsDisabled)
     const currentDictionary = useStore(dictionary)
+    const hasLogo = !!useStore(special).outputLogo
 
     const [enableRestore, setEnableRestore] = useState(false)
     const [audioIcon, setAudioIcon] = useState("audio")
@@ -179,6 +181,10 @@ export function ClearButtons({ autoChange, activeClear, onAutoChangeChange, onUp
                 <Button style={{ padding: "0.42em 0.8em" }} className="clearAll" disabled={!canRestore} title="preview.restore_output" onClick={restoreOutput}>
                     <Icon id="reset" size={1.2} white />
                     {!currentLabelsDisabled ? <T id="preview.restore_output" /> : null}
+                </Button>
+                <Button style={{ padding: "0.42em 0.8em" }} className="clearAll" disabled={currentOutLocked || !hasLogo} title={hasLogo ? "clear.logo [F6]" : "clear.logo_missing"} onClick={clearToLogo}>
+                    <Icon id="image" size={1.2} white />
+                    {!currentLabelsDisabled ? <T id="clear.logo" /> : null}
                 </Button>
             </span>
 

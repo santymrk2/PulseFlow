@@ -1,8 +1,9 @@
 // @vitest-environment happy-dom
 import { cleanup, fireEvent, render, screen } from "@testing-library/react"
 import { afterEach, describe, expect, it, vi } from "vitest"
-import { activeTimers, dictionary, isFadingOut, isTimelinePlaying, labelsDisabled, media, outLocked, outputCache, outputs, overlayTimers, playingAudio, playingMetronome, styles as outputStyles, timelineRecordingAction } from "../../shared/core/stores"
+import { activeTimers, dictionary, isFadingOut, isTimelinePlaying, labelsDisabled, media, outLocked, outputCache, outputs, overlayTimers, playingAudio, playingMetronome, special, styles as outputStyles, timelineRecordingAction } from "../../shared/core/stores"
 import { clearAll, clearBackground } from "./logic/clear"
+import { clearToLogo } from "./logic/clearToLogo"
 import { getActiveOutputs, getOutputContent, isOutCleared } from "../../shared/utils/helpers/output"
 import { looseEntry, setStoresForTest } from "../../shared/test/storeTestKit"
 import { ClearButtons } from "./ClearButtons"
@@ -16,6 +17,7 @@ vi.mock("../../shared/utils/helpers/output", () => ({
     getOutputContent: vi.fn(() => null),
     isOutCleared: vi.fn(() => false)
 }))
+vi.mock("./logic/clearToLogo", () => ({ clearToLogo: vi.fn() }))
 vi.mock("./logic/clear", () => ({
     clearAll: vi.fn(),
     clearBackground: vi.fn(),
@@ -33,8 +35,9 @@ afterEach(() => {
     vi.clearAllMocks()
 })
 
-function setBaseStores() {
+function setBaseStores(specialValue: Record<string, unknown> = {}) {
     restore = setStoresForTest([
+        looseEntry(special, specialValue),
         looseEntry(outputs, {}),
         looseEntry(playingAudio, {}),
         looseEntry(playingMetronome, false),
@@ -102,5 +105,25 @@ describe("ClearButtons", () => {
         expect(screen.getByTitle("clear.all [esc]")).toBeTruthy()
         const restore = screen.getByTitle("preview.restore_output") as HTMLButtonElement
         expect(restore.disabled).toBe(true)
+    })
+
+    it("el_boton_logo_esta_deshabilitado_sin_logo_configurado", () => {
+        vi.mocked(isOutCleared).mockReturnValue(false)
+        setBaseStores()
+
+        render(<ClearButtons autoChange={false} activeClear={null} />)
+        const logo = screen.getByTitle("clear.logo_missing") as HTMLButtonElement
+        expect(logo.disabled).toBe(true)
+        fireEvent.click(logo)
+        expect(clearToLogo).not.toHaveBeenCalled()
+    })
+
+    it("con_logo_el_boton_llama_a_clearToLogo", () => {
+        vi.mocked(isOutCleared).mockReturnValue(false)
+        setBaseStores({ outputLogo: "/img/logo.png" })
+
+        render(<ClearButtons autoChange={false} activeClear={null} />)
+        fireEvent.click(screen.getByTitle("clear.logo [F6]"))
+        expect(clearToLogo).toHaveBeenCalled()
     })
 })

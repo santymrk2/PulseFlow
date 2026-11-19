@@ -10,6 +10,7 @@ import { setStoresForTest, storeEntry } from "../../shared/test/storeTestKit"
 import { General } from "./General"
 
 vi.mock("../../shared/utils/common", () => commonMock())
+vi.mock("../../shared/core/ipc/main", () => ({ requestMain: vi.fn(), sendMain: vi.fn(), receiveToMain: vi.fn(() => "listener"), destroyMain: vi.fn() }))
 // SelectField llega a helpers/media (getFileName), que arrastra el módulo de audio
 vi.mock("../../shared/audio/audioProcessor", () => ({}))
 vi.mock("../../shared/audio/audioAnalyser", () => ({ AudioAnalyser: {} }))
@@ -31,7 +32,7 @@ const pulsar = (label: string) => fireEvent.click(toggle(label))
 describe("General", () => {
     it("renderiza_lo_principal", () => {
         render(<General />)
-        for (const label of ["settings.language", "settings.use24hClock", "settings.disable_labels", "settings.full_colors", "tools.slide", "popup.manage_groups", "settings.next_item_on_last_slide", "settings.slide_number_keys", "settings.auto_shortcut_first_letter"]) expect(screen.getByText(label)).toBeTruthy()
+        for (const label of ["settings.language", "settings.use24hClock", "settings.disable_labels", "settings.full_colors", "settings.output_logo", "tools.slide", "popup.manage_groups", "settings.next_item_on_last_slide", "settings.slide_number_keys", "settings.auto_shortcut_first_letter"]) expect(screen.getByText(label)).toBeTruthy()
         expect(document.querySelectorAll('[role="switch"]')).toHaveLength(6)
     })
 

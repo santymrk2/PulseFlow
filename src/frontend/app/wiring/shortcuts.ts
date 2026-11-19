@@ -16,6 +16,7 @@ import { getActiveOutputs, getFirstActiveOutput, refreshOut, setOutput, startFol
 import { OutputHelper } from "../../shared/utils/helpers/OutputHelper"
 import { VideoPlayer } from "../../features/media/logic/video/videoPlayer"
 import { clearAll, clearBackground, clearSlide } from "../../features/output/logic/clear"
+import { clearToLogo } from "../../features/output/logic/clearToLogo"
 import { getRecentlyUsedProjects, openProject } from "../../features/show/logic/project"
 import { importFromClipboard } from "../../features/import/importHelpers"
 import { addSection } from "../../features/import/project"
@@ -180,7 +181,7 @@ export function keydown(e: KeyboardEvent) {
         if (e.key === "Escape" && !contentDisplayed) return hideDisplay()
 
         // allow custom shortcuts through main display (could be useful in some cases when you need output over the main app)
-        const allowThroughWindow = ["Escape", "ArrowRight", "ArrowLeft", " ", "PageDown", "PageUp", "Home", "End", ".", "F1", "F2", "F3", "F4", "F5"]
+        const allowThroughWindow = ["Escape", "ArrowRight", "ArrowLeft", " ", "PageDown", "PageUp", "Home", "End", ".", "F1", "F2", "F3", "F4", "F5", "F6"]
         if (allowThroughWindow.includes(e.key)) send(OUTPUT, ["MAIN_SHORTCUT"], { key: e.key, ctrlKey: e.ctrlKey, metaKey: e.metaKey, altKey: e.altKey })
 
         return
@@ -430,6 +431,7 @@ export const previewShortcuts = {
         clearAudio("", { clearPlaylist: true, clearMicrophones: true, commonClear: true })
         timelineRecordingAction.set({ id: "clear_audio" })
     },
+    F6: () => clearToLogo(),
     F5: () => {
         if (!presentationControllersKeysDisabled()) OutputHelper.advanceOutputs()
         else setOutput("transition", null)

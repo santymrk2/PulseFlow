@@ -1,7 +1,9 @@
 import { dictionary, fullColors, groups, labelsDisabled, language, special, timeFormat } from "../../shared/core/stores"
+import { imageExtensions } from "../../shared/core/values/extensions"
 import { sortByName } from "../../shared/utils/helpers/array"
 import { getLanguageList, setLanguage, translateText } from "../../shared/utils/language"
 import { isGroupHidden } from "../../shared/utils/profile"
+import { FileField } from "../../shared/ui/kit/file-field/FileField"
 import { useStore } from "../../shared/ui/hooks/useStore"
 import { PopupField } from "../../shared/ui/kit/popup-field/PopupField"
 import { SelectField } from "../../shared/ui/kit/select-field/SelectField"
@@ -48,6 +50,8 @@ export function General() {
             <ToggleField label="settings.use24hClock" checked={timeFormatValue === "24"} onChange={(checked) => timeFormat.set(checked ? "24" : "12")} />
             <ToggleField label="settings.disable_labels" checked={labelsDisabledValue} defaultValue={false} onChange={(checked) => labelsDisabled.set(checked)} />
             <ToggleField label="settings.full_colors" checked={fullColorsValue} defaultValue={false} onChange={(checked) => fullColors.set(checked)} />
+
+            <FileField label="settings.output_logo" value={specialValue.outputLogo} filter={{ name: "Image", extensions: imageExtensions }} showThumbnail onChange={(value) => updateSpecial(Array.isArray(value) ? value[0] : value, "outputLogo")} allowEmpty />
 
             {/* SLIDES */}
 
